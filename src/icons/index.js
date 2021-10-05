@@ -9,6 +9,7 @@ const errorIcon = require("./error.png");
 const successIcon = require("./success.png");
 const warningIcon = require("./warning.png");
 const questionFilled = require("./question-filled.svg");
+const settingsSVG = require("./settings.svg");
 
 export {
   settings,
@@ -22,4 +23,5 @@ export {
   successIcon,
   warningIcon,
   questionFilled,
+  settingsSVG,
 };

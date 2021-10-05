@@ -20,18 +20,26 @@ export const highlightOnPage = () => {
     return val;
   };
 
-  const toggleElement = (element) => {
-    const div = document.getElementById(element.element_id);
-    div.className = `jdn-highlight ${element.skipGeneration ? 'jdn-secondary' : 'jdn-primary'}`;
-  };
-
-  const removeElement = (element) => {
+  const toggleElement = ({element_id, generate}) => {
     predictedElements.find((e) => {
-      if (e.element_id === element.element_id) e.hidden = element.hidden;
+      if (e.element_id === element_id) e.generate = generate;
     });
 
-    const div = document.getElementById(element.element_id);
-    if (div) div.remove();
+    const div = document.getElementById(element_id);
+    if (div) div.className = `jdn-highlight ${generate ? 'jdn-primary' : 'jdn-secondary'}`;
+  };
+
+  const toggleDeletedElement = (element) => {
+    predictedElements.find((e) => {
+      if (e.element_id === element.element_id) e.deleted = element.deleted;
+    });
+
+    if (element.deleted) {
+      const div = document.getElementById(element.element_id);
+      if (div) div.remove();
+    } else {
+      findAndHighlight();
+    }
   };
 
   const createLabelText = (element) => {
@@ -50,19 +58,19 @@ export const highlightOnPage = () => {
   };
 
   const drawRectangle = (
-    element,
-    { element_id, jdi_class_name, predicted_probability, predicted_label }
+      element,
+      { element_id, jdi_class_name, predicted_probability, generate, predicted_label }
   ) => {
     const divDefaultStyle = (rect) => {
       const { top, left, height, width } = rect || {};
-      return rect
-        ? {
+      return rect ?
+        {
           left: `${left + window.pageXOffset}px`,
           top: `${top + window.pageYOffset}px`,
           height: `${height}px`,
           width: `${width}px`,
-        }
-        : {};
+        } :
+        {};
     };
     const tooltipDefaultStyle = (rect) => {
       const {right, top, height, width} = rect;
@@ -74,7 +82,7 @@ export const highlightOnPage = () => {
     const predictedProbabilityPercent = Math.round(predicted_probability * 100);
     const div = document.createElement("div");
     div.id = element_id;
-    div.className = "jdn-highlight jdn-primary";
+    div.className = `jdn-highlight ${generate ? 'jdn-primary' : 'jdn-secondary'}`;
     div.setAttribute("jdn-highlight", true);
     const tooltip = document.createElement('div');
     tooltip.className = 'jdn-tooltip';
@@ -109,17 +117,17 @@ export const highlightOnPage = () => {
   };
 
   const clearContainer = (parent) => {
-    nodes.forEach(node => {
+    nodes.forEach((node) => {
       if (parent.contains(node)) {
         const id = node.getAttribute('jdn-hash');
-        predictedElements.find(elem => elem.element_id === id).hidden = true;
+        predictedElements.find((elem) => elem.element_id === id).deleted = true;
         chrome.runtime.sendMessage({
           message: "REMOVE_ELEMENT",
           param: id,
         });
         chrome.runtime.sendMessage({
           message: "PREDICTION_IS_UNACTUAL"
-        })
+        });
       };
     });
   };
@@ -133,8 +141,8 @@ export const highlightOnPage = () => {
       perception = param.perception;
     }
     let query = "";
-    predictedElements.forEach(({ element_id, hidden }) => {
-      if (hidden) return;
+    predictedElements.forEach(({ element_id, deleted }) => {
+      if (deleted) return;
       query += `${!!query.length ? ", " : ""}[jdn-hash='${element_id}']`;
     });
     nodes = document.querySelectorAll(query);
@@ -149,7 +157,7 @@ export const highlightOnPage = () => {
           highlightElement.remove();
         } else if (!highlightElement && isAbovePerceptionTreshold) {
           const predicted = predictedElements.find(
-            (e) => e.element_id === hash
+              (e) => e.element_id === hash
           );
           drawRectangle(element, predicted, perception);
         }
@@ -255,8 +263,8 @@ export const highlightOnPage = () => {
       toggleElement(param);
     }
 
-    if (message === "HIDE_ELEMENT") {
-      removeElement(param);
+    if (message === "TOGGLE_DLETED") {
+      toggleDeletedElement(param);
     }
 
     if (message === "ASSIGN_TYPE") {

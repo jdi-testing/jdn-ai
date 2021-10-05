@@ -361,7 +361,7 @@ export const runContextMenu = () => {
   let predictedElement;
 
   const menuItems = (
-      { jdi_class_name, jdi_custom_class_name = null, element_id, skipGeneration },
+      { jdi_class_name, jdi_custom_class_name = null, element_id, generate },
       types
   ) => [
     {
@@ -380,7 +380,7 @@ export const runContextMenu = () => {
       sub: typesMenu(types),
     },
     {
-      text: `Switch ${skipGeneration ? "on" : "off"}`,
+      text: `Switch ${generate ? "off" : "on"}`,
       events: {
         click: () =>
           chrome.runtime.sendMessage({

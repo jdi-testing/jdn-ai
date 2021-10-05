@@ -16,7 +16,7 @@ export const GenerationButtons = () => {
 
   return (
     <Content>
-      <Space direction="horizontal" size={16} >
+      <Space direction="horizontal" size={16}>
         <Button
           icon={<SearchOutlined />}
           type="primary"
@@ -27,13 +27,9 @@ export const GenerationButtons = () => {
         >
           Identify
         </Button>
-        <Button hidden={!allowRemoveElements} onClick={removeHighlighs} className="jdn__buttons" >
+        <Button hidden={!allowRemoveElements} onClick={removeHighlighs} className="jdn__buttons">
           <Icon component={ClearAllSvg} className="jdn__buttons-icons" />
           Clear all
-        </Button>
-        <Button hidden={xpathStatus !== xpathGenerationStatus.complete} onClick={generateAndDownload} className="jdn__buttons">
-          <Icon component={DownloadSvg} fill="#c15f0f" className="jdn__buttons-icons" />
-          Download
         </Button>
       </Space>
     </Content>

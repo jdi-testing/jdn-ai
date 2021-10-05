@@ -32,6 +32,11 @@
 
     .anticon {
       vertical-align: baseline;
+
+      svg {
+        min-width: 14px;
+        min-height: 14px;
+      }
     }
   }
 
@@ -85,6 +90,16 @@
 
   .ant-typography-danger {
     color: #d82c15;
+  }
+
+  .ant-checkbox-wrapper + .ant-checkbox-wrapper {
+    margin-left: 0px;
+  }
+
+  .ant-checkbox {
+    &-inner {
+      border-radius: 0px;
+    }
   }
 
   .jdn {
@@ -207,6 +222,76 @@
   */
     &__urls-list {
       margin: 0 0 0 10px;
+    }
+
+    /*
+    XPATHES
+    */
+
+    &__locatorsList-header {
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      padding-top: 8px;
+      padding-bottom: 8px;
+
+      button {
+        padding: 4px 12px;
+        font-weight: bold;
+        font-size: 12px;
+      }
+
+      button:not(.ant-btn-primary, .ant-btn-dangerous) {
+        border: none;
+        color: #1582d8;
+        background: #deeffd;
+
+        &:hover {
+          background: #cde6f6;
+        }
+      }
+
+      &-buttons > * {
+        margin-left: 8px;
+      }
+
+      .ant-btn {
+        height: 30px;
+      }
+
+      .ant-btn-dangerous {
+        border: none;
+        background: #fddede;
+        color: #d82c15;
+
+        &:hover {
+          background: #f6d1d1;
+        }
+      }
+
+      .ant-select-multiple .ant-select-selection-item {
+        background-color: #ffffff;
+        border: 1px solid #ebebeb;
+        margin-inline-end: 6px;
+      }
+
+      .ant-select-multiple .ant-select-selection-item-content {
+        font-size: 12px;
+
+        span {
+          font-weight: 400;
+          color: #000000;
+        }
+      }
+
+      .anticon-close {
+        color: #949494;
+      }
+    }
+
+    &__xpath_item {
+      font-size: 12px;
     }
   }
 
