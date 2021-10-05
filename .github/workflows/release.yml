@@ -38,14 +38,14 @@ jobs:
         artifacts: "${{ steps.package-version.outputs.current-version}}.zip"
         replacesArtifacts: false
         token: ${{ secrets.GITHUB_TOKEN }}
-    - name: Microsoft Teams Notification
-      uses: skitionek/notify-microsoft-teams@master
-      with:
-        webhook_url: ${{ secrets.MSTEAMS_WEBHOOK }}
-        raw: >-
-          {
-            "@type": "MessageCard",
-            "@context": "http://schema.org/extensions",
-            "title": "NEW release ${{ steps.package-version.outputs.current-version }} arrived",
-            "text": "Approve or discard new release ${{ steps.package-version.outputs.current-version }} draft at https://github.com/jdi-testing/jdn/releases"
-          }
+    # - name: Microsoft Teams Notification
+    #   uses: skitionek/notify-microsoft-teams@master
+    #   with:
+    #     webhook_url: ${{ secrets.MSTEAMS_WEBHOOK }}
+    #     raw: >-
+    #       {
+    #         "@type": "MessageCard",
+    #         "@context": "http://schema.org/extensions",
+    #         "title": "NEW release ${{ steps.package-version.outputs.current-version }} arrived",
+    #         "text": "Approve or discard new release ${{ steps.package-version.outputs.current-version }} draft at https://github.com/jdi-testing/jdn/releases"
+    #       }
