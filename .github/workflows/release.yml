@@ -1,0 +1,51 @@
+name: Release version
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    # TODO: try to use .lock file, npm ci and cache for speedup
+    - name: npm install, build
+      run: |
+        npm install
+        npm run build
+
+
+    - name: get-npm-version
+      id: package-version
+      uses: martinbeentjes/npm-get-version-action@master
+
+    - name: Archive production artifacts
+      uses: thedoctor0/zip-release@master
+      with:
+        filename: "${{ steps.package-version.outputs.current-version}}.zip"
+        path: dist
+
+    - name: Release version
+      uses: ncipollo/release-action@v1
+      with:
+        draft: true
+        tag: ${{ steps.package-version.outputs.current-version}}
+        prerelease: true
+        artifacts: "${{ steps.package-version.outputs.current-version}}.zip"
+        replacesArtifacts: false
+        token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Microsoft Teams Notification
+      uses: skitionek/notify-microsoft-teams@master
+      with:
+        webhook_url: ${{ secrets.MSTEAMS_WEBHOOK }}
+        raw: >-
+          {
+            "@type": "MessageCard",
+            "@context": "http://schema.org/extensions",
+            "title": "NEW release ${{ steps.package-version.outputs.current-version }} arrived",
+            "text": "Approve or discard new release ${{ steps.package-version.outputs.current-version }} draft at https://github.com/jdi-testing/jdn/releases"
+          }
