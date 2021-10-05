@@ -1,0 +1,37 @@
+@import "../autoFind.less";
+
+.ant-slider-track {
+  height: 2px;
+  background-color: #C4C4C4;
+}
+
+.ant-slider-rail {
+  height: 2px;
+  background-color: @primary-color;
+}
+
+.ant-slider {
+  padding: 0;
+}
+
+.ant-slider:hover {
+  .ant-slider-track {
+    background-color: #C4C4C4;
+  }
+  .ant-slider-rail {
+    background-color: @primary-active-color;
+  }
+}
+
+.ant-slider-handle {
+  width: 15px;
+  height: 15px;
+  margin: -6px 0 0;
+  border: none;
+  background-color: @primary-color;
+  box-shadow: none;
+}
+
+.ant-slider-handle:focus {
+  background-color: @primary-active-color;
+}

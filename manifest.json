@@ -1,0 +1,33 @@
+{
+  "manifest_version": 3,
+  "name": "JDN",
+  "description": "",
+  "devtools_page": "index.html",
+  "version": "3.0.54",
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "scripting",
+    "storage",
+    "webNavigation"
+  ],
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com;"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "css": [
+        "reportProblemPopup.css",
+        "highlight.css"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "env": {
+    "browser": true,
+    "es6": true,
+    "webextensions": true
+  },
+  "extends": ["plugin:react/recommended", "google"],
+  "globals": {
+    "Atomics": "readonly",
+    "SharedArrayBuffer": "readonly",
+    "chrome": true
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
+  "plugins": ["react"],
+  "rules": {
+    "quotes": 0,
+    "require-jsdoc": 0,
+    "camelcase": 0,
+    "max-len": [1, { "code": 120 }],
+    "object-curly-spacing": 0,
+    "comma-dangle": 0,
+    "react/prop-types": [
+      0
+    ]
+  }
+}
