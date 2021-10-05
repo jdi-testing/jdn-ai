@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { Collapse } from "antd";
+import { Checkbox, Collapse } from "antd";
+import Icon from "@ant-design/icons";
+
 import { WaitingList } from "./WaitingList";
 import { GeneratedList } from "./GeneratedList";
 import { useAutoFind } from "../../autoFindProvider/AutoFindProvider";
 import { locatorProgressStatus, locatorTaskStatus } from "../../utils/locatorGenerationController";
 import { DeletedList } from "./DeletedList";
 import { LocatorListHeader } from "./LocatorListHeader";
+
+import CaretDownSvg from "../../../../../icons/caret-down.svg";
 
 export const LocatorsList = () => {
   const [
@@ -51,6 +55,20 @@ export const LocatorsList = () => {
     });
   };
 
+  const handleCheckboxChange = (event) => {
+    console.log(event);
+  };
+
+  const renderGroupHeader = (title) => {
+    return (
+      <React.Fragment>
+        <Checkbox onChange={handleCheckboxChange} onClick={(event) => event.stopPropagation()}>
+          {title}
+        </Checkbox>
+      </React.Fragment>
+    );
+  };
+
   return (
     <div className="jdn__locatorsList">
       <LocatorListHeader
@@ -64,14 +82,17 @@ export const LocatorsList = () => {
           stopXpathGroupGeneration,
         }}
       />
-      <Collapse defaultActiveKey={["1", "2", "3"]}>
-        <Collapse.Panel key="1" header="Generated">
+      <Collapse
+        defaultActiveKey={["1", "2", "3"]}
+        expandIcon={({ isActive }) => <Icon component={CaretDownSvg} rotate={isActive ? 180 : 0} />}
+      >
+        <Collapse.Panel key="1" header={renderGroupHeader("Generated")}>
           <GeneratedList elements={generated} {...{ toggleElementGeneration }} />
         </Collapse.Panel>
-        <Collapse.Panel key="2" header="Waiting for generation">
+        <Collapse.Panel key="2" header={renderGroupHeader("Waiting for generation")}>
           <WaitingList elements={waiting} {...{ toggleElementGeneration }} />
         </Collapse.Panel>
-        <Collapse.Panel key="3" header="Deleted">
+        <Collapse.Panel key="3" header={renderGroupHeader("Deleted")}>
           <DeletedList elements={deleted} {...{ toggleElementGeneration }} />
         </Collapse.Panel>
       </Collapse>

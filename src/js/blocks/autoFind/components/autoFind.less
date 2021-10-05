@@ -92,6 +92,8 @@
     color: #d82c15;
   }
 
+
+
   .ant-checkbox-wrapper + .ant-checkbox-wrapper {
     margin-left: 0px;
   }
@@ -99,6 +101,8 @@
   .ant-checkbox {
     &-inner {
       border-radius: 0px;
+      width: 14px;
+      height: 14px;
     }
   }
 
@@ -228,65 +232,95 @@
     XPATHES
     */
 
-    &__locatorsList-header {
-      font-size: 16px;
-      font-weight: 700;
-      display: flex;
-      justify-content: space-between;
-      padding-top: 8px;
-      padding-bottom: 8px;
+    &__locatorsList {
+      margin: 0 16px;
 
-      button {
-        padding: 4px 12px;
+      .ant-collapse {        
+        border: 1px solid #d1d1d1;
+        border-radius: 0;
+      }
+
+      .ant-collapse > .ant-collapse-item > .ant-collapse-header {
+        background: #fff;
+        padding: 6px 12px;
         font-weight: bold;
         font-size: 12px;
+        line-height: 16px;
       }
 
-      button:not(.ant-btn-primary, .ant-btn-dangerous) {
-        border: none;
-        color: #1582d8;
-        background: #deeffd;
+      .ant-collapse-item:last-child > .ant-collapse-content {
+        border-radius: 0;
+      }
 
-        &:hover {
-          background: #cde6f6;
+      .ant-collapse > .ant-collapse-item > .ant-collapse-header .ant-collapse-arrow {
+        position: absolute;
+        right: 0;
+      }
+
+      // .ant-collapse > .ant-collapse-item {
+      //   border-bottom: 1px solid #e5dfdf;
+      // }
+
+      &-header {
+        font-size: 16px;
+        font-weight: 700;
+        display: flex;
+        justify-content: space-between;
+        padding-top: 8px;
+        padding-bottom: 8px;
+
+        button {
+          padding: 4px 12px;
+          font-weight: bold;
+          font-size: 12px;
         }
-      }
 
-      &-buttons > * {
-        margin-left: 8px;
-      }
+        button:not(.ant-btn-primary, .ant-btn-dangerous) {
+          border: none;
+          color: #1582d8;
+          background: #deeffd;
 
-      .ant-btn {
-        height: 30px;
-      }
-
-      .ant-btn-dangerous {
-        border: none;
-        background: #fddede;
-        color: #d82c15;
-
-        &:hover {
-          background: #f6d1d1;
+          &:hover {
+            background: #cde6f6;
+          }
         }
-      }
 
-      .ant-select-multiple .ant-select-selection-item {
-        background-color: #ffffff;
-        border: 1px solid #ebebeb;
-        margin-inline-end: 6px;
-      }
-
-      .ant-select-multiple .ant-select-selection-item-content {
-        font-size: 12px;
-
-        span {
-          font-weight: 400;
-          color: #000000;
+        &-buttons > * {
+          margin-left: 8px;
         }
-      }
 
-      .anticon-close {
-        color: #949494;
+        .ant-btn {
+          height: 30px;
+        }
+
+        .ant-btn-dangerous {
+          border: none;
+          background: #fddede;
+          color: #d82c15;
+
+          &:hover {
+            background: #f6d1d1;
+          }
+        }
+
+        .ant-select-multiple .ant-select-selection-item {
+          background-color: #ffffff;
+          border: 1px solid #ebebeb;
+          margin-inline-end: 6px;
+        }
+
+        .ant-select-multiple .ant-select-selection-item-content {
+          font-size: 12px;
+
+          span {
+            font-weight: 400;
+            color: #000000;
+          }
+        }
+
+        .anticon-close {
+          color: #949494;
+        }
       }
     }
 
