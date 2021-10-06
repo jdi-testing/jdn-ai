@@ -12,6 +12,7 @@ import RestoreSvg from "../../../../../icons/restore.svg";
 
 import { useAutoFind } from "../../autoFindProvider/AutoFindProvider";
 import { Chip } from "./Chip";
+import { locatorTaskStatus } from "../../utils/locatorGenerationController";
 
 export const LocatorListHeader = ({
   generatedSelected,
@@ -24,6 +25,7 @@ export const LocatorListHeader = ({
 }) => {
   const [{ locators }, { generateAndDownload }] = useAutoFind();
   const [stoppedSelected, setStoppedSelected] = useState([]);
+  const [inProgressSelected, setInProgressSelected] = useState([]);
   const [selected, setSelected] = useState([]);
 
   useEffect(() => {
@@ -31,7 +33,8 @@ export const LocatorListHeader = ({
   }, [locators]);
 
   useEffect(() => {
-    setStoppedSelected(() => filter(waitingSelected, "stopped"));
+    setStoppedSelected(() => filter(waitingSelected, (el) => el.locator.taskStatus === locatorTaskStatus.REVOKED));
+    setInProgressSelected(() => filter(waitingSelected, (el) => el.locator.taskStatus !== locatorTaskStatus.REVOKED));
   }, [waitingSelected]);
 
   return (
@@ -51,7 +54,7 @@ export const LocatorListHeader = ({
         <Button hidden={!size(stoppedSelected)} onClick={() => runXpathGeneration(stoppedSelected)}>
           <Icon component={PlaySvg} />
         </Button>
-        <Button hidden={!size(waitingSelected)} danger onClick={() => stopXpathGroupGeneration(waitingSelected)}>
+        <Button hidden={!size(inProgressSelected)} danger onClick={() => stopXpathGroupGeneration(inProgressSelected)}>
           <Icon component={PauseSVG} />
         </Button>
         <Button

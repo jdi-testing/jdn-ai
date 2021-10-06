@@ -104,7 +104,7 @@ export const LocatorsList = () => {
         <Collapse expandIcon={({ isActive }) => <Icon component={CaretDownSvg} rotate={isActive ? 180 : 0} />}>
           <Collapse.Panel
             key="1"
-            style={{display: !size(generated) ? "none" : "block"}}
+            style={{ display: !size(generated) ? "none" : "block" }}
             header={renderGroupHeader(
                 `Generated (${size(generated)})`,
                 generated,
@@ -120,7 +120,7 @@ export const LocatorsList = () => {
           </Collapse.Panel>
           <Collapse.Panel
             key="2"
-            style={{display: !size(waiting) ? "none" : "block"}}
+            style={{ display: !size(waiting) ? "none" : "block" }}
             header={renderGroupHeader(
                 `Waiting for generation (${size(waiting)})`,
                 waiting,
@@ -132,7 +132,7 @@ export const LocatorsList = () => {
           </Collapse.Panel>
           <Collapse.Panel
             key="3"
-            style={{display: !size(deleted) ? "none" : "block"}}
+            style={{ display: !size(deleted) ? "none" : "block" }}
             header={renderGroupHeader(
                 `Deleted (${size(deleted)})`,
                 deleted,
