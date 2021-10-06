@@ -26,16 +26,17 @@ const AutoFind = () => {
         {xpathStatus === xpathGenerationStatus.started ? (
           <React.Fragment>
             <LocatorsList />
+            <PerceptionTreshold />
           </React.Fragment>
         ) : null}
         {/* <XPathSettings />
         <Result /> */}
       </Content>
-      {xpathStatus === xpathGenerationStatus.started ? (
+      {/* {xpathStatus === xpathGenerationStatus.started ? (
         <Footer>
           <PerceptionTreshold />
         </Footer>
-      ) : null}
+      ) : null} */}
     </Layout>
   );
 };

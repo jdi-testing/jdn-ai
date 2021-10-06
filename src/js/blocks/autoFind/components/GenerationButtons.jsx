@@ -1,21 +1,18 @@
 import Icon, { SearchOutlined } from "@ant-design/icons";
 import { Button, Space } from "antd";
 import React from "react";
-import { autoFindStatus, useAutoFind, xpathGenerationStatus } from "../autoFindProvider/AutoFindProvider";
+import { autoFindStatus, useAutoFind } from "../autoFindProvider/AutoFindProvider";
 
-// import "./GenerationButtons.less";
 import ClearAllSvg from "../../../../icons/clear-all.svg";
-import DownloadSvg from "../../../../icons/download.svg";
-import { Content } from "antd/lib/layout/layout";
 
 export const GenerationButtons = () => {
   const [
-    { status, allowIdentifyElements, allowRemoveElements, xpathStatus },
-    { identifyElements, removeHighlighs, generateAndDownload },
+    { status, allowIdentifyElements, allowRemoveElements },
+    { identifyElements, removeHighlighs },
   ] = useAutoFind();
 
   return (
-    <div>
+    <div className="jdn__generationButtons">
       <Space direction="horizontal" size={16}>
         <Button
           icon={<SearchOutlined />}

@@ -103,6 +103,7 @@ class LocatorGenerationController {
 
   revokeTask(elementId) {
     const task = this.getTaskById(elementId);
+    if (!task) return;
     this.unscheduleTask(elementId);
     task.scheduler.revokeTask();
   }

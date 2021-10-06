@@ -3,7 +3,7 @@ import Text from "antd/lib/typography/Text";
 import React from "react";
 import { getPageElementCode } from "../../utils/pageObject";
 
-export const Locator = ({ element, onChange }) => {
+export const Locator = ({ element, onChange, iconComponent }) => {
   const { element_id, type, name, locator, generate } = element;
 
   const handleOnChange = (value) => {
@@ -13,6 +13,7 @@ export const Locator = ({ element, onChange }) => {
   return (
     <React.Fragment>
       <Checkbox checked={generate} onChange={handleOnChange}>
+        {iconComponent}
         <Text className="jdn__xpath_item">
           {locator.taskStatus} {getPageElementCode(type, name, locator)}
         </Text>

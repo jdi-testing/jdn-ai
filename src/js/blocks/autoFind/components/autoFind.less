@@ -152,10 +152,6 @@
       line-height: 16px;
     }
 
-    &__content {
-      margin: 16px 0;
-    }
-
     &__divider {
       margin: 16px 0;
       background-color: #000;
@@ -163,6 +159,7 @@
     }
 
     &__perception-treshold {
+      padding-top: 16px;
       font-size: 13px;
       line-height: 17.71px;
     }
@@ -170,6 +167,10 @@
     /*
     Generation Buttons
      */
+
+    &__generationButtons {
+      padding-top: 16px;
+    }
 
     &__buttons {
       width: 109px;
@@ -228,10 +229,7 @@
     */
 
     &__locatorsList {
-      margin-top: 28px;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
+      padding-top: 28px;
 
       .ant-collapse {
         border: none;
@@ -257,10 +255,11 @@
 
       .ant-collapse-content > .ant-collapse-content-box {
         padding: 0 12px;
-      }
 
-      .ant-checkbox-wrapper {
-        display: flex;
+        .ant-checkbox-wrapper {
+          display: flex;
+          gap: 12px;
+        }
       }
 
       &-header {
@@ -268,12 +267,12 @@
         font-weight: 700;
         display: flex;
         justify-content: space-between;
-        height: 32px;        
-        margin: 8px;
+        padding: 8px 8px 8px 12px;
 
         & > * {
           margin-top: auto;
           margin-bottom: auto;
+          height: 32px;
         }
 
         &:first-child {
@@ -335,10 +334,28 @@
       }
 
       &-content {
-        height: 100%;        
-        margin-bottom: 68px;
+        height: 100%;
         background-color: #fff;
         border: 1px solid #d1d1d1;
+        overflow-y: auto;
+        height: calc(100vh - 232px);
+
+        .anticon {
+          margin: 0 8px;
+          font-size: 14px;
+        }
+
+        .ant-spin {
+          margin: 0 8px;
+        }
+
+        .ant-spin-sm .ant-spin-dot {
+          font-size: 12px;
+        }
+
+        .ant-spin-dot-item {
+          background-color: #d8a115;
+        }
       }
     }
 

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { filter, size } from "lodash";
 import { Button } from "antd";
 import Icon from "@ant-design/icons";
-import { Content } from "antd/lib/layout/layout";
 
 // import SettingsSVG from "../../../../../icons/settings.svg";
 import TrashBinSVG from "../../../../../icons/trash-bin.svg";
@@ -24,9 +23,6 @@ export const LocatorListHeader = ({
   stopXpathGroupGeneration,
 }) => {
   const [{ locators }, { generateAndDownload }] = useAutoFind();
-  // const [generatedSelected, setGeneratedSelected] = useState([]);
-  // const [waitingSelected, setWaitingSelected] = useState([]);
-  // const [deletedSelected, setDeletedSelected] = useState([]);
   const [stoppedSelected, setStoppedSelected] = useState([]);
   const [selected, setSelected] = useState([]);
 
@@ -34,17 +30,9 @@ export const LocatorListHeader = ({
     setSelected(() => filter(locators, "generate"));
   }, [locators]);
 
-  // useEffect(() => {
-  //   setGeneratedSelected(() => filter(generated, "generate"));
-  // }, [generated]);
-
   useEffect(() => {
     setStoppedSelected(() => filter(waitingSelected, "stopped"));
   }, [waitingSelected]);
-
-  // useEffect(() => {
-  //   setDeletedSelected(() => filter(deleted, "generate"));
-  // }, [deleted]);
 
   return (
     <div className="jdn__locatorsList-header">

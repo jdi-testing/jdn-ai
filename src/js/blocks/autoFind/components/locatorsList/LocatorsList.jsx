@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { filter, size } from "lodash";
 
-import { Checkbox, Collapse } from "antd";
+import { Checkbox, Collapse, Spin } from "antd";
 import Icon from "@ant-design/icons";
 
 import { WaitingList } from "./WaitingList";
@@ -12,7 +12,8 @@ import { DeletedList } from "./DeletedList";
 import { LocatorListHeader } from "./LocatorListHeader";
 
 import CaretDownSvg from "../../../../../icons/caret-down.svg";
-import { Content } from "antd/lib/layout/layout";
+import CheckedkSvg from "../../../../../icons/checked-outlined.svg";
+import InvisibleSvg from "../../../../../icons/invisible.svg";
 
 export const LocatorsList = () => {
   const [
@@ -66,7 +67,7 @@ export const LocatorsList = () => {
     });
   };
 
-  const renderGroupHeader = (title, locatorsGroup, selectedGroup) => {
+  const renderGroupHeader = (title, locatorsGroup, selectedGroup, iconComponent) => {
     const handleCheckboxChange = ({ target }) => {
       const group = filter(locatorsGroup, (loc) => loc.generate !== target.checked);
       toggleLocatorsGroup(group);
@@ -79,9 +80,9 @@ export const LocatorsList = () => {
           indeterminate={size(selectedGroup) && size(locatorsGroup) > size(selectedGroup)}
           onChange={handleCheckboxChange}
           onClick={(event) => event.stopPropagation()}
-        >
-          {title}
-        </Checkbox>
+        ></Checkbox>
+        {iconComponent}
+        {title}
       </React.Fragment>
     );
   };
@@ -103,24 +104,47 @@ export const LocatorsList = () => {
         <Collapse expandIcon={({ isActive }) => <Icon component={CaretDownSvg} rotate={isActive ? 180 : 0} />}>
           <Collapse.Panel
             key="1"
-            collapsible={!size(generated) ? "disabled" : ""}
-            header={renderGroupHeader(`Generated (${size(generated)})`, generated, generatedSelected)}
+            style={{display: !size(generated) ? "none" : "block"}}
+            header={renderGroupHeader(
+                `Generated (${size(generated)})`,
+                generated,
+                generatedSelected,
+                <Icon component={CheckedkSvg} />
+            )}
           >
-            <GeneratedList elements={generated} {...{ toggleElementGeneration }} />
+            <GeneratedList
+              elements={generated}
+              iconComponent={<Icon component={CheckedkSvg} />}
+              {...{ toggleElementGeneration }}
+            />
           </Collapse.Panel>
           <Collapse.Panel
             key="2"
-            collapsible={!size(waiting) ? "disabled" : ""}
-            header={renderGroupHeader(`Waiting for generation (${size(waiting)})`, waiting, waitingSelected)}
+            style={{display: !size(waiting) ? "none" : "block"}}
+            header={renderGroupHeader(
+                `Waiting for generation (${size(waiting)})`,
+                waiting,
+                waitingSelected,
+                <Spin size="small" />
+            )}
           >
-            <WaitingList elements={waiting} {...{ toggleElementGeneration }} />
+            <WaitingList elements={waiting} iconComponent={<Spin size="small" />} {...{ toggleElementGeneration }} />
           </Collapse.Panel>
           <Collapse.Panel
             key="3"
-            collapsible={!size(deleted) ? "disabled" : ""}
-            header={renderGroupHeader(`Deleted (${size(deleted)})`, deleted, deletedSelected)}
+            style={{display: !size(deleted) ? "none" : "block"}}
+            header={renderGroupHeader(
+                `Deleted (${size(deleted)})`,
+                deleted,
+                deletedSelected,
+                <Icon component={InvisibleSvg} />
+            )}
           >
-            <DeletedList elements={deleted} {...{ toggleElementGeneration }} />
+            <DeletedList
+              elements={deleted}
+              iconComponent={<Icon component={InvisibleSvg} />}
+              {...{ toggleElementGeneration }}
+            />
           </Collapse.Panel>
         </Collapse>
       </div>
