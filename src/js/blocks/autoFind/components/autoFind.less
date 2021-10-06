@@ -20,6 +20,7 @@
 
 .jdn__autofind {
   width: 100%;
+  height: 100%;
   overflow-x: auto;
   background-color: #f7faff;
 
@@ -68,10 +69,6 @@
     display: none;
   }
 
-  .ant-space-vertical {
-    width: 100%;
-  }
-
   .ant-space-align-center {
     align-items: flex-start;
   }
@@ -91,8 +88,6 @@
   .ant-typography-danger {
     color: #d82c15;
   }
-
-
 
   .ant-checkbox-wrapper + .ant-checkbox-wrapper {
     margin-left: 0px;
@@ -233,10 +228,13 @@
     */
 
     &__locatorsList {
-      margin: 0 16px;
+      margin-top: 28px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
 
-      .ant-collapse {        
-        border: 1px solid #d1d1d1;
+      .ant-collapse {
+        border: none;
         border-radius: 0;
       }
 
@@ -257,17 +255,30 @@
         right: 0;
       }
 
-      // .ant-collapse > .ant-collapse-item {
-      //   border-bottom: 1px solid #e5dfdf;
-      // }
+      .ant-collapse-content > .ant-collapse-content-box {
+        padding: 0 12px;
+      }
+
+      .ant-checkbox-wrapper {
+        display: flex;
+      }
 
       &-header {
         font-size: 16px;
         font-weight: 700;
         display: flex;
         justify-content: space-between;
-        padding-top: 8px;
-        padding-bottom: 8px;
+        height: 32px;        
+        margin: 8px;
+
+        & > * {
+          margin-top: auto;
+          margin-bottom: auto;
+        }
+
+        &:first-child {
+          padding-left: 4px;
+        }
 
         button {
           padding: 4px 12px;
@@ -321,6 +332,13 @@
         .anticon-close {
           color: #949494;
         }
+      }
+
+      &-content {
+        height: 100%;        
+        margin-bottom: 68px;
+        background-color: #fff;
+        border: 1px solid #d1d1d1;
       }
     }
 

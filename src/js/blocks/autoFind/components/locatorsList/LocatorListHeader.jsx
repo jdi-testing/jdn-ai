@@ -15,18 +15,18 @@ import { useAutoFind } from "../../autoFindProvider/AutoFindProvider";
 import { Chip } from "./Chip";
 
 export const LocatorListHeader = ({
-  generated,
-  waiting,
-  deleted,
+  generatedSelected,
+  waitingSelected,
+  deletedSelected,
   toggleLocatorsGroup,
   toggleDeletedGroup,
   runXpathGeneration,
   stopXpathGroupGeneration,
 }) => {
   const [{ locators }, { generateAndDownload }] = useAutoFind();
-  const [generatedSelected, setGeneratedSelected] = useState([]);
-  const [waitingSelected, setWaitingSelected] = useState([]);
-  const [deletedSelected, setDeletedSelected] = useState([]);
+  // const [generatedSelected, setGeneratedSelected] = useState([]);
+  // const [waitingSelected, setWaitingSelected] = useState([]);
+  // const [deletedSelected, setDeletedSelected] = useState([]);
   const [stoppedSelected, setStoppedSelected] = useState([]);
   const [selected, setSelected] = useState([]);
 
@@ -34,22 +34,20 @@ export const LocatorListHeader = ({
     setSelected(() => filter(locators, "generate"));
   }, [locators]);
 
-  useEffect(() => {
-    setGeneratedSelected(() => filter(generated, "generate"));
-  }, [generated]);
+  // useEffect(() => {
+  //   setGeneratedSelected(() => filter(generated, "generate"));
+  // }, [generated]);
 
   useEffect(() => {
-    const _waitingSelected = filter(waiting, "generate");
-    setWaitingSelected(() => _waitingSelected);
-    setStoppedSelected(() => filter(_waitingSelected, "stopped"));
-  }, [waiting]);
+    setStoppedSelected(() => filter(waitingSelected, "stopped"));
+  }, [waitingSelected]);
 
-  useEffect(() => {
-    setDeletedSelected(() => filter(deleted, "generate"));
-  }, [deleted]);
+  // useEffect(() => {
+  //   setDeletedSelected(() => filter(deleted, "generate"));
+  // }, [deleted]);
 
   return (
-    <Content className="jdn__locatorsList-header">
+    <div className="jdn__locatorsList-header">
       <span>Locators list</span>
       <span className="jdn__locatorsList-header-buttons">
         <Chip
@@ -83,6 +81,6 @@ export const LocatorListHeader = ({
           Download
         </Button>
       </span>
-    </Content>
+    </div>
   );
 };

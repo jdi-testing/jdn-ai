@@ -15,7 +15,7 @@ export const GenerationButtons = () => {
   ] = useAutoFind();
 
   return (
-    <Content>
+    <div>
       <Space direction="horizontal" size={16}>
         <Button
           icon={<SearchOutlined />}
@@ -32,6 +32,6 @@ export const GenerationButtons = () => {
           Clear all
         </Button>
       </Space>
-    </Content>
+    </div>
   );
 };
