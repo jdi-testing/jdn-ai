@@ -153,6 +153,6 @@ export const stopGenerationHandler = (element) => {
   locatorGenerationController.revokeTask(element.element_id);
 };
 
-export const openSettingsMenu = () => {
-  chrome.storage.sync.set({ }, connector.attachContentScript(settingsPopup));
+export const openSettingsMenu = (xpathConfig) => {
+  chrome.storage.sync.set({ xpathConfig }, connector.attachContentScript(settingsPopup));
 };

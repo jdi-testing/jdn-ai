@@ -9,7 +9,7 @@ import { openSettingsMenu } from "../utils/pageDataHandlers";
 
 export const GenerationButtons = () => {
   const [
-    { status, allowIdentifyElements, allowRemoveElements, xpathStatus },
+    { status, allowIdentifyElements, allowRemoveElements, xpathStatus, xpathConfig },
     { identifyElements, removeHighlighs },
   ] = useAutoFind();
 

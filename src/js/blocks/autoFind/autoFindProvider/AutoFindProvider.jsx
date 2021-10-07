@@ -49,7 +49,9 @@ const AutoFindProvider = inject("mainModel")(
       allow_indexes_at_the_beginning: false,
       allow_indexes_in_the_middle: false,
       allow_indexes_at_the_end: true,
+      limit_maximum_generation_time: true,
     });
+    const [isXpathModalOpen, setIsXpathModalOpen] = useState(false);
 
     connector.onerror = () => {
       setStatus(autoFindStatus.error);
@@ -209,6 +211,19 @@ const AutoFindProvider = inject("mainModel")(
     };
 
     useEffect(() => {
+      chrome.runtime.onMessage.addListener(
+        ({ message, param }) => {
+            if (message === "CHANGE_XPATH_CONFIG") {
+              setXpathConfig(param);
+            }
+            if (message === 'OPEN_XPATH_CONFIG_MODAL') {
+              setIsXpathModalOpen(param);
+            }
+          }
+      );
+    }, []);
+
+    useEffect(() => {
       if (predictedElements) {
         const onHighlighted = () => {
           setStatus(autoFindStatus.success);
@@ -270,6 +285,7 @@ const AutoFindProvider = inject("mainModel")(
         xpathStatus,
         unactualPrediction,
         xpathConfig,
+        isXpathModalOpen,
       },
       {
         identifyElements,

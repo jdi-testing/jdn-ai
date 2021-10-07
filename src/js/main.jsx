@@ -21,6 +21,7 @@ import "../css/main.less";
 import LogComponentWrapper from "./blocks/log/LogComponent";
 import AutoFind from "./blocks/autoFind/components/autoFind/AutoFind";
 import { AutoFindProvider } from "./blocks/autoFind/autoFindProvider/AutoFindProvider";
+import {Backdrop} from './blocks/autoFind/components/Backdrop/Backdrop';
 
 const styles = {
   commonContainer: {
@@ -69,6 +70,7 @@ class App extends React.Component {
       <Provider mainModel={this.mainModel}>
         <AutoFindProvider>
           <div className={classes.commonContainer}>
+            <Backdrop />
             {/* UNCOMMENT THIS PART 
               TO MAKE THE REST FUNCTIONALITY AVAILABLE */}
             {/* <Menu onClick={this.handleClick} selectedKeys={[this.tab]} mode="horizontal" className="jdn__hidden">
