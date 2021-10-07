@@ -3,13 +3,11 @@ import React from "react";
 import "./slider.less";
 import "./../autoFind.less";
 
-import Layout, { Content, Footer, Header } from "antd/lib/layout/layout";
+import Layout, { Content, Header } from "antd/lib/layout/layout";
 import { GenerationButtons } from "../GenerationButtons";
 import { PerceptionTreshold } from "../PerceptionTreshold";
-import { Result } from "../Result";
-import { Space } from "antd";
 import { ControlBar } from "../ControlBar";
-import { XPathSettings } from "../XPathSettings";
+// import { XPathSettings } from "../XPathSettings";
 import { LocatorsList } from "../locatorsList/LocatorsList";
 import { useAutoFind, xpathGenerationStatus } from "../../autoFindProvider/AutoFindProvider";
 
@@ -29,14 +27,8 @@ const AutoFind = () => {
             <PerceptionTreshold />
           </React.Fragment>
         ) : null}
-        {/* <XPathSettings />
-        <Result /> */}
+        {/* <XPathSettings />*/}
       </Content>
-      {/* {xpathStatus === xpathGenerationStatus.started ? (
-        <Footer>
-          <PerceptionTreshold />
-        </Footer>
-      ) : null} */}
     </Layout>
   );
 };
