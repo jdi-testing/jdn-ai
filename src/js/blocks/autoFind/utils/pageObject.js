@@ -60,7 +60,7 @@ export const createLocatorNames = (elements) => {
 };
 
 export const predictedToConvert = (elements) => {
-  return elements.map((e, i) => {
+  return elements.map((e) => {
     return {
       ...e,
       Locator: e.locator.robulaXpath || e.locator.fullXpath,

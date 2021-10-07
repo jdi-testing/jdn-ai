@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { Collapse } from "antd";
+import { filter, size } from "lodash";
+
+import { Checkbox, Collapse, Spin } from "antd";
+import Icon from "@ant-design/icons";
+
 import { WaitingList } from "./WaitingList";
 import { GeneratedList } from "./GeneratedList";
 import { useAutoFind } from "../../autoFindProvider/AutoFindProvider";
 import { locatorProgressStatus, locatorTaskStatus } from "../../utils/locatorGenerationController";
 import { DeletedList } from "./DeletedList";
 import { LocatorListHeader } from "./LocatorListHeader";
+
+import CaretDownSvg from "../../../../../icons/caret-down.svg";
+import CheckedkSvg from "../../../../../icons/checked-outlined.svg";
+import InvisibleSvg from "../../../../../icons/invisible.svg";
 
 export const LocatorsList = () => {
   const [
@@ -16,21 +24,29 @@ export const LocatorsList = () => {
   const [generated, setGenerated] = useState([]);
   const [deleted, setDeleted] = useState([]);
 
+  const [generatedSelected, setGeneratedSelected] = useState([]);
+  const [waitingSelected, setWaitingSelected] = useState([]);
+  const [deletedSelected, setDeletedSelected] = useState([]);
+
   useEffect(() => {
     const byProbability = filterByProbability(locators);
 
-    setWaiting(
-        byProbability.filter(
-            (el) =>
-              (locatorProgressStatus.hasOwnProperty(el.locator.taskStatus) ||
-            el.locator.taskStatus === locatorTaskStatus.REVOKED) &&
-          !el.deleted
-        )
+    const _waiting = byProbability.filter(
+        (el) =>
+          (locatorProgressStatus.hasOwnProperty(el.locator.taskStatus) ||
+          el.locator.taskStatus === locatorTaskStatus.REVOKED) &&
+        !el.deleted
     );
+    setWaiting(_waiting);
+    setWaitingSelected(filter(_waiting, "generate"));
 
-    setGenerated(byProbability.filter((el) => el.locator.taskStatus === locatorTaskStatus.SUCCESS && !el.deleted));
+    const _generated = byProbability.filter((el) => el.locator.taskStatus === locatorTaskStatus.SUCCESS && !el.deleted);
+    setGenerated(_generated);
+    setGeneratedSelected(filter(_generated, "generate"));
 
-    setDeleted(byProbability.filter((el) => el.deleted));
+    const _deleted = byProbability.filter((el) => el.deleted);
+    setDeleted(_deleted);
+    setDeletedSelected(() => filter(_deleted, "generate"));
   }, [locators]);
 
   const toggleLocatorsGroup = (locatorsGroup) => {
@@ -51,30 +67,87 @@ export const LocatorsList = () => {
     });
   };
 
+  const renderGroupHeader = (title, locatorsGroup, selectedGroup, iconComponent) => {
+    const handleCheckboxChange = ({ target }) => {
+      const group = filter(locatorsGroup, (loc) => loc.generate !== target.checked);
+      toggleLocatorsGroup(group);
+    };
+
+    return (
+      <React.Fragment>
+        <Checkbox
+          checked={size(locatorsGroup) && size(selectedGroup) === size(locatorsGroup)}
+          indeterminate={size(selectedGroup) && size(locatorsGroup) > size(selectedGroup)}
+          onChange={handleCheckboxChange}
+          onClick={(event) => event.stopPropagation()}
+        ></Checkbox>
+        {iconComponent}
+        {title}
+      </React.Fragment>
+    );
+  };
+
   return (
     <div className="jdn__locatorsList">
       <LocatorListHeader
         {...{
-          generated,
-          waiting,
-          deleted,
+          generatedSelected,
+          waitingSelected,
+          deletedSelected,
           toggleLocatorsGroup,
           toggleDeletedGroup,
           runXpathGeneration,
           stopXpathGroupGeneration,
         }}
       />
-      <Collapse defaultActiveKey={["1", "2", "3"]}>
-        <Collapse.Panel key="1" header="Generated">
-          <GeneratedList elements={generated} {...{ toggleElementGeneration }} />
-        </Collapse.Panel>
-        <Collapse.Panel key="2" header="Waiting for generation">
-          <WaitingList elements={waiting} {...{ toggleElementGeneration }} />
-        </Collapse.Panel>
-        <Collapse.Panel key="3" header="Deleted">
-          <DeletedList elements={deleted} {...{ toggleElementGeneration }} />
-        </Collapse.Panel>
-      </Collapse>
+      <div className="jdn__locatorsList-content">
+        <Collapse expandIcon={({ isActive }) => <Icon component={CaretDownSvg} rotate={isActive ? 180 : 0} />}>
+          <Collapse.Panel
+            key="1"
+            style={{ display: !size(generated) ? "none" : "block" }}
+            header={renderGroupHeader(
+                `Generated (${size(generated)})`,
+                generated,
+                generatedSelected,
+                <Icon component={CheckedkSvg} />
+            )}
+          >
+            <GeneratedList
+              elements={generated}
+              iconComponent={<Icon component={CheckedkSvg} />}
+              {...{ toggleElementGeneration }}
+            />
+          </Collapse.Panel>
+          <Collapse.Panel
+            key="2"
+            style={{ display: !size(waiting) ? "none" : "block" }}
+            header={renderGroupHeader(
+                `Waiting for generation (${size(waiting)})`,
+                waiting,
+                waitingSelected,
+                <Spin size="small" />
+            )}
+          >
+            <WaitingList elements={waiting} iconComponent={<Spin size="small" />} {...{ toggleElementGeneration }} />
+          </Collapse.Panel>
+          <Collapse.Panel
+            key="3"
+            style={{ display: !size(deleted) ? "none" : "block" }}
+            header={renderGroupHeader(
+                `Deleted (${size(deleted)})`,
+                deleted,
+                deletedSelected,
+                <Icon component={InvisibleSvg} />
+            )}
+          >
+            <DeletedList
+              elements={deleted}
+              iconComponent={<Icon component={InvisibleSvg} />}
+              {...{ toggleElementGeneration }}
+            />
+          </Collapse.Panel>
+        </Collapse>
+      </div>
     </div>
   );
 };

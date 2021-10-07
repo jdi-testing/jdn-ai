@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { filter, size } from "lodash";
 import { Button } from "antd";
 import Icon from "@ant-design/icons";
-import { Content } from "antd/lib/layout/layout";
 
 // import SettingsSVG from "../../../../../icons/settings.svg";
 import TrashBinSVG from "../../../../../icons/trash-bin.svg";
@@ -13,21 +12,20 @@ import RestoreSvg from "../../../../../icons/restore.svg";
 
 import { useAutoFind } from "../../autoFindProvider/AutoFindProvider";
 import { Chip } from "./Chip";
+import { locatorTaskStatus } from "../../utils/locatorGenerationController";
 
 export const LocatorListHeader = ({
-  generated,
-  waiting,
-  deleted,
+  generatedSelected,
+  waitingSelected,
+  deletedSelected,
   toggleLocatorsGroup,
   toggleDeletedGroup,
   runXpathGeneration,
   stopXpathGroupGeneration,
 }) => {
   const [{ locators }, { generateAndDownload }] = useAutoFind();
-  const [generatedSelected, setGeneratedSelected] = useState([]);
-  const [waitingSelected, setWaitingSelected] = useState([]);
-  const [deletedSelected, setDeletedSelected] = useState([]);
   const [stoppedSelected, setStoppedSelected] = useState([]);
+  const [inProgressSelected, setInProgressSelected] = useState([]);
   const [selected, setSelected] = useState([]);
 
   useEffect(() => {
@@ -35,21 +33,12 @@ export const LocatorListHeader = ({
   }, [locators]);
 
   useEffect(() => {
-    setGeneratedSelected(() => filter(generated, "generate"));
-  }, [generated]);
-
-  useEffect(() => {
-    const _waitingSelected = filter(waiting, "generate");
-    setWaitingSelected(() => _waitingSelected);
-    setStoppedSelected(() => filter(_waitingSelected, "stopped"));
-  }, [waiting]);
-
-  useEffect(() => {
-    setDeletedSelected(() => filter(deleted, "generate"));
-  }, [deleted]);
+    setStoppedSelected(() => filter(waitingSelected, (el) => el.locator.taskStatus === locatorTaskStatus.REVOKED));
+    setInProgressSelected(() => filter(waitingSelected, (el) => el.locator.taskStatus !== locatorTaskStatus.REVOKED));
+  }, [waitingSelected]);
 
   return (
-    <Content className="jdn__locatorsList-header">
+    <div className="jdn__locatorsList-header">
       <span>Locators list</span>
       <span className="jdn__locatorsList-header-buttons">
         <Chip
@@ -65,7 +54,7 @@ export const LocatorListHeader = ({
         <Button hidden={!size(stoppedSelected)} onClick={() => runXpathGeneration(stoppedSelected)}>
           <Icon component={PlaySvg} />
         </Button>
-        <Button hidden={!size(waitingSelected)} danger onClick={() => stopXpathGroupGeneration(waitingSelected)}>
+        <Button hidden={!size(inProgressSelected)} danger onClick={() => stopXpathGroupGeneration(inProgressSelected)}>
           <Icon component={PauseSVG} />
         </Button>
         <Button
@@ -83,6 +72,6 @@ export const LocatorListHeader = ({
           Download
         </Button>
       </span>
-    </Content>
+    </div>
   );
 };

@@ -3,7 +3,6 @@ import Text from "antd/lib/typography/Text";
 import { Col, Row, Slider, Tooltip } from "antd";
 import { useAutoFind } from "../autoFindProvider/AutoFindProvider";
 import { useState } from "react";
-import { Content } from "antd/lib/layout/layout";
 import Icon from "@ant-design/icons";
 
 import QuestionFilled from "../../../../icons/question-filled.svg";
@@ -22,8 +21,7 @@ export const PerceptionTreshold = () => {
   };
 
   return (
-    <Content className="jdn__perception-treshold"
-      style={{marginTop: "24px" }} >
+    <div className="jdn__perception-treshold">
       <Text strong level={5}>
         Perception treshold: {perception}
       </Text>
@@ -46,6 +44,6 @@ export const PerceptionTreshold = () => {
           <Text>1.0</Text>
         </Col>
       </Row>
-    </Content>
+    </div>
   );
 };

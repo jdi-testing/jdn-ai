@@ -20,6 +20,7 @@
 
 .jdn__autofind {
   width: 100%;
+  height: 100%;
   overflow-x: auto;
   background-color: #f7faff;
 
@@ -68,10 +69,6 @@
     display: none;
   }
 
-  .ant-space-vertical {
-    width: 100%;
-  }
-
   .ant-space-align-center {
     align-items: flex-start;
   }
@@ -99,6 +96,8 @@
   .ant-checkbox {
     &-inner {
       border-radius: 0px;
+      width: 14px;
+      height: 14px;
     }
   }
 
@@ -153,10 +152,6 @@
       line-height: 16px;
     }
 
-    &__content {
-      margin: 16px 0;
-    }
-
     &__divider {
       margin: 16px 0;
       background-color: #000;
@@ -164,6 +159,7 @@
     }
 
     &__perception-treshold {
+      padding-top: 16px;
       font-size: 13px;
       line-height: 17.71px;
     }
@@ -171,6 +167,10 @@
     /*
     Generation Buttons
      */
+
+    &__generationButtons {
+      padding-top: 16px;
+    }
 
     &__buttons {
       width: 109px;
@@ -202,22 +202,6 @@
     }
 
     /* 
-    RESULTS
-  */
-
-    &__result-status {
-      min-height: 25px;
-      font-size: 18px;
-      font-weight: 700;
-      color: @primary-color;
-    }
-    &__result-count {
-      display: block;
-      font-size: 18px;
-      line-height: 25px;
-    }
-
-    /* 
     URL LIST
   */
     &__urls-list {
@@ -228,65 +212,133 @@
     XPATHES
     */
 
-    &__locatorsList-header {
-      font-size: 16px;
-      font-weight: 700;
-      display: flex;
-      justify-content: space-between;
-      padding-top: 8px;
-      padding-bottom: 8px;
+    &__locatorsList {
+      padding-top: 28px;
 
-      button {
-        padding: 4px 12px;
+      .ant-collapse {
+        border: none;
+        border-radius: 0;
+      }
+
+      .ant-collapse > .ant-collapse-item > .ant-collapse-header {
+        background: #fff;
+        padding: 6px 12px;
         font-weight: bold;
         font-size: 12px;
+        line-height: 16px;
       }
 
-      button:not(.ant-btn-primary, .ant-btn-dangerous) {
-        border: none;
-        color: #1582d8;
-        background: #deeffd;
+      .ant-collapse-item:last-child > .ant-collapse-content {
+        border-radius: 0;
+      }
 
-        &:hover {
-          background: #cde6f6;
+      .ant-collapse > .ant-collapse-item > .ant-collapse-header .ant-collapse-arrow {
+        position: absolute;
+        right: 0;
+      }
+
+      .ant-collapse-content > .ant-collapse-content-box {
+        padding: 0 12px;
+
+        .ant-checkbox-wrapper {
+          display: flex;
+          gap: 12px;
         }
       }
 
-      &-buttons > * {
-        margin-left: 8px;
-      }
+      &-header {
+        font-size: 16px;
+        font-weight: 700;
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 8px 8px 12px;
 
-      .ant-btn {
-        height: 30px;
-      }
+        & > * {
+          margin-top: auto;
+          margin-bottom: auto;
+          height: 32px;
+        }
 
-      .ant-btn-dangerous {
-        border: none;
-        background: #fddede;
-        color: #d82c15;
+        &:first-child {
+          padding-left: 4px;
+        }
 
-        &:hover {
-          background: #f6d1d1;
+        button {
+          padding: 4px 12px;
+          font-weight: bold;
+          font-size: 12px;
+        }
+
+        button:not(.ant-btn-primary, .ant-btn-dangerous) {
+          border: none;
+          color: #1582d8;
+          background: #deeffd;
+
+          &:hover {
+            background: #cde6f6;
+          }
+        }
+
+        &-buttons > * {
+          margin-left: 8px;
+        }
+
+        .ant-btn {
+          height: 30px;
+        }
+
+        .ant-btn-dangerous {
+          border: none;
+          background: #fddede;
+          color: #d82c15;
+
+          &:hover {
+            background: #f6d1d1;
+          }
+        }
+
+        .ant-select-multiple .ant-select-selection-item {
+          background-color: #ffffff;
+          border: 1px solid #ebebeb;
+          margin-inline-end: 6px;
+        }
+
+        .ant-select-multiple .ant-select-selection-item-content {
+          font-size: 12px;
+
+          span {
+            font-weight: 400;
+            color: #000000;
+          }
+        }
+
+        .anticon-close {
+          color: #949494;
         }
       }
 
-      .ant-select-multiple .ant-select-selection-item {
-        background-color: #ffffff;
-        border: 1px solid #ebebeb;
-        margin-inline-end: 6px;
-      }
+      &-content {
+        background-color: #fff;
+        border: 1px solid #d1d1d1;
+        overflow-y: auto;
+        height: calc(100vh - 232px);
 
-      .ant-select-multiple .ant-select-selection-item-content {
-        font-size: 12px;
-
-        span {
-          font-weight: 400;
-          color: #000000;
+        .anticon {
+          margin: 0 8px;
+          font-size: 14px;
         }
-      }
 
-      .anticon-close {
-        color: #949494;
+        .ant-spin {
+          margin: 0 8px;
+        }
+
+        .ant-spin-sm .ant-spin-dot {
+          font-size: 12px;
+        }
+
+        .ant-spin-dot-item {
+          background-color: #d8a115;
+        }
       }
     }
 

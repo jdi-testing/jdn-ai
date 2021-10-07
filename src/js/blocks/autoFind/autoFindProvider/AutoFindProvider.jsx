@@ -219,6 +219,7 @@ const AutoFindProvider = inject("mainModel")(
             );
             if (noLocator.length) {
               requestGenerationData(noLocator, xpathConfig, ({ generationData }) => {
+                setXpathStatus(xpathGenerationStatus.started);
                 runXpathGeneration(generationData);
               });
             }
@@ -235,11 +236,11 @@ const AutoFindProvider = inject("mainModel")(
       }
     }, [status]);
 
-    useEffect(() => {
-      if (locators.length) {
-        setXpathStatus(xpathGenerationStatus.complete);
-      }
-    }, [locators]);
+    // useEffect(() => {
+    //   if (locators.length) {
+    //     setXpathStatus(xpathGenerationStatus.complete);
+    //   }
+    // }, [locators]);
 
     // useEffect(() => {
     //   if (!unreachableNodes.length) return;
