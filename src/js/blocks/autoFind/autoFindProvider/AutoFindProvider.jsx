@@ -1,5 +1,5 @@
 /* eslint-disable indent */
-import _, { sortBy } from "lodash";
+import { filter, findIndex, sortBy } from "lodash";
 import React, { useState, useEffect } from "react";
 import { inject, observer } from "mobx-react";
 import { useContext } from "react";
@@ -9,6 +9,8 @@ import {
   runDocumentListeners,
   generatePageObject,
   requestGenerationData,
+  stopGenerationHandler,
+  runGenerationHandler,
 } from "./../utils/pageDataHandlers";
 import { JDIclasses, getJdiClassName } from "./../utils/generationClassesMap";
 import { connector, sendMessage } from "../utils/connector";
@@ -39,7 +41,7 @@ const AutoFindProvider = inject("mainModel")(
     const [allowRemoveElements, setAllowRemoveElements] = useState(false);
     const [perception, setPerception] = useState(0.5);
     const [unreachableNodes, setUnreachableNodes] = useState([]);
-    const [availableForGeneration, setAvailableForGeneration] = useState([]);
+    const [locators, setLocators] = useState([]);
     const [xpathStatus, setXpathStatus] = useState(xpathGenerationStatus.noStatus);
     const [unactualPrediction, setUnactualPrediction] = useState(false);
     const [xpathConfig, setXpathConfig] = useState({
@@ -60,16 +62,16 @@ const AutoFindProvider = inject("mainModel")(
       setAllowIdentifyElements(true);
       setAllowRemoveElements(false);
       setUnreachableNodes([]);
-      setAvailableForGeneration([]);
+      setLocators([]);
       setXpathStatus(xpathGenerationStatus.noStatus);
       setUnactualPrediction(false);
     };
 
     const toggleElementGeneration = (id) => {
-      setPredictedElements((previousValue) => {
+      setLocators((previousValue) => {
         const toggled = previousValue.map((el) => {
           if (el.element_id === id) {
-            el.skipGeneration = !el.skipGeneration;
+            el.generate = !el.generate;
             sendMessage.toggle(el);
           }
           return el;
@@ -78,21 +80,21 @@ const AutoFindProvider = inject("mainModel")(
       });
     };
 
-    const hideElement = (id) => {
-      setPredictedElements((previousValue) => {
-        const hidden = previousValue.map((el) => {
+    const toggleDeleted = (id) => {
+      setLocators((previousValue) => {
+        const deleted = previousValue.map((el) => {
           if (el.element_id === id) {
-            el.hidden = true;
-            sendMessage.hide(el);
+            el.deleted = !el.deleted;
+            sendMessage.toggleDeleted(el);
           }
           return el;
         });
-        return hidden;
+        return deleted;
       });
     };
 
     const changeType = ({ id, newType }) => {
-      setPredictedElements((previousValue) => {
+      setLocators((previousValue) => {
         const changed = previousValue.map((el) => {
           if (el.element_id === id) {
             el.predicted_label = newType;
@@ -106,7 +108,7 @@ const AutoFindProvider = inject("mainModel")(
     };
 
     const changeElementName = ({ id, name }) => {
-      setPredictedElements((previousValue) => {
+      setLocators((previousValue) => {
         const renamed = previousValue.map((el) => {
           if (el.element_id === id) {
             el.jdi_custom_class_name = name;
@@ -145,55 +147,83 @@ const AutoFindProvider = inject("mainModel")(
     };
 
     const generateAndDownload = () => {
-      generatePageObject(availableForGeneration, mainModel);
+      generatePageObject(
+        filter(locators, (loc) => loc.generate && !loc.deleted),
+        mainModel
+      );
     };
 
     const onChangePerception = (value) => {
       setPerception(value);
     };
 
-    const getPredictedElement = (id) => {
-      const element = predictedElements.find((e) => e.element_id === id);
-      sendMessage.elementData({
-        element,
-        types: sortBy(
-          Object.keys(JDIclasses).map((label) => {
-            return { label, jdi: getJdiClassName(label) };
-          }),
-          ["jdi"]
-        ),
+    const updateLocator = (element) => {
+      setLocators((prevState) => {
+        const index = findIndex(prevState, { element_id: element.element_id });
+        if (index === -1) {
+          return [...prevState, element];
+        } else {
+          const newState = [...prevState];
+          newState[index].locator = element.locator;
+          return newState;
+        }
       });
     };
 
-    const actions = {
-      GET_ELEMENT: getPredictedElement,
-      TOGGLE_ELEMENT: toggleElementGeneration,
-      HIGHLIGHT_OFF: clearElementsState,
-      REMOVE_ELEMENT: hideElement,
-      CHANGE_TYPE: changeType,
-      CHANGE_ELEMENT_NAME: changeElementName,
-      PREDICTION_IS_UNACTUAL: () => setUnactualPrediction(true),
+    const runXpathGeneration = (elements) => {
+      runGenerationHandler(elements, xpathConfig, updateLocator);
+    };
+
+    const stopXpathGeneration = ({element_id, locator}) => {
+      setLocators((prevState) => {
+        const stopped = prevState.map((el) => {
+          if (el.element_id === element_id) {
+            el.locator.stopped = true;
+            stopGenerationHandler(el);
+          }
+          return el;
+        });
+        return stopped;
+      });
+    };
+
+    const getPredictedElement = (id) => {
+      setLocators((prevLocators) => {
+        // walkaround to get access to locators state
+        const element = prevLocators.find((e) => e.element_id === id);
+        sendMessage.elementData({
+          element,
+          types: sortBy(
+            Object.keys(JDIclasses).map((label) => {
+              return { label, jdi: getJdiClassName(label) };
+            }),
+            ["jdi"]
+          ),
+        });
+        return prevLocators;
+      });
+    };
+
+    const filterByProbability = (elements) => {
+      return elements.filter((e) => e.predicted_probability >= perception);
     };
 
     useEffect(() => {
       if (predictedElements) {
         const onHighlighted = () => {
           setStatus(autoFindStatus.success);
-          setAvailableForGeneration(
-            _.chain(predictedElements)
-              .map((predicted) => {
-                const el = _.find(availableForGeneration, { element_id: predicted.element_id });
-                return { ...el, ...predicted };
-              })
-              .filter(
-                (e) =>
-                  e.predicted_probability >= perception &&
-                  !e.skipGeneration &&
-                  !e.hidden &&
-                  !unreachableNodes.includes(e.element_id)
-              )
-              .value()
-          );
+          const availableForGeneration = filterByProbability(predictedElements);
+          if (availableForGeneration.length) {
+            const noLocator = availableForGeneration.filter(
+              (element) => locators.findIndex((loc) => loc.element_id === element.element_id) === -1
+            );
+            if (noLocator.length) {
+              requestGenerationData(noLocator, xpathConfig, ({ generationData }) => {
+                setXpathStatus(xpathGenerationStatus.started);
+                runXpathGeneration(generationData);
+              });
+            }
+          }
         };
 
         highlightElements(predictedElements, onHighlighted, perception);
@@ -206,27 +236,26 @@ const AutoFindProvider = inject("mainModel")(
       }
     }, [status]);
 
-    useEffect(() => {
-      if (!availableForGeneration) return;
-      const noXpath = availableForGeneration.filter((element) => !element.xpath);
-      if (!noXpath.length) return;
-      setXpathStatus(xpathGenerationStatus.started);
-      requestGenerationData(noXpath, xpathConfig, ({ generationData, unreachableNodes }) => {
-        setAvailableForGeneration(
-          _.chain(availableForGeneration)
-            .map((el) => _.chain(generationData).find({ element_id: el.element_id }).merge(el).value())
-            .differenceBy(unreachableNodes, "element_id")
-            .value()
-        );
-        setUnreachableNodes(unreachableNodes);
-        setXpathStatus(xpathGenerationStatus.complete);
-      });
-    }, [availableForGeneration]);
+    // useEffect(() => {
+    //   if (locators.length) {
+    //     setXpathStatus(xpathGenerationStatus.complete);
+    //   }
+    // }, [locators]);
 
-    useEffect(() => {
-      if (!unreachableNodes.length) return;
-      sendMessage.highlightUnreached(unreachableNodes);
-    }, [unreachableNodes]);
+    // useEffect(() => {
+    //   if (!unreachableNodes.length) return;
+    //   sendMessage.highlightUnreached(unreachableNodes);
+    // }, [unreachableNodes]);
+
+    const actions = {
+      GET_ELEMENT: getPredictedElement,
+      TOGGLE_ELEMENT: toggleElementGeneration,
+      HIGHLIGHT_OFF: clearElementsState,
+      REMOVE_ELEMENT: toggleDeleted,
+      CHANGE_TYPE: changeType,
+      CHANGE_ELEMENT_NAME: changeElementName,
+      PREDICTION_IS_UNACTUAL: () => setUnactualPrediction(true),
+    };
 
     const data = [
       {
@@ -237,7 +266,7 @@ const AutoFindProvider = inject("mainModel")(
         allowRemoveElements,
         perception,
         unreachableNodes,
-        availableForGeneration,
+        locators,
         xpathStatus,
         unactualPrediction,
         xpathConfig,
@@ -248,6 +277,11 @@ const AutoFindProvider = inject("mainModel")(
         generateAndDownload,
         onChangePerception,
         setXpathConfig,
+        filterByProbability,
+        toggleElementGeneration,
+        toggleDeleted,
+        runXpathGeneration,
+        stopXpathGeneration,
       },
     ];
 

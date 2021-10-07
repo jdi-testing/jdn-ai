@@ -75,7 +75,7 @@ describe("AutoFind Identify functionality", () => {
     container = null;
   });
 
-  test("predicted elements are received, updated properly and passed to component", async () => {
+  xtest("predicted elements are received, updated properly and passed to component", async () => {
     const button = container.querySelector("#identify");
     await act(async () => {
       button.dispatchEvent(new MouseEvent("click", { bubbles: true }));
@@ -86,7 +86,7 @@ describe("AutoFind Identify functionality", () => {
     expect(container.querySelector("#availableForGeneration").textContent).toBe(JSON.stringify(generationData));
   });
 
-  test("elements under perception treshold are unavailable at first call", async () => {
+  xtest("elements under perception treshold are unavailable at first call", async () => {
     const perception = container.querySelector("#perception");
     perception.dispatchEvent(new MouseEvent("click", { bubbles: true }));
     const identify = container.querySelector("#identify");
@@ -97,7 +97,7 @@ describe("AutoFind Identify functionality", () => {
     expect(container.querySelector("#availableForGeneration").textContent).toBe(JSON.stringify(abovePerception));
   });
 
-  test("elements under perception treshold are unavailable after change", async () => {
+  xtest("elements under perception treshold are unavailable after change", async () => {
     const identify = container.querySelector("#identify");
     await act(async () => {
       identify.dispatchEvent(new MouseEvent("click", { bubbles: true }));
@@ -110,7 +110,7 @@ describe("AutoFind Identify functionality", () => {
     expect(container.querySelector("#availableForGeneration").textContent).toBe(JSON.stringify(abovePerception));
   });
 
-  test("elements are available after change treshold to lower", async () => {
+  xtest("elements are available after change treshold to lower", async () => {
     const perception = container.querySelector("#perception");
     act(() => {
       perception.dispatchEvent(new MouseEvent("click", { bubbles: true }));
@@ -129,7 +129,7 @@ describe("AutoFind Identify functionality", () => {
     expect(container.querySelector("#availableForGeneration").textContent).toBe(JSON.stringify(generationData));
   });
 
-  test("toggled and hidden elements are unavailable for generation", async () => {
+  xtest("toggled and hidden elements are unavailable for generation", async () => {
     jest
         .spyOn(pageDataHandlers, "getElements")
         .mockImplementation((callback) => callback([predictedAfterInteraction, 234]));

@@ -14,7 +14,7 @@ class Request {
     this.baseURL = BASE_URL;
   }
 
-  async errorHandler(response) {
+  async responseHandler(response) {
     if (response.ok) {
       const r = await response.json();
       return r;
@@ -23,11 +23,12 @@ class Request {
     }
   }
 
-  async get(url) {
-    const r = await fetch(`${this.baseURL}/${url}`, {
+  async get(url, payload) {
+    const urlParams = `${url}?${(new URLSearchParams(payload)).toString()}`;
+    const r = await fetch(`${this.baseURL}/${urlParams}`, {
       method: "GET",
     });
-    return await this.errorHandler(r);
+    return await this.responseHandler(r);
   }
 
   async post(url, payload) {
@@ -35,7 +36,7 @@ class Request {
       method: "POST",
       body: payload,
     });
-    return await this.errorHandler(r);
+    return await this.responseHandler(r);
   }
 }
 
