@@ -3,10 +3,10 @@ import {useAutoFind} from "../../autoFindProvider/AutoFindProvider";
 import './Backdrop.less';
 export const Backdrop = () => {
   const [
-    {isXpathModalOpen},
+    {isModalOpen},
   ] = useAutoFind();
 
-  if (isXpathModalOpen) {
+  if (isModalOpen) {
     return (
       <div className="backdrop"></div>
     );

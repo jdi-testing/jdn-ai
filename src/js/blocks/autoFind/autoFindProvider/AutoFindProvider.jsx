@@ -51,7 +51,7 @@ const AutoFindProvider = inject("mainModel")(
       allow_indexes_at_the_end: true,
       limit_maximum_generation_time: true,
     });
-    const [isXpathModalOpen, setIsXpathModalOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
     connector.onerror = () => {
       setStatus(autoFindStatus.error);
@@ -217,7 +217,7 @@ const AutoFindProvider = inject("mainModel")(
               setXpathConfig(param);
             }
             if (message === 'OPEN_XPATH_CONFIG_MODAL') {
-              setIsXpathModalOpen(param);
+              setIsModalOpen(param);
             }
           }
       );
@@ -285,7 +285,7 @@ const AutoFindProvider = inject("mainModel")(
         xpathStatus,
         unactualPrediction,
         xpathConfig,
-        isXpathModalOpen,
+        isModalOpen,
       },
       {
         identifyElements,
