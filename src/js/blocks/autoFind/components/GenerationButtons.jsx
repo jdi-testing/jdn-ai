@@ -9,7 +9,7 @@ import { openSettingsMenu } from "../utils/pageDataHandlers";
 
 export const GenerationButtons = () => {
   const [
-    { status, allowIdentifyElements, allowRemoveElements, xpathStatus, xpathConfig },
+    { status, allowIdentifyElements, allowRemoveElements, xpathConfig },
     { identifyElements, removeHighlighs },
   ] = useAutoFind();
 
@@ -26,7 +26,9 @@ export const GenerationButtons = () => {
         >
           Identify
         </Button>
-        <Button onClick={openSettingsMenu} className="jdn__buttons" >
+        <Button onClick={() => {
+          openSettingsMenu(xpathConfig);
+        }} className="jdn__buttons" >
           <Icon component={Settings} className="jdn__buttons-icons" />
           Settings
         </Button>
