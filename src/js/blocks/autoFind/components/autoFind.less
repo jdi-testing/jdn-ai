@@ -2,20 +2,27 @@
 @primary-active-color: #0f73c1;
 @disabled-color: #b2b5c2;
 
-.jdn__header-kebab {
+.ant-dropdown-menu {
   background-color: #000;
-}
+  padding: 0;
 
-.jdn__header-kebab-links {
-  font-size: 12px;
-  line-height: 16px;
-  color: #fff;
-  background-color: #000;
-}
+  &-item,
+  &-submenu-title {
+    font-size: 12px;
+    line-height: 16px;
+    color: #fff;
+    background-color: #000;
+    padding: 7px 12px;
 
-.jdn__header-kebab-links:hover {
-  color: #1582d8;
-  background: #202126;
+    &:hover {
+      color: #1582d8;
+      background: #202126;
+    }
+
+    &-icon {
+      color: #fff;
+    }
+  }
 }
 
 .jdn__autofind {
@@ -152,12 +159,6 @@
       line-height: 16px;
     }
 
-    &__divider {
-      margin: 16px 0;
-      background-color: #000;
-      opacity: 0.2;
-    }
-
     &__perception-treshold {
       padding-top: 16px;
       font-size: 13px;
@@ -179,11 +180,6 @@
       font-weight: bold;
       font-size: 12px;
       line-height: 16px;
-    }
-
-    &__buttons-icons {
-      width: 14px;
-      height: 14px;
     }
 
     /* 
@@ -215,6 +211,11 @@
     &__locatorsList {
       padding-top: 28px;
 
+      &-status {
+        margin: 0 8px;
+        font-size: 14px;
+      }
+
       .ant-collapse {
         border: none;
         border-radius: 0;
@@ -241,8 +242,7 @@
         padding: 0 12px;
 
         .ant-checkbox-wrapper {
-          display: flex;
-          gap: 12px;
+          width: calc(100% - 14px);
         }
       }
 
@@ -323,11 +323,6 @@
         overflow-y: auto;
         height: calc(100vh - 232px);
 
-        .anticon {
-          margin: 0 8px;
-          font-size: 14px;
-        }
-
         .ant-spin {
           margin: 0 8px;
         }
@@ -339,11 +334,30 @@
         .ant-spin-dot-item {
           background-color: #d8a115;
         }
+
+        .ant-checkbox + span {
+          padding-left: 20px;
+        }
+
+        .ant-dropdown-trigger {
+          color: #777;
+
+          &:hover {
+            color: @primary-color;
+          }
+
+          &:active {
+            color: @primary-active-color;
+          }
+        }
       }
     }
 
-    &__xpath_item {
-      font-size: 12px;
+    &__xpath {
+      &_item {
+        font-size: 12px;
+        word-break: break-all;
+      }
     }
   }
 

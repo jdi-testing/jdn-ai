@@ -109,14 +109,10 @@ export const LocatorsList = () => {
                 `Generated (${size(generated)})`,
                 generated,
                 generatedSelected,
-                <Icon component={CheckedkSvg} />
+                <Icon component={CheckedkSvg} className="jdn__locatorsList-status" />
             )}
           >
-            <GeneratedList
-              elements={generated}
-              iconComponent={<Icon component={CheckedkSvg} />}
-              {...{ toggleElementGeneration }}
-            />
+            <GeneratedList elements={generated} {...{ toggleElementGeneration }} />
           </Collapse.Panel>
           <Collapse.Panel
             key="2"
@@ -128,7 +124,7 @@ export const LocatorsList = () => {
                 <Spin size="small" />
             )}
           >
-            <WaitingList elements={waiting} iconComponent={<Spin size="small" />} {...{ toggleElementGeneration }} />
+            <WaitingList elements={waiting} {...{ toggleElementGeneration }} />
           </Collapse.Panel>
           <Collapse.Panel
             key="3"
@@ -137,14 +133,10 @@ export const LocatorsList = () => {
                 `Deleted (${size(deleted)})`,
                 deleted,
                 deletedSelected,
-                <Icon component={InvisibleSvg} />
+                <Icon component={InvisibleSvg} className="jdn__locatorsList-status" />
             )}
           >
-            <DeletedList
-              elements={deleted}
-              iconComponent={<Icon component={InvisibleSvg} />}
-              {...{ toggleElementGeneration }}
-            />
+            <DeletedList elements={deleted} {...{ toggleElementGeneration }} />
           </Collapse.Panel>
         </Collapse>
       </div>

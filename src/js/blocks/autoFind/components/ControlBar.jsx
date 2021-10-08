@@ -28,23 +28,16 @@ export const ControlBar = () => {
   };
 
   const kebabMenu = (
-    <Menu className="jdn__header-kebab">
-      <Menu.Item
-        key="0"
-        hidden={!allowRemoveElements}
-        onClick={handleReportProblem}
-        className="jdn__header-kebab-links"
-      >
+    <Menu>
+      <Menu.Item key="0" hidden={!allowRemoveElements} onClick={handleReportProblem}>
         Report a problem
       </Menu.Item>
-      <Menu.Item key="1" className="jdn__header-kebab-links">
+      <Menu.Item key="1">
         <a href="https://github.com/jdi-testing/jdn" target="_blank" rel="noreferrer">
           Readme
         </a>
       </Menu.Item>
-      <Menu.Item key="3" className="jdn__header-kebab-links">
-        Upgrade
-      </Menu.Item>
+      <Menu.Item key="3">Upgrade</Menu.Item>
     </Menu>
   );
 
@@ -68,7 +61,7 @@ export const ControlBar = () => {
         <a className="jdn__header-link" href="#">
           Upgrade
         </a>
-        <a className="jdn__header-kebab">
+        <a>
           <Dropdown overlay={kebabMenu} trigger={["click"]}>
             <Icon component={kebab_menu} onClick={(e) => e.preventDefault()} />
           </Dropdown>

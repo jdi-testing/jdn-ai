@@ -68,7 +68,7 @@ export const LocatorListHeader = ({
           <Icon component={SettingsSVG} />
         </Button> */}
         <Button hidden={!size(generatedSelected)} type="primary" className="jdn__buttons" onClick={generateAndDownload}>
-          <Icon component={DownloadSvg} fill="#c15f0f" className="jdn__buttons-icons" />
+          <Icon component={DownloadSvg} fill="#c15f0f" />
           Download
         </Button>
       </span>
