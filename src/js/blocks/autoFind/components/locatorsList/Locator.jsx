@@ -11,14 +11,16 @@ import CheckedkSvg from "../../../../../icons/checked-outlined.svg";
 import InvisibleSvg from "../../../../../icons/invisible.svg";
 import ClockSvg from "../../../../../icons/clock-outlined.svg";
 import EllipsisSvg from "../../../../../icons/ellipsis.svg";
-import SettingsSvg from "../../../../../icons/settings.svg";
+// import SettingsSvg from "../../../../../icons/settings.svg";
+// import PencilSvg from "../../../../../icons/pencil.svg";
 import PlaySvg from "../../../../../icons/play.svg";
 import PauseSvg from "../../../../../icons/pause.svg";
+import PauseOutlinedSvg from "../../../../../icons/pause-outlined.svg";
 import TrashBinSvg from "../../../../../icons/trash-bin.svg";
-import PencilSvg from "../../../../../icons/pencil.svg";
 import RestoreSvg from "../../../../../icons/restore.svg";
+import { locatorProgressStatus } from "../../utils/locatorGenerationController";
 
-export const Locator = ({ element, onChange }) => {
+export const Locator = ({ element, onChange, stopXpathGeneration, runXpathGeneration, toggleDeleted }) => {
   const { element_id, type, name, locator, generate } = element;
 
   const handleOnChange = (value) => {
@@ -36,38 +38,47 @@ export const Locator = ({ element, onChange }) => {
       case locatorTaskStatus.PENDING:
         return <Icon component={ClockSvg} className="jdn__locatorsList-status" />;
       case locatorTaskStatus.REVOKED:
-        return <Icon component={ClockSvg} className="jdn__locatorsList-status" />;
+        return <Icon component={PauseOutlinedSvg} className="jdn__locatorsList-status" />;
       default:
         break;
     }
   };
 
-  const handleMenuClick = (key) => () => {
-    console.log(`clicked key ${key}`);
+  const renderMenu = () => {
+    if (element.deleted) {
+      return (
+        <Menu>
+          <Menu.Item key="5" icon={<RestoreSvg />} onClick={() => toggleDeleted(element.element_id)}>
+            Restore
+          </Menu.Item>
+        </Menu>
+      );
+    } else {
+      return (
+        <Menu>
+          {/* <Menu.Item key="1" icon={<PencilSvg />} onClick={handleMenuClick(1)}>
+            Edit
+          </Menu.Item>
+          <Menu.Item key="2" icon={<SettingsSvg />} onClick={handleMenuClick(2)}>
+            Settings
+          </Menu.Item> */}
+          {locatorProgressStatus.hasOwnProperty(locator.taskStatus) ? (
+            <Menu.Item key="3" icon={<PauseSvg />} onClick={() => stopXpathGeneration(element)}>
+              Stop generation
+            </Menu.Item>
+          ) : null}
+          {locator.taskStatus === locatorTaskStatus.REVOKED ? (
+            <Menu.Item key="4" icon={<PlaySvg />} onClick={() => runXpathGeneration([element])}>
+              Rerun
+            </Menu.Item>
+          ) : null}
+          <Menu.Item key="6" icon={<TrashBinSvg />} onClick={() => toggleDeleted(element.element_id)}>
+            <Typography.Text type="danger">Delete</Typography.Text>
+          </Menu.Item>
+        </Menu>
+      );
+    }
   };
-
-  const menu = (
-    <Menu>
-      <Menu.Item key="1" icon={<PencilSvg />} onClick={handleMenuClick(1)}>
-        Edit
-      </Menu.Item>
-      <Menu.Item key="2" icon={<SettingsSvg />} onClick={handleMenuClick(2)}>
-        Settings
-      </Menu.Item>
-      <Menu.Item key="3" icon={<PauseSvg />} onClick={handleMenuClick(3)}>
-        Stop generation
-      </Menu.Item>
-      <Menu.Item key="4" icon={<PlaySvg />} onClick={handleMenuClick(3)}>
-        Rerun
-      </Menu.Item>
-      <Menu.Item key="5" icon={<RestoreSvg />} onClick={handleMenuClick(3)}>
-        Restore
-      </Menu.Item>
-      <Menu.Item key="6" icon={<TrashBinSvg />} onClick={handleMenuClick(3)}>
-        <Typography.Text type="danger">Delete</Typography.Text>
-      </Menu.Item>
-    </Menu>
-  );
 
   return (
     <div>
@@ -78,7 +89,7 @@ export const Locator = ({ element, onChange }) => {
         </Text>
       </Checkbox>
       <a>
-        <Dropdown trigger="click" overlay={menu}>
+        <Dropdown trigger="click" overlay={renderMenu()}>
           <Icon component={EllipsisSvg} onClick={(e) => e.preventDefault()} />
         </Dropdown>
       </a>

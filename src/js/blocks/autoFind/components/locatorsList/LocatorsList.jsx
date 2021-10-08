@@ -4,16 +4,14 @@ import { filter, size } from "lodash";
 import { Checkbox, Collapse, Spin } from "antd";
 import Icon from "@ant-design/icons";
 
-import { WaitingList } from "./WaitingList";
-import { GeneratedList } from "./GeneratedList";
 import { useAutoFind } from "../../autoFindProvider/AutoFindProvider";
 import { locatorProgressStatus, locatorTaskStatus } from "../../utils/locatorGenerationController";
-import { DeletedList } from "./DeletedList";
 import { LocatorListHeader } from "./LocatorListHeader";
 
 import CaretDownSvg from "../../../../../icons/caret-down.svg";
 import CheckedkSvg from "../../../../../icons/checked-outlined.svg";
 import InvisibleSvg from "../../../../../icons/invisible.svg";
+import { Locator } from "./Locator";
 
 export const LocatorsList = () => {
   const [
@@ -87,6 +85,18 @@ export const LocatorsList = () => {
     );
   };
 
+  const renderList = (elements) => {
+    return elements.map((element) => {
+      return (
+        <Locator
+          key={element.element_id}
+          onChange={toggleElementGeneration}
+          {...{ element, stopXpathGeneration, runXpathGeneration, toggleDeleted }}
+        />
+      );
+    });
+  };
+
   return (
     <div className="jdn__locatorsList">
       <LocatorListHeader
@@ -112,7 +122,7 @@ export const LocatorsList = () => {
                 <Icon component={CheckedkSvg} className="jdn__locatorsList-status" />
             )}
           >
-            <GeneratedList elements={generated} {...{ toggleElementGeneration }} />
+            {renderList(generated)}
           </Collapse.Panel>
           <Collapse.Panel
             key="2"
@@ -124,7 +134,7 @@ export const LocatorsList = () => {
                 <Spin size="small" />
             )}
           >
-            <WaitingList elements={waiting} {...{ toggleElementGeneration }} />
+            {renderList(waiting)}
           </Collapse.Panel>
           <Collapse.Panel
             key="3"
@@ -136,7 +146,7 @@ export const LocatorsList = () => {
                 <Icon component={InvisibleSvg} className="jdn__locatorsList-status" />
             )}
           >
-            <DeletedList elements={deleted} {...{ toggleElementGeneration }} />
+            {renderList(deleted)}
           </Collapse.Panel>
         </Collapse>
       </div>
