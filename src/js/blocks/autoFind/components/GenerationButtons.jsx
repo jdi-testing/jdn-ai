@@ -33,7 +33,7 @@ export const GenerationButtons = () => {
           Settings
         </Button>
         <Button hidden={!allowRemoveElements} onClick={removeHighlighs} className="jdn__buttons">
-          <Icon component={ClearAllSvg} className="jdn__buttons-icons" />
+          <Icon component={ClearAllSvg} />
           Clear all
         </Button>
       </Space>

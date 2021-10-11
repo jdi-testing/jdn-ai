@@ -4,20 +4,18 @@ import { filter, size } from "lodash";
 import { Checkbox, Collapse, Spin } from "antd";
 import Icon from "@ant-design/icons";
 
-import { WaitingList } from "./WaitingList";
-import { GeneratedList } from "./GeneratedList";
 import { useAutoFind } from "../../autoFindProvider/AutoFindProvider";
 import { locatorProgressStatus, locatorTaskStatus } from "../../utils/locatorGenerationController";
-import { DeletedList } from "./DeletedList";
 import { LocatorListHeader } from "./LocatorListHeader";
 
 import CaretDownSvg from "../../../../../icons/caret-down.svg";
 import CheckedkSvg from "../../../../../icons/checked-outlined.svg";
 import InvisibleSvg from "../../../../../icons/invisible.svg";
+import { Locator } from "./Locator";
 
 export const LocatorsList = () => {
   const [
-    { locators },
+    { locators, perception },
     { filterByProbability, toggleElementGeneration, toggleDeleted, runXpathGeneration, stopXpathGeneration },
   ] = useAutoFind();
   const [waiting, setWaiting] = useState([]);
@@ -47,7 +45,7 @@ export const LocatorsList = () => {
     const _deleted = byProbability.filter((el) => el.deleted);
     setDeleted(_deleted);
     setDeletedSelected(() => filter(_deleted, "generate"));
-  }, [locators]);
+  }, [locators, perception]);
 
   const toggleLocatorsGroup = (locatorsGroup) => {
     locatorsGroup.forEach((locator) => {
@@ -87,6 +85,18 @@ export const LocatorsList = () => {
     );
   };
 
+  const renderList = (elements) => {
+    return elements.map((element) => {
+      return (
+        <Locator
+          key={element.element_id}
+          onChange={toggleElementGeneration}
+          {...{ element, stopXpathGeneration, runXpathGeneration, toggleDeleted }}
+        />
+      );
+    });
+  };
+
   return (
     <div className="jdn__locatorsList">
       <LocatorListHeader
@@ -109,14 +119,10 @@ export const LocatorsList = () => {
                 `Generated (${size(generated)})`,
                 generated,
                 generatedSelected,
-                <Icon component={CheckedkSvg} />
+                <Icon component={CheckedkSvg} className="jdn__locatorsList-status" />
             )}
           >
-            <GeneratedList
-              elements={generated}
-              iconComponent={<Icon component={CheckedkSvg} />}
-              {...{ toggleElementGeneration }}
-            />
+            {renderList(generated)}
           </Collapse.Panel>
           <Collapse.Panel
             key="2"
@@ -128,7 +134,7 @@ export const LocatorsList = () => {
                 <Spin size="small" />
             )}
           >
-            <WaitingList elements={waiting} iconComponent={<Spin size="small" />} {...{ toggleElementGeneration }} />
+            {renderList(waiting)}
           </Collapse.Panel>
           <Collapse.Panel
             key="3"
@@ -137,14 +143,10 @@ export const LocatorsList = () => {
                 `Deleted (${size(deleted)})`,
                 deleted,
                 deletedSelected,
-                <Icon component={InvisibleSvg} />
+                <Icon component={InvisibleSvg} className="jdn__locatorsList-status" />
             )}
           >
-            <DeletedList
-              elements={deleted}
-              iconComponent={<Icon component={InvisibleSvg} />}
-              {...{ toggleElementGeneration }}
-            />
+            {renderList(deleted)}
           </Collapse.Panel>
         </Collapse>
       </div>
