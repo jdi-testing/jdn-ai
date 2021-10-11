@@ -8,6 +8,7 @@ import { createLocatorNames, getPage, predictedToConvert } from "./pageObject";
 import { autoFindStatus } from "./../autoFindProvider/AutoFindProvider";
 import { highlightOrder } from "./../contentScripts/highlightOrder";
 import { reportProblemPopup } from "../contentScripts/reportProblemPopup/reportProblemPopup";
+import { settingsPopup } from "../contentScripts/settingsPopup/settingsPopup";
 import { MUI_PREDICT, request } from "./backend";
 import { locatorGenerationController } from "./locatorGenerationController";
 /* global chrome*/
@@ -150,4 +151,8 @@ export const runGenerationHandler = async (elements, settings, elementCallback) 
 
 export const stopGenerationHandler = (element) => {
   locatorGenerationController.revokeTask(element.element_id);
+};
+
+export const openSettingsMenu = (xpathConfig) => {
+  chrome.storage.sync.set({ xpathConfig }, connector.attachContentScript(settingsPopup));
 };
