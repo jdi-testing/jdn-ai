@@ -15,7 +15,7 @@ import { Locator } from "./Locator";
 
 export const LocatorsList = () => {
   const [
-    { locators },
+    { locators, perception },
     { filterByProbability, toggleElementGeneration, toggleDeleted, runXpathGeneration, stopXpathGeneration },
   ] = useAutoFind();
   const [waiting, setWaiting] = useState([]);
@@ -45,7 +45,7 @@ export const LocatorsList = () => {
     const _deleted = byProbability.filter((el) => el.deleted);
     setDeleted(_deleted);
     setDeletedSelected(() => filter(_deleted, "generate"));
-  }, [locators]);
+  }, [locators, perception]);
 
   const toggleLocatorsGroup = (locatorsGroup) => {
     locatorsGroup.forEach((locator) => {
