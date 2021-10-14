@@ -5,7 +5,7 @@ import Icon from "@ant-design/icons";
 import Text from "antd/lib/typography/Text";
 
 import { locatorTaskStatus } from "../../utils/locatorGenerationController";
-import { getPageElementCode } from "../../utils/pageObject";
+import { getLocator } from "../../utils/pageObject";
 
 import CheckedkSvg from "../../../../../icons/checked-outlined.svg";
 import InvisibleSvg from "../../../../../icons/invisible.svg";
@@ -85,7 +85,15 @@ export const Locator = ({ element, onChange, stopXpathGeneration, runXpathGenera
       <Checkbox checked={generate} onChange={handleOnChange}>
         <Text className="jdn__xpath_item">
           {renderIcon()}
-          {getPageElementCode(type, name, locator)}
+          @UI(
+          <span className="jdn__xpath_item-locator">
+            &quot;{getLocator(locator)}&quot;
+          </span>
+          )
+          <span className="jdn__xpath_item-type">
+            &nbsp;{type}&nbsp;
+          </span>
+          {name}
         </Text>
       </Checkbox>
       <a>

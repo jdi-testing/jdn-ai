@@ -1,11 +1,13 @@
 @primary-color: #1582d8;
 @primary-active-color: #0f73c1;
 @disabled-color: #b2b5c2;
+@xpath-item-color-locator: #7a2626;
+@xpath-item-color-type: #004aa0;
 
 .ant-dropdown-menu {
   min-width: 145px;
   background-color: #000;
-  padding: 0;  
+  padding: 0;
 
   &-item,
   &-submenu-title {
@@ -118,7 +120,7 @@
       overflow: hidden;
     }
 
-    /* 
+    /*
     HEADER
   */
     &__header {
@@ -183,7 +185,7 @@
       line-height: 16px;
     }
 
-    /* 
+    /*
     SLIDER
   */
     &__slider {
@@ -198,7 +200,7 @@
       }
     }
 
-    /* 
+    /*
     URL LIST
   */
     &__urls-list {
@@ -358,6 +360,14 @@
       &_item {
         font-size: 12px;
         word-break: break-all;
+
+        &-locator {
+          color: @xpath-item-color-locator;
+        }
+
+        &-type {
+          color: @xpath-item-color-type;
+        }
       }
     }
   }
