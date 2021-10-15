@@ -44,6 +44,22 @@ export const Locator = ({ element, onChange, stopXpathGeneration, runXpathGenera
     }
   };
 
+  const renderColorizedString = () => {
+    return (
+      <React.Fragment>
+        @UI(
+        <span className="jdn__xpath_item-locator">
+          &quot;{getLocator(locator)}&quot;
+        </span>
+        )
+        <span className="jdn__xpath_item-type">
+          &nbsp;{type}&nbsp;
+        </span>
+        {name}
+      </React.Fragment>
+    );
+  };
+
   const renderMenu = () => {
     if (element.deleted) {
       return (
@@ -85,15 +101,7 @@ export const Locator = ({ element, onChange, stopXpathGeneration, runXpathGenera
       <Checkbox checked={generate} onChange={handleOnChange}>
         <Text className="jdn__xpath_item">
           {renderIcon()}
-          @UI(
-          <span className="jdn__xpath_item-locator">
-            &quot;{getLocator(locator)}&quot;
-          </span>
-          )
-          <span className="jdn__xpath_item-type">
-            &nbsp;{type}&nbsp;
-          </span>
-          {name}
+          {renderColorizedString()}
         </Text>
       </Checkbox>
       <a>
