@@ -102,6 +102,7 @@ class Connector {
 
 export const connector = new Connector();
 
+// messages, are sent from plugun to content scripts
 export const sendMessage = {
   toggle: (el) => connector.sendMessage("HIGHLIGHT_TOGGLED", el),
   toggleDeleted: (el) => connector.sendMessage("TOGGLE_DLETED", el),
@@ -117,6 +118,7 @@ export const sendMessage = {
   pingScript: (payload, onResponse) =>
     connector.sendMessage("PING_SCRIPT", payload, onResponse),
   highlightUnreached: (payload) => connector.sendMessage("HIGHLIGHT_ERRORS", payload),
+  changeXpathSettings: (payload) => connector.sendMessage("CHANGE_ELEMENT_SETTINGS", payload),
 };
 
 export default Connector;

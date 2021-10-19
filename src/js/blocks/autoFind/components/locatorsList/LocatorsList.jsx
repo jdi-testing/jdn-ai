@@ -15,8 +15,15 @@ import { Locator } from "./Locator";
 
 export const LocatorsList = () => {
   const [
-    { locators, perception },
-    { filterByProbability, toggleElementGeneration, toggleDeleted, runXpathGeneration, stopXpathGeneration },
+    { locators, perception, xpathConfig },
+    {
+      filterByProbability,
+      toggleElementGeneration,
+      toggleDeleted,
+      runXpathGeneration,
+      stopXpathGeneration,
+      changeElementSettings,
+    },
   ] = useAutoFind();
   const [waiting, setWaiting] = useState([]);
   const [generated, setGenerated] = useState([]);
@@ -32,7 +39,7 @@ export const LocatorsList = () => {
     const _waiting = byProbability.filter(
         (el) =>
           (locatorProgressStatus.hasOwnProperty(el.locator.taskStatus) ||
-          el.locator.taskStatus === locatorTaskStatus.REVOKED) &&
+          el.locator.taskStatus === locatorTaskStatus.REVOKED || el.locator.taskStatus === locatorTaskStatus.FAILURE) &&
         !el.deleted
     );
     setWaiting(_waiting);
@@ -91,7 +98,7 @@ export const LocatorsList = () => {
         <Locator
           key={element.element_id}
           onChange={toggleElementGeneration}
-          {...{ element, stopXpathGeneration, runXpathGeneration, toggleDeleted }}
+          {...{ element, xpathConfig, stopXpathGeneration, runXpathGeneration, toggleDeleted, changeElementSettings }}
         />
       );
     });

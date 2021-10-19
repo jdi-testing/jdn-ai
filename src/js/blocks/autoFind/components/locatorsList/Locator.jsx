@@ -10,8 +10,9 @@ import { getPageElementCode } from "../../utils/pageObject";
 import CheckedkSvg from "../../../../../icons/checked-outlined.svg";
 import InvisibleSvg from "../../../../../icons/invisible.svg";
 import ClockSvg from "../../../../../icons/clock-outlined.svg";
+import WarningSvg from "../../../../../icons/warning.svg";
 import EllipsisSvg from "../../../../../icons/ellipsis.svg";
-// import SettingsSvg from "../../../../../icons/settings.svg";
+import SettingsSvg from "../../../../../icons/settings.svg";
 // import PencilSvg from "../../../../../icons/pencil.svg";
 import PlaySvg from "../../../../../icons/play.svg";
 import PauseSvg from "../../../../../icons/pause.svg";
@@ -19,12 +20,17 @@ import PauseOutlinedSvg from "../../../../../icons/pause-outlined.svg";
 import TrashBinSvg from "../../../../../icons/trash-bin.svg";
 import RestoreSvg from "../../../../../icons/restore.svg";
 import { locatorProgressStatus } from "../../utils/locatorGenerationController";
+import { openSettingsMenu } from "../../utils/pageDataHandlers";
 
-export const Locator = ({ element, onChange, stopXpathGeneration, runXpathGeneration, toggleDeleted }) => {
+export const Locator = ({ element, xpathConfig, onChange, stopXpathGeneration, runXpathGeneration, toggleDeleted }) => {
   const { element_id, type, name, locator, generate } = element;
 
   const handleOnChange = (value) => {
     onChange(element_id);
+  };
+
+  const handleSettingsOption = () => {
+    openSettingsMenu((element.locator.settings || xpathConfig), [element.element_id]);
   };
 
   const renderIcon = () => {
@@ -39,6 +45,8 @@ export const Locator = ({ element, onChange, stopXpathGeneration, runXpathGenera
         return <Icon component={ClockSvg} className="jdn__locatorsList-status" />;
       case locatorTaskStatus.REVOKED:
         return <Icon component={PauseOutlinedSvg} className="jdn__locatorsList-status" />;
+      case locatorTaskStatus.FAILURE:
+        return <Icon component={WarningSvg} className="jdn__locatorsList-status" />;
       default:
         break;
     }
@@ -58,10 +66,10 @@ export const Locator = ({ element, onChange, stopXpathGeneration, runXpathGenera
         <Menu>
           {/* <Menu.Item key="1" icon={<PencilSvg />} onClick={handleMenuClick(1)}>
             Edit
-          </Menu.Item>
-          <Menu.Item key="2" icon={<SettingsSvg />} onClick={handleMenuClick(2)}>
+          </Menu.Item>*/}
+          <Menu.Item key="2" icon={<SettingsSvg />} onClick={handleSettingsOption}>
             Settings
-          </Menu.Item> */}
+          </Menu.Item>
           {locatorProgressStatus.hasOwnProperty(locator.taskStatus) ? (
             <Menu.Item key="3" icon={<PauseSvg />} onClick={() => stopXpathGeneration(element)}>
               Stop generation
