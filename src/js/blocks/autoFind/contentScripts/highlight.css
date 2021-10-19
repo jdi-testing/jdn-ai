@@ -370,7 +370,7 @@
   position: relative;
 }
 
-.jdn-indeterminate:after {
+.jdn-indeterminate::after {
   position: absolute;
   top: 6px;
   left: 6px;
@@ -380,5 +380,5 @@
   border: 0;
   transform: translate(-50%, -50%) scale(1);
   opacity: 1;
-  content: ' ';  
+  content: ' ';
 }
