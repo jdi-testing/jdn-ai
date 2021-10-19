@@ -11,12 +11,8 @@ const getPackage = (url) => {
       .join(".");
 };
 
-const getLocator = ({fullXpath, robulaXpath}) => {
+export const getLocator = ({fullXpath, robulaXpath}) => {
   return robulaXpath || fullXpath || '';
-};
-
-export const getPageElementCode = (type, name, locator) => {
-  return `@UI(${getLocator(locator)}) public ${type} ${name};`;
 };
 
 export const createLocatorNames = (elements) => {
