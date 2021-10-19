@@ -5,7 +5,7 @@ import Icon from "@ant-design/icons";
 import Text from "antd/lib/typography/Text";
 
 import { locatorTaskStatus } from "../../utils/locatorGenerationController";
-import { getPageElementCode } from "../../utils/pageObject";
+import { getLocator } from "../../utils/pageObject";
 
 import CheckedkSvg from "../../../../../icons/checked-outlined.svg";
 import InvisibleSvg from "../../../../../icons/invisible.svg";
@@ -52,6 +52,22 @@ export const Locator = ({ element, xpathConfig, onChange, stopXpathGeneration, r
     }
   };
 
+  const renderColorizedString = () => {
+    return (
+      <React.Fragment>
+        @UI(
+        <span className="jdn__xpath_item-locator">
+          &quot;{getLocator(locator)}&quot;
+        </span>
+        )
+        <span className="jdn__xpath_item-type">
+          &nbsp;{type}&nbsp;
+        </span>
+        {name}
+      </React.Fragment>
+    );
+  };
+
   const renderMenu = () => {
     if (element.deleted) {
       return (
@@ -93,7 +109,7 @@ export const Locator = ({ element, xpathConfig, onChange, stopXpathGeneration, r
       <Checkbox checked={generate} onChange={handleOnChange}>
         <Text className="jdn__xpath_item">
           {renderIcon()}
-          {getPageElementCode(type, name, locator)}
+          {renderColorizedString()}
         </Text>
       </Checkbox>
       <a>

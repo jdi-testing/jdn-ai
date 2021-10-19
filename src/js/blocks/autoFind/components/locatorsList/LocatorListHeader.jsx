@@ -93,7 +93,7 @@ export const LocatorListHeader = ({
         <Button
           hidden={!(size(generatedSelected) + size(waitingSelected))}
           danger
-          onClick={() => toggleDeletedGroup(selected)}
+          onClick={() => toggleDeletedGroup([...generatedSelected, ...waitingSelected])}
         >
           <Icon fill="#D82C15" component={TrashBinSVG} />
         </Button>
