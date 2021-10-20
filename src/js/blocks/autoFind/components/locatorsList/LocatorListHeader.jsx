@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { filter, has, isEmpty, keys, map, reduce, size } from "lodash";
+import React from "react";
+import { filter, isEmpty, map, reduce, size } from "lodash";
 import { Button } from "antd";
 import Icon from "@ant-design/icons";
 
@@ -24,50 +24,44 @@ export const LocatorListHeader = ({
   runXpathGeneration,
   stopXpathGroupGeneration,
 }) => {
-  const [{ locators, xpathConfig }, { generateAndDownload }] = useAutoFind();
-  const [stoppedSelected, setStoppedSelected] = useState([]);
-  const [inProgressSelected, setInProgressSelected] = useState([]);
-  const [selected, setSelected] = useState([]);
+  const [{ xpathConfig }, { generateAndDownload }] = useAutoFind();
 
-  useEffect(() => {
-    setSelected(() => filter(locators, "generate"));
-  }, [locators]);
-
-  useEffect(() => {
-    setStoppedSelected(() => filter(waitingSelected, (el) => el.locator.taskStatus === locatorTaskStatus.REVOKED));
-    setInProgressSelected(() => filter(waitingSelected, (el) => el.locator.taskStatus !== locatorTaskStatus.REVOKED));
-  }, [waitingSelected]);
+  const selected = [...generatedSelected, ...waitingSelected, ...deletedSelected];
+  const activeSelected = [...generatedSelected, ...waitingSelected];
+  const stoppedSelected = filter(waitingSelected, (el) => el.locator.taskStatus === locatorTaskStatus.REVOKED);
+  const inProgressSelected = filter(waitingSelected, (el) => el.locator.taskStatus !== locatorTaskStatus.REVOKED);
 
   const handleOnClickSettings = () => {
-    if (size(selected) === 1) {
-      openSettingsMenu(selected[0].locator.settings || xpathConfig, [selected[0].element_id]);
-    } else {
-      const settings = reduce(
-          selected,
+    const reduceSettingsObject = (result, itemSettings) => {
+      const init = { ...result };
+      return reduce(
+          itemSettings,
+          (settingsResult, value, key) => {
+            if (settingsResult[key] === itemSettings[key]) return init;
+            else {
+              init[key] = "indeterminate";
+              return init;
+            }
+          },
+          init
+      );
+    };
+
+    const reduceSettingsArray = () => {
+      return reduce(
+          activeSelected,
           (result, item) => {
             const itemSettings = item.locator.settings;
-            if (!itemSettings) return result;
             if (isEmpty(result)) return itemSettings;
-            else {
-              const init = { ...result };
-              return reduce(
-                  itemSettings,
-                  (settingsResult, value, key) => {
-                    if (!has(itemSettings, key)) return (init[key] = settingsResult[key]);
-                    if (settingsResult[key] === itemSettings[key]) return init;
-                    else {
-                      init[key] = "indeterminate";
-                      return init;
-                    }
-                  },
-                  init
-              );
-            }
+            if (!itemSettings) return result;
+            return reduceSettingsObject(result, itemSettings);
           },
           {}
       );
-      openSettingsMenu(size(keys(settings)) ? settings : xpathConfig, map(selected, "element_id"));
-    }
+    };
+
+    const settings = size(activeSelected) === 1 ? activeSelected[0].locator.settings : reduceSettingsArray();
+    openSettingsMenu(settings || xpathConfig, map(activeSelected, "element_id"));
   };
 
   return (
@@ -90,14 +84,10 @@ export const LocatorListHeader = ({
         <Button hidden={!size(inProgressSelected)} danger onClick={() => stopXpathGroupGeneration(inProgressSelected)}>
           <Icon component={PauseSVG} />
         </Button>
-        <Button
-          hidden={!(size(generatedSelected) + size(waitingSelected))}
-          danger
-          onClick={() => toggleDeletedGroup([...generatedSelected, ...waitingSelected])}
-        >
+        <Button hidden={!size(activeSelected)} danger onClick={() => toggleDeletedGroup(activeSelected)}>
           <Icon fill="#D82C15" component={TrashBinSVG} />
         </Button>
-        <Button hidden={!size(selected)} onClick={handleOnClickSettings}>
+        <Button id="locatorListSettings" hidden={!size(activeSelected)} onClick={handleOnClickSettings}>
           <Icon component={SettingsSVG} />
         </Button>
         <Button hidden={!size(generatedSelected)} type="primary" className="jdn__buttons" onClick={generateAndDownload}>
