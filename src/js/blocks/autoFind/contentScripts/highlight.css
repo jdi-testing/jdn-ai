@@ -365,3 +365,20 @@
   border: none;
   border-radius: 3px;
 }
+
+.jdn-indeterminate {
+  position: relative;
+}
+
+.jdn-indeterminate::after {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 5px;
+  height: 5px;
+  background-color: #1582d8;
+  border: 0;
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  content: ' ';
+}

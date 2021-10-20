@@ -1,4 +1,4 @@
-import { find, pull } from "lodash";
+import { find, isEqual, pull } from "lodash";
 import { GET_TASK_RESULT, GET_TASK_STATUS, request, REVOKE_TASK, SHEDULE_XPATH_GENERATION } from "./backend";
 
 export const locatorProgressStatus = {
@@ -27,6 +27,15 @@ export class LocatorGenerationScheduler {
 
     this.scheduleGeneration();
   };
+
+  updateSettings(newSettings) {
+    if (this.taskStatus !== locatorTaskStatus.STARTED) {
+      this.settings = newSettings;
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   async scheduleGeneration() {
     const result = await request.post(SHEDULE_XPATH_GENERATION, JSON.stringify({
@@ -88,7 +97,14 @@ class LocatorGenerationController {
   }
 
   scheduleTask(elementId, settings, document, callback) {
-    if (find(this.scheduledGenerations, {elementId: elementId})) return;
+    const task = this.getTaskById(elementId);
+    if (task) {
+      if (isEqual(settings, task.scheduler.settings)) return;
+      else {
+        const success = task.scheduler.updateSettings(settings);
+        if (success) return;
+      };
+    }
 
     this.scheduledGenerations.push({
       elementId,

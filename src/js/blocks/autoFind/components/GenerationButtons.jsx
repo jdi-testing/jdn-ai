@@ -26,7 +26,7 @@ export const GenerationButtons = () => {
         >
           Identify
         </Button>
-        <Button onClick={() => {
+        <Button hidden={!allowIdentifyElements} onClick={() => {
           openSettingsMenu(xpathConfig);
         }} className="jdn__buttons" >
           <Icon component={Settings} className="jdn__buttons-icons" />

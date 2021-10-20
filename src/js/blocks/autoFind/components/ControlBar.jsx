@@ -61,7 +61,7 @@ export const ControlBar = () => {
         <a className="jdn__header-link" href="#">
           Upgrade
         </a>
-        <a>
+        <a className="jdn__header-kebab">
           <Dropdown overlay={kebabMenu} trigger={["click"]}>
             <Icon component={kebab_menu} onClick={(e) => e.preventDefault()} />
           </Dropdown>

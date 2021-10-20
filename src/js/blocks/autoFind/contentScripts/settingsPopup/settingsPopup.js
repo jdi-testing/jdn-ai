@@ -22,9 +22,10 @@ export const settingsPopup = () => {
     },
   ];
 
-  chrome.storage.sync.get(['xpathConfig'], ({xpathConfig}) => {
+  chrome.storage.sync.get(['XPATH_CONFIG'], ({XPATH_CONFIG}) => {
+    const {xpathConfig, elementIds} = XPATH_CONFIG;
     chrome.runtime.sendMessage({
-      message: "OPEN_XPATH_CONFIG_MODAL",
+      message: "IS_OPEN_XPATH_CONFIG_MODAL",
       param: true,
     });
     const settings = xpathConfig;
@@ -45,7 +46,7 @@ export const settingsPopup = () => {
 
     function removePopup() {
       chrome.runtime.sendMessage({
-        message: "OPEN_XPATH_CONFIG_MODAL",
+        message: "IS_OPEN_XPATH_CONFIG_MODAL",
         param: false,
       });
       backgroundModal.remove();
@@ -67,7 +68,7 @@ export const settingsPopup = () => {
       event.preventDefault();
       chrome.runtime.sendMessage({
         message: "CHANGE_XPATH_CONFIG",
-        param: settings,
+        param: {settings, elementIds},
       });
       removePopup();
     };
@@ -90,8 +91,10 @@ export const settingsPopup = () => {
       tooltip.className = 'jdn-tooltip--light';
       tooltip.innerHTML = checkbox.tooltip;
       hintIcon.appendChild(tooltip);
-      if (settings[name]) {
+      if (settings[name] === true) {
         formCheckbox.setAttribute('checked', true);
+      } else if (settings[name] === "indeterminate") {
+        formCheckbox.classList.add("jdn-indeterminate");
       }
 
       const checkboxLabel = document.createElement('label');
@@ -100,6 +103,9 @@ export const settingsPopup = () => {
 
       formCheckbox.addEventListener("change", (event) => {
         event.preventDefault();
+        if (formCheckbox.classList.value.includes("jdn-indeterminate")) {
+          formCheckbox.classList.remove("jdn-indeterminate");
+        }
         settings[event.target.name] = event.target.checked;
       });
       inputContainer.appendChild(checkboxLabel);

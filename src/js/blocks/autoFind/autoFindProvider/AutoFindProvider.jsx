@@ -1,5 +1,5 @@
 /* eslint-disable indent */
-import { filter, findIndex, sortBy } from "lodash";
+import { filter, findIndex, isEmpty, mapValues, sortBy } from "lodash";
 import React, { useState, useEffect } from "react";
 import { inject, observer } from "mobx-react";
 import { useContext } from "react";
@@ -11,6 +11,7 @@ import {
   requestGenerationData,
   stopGenerationHandler,
   runGenerationHandler,
+  openSettingsMenu,
 } from "./../utils/pageDataHandlers";
 import { JDIclasses, getJdiClassName } from "./../utils/generationClassesMap";
 import { connector, sendMessage } from "../utils/connector";
@@ -34,7 +35,6 @@ const AutoFindContext = React.createContext();
 
 const AutoFindProvider = inject("mainModel")(
   observer(({ mainModel, children }) => {
-    const [pageElements, setPageElements] = useState(null);
     const [predictedElements, setPredictedElements] = useState(null);
     const [status, setStatus] = useState(autoFindStatus.noStatus);
     const [allowIdentifyElements, setAllowIdentifyElements] = useState(true);
@@ -58,7 +58,6 @@ const AutoFindProvider = inject("mainModel")(
     };
 
     const clearElementsState = () => {
-      setPageElements(null);
       setPredictedElements(null);
       setStatus(autoFindStatus.noStatus);
       setAllowIdentifyElements(true);
@@ -122,14 +121,47 @@ const AutoFindProvider = inject("mainModel")(
       });
     };
 
-    const updateElements = ([predicted, page]) => {
+    const updateLocator = (element) => {
+      setLocators((prevState) => {
+        const index = findIndex(prevState, { element_id: element.element_id });
+        if (index === -1) {
+          return [...prevState, element];
+        } else {
+          const newState = [...prevState];
+          newState[index].locator = element.locator;
+          return newState;
+        }
+      });
+    };
+
+    const changeElementSettings = (settings, ids) => {
+      if (!ids) {
+        setXpathConfig(param.settings);
+        return;
+      };
+      setLocators((previousValue) => {
+        const newValue = previousValue.map((el) => {
+          if (ids.includes(el.element_id)) {
+            if (isEmpty(el.locator.settings)) el.locator.settings = {};
+            el.locator.settings = mapValues(settings, (value, key) => {
+              return value === "indeterminate" ? el.locator.settings[key] || xpathConfig[key] : value;
+            });
+            sendMessage.changeXpathSettings(el);
+            runXpathGeneration([el]);
+          }
+          return el;
+        });
+        return newValue;
+      });
+    };
+
+    const updateElements = ([predicted]) => {
       const rounded = predicted.map((el) => ({
         ...el,
         jdi_class_name: getJdiClassName(el.predicted_label),
         predicted_probability: Math.round(el.predicted_probability * 100) / 100,
       }));
       setPredictedElements(rounded);
-      setPageElements(page);
       setAllowRemoveElements(!allowRemoveElements);
     };
 
@@ -159,24 +191,11 @@ const AutoFindProvider = inject("mainModel")(
       setPerception(value);
     };
 
-    const updateLocator = (element) => {
-      setLocators((prevState) => {
-        const index = findIndex(prevState, { element_id: element.element_id });
-        if (index === -1) {
-          return [...prevState, element];
-        } else {
-          const newState = [...prevState];
-          newState[index].locator = element.locator;
-          return newState;
-        }
-      });
-    };
-
     const runXpathGeneration = (elements) => {
       runGenerationHandler(elements, xpathConfig, updateLocator);
     };
 
-    const stopXpathGeneration = ({element_id, locator}) => {
+    const stopXpathGeneration = ({ element_id, locator }) => {
       setLocators((prevState) => {
         const stopped = prevState.map((el) => {
           if (el.element_id === element_id) {
@@ -211,16 +230,14 @@ const AutoFindProvider = inject("mainModel")(
     };
 
     useEffect(() => {
-      chrome.runtime.onMessage.addListener(
-        ({ message, param }) => {
-            if (message === "CHANGE_XPATH_CONFIG") {
-              setXpathConfig(param);
-            }
-            if (message === 'OPEN_XPATH_CONFIG_MODAL') {
-              setIsModalOpen(param);
-            }
-          }
-      );
+      chrome.runtime.onMessage.addListener(({ message, param }) => {
+        if (message === "CHANGE_XPATH_CONFIG") {
+          changeElementSettings(param.settings, param.elementIds);
+        }
+        if (message === "IS_OPEN_XPATH_CONFIG_MODAL") {
+          setIsModalOpen(param);
+        }
+      });
     }, []);
 
     useEffect(() => {
@@ -262,6 +279,7 @@ const AutoFindProvider = inject("mainModel")(
     //   sendMessage.highlightUnreached(unreachableNodes);
     // }, [unreachableNodes]);
 
+    // messages, are sent from content scripts to plugin
     const actions = {
       GET_ELEMENT: getPredictedElement,
       TOGGLE_ELEMENT: toggleElementGeneration,
@@ -270,11 +288,12 @@ const AutoFindProvider = inject("mainModel")(
       CHANGE_TYPE: changeType,
       CHANGE_ELEMENT_NAME: changeElementName,
       PREDICTION_IS_UNACTUAL: () => setUnactualPrediction(true),
+      CHANGE_ELEMENT_SETTINGS: changeElementSettings,
+      OPEN_XPATH_CONFIG: (ids) => openSettingsMenu(xpathConfig, ids),
     };
 
     const data = [
       {
-        pageElements,
         predictedElements,
         status,
         allowIdentifyElements,
@@ -298,6 +317,7 @@ const AutoFindProvider = inject("mainModel")(
         toggleDeleted,
         runXpathGeneration,
         stopXpathGeneration,
+        changeElementSettings,
       },
     ];
 

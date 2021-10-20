@@ -145,7 +145,12 @@ export const runGenerationHandler = async (elements, settings, elementCallback) 
     const callback = (elementId, locator) => {
       elementCallback({...element, locator: { ...element.locator, ...locator}});
     };
-    locatorGenerationController.scheduleTask(element.element_id, settings, document, callback);
+    locatorGenerationController.scheduleTask(
+        element.element_id,
+        element.locator.settings || settings,
+        document,
+        callback
+    );
   });
 };
 
@@ -153,6 +158,6 @@ export const stopGenerationHandler = (element) => {
   locatorGenerationController.revokeTask(element.element_id);
 };
 
-export const openSettingsMenu = (xpathConfig) => {
-  chrome.storage.sync.set({ xpathConfig }, connector.attachContentScript(settingsPopup));
+export const openSettingsMenu = (xpathConfig, elementIds) => {
+  chrome.storage.sync.set({ XPATH_CONFIG: {xpathConfig, elementIds} }, connector.attachContentScript(settingsPopup));
 };
