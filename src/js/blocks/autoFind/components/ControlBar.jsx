@@ -1,15 +1,18 @@
-import { Divider, Space, Menu, Dropdown } from "antd";
 import React, { useState, useEffect } from "react";
-import { useAutoFind } from "../autoFindProvider/AutoFindProvider";
+import { useSelector, useDispatch } from "react-redux";
+import { Divider, Space, Menu, Dropdown } from "antd";
+import Icon from "@ant-design/icons";
+
 import { BUILD, request } from "../utils/backend";
 import { reportProblem } from "../utils/pageDataHandlers";
 import kebab_menu from "../../../../icons/Kebab_menu.svg";
-import Icon from "@ant-design/icons";
 
 export const ControlBar = () => {
   const [backendVer, setBackendVer] = useState("");
   const [pluginVer, setPluginVer] = useState("");
-  const [{ predictedElements, allowRemoveElements }] = useAutoFind();
+
+  const predictedElements = useSelector((state) => state.main.predictedElements);
+  const allowRemoveElements = useSelector((state) => state.main.allowRemoveElements);
 
   useEffect(() => {
     const fetchData = async () => {

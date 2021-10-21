@@ -34,13 +34,13 @@ const clearState = () => {
 };
 
 const uploadElements = async ([{ result }]) => {
-  const [payload, length] = result;
+  const payload = result[0];
   const r = await request.post(
       MUI_PREDICT,
       payload
   );
 
-  return [r, length];
+  return r;
 };
 
 const setUrlListener = (onHighlightOff) => {
@@ -54,7 +54,8 @@ const setUrlListener = (onHighlightOff) => {
 
 export const getElements = (callback, setStatus) => {
   const pageAccessTimeout = setTimeout(() => {
-    setStatus(autoFindStatus.blocked);
+    // setStatus(autoFindStatus.blocked);
+    console.log('Script is blocked. Close all popups');
   }, 5000);
 
   connector.updateMessageListener((payload) => {
@@ -68,7 +69,7 @@ export const getElements = (callback, setStatus) => {
       .then(uploadElements)
       .then((data) => {
         removeOverlay();
-        callback(data);
+        return data;
       });
 };
 
@@ -120,7 +121,7 @@ export const runDocumentListeners = (actions) => {
 export const requestGenerationData = async (elements, xpathConfig, callback) => {
   const generationTags = await requestGenerationAttributes(elements);
   const generationData = createLocatorNames(generationTags);
-  callback({ generationData, unreachableNodes: [] });
+  return { generationData, unreachableNodes: [] };
 };
 
 export const generatePageObject = (elements, mainModel) => {

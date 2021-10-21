@@ -39,6 +39,7 @@
   },
   "dependencies": {
     "@ant-design/icons": "^4.6.2",
+    "@reduxjs/toolkit": "^1.6.2",
     "antd": "^4.14.0",
     "classnames": "^2.2.6",
     "cyrillic-to-translit-js": "^3.1.0",
@@ -55,6 +56,7 @@
     "react-file-reader": "^1.1.4",
     "react-jss": "^10.6.0",
     "react-loading": "^2.0.3",
+    "react-redux": "^7.2.5",
     "react-responsive": "^8.2.0",
     "react-select": "^4.3.0",
     "simple-crypto-js": "^3.0.0"
