@@ -12,10 +12,13 @@ import CaretDownSvg from "../../../../../icons/caret-down.svg";
 import CheckedkSvg from "../../../../../icons/checked-outlined.svg";
 import InvisibleSvg from "../../../../../icons/invisible.svg";
 import { Locator } from "./Locator";
+import { useSelector } from "react-redux";
 
 export const LocatorsList = () => {
+  const locators = useSelector((state) => state.main.locators);
+
   const [
-    { locators, perception, xpathConfig },
+    { perception, xpathConfig },
     {
       filterByProbability,
       toggleElementGeneration,

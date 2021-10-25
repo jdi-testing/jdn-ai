@@ -1,14 +1,21 @@
 import { sortBy } from "lodash";
-import { clearAll, toggleElementGeneration } from "../redux/predictionSlice";
+import {
+  changeElementName,
+  changeType,
+  clearAll,
+  setUnactualPrediction,
+  toggleDeleted,
+  toggleElementGeneration,
+} from "../redux/predictionSlice";
 import { connector, sendMessage } from "./connector";
 import { getJdiClassName, JDIclasses } from "./generationClassesMap";
 import { onStartCollectData, openSettingsMenu } from "./pageDataHandlers";
 
 export const createListeners = (dispatch, state) => {
   const actions = {
-    TOGGLE_ELEMENT: (payload) => {
-      dispatch(toggleElementGeneration(payload));
-    },
+    CHANGE_ELEMENT_NAME: (payload) => dispatch(changeElementName(payload)),
+    CHANGE_ELEMENT_SETTINGS: (payload) => {},
+    CHANGE_TYPE: (payload) => dispatch(changeType(payload)),
     GET_ELEMENT: (id) => {
       const element = state.locators.find((e) => e.element_id === id);
       sendMessage.elementData({
@@ -24,8 +31,13 @@ export const createListeners = (dispatch, state) => {
     HIGHLIGHT_OFF: () => {
       dispatch(clearAll());
     },
-    OPEN_XPATH_CONFIG: (ids) => openSettingsMenu(xpathConfig, ids),
+    OPEN_XPATH_CONFIG: (payload) => openSettingsMenu(xpathConfig, payload),
+    PREDICTION_IS_UNACTUAL: () => dispatch(setUnactualPrediction(true)),
+    REMOVE_ELEMENT: (payload) => dispatch(toggleDeleted(payload)),
     START_COLLECT_DATA: onStartCollectData,
+    TOGGLE_ELEMENT: (payload) => {
+      dispatch(toggleElementGeneration(payload));
+    },
   };
 
   const messageHandler = ({ message, param }, _actions) => {
@@ -34,8 +46,5 @@ export const createListeners = (dispatch, state) => {
     }
   };
 
-  connector.updateMessageListener((payload) =>
-    messageHandler(payload, actions)
-  );
+  connector.updateMessageListener((payload) => messageHandler(payload, actions));
 };
-

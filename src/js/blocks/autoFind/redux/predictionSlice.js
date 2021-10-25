@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { findIndex } from "lodash";
 import { autoFindStatus, xpathGenerationStatus } from "../autoFindProvider/AutoFindProvider";
 import { sendMessage } from "../utils/connector";
+import { getJdiClassName } from "../utils/generationClassesMap";
 import { generateLocators, identifyElements } from "./thunks";
 
 const initialState = {
@@ -10,6 +11,7 @@ const initialState = {
   allowRemoveElements: false,
   predictedElements: [],
   locators: [],
+  unactualPrediction: false,
   xpathStatus: xpathGenerationStatus.noStatus,
   xpathConfig: {
     maximum_generation_time: 10,
@@ -24,13 +26,41 @@ const predictionSlice = createSlice({
   name: "main",
   initialState,
   reducers: {
-    toggleElementGeneration(state, {payload}) {
+    changeElementName(state, { payload: { id, name } }) {
+      const locators = state.locators;
+      const index = findIndex(locators, { element_id: id });
+      locators[index].jdi_custom_class_name = name;
+      sendMessage.changeElementName(locators[index]);
+    },
+    changeType(state, { payload: { id, newType } }) {
+      const locators = state.locators;
+      const index = findIndex(locators, { element_id: id });
+      locators[index].predicted_label = newType;
+      locators[index].jdi_class_name = getJdiClassName(newType);
+      sendMessage.changeType(locators[index]);
+    },
+    clearAll(state) {
+      Object.keys(initialState).forEach((key) => {
+        state[key] = initialState[key];
+      });
+      state.status = autoFindStatus.removed;
+    },
+    setUnactualPrediction(state, {payload}) {
+      state.unactualPrediction = payload;
+    },
+    toggleElementGeneration(state, { payload }) {
       const locators = state.locators;
       const index = findIndex(locators, { element_id: payload });
       locators[index].generate = !locators[index].generate;
       sendMessage.toggle(locators[index]);
     },
-    updateLocator(state, {payload}) {
+    toggleDeleted(state, { payload }) {
+      const locators = state.locators;
+      const index = findIndex(state.locators, { element_id: payload });
+      locators[index].deleted = !locators[index].deleted;
+      sendMessage.toggleDeleted(locators[index]);
+    },
+    updateLocator(state, { payload }) {
       const locators = state.locators;
       const index = findIndex(locators, { element_id: payload.element_id });
       if (index === -1) {
@@ -39,15 +69,9 @@ const predictionSlice = createSlice({
         locators[index].locator = payload.locator;
       }
     },
-    clearAll(state) {
-      Object.keys(initialState).forEach((key) => {
-        state[key] = initialState[key];
-      });
-      state.status = autoFindStatus.removed;
-    },
     xPathGenerationStarted(state) {
       state.xpathStatus = xpathGenerationStatus.started;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -60,7 +84,7 @@ const predictionSlice = createSlice({
           state.allowRemoveElements = true;
           state.predictedElements = payload;
         })
-        .addCase(identifyElements.rejected, (state, {error}) => {
+        .addCase(identifyElements.rejected, (state, { error }) => {
           throw new Error(error.stack);
         })
         .addCase(generateLocators.pending, (state, action) => {
@@ -69,11 +93,20 @@ const predictionSlice = createSlice({
         .addCase(generateLocators.fulfilled, (state, { payload }) => {
           state.schedulerStatus = "scheduled";
         })
-        .addCase(generateLocators.rejected, (state, {error}) => {
+        .addCase(generateLocators.rejected, (state, { error }) => {
           throw new Error(error.stack);
         });
   },
 });
 
 export default predictionSlice.reducer;
-export const { clearAll, updateLocator, toggleElementGeneration, xPathGenerationStarted } = predictionSlice.actions;
+export const {
+  changeType,
+  changeElementName,
+  clearAll,
+  setUnactualPrediction,
+  toggleElementGeneration,
+  toggleDeleted,
+  updateLocator,
+  xPathGenerationStarted,
+} = predictionSlice.actions;
