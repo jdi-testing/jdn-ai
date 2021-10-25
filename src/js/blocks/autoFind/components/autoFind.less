@@ -29,7 +29,7 @@
 }
 
 .jdn__autofind {
-  width: 100%;
+  min-width: 310px;
   height: 100%;
   overflow-x: auto;
   background-color: #f7faff;
@@ -373,6 +373,10 @@
   }
 
   @media screen and (max-width: 600px) {
+    .header__space {
+      gap: 0 !important;
+    }
+
     .jdn {
       &__header {
         padding: 12.5px 16px;
