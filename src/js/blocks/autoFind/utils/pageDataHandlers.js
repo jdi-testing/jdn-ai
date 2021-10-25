@@ -1,36 +1,33 @@
 import { connector, sendMessage } from "./connector";
-import { runContextMenu } from "./../contentScripts/contextMenu/contextmenu";
 import { getGenerationAttributes } from "./../contentScripts/generationData";
-import { highlightOnPage } from "./../contentScripts/highlight";
 import { getPageData } from "./../contentScripts/pageData";
-import { urlListener } from "./../contentScripts/urlListener";
 import { createLocatorNames, getPage, predictedToConvert } from "./pageObject";
-import { autoFindStatus } from "./../autoFindProvider/AutoFindProvider";
-import { highlightOrder } from "./../contentScripts/highlightOrder";
 import { reportProblemPopup } from "../contentScripts/reportProblemPopup/reportProblemPopup";
 import { settingsPopup } from "../contentScripts/settingsPopup/settingsPopup";
 import { MUI_PREDICT, request } from "./backend";
 import { locatorGenerationController } from "./locatorGenerationController";
 /* global chrome*/
 
-let documentListenersStarted;
+// let documentListenersStarted;
 let overlayID;
+let pageAccessTimeout;
 
-const removeOverlay = () => {
+export const removeOverlay = () => {
   if (overlayID) {
     chrome.storage.sync.set({ overlayID });
 
     connector.attachContentScript(() => {
       chrome.storage.sync.get(["overlayID"], ({ overlayID }) => {
-        document.getElementById(overlayID).remove();
+        const overlay = document.getElementById(overlayID);
+        overlay && overlay.remove();
       });
     });
   }
 };
 
-const clearState = () => {
-  documentListenersStarted = false;
-  removeOverlay();
+export const onStartCollectData = (payload) => {
+  clearTimeout(pageAccessTimeout);
+  overlayID = payload.overlayID;
 };
 
 const uploadElements = async ([{ result }]) => {
@@ -43,27 +40,11 @@ const uploadElements = async ([{ result }]) => {
   return r;
 };
 
-const setUrlListener = (onHighlightOff) => {
-  connector.onTabUpdate(() => {
-    clearState();
-    onHighlightOff();
-  });
-
-  connector.attachContentScript(urlListener);
-};
-
 export const getElements = (callback, setStatus) => {
-  const pageAccessTimeout = setTimeout(() => {
+  pageAccessTimeout = setTimeout(() => {
     // setStatus(autoFindStatus.blocked);
     console.log('Script is blocked. Close all popups');
   }, 5000);
-
-  connector.updateMessageListener((payload) => {
-    if (payload.message === "START_COLLECT_DATA") {
-      clearTimeout(pageAccessTimeout);
-      overlayID = payload.param.overlayID;
-    }
-  });
 
   return connector.attachContentScript(getPageData)
       .then(uploadElements)
@@ -73,15 +54,8 @@ export const getElements = (callback, setStatus) => {
       });
 };
 
-export const highlightElements = (elements, successCallback, perception) => {
-  const setHighlight = () => {
-    sendMessage.setHighlight({ elements, perception });
-    successCallback();
-  };
-
-  connector.attachContentScript(highlightOnPage).then(() =>
-    connector.createPort().then(setHighlight)
-  );
+export const highlightElements = (elements, perception) => {
+  sendMessage.setHighlight({ elements, perception });
 };
 
 const messageHandler = ({ message, param }, actions) => {
@@ -106,19 +80,20 @@ const requestGenerationAttributes = async (elements) => {
 };
 
 export const runDocumentListeners = (actions) => {
+  console.log(actions);
   connector.updateMessageListener((payload) =>
     messageHandler(payload, actions)
   );
 
-  if (!documentListenersStarted) {
-    setUrlListener(actions["HIGHLIGHT_OFF"]);
-    connector.attachContentScript(runContextMenu);
-    connector.attachContentScript(highlightOrder);
-    documentListenersStarted = true;
-  }
+  // if (!documentListenersStarted) {
+  //   setUrlListener(actions["HIGHLIGHT_OFF"]);
+  //   connector.attachContentScript(runContextMenu);
+  //   connector.attachContentScript(highlightOrder);
+  //   documentListenersStarted = true;
+  // }
 };
 
-export const requestGenerationData = async (elements, xpathConfig, callback) => {
+export const requestGenerationData = async (elements) => {
   const generationTags = await requestGenerationAttributes(elements);
   const generationData = createLocatorNames(generationTags);
   return { generationData, unreachableNodes: [] };

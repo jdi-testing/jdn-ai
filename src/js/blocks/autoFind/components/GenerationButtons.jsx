@@ -8,7 +8,9 @@ import { autoFindStatus } from "../autoFindProvider/AutoFindProvider";
 import ClearAllSvg from "../../../../icons/clear-all.svg";
 import Settings from "../../../../icons/settings.svg";
 import { openSettingsMenu } from "../utils/pageDataHandlers";
-import { identifyElements, clearAll } from "../redux/predictionSlice";
+import { clearAll } from "../redux/predictionSlice";
+import { sendMessage } from "../utils/connector";
+import { identifyElements } from "../redux/thunks";
 
 export const GenerationButtons = () => {
   const status = useSelector((state) => state.main.status);
@@ -16,6 +18,11 @@ export const GenerationButtons = () => {
   const allowRemoveElements = useSelector((state) => state.main.allowRemoveElements);
   const xpathConfig = useSelector((state) => state.main.xpathConfig);
   const dispatch = useDispatch();
+
+  const handleClearAll = () => {
+    dispatch(clearAll());
+    sendMessage.killHighlight();
+  };
 
   return (
     <div className="jdn__generationButtons">
@@ -28,7 +35,7 @@ export const GenerationButtons = () => {
           onClick={() => dispatch(identifyElements())}
           className="jdn__buttons"
         >
-          Identify{status}
+          Identify
         </Button>
         <Button
           hidden={!allowIdentifyElements}
@@ -40,7 +47,7 @@ export const GenerationButtons = () => {
           <Icon component={Settings} className="jdn__buttons-icons" />
           Settings
         </Button>
-        <Button hidden={!allowRemoveElements} onClick={() => dispatch(clearAll())} className="jdn__buttons">
+        <Button hidden={!allowRemoveElements} onClick={handleClearAll} className="jdn__buttons">
           <Icon component={ClearAllSvg} />
           Clear all
         </Button>

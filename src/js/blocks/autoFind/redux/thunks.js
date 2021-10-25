@@ -1,12 +1,18 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { getJdiClassName } from "../utils/generationClassesMap";
 import { getElements, highlightElements, requestGenerationData, runGenerationHandler } from "../utils/pageDataHandlers";
+import { updateLocator, xPathGenerationStarted } from "./predictionSlice";
 
 export const identifyElements = createAsyncThunk("main/identifyElements", async (data, thunkAPI) => {
-  const onHighlighted = () => console.log("highlighted");
   const res = await getElements();
-  highlightElements(res, onHighlighted, 0.5);
-  thunkAPI.dispatch(generateLocators(res));
-  return thunkAPI.fulfillWithValue(res);
+  const rounded = res.map((el) => ({
+    ...el,
+    jdi_class_name: getJdiClassName(el.predicted_label),
+    predicted_probability: Math.round(el.predicted_probability * 100) / 100,
+  }));
+  highlightElements(rounded, 0.5);
+  thunkAPI.dispatch(generateLocators(rounded));
+  return thunkAPI.fulfillWithValue(rounded);
 });
 
 const filterByProbability = (elements, perception) => {
@@ -22,8 +28,9 @@ export const generateLocators = createAsyncThunk("main/generateLocators", async 
     );
     if (noLocator.length) {
       const { generationData } = await requestGenerationData(noLocator, xpathConfig);
+      thunkAPI.dispatch(xPathGenerationStarted());
       runGenerationHandler(generationData, xpathConfig, (el) =>
-        thunkAPI.dispatch(predictionSlice.actions.updateLocator(el))
+        thunkAPI.dispatch(updateLocator(el))
       );
     }
   }
