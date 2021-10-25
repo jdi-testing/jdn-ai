@@ -236,7 +236,10 @@
         border-radius: 0;
       }
 
-      .ant-collapse > .ant-collapse-item > .ant-collapse-header .ant-collapse-arrow {
+      .ant-collapse
+        > .ant-collapse-item
+        > .ant-collapse-header
+        .ant-collapse-arrow {
         position: absolute;
         right: 0;
       }
@@ -325,6 +328,9 @@
         border: 1px solid #d1d1d1;
         overflow-y: auto;
         height: calc(100vh - 232px);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
 
         .ant-spin {
           margin: 0 8px;

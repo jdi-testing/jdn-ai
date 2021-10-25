@@ -4,7 +4,7 @@ import { filter, size } from "lodash";
 
 import { Checkbox, Collapse, Spin } from "antd";
 import Icon from "@ant-design/icons";
-
+import { Progress } from 'antd';
 import { locatorProgressStatus, locatorTaskStatus } from "../../utils/locatorGenerationController";
 import { LocatorListHeader } from "./LocatorListHeader";
 
@@ -157,6 +157,15 @@ export const LocatorsList = () => {
             {renderList(deleted)}
           </Collapse.Panel>
         </Collapse>
+        <Progress
+          percent={readinessPercentage}
+          status="active"
+          showInfo={false}
+          strokeColor="#1582D8"
+          trailColor="transparent"
+          strokeLinecap="square"
+          strokeWidth={5}
+        />
       </div>
     </div>
   );
