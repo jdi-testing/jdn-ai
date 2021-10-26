@@ -21,10 +21,11 @@ export const LocatorListHeader = ({
   deletedSelected,
   toggleLocatorsGroup,
   toggleDeletedGroup,
-  runXpathGeneration,
+  runXpathGenerationHandler,
   stopXpathGroupGeneration,
 }) => {
-  const [{ xpathConfig }, { generateAndDownload }] = useAutoFind();
+  const [{}, { generateAndDownload }] = useAutoFind();
+  const xpathConfig = useSelector((state) => state.main.xpathConfig);
 
   const selected = [...generatedSelected, ...waitingSelected, ...deletedSelected];
   const activeSelected = [...generatedSelected, ...waitingSelected];
@@ -78,7 +79,7 @@ export const LocatorListHeader = ({
           <Icon component={RestoreSvg} />
           Restore
         </Button>
-        <Button hidden={!size(stoppedSelected)} onClick={() => runXpathGeneration(stoppedSelected)}>
+        <Button hidden={!size(stoppedSelected)} onClick={() => runXpathGenerationHandler(stoppedSelected)}>
           <Icon component={PlaySvg} />
         </Button>
         <Button hidden={!size(inProgressSelected)} danger onClick={() => stopXpathGroupGeneration(inProgressSelected)}>

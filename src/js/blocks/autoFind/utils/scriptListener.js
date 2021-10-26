@@ -29,11 +29,13 @@ export const createListeners = (dispatch, state) => {
           });
           dispatch(changeLocatorXpathSettings({id, settings: newSettings}));
 
-          const _locator = {...locator, locator: {...locator.locator, settings: {} }};
-          _locator.locator.settings = newSettings;
-          runGenerationHandler([_locator], state.xpathConfig, (el) =>
-            dispatch(updateLocator(el))
-          );
+          if (!locator.stopped) {
+            const _locator = {...locator, locator: {...locator.locator, settings: {} }};
+            _locator.locator.settings = newSettings;
+            runGenerationHandler([_locator], state.xpathConfig, (el) =>
+              dispatch(updateLocator(el))
+            );
+          }
         });
       }
     },

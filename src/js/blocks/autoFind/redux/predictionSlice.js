@@ -3,12 +3,14 @@ import { findIndex } from "lodash";
 import { autoFindStatus, xpathGenerationStatus } from "../autoFindProvider/AutoFindProvider";
 import { sendMessage } from "../utils/connector";
 import { getJdiClassName } from "../utils/generationClassesMap";
+import { stopGenerationHandler } from "../utils/pageDataHandlers";
 import { generateLocators, identifyElements } from "./thunks";
 
 const initialState = {
   status: autoFindStatus.noStatus,
   allowIdentifyElements: true,
   allowRemoveElements: false,
+  perception: 0.5,
   predictedElements: [],
   locators: [],
   unactualPrediction: false,
@@ -55,6 +57,12 @@ const predictionSlice = createSlice({
     },
     setUnactualPrediction(state, {payload}) {
       state.unactualPrediction = payload;
+    },
+    stopXpathGeneration(state, {payload}) {
+      const locators = state.locators;
+      const index = findIndex(locators, { element_id: payload });
+      locators[index].stopped = true;
+      stopGenerationHandler(payload);
     },
     toggleElementGeneration(state, { payload }) {
       const locators = state.locators;
@@ -115,6 +123,7 @@ export const {
   changeXpathSettings,
   clearAll,
   setUnactualPrediction,
+  stopXpathGeneration,
   toggleElementGeneration,
   toggleDeleted,
   updateLocator,

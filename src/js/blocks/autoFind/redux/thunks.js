@@ -21,17 +21,22 @@ const filterByProbability = (elements, perception) => {
 
 export const generateLocators = createAsyncThunk("main/generateLocators", async (predictedElements, thunkAPI) => {
   const availableForGeneration = filterByProbability(predictedElements, 0.5);
-  const { xpathConfig, locators } = thunkAPI.getState().main;
+  const { locators } = thunkAPI.getState().main;
   if (availableForGeneration.length) {
     const noLocator = availableForGeneration.filter(
         (element) => locators.findIndex((loc) => loc.element_id === element.element_id) === -1
     );
     if (noLocator.length) {
-      const { generationData } = await requestGenerationData(noLocator, xpathConfig);
+      const { generationData } = await requestGenerationData(noLocator);
       thunkAPI.dispatch(xPathGenerationStarted());
-      runGenerationHandler(generationData, xpathConfig, (el) =>
-        thunkAPI.dispatch(updateLocator(el))
-      );
+      thunkAPI.dispatch(runXpathGeneration(generationData));
     }
   }
+});
+
+export const runXpathGeneration = createAsyncThunk("main/scheduleGeneration", async (generationData, thunkAPI) => {
+  const { xpathConfig } = thunkAPI.getState().main;
+  runGenerationHandler(generationData, xpathConfig, (el) =>
+    thunkAPI.dispatch(updateLocator(el))
+  );
 });

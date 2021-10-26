@@ -130,8 +130,8 @@ export const runGenerationHandler = async (elements, settings, elementCallback) 
   });
 };
 
-export const stopGenerationHandler = (element) => {
-  locatorGenerationController.revokeTask(element.element_id);
+export const stopGenerationHandler = (element_id) => {
+  locatorGenerationController.revokeTask(element_id);
 };
 
 export const openSettingsMenu = (xpathConfig, elementIds) => {
