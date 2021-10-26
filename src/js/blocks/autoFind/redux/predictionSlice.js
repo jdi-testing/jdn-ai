@@ -10,9 +10,10 @@ const initialState = {
   status: autoFindStatus.noStatus,
   allowIdentifyElements: true,
   allowRemoveElements: false,
+  locators: [],
+  notifications: [],
   perception: 0.5,
   predictedElements: [],
-  locators: [],
   unactualPrediction: false,
   xpathStatus: xpathGenerationStatus.noStatus,
   xpathConfig: {
@@ -54,6 +55,9 @@ const predictionSlice = createSlice({
         state[key] = initialState[key];
       });
       state.status = autoFindStatus.removed;
+    },
+    pushNotification(state, {payload}) {
+      state.notifications.push(payload);
     },
     setUnactualPrediction(state, {payload}) {
       state.unactualPrediction = payload;
@@ -122,6 +126,7 @@ export const {
   changeLocatorXpathSettings,
   changeXpathSettings,
   clearAll,
+  pushNotification,
   setUnactualPrediction,
   stopXpathGeneration,
   toggleElementGeneration,

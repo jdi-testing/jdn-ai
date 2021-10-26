@@ -12,7 +12,12 @@ import CaretDownSvg from "../../../../../icons/caret-down.svg";
 import CheckedkSvg from "../../../../../icons/checked-outlined.svg";
 import InvisibleSvg from "../../../../../icons/invisible.svg";
 import { Locator } from "./Locator";
-import { stopXpathGeneration, toggleDeleted, toggleElementGeneration } from "../../redux/predictionSlice";
+import {
+  pushNotification,
+  stopXpathGeneration,
+  toggleDeleted,
+  toggleElementGeneration,
+} from "../../redux/predictionSlice";
 import { selectLocatorsByProbability } from "../../redux/selectors";
 import { runXpathGeneration } from "../../redux/thunks";
 
@@ -44,10 +49,12 @@ export const LocatorsList = () => {
     });
   };
 
-  const toggleDeletedGroup = (locatorsGroup) => {
+  const toggleDeletedGroup = (locatorsGroup, areDeleted) => {
     locatorsGroup.forEach((locator) => {
       dispatch(toggleDeleted(locator.element_id));
     });
+    const message = areDeleted ? "DELETED" : "RESTORED";
+    dispatch(pushNotification({ message, data: locatorsGroup }));
   };
 
   const stopXpathGroupGeneration = (locatorsGroup) => {

@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { filter, isEmpty, map, reduce, size } from "lodash";
 import { Button } from "antd";
 import Icon from "@ant-design/icons";
@@ -85,7 +86,7 @@ export const LocatorListHeader = ({
         <Button hidden={!size(inProgressSelected)} danger onClick={() => stopXpathGroupGeneration(inProgressSelected)}>
           <Icon component={PauseSVG} />
         </Button>
-        <Button hidden={!size(activeSelected)} danger onClick={() => toggleDeletedGroup(activeSelected)}>
+        <Button hidden={!size(activeSelected)} danger onClick={() => toggleDeletedGroup(activeSelected, true)}>
           <Icon fill="#D82C15" component={TrashBinSVG} />
         </Button>
         <Button id="locatorListSettings" hidden={!size(activeSelected)} onClick={handleOnClickSettings}>
