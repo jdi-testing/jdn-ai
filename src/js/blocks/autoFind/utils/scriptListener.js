@@ -1,20 +1,42 @@
-import { sortBy } from "lodash";
+import { mapValues, sortBy } from "lodash";
 import {
   changeElementName,
+  changeLocatorXpathSettings,
   changeType,
+  changeXpathSettings,
   clearAll,
   setUnactualPrediction,
   toggleDeleted,
   toggleElementGeneration,
+  updateLocator,
 } from "../redux/predictionSlice";
 import { connector, sendMessage } from "./connector";
 import { getJdiClassName, JDIclasses } from "./generationClassesMap";
-import { onStartCollectData, openSettingsMenu } from "./pageDataHandlers";
+import { onStartCollectData, openSettingsMenu, runGenerationHandler } from "./pageDataHandlers";
 
 export const createListeners = (dispatch, state) => {
   const actions = {
     CHANGE_ELEMENT_NAME: (payload) => dispatch(changeElementName(payload)),
-    CHANGE_ELEMENT_SETTINGS: (payload) => {},
+    CHANGE_XPATH_SETTINGS: ({settings, elementIds}) => {
+      if (!elementIds) {
+        dispatch(changeXpathSettings(settings));
+      } else {
+        elementIds.forEach((id) => {
+          const locator = state.locators.find((el) => el.element_id === id);
+          const elementSettings = locator.locator.settings || {};
+          const newSettings = mapValues(settings, (value, key) => {
+            return value === "indeterminate" ? elementSettings[key] || xpathConfig[key] : value;
+          });
+          dispatch(changeLocatorXpathSettings({id, settings: newSettings}));
+
+          const _locator = {...locator, locator: {...locator.locator, settings: {} }};
+          _locator.locator.settings = newSettings;
+          runGenerationHandler([_locator], state.xpathConfig, (el) =>
+            dispatch(updateLocator(el))
+          );
+        });
+      }
+    },
     CHANGE_TYPE: (payload) => dispatch(changeType(payload)),
     GET_ELEMENT: (id) => {
       const element = state.locators.find((e) => e.element_id === id);

@@ -32,6 +32,14 @@ const predictionSlice = createSlice({
       locators[index].jdi_custom_class_name = name;
       sendMessage.changeElementName(locators[index]);
     },
+    changeLocatorXpathSettings(state, {payload: {id, settings}}) {
+      const locators = state.locators;
+      const index = findIndex(locators, { element_id: id });
+      locators[index].locator.settings = settings;
+    },
+    changeXpathSettings(state, { payload }) {
+      state.xpathConfig = payload;
+    },
     changeType(state, { payload: { id, newType } }) {
       const locators = state.locators;
       const index = findIndex(locators, { element_id: id });
@@ -103,6 +111,8 @@ export default predictionSlice.reducer;
 export const {
   changeType,
   changeElementName,
+  changeLocatorXpathSettings,
+  changeXpathSettings,
   clearAll,
   setUnactualPrediction,
   toggleElementGeneration,

@@ -288,7 +288,7 @@ const AutoFindProvider = inject("mainModel")(
       CHANGE_TYPE: changeType,
       CHANGE_ELEMENT_NAME: changeElementName,
       PREDICTION_IS_UNACTUAL: () => setUnactualPrediction(true),
-      CHANGE_ELEMENT_SETTINGS: changeElementSettings,
+      CHANGE_XPATH_SETTINGS: changeElementSettings,
       OPEN_XPATH_CONFIG: (ids) => openSettingsMenu(xpathConfig, ids),
     };
 

@@ -142,7 +142,7 @@ export const sendMessage = {
   pingScript: (payload, onResponse) =>
     connector.sendMessage("PING_SCRIPT", payload, onResponse),
   highlightUnreached: (payload) => connector.sendMessage("HIGHLIGHT_ERRORS", payload),
-  changeXpathSettings: (payload) => connector.sendMessage("CHANGE_ELEMENT_SETTINGS", payload),
+  changeXpathSettings: (payload) => connector.sendMessage("CHANGE_XPATH_SETTINGS", payload),
 };
 
 export default Connector;
