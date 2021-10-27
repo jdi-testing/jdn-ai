@@ -251,8 +251,8 @@ export const runContextMenu = () => {
       let width_def = 0;
       let height_def = 0;
 
-      for (var i = 0; i < lis.length; i++) {
-        var li = lis[i];
+      for (let i = 0; i < lis.length; i++) {
+        const li = lis[i];
 
         if (li.offsetWidth > width_def) {
           width_def = li.offsetWidth;
@@ -266,8 +266,8 @@ export const runContextMenu = () => {
       let width = width_def;
       let height = height_def;
 
-      for (var i = 0; i < lis.length; i++) {
-        var li = lis[i];
+      for (let i = 0; i < lis.length; i++) {
+        const li = lis[i];
 
         const ul = li.getElementsByTagName("ul");
         if (typeof ul[0] !== "undefined") {
@@ -290,7 +290,7 @@ export const runContextMenu = () => {
     },
   };
 
-  const changeElementNameModal = (element_id, jdi_class_name) => {
+  const changeElementNameModal = (element_id, name) => {
     // MODAL
     const modal = document.createElement('div');
     modal.classList.add("jdn-change-element-name-modal");
@@ -313,7 +313,7 @@ export const runContextMenu = () => {
     // MODAL FORM INPUT
     const formInput = document.createElement('input');
     formInput.classList.add('jdn-change-element-name-modal__form-input');
-    formInput.value = jdi_class_name;
+    formInput.value = name;
     form.append(formInput);
 
     // MODAL FORM BUTTON
@@ -361,18 +361,18 @@ export const runContextMenu = () => {
   let predictedElement;
 
   const menuItems = (
-      { jdi_class_name, jdi_custom_class_name = null, element_id, generate },
+      { name, type, element_id, generate },
       types
   ) => [
     {
-      text: `<span>Change name: ${jdi_custom_class_name ? jdi_custom_class_name : jdi_class_name}</span> 
+      text: `<span>Change name: ${name}</span> 
       <span class="cm_text_edit_icon"><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M1.57843 12.1013L2.10457 8.41825L5.26143 11.5751L1.57843 12.1013Z" fill="white"/>
       <path fill-rule="evenodd" clip-rule="evenodd" d="M12.9726 3.86385C13.3631 3.47332 13.3631 2.84016 12.9726 2.44963L11.2299 0.706985C10.8394 0.316461 10.2062 0.31646 9.81572 0.706985L9.47052 1.05219L12.6273 4.20902L11.5751 5.2613L8.41823 2.10447L3.15682 7.36589L6.31368 10.5227L12.9726 3.86385Z" fill="white"/>
       </svg>
       </i>`,
       events: {
-        click: () => changeElementNameModal(element_id, jdi_class_name),
+        click: () => changeElementNameModal(element_id, name),
       },
     },
     {
@@ -389,7 +389,7 @@ export const runContextMenu = () => {
       },
     },
     {
-      text: `<b>Block type: ${jdi_class_name}</b>`,
+      text: `<b>Block type: ${type}</b>`,
       sub: typesMenu(types),
     },
     {

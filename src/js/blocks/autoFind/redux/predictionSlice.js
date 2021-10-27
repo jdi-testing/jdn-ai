@@ -34,7 +34,8 @@ const predictionSlice = createSlice({
     changeElementName(state, { payload: { id, name } }) {
       const locators = state.locators;
       const index = findIndex(locators, { element_id: id });
-      locators[index].jdi_custom_class_name = name;
+      locators[index].name = name;
+      locators[index].isCustomName = true;
       sendMessage.changeElementName(locators[index]);
     },
     changeLocatorXpathSettings(state, {payload: {id, settings}}) {
@@ -51,8 +52,8 @@ const predictionSlice = createSlice({
     changeType(state, { payload: { id, newType } }) {
       const locators = state.locators;
       const index = findIndex(locators, { element_id: id });
-      locators[index].predicted_label = newType;
-      locators[index].jdi_class_name = getJdiClassName(newType);
+      locators[index].type = newType;
+      if (!locators[index].isCustomName) locators[index].name = getJdiClassName(newType);
       sendMessage.changeType(locators[index]);
     },
     clearAll(state) {
