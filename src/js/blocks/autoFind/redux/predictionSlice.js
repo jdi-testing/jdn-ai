@@ -16,6 +16,7 @@ const initialState = {
   perception: 0.5,
   predictedElements: [],
   unactualPrediction: false,
+  unreachableNodes: [], // sendMessage.highlightUnreached(unreachableNodes);
   xpathStatus: xpathGenerationStatus.noStatus,
   xpathConfig: {
     maximum_generation_time: 10,
@@ -40,6 +41,9 @@ const predictionSlice = createSlice({
       const locators = state.locators;
       const index = findIndex(locators, { element_id: id });
       locators[index].locator.settings = settings;
+    },
+    changePerception(state, {payload}) {
+      state.perception = payload;
     },
     changeXpathSettings(state, { payload }) {
       state.xpathConfig = payload;
@@ -130,6 +134,7 @@ export const {
   changeLocatorXpathSettings,
   changeXpathSettings,
   clearAll,
+  changePerception,
   pushNotification,
   setUnactualPrediction,
   stopXpathGeneration,

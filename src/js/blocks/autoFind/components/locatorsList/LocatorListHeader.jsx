@@ -92,7 +92,12 @@ export const LocatorListHeader = ({
         <Button id="locatorListSettings" hidden={!size(activeSelected)} onClick={handleOnClickSettings}>
           <Icon component={SettingsSVG} />
         </Button>
-        <Button hidden={!size(generatedSelected)} type="primary" className="jdn__buttons" onClick={generateAndDownload}>
+        <Button
+          hidden={!size(generatedSelected)}
+          type="primary"
+          className="jdn__buttons"
+          onClick={() => generateAndDownload(activeSelected)}
+        >
           <Icon component={DownloadSvg} fill="#c15f0f" />
           Download
         </Button>
