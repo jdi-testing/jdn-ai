@@ -1,10 +1,8 @@
 import React from "react";
-import {useAutoFind} from "../../autoFindProvider/AutoFindProvider";
+import { useSelector } from "react-redux";
 import './Backdrop.less';
 export const Backdrop = () => {
-  const [
-    {isModalOpen},
-  ] = useAutoFind();
+  const isModalOpen = useSelector((state) => state.main.isModalOpen);
 
   if (isModalOpen) {
     return (

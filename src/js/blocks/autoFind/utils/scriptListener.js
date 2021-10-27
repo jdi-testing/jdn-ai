@@ -6,6 +6,7 @@ import {
   changeXpathSettings,
   clearAll,
   setUnactualPrediction,
+  toggleBackdrop,
   toggleDeleted,
   toggleElementGeneration,
   updateLocator,
@@ -55,6 +56,7 @@ export const createListeners = (dispatch, state) => {
     HIGHLIGHT_OFF: () => {
       dispatch(clearAll());
     },
+    IS_OPEN_XPATH_CONFIG_MODAL: (payload) => dispatch(toggleBackdrop(payload)),
     OPEN_XPATH_CONFIG: (payload) => openSettingsMenu(xpathConfig, payload),
     PREDICTION_IS_UNACTUAL: () => dispatch(setUnactualPrediction(true)),
     REMOVE_ELEMENT: (payload) => dispatch(toggleDeleted(payload)),

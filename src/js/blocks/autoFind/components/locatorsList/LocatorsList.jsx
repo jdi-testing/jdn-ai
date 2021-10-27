@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { filter, size } from "lodash";
 
@@ -29,15 +29,22 @@ export const LocatorsList = () => {
 
   const byProbability = selectLocatorsByProbability(state);
 
-  const waiting = byProbability.filter(
-      (el) =>
-        (locatorProgressStatus.hasOwnProperty(el.locator.taskStatus) ||
-        el.locator.taskStatus === locatorTaskStatus.REVOKED ||
-        el.locator.taskStatus === locatorTaskStatus.FAILURE) &&
-      !el.deleted
+  const waiting = useMemo(
+      () =>
+        byProbability.filter(
+            (el) =>
+              (locatorProgressStatus.hasOwnProperty(el.locator.taskStatus) ||
+            el.locator.taskStatus === locatorTaskStatus.REVOKED ||
+            el.locator.taskStatus === locatorTaskStatus.FAILURE) &&
+          !el.deleted
+        ),
+      [byProbability]
   );
-  const generated = byProbability.filter((el) => el.locator.taskStatus === locatorTaskStatus.SUCCESS && !el.deleted);
-  const deleted = byProbability.filter((el) => el.deleted);
+  const generated = useMemo(
+      () => byProbability.filter((el) => el.locator.taskStatus === locatorTaskStatus.SUCCESS && !el.deleted),
+      [byProbability]
+  );
+  const deleted = useMemo(() => byProbability.filter((el) => el.deleted), [byProbability]);
 
   const waitingSelected = filter(waiting, "generate");
   const generatedSelected = filter(generated, "generate");

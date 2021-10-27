@@ -91,7 +91,7 @@ export const Locator = ({ element, xpathConfig, stopXpathGeneration, runXpathGen
             Settings
           </Menu.Item>
           {locatorProgressStatus.hasOwnProperty(locator.taskStatus) ? (
-            <Menu.Item key="3" icon={<PauseSvg />} onClick={() => stopXpathGeneration(element)}>
+            <Menu.Item key="3" icon={<PauseSvg />} onClick={() => dispatch(stopXpathGeneration(element.element_id))}>
               Stop generation
             </Menu.Item>
           ) : null}

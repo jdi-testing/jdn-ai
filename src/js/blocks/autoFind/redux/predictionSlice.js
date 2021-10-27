@@ -10,6 +10,7 @@ const initialState = {
   status: autoFindStatus.noStatus,
   allowIdentifyElements: true,
   allowRemoveElements: false,
+  isModalOpen: false,
   locators: [],
   notifications: [],
   perception: 0.5,
@@ -80,6 +81,9 @@ const predictionSlice = createSlice({
       locators[index].deleted = !locators[index].deleted;
       sendMessage.toggleDeleted(locators[index]);
     },
+    toggleBackdrop(state, {payload}) {
+      state.isModalOpen = payload;
+    },
     updateLocator(state, { payload }) {
       const locators = state.locators;
       const index = findIndex(locators, { element_id: payload.element_id });
@@ -131,6 +135,7 @@ export const {
   stopXpathGeneration,
   toggleElementGeneration,
   toggleDeleted,
+  toggleBackdrop,
   updateLocator,
   xPathGenerationStarted,
 } = predictionSlice.actions;
