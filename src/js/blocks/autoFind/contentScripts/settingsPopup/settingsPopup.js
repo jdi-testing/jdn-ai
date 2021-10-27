@@ -67,7 +67,7 @@ export const settingsPopup = () => {
     form.onsubmit = (event) => {
       event.preventDefault();
       chrome.runtime.sendMessage({
-        message: "CHANGE_XPATH_CONFIG",
+        message: "CHANGE_XPATH_SETTINGS",
         param: {settings, elementIds},
       });
       removePopup();

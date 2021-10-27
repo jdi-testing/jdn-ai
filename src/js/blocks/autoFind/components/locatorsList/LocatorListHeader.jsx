@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { filter, isEmpty, map, reduce, size } from "lodash";
 import { Button } from "antd";
 import Icon from "@ant-design/icons";
@@ -21,10 +22,11 @@ export const LocatorListHeader = ({
   deletedSelected,
   toggleLocatorsGroup,
   toggleDeletedGroup,
-  runXpathGeneration,
+  runXpathGenerationHandler,
   stopXpathGroupGeneration,
 }) => {
-  const [{ xpathConfig }, { generateAndDownload }] = useAutoFind();
+  const [{}, { generateAndDownload }] = useAutoFind();
+  const xpathConfig = useSelector((state) => state.main.xpathConfig);
 
   const selected = [...generatedSelected, ...waitingSelected, ...deletedSelected];
   const activeSelected = [...generatedSelected, ...waitingSelected];
@@ -78,19 +80,24 @@ export const LocatorListHeader = ({
           <Icon component={RestoreSvg} />
           Restore
         </Button>
-        <Button hidden={!size(stoppedSelected)} onClick={() => runXpathGeneration(stoppedSelected)}>
+        <Button hidden={!size(stoppedSelected)} onClick={() => runXpathGenerationHandler(stoppedSelected)}>
           <Icon component={PlaySvg} />
         </Button>
         <Button hidden={!size(inProgressSelected)} danger onClick={() => stopXpathGroupGeneration(inProgressSelected)}>
           <Icon component={PauseSVG} />
         </Button>
-        <Button hidden={!size(activeSelected)} danger onClick={() => toggleDeletedGroup(activeSelected)}>
+        <Button hidden={!size(activeSelected)} danger onClick={() => toggleDeletedGroup(activeSelected, true)}>
           <Icon fill="#D82C15" component={TrashBinSVG} />
         </Button>
         <Button id="locatorListSettings" hidden={!size(activeSelected)} onClick={handleOnClickSettings}>
           <Icon component={SettingsSVG} />
         </Button>
-        <Button hidden={!size(generatedSelected)} type="primary" className="jdn__buttons" onClick={generateAndDownload}>
+        <Button
+          hidden={!size(generatedSelected)}
+          type="primary"
+          className="jdn__buttons"
+          onClick={() => generateAndDownload(activeSelected)}
+        >
           <Icon component={DownloadSvg} fill="#c15f0f" />
           Download
         </Button>

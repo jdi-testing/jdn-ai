@@ -4,6 +4,8 @@ import injectSheet from "react-jss";
 import { inject, observer, Provider } from "mobx-react";
 import { action, computed, observable } from "mobx";
 
+import { Provider as ReduxProvider } from "react-redux";
+
 import GenerateResults from "./blocks/generate/GenerateResults";
 import GeneralSettings from "./blocks/generate/GeneralSettings";
 import { RulesBlock } from "./blocks/rules/RulesBlock";
@@ -21,7 +23,9 @@ import "../css/main.less";
 import LogComponentWrapper from "./blocks/log/LogComponent";
 import AutoFind from "./blocks/autoFind/components/autoFind/AutoFind";
 import { AutoFindProvider } from "./blocks/autoFind/autoFindProvider/AutoFindProvider";
-import {Backdrop} from './blocks/autoFind/components/Backdrop/Backdrop';
+import { Backdrop } from "./blocks/autoFind/components/Backdrop/Backdrop";
+
+import { store } from "./blocks/autoFind/redux/store";
 
 const styles = {
   commonContainer: {
@@ -69,11 +73,12 @@ class App extends React.Component {
     return (
       <Provider mainModel={this.mainModel}>
         <AutoFindProvider>
-          <div className={classes.commonContainer}>
-            <Backdrop />
-            {/* UNCOMMENT THIS PART 
+          <ReduxProvider {...{ store }}>
+            <div className={classes.commonContainer}>
+              <Backdrop />
+              {/* UNCOMMENT THIS PART 
               TO MAKE THE REST FUNCTIONALITY AVAILABLE */}
-            {/* <Menu onClick={this.handleClick} selectedKeys={[this.tab]} mode="horizontal" className="jdn__hidden">
+              {/* <Menu onClick={this.handleClick} selectedKeys={[this.tab]} mode="horizontal" className="jdn__hidden">
               <Menu.Item key="auto_find">Auto Find Objects</Menu.Item>
 
               <Menu.Item key="settings">Settings</Menu.Item>
@@ -93,34 +98,35 @@ class App extends React.Component {
               <Menu.Item key="warnings">Warnings</Menu.Item>
             </Menu> */}
 
-            {this.tab === "settings" && (
-              <div key="settings">
-                <Row>
-                  <Col span={8}>
-                    <GeneralSettings></GeneralSettings>
-                  </Col>
-                  <Col
-                    span={16}
-                    style={{
-                      padding: "10px",
-                      minHeight: "100vh",
-                      borderLeft: "2px solid #d8d8d8",
-                    }}
-                  >
-                    <RulesBlock></RulesBlock>
-                  </Col>
-                </Row>
-              </div>
-            )}
+              {this.tab === "settings" && (
+                <div key="settings">
+                  <Row>
+                    <Col span={8}>
+                      <GeneralSettings></GeneralSettings>
+                    </Col>
+                    <Col
+                      span={16}
+                      style={{
+                        padding: "10px",
+                        minHeight: "100vh",
+                        borderLeft: "2px solid #d8d8d8",
+                      }}
+                    >
+                      <RulesBlock></RulesBlock>
+                    </Col>
+                  </Row>
+                </div>
+              )}
 
-            {this.tab === "urls" && <GenerateBlock key="urls"></GenerateBlock>}
+              {this.tab === "urls" && <GenerateBlock key="urls"></GenerateBlock>}
 
-            {this.tab === "results" && <GenerateResults key={this.mainModel.generationId}></GenerateResults>}
+              {this.tab === "results" && <GenerateResults key={this.mainModel.generationId}></GenerateResults>}
 
-            {this.tab === "warnings" && <LogComponentWrapper key={this.mainModel.showLog} />}
+              {this.tab === "warnings" && <LogComponentWrapper key={this.mainModel.showLog} />}
 
-            {this.tab === "auto_find" && <AutoFind key="auto_find" />}
-          </div>
+              {this.tab === "auto_find" && <AutoFind key="auto_find" />}
+            </div>
+          </ReduxProvider>
         </AutoFindProvider>
       </Provider>
     );

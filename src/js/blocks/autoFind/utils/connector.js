@@ -1,3 +1,8 @@
+import { runContextMenu } from "../contentScripts/contextMenu/contextmenu";
+import { highlightOnPage } from "../contentScripts/highlight";
+import { highlightOrder } from "../contentScripts/highlightOrder";
+import { urlListener } from "../contentScripts/urlListener";
+
 class Connector {
   constructor() {
     this.tab = null;
@@ -20,14 +25,20 @@ class Connector {
   }
 
   sendMessage(action, payload, onResponse) {
-    chrome.tabs.sendMessage(
-        this.tab.id,
-        {
-          message: action,
-          param: payload,
-        },
-        onResponse
-    );
+    const callback = () => {
+      chrome.tabs.sendMessage(
+          this.tab.id,
+          {
+            message: action,
+            param: payload,
+          },
+          onResponse
+      );
+    };
+
+    if (!this.tab) {
+      setTimeout(callback, 0);
+    } else callback();
   }
 
   updateMessageListener(callback) {
@@ -37,7 +48,7 @@ class Connector {
   }
 
   onTabUpdate(callback) {
-    chrome.tabs.onUpdated.addListener((tabId, changeinfo) => {
+    const listener = (tabId, changeinfo) => {
       if (
         changeinfo &&
         changeinfo.status === "complete" &&
@@ -50,7 +61,11 @@ class Connector {
         }
         if (typeof callback === "function") callback();
       }
-    });
+    };
+
+    if (!chrome.tabs.onUpdated.hasListener(listener)) {
+      chrome.tabs.onUpdated.addListener(listener);
+    };
   }
 
   createPort() {
@@ -98,6 +113,15 @@ class Connector {
       });
     });
   }
+
+  attachStaticScripts() {
+    this.attachContentScript(highlightOnPage).then(() => {
+      this.createPort();
+    });
+    this.attachContentScript(runContextMenu);
+    this.attachContentScript(highlightOrder);
+    this.attachContentScript(urlListener);
+  }
 }
 
 export const connector = new Connector();
@@ -118,7 +142,7 @@ export const sendMessage = {
   pingScript: (payload, onResponse) =>
     connector.sendMessage("PING_SCRIPT", payload, onResponse),
   highlightUnreached: (payload) => connector.sendMessage("HIGHLIGHT_ERRORS", payload),
-  changeXpathSettings: (payload) => connector.sendMessage("CHANGE_ELEMENT_SETTINGS", payload),
+  changeXpathSettings: (payload) => connector.sendMessage("CHANGE_XPATH_SETTINGS", payload),
 };
 
 export default Connector;

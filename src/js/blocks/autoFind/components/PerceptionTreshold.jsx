@@ -1,22 +1,24 @@
 import React from "react";
+import { useState } from "react";
+import { useSelector } from "react-redux";
 import Text from "antd/lib/typography/Text";
 import { Col, Row, Slider, Tooltip } from "antd";
-import { useAutoFind } from "../autoFindProvider/AutoFindProvider";
-import { useState } from "react";
 import Icon from "@ant-design/icons";
 
 import QuestionFilled from "../../../../icons/question-filled.svg";
+import { changePerception } from "../redux/predictionSlice";
 
 let sliderTimer;
 export const PerceptionTreshold = () => {
-  const [{ perception }, { onChangePerception }] = useAutoFind();
+  const perception = useSelector((state) => state.main.perception);
+
   const [perceptionOutput, setPerceptionOutput] = useState(0.5);
 
   const handlePerceptionChange = (value) => {
     setPerceptionOutput(value);
     if (sliderTimer) clearTimeout(sliderTimer);
     sliderTimer = setTimeout(() => {
-      onChangePerception(value);
+      changePerception(value);
     }, 300);
   };
 

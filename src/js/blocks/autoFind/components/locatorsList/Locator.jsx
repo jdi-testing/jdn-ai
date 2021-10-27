@@ -1,4 +1,5 @@
 import React from "react";
+import { useDispatch } from "react-redux";
 
 import { Checkbox, Dropdown, Menu, Spin, Typography } from "antd";
 import Icon from "@ant-design/icons";
@@ -21,12 +22,15 @@ import TrashBinSvg from "../../../../../icons/trash-bin.svg";
 import RestoreSvg from "../../../../../icons/restore.svg";
 import { locatorProgressStatus } from "../../utils/locatorGenerationController";
 import { openSettingsMenu } from "../../utils/pageDataHandlers";
+import { toggleDeleted, toggleElementGeneration } from "../../redux/predictionSlice";
 
-export const Locator = ({ element, xpathConfig, onChange, stopXpathGeneration, runXpathGeneration, toggleDeleted }) => {
+export const Locator = ({ element, xpathConfig, stopXpathGeneration, runXpathGenerationHandler }) => {
+  const dispatch = useDispatch();
+
   const { element_id, type, name, locator, generate } = element;
 
   const handleOnChange = (value) => {
-    onChange(element_id);
+    dispatch(toggleElementGeneration(element_id));
   };
 
   const handleSettingsOption = () => {
@@ -72,7 +76,7 @@ export const Locator = ({ element, xpathConfig, onChange, stopXpathGeneration, r
     if (element.deleted) {
       return (
         <Menu>
-          <Menu.Item key="5" icon={<RestoreSvg />} onClick={() => toggleDeleted(element.element_id)}>
+          <Menu.Item key="5" icon={<RestoreSvg />} onClick={() => dispatch(toggleDeleted(element.element_id))}>
             Restore
           </Menu.Item>
         </Menu>
@@ -87,16 +91,16 @@ export const Locator = ({ element, xpathConfig, onChange, stopXpathGeneration, r
             Settings
           </Menu.Item>
           {locatorProgressStatus.hasOwnProperty(locator.taskStatus) ? (
-            <Menu.Item key="3" icon={<PauseSvg />} onClick={() => stopXpathGeneration(element)}>
+            <Menu.Item key="3" icon={<PauseSvg />} onClick={() => dispatch(stopXpathGeneration(element.element_id))}>
               Stop generation
             </Menu.Item>
           ) : null}
           {locator.taskStatus === locatorTaskStatus.REVOKED ? (
-            <Menu.Item key="4" icon={<PlaySvg />} onClick={() => runXpathGeneration([element])}>
+            <Menu.Item key="4" icon={<PlaySvg />} onClick={() => runXpathGenerationHandler([element])}>
               Rerun
             </Menu.Item>
           ) : null}
-          <Menu.Item key="6" icon={<TrashBinSvg />} onClick={() => toggleDeleted(element.element_id)}>
+          <Menu.Item key="6" icon={<TrashBinSvg />} onClick={() => dispatch(toggleDeleted(element.element_id))}>
             <Typography.Text type="danger">Delete</Typography.Text>
           </Menu.Item>
         </Menu>

@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useMemo } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { filter, size } from "lodash";
 
 import { Checkbox, Collapse, Spin } from "antd";
 import Icon from "@ant-design/icons";
 
-import { useAutoFind } from "../../autoFindProvider/AutoFindProvider";
 import { locatorProgressStatus, locatorTaskStatus } from "../../utils/locatorGenerationController";
 import { LocatorListHeader } from "./LocatorListHeader";
 
@@ -12,64 +12,66 @@ import CaretDownSvg from "../../../../../icons/caret-down.svg";
 import CheckedkSvg from "../../../../../icons/checked-outlined.svg";
 import InvisibleSvg from "../../../../../icons/invisible.svg";
 import { Locator } from "./Locator";
+import {
+  pushNotification,
+  stopXpathGeneration,
+  toggleDeleted,
+  toggleElementGeneration,
+} from "../../redux/predictionSlice";
+import { selectLocatorsByProbability } from "../../redux/selectors";
+import { runXpathGeneration } from "../../redux/thunks";
 
 export const LocatorsList = () => {
-  const [
-    { locators, perception, xpathConfig },
-    {
-      filterByProbability,
-      toggleElementGeneration,
-      toggleDeleted,
-      runXpathGeneration,
-      stopXpathGeneration,
-      changeElementSettings,
-    },
-  ] = useAutoFind();
-  const [waiting, setWaiting] = useState([]);
-  const [generated, setGenerated] = useState([]);
-  const [deleted, setDeleted] = useState([]);
+  const dispatch = useDispatch();
 
-  const [generatedSelected, setGeneratedSelected] = useState([]);
-  const [waitingSelected, setWaitingSelected] = useState([]);
-  const [deletedSelected, setDeletedSelected] = useState([]);
+  const state = useSelector((state) => state);
+  const xpathConfig = useSelector((state) => state.main.xpathConfig);
 
-  useEffect(() => {
-    const byProbability = filterByProbability(locators);
+  const byProbability = selectLocatorsByProbability(state);
 
-    const _waiting = byProbability.filter(
-        (el) =>
-          (locatorProgressStatus.hasOwnProperty(el.locator.taskStatus) ||
-          el.locator.taskStatus === locatorTaskStatus.REVOKED || el.locator.taskStatus === locatorTaskStatus.FAILURE) &&
-        !el.deleted
-    );
-    setWaiting(_waiting);
-    setWaitingSelected(filter(_waiting, "generate"));
+  const waiting = useMemo(
+      () =>
+        byProbability.filter(
+            (el) =>
+              (locatorProgressStatus.hasOwnProperty(el.locator.taskStatus) ||
+            el.locator.taskStatus === locatorTaskStatus.REVOKED ||
+            el.locator.taskStatus === locatorTaskStatus.FAILURE) &&
+          !el.deleted
+        ),
+      [byProbability]
+  );
+  const generated = useMemo(
+      () => byProbability.filter((el) => el.locator.taskStatus === locatorTaskStatus.SUCCESS && !el.deleted),
+      [byProbability]
+  );
+  const deleted = useMemo(() => byProbability.filter((el) => el.deleted), [byProbability]);
 
-    const _generated = byProbability.filter((el) => el.locator.taskStatus === locatorTaskStatus.SUCCESS && !el.deleted);
-    setGenerated(_generated);
-    setGeneratedSelected(filter(_generated, "generate"));
-
-    const _deleted = byProbability.filter((el) => el.deleted);
-    setDeleted(_deleted);
-    setDeletedSelected(() => filter(_deleted, "generate"));
-  }, [locators, perception]);
+  const waitingSelected = filter(waiting, "generate");
+  const generatedSelected = filter(generated, "generate");
+  const deletedSelected = filter(deleted, "generate");
 
   const toggleLocatorsGroup = (locatorsGroup) => {
     locatorsGroup.forEach((locator) => {
-      toggleElementGeneration(locator.element_id);
+      dispatch(toggleElementGeneration(locator.element_id));
     });
   };
 
-  const toggleDeletedGroup = (locatorsGroup) => {
+  const toggleDeletedGroup = (locatorsGroup, areDeleted) => {
     locatorsGroup.forEach((locator) => {
-      toggleDeleted(locator.element_id);
+      dispatch(toggleDeleted(locator.element_id));
     });
+    const message = areDeleted ? "DELETED" : "RESTORED";
+    dispatch(pushNotification({ message, data: locatorsGroup }));
   };
 
   const stopXpathGroupGeneration = (locatorsGroup) => {
     locatorsGroup.forEach((locator) => {
-      stopXpathGeneration(locator);
+      dispatch(stopXpathGeneration(locator.element_id));
     });
+  };
+
+  const runXpathGenerationHandler = (locatorsGroup) => {
+    dispatch(runXpathGeneration(locatorsGroup));
   };
 
   const renderGroupHeader = (title, locatorsGroup, selectedGroup, iconComponent) => {
@@ -97,8 +99,7 @@ export const LocatorsList = () => {
       return (
         <Locator
           key={element.element_id}
-          onChange={toggleElementGeneration}
-          {...{ element, xpathConfig, stopXpathGeneration, runXpathGeneration, toggleDeleted, changeElementSettings }}
+          {...{ element, xpathConfig, stopXpathGeneration, runXpathGenerationHandler }}
         />
       );
     });
@@ -113,7 +114,7 @@ export const LocatorsList = () => {
           deletedSelected,
           toggleLocatorsGroup,
           toggleDeletedGroup,
-          runXpathGeneration,
+          runXpathGenerationHandler,
           stopXpathGroupGeneration,
         }}
       />
