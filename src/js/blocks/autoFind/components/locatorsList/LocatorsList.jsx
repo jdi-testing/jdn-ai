@@ -80,6 +80,16 @@ export const LocatorsList = () => {
       toggleLocatorsGroup(group);
     };
 
+    const readinessPercentage = useMemo(() => {
+      const readyCount = size(generated);
+      const total = size(locators);
+      if (!total && !readyCount) {
+        return 0;
+      }
+      const result = readyCount / total;
+      return result.toFixed(2) * 100;
+    }, [locators, generated]);
+
     return (
       <React.Fragment>
         <Checkbox
@@ -157,15 +167,18 @@ export const LocatorsList = () => {
             {renderList(deleted)}
           </Collapse.Panel>
         </Collapse>
-        <Progress
-          percent={readinessPercentage}
-          status="active"
-          showInfo={false}
-          strokeColor="#1582D8"
-          trailColor="transparent"
-          strokeLinecap="square"
-          strokeWidth={5}
-        />
+        <div className="jdn__locatorsList-progress">
+          <Progress
+            percent={readinessPercentage}
+            status="active"
+            showInfo={false}
+            strokeColor="#1582D8"
+            trailColor="black"
+            strokeLinecap="square"
+            strokeWidth={5}
+          />
+          <p className="jdn__locatorsList-progress-text">{xpathStatus}</p>
+        </div>
       </div>
     </div>
   );
