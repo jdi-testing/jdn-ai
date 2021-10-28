@@ -4,7 +4,7 @@ import { filter, size } from "lodash";
 
 import { Checkbox, Collapse, Spin } from "antd";
 import Icon from "@ant-design/icons";
-
+import { Progress } from 'antd';
 import { locatorProgressStatus, locatorTaskStatus } from "../../utils/locatorGenerationController";
 import { LocatorListHeader } from "./LocatorListHeader";
 
@@ -26,6 +26,7 @@ export const LocatorsList = () => {
 
   const state = useSelector((state) => state);
   const xpathConfig = useSelector((state) => state.main.xpathConfig);
+  const xpathStatus = useSelector((state) => state.main.xpathStatus);
 
   const byProbability = selectLocatorsByProbability(state);
 
@@ -105,6 +106,16 @@ export const LocatorsList = () => {
     });
   };
 
+  const readinessPercentage = useMemo(() => {
+    const readyCount = size(generated);
+    const total = size(byProbability);
+    if (!total && !readyCount) {
+      return 0;
+    }
+    const result = readyCount / total;
+    return result.toFixed(2) * 100;
+  }, [byProbability, generated]);
+
   return (
     <div className="jdn__locatorsList">
       <LocatorListHeader
@@ -157,6 +168,20 @@ export const LocatorsList = () => {
             {renderList(deleted)}
           </Collapse.Panel>
         </Collapse>
+        <div className="jdn__locatorsList-progress">
+          <Progress
+            percent={readinessPercentage}
+            status="active"
+            showInfo={false}
+            strokeColor="#1582D8"
+            trailColor="black"
+            strokeLinecap="square"
+            strokeWidth={5}
+          />
+          <p className="jdn__locatorsList-progress-text">
+            {size(waiting) ? xpathStatus : `Locators generation is successfully completed`}
+          </p>
+        </div>
       </div>
     </div>
   );
