@@ -54,8 +54,6 @@ export const highlightOnPage = () => {
   const assignType = (element) => {
     const i = predictedElements.findIndex((e) => e.element_id === element.element_id);
     predictedElements[i].type = element.type;
-    const div = document.getElementById(element.element_id);
-    div.querySelector(".jdn-class").textContent = createLabelText(element);
   };
 
   const changeElementName = (element) => {
