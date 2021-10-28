@@ -178,7 +178,9 @@ export const LocatorsList = () => {
             strokeLinecap="square"
             strokeWidth={5}
           />
-          <p className="jdn__locatorsList-progress-text">{xpathStatus}</p>
+          <p className="jdn__locatorsList-progress-text">
+            {size(waiting) ? xpathStatus : `Locators generation is successfully completed`}
+          </p>
         </div>
       </div>
     </div>
