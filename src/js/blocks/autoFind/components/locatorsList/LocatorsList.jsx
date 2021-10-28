@@ -26,6 +26,7 @@ export const LocatorsList = () => {
 
   const state = useSelector((state) => state);
   const xpathConfig = useSelector((state) => state.main.xpathConfig);
+  const xpathStatus = useSelector((state) => state.main.xpathStatus);
 
   const byProbability = selectLocatorsByProbability(state);
 
@@ -80,16 +81,6 @@ export const LocatorsList = () => {
       toggleLocatorsGroup(group);
     };
 
-    const readinessPercentage = useMemo(() => {
-      const readyCount = size(generated);
-      const total = size(locators);
-      if (!total && !readyCount) {
-        return 0;
-      }
-      const result = readyCount / total;
-      return result.toFixed(2) * 100;
-    }, [locators, generated]);
-
     return (
       <React.Fragment>
         <Checkbox
@@ -114,6 +105,16 @@ export const LocatorsList = () => {
       );
     });
   };
+
+  const readinessPercentage = useMemo(() => {
+    const readyCount = size(generated);
+    const total = size(byProbability);
+    if (!total && !readyCount) {
+      return 0;
+    }
+    const result = readyCount / total;
+    return result.toFixed(2) * 100;
+  }, [byProbability, generated]);
 
   return (
     <div className="jdn__locatorsList">
