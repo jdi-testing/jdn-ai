@@ -1,11 +1,15 @@
 /*
     avoid using any outer scope variables inside this function
  */
+
 /* global chrome */
 export const highlightOnPage = () => {
   let highlightElements = [];
   let isHighlightElementsReverse = false;
   let port;
+  let nodes;
+  let predictedElements;
+  let perception;
 
   const isInViewport = (element) => {
     const { top, right, bottom, left } = element.getBoundingClientRect();
@@ -44,23 +48,26 @@ export const highlightOnPage = () => {
 
   const createLabelText = (element) => {
     const predictedProbabilityPercent = Math.round(element.predicted_probability * 100);
-    return `${predictedProbabilityPercent}%, ${element.jdi_class_name}`;
+    return `${predictedProbabilityPercent}%, ${element.name}`;
   };
 
   const assignType = (element) => {
-    const div = document.getElementById(element.element_id);
-    div.querySelector(".jdn-class").textContent = createLabelText(element);
+    const i = predictedElements.findIndex((e) => e.element_id === element.element_id);
+    predictedElements[i].type = element.type;
   };
 
   const changeElementName = (element) => {
+    const i = predictedElements.findIndex((e) => e.element_id === element.element_id);
+    predictedElements[i].name = element.name;
     const div = document.getElementById(element.element_id);
     div.querySelector(".jdn-class").textContent = createLabelText(element);
   };
 
   const drawRectangle = (
       element,
-      { element_id, jdi_class_name, predicted_probability, generate, predicted_label }
+      predictedElement
   ) => {
+    const { element_id, generate } = predictedElement;
     const divDefaultStyle = (rect) => {
       const { top, left, height, width } = rect || {};
       return rect ?
@@ -79,23 +86,26 @@ export const highlightOnPage = () => {
         top: `${top + window.pageYOffset + height}px`,
       } : {};
     };
-    const predictedProbabilityPercent = Math.round(predicted_probability * 100);
+    const tooltipInnerHTML = () => {
+      const el = predictedElements.find((e) => e.element_id === element_id);
+      return `
+      <p><b>Name:</b> ${el.name}</p>
+      <p><b>Type:</b> ${el.type}</p>
+      <p><b>Prediction accuracy:</b> ${Math.round(el.predicted_probability * 100)}%</p>`;
+    };
     const div = document.createElement("div");
     div.id = element_id;
     div.className = `jdn-highlight ${generate ? 'jdn-primary' : 'jdn-secondary'}`;
     div.setAttribute("jdn-highlight", true);
     const tooltip = document.createElement('div');
     tooltip.className = 'jdn-tooltip';
-    tooltip.innerHTML = `
-      <p><b>Name:</b> ${predicted_label}</p>
-      <p><b>Type:</b> ${jdi_class_name}</p>
-      <p><b>Prediction accuracy:</b> ${predictedProbabilityPercent}%</p>`;
     const labelContainer = document.createElement('div');
     const label = document.createElement('span');
     label.className = 'jdn-label';
-    label.innerHTML = `<span class="jdn-class">${predictedProbabilityPercent}%, ${jdi_class_name}</span>`;
+    label.innerHTML = `<span class="jdn-class">${createLabelText(predictedElement)}</span>`;
     label.addEventListener('mouseover', () => {
       Object.assign(tooltip.style, tooltipDefaultStyle(label.getBoundingClientRect()));
+      tooltip.innerHTML = tooltipInnerHTML();
       document.body.appendChild(tooltip);
     });
     label.addEventListener('mouseout', () => {
@@ -132,9 +142,6 @@ export const highlightOnPage = () => {
     });
   };
 
-  let nodes;
-  let predictedElements;
-  let perception;
   const findAndHighlight = (param) => {
     if (param) {
       predictedElements = param.elements;
@@ -159,7 +166,7 @@ export const highlightOnPage = () => {
           const predicted = predictedElements.find(
               (e) => e.element_id === hash
           );
-          drawRectangle(element, predicted, perception);
+          drawRectangle(element, predicted);
         }
       }
     });
