@@ -448,7 +448,7 @@ export const runContextMenu = () => {
   };
 
   const contextMenuListener = (event) => {
-    const highlightTarget = event.target.closest("[jdn-highlight=true]:not(.jdn-error)");
+    const highlightTarget = event.target.closest("[jdn-highlight=true]");
     if (highlightTarget) {
       event.preventDefault();
       contextEvent = event;
