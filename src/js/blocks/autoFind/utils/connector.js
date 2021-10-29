@@ -133,6 +133,7 @@ export const sendMessage = {
   // restore: (el) => connector.sendMessage("RESTORE_ELEMENT", el),
   changeType: (el) => connector.sendMessage("ASSIGN_TYPE", el),
   changeElementName: (el) => connector.sendMessage("CHANGE_ELEMENT_NAME", el),
+  changeStatus: (el) => connector.sendMessage("CHANGE_STATUS", el),
   elementData: (payload) => connector.sendMessage("ELEMENT_DATA", payload),
   setHighlight: (payload) => connector.sendMessage("SET_HIGHLIGHT", payload),
   killHighlight: (payload, onResponse) =>

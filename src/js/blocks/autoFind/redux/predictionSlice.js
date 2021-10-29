@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { findIndex } from "lodash";
 import { autoFindStatus, xpathGenerationStatus } from "../autoFindProvider/AutoFindProvider";
-import { sendMessage } from "../utils/connector";
+import { connector, sendMessage } from "../utils/connector";
 import { getJdiClassName } from "../utils/generationClassesMap";
 import { stopGenerationHandler } from "../utils/pageDataHandlers";
 import { generateLocators, identifyElements } from "./thunks";
@@ -97,6 +97,7 @@ const predictionSlice = createSlice({
       } else {
         locators[index].locator = payload.locator;
       }
+      sendMessage.changeStatus(payload);
     },
     xPathGenerationStarted(state) {
       state.xpathStatus = xpathGenerationStatus.started;

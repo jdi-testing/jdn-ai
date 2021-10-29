@@ -51,23 +51,41 @@ export const highlightOnPage = () => {
     return `${predictedProbabilityPercent}%, ${element.name}`;
   };
 
-  const assignType = (element) => {
+  const getBorderClass = (element) => {
+    if (element.locator.taskStatus === "PENDING") {
+      return element.generate ? "jdn-pending-primary" : "jdn-pending-secondary";
+    } else return null;
+  };
+
+  const updateElement = (element) => {
     const i = predictedElements.findIndex((e) => e.element_id === element.element_id);
-    predictedElements[i].type = element.type;
+    predictedElements[i] = {...predictedElements[i], element};
+    return predictedElements[i];
   };
 
   const changeElementName = (element) => {
-    const i = predictedElements.findIndex((e) => e.element_id === element.element_id);
-    predictedElements[i].name = element.name;
+    updateElement(element);
     const div = document.getElementById(element.element_id);
     div.querySelector(".jdn-class").textContent = createLabelText(element);
+  };
+
+  const changeGenerationStatus = (element) => {
+    updateElement(element);
+    const div = document.getElementById(element.element_id);
+    if (!div) return;
+    const borderClass = getBorderClass(element);
+    if (borderClass) div.classList.add(borderClass);
+    else {
+      div.classList.remove("jdn-pending-primary");
+      div.classList.remove("jdn-pending-secondary");
+    }
   };
 
   const drawRectangle = (
       element,
       predictedElement
   ) => {
-    const { element_id, generate } = predictedElement;
+    const { element_id, generate, locator } = predictedElement;
     const divDefaultStyle = (rect) => {
       const { top, left, height, width } = rect || {};
       return rect ?
@@ -95,7 +113,7 @@ export const highlightOnPage = () => {
     };
     const div = document.createElement("div");
     div.id = element_id;
-    div.className = `jdn-highlight ${generate ? 'jdn-primary' : 'jdn-secondary'}`;
+    div.className = `jdn-highlight ${generate ? 'jdn-primary' : 'jdn-secondary'} ${locator.taskStatus === "PENDING" ? inProgressClass : ''}`;
     div.setAttribute("jdn-highlight", true);
     const tooltip = document.createElement('div');
     tooltip.className = 'jdn-tooltip';
@@ -275,11 +293,15 @@ export const highlightOnPage = () => {
     }
 
     if (message === "ASSIGN_TYPE") {
-      assignType(param);
+      updateElement(param);
     }
 
     if (message === "CHANGE_ELEMENT_NAME") {
       changeElementName(param);
+    }
+
+    if (message === "CHANGE_STATUS") {
+      changeGenerationStatus(param);
     }
 
     if (message === "PING_SCRIPT" && (param.scriptName === "highlightOnPage")) {
