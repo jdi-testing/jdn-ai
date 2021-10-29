@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { findIndex } from "lodash";
 import { autoFindStatus, xpathGenerationStatus } from "../autoFindProvider/AutoFindProvider";
-import { connector, sendMessage } from "../utils/connector";
+import { sendMessage } from "../utils/connector";
 import { getJdiClassName } from "../utils/generationClassesMap";
 import { stopGenerationHandler } from "../utils/pageDataHandlers";
 import { generateLocators, identifyElements } from "./thunks";
