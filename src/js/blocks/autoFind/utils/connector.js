@@ -131,7 +131,6 @@ export const sendMessage = {
   toggle: (el) => connector.sendMessage("HIGHLIGHT_TOGGLED", el),
   toggleDeleted: (el) => connector.sendMessage("TOGGLE_DLETED", el),
   // restore: (el) => connector.sendMessage("RESTORE_ELEMENT", el),
-  changeType: (el) => connector.sendMessage("ASSIGN_TYPE", el),
   changeElementName: (el) => connector.sendMessage("CHANGE_ELEMENT_NAME", el),
   changeStatus: (el) => connector.sendMessage("CHANGE_STATUS", el),
   elementData: (payload) => connector.sendMessage("ELEMENT_DATA", payload),

@@ -52,7 +52,7 @@ export const highlightOnPage = () => {
   };
 
   const getBorderClass = (element) => {
-    if (element.locator.taskStatus === "PENDING") {
+    if (element.locator.taskStatus === "PENDING" || element.locator.taskStatus === "STARTED") {
       return element.generate ? "jdn-pending-primary" : "jdn-pending-secondary";
     } else return null;
   };
@@ -73,19 +73,14 @@ export const highlightOnPage = () => {
     updateElement(element);
     const div = document.getElementById(element.element_id);
     if (!div) return;
-    const borderClass = getBorderClass(element);
-    if (borderClass) div.classList.add(borderClass);
-    else {
-      div.classList.remove("jdn-pending-primary");
-      div.classList.remove("jdn-pending-secondary");
-    }
+    div.setAttribute("jdn-status", element.locator.taskStatus);
   };
 
   const drawRectangle = (
       element,
       predictedElement
   ) => {
-    const { element_id, generate, locator } = predictedElement;
+    const { element_id, generate } = predictedElement;
     const divDefaultStyle = (rect) => {
       const { top, left, height, width } = rect || {};
       return rect ?
@@ -113,7 +108,7 @@ export const highlightOnPage = () => {
     };
     const div = document.createElement("div");
     div.id = element_id;
-    div.className = `jdn-highlight ${generate ? 'jdn-primary' : 'jdn-secondary'} ${locator.taskStatus === "PENDING" ? inProgressClass : ''}`;
+    div.className = `jdn-highlight ${generate ? 'jdn-primary' : 'jdn-secondary'} ${getBorderClass(predictedElement)}`;
     div.setAttribute("jdn-highlight", true);
     const tooltip = document.createElement('div');
     tooltip.className = 'jdn-tooltip';
@@ -262,14 +257,6 @@ export const highlightOnPage = () => {
     document.addEventListener("click", clickListener);
   };
 
-  const highlightErrors = (ids) => {
-    ids.forEach((id) => {
-      const div = document.getElementById(id);
-      div.onclick = () => { };
-      div.className = "jdn-highlight jdn-error";
-    });
-  };
-
   const messageHandler = ({ message, param }, sender, sendResponse) => {
     if (message === "SET_HIGHLIGHT") {
       if (!highlightElements.length) setDocumentListeners();
@@ -280,20 +267,12 @@ export const highlightOnPage = () => {
       removeHighlight(sendResponse)();
     }
 
-    if (message === "HIGHLIGHT_ERRORS") {
-      highlightErrors(param);
-    }
-
     if (message === "HIGHLIGHT_TOGGLED") {
       toggleElement(param);
     }
 
     if (message === "TOGGLE_DLETED") {
       toggleDeletedElement(param);
-    }
-
-    if (message === "ASSIGN_TYPE") {
-      updateElement(param);
     }
 
     if (message === "CHANGE_ELEMENT_NAME") {

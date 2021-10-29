@@ -54,7 +54,6 @@ const predictionSlice = createSlice({
       const index = findIndex(locators, { element_id: id });
       locators[index].type = newType;
       if (!locators[index].isCustomName) locators[index].name = getJdiClassName(newType);
-      sendMessage.changeType(locators[index]);
     },
     clearAll(state) {
       Object.keys(initialState).forEach((key) => {

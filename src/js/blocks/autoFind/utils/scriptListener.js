@@ -57,7 +57,7 @@ export const createListeners = (dispatch, state) => {
       dispatch(clearAll());
     },
     IS_OPEN_XPATH_CONFIG_MODAL: (payload) => dispatch(toggleBackdrop(payload)),
-    OPEN_XPATH_CONFIG: (payload) => openSettingsMenu(xpathConfig, payload),
+    OPEN_XPATH_CONFIG: (payload) => openSettingsMenu(state.xpathConfig, payload),
     PREDICTION_IS_UNACTUAL: () => dispatch(setUnactualPrediction(true)),
     REMOVE_ELEMENT: (payload) => dispatch(toggleDeleted(payload)),
     START_COLLECT_DATA: onStartCollectData,
