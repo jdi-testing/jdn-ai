@@ -13,7 +13,7 @@ Current version of JDN plugin is client-server application with to independent p
 * Setup Docker https://www.docker.com/products/docker-desktop
 * Create container using the command 
 ```
-_docker login registry.gitlab.com
+docker login registry.gitlab.com
 docker run -p 127.0.0.1:5000:5000/tcp -ti --rm --name jdi-ml registry.gitlab.com/vfuga/jdi-qasp-ml:latest_
 ```
 * In Windows 10 use PowerShell instead of regular command-line interpreter, for macOS use native terminal.
