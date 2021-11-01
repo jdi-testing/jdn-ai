@@ -101,7 +101,7 @@ const predictionSlice = createSlice({
     xPathGenerationStarted(state) {
       state.xpathStatus = xpathGenerationStatus.started;
     },
-    toggleCmElementHighlight(state, { payload }) {
+    addCmElementHighlight(state, { payload }) {
       const locators = state.locators;
       const elem = locators.find((e) => e.element_id === payload);
       elem.isCmHighlighted = true;
@@ -154,6 +154,6 @@ export const {
   toggleBackdrop,
   updateLocator,
   xPathGenerationStarted,
-  toggleCmElementHighlight,
+  addCmElementHighlight,
   clearCmElementHighlight,
 } = predictionSlice.actions;

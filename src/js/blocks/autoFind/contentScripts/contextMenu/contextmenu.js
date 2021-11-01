@@ -491,7 +491,7 @@ export const runContextMenu = () => {
       elementMenu.display(contextEvent);
       const el = document.getElementById(predictedElement.element_id);
       chrome.runtime.sendMessage({
-        message: "CM_ELEMENT_HIGHLIGHT",
+        message: "CM_ELEMENT_HIGHLIGHT_ON",
         param: predictedElement.element_id,
       });
         el?.classList?.add('cm--selected');

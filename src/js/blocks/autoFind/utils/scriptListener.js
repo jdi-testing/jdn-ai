@@ -11,7 +11,7 @@ import {
   toggleElementGeneration,
   updateLocator,
   clearCmElementHighlight,
-  toggleCmElementHighlight,
+  addCmElementHighlight,
 } from "../redux/predictionSlice";
 import { connector, sendMessage } from "./connector";
 import { getJdiClassName, JDIclasses } from "./generationClassesMap";
@@ -58,8 +58,8 @@ export const createListeners = (dispatch, state) => {
     HIGHLIGHT_OFF: () => {
       dispatch(clearAll());
     },
-    CM_ELEMENT_HIGHLIGHT: (payload) => {
-      dispatch(toggleCmElementHighlight(payload));
+    CM_ELEMENT_HIGHLIGHT_ON: (payload) => {
+      dispatch(addCmElementHighlight(payload));
     },
     CM_ELEMENT_HIGHLIGHT_OFF: (payload) => {
       dispatch(clearCmElementHighlight(payload));
