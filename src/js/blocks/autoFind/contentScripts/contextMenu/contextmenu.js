@@ -228,13 +228,13 @@ export const runContextMenu = () => {
 
     this.hide = function() {
       document.getElementById("cm_" + num).classList.remove("display");
-      removeHighlight()
+      removeHighlight();
       window.removeEventListener("click", documentClick);
     };
     
     this.remove = function() {
       document.getElementById("cm_" + num).remove();
-      removeHighlight()
+      removeHighlight();
       window.removeEventListener("click", documentClick);
       window.removeEventListener("resize", onResize);
     };
