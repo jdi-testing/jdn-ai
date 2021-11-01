@@ -1,4 +1,5 @@
 .cm_container {
+  width: 204px;
   position: fixed;
   opacity: 0;
   transform: scale(0);
@@ -32,8 +33,7 @@
 }
 
 .cm_container li {
-  padding: 10px 17px;
-  padding-right: 3em;
+  padding: 10px 12px 10px 16px;
   cursor: pointer;
   white-space: nowrap;
 }
@@ -56,15 +56,15 @@
   display: inline-block;
 }
 
+.cm_container li .cm_text {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
 .cm_container li .cm_text_icon {
   display: inline-block;
   margin: 0 0 0 10px;
   transform: scale(-1, 1);
-}
-
-.cm_container li .cm_text .cm_text_edit_icon {
-  position: absolute;
-  right: -2.8em;
 }
 
 .cm_container li .cm_sub_span {
@@ -109,8 +109,7 @@
 }
 
 .cm_container li.cm_divider {
-  border-bottom: 1px solid #aaa;
-  margin: 5px;
+  border-bottom: 1px solid rgba(56, 56, 56, 1);
   padding: 0;
   cursor: default;
 }
