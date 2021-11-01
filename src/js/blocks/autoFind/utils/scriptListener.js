@@ -6,6 +6,7 @@ import {
   changeXpathSettings,
   clearAll,
   setUnactualPrediction,
+  stopXpathGeneration,
   toggleBackdrop,
   toggleDeleted,
   toggleElementGeneration,
@@ -13,6 +14,7 @@ import {
   clearCmElementHighlight,
   addCmElementHighlight,
 } from "../redux/predictionSlice";
+import { runXpathGeneration } from "../redux/thunks";
 import { connector, sendMessage } from "./connector";
 import { getJdiClassName, JDIclasses } from "./generationClassesMap";
 import { onStartCollectData, openSettingsMenu, runGenerationHandler } from "./pageDataHandlers";
@@ -65,10 +67,12 @@ export const createListeners = (dispatch, state) => {
       dispatch(clearCmElementHighlight(payload));
     },
     IS_OPEN_XPATH_CONFIG_MODAL: (payload) => dispatch(toggleBackdrop(payload)),
-    OPEN_XPATH_CONFIG: (payload) => openSettingsMenu(xpathConfig, payload),
+    OPEN_XPATH_CONFIG: (payload) => openSettingsMenu(state.xpathConfig, payload),
     PREDICTION_IS_UNACTUAL: () => dispatch(setUnactualPrediction(true)),
     REMOVE_ELEMENT: (payload) => dispatch(toggleDeleted(payload)),
+    RERUN_GENERATION: (payload) => dispatch(runXpathGeneration([payload])),
     START_COLLECT_DATA: onStartCollectData,
+    STOP_GENERATION: (payload) => dispatch(stopXpathGeneration(payload)),
     TOGGLE_ELEMENT: (payload) => {
       dispatch(toggleElementGeneration(payload));
     },

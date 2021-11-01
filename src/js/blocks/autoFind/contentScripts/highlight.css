@@ -239,13 +239,23 @@
   background-color: rgba(21, 130, 216, 1);
 }
 
+[jdn-status="PENDING"].jdn-primary, [jdn-status="STARTED"].jdn-primary {
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%231582D8FF' stroke-width='2' stroke-dasharray='5%2c 10' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+  border: none;
+}
+
+[jdn-status="PENDING"].jdn-primary.cm--selected, [jdn-status="STARTED"].jdn-primary.cm--selected {
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%2310B6DBFF' stroke-width='4' stroke-dasharray='5%2c 10' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+  border: none;
+}
+
 .jdn-secondary {
   border: 1px solid rgba(216, 161, 21, 1);
   background-color: rgba(216, 161, 21, 0.2);
 }
 
 .jdn-secondary.cm--selected {
-  border: 1px solid #f18b14;
+  border: 2px solid #f18b14;
   background-color: rgba(241, 139, 20, 0.2);
 }
 
@@ -257,12 +267,23 @@
   background-color: rgba(216, 161, 21, 1);
 }
 
-.jdn-error {
+[jdn-status="PENDING"].jdn-secondary, [jdn-status="STARTED"].jdn-secondary {
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23D8A115FF' stroke-width='2' stroke-dasharray='5%2c 10' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+  border: none;
+}
+
+[jdn-status="PENDING"].jdn-secondary.cm--selected, [jdn-status="STARTED"].jdn-secondary.cm--selected {
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23F18B14FF' stroke-width='4' stroke-dasharray='5%2c 10' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+  border: none;
+}
+
+[jdn-status="FAILURE"] {
+
   border: 1px solid rgba(216, 44, 21, 1);
   background-color: rgba(216, 44, 21, 0.2);
 }
 
-.jdn-error .jdn-label {
+[jdn-status="FAILURE"] .jdn-label {
   background-color: rgba(216, 44, 21, 1);
 }
 

@@ -51,16 +51,29 @@ export const highlightOnPage = () => {
     return `${predictedProbabilityPercent}%, ${element.name}`;
   };
 
-  const assignType = (element) => {
+  const getBorderClass = (element) => {
+    if (element.locator.taskStatus === "PENDING" || element.locator.taskStatus === "STARTED") {
+      return element.generate ? "jdn-pending-primary" : "jdn-pending-secondary";
+    } else return null;
+  };
+
+  const updateElement = (element) => {
     const i = predictedElements.findIndex((e) => e.element_id === element.element_id);
-    predictedElements[i].type = element.type;
+    predictedElements[i] = {...predictedElements[i], element};
+    return predictedElements[i];
   };
 
   const changeElementName = (element) => {
-    const i = predictedElements.findIndex((e) => e.element_id === element.element_id);
-    predictedElements[i].name = element.name;
+    updateElement(element);
     const div = document.getElementById(element.element_id);
     div.querySelector(".jdn-class").textContent = createLabelText(element);
+  };
+
+  const changeGenerationStatus = (element) => {
+    updateElement(element);
+    const div = document.getElementById(element.element_id);
+    if (!div) return;
+    div.setAttribute("jdn-status", element.locator.taskStatus);
   };
 
   const drawRectangle = (
@@ -95,7 +108,7 @@ export const highlightOnPage = () => {
     };
     const div = document.createElement("div");
     div.id = element_id;
-    div.className = `jdn-highlight ${generate ? 'jdn-primary' : 'jdn-secondary'}`;
+    div.className = `jdn-highlight ${generate ? 'jdn-primary' : 'jdn-secondary'} ${getBorderClass(predictedElement)}`;
     div.setAttribute("jdn-highlight", true);
     const tooltip = document.createElement('div');
     tooltip.className = 'jdn-tooltip';
@@ -244,14 +257,6 @@ export const highlightOnPage = () => {
     document.addEventListener("click", clickListener);
   };
 
-  const highlightErrors = (ids) => {
-    ids.forEach((id) => {
-      const div = document.getElementById(id);
-      div.onclick = () => { };
-      div.className = "jdn-highlight jdn-error";
-    });
-  };
-
   const messageHandler = ({ message, param }, sender, sendResponse) => {
     if (message === "SET_HIGHLIGHT") {
       if (!highlightElements.length) setDocumentListeners();
@@ -262,10 +267,6 @@ export const highlightOnPage = () => {
       removeHighlight(sendResponse)();
     }
 
-    if (message === "HIGHLIGHT_ERRORS") {
-      highlightErrors(param);
-    }
-
     if (message === "HIGHLIGHT_TOGGLED") {
       toggleElement(param);
     }
@@ -274,12 +275,12 @@ export const highlightOnPage = () => {
       toggleDeletedElement(param);
     }
 
-    if (message === "ASSIGN_TYPE") {
-      assignType(param);
-    }
-
     if (message === "CHANGE_ELEMENT_NAME") {
       changeElementName(param);
+    }
+
+    if (message === "CHANGE_STATUS") {
+      changeGenerationStatus(param);
     }
 
     if (message === "PING_SCRIPT" && (param.scriptName === "highlightOnPage")) {
