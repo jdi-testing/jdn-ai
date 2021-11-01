@@ -226,6 +226,15 @@
   border: 1px solid rgba(21, 130, 216, 1);
 }
 
+.jdn-primary.cm--selected {
+  border: 2px solid #10b6db;
+  background-color: rgba(16, 182, 219, 0.2);
+}
+
+.jdn-primary.cm--selected .jdn-label {
+  background-color: #10b6db;
+}
+
 .jdn-primary .jdn-label {
   background-color: rgba(21, 130, 216, 1);
 }
@@ -238,6 +247,15 @@
 .jdn-secondary {
   border: 1px solid rgba(216, 161, 21, 1);
   background-color: rgba(216, 161, 21, 0.2);
+}
+
+.jdn-secondary.cm--selected {
+  border: 1px solid #f18b14;
+  background-color: rgba(241, 139, 20, 0.2);
+}
+
+.jdn-secondary.cm--selected .jdn-label {
+  background-color: #f18b14;
 }
 
 .jdn-secondary .jdn-label {
@@ -390,5 +408,5 @@
   border: 0;
   transform: translate(-50%, -50%) scale(1);
   opacity: 1;
-  content: ' ';
+  content: " ";
 }
