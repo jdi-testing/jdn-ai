@@ -10,6 +10,8 @@ import {
   toggleDeleted,
   toggleElementGeneration,
   updateLocator,
+  clearCmElementHighlight,
+  toggleCmElementHighlight,
 } from "../redux/predictionSlice";
 import { connector, sendMessage } from "./connector";
 import { getJdiClassName, JDIclasses } from "./generationClassesMap";
@@ -55,6 +57,12 @@ export const createListeners = (dispatch, state) => {
     },
     HIGHLIGHT_OFF: () => {
       dispatch(clearAll());
+    },
+    CM_ELEMENT_HIGHLIGHT: (payload) => {
+      dispatch(toggleCmElementHighlight(payload));
+    },
+    CM_ELEMENT_HIGHLIGHT_OFF: (payload) => {
+      dispatch(clearCmElementHighlight(payload));
     },
     IS_OPEN_XPATH_CONFIG_MODAL: (payload) => dispatch(toggleBackdrop(payload)),
     OPEN_XPATH_CONFIG: (payload) => openSettingsMenu(xpathConfig, payload),

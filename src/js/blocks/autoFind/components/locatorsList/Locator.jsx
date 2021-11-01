@@ -27,7 +27,7 @@ import { toggleDeleted, toggleElementGeneration } from "../../redux/predictionSl
 export const Locator = ({ element, xpathConfig, stopXpathGeneration, runXpathGenerationHandler }) => {
   const dispatch = useDispatch();
 
-  const { element_id, type, name, locator, generate } = element;
+  const { element_id, type, name, locator, generate, isCmHighlighted} = element;
 
   const handleOnChange = (value) => {
     dispatch(toggleElementGeneration(element_id));
@@ -109,7 +109,8 @@ export const Locator = ({ element, xpathConfig, stopXpathGeneration, runXpathGen
   };
 
   return (
-    <div>
+    <div className={`${generate ? 'jdn__xpath_container--selected' : ''}
+     ${isCmHighlighted ? 'jdn__xpath_container--cm-selected' : ''}`}>
       <Checkbox checked={generate} onChange={handleOnChange}>
         <Text className="jdn__xpath_item">
           {renderIcon()}
