@@ -101,6 +101,16 @@ const predictionSlice = createSlice({
     xPathGenerationStarted(state) {
       state.xpathStatus = xpathGenerationStatus.started;
     },
+    addCmElementHighlight(state, { payload }) {
+      const locators = state.locators;
+      const elem = locators.find((e) => e.element_id === payload);
+      elem.isCmHighlighted = true;
+    },
+    clearCmElementHighlight(state, { payload }) {
+      const locators = state.locators;
+      const elem = locators.find((e) => e.element_id === payload);
+      elem.isCmHighlighted = false;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -144,4 +154,6 @@ export const {
   toggleBackdrop,
   updateLocator,
   xPathGenerationStarted,
+  addCmElementHighlight,
+  clearCmElementHighlight,
 } = predictionSlice.actions;
