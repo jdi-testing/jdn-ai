@@ -31,6 +31,17 @@ export const runContextMenu = () => {
       }
     }
 
+    function removeHighlight() {
+      const el = document.querySelector('.cm--selected');
+      if (el) {
+        el.classList.remove('cm--selected');
+        chrome.runtime.sendMessage({
+          message: "CM_ELEMENT_HIGHLIGHT_OFF",
+          param: el.id,
+      });
+      }
+    }
+
     window.addEventListener("resize", onResize);
 
     this.setOptions = function(_options) {
@@ -217,11 +228,13 @@ export const runContextMenu = () => {
 
     this.hide = function() {
       document.getElementById("cm_" + num).classList.remove("display");
+      removeHighlight();
       window.removeEventListener("click", documentClick);
     };
-
+    
     this.remove = function() {
       document.getElementById("cm_" + num).remove();
+      removeHighlight();
       window.removeEventListener("click", documentClick);
       window.removeEventListener("resize", onResize);
     };
@@ -538,6 +551,12 @@ export const runContextMenu = () => {
       elementMenu && elementMenu.remove();
       elementMenu = new ContextMenu(menuItems(param.element, param.types));
       elementMenu.display(contextEvent);
+      const el = document.getElementById(predictedElement.element_id);
+      chrome.runtime.sendMessage({
+        message: "CM_ELEMENT_HIGHLIGHT_ON",
+        param: predictedElement.element_id,
+      });
+        el?.classList?.add('cm--selected');
     }
 
     if (message === "HIGHLIGHT_TOGGLED") {
