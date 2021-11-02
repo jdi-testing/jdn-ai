@@ -191,12 +191,16 @@
     &__slider {
       display: flex;
 
-      &__perception-min {
-        text-align: left;
+      .ant-col-2 {
+        display: flex;
       }
 
-      &__perception-max {
-        text-align: right;
+      &-perception-min {
+        justify-content: end;
+      }
+
+      &-perception-max {
+        justify-content: start;
       }
     }
 
