@@ -76,7 +76,11 @@ export const LocatorListHeader = ({
           secondaryLabel={"selected"}
           onDelete={() => toggleLocatorsGroup(selected)}
         />
-        <Button hidden={!size(deletedSelected)} className="jdn__buttons" onClick={() => toggleDeletedGroup(selected)}>
+        <Button
+          hidden={!size(deletedSelected)}
+          className="jdn__buttons"
+          onClick={() => toggleDeletedGroup(deletedSelected)}
+        >
           <Icon component={RestoreSvg} />
           Restore
         </Button>
