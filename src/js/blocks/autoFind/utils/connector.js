@@ -117,6 +117,7 @@ class Connector {
   attachStaticScripts() {
     this.attachContentScript(highlightOnPage).then(() => {
       this.createPort();
+      chrome.storage.sync.set({ IS_DISCONNECTED: false });
     });
     this.attachContentScript(runContextMenu);
     this.attachContentScript(highlightOrder);
