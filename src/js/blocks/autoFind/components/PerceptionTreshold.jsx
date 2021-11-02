@@ -25,7 +25,7 @@ export const PerceptionTreshold = () => {
   return (
     <div className="jdn__perception-treshold">
       <Text strong level={5}>
-        Perception treshold: {perception}
+        Prediction accuracy: {perception * 100}%
       </Text>
       <Tooltip
         title="The minimum value of the
@@ -36,14 +36,21 @@ export const PerceptionTreshold = () => {
         <Icon component={QuestionFilled} style={{ marginLeft: "4px" }} />
       </Tooltip>
       <Row className="jdn__slider">
-        <Col span={1} className="jdn__perception-min">
-          <Text>0.0</Text>
+        <Col span={2} className="jdn__slider-perception-min">
+          <Text>0%</Text>
         </Col>
-        <Col span={22}>
-          <Slider min={0.0} max={1} step={0.01} onChange={handlePerceptionChange} value={perceptionOutput} />
+        <Col span={20}>
+          <Slider
+            min={0.0}
+            max={1}
+            step={0.01}
+            onChange={handlePerceptionChange}
+            value={perceptionOutput}
+            tipFormatter={(value) => `${value * 100}%`}
+          />
         </Col>
-        <Col span={1} className="jdn__perception-max">
-          <Text>1.0</Text>
+        <Col span={2} className="jdn__slider-perception-max">
+          <Text>100%</Text>
         </Col>
       </Row>
     </div>
