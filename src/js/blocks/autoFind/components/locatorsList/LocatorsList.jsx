@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { filter, size } from "lodash";
 
-import { Checkbox, Collapse, Spin } from "antd";
+import { Checkbox, Collapse, Spin, notification, Button } from "antd";
 import Icon from "@ant-design/icons";
 import { Progress } from 'antd';
 import { locatorProgressStatus, locatorTaskStatus } from "../../utils/locatorGenerationController";
@@ -27,8 +27,37 @@ export const LocatorsList = () => {
   const state = useSelector((state) => state);
   const xpathConfig = useSelector((state) => state.main.xpathConfig);
   const xpathStatus = useSelector((state) => state.main.xpathStatus);
+  const [not, setNot] = React.useState(true);
 
   const byProbability = selectLocatorsByProbability(state);
+
+  const close = () => {
+    console.log(
+      'Notification was closed. Either the close button was clicked or duration time elapsed.',
+    );
+  };
+
+  if (not=== true) {
+    const openNotification = () => {
+      const key = `open${Date.now()}`;
+      const btn = (
+        <Button type="primary" size="small" className="jdn__notification-close-btn" onClick={() => notification.close(key)}>
+          Cancel
+        </Button>
+      );
+      notification.open({
+        message: 'Notification Title',
+        duration: 0,
+        getContainer: () => document.body.querySelector(".jdn__notification"),
+        btn,
+        key,
+        onClose: close,
+      });
+    };
+
+    setTimeout(openNotification, 8000);
+    setNot(false);
+  }
 
   const waiting = useMemo(
       () =>
@@ -129,7 +158,7 @@ export const LocatorsList = () => {
           stopXpathGroupGeneration,
         }}
       />
-      <div className="jdn__locatorsList-content">
+        <div className="jdn__locatorsList-content">
         <Collapse expandIcon={({ isActive }) => <Icon component={CaretDownSvg} rotate={isActive ? 180 : 0} />}>
           <Collapse.Panel
             key="1"
@@ -168,20 +197,23 @@ export const LocatorsList = () => {
             {renderList(deleted)}
           </Collapse.Panel>
         </Collapse>
-        <div className="jdn__locatorsList-progress">
-          <Progress
-            percent={readinessPercentage}
-            status="active"
-            showInfo={false}
-            strokeColor="#1582D8"
-            trailColor="black"
-            strokeLinecap="square"
-            strokeWidth={5}
-          />
-          <p className="jdn__locatorsList-progress-text">
-            {size(waiting) ? xpathStatus : `Locators generation is successfully completed`}
-          </p>
-        </div>
+          <div className="jdn__notification-container">
+            <div className="jdn__notification"/>
+            <div className="jdn__locatorsList-progress">
+                <Progress
+                  percent={readinessPercentage}
+                  status="active"
+                  showInfo={false}
+                  strokeColor="#1582D8"
+                  trailColor="black"
+                  strokeLinecap="square"
+                  strokeWidth={5}
+                />
+                <p className="jdn__locatorsList-progress-text">
+                  {size(waiting) ? xpathStatus : `Locators generation is successfully completed`}
+                </p>
+              </div>
+          </div>
       </div>
     </div>
   );
