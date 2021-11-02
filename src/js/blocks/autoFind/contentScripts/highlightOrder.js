@@ -40,7 +40,7 @@ export function highlightOrder() {
   };
 
   const messageHandler = ({ message, param }, sender, sendResponse) => {
-    if (message === "PING_SCRIPT" && (param.scriptName === "highlightOrder")) {
+    if (message === "PING_SCRIPT" && param.scriptName === "highlightOrder") {
       sendResponse({ message: true });
     }
   };
