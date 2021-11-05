@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { filter, size } from "lodash";
 
@@ -27,37 +27,57 @@ export const LocatorsList = () => {
   const state = useSelector((state) => state);
   const xpathConfig = useSelector((state) => state.main.xpathConfig);
   const xpathStatus = useSelector((state) => state.main.xpathStatus);
-  const [not, setNot] = React.useState(true);
+  const notifications = useSelector((state) => state.main.notifications);
+  const [notificationMessage, setNotificationMessage] = React.useState("");
 
   const byProbability = selectLocatorsByProbability(state);
 
   const close = () => {
-    console.log(
-      'Notification was closed. Either the close button was clicked or duration time elapsed.',
-    );
+    toggleDeletedGroup(activeSelected, true)
   };
 
-  if (not=== true) {
-    const openNotification = () => {
-      const key = `open${Date.now()}`;
-      const btn = (
-        <Button type="primary" size="small" className="jdn__notification-close-btn" onClick={() => notification.close(key)}>
-          Cancel
-        </Button>
-      );
-      notification.open({
-        message: 'Notification Title',
-        duration: 0,
-        getContainer: () => document.body.querySelector(".jdn__notification"),
-        btn,
-        key,
-        onClose: close,
-      });
-    };
+  useEffect(() => {
+    const lastAction = notifications.length-1;
+    if ( lastAction === -1 ) {
+    } else {
+      if (notifications[lastAction].message === 'DELETED' ) {
+        setNotificationMessage('The locator deleted successfully!');
+      }
+      if (notifications[lastAction].data.length > 1 && notifications[lastAction].message === 'DELETED' ) {
+        setNotificationMessage(`${notifications[lastAction].data.length} locators deleted successfully!`);
+      }
+      if (notifications[lastAction].message === 'RESTORED' ) {
+        setNotificationMessage('The locator restored successfully!');
+      }
+      if (notifications[lastAction].data.length > 1 && notifications[lastAction].message === 'RESTORED' ) {
+        setNotificationMessage(`${notifications[lastAction].data.length} locators restored successfully!`);
+      }
+    }
+  }, [notifications]);
 
-    setTimeout(openNotification, 8000);
-    setNot(false);
-  }
+
+  useEffect(()=>{
+    if (notificationMessage.length !== 0 ) {
+      openNotification();
+    }
+  },[notificationMessage]);
+
+  const openNotification = () => {
+    const key = `open${Date.now()}`;
+    const btn = (
+      <Button type="primary" size="small" className="jdn__notification-close-btn" onClick={() => notification.close(key)}>
+        Cancel
+      </Button>
+    );
+    notification.open({
+      message: notificationMessage,
+      duration: 5,
+      getContainer: () => document.body.querySelector(".jdn__notification"),
+      btn,
+      key,
+      onClose: close,
+    });
+  };
 
   const waiting = useMemo(
       () =>
@@ -158,7 +178,7 @@ export const LocatorsList = () => {
           stopXpathGroupGeneration,
         }}
       />
-        <div className="jdn__locatorsList-content">
+      <div className="jdn__locatorsList-content">
         <Collapse expandIcon={({ isActive }) => <Icon component={CaretDownSvg} rotate={isActive ? 180 : 0} />}>
           <Collapse.Panel
             key="1"
@@ -197,23 +217,23 @@ export const LocatorsList = () => {
             {renderList(deleted)}
           </Collapse.Panel>
         </Collapse>
-          <div className="jdn__notification-container">
-            <div className="jdn__notification"/>
-            <div className="jdn__locatorsList-progress">
-                <Progress
-                  percent={readinessPercentage}
-                  status="active"
-                  showInfo={false}
-                  strokeColor="#1582D8"
-                  trailColor="black"
-                  strokeLinecap="square"
-                  strokeWidth={5}
-                />
-                <p className="jdn__locatorsList-progress-text">
-                  {size(waiting) ? xpathStatus : `Locators generation is successfully completed`}
-                </p>
-              </div>
+        <div className="jdn__notification-container">
+          <div className="jdn__notification"/>
+          <div className="jdn__locatorsList-progress">
+            <Progress
+              percent={readinessPercentage}
+              status="active"
+              showInfo={false}
+              strokeColor="#1582D8"
+              trailColor="black"
+              strokeLinecap="square"
+              strokeWidth={5}
+            />
+            <p className="jdn__locatorsList-progress-text">
+              {size(waiting) ? xpathStatus : `Locators generation is successfully completed`}
+            </p>
           </div>
+        </div>
       </div>
     </div>
   );
