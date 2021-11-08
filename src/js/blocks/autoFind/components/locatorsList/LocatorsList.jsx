@@ -33,24 +33,26 @@ export const LocatorsList = () => {
   const byProbability = selectLocatorsByProbability(state);
 
   const close = () => {
-    toggleDeletedGroup(activeSelected, true)
+    toggleDeletedGroup(deleted, true);
+    cancelNotification();
   };
 
   useEffect(() => {
     const lastAction = notifications.length-1;
-    if ( lastAction === -1 ) {
-    } else {
+    if ( lastAction !== -1 ) {
       if (notifications[lastAction].message === 'DELETED' ) {
-        setNotificationMessage('The locator deleted successfully!');
-      }
-      if (notifications[lastAction].data.length > 1 && notifications[lastAction].message === 'DELETED' ) {
-        setNotificationMessage(`${notifications[lastAction].data.length} locators deleted successfully!`);
+        if (notifications[lastAction].data.length > 1) {
+          setNotificationMessage(`${notifications[lastAction].data.length} locators deleted successfully!`);
+        } else {
+          setNotificationMessage('The locator deleted successfully!');
+        }
       }
       if (notifications[lastAction].message === 'RESTORED' ) {
-        setNotificationMessage('The locator restored successfully!');
-      }
-      if (notifications[lastAction].data.length > 1 && notifications[lastAction].message === 'RESTORED' ) {
-        setNotificationMessage(`${notifications[lastAction].data.length} locators restored successfully!`);
+        if (notifications[lastAction].data.length > 1) {
+          setNotificationMessage(`${notifications[lastAction].data.length} locators restored successfully!`);
+        } else {
+          setNotificationMessage('The locator restored successfully!');
+        }
       }
     }
   }, [notifications]);
@@ -62,20 +64,29 @@ export const LocatorsList = () => {
     }
   },[notificationMessage]);
 
+  const cancelNotification = () => {
+    notification.open({
+      message: "Action canceled.",
+      duration: 7,
+      getContainer: () => document.body.querySelector(".jdn__notification"),
+    });
+  };
+
   const openNotification = () => {
     const key = `open${Date.now()}`;
     const btn = (
-      <Button type="primary" size="small" className="jdn__notification-close-btn" onClick={() => notification.close(key)}>
+      // <Button type="primary" size="small" className="jdn__notification-close-btn" onClick={() => notification.close(key)}>
+      <Button type="primary" size="small" className="jdn__notification-close-btn" onClick={close}>
         Cancel
       </Button>
     );
     notification.open({
       message: notificationMessage,
-      duration: 5,
+      duration: 7,
       getContainer: () => document.body.querySelector(".jdn__notification"),
       btn,
       key,
-      onClose: close,
+      // onClose: close,
     });
   };
 
