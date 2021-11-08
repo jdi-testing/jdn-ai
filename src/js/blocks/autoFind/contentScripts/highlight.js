@@ -289,6 +289,7 @@ export const highlightOnPage = () => {
 
   const disconnectHandler = () => {
     removeHighlight(() => console.log("JDN highlight has been killed"))();
+    chrome.storage.sync.set({ IS_DISCONNECTED: true });
   };
 
   chrome.runtime.onConnect.addListener((p) => {

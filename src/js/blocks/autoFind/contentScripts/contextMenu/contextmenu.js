@@ -363,6 +363,11 @@ export const runContextMenu = () => {
 
     // ACTION: CLOSE MODAL
     modalCloseLink.addEventListener("click", () => modal.remove());
+    chrome.storage.onChanged.addListener((event) => {
+        if (event?.IS_DISCONNECTED?.newValue === true && modal) {
+          modal.remove();
+        }
+    });
   };
 
   // <-----
