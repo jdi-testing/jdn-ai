@@ -139,5 +139,10 @@ export const settingsPopup = () => {
     modal.appendChild(form);
     backgroundModal.append(modal);
     document.body.append(backgroundModal);
+    chrome.storage.onChanged.addListener((event) => {
+      if (event?.IS_DISCONNECTED?.newValue === true) {
+        removePopup();
+      };
+    });
   });
 };
