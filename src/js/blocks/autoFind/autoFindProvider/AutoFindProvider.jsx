@@ -3,7 +3,8 @@ import { filter } from "lodash";
 import React from "react";
 import { inject, observer } from "mobx-react";
 import { useContext } from "react";
-import { generatePageObject } from "./../utils/pageDataHandlers";
+import { generatePageObject, openDownloadPopup } from "./../utils/pageDataHandlers";
+import { locatorTaskStatus } from "./../utils/locatorGenerationController";
 
 export const autoFindStatus = {
   noStatus: "",
@@ -20,21 +21,33 @@ export const xpathGenerationStatus = {
   complete: "XPathes generation is successfully completed",
 };
 
+const hasNotGeneratedLocators = (locators) => locators.some((loc) => {
+  return loc.locator.taskStatus === locatorTaskStatus.STARTED ||
+    loc.locator.taskStatus === locatorTaskStatus.PENDING;
+});
+
 const AutoFindContext = React.createContext();
 
 const AutoFindProvider = inject("mainModel")(
   observer(({ mainModel, children }) => {
+    const generateAllLocators = (locators) => generatePageObject(
+      filter(locators, (loc) => !loc.deleted),
+      mainModel
+    );
+
     const generateAndDownload = (locators) => {
-      generatePageObject(
-        filter(locators, (loc) => loc.generate && !loc.deleted),
-        mainModel
-      );
+      if (hasNotGeneratedLocators(locators)) {
+        openDownloadPopup();
+      } else {
+        generateAllLocators(locators);
+      }
     };
 
     const data = [
       {},
       {
         generateAndDownload,
+        generateAllLocators
       },
     ];
 

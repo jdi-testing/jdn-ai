@@ -4,6 +4,7 @@ import { getPageData } from "./../contentScripts/pageData";
 import { createLocatorNames, getPage, predictedToConvert } from "./pageObject";
 import { reportProblemPopup } from "../contentScripts/reportProblemPopup/reportProblemPopup";
 import { settingsPopup } from "../contentScripts/settingsPopup/settingsPopup";
+import { downloadPopup } from "../contentScripts/downloadPopup/downloadPopup";
 import { MUI_PREDICT, request } from "./backend";
 import { locatorGenerationController } from "./locatorGenerationController";
 /* global chrome*/
@@ -136,4 +137,8 @@ export const stopGenerationHandler = (element_id) => {
 
 export const openSettingsMenu = (xpathConfig, elementIds) => {
   chrome.storage.sync.set({ XPATH_CONFIG: {xpathConfig, elementIds} }, connector.attachContentScript(settingsPopup));
+};
+
+export const openDownloadPopup = () => {
+  connector.attachContentScript(downloadPopup);
 };
