@@ -34,7 +34,8 @@ const predictionSlice = createSlice({
     changeElementName(state, { payload: { id, name } }) {
       const locators = state.locators;
       const index = findIndex(locators, { element_id: id });
-      locators[index].jdi_custom_class_name = name;
+      locators[index].name = name;
+      locators[index].isCustomName = true;
       sendMessage.changeElementName(locators[index]);
     },
     changeLocatorXpathSettings(state, {payload: {id, settings}}) {
@@ -51,9 +52,8 @@ const predictionSlice = createSlice({
     changeType(state, { payload: { id, newType } }) {
       const locators = state.locators;
       const index = findIndex(locators, { element_id: id });
-      locators[index].predicted_label = newType;
-      locators[index].jdi_class_name = getJdiClassName(newType);
-      sendMessage.changeType(locators[index]);
+      locators[index].type = newType;
+      if (!locators[index].isCustomName) locators[index].name = getJdiClassName(newType);
     },
     clearAll(state) {
       Object.keys(initialState).forEach((key) => {
@@ -96,9 +96,20 @@ const predictionSlice = createSlice({
       } else {
         locators[index].locator = payload.locator;
       }
+      sendMessage.changeStatus(payload);
     },
     xPathGenerationStarted(state) {
       state.xpathStatus = xpathGenerationStatus.started;
+    },
+    addCmElementHighlight(state, { payload }) {
+      const locators = state.locators;
+      const elem = locators.find((e) => e.element_id === payload);
+      elem.isCmHighlighted = true;
+    },
+    clearCmElementHighlight(state, { payload }) {
+      const locators = state.locators;
+      const elem = locators.find((e) => e.element_id === payload);
+      elem.isCmHighlighted = false;
     },
   },
   extraReducers: (builder) => {
@@ -143,4 +154,6 @@ export const {
   toggleBackdrop,
   updateLocator,
   xPathGenerationStarted,
+  addCmElementHighlight,
+  clearCmElementHighlight,
 } = predictionSlice.actions;

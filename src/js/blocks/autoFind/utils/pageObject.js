@@ -33,14 +33,12 @@ export const createLocatorNames = (elements) => {
     const startsWithNumber = new RegExp('^[0-9].+$');
     elementTagId = elementTagId.match(startsWithNumber) ? `name${elementTagId}` : elementTagId;
 
-    const customElementName = e.jdi_custom_class_name;
-
     if (uniqueNames.indexOf(elementName) >= 0) elementName += i;
     if (elementTagId && uniqueNames.indexOf(elementTagId) >= 0) elementTagId += i;
     uniqueNames.push(elementTagId, elementName);
 
-    const name = customElementName ?
-      customElementName :
+    const name = e.isCustomName ?
+      e.name :
       elementTagId ?
         elementTagId :
         elementName;

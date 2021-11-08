@@ -9,7 +9,6 @@ import { MUI_PREDICT, request } from "./backend";
 import { locatorGenerationController } from "./locatorGenerationController";
 /* global chrome*/
 
-// let documentListenersStarted;
 let overlayID;
 let pageAccessTimeout;
 
@@ -41,9 +40,8 @@ const uploadElements = async ([{ result }]) => {
   return r;
 };
 
-export const getElements = (callback, setStatus) => {
+export const getElements = () => {
   pageAccessTimeout = setTimeout(() => {
-    // setStatus(autoFindStatus.blocked);
     console.log('Script is blocked. Close all popups');
   }, 5000);
 
@@ -59,12 +57,6 @@ export const highlightElements = (elements, perception) => {
   sendMessage.setHighlight({ elements, perception });
 };
 
-const messageHandler = ({ message, param }, actions) => {
-  if (actions[message]) {
-    actions[message](param);
-  }
-};
-
 const requestGenerationAttributes = async (elements) => {
   await connector.attachContentScript(getGenerationAttributes);
 
@@ -78,20 +70,6 @@ const requestGenerationAttributes = async (elements) => {
       } else resolve(false);
     });
   });
-};
-
-export const runDocumentListeners = (actions) => {
-  console.log(actions);
-  connector.updateMessageListener((payload) =>
-    messageHandler(payload, actions)
-  );
-
-  // if (!documentListenersStarted) {
-  //   setUrlListener(actions["HIGHLIGHT_OFF"]);
-  //   connector.attachContentScript(runContextMenu);
-  //   connector.attachContentScript(highlightOrder);
-  //   documentListenersStarted = true;
-  // }
 };
 
 export const requestGenerationData = async (elements) => {

@@ -1,4 +1,5 @@
 .cm_container {
+  width: 204px;
   position: fixed;
   opacity: 0;
   transform: scale(0);
@@ -32,8 +33,7 @@
 }
 
 .cm_container li {
-  padding: 10px 17px;
-  padding-right: 3em;
+  padding: 10px 12px 10px 16px;
   cursor: pointer;
   white-space: nowrap;
 }
@@ -56,15 +56,15 @@
   display: inline-block;
 }
 
+.cm_container li .cm_text {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+}
 .cm_container li .cm_text_icon {
   display: inline-block;
   margin: 0 0 0 10px;
   transform: scale(-1, 1);
-}
-
-.cm_container li .cm_text .cm_text_edit_icon {
-  position: absolute;
-  right: -2.8em;
 }
 
 .cm_container li .cm_sub_span {
@@ -109,8 +109,7 @@
 }
 
 .cm_container li.cm_divider {
-  border-bottom: 1px solid #aaa;
-  margin: 5px;
+  border-bottom: 1px solid rgba(56, 56, 56, 1);
   padding: 0;
   cursor: default;
 }
@@ -226,8 +225,27 @@
   border: 1px solid rgba(21, 130, 216, 1);
 }
 
+.jdn-primary.cm--selected {
+  border: 2px solid #10b6db;
+  background-color: rgba(16, 182, 219, 0.2);
+}
+
+.jdn-primary.cm--selected .jdn-label {
+  background-color: #10b6db;
+}
+
 .jdn-primary .jdn-label {
   background-color: rgba(21, 130, 216, 1);
+}
+
+[jdn-status="PENDING"].jdn-primary, [jdn-status="STARTED"].jdn-primary {
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%231582D8FF' stroke-width='2' stroke-dasharray='5%2c 10' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+  border: none;
+}
+
+[jdn-status="PENDING"].jdn-primary.cm--selected, [jdn-status="STARTED"].jdn-primary.cm--selected {
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%2310B6DBFF' stroke-width='4' stroke-dasharray='5%2c 10' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+  border: none;
 }
 
 .jdn-secondary {
@@ -235,16 +253,36 @@
   background-color: rgba(216, 161, 21, 0.2);
 }
 
+.jdn-secondary.cm--selected {
+  border: 2px solid #f18b14;
+  background-color: rgba(241, 139, 20, 0.2);
+}
+
+.jdn-secondary.cm--selected .jdn-label {
+  background-color: #f18b14;
+}
+
 .jdn-secondary .jdn-label {
   background-color: rgba(216, 161, 21, 1);
 }
 
-.jdn-error {
+[jdn-status="PENDING"].jdn-secondary, [jdn-status="STARTED"].jdn-secondary {
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23D8A115FF' stroke-width='2' stroke-dasharray='5%2c 10' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+  border: none;
+}
+
+[jdn-status="PENDING"].jdn-secondary.cm--selected, [jdn-status="STARTED"].jdn-secondary.cm--selected {
+  background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23F18B14FF' stroke-width='4' stroke-dasharray='5%2c 10' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+  border: none;
+}
+
+[jdn-status="FAILURE"] {
+
   border: 1px solid rgba(216, 44, 21, 1);
   background-color: rgba(216, 44, 21, 0.2);
 }
 
-.jdn-error .jdn-label {
+[jdn-status="FAILURE"] .jdn-label {
   background-color: rgba(216, 44, 21, 1);
 }
 
@@ -380,5 +418,5 @@
   border: 0;
   transform: translate(-50%, -50%) scale(1);
   opacity: 1;
-  content: ' ';
+  content: " ";
 }
