@@ -42,7 +42,10 @@ export const highlightOnPage = () => {
 
   const toggleElement = (element) => {
     const div = updateElement(element);
-    if (div) div.className = getClassName(element);
+    if (div) {
+      div.className = getClassName(element);
+      div.scrollIntoView({behavior: 'smooth'});
+    }
   };
 
   const toggleDeletedElement = (element) => {
