@@ -14,12 +14,15 @@ import {
   clearCmElementHighlight,
   addCmElementHighlight,
 } from "../redux/predictionSlice";
+import { useAutoFind } from "../autoFindProvider/AutoFindProvider";
 import { runXpathGeneration } from "../redux/thunks";
 import { connector, sendMessage } from "./connector";
 import { getJdiClassName, JDIclasses } from "./generationClassesMap";
 import { onStartCollectData, openSettingsMenu, runGenerationHandler } from "./pageDataHandlers";
+import { locatorTaskStatus } from "../utils/locatorGenerationController";
 
 export const createListeners = (dispatch, state) => {
+  const [{}, { generateAllLocators }] = useAutoFind();
   const actions = {
     CHANGE_ELEMENT_NAME: (payload) => dispatch(changeElementName(payload)),
     CHANGE_XPATH_SETTINGS: ({settings, elementIds}) => {
@@ -76,6 +79,15 @@ export const createListeners = (dispatch, state) => {
     TOGGLE_ELEMENT: (payload) => {
       dispatch(toggleElementGeneration(payload));
     },
+    DOWNLOAD_POPUP: (payload) => {
+      if (payload === 'all') {
+        generateAllLocators(state.locators);
+      } else if (payload === 'generated') {
+        generateAllLocators(state.locators.filter((loc) => {
+          return loc.locator.taskStatus === locatorTaskStatus.SUCCESS;
+        }));
+      }
+    }
   };
 
   const messageHandler = ({ message, param }, _actions) => {
