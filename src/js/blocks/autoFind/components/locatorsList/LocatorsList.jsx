@@ -38,18 +38,18 @@ export const LocatorsList = () => {
   };
 
   useEffect(() => {
-    const lastAction = notifications.length-1;
-    if ( lastAction !== -1 ) {
-      if (notifications[lastAction].message === 'DELETED' ) {
-        if (notifications[lastAction].data.length > 1) {
-          setNotificationMessage(`${notifications[lastAction].data.length} locators deleted successfully!`);
+    const lastIndex = notifications.length-1;
+    if ( lastIndex !== -1 ) {
+      if (notifications[lastIndex].message === 'DELETED' ) {
+        if (notifications[lastIndex].data.length > 1) {
+          setNotificationMessage(`${notifications[lastIndex].data.length} locators deleted successfully!`);
         } else {
           setNotificationMessage('The locator deleted successfully!');
         }
       }
-      if (notifications[lastAction].message === 'RESTORED' ) {
-        if (notifications[lastAction].data.length > 1) {
-          setNotificationMessage(`${notifications[lastAction].data.length} locators restored successfully!`);
+      if (notifications[lastIndex].message === 'RESTORED' ) {
+        if (notifications[lastIndex].data.length > 1) {
+          setNotificationMessage(`${notifications[lastIndex].data.length} locators restored successfully!`);
         } else {
           setNotificationMessage('The locator restored successfully!');
         }
