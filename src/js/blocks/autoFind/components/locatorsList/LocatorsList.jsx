@@ -57,7 +57,7 @@ export const LocatorsList = () => {
     if (notificationMessage.length !== 0 ) {
       openNotification();
     }
-  },[notificationMessage]);
+  }, [notificationMessage]);
 
   const cancelNotification = () => {
     notification.destroy();
