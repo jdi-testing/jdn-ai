@@ -106,7 +106,7 @@ export const LocatorsList = () => {
     );
   };
 
-  const renderList = (elements, selectedElements, groupKey) => {
+  const renderList = (elements, selectedElements) => {
     return elements.map((element) => {
       return (
         <Locator
