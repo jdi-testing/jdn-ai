@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect, useRef} from "react";
 import { useDispatch } from "react-redux";
 
 import { Checkbox, Dropdown, Menu, Spin, Typography } from "antd";
@@ -24,14 +24,22 @@ import { locatorProgressStatus } from "../../utils/locatorGenerationController";
 import { openSettingsMenu } from "../../utils/pageDataHandlers";
 import { toggleDeleted, toggleElementGeneration } from "../../redux/predictionSlice";
 
-export const Locator = ({ element, xpathConfig, stopXpathGeneration, runXpathGenerationHandler }) => {
+export const Locator = ({ element, xpathConfig, stopXpathGeneration, runXpathGenerationHandler, noScrolling }) => {
   const dispatch = useDispatch();
 
   const { element_id, type, name, locator, generate, isCmHighlighted} = element;
 
+  const ref = useRef(null);
+
   const handleOnChange = (value) => {
     dispatch(toggleElementGeneration(element_id));
   };
+
+  useEffect(() => {
+    if (generate && !noScrolling) {
+      ref.current.scrollIntoView({behavior: 'smooth', block: 'nearest'});
+    }
+  }, [generate]);
 
   const handleSettingsOption = () => {
     openSettingsMenu((element.locator.settings || xpathConfig), [element.element_id]);
@@ -109,7 +117,7 @@ export const Locator = ({ element, xpathConfig, stopXpathGeneration, runXpathGen
   };
 
   return (
-    <div className={`${generate ? 'jdn__xpath_container--selected' : ''}
+    <div ref={ref} className={`${generate ? 'jdn__xpath_container--selected' : ''}
      ${isCmHighlighted ? 'jdn__xpath_container--cm-selected' : ''}`}>
       <Checkbox checked={generate} onChange={handleOnChange}>
         <Text className="jdn__xpath_item">
