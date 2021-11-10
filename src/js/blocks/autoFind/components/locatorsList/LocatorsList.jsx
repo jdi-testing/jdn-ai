@@ -1,12 +1,13 @@
-import React, { useMemo, useEffect, useState } from "react";
+import React, { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { filter, size } from "lodash";
 
-import { Checkbox, Collapse, Spin, notification, Button } from "antd";
+import { Checkbox, Collapse, Spin } from "antd";
 import Icon from "@ant-design/icons";
 import { Progress } from 'antd';
 import { locatorProgressStatus, locatorTaskStatus } from "../../utils/locatorGenerationController";
 import { LocatorListHeader } from "./LocatorListHeader";
+import { Notifications } from "./Notifications";
 
 import CaretDownSvg from "../../../../../icons/caret-down.svg";
 import CheckedkSvg from "../../../../../icons/checked-outlined.svg";
@@ -27,62 +28,8 @@ export const LocatorsList = () => {
   const state = useSelector((state) => state);
   const xpathConfig = useSelector((state) => state.main.xpathConfig);
   const xpathStatus = useSelector((state) => state.main.xpathStatus);
-  const notifications = useSelector((state) => state.main.notifications);
-  const [notificationMessage, setNotificationMessage] = useState("");
 
   const byProbability = selectLocatorsByProbability(state);
-
-  useEffect(() => {
-    const lastIndex = notifications.length-1;
-    if ( lastIndex !== -1 ) {
-      if (notifications[lastIndex].message === 'DELETED' ) {
-        if (notifications[lastIndex].data.length > 1) {
-          setNotificationMessage(`${notifications[lastIndex].data.length} locators deleted successfully!`);
-        } else {
-          setNotificationMessage('The locator deleted successfully!');
-        }
-      }
-      if (notifications[lastIndex].message === 'RESTORED' ) {
-        if (notifications[lastIndex].data.length > 1) {
-          setNotificationMessage(`${notifications[lastIndex].data.length} locators restored successfully!`);
-        } else {
-          setNotificationMessage('The locator restored successfully!');
-        }
-      }
-    }
-  }, [notifications]);
-
-
-  useEffect(()=>{
-    if (notificationMessage.length !== 0 ) {
-      openNotification();
-    }
-  }, [notificationMessage]);
-
-  const cancelNotification = () => {
-    notification.destroy();
-    toggleDeletedGroup(deleted, true);
-    notification.open({
-      message: "Action canceled.",
-      duration: 7,
-      getContainer: () => document.body.querySelector(".jdn__notification"),
-    });
-  };
-
-  const openNotification = () => {
-    notification.destroy();
-    const btn = (
-      <Button type="primary" size="small" className="jdn__notification-close-btn" onClick={cancelNotification}>
-        Cancel
-      </Button>
-    );
-    notification.open({
-      message: notificationMessage,
-      duration: 0,
-      getContainer: () => document.body.querySelector(".jdn__notification"),
-      btn,
-    });
-  };
 
   const waiting = useMemo(
       () =>
@@ -223,7 +170,7 @@ export const LocatorsList = () => {
           </Collapse.Panel>
         </Collapse>
         <div>
-          <div className="jdn__notification"/>
+          <Notifications {...{toggleDeletedGroup, deletedSelected}} />
           <div className="jdn__locatorsList-progress">
             <Progress
               percent={readinessPercentage}
