@@ -1,4 +1,4 @@
-import React, { useMemo, useEffect } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { filter, size } from "lodash";
 
@@ -28,7 +28,7 @@ export const LocatorsList = () => {
   const xpathConfig = useSelector((state) => state.main.xpathConfig);
   const xpathStatus = useSelector((state) => state.main.xpathStatus);
   const notifications = useSelector((state) => state.main.notifications);
-  const [notificationMessage, setNotificationMessage] = React.useState("");
+  const [notificationMessage, setNotificationMessage] = useState("");
 
   const byProbability = selectLocatorsByProbability(state);
 
@@ -78,7 +78,7 @@ export const LocatorsList = () => {
     );
     notification.open({
       message: notificationMessage,
-      duration: 7,
+      duration: 0,
       getContainer: () => document.body.querySelector(".jdn__notification"),
       btn,
     });
@@ -222,7 +222,7 @@ export const LocatorsList = () => {
             {renderList(deleted)}
           </Collapse.Panel>
         </Collapse>
-        <div className="jdn__notification-container">
+        <div>
           <div className="jdn__notification"/>
           <div className="jdn__locatorsList-progress">
             <Progress

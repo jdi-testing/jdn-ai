@@ -53,7 +53,6 @@
   margin-top: 0;
   top: 2px;
   right: 40px;
-  border: none;
   background: transparent;
 }
 
@@ -64,11 +63,6 @@
   font-size: 12px;
   line-height: 22px;
   margin-bottom: 0;
-}
-
-.jdn__notification-close-btn {
-  border: none !important;
-  background: #2e2e2e !important;
 }
 
 .jdn__autofind {
@@ -95,9 +89,9 @@
   }
 
   .ant-btn:hover {
-  color: @primary-active-color;
-  border: 1px solid @primary-active-color;
-  background: transparent;
+    color: @primary-active-color;
+    border: 1px solid @primary-active-color;
+    background: transparent;
   }
 
   .ant-btn-primary {
@@ -161,6 +155,14 @@
     &__hidden {
       height: 0;
       overflow: hidden;
+    }
+
+    /*
+    Notification
+    */
+    &__notification-close-btn {
+      border: none;
+      background: #2e2e2e;
     }
 
     /*
