@@ -29,16 +29,8 @@ export const LocatorsList = () => {
   const xpathStatus = useSelector((state) => state.main.xpathStatus);
   const notifications = useSelector((state) => state.main.notifications);
   const [notificationMessage, setNotificationMessage] = React.useState("");
-  // const [notificationKey, setNotificationKey] = React.useState("");
-  // let notificationKey;
-  // let key;
 
   const byProbability = selectLocatorsByProbability(state);
-
-  const close = () => {
-    notification.destroy();
-    toggleDeletedGroup(deleted, true);
-  };
 
   useEffect(() => {
     const lastIndex = notifications.length-1;
@@ -68,6 +60,8 @@ export const LocatorsList = () => {
   },[notificationMessage]);
 
   const cancelNotification = () => {
+    notification.destroy();
+    toggleDeletedGroup(deleted, true);
     notification.open({
       message: "Action canceled.",
       duration: 7,
@@ -77,10 +71,8 @@ export const LocatorsList = () => {
 
   const openNotification = () => {
     notification.destroy();
-    // setKey(`open${Date.now()}`);
     const btn = (
-      // <Button type="primary" size="small" className="jdn__notification-close-btn" onClick={() => notification.close(key)}>
-      <Button type="primary" size="small" className="jdn__notification-close-btn" onClick={close}>
+      <Button type="primary" size="small" className="jdn__notification-close-btn" onClick={cancelNotification}>
         Cancel
       </Button>
     );
@@ -89,9 +81,6 @@ export const LocatorsList = () => {
       duration: 7,
       getContainer: () => document.body.querySelector(".jdn__notification"),
       btn,
-      // notificationKey,
-      // key,
-      // onClose: close,
     });
   };
 
@@ -128,7 +117,6 @@ export const LocatorsList = () => {
     });
     const message = areDeleted ? "DELETED" : "RESTORED";
     dispatch(pushNotification({ message, data: locatorsGroup }));
-    // openNotification();
   };
 
   const stopXpathGroupGeneration = (locatorsGroup) => {
