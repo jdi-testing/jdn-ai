@@ -1,6 +1,6 @@
 {
   "name": "jdi-react-extension",
-  "version": "3.0.75",
+  "version": "3.0.74",
   "description": "jdi react extension",
   "scripts": {
     "start": "npm run webpack",
