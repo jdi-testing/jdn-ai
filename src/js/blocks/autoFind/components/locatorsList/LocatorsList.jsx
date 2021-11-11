@@ -170,7 +170,7 @@ export const LocatorsList = () => {
           </Collapse.Panel>
         </Collapse>
         <div>
-          <Notifications {...{toggleDeletedGroup, deletedSelected}} />
+          <Notifications {...{toggleDeletedGroup, deletedSelected, generatedSelected}} />
           <div className="jdn__locatorsList-progress">
             <Progress
               percent={readinessPercentage}
