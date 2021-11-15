@@ -73,6 +73,9 @@ export const Locator = ({ element, xpathConfig, stopXpathGeneration, runXpathGen
         </span>
         )
         <span className="jdn__xpath_item-type">
+          public
+        </span>
+        <span>
           &nbsp;{type}&nbsp;
         </span>
         {name}
