@@ -3,6 +3,7 @@
 @disabled-color: #b2b5c2;
 @xpath-item-color-locator: #7a2626;
 @xpath-item-color-type: #004aa0;
+@locators-list-item-border: #e5dfdf;
 
 .ant-dropdown-menu {
   min-width: 145px;
@@ -394,7 +395,7 @@
           .ant-collapse-header {
             position: sticky;
             z-index: 10000;
-            border-bottom: 1px solid #e5dfdf;
+            border-bottom: 1px solid @locators-list-item-border;
           }
 
           .ant-collapse-content {
@@ -413,7 +414,7 @@
             & .ant-collapse-item-active {
               .ant-collapse-header {
                 top: 31px;
-                border-bottom: 1px solid #e5dfdf;
+                border-bottom: 1px solid @locators-list-item-border;
                 border-top: 0;
               }
             }
@@ -424,7 +425,7 @@
 
             .ant-collapse-header {
               top: 31px;
-              border-bottom: 1px solid #e5dfdf;
+              border-bottom: 1px solid @locators-list-item-border;
             }
 
             &.jdn__collapse-panel-middle {
@@ -434,7 +435,7 @@
               }
 
               & .ant-collapse-item-active {
-                border-bottom: 1px solid #e5dfdf;
+                border-bottom: 1px solid @locators-list-item-border;
               }
 
               & + .ant-collapse-item-active {
@@ -442,7 +443,7 @@
 
                 .ant-collapse-header {
                   top: 66px;
-                  border-bottom: 1px solid #e5dfdf;
+                  border-bottom: 1px solid @locators-list-item-border;
                 }
               }
             }
@@ -455,7 +456,7 @@
             &.jdn__collapse-panel-middle {
               .ant-collapse-header {
                 top: 31px;
-                border-bottom: 1px solid #e5dfdf;
+                border-bottom: 1px solid @locators-list-item-border;
               }
             }
           }
@@ -474,7 +475,7 @@
                 .ant-collapse-header {
                   bottom: 0;
                   border-bottom: 0;
-                  border-top: 1px solid #e5dfdf;
+                  border-top: 1px solid @locators-list-item-border;
                 }
 
                 &.jdn__collapse-panel-middle {
@@ -482,7 +483,7 @@
 
                   .ant-collapse-header {
                     bottom: 30px;
-                    border-bottom: 1px solid #e5dfdf;
+                    border-bottom: 1px solid @locators-list-item-border;
                   }
                 }
               }

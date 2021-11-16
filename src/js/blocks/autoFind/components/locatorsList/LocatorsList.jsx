@@ -163,7 +163,6 @@ export const LocatorsList = () => {
           />}>
           {size(generated) && <Collapse.Panel
             key="1"
-            style={{ display: !size(generated) ? "none" : "block" }}
             header={renderGroupHeader(
                 `Generated (${size(generated)})`,
                 generated,
