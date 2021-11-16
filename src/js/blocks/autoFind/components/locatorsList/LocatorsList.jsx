@@ -27,7 +27,7 @@ export const LocatorsList = () => {
   const state = useSelector((state) => state);
   const xpathConfig = useSelector((state) => state.main.xpathConfig);
   const xpathStatus = useSelector((state) => state.main.xpathStatus);
-  const [activePanels, setActivePanels] = useState([]);
+  const [activePanel, setActivePanel] = useState();
 
   const byProbability = selectLocatorsByProbability(state);
 
@@ -82,8 +82,8 @@ export const LocatorsList = () => {
     dispatch(runXpathGeneration(locatorsGroup));
   };
 
-  const togglePanel = useCallback((panels) => {
-    setActivePanels([...panels]);
+  const togglePanel = useCallback((panel) => {
+    setActivePanel(panel);
   }, []);
 
   const renderGroupHeader = (title, locatorsGroup, selectedGroup, iconComponent) => {
@@ -129,14 +129,14 @@ export const LocatorsList = () => {
   }, [byProbability, generated]);
 
   useEffect(() => {
-    if (hasGeneratedSelected && !activePanels.includes('1')) {
-      setActivePanels([...activePanels, '1']);
+    if (hasGeneratedSelected) {
+      setActivePanel('1');
     }
   }, [hasGeneratedSelected]);
 
   useEffect(() => {
-    if (hasWaitingSelected && !activePanels.includes('2')) {
-      setActivePanels([...activePanels, '2']);
+    if (hasWaitingSelected) {
+      setActivePanel('2');
     }
   }, [hasWaitingSelected]);
 
@@ -155,11 +155,13 @@ export const LocatorsList = () => {
       />
       <div className="jdn__locatorsList-content">
         <Collapse
+          className="jdn__collapse"
           onChange={togglePanel}
-          activeKey={ activePanels}
+          activeKey={ activePanel}
+          accordion
           expandIcon={({ isActive }) => <Icon component={CaretDownSvg} rotate={isActive ? 180 : 0}
           />}>
-          <Collapse.Panel
+          {size(generated) && <Collapse.Panel
             key="1"
             style={{ display: !size(generated) ? "none" : "block" }}
             header={renderGroupHeader(
@@ -168,9 +170,11 @@ export const LocatorsList = () => {
                 generatedSelected,
                 <Icon component={CheckedkSvg} className="jdn__locatorsList-status" />
             )}
+            className="jdn__collapse-panel"
           >
             {renderList(generated, generatedSelected)}
-          </Collapse.Panel>
+          </Collapse.Panel>}
+          { size(waiting) &&
           <Collapse.Panel
             key="2"
             style={{ display: !size(waiting) ? "none" : "block" }}
@@ -180,9 +184,10 @@ export const LocatorsList = () => {
                 waitingSelected,
                 <Spin size="small" />
             )}
+            className={`jdn__collapse-panel ${size(deleted) ? 'jdn__collapse-panel-middle' : '' }`}
           >
             {renderList(waiting, waitingSelected)}
-          </Collapse.Panel>
+          </Collapse.Panel> }
           <Collapse.Panel
             key="3"
             style={{ display: !size(deleted) ? "none" : "block" }}
@@ -192,6 +197,7 @@ export const LocatorsList = () => {
                 deletedSelected,
                 <Icon component={InvisibleSvg} className="jdn__locatorsList-status" />
             )}
+            className="jdn__collapse-panel"
           >
             {renderList(deleted, deletedSelected)}
           </Collapse.Panel>
