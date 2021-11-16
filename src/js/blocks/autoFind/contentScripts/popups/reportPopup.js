@@ -92,9 +92,9 @@ export const reportPopup = () => {
   document.body.append(background);
 
   chrome.storage.onChanged.addListener((event) => {
-      if (event?.IS_DISCONNECTED?.newValue === true && modal) {
-        removePopup();
-      }
+    if (event?.IS_DISCONNECTED?.newValue === true && modal) {
+      removePopup();
+    }
   });
 
   function removePopup() {
