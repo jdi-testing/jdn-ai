@@ -227,6 +227,9 @@
         border: none;
         border-radius: 0;
       }
+      .ant-collapse > .ant-collapse-item {
+        border-bottom: 0;
+      }
 
       .ant-collapse > .ant-collapse-item > .ant-collapse-header {
         background: #fff;
@@ -378,6 +381,94 @@
         }
         .ant-progress {
           height: 15px;
+        }
+      }
+      .jdn__collapse {
+        height: 100%;
+        overflow-y: auto;
+
+        .jdn__collapse-panel {
+          .ant-collapse-header {
+            position: sticky;
+            z-index: 10000;
+            border-bottom: 1px solid #e5dfdf;
+          }
+          .ant-collapse-content {
+            border-top: 0;
+          }
+          &:first-child {
+            top: 0;
+            .ant-collapse-header {
+              top: 0;
+            }
+            &.ant-collapse-item-active {
+              + .jdn__collapse-panel {
+                bottom: 0;
+                .ant-collapse-header {
+                  bottom: 0;
+                  border-bottom: 0;
+                  border-top: 1px solid #e5dfdf;
+                }
+                &.jdn__collapse-panel-middle {
+                  bottom: 30px;
+                  .ant-collapse-header {
+                    bottom: 30px;
+                    border-bottom: 1px solid #e5dfdf;
+                  }
+                }
+              }
+            }
+          }
+          &:nth-child(2) {
+            top: 31px;
+            .ant-collapse-header {
+              top: 31px;
+              border-bottom: 1px solid #e5dfdf;
+            }
+            &.jdn__collapse-panel-middle {
+              .ant-collapse-header {
+                top: 31px;
+                border-bottom: 0;
+              }
+              & .ant-collapse-item-active {
+                border-bottom: 1px solid #e5dfdf;
+              }
+              & + .ant-collapse-item-active {
+                z-index: 1;
+                .ant-collapse-header {
+                  top: 66px;
+                  border-bottom: 1px solid #e5dfdf;
+                }
+              }
+            }
+          }
+          &:not(.ant-collapse-item-active) {
+            position: sticky;
+            z-index: 100000;
+
+            &.jdn__collapse-panel-middle {
+              .ant-collapse-header {
+                top: 31px;
+                border-bottom: 1px solid #e5dfdf;
+              }
+            }
+          }
+
+          &:last-child {
+            bottom: 0;
+            z-index: 1;
+            .ant-collapse-header {
+              bottom: 0;
+              border-bottom: 0;
+            }
+            & .ant-collapse-item-active {
+              .ant-collapse-header {
+                top: 31px;
+                border-bottom: 1px solid #e5dfdf;
+                border-top: 0;
+              }
+            }
+          }
         }
       }
     }
