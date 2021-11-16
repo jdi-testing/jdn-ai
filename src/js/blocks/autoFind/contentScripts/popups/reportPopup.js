@@ -20,7 +20,8 @@ export const reportPopup = () => {
 
   const description = document.createElement("p");
   description.innerHTML = `
-        To find the real problem, we need to get the txt-file (json.txt) and a screenshot of the site with the identified elements on it (screenshot.jpg). <br> <br>
+        To find the real problem, we need to get the txt-file (json.txt)
+        and a screenshot of the site with the identified elements on it (screenshot.jpg). <br> <br>
 
         To take a screenshot and get the json file, you need: <br>
             - press the OK button in this window <br>
@@ -105,7 +106,10 @@ export const reportPopup = () => {
   function mailTo() {
     const mailToLink = document.createElement("a");
     mailToLink.target = "_blank";
-    mailToLink.href = `mailto:JDI-support+JDN@epam.com?subject=Some%20elements%20were%20not%20identified%20on%20page%3A%20${window.location.href}&body=Hi%2C%0D%0ASome%20elements%20were%20not%20identified%20on%20the%20page%2C%20please%20have%20a%20look.%0D%0A%3CPlease%20save%20provided%20archive%20to%20disk%20and%20attach%20it%20to%20this%20email%3E%0D%0A%3CPROVIDE%20ADDITIONAL%20DETAILS%20IF%20NEEDED%3E`;
+    mailToLink.href = `mailto:JDI-support+JDN@epam.com?subject=Some%20elements%20were%20not%20identified
+    %20on%20page%3A%20${window.location.href}&body=Hi%2C%0D%0ASome%20elements%20were%20not%20identified%
+    20on%20the%20page%2C%20please%20have%20a%20look.%0D%0A%3CPlease%20save%20provided%20archive%20to%20
+    disk%20and%20attach%20it%20to%20this%20email%3E%0D%0A%3CPROVIDE%20ADDITIONAL%20DETAILS%20IF%20NEEDED%3E`;
     mailToLink.click();
   }
 
