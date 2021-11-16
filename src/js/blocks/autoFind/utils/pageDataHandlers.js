@@ -2,9 +2,7 @@ import { connector, sendMessage } from "./connector";
 import { getGenerationAttributes } from "./../contentScripts/generationData";
 import { getPageData } from "./../contentScripts/pageData";
 import { createLocatorNames, getPage, predictedToConvert } from "./pageObject";
-import { reportProblemPopup } from "../contentScripts/reportProblemPopup/reportProblemPopup";
-import { settingsPopup } from "../contentScripts/settingsPopup/settingsPopup";
-import { downloadPopup } from "../contentScripts/downloadPopup/downloadPopup";
+import { reportPopup, settingsPopup, downloadPopup } from "../contentScripts/popups";
 import { MUI_PREDICT, request } from "./backend";
 import { locatorGenerationController } from "./locatorGenerationController";
 /* global chrome*/
@@ -87,7 +85,7 @@ export const generatePageObject = (elements, mainModel) => {
 };
 
 export const reportProblem = (predictedElements) => {
-  chrome.storage.sync.set({ predictedElements }, connector.attachContentScript(reportProblemPopup));
+  chrome.storage.sync.set({ predictedElements }, connector.attachContentScript(reportPopup));
 };
 
 export const runGenerationHandler = async (elements, settings, elementCallback) => {
