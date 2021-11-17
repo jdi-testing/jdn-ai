@@ -145,7 +145,7 @@ export const settingsPopup = () => {
     okButton.classList.add("jdn-popup__button");
     okButton.classList.add("jdn-popup__button_primary");
     okButton.setAttribute('type', 'submit');
-    buttonOk.innerText = hasGeneratedSelected ? "Save and regenerate": "Save";
+    okButton.innerText = hasGeneratedSelected ? "Save and regenerate": "Save";
 
     const cancelButton = document.createElement("button");
     cancelButton.classList.add("jdn-popup__button");
