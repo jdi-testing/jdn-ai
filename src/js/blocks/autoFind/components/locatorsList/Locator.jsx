@@ -122,7 +122,7 @@ export const Locator = ({ element, xpathConfig, stopXpathGeneration, runXpathGen
   };
 
   return (
-    <div ref={ref} className={`${generate ? 'jdn__xpath_container--selected' : ''}
+    <div ref={ref} className={`${generate ? 'jdn__xpath_container--selected' : 'jdn__xpath_container--shift'}
      ${isCmHighlighted ? 'jdn__xpath_container--cm-selected' : ''}`}>
       <Checkbox checked={generate} onChange={handleOnChange}>
         <Text className="jdn__xpath_item">

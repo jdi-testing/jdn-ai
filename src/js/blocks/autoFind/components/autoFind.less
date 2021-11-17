@@ -254,7 +254,7 @@
       }
 
       .ant-collapse-content > .ant-collapse-content-box {
-        padding: 0 12px;
+         padding: 0 0;
 
         .ant-checkbox-wrapper {
           width: calc(100% - 14px);
@@ -497,10 +497,14 @@
       &_container {
         &--selected {
           background-color: #ecf7ff;
+          padding: 0 12px;
 
           &.jdn__xpath_container--cm-selected {
             background-color: #d4eefa;
           }
+        }
+        &--shift {
+          padding: 0 12px;
         }
 
         &--cm-selected {
