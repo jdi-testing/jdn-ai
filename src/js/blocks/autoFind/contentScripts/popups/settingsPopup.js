@@ -36,7 +36,7 @@ export const settingsPopup = () => {
     const modal = document.createElement("dialog");
     modal.setAttribute('open', true);
     modal.classList.add("jdn-popup");
-    modal.classList.add("settings-popup");
+    modal.classList.add("jdn-settings-popup");
 
     const header = document.createElement('h4');
     header.classList.add('jdn-popup__header');
@@ -62,7 +62,7 @@ export const settingsPopup = () => {
 
     checkboxes.forEach(((checkbox) => {
       const inputContainer = document.createElement('div');
-      inputContainer.className = 'settings-popup__input-container';
+      inputContainer.className = 'jdn-settings-popup__input-container';
 
       const {name, label} = checkbox;
       const formCheckbox = document.createElement('input');
@@ -105,7 +105,7 @@ export const settingsPopup = () => {
 
       const checkboxLabel = document.createElement('label');
       checkboxLabel.innerHTML = label;
-      checkboxLabel.classList.add('settings-popup__label');
+      checkboxLabel.classList.add('jdn-settings-popup__label');
       checkboxLabel.append(formCheckbox);
 
       formCheckbox.addEventListener("change", (event) => {
@@ -120,7 +120,7 @@ export const settingsPopup = () => {
 
       if (name === 'limit_maximum_generation_time') {
         const numberInput = document.createElement('input');
-        numberInput.classList.add('settings-popup__input');
+        numberInput.classList.add('jdn-settings-popup__input');
         numberInput.setAttribute('type', 'number');
         numberInput.setAttribute('name', 'maximum_generation_time');
         numberInput.setAttribute('min', 0);
@@ -132,7 +132,7 @@ export const settingsPopup = () => {
         });
 
         const numberInputLabel = document.createElement('label');
-        numberInputLabel.classList.add('settings-popup__label');
+        numberInputLabel.classList.add('jdn-settings-popup__label');
         numberInputLabel.innerHTML = 'sec';
         numberInputLabel.append(numberInput);
         inputContainer.append(numberInputLabel);

@@ -4,7 +4,7 @@ export const reportPopup = () => {
 
   const modal = document.createElement("div");
   modal.classList.add("jdn-popup");
-  modal.classList.add("problem-report-popup");
+  modal.classList.add("jdn-report-popup");
 
   const header = document.createElement("h4");
   header.classList.add('jdn-popup__header');

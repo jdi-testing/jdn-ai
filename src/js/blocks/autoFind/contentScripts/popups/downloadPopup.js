@@ -10,7 +10,7 @@ export const downloadPopup = () => {
   const modal = document.createElement("dialog");
   modal.setAttribute('open', true);
   modal.classList.add("jdn-popup");
-  modal.classList.add("download-popup");
+  modal.classList.add("jdn-download-popup");
 
   const header = document.createElement('h4');
   header.classList.add('jdn-popup__header');
@@ -24,7 +24,7 @@ export const downloadPopup = () => {
   const main = document.createElement('div');
   main.classList.add("jdn-popup__main");
   main.innerHTML = `
-    <strong class="download-popup__warning">Attention!</strong>
+    <strong class="jdn-download-popup__warning">Attention!</strong>
     Not all selected locators have already been <br>
     generated. We recommend waiting until the generation is complete.
     <br>
