@@ -11,6 +11,7 @@ import { LocatorListHeader } from "./LocatorListHeader";
 import CaretDownSvg from "../../../../../icons/caret-down.svg";
 import CheckedkSvg from "../../../../../icons/checked-outlined.svg";
 import InvisibleSvg from "../../../../../icons/invisible.svg";
+import DeletedSvg from "../../../../../icons/deleted.svg";
 import { Locator } from "./Locator";
 import {
   pushNotification,
@@ -194,7 +195,7 @@ export const LocatorsList = () => {
                 `Deleted (${size(deleted)})`,
                 deleted,
                 deletedSelected,
-                <Icon component={InvisibleSvg} className="jdn__locatorsList-status" />
+                <Icon component={DeletedSvg} className="jdn__locatorsList-status" />
             )}
             className="jdn__collapse-panel"
           >
