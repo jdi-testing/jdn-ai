@@ -23,7 +23,7 @@ export const settingsPopup = () => {
   ];
 
   chrome.storage.sync.get(['XPATH_CONFIG'], ({XPATH_CONFIG}) => {
-    const {xpathConfig, elementIds} = XPATH_CONFIG;
+    const {xpathConfig, elementIds, hasGeneratedSelected} = XPATH_CONFIG;
     chrome.runtime.sendMessage({
       message: "IS_OPEN_XPATH_CONFIG_MODAL",
       param: true,
@@ -56,7 +56,7 @@ export const settingsPopup = () => {
     const buttonOk = document.createElement("button");
     buttonOk.classList.add("jdn-settings-popup__button--ok");
     buttonOk.setAttribute('type', 'submit');
-    buttonOk.innerText = "Save";
+    buttonOk.innerText = hasGeneratedSelected ? "Save and regenerate": "Save";
 
     const buttonCancel = document.createElement("button");
     buttonCancel.classList.add("jdn-report-problem-popup__button");

@@ -32,6 +32,7 @@ export const LocatorListHeader = ({
   const activeSelected = [...generatedSelected, ...waitingSelected];
   const stoppedSelected = filter(waitingSelected, (el) => el.locator.taskStatus === locatorTaskStatus.REVOKED);
   const inProgressSelected = filter(waitingSelected, (el) => el.locator.taskStatus !== locatorTaskStatus.REVOKED);
+  const hasGeneratedSelected = generatedSelected?.length > 0;
 
   const handleOnClickSettings = () => {
     const reduceSettingsObject = (result, itemSettings) => {
@@ -63,7 +64,7 @@ export const LocatorListHeader = ({
     };
 
     const settings = size(activeSelected) === 1 ? activeSelected[0].locator.settings : reduceSettingsArray();
-    openSettingsMenu(settings || xpathConfig, map(activeSelected, "element_id"));
+    openSettingsMenu(settings || xpathConfig, map(activeSelected, "element_id"), hasGeneratedSelected);
   };
 
   return (
