@@ -4,8 +4,8 @@ import { filter, size } from "lodash";
 
 import { Checkbox, Collapse, Spin } from "antd";
 import Icon from "@ant-design/icons";
-import { Progress } from 'antd';
-import { locatorProgressStatus, locatorTaskStatus } from "../../utils/locatorGenerationController";
+import { Progress } from "antd";
+import { isProgressStatus, locatorTaskStatus } from "../../utils/locatorGenerationController";
 import { LocatorListHeader } from "./LocatorListHeader";
 import { Notifications } from "./Notifications";
 
@@ -14,13 +14,9 @@ import CheckedkSvg from "../../../../../icons/checked-outlined.svg";
 import InvisibleSvg from "../../../../../icons/invisible.svg";
 import { Locator } from "./Locator";
 import {
-  pushNotification,
-  stopXpathGeneration,
-  toggleDeleted,
-  toggleElementGeneration,
+  toggleElementGroupGeneration,
 } from "../../redux/predictionSlice";
 import { selectLocatorsByProbability } from "../../redux/selectors";
-import { runXpathGeneration } from "../../redux/thunks";
 
 export const LocatorsList = () => {
   const dispatch = useDispatch();
@@ -35,7 +31,7 @@ export const LocatorsList = () => {
       () =>
         byProbability.filter(
             (el) =>
-              (locatorProgressStatus.hasOwnProperty(el.locator.taskStatus) ||
+              (isProgressStatus(el.locator.taskStatus) ||
             el.locator.taskStatus === locatorTaskStatus.REVOKED ||
             el.locator.taskStatus === locatorTaskStatus.FAILURE) &&
           !el.deleted
@@ -52,34 +48,10 @@ export const LocatorsList = () => {
   const generatedSelected = filter(generated, "generate");
   const deletedSelected = filter(deleted, "generate");
 
-  const toggleLocatorsGroup = (locatorsGroup) => {
-    locatorsGroup.forEach((locator) => {
-      dispatch(toggleElementGeneration(locator.element_id));
-    });
-  };
-
-  const toggleDeletedGroup = (locatorsGroup, areDeleted) => {
-    locatorsGroup.forEach((locator) => {
-      dispatch(toggleDeleted(locator.element_id));
-    });
-    const message = areDeleted ? "DELETED" : "RESTORED";
-    dispatch(pushNotification({ message, data: locatorsGroup }));
-  };
-
-  const stopXpathGroupGeneration = (locatorsGroup) => {
-    locatorsGroup.forEach((locator) => {
-      dispatch(stopXpathGeneration(locator.element_id));
-    });
-  };
-
-  const runXpathGenerationHandler = (locatorsGroup) => {
-    dispatch(runXpathGeneration(locatorsGroup));
-  };
-
   const renderGroupHeader = (title, locatorsGroup, selectedGroup, iconComponent) => {
     const handleCheckboxChange = ({ target }) => {
       const group = filter(locatorsGroup, (loc) => loc.generate !== target.checked);
-      toggleLocatorsGroup(group);
+      dispatch(toggleElementGroupGeneration(group));
     };
 
     return (
@@ -101,7 +73,7 @@ export const LocatorsList = () => {
       return (
         <Locator
           key={element.element_id}
-          {...{ element, xpathConfig, stopXpathGeneration, runXpathGenerationHandler }}
+          {...{ element, xpathConfig }}
         />
       );
     });
@@ -124,10 +96,6 @@ export const LocatorsList = () => {
           generatedSelected,
           waitingSelected,
           deletedSelected,
-          toggleLocatorsGroup,
-          toggleDeletedGroup,
-          runXpathGenerationHandler,
-          stopXpathGroupGeneration,
         }}
       />
       <div className="jdn__locatorsList-content">
@@ -170,7 +138,7 @@ export const LocatorsList = () => {
           </Collapse.Panel>
         </Collapse>
         <div>
-          <Notifications {...{toggleDeletedGroup, deletedSelected, generatedSelected}} />
+          <Notifications {...{ deletedSelected, generatedSelected }} />
           <div className="jdn__locatorsList-progress">
             <Progress
               percent={readinessPercentage}

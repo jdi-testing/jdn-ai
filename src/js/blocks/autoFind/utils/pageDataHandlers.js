@@ -5,7 +5,6 @@ import { createLocatorNames, getPage, predictedToConvert } from "./pageObject";
 import { reportProblemPopup } from "../contentScripts/reportProblemPopup/reportProblemPopup";
 import { settingsPopup } from "../contentScripts/settingsPopup/settingsPopup";
 import { MUI_PREDICT, request } from "./backend";
-import { locatorGenerationController } from "./locatorGenerationController";
 /* global chrome*/
 
 let overlayID;
@@ -52,10 +51,6 @@ export const getElements = () => {
       });
 };
 
-export const highlightElements = (elements, perception) => {
-  sendMessage.setHighlight({ elements, perception });
-};
-
 const requestGenerationAttributes = async (elements) => {
   await connector.attachContentScript(getGenerationAttributes);
 
@@ -87,29 +82,6 @@ export const generatePageObject = (elements, mainModel) => {
 
 export const reportProblem = (predictedElements) => {
   chrome.storage.sync.set({ predictedElements }, connector.attachContentScript(reportProblemPopup));
-};
-
-export const runGenerationHandler = async (elements, settings, elementCallback) => {
-  const documentResult = await connector.attachContentScript(
-      (() => JSON.stringify(document.documentElement.innerHTML))
-  );
-  const document = await documentResult[0].result;
-
-  elements.forEach((element) => {
-    const callback = (elementId, locator) => {
-      elementCallback({...element, locator: { ...element.locator, ...locator}});
-    };
-    locatorGenerationController.scheduleTask(
-        element.element_id,
-        element.locator.settings || settings,
-        document,
-        callback
-    );
-  });
-};
-
-export const stopGenerationHandler = (element_id) => {
-  locatorGenerationController.revokeTask(element_id);
 };
 
 export const openSettingsMenu = (xpathConfig, elementIds) => {

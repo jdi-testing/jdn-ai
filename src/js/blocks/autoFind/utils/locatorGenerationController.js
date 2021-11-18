@@ -1,5 +1,6 @@
 import { find, isEqual, pull } from "lodash";
 import { GET_TASK_RESULT, GET_TASK_STATUS, request, REVOKE_TASK, SHEDULE_XPATH_GENERATION } from "./backend";
+import { connector } from "./connector";
 
 export const locatorProgressStatus = {
   PENDING: "PENDING",
@@ -13,6 +14,31 @@ export const locatorTaskStatus = {
   RETRY: "RETRY",
   SUCCESS: "SUCCESS",
   ...locatorProgressStatus,
+};
+
+export const isProgressStatus = (taskStatus) => !!locatorProgressStatus.hasOwnProperty(taskStatus);
+
+export const runGenerationHandler = async (elements, settings, elementCallback) => {
+  const documentResult = await connector.attachContentScript(
+      (() => JSON.stringify(document.documentElement.innerHTML))
+  );
+  const document = await documentResult[0].result;
+
+  elements.forEach((element) => {
+    const callback = (elementId, locator) => {
+      elementCallback({...element, locator: { ...element.locator, ...locator}});
+    };
+    locatorGenerationController.scheduleTask(
+        element.element_id,
+        element.locator.settings || settings,
+        document,
+        callback
+    );
+  });
+};
+
+export const stopGenerationHandler = (element_id) => {
+  locatorGenerationController.revokeTask(element_id);
 };
 
 export class LocatorGenerationScheduler {
@@ -69,7 +95,7 @@ export class LocatorGenerationScheduler {
     this.taskStatus = result.status;
     this.requestInProgress = false;
 
-    if (!locatorProgressStatus.hasOwnProperty(this.taskStatus)) {
+    if (!isProgressStatus(this.taskStatus)) {
       clearInterval(this.ping);
       locatorGenerationController.unscheduleTask(this.elementId);
     }

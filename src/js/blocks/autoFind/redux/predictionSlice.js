@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { findIndex } from "lodash";
+import { size } from "lodash";
 import { autoFindStatus, xpathGenerationStatus } from "../autoFindProvider/AutoFindProvider";
-import { sendMessage } from "../utils/connector";
 import { getJdiClassName } from "../utils/generationClassesMap";
-import { stopGenerationHandler } from "../utils/pageDataHandlers";
+import { stopGenerationHandler } from "../utils/locatorGenerationController";
+import { locatorsAdapter, simpleSelectLocatorById } from "./selectors";
 import { generateLocators, identifyElements } from "./thunks";
 
 const initialState = {
@@ -11,7 +11,6 @@ const initialState = {
   allowIdentifyElements: true,
   allowRemoveElements: false,
   isModalOpen: false,
-  locators: [],
   notifications: [],
   perception: 0.5,
   predictedElements: [],
@@ -29,19 +28,14 @@ const initialState = {
 
 const predictionSlice = createSlice({
   name: "main",
-  initialState,
+  initialState: locatorsAdapter.getInitialState(initialState),
   reducers: {
     changeElementName(state, { payload: { id, name } }) {
-      const locators = state.locators;
-      const index = findIndex(locators, { element_id: id });
-      locators[index].name = name;
-      locators[index].isCustomName = true;
-      sendMessage.changeElementName(locators[index]);
+      const locator = simpleSelectLocatorById(state, id);
+      locatorsAdapter.upsertOne(state, {...locator, name: name, isCustomName: true});
     },
-    changeLocatorXpathSettings(state, {payload: {id, settings}}) {
-      const locators = state.locators;
-      const index = findIndex(locators, { element_id: id });
-      locators[index].locator.settings = settings;
+    changeLocatorSettings(state, {payload}) {
+      locatorsAdapter.upsertMany(state, payload);
     },
     changePerception(state, {payload}) {
       state.perception = payload;
@@ -50,66 +44,79 @@ const predictionSlice = createSlice({
       state.xpathConfig = payload;
     },
     changeType(state, { payload: { id, newType } }) {
-      const locators = state.locators;
-      const index = findIndex(locators, { element_id: id });
-      locators[index].type = newType;
-      if (!locators[index].isCustomName) locators[index].name = getJdiClassName(newType);
+      const locator = simpleSelectLocatorById(state, id);
+      const newValue = {...locator, type: newType};
+      if (!locator.isCustomName) newValue.name = getJdiClassName(newType);
+      locatorsAdapter.upsertOne(state, newValue);
     },
     clearAll(state) {
       Object.keys(initialState).forEach((key) => {
         state[key] = initialState[key];
       });
+      locatorsAdapter.removeAll(state);
       state.status = autoFindStatus.removed;
     },
     pushNotification(state, {payload}) {
       state.notifications.push(payload);
     },
+    cancelLastNotification(state) {
+      state.notifications[size(state.notifications) -1].isCanceled = true;
+    },
+    handleLastNotification(state) {
+      state.notifications[size(state.notifications) -1].isHandled = true;
+    },
     setUnactualPrediction(state, {payload}) {
       state.unactualPrediction = payload;
     },
     stopXpathGeneration(state, {payload}) {
-      const locators = state.locators;
-      const index = findIndex(locators, { element_id: payload });
-      locators[index].stopped = true;
+      const locator = simpleSelectLocatorById(state, payload);
+      locatorsAdapter.upsertOne(state, {...locator, stopped: true});
       stopGenerationHandler(payload);
     },
+    stopXpathGenerationGroup(state, {payload}) {
+      const newValue = [];
+      payload.forEach((locator) => {
+        newValue.push({...locator, stopped: true});
+        stopGenerationHandler(locator.element_id);
+      });
+      locatorsAdapter.upsertMany(state, newValue);
+    },
     toggleElementGeneration(state, { payload }) {
-      const locators = state.locators;
-      const index = findIndex(locators, { element_id: payload });
-      locators[index].generate = !locators[index].generate;
-      sendMessage.toggle(locators[index]);
+      const locator = simpleSelectLocatorById(state, payload);
+      locatorsAdapter.upsertOne(state, {...locator, generate: !locator.generate});
+    },
+    toggleElementGroupGeneration(state, { payload }) {
+      const newValue = [];
+      payload.forEach((locator) => {
+        newValue.push({...locator, generate: !locator.generate});
+      });
+      locatorsAdapter.upsertMany(state, newValue);
     },
     toggleDeleted(state, { payload }) {
-      const locators = state.locators;
-      const index = findIndex(state.locators, { element_id: payload });
-      locators[index].deleted = !locators[index].deleted;
-      sendMessage.toggleDeleted(locators[index]);
+      const locator = simpleSelectLocatorById(state, payload);
+      locatorsAdapter.upsertOne(state, {...locator, deleted: !locator.deleted});
+    },
+    toggleDeletedGroup(state, { payload }) {
+      const newValue = [];
+      payload.forEach((locator) => {
+        newValue.push({...locator, deleted: !locator.deleted});
+      });
+      locatorsAdapter.upsertMany(state, newValue);
     },
     toggleBackdrop(state, {payload}) {
       state.isModalOpen = payload;
     },
     updateLocator(state, { payload }) {
-      const locators = state.locators;
-      const index = findIndex(locators, { element_id: payload.element_id });
-      if (index === -1) {
-        locators.push(payload);
-      } else {
-        locators[index].locator = payload.locator;
-      }
-      sendMessage.changeStatus(payload);
+      locatorsAdapter.upsertOne(state, payload);
     },
     xPathGenerationStarted(state) {
       state.xpathStatus = xpathGenerationStatus.started;
     },
     addCmElementHighlight(state, { payload }) {
-      const locators = state.locators;
-      const elem = locators.find((e) => e.element_id === payload);
-      elem.isCmHighlighted = true;
+      locatorsAdapter.upsertOne(state, {element_id: payload, isCmHighlighted: true});
     },
     clearCmElementHighlight(state, { payload }) {
-      const locators = state.locators;
-      const elem = locators.find((e) => e.element_id === payload);
-      elem.isCmHighlighted = false;
+      locatorsAdapter.upsertOne(state, {element_id: payload, isCmHighlighted: false});
     },
   },
   extraReducers: (builder) => {
@@ -140,17 +147,22 @@ const predictionSlice = createSlice({
 
 export default predictionSlice.reducer;
 export const {
+  cancelLastNotification,
   changeType,
   changeElementName,
-  changeLocatorXpathSettings,
+  changeLocatorSettings,
   changeXpathSettings,
   clearAll,
   changePerception,
+  handleLastNotification,
   pushNotification,
   setUnactualPrediction,
   stopXpathGeneration,
+  stopXpathGenerationGroup,
   toggleElementGeneration,
+  toggleElementGroupGeneration,
   toggleDeleted,
+  toggleDeletedGroup,
   toggleBackdrop,
   updateLocator,
   xPathGenerationStarted,
