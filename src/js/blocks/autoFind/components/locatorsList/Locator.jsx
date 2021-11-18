@@ -48,7 +48,6 @@ export const Locator = ({ element, xpathConfig, noScrolling }) => {
   const renderIcon = () => {
     if (element.deleted) return <Icon component={DeletedSvg} className="jdn__locatorsList-status" />;
 
-    console.log('hi');
     switch (element.locator.taskStatus) {
       case locatorTaskStatus.SUCCESS:
         return <Icon component={CheckedkSvg} className="jdn__locatorsList-status" />;

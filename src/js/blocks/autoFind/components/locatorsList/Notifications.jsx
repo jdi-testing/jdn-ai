@@ -35,7 +35,7 @@ export const Notifications = () => {
       notificationMessage = "Action canceled.";
       dispatch(handleLastNotification());
     } else {
-      switch (action.type) {
+      switch (action?.type) {
         case "main/changeElementName":
           notificationMessage = "Locator edited successfully!";
           debugger;
@@ -99,7 +99,7 @@ export const Notifications = () => {
   const openNotification = () => {
     notification.destroy();
 
-    if (notificationMessage !== "Action canceled.") {
+    if (notificationMessage !== "Action canceled." && lastNotification !== "Download") {
       const btn = (
         <Button type="primary" size="small" className="jdn__notification-close-btn" onClick={cancelNotification}>
           Cancel
