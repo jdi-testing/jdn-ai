@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { filter, size } from "lodash";
 
@@ -24,6 +24,7 @@ export const LocatorsList = () => {
   const state = useSelector((state) => state);
   const xpathConfig = useSelector((state) => state.main.xpathConfig);
   const xpathStatus = useSelector((state) => state.main.xpathStatus);
+  const [activePanel, setActivePanel] = useState();
 
   const byProbability = selectLocatorsByProbability(state);
 
@@ -48,6 +49,16 @@ export const LocatorsList = () => {
   const generatedSelected = filter(generated, "generate");
   const deletedSelected = filter(deleted, "generate");
 
+  const hasGeneratedSelected = useMemo(() => size(generatedSelected) > 0 &&
+   size(generatedSelected) !== size(generated), [generatedSelected, generated]);
+
+  const hasWaitingSelected = useMemo(() => size(waitingSelected) > 0 &&
+  size(waitingSelected) !== size(waiting), [waitingSelected, waiting]);
+
+  const togglePanel = useCallback((panel) => {
+    setActivePanel(panel);
+  }, []);
+
   const renderGroupHeader = (title, locatorsGroup, selectedGroup, iconComponent) => {
     const handleCheckboxChange = ({ target }) => {
       const group = filter(locatorsGroup, (loc) => loc.generate !== target.checked);
@@ -68,11 +79,12 @@ export const LocatorsList = () => {
     );
   };
 
-  const renderList = (elements) => {
+  const renderList = (elements, selectedElements) => {
     return elements.map((element) => {
       return (
         <Locator
           key={element.element_id}
+          noScrolling={size(elements) && size(selectedElements) === size(elements)}
           {...{ element, xpathConfig }}
         />
       );
@@ -89,6 +101,18 @@ export const LocatorsList = () => {
     return result.toFixed(2) * 100;
   }, [byProbability, generated]);
 
+  useEffect(() => {
+    if (hasGeneratedSelected) {
+      setActivePanel('1');
+    }
+  }, [hasGeneratedSelected]);
+
+  useEffect(() => {
+    if (hasWaitingSelected) {
+      setActivePanel('2');
+    }
+  }, [hasWaitingSelected]);
+
   return (
     <div className="jdn__locatorsList">
       <LocatorListHeader
@@ -99,19 +123,26 @@ export const LocatorsList = () => {
         }}
       />
       <div className="jdn__locatorsList-content">
-        <Collapse expandIcon={({ isActive }) => <Icon component={CaretDownSvg} rotate={isActive ? 180 : 0} />}>
-          <Collapse.Panel
+        <Collapse
+          className="jdn__collapse"
+          onChange={togglePanel}
+          activeKey={ activePanel}
+          accordion
+          expandIcon={({ isActive }) => <Icon component={CaretDownSvg} rotate={isActive ? 180 : 0}
+          />}>
+          {size(generated) && <Collapse.Panel
             key="1"
-            style={{ display: !size(generated) ? "none" : "block" }}
             header={renderGroupHeader(
                 `Generated (${size(generated)})`,
                 generated,
                 generatedSelected,
                 <Icon component={CheckedkSvg} className="jdn__locatorsList-status" />
             )}
+            className="jdn__collapse-panel"
           >
-            {renderList(generated)}
-          </Collapse.Panel>
+            {renderList(generated, generatedSelected)}
+          </Collapse.Panel>}
+          { size(waiting) &&
           <Collapse.Panel
             key="2"
             style={{ display: !size(waiting) ? "none" : "block" }}
@@ -121,9 +152,10 @@ export const LocatorsList = () => {
                 waitingSelected,
                 <Spin size="small" />
             )}
+            className={`jdn__collapse-panel ${size(deleted) ? 'jdn__collapse-panel-middle' : '' }`}
           >
-            {renderList(waiting)}
-          </Collapse.Panel>
+            {renderList(waiting, waitingSelected)}
+          </Collapse.Panel> }
           <Collapse.Panel
             key="3"
             style={{ display: !size(deleted) ? "none" : "block" }}
@@ -133,8 +165,9 @@ export const LocatorsList = () => {
                 deletedSelected,
                 <Icon component={InvisibleSvg} className="jdn__locatorsList-status" />
             )}
+            className="jdn__collapse-panel"
           >
-            {renderList(deleted)}
+            {renderList(deleted, deletedSelected)}
           </Collapse.Panel>
         </Collapse>
         <div>

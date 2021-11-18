@@ -117,6 +117,7 @@ class Connector {
   attachStaticScripts() {
     this.attachContentScript(highlightOnPage).then(() => {
       this.createPort();
+      chrome.storage.sync.set({ IS_DISCONNECTED: false });
     });
     this.attachContentScript(runContextMenu);
     this.attachContentScript(highlightOrder);
@@ -132,6 +133,7 @@ export const sendMessage = {
   toggleDeleted: (el) => connector.sendMessage("TOGGLE_DLETED", el),
   // restore: (el) => connector.sendMessage("RESTORE_ELEMENT", el),
   changeElementName: (el) => connector.sendMessage("CHANGE_ELEMENT_NAME", el),
+  changeElementType: (el) => connector.sendMessage("CHANGE_ELEMENT_TYPE", el),
   changeStatus: (el) => connector.sendMessage("CHANGE_STATUS", el),
   elementData: (payload) => connector.sendMessage("ELEMENT_DATA", payload),
   setHighlight: (payload) => connector.sendMessage("SET_HIGHLIGHT", payload),

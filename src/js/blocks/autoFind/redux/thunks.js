@@ -1,4 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { sendMessage } from "../utils/connector";
 import { isProgressStatus, runGenerationHandler } from "../utils/locatorGenerationController";
 import { getElements, requestGenerationData } from "../utils/pageDataHandlers";
 import { changeLocatorSettings, stopXpathGeneration, updateLocator, xPathGenerationStarted } from "./predictionSlice";
@@ -29,7 +30,7 @@ export const generateLocators = createAsyncThunk("main/generateLocators", async 
     );
     if (noLocator.length) {
       const { generationData } = await requestGenerationData(noLocator);
-      sendMessage.setHighlight({ elements, perception });
+      sendMessage.setHighlight({ elements: generationData, perception });
       thunkAPI.dispatch(xPathGenerationStarted());
       thunkAPI.dispatch(runXpathGeneration(generationData));
     }

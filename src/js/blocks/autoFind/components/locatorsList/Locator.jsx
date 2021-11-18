@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 
 import { Checkbox, Dropdown, Menu, Spin, Typography } from "antd";
@@ -24,14 +24,22 @@ import { openSettingsMenu } from "../../utils/pageDataHandlers";
 import { stopXpathGeneration, toggleDeleted, toggleElementGeneration } from "../../redux/predictionSlice";
 import { rerunGeneration } from "../../redux/thunks";
 
-export const Locator = ({ element, xpathConfig }) => {
+export const Locator = ({ element, xpathConfig, noScrolling }) => {
   const dispatch = useDispatch();
 
   const { element_id, type, name, locator, generate, isCmHighlighted } = element;
 
+  const ref = useRef(null);
+
   const handleOnChange = (value) => {
     dispatch(toggleElementGeneration(element_id));
   };
+
+  useEffect(() => {
+    if (generate && !noScrolling) {
+      ref.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+  }, [generate]);
 
   const handleSettingsOption = () => {
     openSettingsMenu(element.locator.settings || xpathConfig, [element.element_id]);
@@ -61,7 +69,8 @@ export const Locator = ({ element, xpathConfig }) => {
       <React.Fragment>
         @UI(
         <span className="jdn__xpath_item-locator">&quot;{getLocator(locator)}&quot;</span>)
-        <span className="jdn__xpath_item-type">&nbsp;{type}&nbsp;</span>
+        <span className="jdn__xpath_item-type">public</span>
+        <span>&nbsp;{type}&nbsp;</span>
         {name}
       </React.Fragment>
     );
@@ -105,6 +114,7 @@ export const Locator = ({ element, xpathConfig }) => {
 
   return (
     <div
+      ref={ref}
       className={`${generate ? "jdn__xpath_container--selected" : ""}
      ${isCmHighlighted ? "jdn__xpath_container--cm-selected" : ""}`}
     >

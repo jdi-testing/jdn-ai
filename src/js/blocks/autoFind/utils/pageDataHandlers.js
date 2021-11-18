@@ -2,8 +2,7 @@ import { connector, sendMessage } from "./connector";
 import { getGenerationAttributes } from "./../contentScripts/generationData";
 import { getPageData } from "./../contentScripts/pageData";
 import { createLocatorNames, getPage, predictedToConvert } from "./pageObject";
-import { reportProblemPopup } from "../contentScripts/reportProblemPopup/reportProblemPopup";
-import { settingsPopup } from "../contentScripts/settingsPopup/settingsPopup";
+import { reportPopup, settingsPopup, downloadPopup } from "../contentScripts/popups";
 import { MUI_PREDICT, request } from "./backend";
 /* global chrome*/
 
@@ -81,9 +80,14 @@ export const generatePageObject = (elements, mainModel) => {
 };
 
 export const reportProblem = (predictedElements) => {
-  chrome.storage.sync.set({ predictedElements }, connector.attachContentScript(reportProblemPopup));
+  chrome.storage.sync.set({ predictedElements }, connector.attachContentScript(reportPopup));
 };
 
-export const openSettingsMenu = (xpathConfig, elementIds) => {
-  chrome.storage.sync.set({ XPATH_CONFIG: {xpathConfig, elementIds} }, connector.attachContentScript(settingsPopup));
+export const openSettingsMenu = (xpathConfig, elementIds, hasGeneratedSelected) => {
+  chrome.storage.sync.set({ XPATH_CONFIG: {xpathConfig, elementIds, hasGeneratedSelected} },
+      connector.attachContentScript(settingsPopup));
+};
+
+export const openDownloadPopup = () => {
+  connector.attachContentScript(downloadPopup);
 };
