@@ -9,7 +9,7 @@ import { isProgressStatus, locatorTaskStatus } from "../../utils/locatorGenerati
 import { getLocator } from "../../utils/pageObject";
 
 import CheckedkSvg from "../../../../../icons/checked-outlined.svg";
-import InvisibleSvg from "../../../../../icons/invisible.svg";
+import DeletedSvg from "../../../../../icons/deleted.svg";
 import ClockSvg from "../../../../../icons/clock-outlined.svg";
 import WarningSvg from "../../../../../icons/warning.svg";
 import EllipsisSvg from "../../../../../icons/ellipsis.svg";
@@ -46,8 +46,9 @@ export const Locator = ({ element, xpathConfig, noScrolling }) => {
   };
 
   const renderIcon = () => {
-    if (element.deleted) return <Icon component={InvisibleSvg} className="jdn__locatorsList-status" />;
+    if (element.deleted) return <Icon component={DeletedSvg} className="jdn__locatorsList-status" />;
 
+    console.log('hi');
     switch (element.locator.taskStatus) {
       case locatorTaskStatus.SUCCESS:
         return <Icon component={CheckedkSvg} className="jdn__locatorsList-status" />;
@@ -113,11 +114,8 @@ export const Locator = ({ element, xpathConfig, noScrolling }) => {
   };
 
   return (
-    <div
-      ref={ref}
-      className={`${generate ? "jdn__xpath_container--selected" : ""}
-     ${isCmHighlighted ? "jdn__xpath_container--cm-selected" : ""}`}
-    >
+    <div ref={ref} className={`${generate ? 'jdn__xpath_container--selected' : 'jdn__xpath_container--shift'}
+     ${isCmHighlighted ? 'jdn__xpath_container--cm-selected' : ''}`}>
       <Checkbox checked={generate} onChange={handleOnChange}>
         <Text className="jdn__xpath_item">
           {renderIcon()}
