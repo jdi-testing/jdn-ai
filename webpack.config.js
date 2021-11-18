@@ -84,6 +84,14 @@ const mainConfig = {
               },
             },
           },
+          {
+            loader: 'style-resources-loader',
+            options: {
+              patterns: [
+                path.resolve(__dirname, 'src/css/variables.less')
+              ],
+            },
+          },
         ],
       },
       {
@@ -155,15 +163,15 @@ const highlightCssConfig = {
   },
 };
 
-const reportProblemPopupCssConfig = {
+const contentScripts = {
   entry:
-    "./src/js/blocks/autoFind/contentScripts/reportProblemPopup/reportProblemPopup.css",
+    "./src/css/contentScripts.less",
   mode: "production",
-  plugins: [new MiniCssExtractPlugin({ filename: "reportproblempopup.css" })],
+  plugins: [new MiniCssExtractPlugin({ filename: "contentScripts.css" })],
   module: {
     rules: [
       {
-        test: /reportproblempopup.css$/i,
+        test: /contentScripts.less$/i,
         use: [
           {
             loader: MiniCssExtractPlugin.loader,
@@ -172,10 +180,19 @@ const reportProblemPopupCssConfig = {
             },
           },
           "css-loader",
+          "less-loader",
+          {
+            loader: 'style-resources-loader',
+            options: {
+              patterns: [
+                path.resolve(__dirname, 'src/css/variables.less'),
+              ],
+            },
+          },
         ],
       },
     ],
   },
 };
 
-module.exports = [mainConfig, indexConfig, highlightCssConfig, reportProblemPopupCssConfig];
+module.exports = [mainConfig, indexConfig, highlightCssConfig, contentScripts];
