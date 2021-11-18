@@ -4,71 +4,71 @@ export const downloadPopup = () => {
     param: true,
   });
 
+  const background = document.createElement("div");
+  background.classList.add("jdn-popup-bg");
+
   const modal = document.createElement("dialog");
   modal.setAttribute('open', true);
-  modal.classList.add("jdn-settings-popup__modal");
-  modal.style.width = '400px';
+  modal.classList.add("jdn-popup");
+  modal.classList.add("jdn-download-popup");
 
-  const backgroundModal = document.createElement("div");
-  backgroundModal.classList.add("jdn-report-problem-popup__background");
+  const header = document.createElement('h4');
+  header.classList.add('jdn-popup__header');
+  header.innerHTML = 'Download';
 
-  const modalCloseButton = document.createElement('button');
-  modalCloseButton.innerHTML = "&#215;";
-  modalCloseButton.classList.add('jdn-settings-popup__modal__close-button');
-  modalCloseButton.onclick = removePopup;
-  modal.appendChild(modalCloseButton);
-
-  const heading = document.createElement('h4');
-  heading.innerHTML = 'Download';
-  modal.appendChild(heading);
+  const closeButton = document.createElement('button');
+  closeButton.innerHTML = "&#215;";
+  closeButton.classList.add('jdn-popup__button_close');
+  closeButton.onclick = removePopup;
 
   const main = document.createElement('div');
-  main.style.padding = '0 18px';
-  // TODO: bold font
+  main.classList.add("jdn-popup__main");
   main.innerHTML = `
-    <strong style="color: #D82C15;">Attention!</strong>
+    <strong class="jdn-download-popup__warning">Attention!</strong>
     Not all selected locators have already been <br>
     generated. We recommend waiting until the generation is complete.
     <br>
   `;
-  modal.appendChild(main);
 
   const downloadGeneratedButton = document.createElement("button");
-  downloadGeneratedButton.classList.add("jdn-settings-popup__button--ok");
+  downloadGeneratedButton.classList.add("jdn-popup__button");
+  downloadGeneratedButton.classList.add("jdn-popup__button_primary");
   downloadGeneratedButton.innerText = "Download generated";
   downloadGeneratedButton.onclick = downloadGenerated;
 
   const downloadAllButton = document.createElement("button");
-  downloadAllButton.style.border = '1px solid #1582D8';
-  downloadAllButton.style.color = '#1582D8';
-  downloadAllButton.style.padding = '7px 15px';
-  downloadAllButton.style.backgroundColor = 'black';
-  downloadAllButton.style.borderRadius = '4px';
+  downloadAllButton.classList.add("jdn-popup__button");
+  downloadAllButton.classList.add("jdn-popup__button_secondary");
   downloadAllButton.innerText = "Download all";
   downloadAllButton.onclick = downloadAll;
 
   const cancelButton = document.createElement("button");
-  cancelButton.classList.add("jdn-report-problem-popup__button");
+  cancelButton.classList.add("jdn-popup__button");
+  cancelButton.classList.add("jdn-popup__button_tertiary");
   cancelButton.innerText = "Cancel";
   cancelButton.onclick = removePopup;
 
   const buttonContainer = document.createElement("div");
-  buttonContainer.classList.add("jdn-settings-popup__button-container");
-  buttonContainer.style.padding = '0 18px';
+  buttonContainer.classList.add("jdn-popup__button-container");
   buttonContainer.append(cancelButton);
   buttonContainer.append(downloadAllButton);
   buttonContainer.append(downloadGeneratedButton);
-  modal.appendChild(buttonContainer);
 
-  backgroundModal.append(modal);
-  document.body.append(backgroundModal);
+  main.append(buttonContainer);
+
+  modal.append(header);
+  modal.append(closeButton);
+  modal.append(main);
+
+  background.append(modal);
+  document.body.append(background);
 
   function removePopup() {
     chrome.runtime.sendMessage({
       message: "IS_OPEN_DOWNLOAD_POPUP",
       param: false,
     });
-    backgroundModal.remove();
+    background.remove();
     modal.remove();
   }
 
@@ -77,7 +77,7 @@ export const downloadPopup = () => {
       message: "DOWNLOAD_POPUP",
       param: 'all'
     });
-    backgroundModal.remove();
+    background.remove();
     modal.remove();
   }
 
@@ -86,7 +86,7 @@ export const downloadPopup = () => {
       message: "DOWNLOAD_POPUP",
       param: 'generated'
     });
-    backgroundModal.remove();
+    background.remove();
     modal.remove();
   }
 };
