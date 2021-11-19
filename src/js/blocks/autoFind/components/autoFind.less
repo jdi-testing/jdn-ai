@@ -4,6 +4,7 @@
 @xpath-item-color-locator: #7a2626;
 @xpath-item-color-type: #004aa0;
 @locators-list-item-border: #e5dfdf;
+@notification-background: #2e2e2e;
 
 .ant-dropdown-menu {
   min-width: 145px;
@@ -41,7 +42,7 @@
   border-radius: 0;
   padding: 3px 13px;
   height: 28px;
-  background: #2e2e2e;
+  background: @notification-background;
 }
 
 .ant-notification-notice-close {
@@ -167,12 +168,12 @@
     */
     &__notification-close-btn {
       border: none;
-      background: #2e2e2e;
+      background: @notification-background;
     }
 
     &__notification-close-btn:hover {
       border: none;
-      background: #2e2e2e;
+      background: @notification-background;
     }
     /*
     HEADER

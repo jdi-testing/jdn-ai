@@ -16,7 +16,7 @@ export const locatorTaskStatus = {
   ...locatorProgressStatus,
 };
 
-export const isProgressStatus = (taskStatus) => !!locatorProgressStatus.hasOwnProperty(taskStatus);
+export const isProgressStatus = (taskStatus) => locatorProgressStatus.hasOwnProperty(taskStatus);
 
 export const runGenerationHandler = async (elements, settings, elementCallback) => {
   const documentResult = await connector.attachContentScript(

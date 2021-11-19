@@ -14,6 +14,22 @@ import { last, size } from "lodash";
 import { selectLocators } from "../../redux/selectors";
 import { revertSettings, runXpathGeneration } from "../../redux/thunks";
 
+const messages = (value) => {
+  return {
+    EDITED: "Locator edited successfully!",
+    SETTINGS_CHANGED: "Locator settings changed successfully!",
+    SETTINGS_CHANGED_GROUP: `Settings of ${value} changed successfully!`,
+    RERUN: "The locator generation rerunned successfully",
+    RERUN_GROUP: `Generation of ${value} rerunned successfully`,
+    STOP_GENERATION: "The locator generation stopped successfully!",
+    STOP_GENERATION_GROUP: `Generation of ${value} locators stopped successfully!`,
+    DELETE: "The locator deleted successfully!",
+    DELETE_GROUP: `${value} locators deleted successfully!`,
+    RESTORE: "The locator restored successfully!",
+    RESTORE_GROUP: `${value} locators restored successfully!`,
+  };
+};
+
 export const Notifications = () => {
   const dispatch = useDispatch();
   const lastNotification = useSelector((state) => last(state.main.notifications));
@@ -37,51 +53,44 @@ export const Notifications = () => {
     } else {
       switch (action?.type) {
         case "main/changeElementName":
-          notificationMessage = "Locator edited successfully!";
-          debugger;
           const { element_id: id, name } = prevValue;
+          notificationMessage = messages().EDITED;
           cancelAction = changeElementName({ id, name });
           break;
         case "main/changeLocatorSettings":
-          if (size(prevValue) === 1) notificationMessage = "Locator settings changed successfully!";
-          else notificationMessage = `Settings of ${size(prevValue)} changed successfully!`;
+          notificationMessage =
+            size(prevValue) === 1 ? messages().SETTINGS_CHANGED : messages(size(prevValue)).SETTINGS_CHANGED_GROUP;
           cancelAction = revertSettings({ payload: action.payload, prevValue });
           break;
         case "main/rerunGeneration/pending":
           const { arg } = action.meta;
           if (size(arg) === 1) {
-            notificationMessage = "The locator generation rerunned successfully";
+            notificationMessage = messages().RERUN;
             cancelAction = stopXpathGeneration(arg[0].element_id);
           } else {
-            notificationMessage = `Generation of ${length} rerunned successfully`;
+            notificationMessage = messages(length).RERUN_GROUP;
             cancelAction = stopXpathGenerationGroup(arg);
           }
           break;
         case "main/stopXpathGeneration":
+          notificationMessage = messages().STOP_GENERATION;
           cancelAction = runXpathGeneration([locators.find((_loc) => _loc.element_id === action.payload)]);
-          notificationMessage = "The locator generation stopped successfully!";
           break;
         case "main/stopXpathGenerationGroup":
+          notificationMessage = messages(size(action.payload)).STOP_GENERATION_GROUP;
           cancelAction = runXpathGeneration(action.payload);
-          notificationMessage = `Generation of ${size(action.payload)} locators stopped successfully!`;
           break;
         case "main/toggleDeleted":
+          notificationMessage = prevValue.deleted ? messages().RESTORE : messages().DELETE;
           cancelAction = toggleDeleted(action.payload);
-          if (prevValue.deleted) {
-            notificationMessage = "The locator restored successfully!";
-          } else {
-            notificationMessage = "The locator deleted successfully!";
-          }
           break;
         case "main/toggleDeletedGroup":
+          notificationMessage = prevValue[0].deleted ?
+            messages(size(prevValue)).RESTORE_GROUP :
+            messages(size(prevValue)).DELETE_GROUP;
           cancelAction = toggleDeletedGroup(
               prevValue.map((loc) => locators.find((_loc) => _loc.element_id === loc.element_id))
           );
-          if (prevValue[0].deleted) {
-            notificationMessage = `${size(prevValue)} locators restored successfully!`;
-          } else {
-            notificationMessage = `${size(prevValue)} locators deleted successfully!`;
-          }
           break;
         default:
           break;
