@@ -141,6 +141,20 @@ export const LocatorsList = () => {
     }
   }, [hasWaitingSelected]);
 
+  function hideProgressInformation() {
+    document.querySelector('.jdn__locatorsList-progress-text').classList.add('jdn__locatorsList-progress_off');
+    document.querySelector('.jdn__locatorsList-progress').classList.add('jdn__locatorsList-progress_off');
+  }
+
+  useEffect(() => {
+    const readyCount = size(generated);
+    const total = size(byProbability);
+    const result = readyCount / total;
+    if (result === 1 ) {
+      setTimeout(hideProgressInformation, 10000);
+    }
+  });
+
   return (
     <div className="jdn__locatorsList">
       <LocatorListHeader
