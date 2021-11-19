@@ -29,6 +29,8 @@ export const LocatorsList = () => {
   const xpathConfig = useSelector((state) => state.main.xpathConfig);
   const xpathStatus = useSelector((state) => state.main.xpathStatus);
   const [activePanel, setActivePanel] = useState();
+  const [isProgressActive, setIsProgressActive] = useState(false);
+
 
   const byProbability = selectLocatorsByProbability(state);
 
@@ -141,6 +143,19 @@ export const LocatorsList = () => {
     }
   }, [hasWaitingSelected]);
 
+  function hideProgressInformation() {
+    setIsProgressActive(true);
+  }
+
+  useEffect(() => {
+    const readyCount = size(generated);
+    const total = size(byProbability);
+    const result = readyCount / total;
+    if (result === 1 ) {
+      setTimeout(hideProgressInformation, 10000);
+    }
+  });
+
   return (
     <div className="jdn__locatorsList">
       <LocatorListHeader
@@ -211,8 +226,9 @@ export const LocatorsList = () => {
             trailColor="black"
             strokeLinecap="square"
             strokeWidth={5}
+            style={{display: isProgressActive ? "none" : "flex" }}
           />
-          <p className="jdn__locatorsList-progress-text">
+          <p className="jdn__locatorsList-progress-text" style={{display: isProgressActive ? "none" : "flex" }}>
             {size(waiting) ? xpathStatus : `Locators generation is successfully completed`}
           </p>
         </div>
