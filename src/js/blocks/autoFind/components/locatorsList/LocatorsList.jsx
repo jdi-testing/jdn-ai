@@ -226,9 +226,9 @@ export const LocatorsList = () => {
             trailColor="black"
             strokeLinecap="square"
             strokeWidth={5}
-            style={{display: isProgressActive ? "none" : "block" }}
+            style={{display: isProgressActive ? "none" : "flex" }}
           />
-          <p className="jdn__locatorsList-progress-text" style={{display: isProgressActive ? "none" : "block" }}>
+          <p className="jdn__locatorsList-progress-text" style={{display: isProgressActive ? "none" : "flex" }}>
             {size(waiting) ? xpathStatus : `Locators generation is successfully completed`}
           </p>
         </div>
