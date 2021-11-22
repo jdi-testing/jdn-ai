@@ -4,23 +4,17 @@ import { filter, size } from "lodash";
 
 import { Checkbox, Collapse, Spin } from "antd";
 import Icon from "@ant-design/icons";
-import { Progress } from 'antd';
-import { locatorProgressStatus, locatorTaskStatus } from "../../utils/locatorGenerationController";
+import { Progress } from "antd";
+import { isProgressStatus, locatorTaskStatus } from "../../utils/locatorGenerationController";
 import { LocatorListHeader } from "./LocatorListHeader";
+import { Notifications } from "./Notifications";
 
 import CaretDownSvg from "../../../../../icons/caret-down.svg";
 import CheckedkSvg from "../../../../../icons/checked-outlined.svg";
-import InvisibleSvg from "../../../../../icons/invisible.svg";
 import DeletedSvg from "../../../../../icons/deleted.svg";
 import { Locator } from "./Locator";
-import {
-  pushNotification,
-  stopXpathGeneration,
-  toggleDeleted,
-  toggleElementGeneration,
-} from "../../redux/predictionSlice";
+import { toggleElementGroupGeneration } from "../../redux/predictionSlice";
 import { selectLocatorsByProbability } from "../../redux/selectors";
-import { runXpathGeneration } from "../../redux/thunks";
 
 export const LocatorsList = () => {
   const dispatch = useDispatch();
@@ -31,14 +25,13 @@ export const LocatorsList = () => {
   const [activePanel, setActivePanel] = useState();
   const [isProgressActive, setIsProgressActive] = useState(false);
 
-
   const byProbability = selectLocatorsByProbability(state);
 
   const waiting = useMemo(
       () =>
         byProbability.filter(
             (el) =>
-              (locatorProgressStatus.hasOwnProperty(el.locator.taskStatus) ||
+              (isProgressStatus(el.locator.taskStatus) ||
             el.locator.taskStatus === locatorTaskStatus.REVOKED ||
             el.locator.taskStatus === locatorTaskStatus.FAILURE) &&
           !el.deleted
@@ -55,35 +48,15 @@ export const LocatorsList = () => {
   const generatedSelected = filter(generated, "generate");
   const deletedSelected = filter(deleted, "generate");
 
-  const hasGeneratedSelected = useMemo(() => size(generatedSelected) > 0 &&
-   size(generatedSelected) !== size(generated), [generatedSelected, generated]);
+  const hasGeneratedSelected = useMemo(
+      () => size(generatedSelected) > 0 && size(generatedSelected) !== size(generated),
+      [generatedSelected, generated]
+  );
 
-  const hasWaitingSelected = useMemo(() => size(waitingSelected) > 0 &&
-  size(waitingSelected) !== size(waiting), [waitingSelected, waiting]);
-
-  const toggleLocatorsGroup = (locatorsGroup) => {
-    locatorsGroup.forEach((locator) => {
-      dispatch(toggleElementGeneration(locator.element_id));
-    });
-  };
-
-  const toggleDeletedGroup = (locatorsGroup, areDeleted) => {
-    locatorsGroup.forEach((locator) => {
-      dispatch(toggleDeleted(locator.element_id));
-    });
-    const message = areDeleted ? "DELETED" : "RESTORED";
-    dispatch(pushNotification({ message, data: locatorsGroup }));
-  };
-
-  const stopXpathGroupGeneration = (locatorsGroup) => {
-    locatorsGroup.forEach((locator) => {
-      dispatch(stopXpathGeneration(locator.element_id));
-    });
-  };
-
-  const runXpathGenerationHandler = (locatorsGroup) => {
-    dispatch(runXpathGeneration(locatorsGroup));
-  };
+  const hasWaitingSelected = useMemo(() => size(waitingSelected) > 0 && size(waitingSelected) !== size(waiting), [
+    waitingSelected,
+    waiting,
+  ]);
 
   const togglePanel = useCallback((panel) => {
     setActivePanel(panel);
@@ -92,7 +65,7 @@ export const LocatorsList = () => {
   const renderGroupHeader = (title, locatorsGroup, selectedGroup, iconComponent) => {
     const handleCheckboxChange = ({ target }) => {
       const group = filter(locatorsGroup, (loc) => loc.generate !== target.checked);
-      toggleLocatorsGroup(group);
+      dispatch(toggleElementGroupGeneration(group));
     };
 
     return (
@@ -115,7 +88,7 @@ export const LocatorsList = () => {
         <Locator
           key={element.element_id}
           noScrolling={size(elements) && size(selectedElements) === size(elements)}
-          {...{ element, xpathConfig, stopXpathGeneration, runXpathGenerationHandler }}
+          {...{ element, xpathConfig }}
         />
       );
     });
@@ -133,13 +106,13 @@ export const LocatorsList = () => {
 
   useEffect(() => {
     if (hasGeneratedSelected) {
-      setActivePanel('1');
+      setActivePanel("1");
     }
   }, [hasGeneratedSelected]);
 
   useEffect(() => {
     if (hasWaitingSelected) {
-      setActivePanel('2');
+      setActivePanel("2");
     }
   }, [hasWaitingSelected]);
 
@@ -162,46 +135,45 @@ export const LocatorsList = () => {
           generatedSelected,
           waitingSelected,
           deletedSelected,
-          toggleLocatorsGroup,
-          toggleDeletedGroup,
-          runXpathGenerationHandler,
-          stopXpathGroupGeneration,
         }}
       />
       <div className="jdn__locatorsList-content">
         <Collapse
           className="jdn__collapse"
           onChange={togglePanel}
-          activeKey={ activePanel}
+          activeKey={activePanel}
           accordion
-          expandIcon={({ isActive }) => <Icon component={CaretDownSvg} rotate={isActive ? 180 : 0}
-          />}>
-          {size(generated) && <Collapse.Panel
-            key="1"
-            header={renderGroupHeader(
-                `Generated (${size(generated)})`,
-                generated,
-                generatedSelected,
-                <Icon component={CheckedkSvg} className="jdn__locatorsList-status" />
-            )}
-            className="jdn__collapse-panel"
-          >
-            {renderList(generated, generatedSelected)}
-          </Collapse.Panel>}
-          { size(waiting) &&
-          <Collapse.Panel
-            key="2"
-            style={{ display: !size(waiting) ? "none" : "block" }}
-            header={renderGroupHeader(
-                `Waiting for generation (${size(waiting)})`,
-                waiting,
-                waitingSelected,
-                <Spin size="small" />
-            )}
-            className={`jdn__collapse-panel ${size(deleted) ? 'jdn__collapse-panel-middle' : '' }`}
-          >
-            {renderList(waiting, waitingSelected)}
-          </Collapse.Panel> }
+          expandIcon={({ isActive }) => <Icon component={CaretDownSvg} rotate={isActive ? 180 : 0} />}
+        >
+          {size(generated) && (
+            <Collapse.Panel
+              key="1"
+              header={renderGroupHeader(
+                  `Generated (${size(generated)})`,
+                  generated,
+                  generatedSelected,
+                  <Icon component={CheckedkSvg} className="jdn__locatorsList-status" />
+              )}
+              className="jdn__collapse-panel"
+            >
+              {renderList(generated, generatedSelected)}
+            </Collapse.Panel>
+          )}
+          {size(waiting) && (
+            <Collapse.Panel
+              key="2"
+              style={{ display: !size(waiting) ? "none" : "block" }}
+              header={renderGroupHeader(
+                  `Waiting for generation (${size(waiting)})`,
+                  waiting,
+                  waitingSelected,
+                  <Spin size="small" />
+              )}
+              className={`jdn__collapse-panel ${size(deleted) ? "jdn__collapse-panel-middle" : ""}`}
+            >
+              {renderList(waiting, waitingSelected)}
+            </Collapse.Panel>
+          )}
           <Collapse.Panel
             key="3"
             style={{ display: !size(deleted) ? "none" : "block" }}
@@ -216,20 +188,23 @@ export const LocatorsList = () => {
             {renderList(deleted, deletedSelected)}
           </Collapse.Panel>
         </Collapse>
-        <div className="jdn__locatorsList-progress">
-          <Progress
-            percent={readinessPercentage}
-            status="active"
-            showInfo={false}
-            strokeColor="#1582D8"
-            trailColor="black"
-            strokeLinecap="square"
-            strokeWidth={5}
-            style={{display: isProgressActive ? "none" : "flex" }}
-          />
-          <p className="jdn__locatorsList-progress-text" style={{display: isProgressActive ? "none" : "flex" }}>
-            {size(waiting) ? xpathStatus : `Locators generation is successfully completed`}
-          </p>
+        <div>
+          <Notifications {...{ deletedSelected, generatedSelected }} />
+          <div className="jdn__locatorsList-progress">
+            <Progress
+              percent={readinessPercentage}
+              status="active"
+              showInfo={false}
+              strokeColor="#1582D8"
+              trailColor="black"
+              strokeLinecap="square"
+              strokeWidth={5}
+              style={{ display: isProgressActive ? "none" : "flex" }}
+            />
+            <p className="jdn__locatorsList-progress-text" style={{ display: isProgressActive ? "none" : "flex" }}>
+              {size(waiting) ? xpathStatus : `Locators generation is successfully completed`}
+            </p>
+          </div>
         </div>
       </div>
     </div>
