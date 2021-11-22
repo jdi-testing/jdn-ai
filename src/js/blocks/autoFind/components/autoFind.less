@@ -4,6 +4,7 @@
 @xpath-item-color-locator: #7a2626;
 @xpath-item-color-type: #004aa0;
 @locators-list-item-border: #e5dfdf;
+@notification-background: #2e2e2e;
 
 .ant-dropdown-menu {
   min-width: 145px;
@@ -27,6 +28,47 @@
       color: #fff;
     }
   }
+}
+
+.ant-notification {
+  position: inherit;
+  margin-right: 0;
+}
+
+.ant-notification-notice {
+  width: 100%;
+  margin: 0;
+  max-width: 100%;
+  border-radius: 0;
+  padding: 3px 13px;
+  height: 28px;
+  background: @notification-background;
+}
+
+.ant-notification-notice-close {
+  top: 4px;
+  color: #ffffff;
+}
+
+.ant-notification-notice-close:hover {
+  color: #ffffff;
+}
+
+.ant-notification-notice-btn {
+  position: absolute;
+  margin-top: 0;
+  top: 2px;
+  right: 40px;
+  background: transparent;
+}
+
+.ant-notification-notice-message {
+  color: #ffffff;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 22px;
+  margin-bottom: 0;
 }
 
 .jdn__autofind {
@@ -115,12 +157,24 @@
   .jdn {
     /*
     COMMON CLASSES
-  */
+    */
     &__hidden {
       height: 0;
       overflow: hidden;
     }
 
+    /*
+    Notification
+    */
+    &__notification-close-btn {
+      border: none;
+      background: @notification-background;
+    }
+
+    &__notification-close-btn:hover {
+      border: none;
+      background: @notification-background;
+    }
     /*
     HEADER
   */

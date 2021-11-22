@@ -1,5 +1,5 @@
 import {configureStore} from "@reduxjs/toolkit";
-// import { logger } from "./loggerMiddleware";
+import { logger } from "./loggerMiddleware";
 import predictionSlice from "./predictionSlice";
 
 const rootReducer = {
@@ -8,5 +8,5 @@ const rootReducer = {
 
 export const store = configureStore({
   reducer: rootReducer,
-  // middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
 });
