@@ -150,8 +150,7 @@ export const LocatorsList = () => {
   useEffect(() => {
     const readyCount = size(generated);
     const total = size(byProbability);
-    const result = readyCount / total;
-    if (result === 1 ) {
+    if (readyCount > 0 && total > 0 && readyCount === total) {
       setTimeout(hideProgressInformation, 10000);
     }
   });
