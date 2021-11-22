@@ -11,12 +11,9 @@ import { Notifications } from "./Notifications";
 
 import CaretDownSvg from "../../../../../icons/caret-down.svg";
 import CheckedkSvg from "../../../../../icons/checked-outlined.svg";
-import InvisibleSvg from "../../../../../icons/invisible.svg";
 import DeletedSvg from "../../../../../icons/deleted.svg";
 import { Locator } from "./Locator";
-import {
-  toggleElementGroupGeneration,
-} from "../../redux/predictionSlice";
+import { toggleElementGroupGeneration } from "../../redux/predictionSlice";
 import { selectLocatorsByProbability } from "../../redux/selectors";
 
 export const LocatorsList = () => {
@@ -26,6 +23,7 @@ export const LocatorsList = () => {
   const xpathConfig = useSelector((state) => state.main.xpathConfig);
   const xpathStatus = useSelector((state) => state.main.xpathStatus);
   const [activePanel, setActivePanel] = useState();
+  const [isProgressActive, setIsProgressActive] = useState(false);
 
   const byProbability = selectLocatorsByProbability(state);
 
@@ -50,11 +48,15 @@ export const LocatorsList = () => {
   const generatedSelected = filter(generated, "generate");
   const deletedSelected = filter(deleted, "generate");
 
-  const hasGeneratedSelected = useMemo(() => size(generatedSelected) > 0 &&
-   size(generatedSelected) !== size(generated), [generatedSelected, generated]);
+  const hasGeneratedSelected = useMemo(
+      () => size(generatedSelected) > 0 && size(generatedSelected) !== size(generated),
+      [generatedSelected, generated]
+  );
 
-  const hasWaitingSelected = useMemo(() => size(waitingSelected) > 0 &&
-  size(waitingSelected) !== size(waiting), [waitingSelected, waiting]);
+  const hasWaitingSelected = useMemo(() => size(waitingSelected) > 0 && size(waitingSelected) !== size(waiting), [
+    waitingSelected,
+    waiting,
+  ]);
 
   const togglePanel = useCallback((panel) => {
     setActivePanel(panel);
@@ -104,15 +106,28 @@ export const LocatorsList = () => {
 
   useEffect(() => {
     if (hasGeneratedSelected) {
-      setActivePanel('1');
+      setActivePanel("1");
     }
   }, [hasGeneratedSelected]);
 
   useEffect(() => {
     if (hasWaitingSelected) {
-      setActivePanel('2');
+      setActivePanel("2");
     }
   }, [hasWaitingSelected]);
+
+  function hideProgressInformation() {
+    setIsProgressActive(true);
+  }
+
+  useEffect(() => {
+    const readyCount = size(generated);
+    const total = size(byProbability);
+    const result = readyCount / total;
+    if (result === 1) {
+      setTimeout(hideProgressInformation, 10000);
+    }
+  });
 
   return (
     <div className="jdn__locatorsList">
@@ -127,36 +142,39 @@ export const LocatorsList = () => {
         <Collapse
           className="jdn__collapse"
           onChange={togglePanel}
-          activeKey={ activePanel}
+          activeKey={activePanel}
           accordion
-          expandIcon={({ isActive }) => <Icon component={CaretDownSvg} rotate={isActive ? 180 : 0}
-          />}>
-          {size(generated) && <Collapse.Panel
-            key="1"
-            header={renderGroupHeader(
-                `Generated (${size(generated)})`,
-                generated,
-                generatedSelected,
-                <Icon component={CheckedkSvg} className="jdn__locatorsList-status" />
-            )}
-            className="jdn__collapse-panel"
-          >
-            {renderList(generated, generatedSelected)}
-          </Collapse.Panel>}
-          { size(waiting) &&
-          <Collapse.Panel
-            key="2"
-            style={{ display: !size(waiting) ? "none" : "block" }}
-            header={renderGroupHeader(
-                `Waiting for generation (${size(waiting)})`,
-                waiting,
-                waitingSelected,
-                <Spin size="small" />
-            )}
-            className={`jdn__collapse-panel ${size(deleted) ? 'jdn__collapse-panel-middle' : '' }`}
-          >
-            {renderList(waiting, waitingSelected)}
-          </Collapse.Panel> }
+          expandIcon={({ isActive }) => <Icon component={CaretDownSvg} rotate={isActive ? 180 : 0} />}
+        >
+          {size(generated) && (
+            <Collapse.Panel
+              key="1"
+              header={renderGroupHeader(
+                  `Generated (${size(generated)})`,
+                  generated,
+                  generatedSelected,
+                  <Icon component={CheckedkSvg} className="jdn__locatorsList-status" />
+              )}
+              className="jdn__collapse-panel"
+            >
+              {renderList(generated, generatedSelected)}
+            </Collapse.Panel>
+          )}
+          {size(waiting) && (
+            <Collapse.Panel
+              key="2"
+              style={{ display: !size(waiting) ? "none" : "block" }}
+              header={renderGroupHeader(
+                  `Waiting for generation (${size(waiting)})`,
+                  waiting,
+                  waitingSelected,
+                  <Spin size="small" />
+              )}
+              className={`jdn__collapse-panel ${size(deleted) ? "jdn__collapse-panel-middle" : ""}`}
+            >
+              {renderList(waiting, waitingSelected)}
+            </Collapse.Panel>
+          )}
           <Collapse.Panel
             key="3"
             style={{ display: !size(deleted) ? "none" : "block" }}
@@ -182,8 +200,9 @@ export const LocatorsList = () => {
               trailColor="black"
               strokeLinecap="square"
               strokeWidth={5}
+              style={{ display: isProgressActive ? "none" : "flex" }}
             />
-            <p className="jdn__locatorsList-progress-text">
+            <p className="jdn__locatorsList-progress-text" style={{ display: isProgressActive ? "none" : "flex" }}>
               {size(waiting) ? xpathStatus : `Locators generation is successfully completed`}
             </p>
           </div>
