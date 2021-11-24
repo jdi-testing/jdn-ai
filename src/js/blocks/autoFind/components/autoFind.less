@@ -612,32 +612,34 @@
   }
 
   @media screen and (max-width: 500px) {
-    .jdn__locatorsList-header {
+    .jdn__locatorsList {
+      &-header {
       justify-content: space-between;
       align-items: center;
+
+      &-title {
+        flex-basis: 100%;
+      }
     }
 
-    .jdn__locatorsList-header-title {
-      flex-basis: 100%;
-    }
-
-    .jdn__locatorsList-content {
-      height: calc(100vh - 262px);
+      &-content {
+        height: calc(100vh - 262px);
+      }
     }
   }
 
   @media screen and (max-width: 400px) {
     .jdn__locatorsList-header {
       justify-content: end;
-    }
 
-    .jdn__locatorsList-header-title {
-      flex-basis: auto;
-    }
+      &-title {
+        flex-basis: auto;
+      }
 
-    .ant-select-multiple .ant-select-selection-item {
-      margin-inline-end: 0 !important;
-      margin-bottom: 6px;
+      .ant-select-multiple .ant-select-selection-item {
+        margin-inline-end: 0 !important;
+        margin-bottom: 6px;
+      }
     }
   }
 }
