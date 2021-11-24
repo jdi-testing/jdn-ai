@@ -30,9 +30,22 @@ const predictionSlice = createSlice({
   name: "main",
   initialState: locatorsAdapter.getInitialState(initialState),
   reducers: {
-    changeElementName(state, { payload: { id, name } }) {
-      const locator = simpleSelectLocatorById(state, id);
-      locatorsAdapter.upsertOne(state, {...locator, name: name, isCustomName: true});
+    changeLocatorAttributes(state, {payload}) {
+      const {type, name, locator, element_id} = payload;
+      const _locator = simpleSelectLocatorById(state, element_id);
+      const {fullXpath, robulaXpath} = _locator.locator;
+      const newValue = {..._locator, locator: {..._locator.locator}};
+      if (_locator.name !== name) {
+        newValue.name = name;
+        newValue.isCustomName = true;
+      }
+      if (_locator.type !== type && !newValue.isCustomName) {
+        newValue.name = getJdiClassName(newType);
+      }
+      if (fullXpath !== locator && robulaXpath !== locator) {
+        newValue.locator.customXpath = locator;
+      }
+      locatorsAdapter.upsertOne(state, newValue);
     },
     changeLocatorSettings(state, {payload}) {
       locatorsAdapter.upsertMany(state, payload);
@@ -42,12 +55,6 @@ const predictionSlice = createSlice({
     },
     changeXpathSettings(state, { payload }) {
       state.xpathConfig = payload;
-    },
-    changeType(state, { payload: { id, newType } }) {
-      const locator = simpleSelectLocatorById(state, id);
-      const newValue = {...locator, type: newType};
-      if (!locator.isCustomName) newValue.name = getJdiClassName(newType);
-      locatorsAdapter.upsertOne(state, newValue);
     },
     clearAll(state) {
       Object.keys(initialState).forEach((key) => {
@@ -148,8 +155,7 @@ const predictionSlice = createSlice({
 export default predictionSlice.reducer;
 export const {
   cancelLastNotification,
-  changeType,
-  changeElementName,
+  changeLocatorAttributes,
   changeLocatorSettings,
   changeXpathSettings,
   clearAll,

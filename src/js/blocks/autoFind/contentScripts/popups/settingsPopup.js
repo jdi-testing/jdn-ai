@@ -25,7 +25,7 @@ export const settingsPopup = () => {
   chrome.storage.sync.get(['XPATH_CONFIG'], ({XPATH_CONFIG}) => {
     const {xpathConfig, elementIds, hasGeneratedSelected} = XPATH_CONFIG;
     chrome.runtime.sendMessage({
-      message: "IS_OPEN_XPATH_CONFIG_MODAL",
+      message: "IS_OPEN_MODAL",
       param: true,
     });
     const settings = xpathConfig;
@@ -177,7 +177,7 @@ export const settingsPopup = () => {
 
     function removePopup() {
       chrome.runtime.sendMessage({
-        message: "IS_OPEN_XPATH_CONFIG_MODAL",
+        message: "IS_OPEN_MODAL",
         param: false,
       });
       background.remove();

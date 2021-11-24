@@ -20,7 +20,7 @@ const AutoFind = () => {
   const xpathStatus = useSelector((state) => state.main.xpathStatus);
 
   const dispatch = useDispatch();
-  createListeners(
+  createListeners( // in the future, move it to connector
       dispatch,
       useSelector((state) => state)
   );

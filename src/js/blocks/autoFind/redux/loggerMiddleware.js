@@ -15,18 +15,15 @@ const notify = (state, action, prevState, store) => {
 
   const {type, payload} = action;
   switch (type) {
-    case "main/changeElementName":
-      sendMessage.changeElementName(selectLocatorById(state, payload.id));
-      pushNotificationHandler(selectLocatorById(prevState, payload.id));
+    case "main/changeLocatorAttributes":
+      sendMessage.changeElementName(selectLocatorById(state, payload.element_id));
+      pushNotificationHandler(selectLocatorById(prevState, payload.element_id));
       break;
     case "main/changeLocatorSettings":
       const prevValues = payload.map((el) => {
         return selectLocatorById(prevState, el.element_id);
       });
       pushNotificationHandler(prevValues);
-      break;
-    case "main/changeType":
-      if (!payload.isCustomName) sendMessage.changeElementName(selectLocatorById(state, payload.id));
       break;
     case "main/rerunGeneration/pending":
       pushNotificationHandler(payload);

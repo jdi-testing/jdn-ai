@@ -4,8 +4,6 @@ export const runContextMenu = () => {
   ----->
 */
 
-  const MODAL_CLOSE_TIMEOUT = 2000;
-
   function ContextMenu(menu, options) {
     const self = this;
     const num = ContextMenu.count++;
@@ -38,7 +36,7 @@ export const runContextMenu = () => {
         chrome.runtime.sendMessage({
           message: "CM_ELEMENT_HIGHLIGHT_OFF",
           param: el.id,
-      });
+        });
       }
     }
 
@@ -231,7 +229,7 @@ export const runContextMenu = () => {
       removeHighlight();
       window.removeEventListener("click", documentClick);
     };
-    
+
     this.remove = function() {
       document.getElementById("cm_" + num).remove();
       removeHighlight();
@@ -302,74 +300,6 @@ export const runContextMenu = () => {
       };
     },
   };
-
-  const changeElementNameModal = (element_id, name) => {
-    // MODAL
-    const modal = document.createElement('div');
-    modal.classList.add("jdn-change-element-name-modal");
-
-    // MODAL CLOSE LINK
-    const modalCloseLink = document.createElement('a');
-    modalCloseLink.innerHTML = "&#215;";
-    modalCloseLink.classList.add('jdn-change-element-name-modal__close-link');
-    modal.append(modalCloseLink);
-
-    // MODAL TITLE
-    const modalTitle = document.createElement('p');
-    modalTitle.innerText = "Change Name";
-    modalTitle.classList.add('jdn-change-element-name-modal__title');
-    modal.append(modalTitle);
-
-    // MODAL FORM
-    const form = document.createElement('form');
-
-    // MODAL FORM INPUT
-    const formInput = document.createElement('input');
-    formInput.classList.add('jdn-change-element-name-modal__form-input');
-    formInput.value = name;
-    form.append(formInput);
-
-    // MODAL FORM BUTTON
-    const formButton = document.createElement('button');
-    formButton.classList.add('jdn-change-element-name-modal__form-button');
-    formButton.innerText = "Save";
-    form.append(formButton);
-
-    // MODAL INITIALIZATION
-    modal.append(form);
-    document.body.appendChild(modal);
-    formInput.focus();
-
-    // ACTION: CHANGE ELEMENT NAME
-    formButton.addEventListener("click", (event) => {
-      event.preventDefault();
-      chrome.runtime.sendMessage({
-        message: "CHANGE_ELEMENT_NAME",
-        param: { id: element_id, name: formInput.value },
-      });
-      nameBeenSuccessfullyChanged();
-    });
-
-    // ACTION: SHOW SUCCESS STATUS
-    const nameBeenSuccessfullyChanged = () => {
-      form.remove();
-      modal.classList.add('jdn-change-element-name-modal--success');
-      modalTitle.innerText = "Name Changed";
-      modalTitle.classList.add("jdn-change-element-name-modal__title--success");
-      setTimeout(() => {
-        modal.remove();
-      }, MODAL_CLOSE_TIMEOUT);
-    };
-
-    // ACTION: CLOSE MODAL
-    modalCloseLink.addEventListener("click", () => modal.remove());
-    chrome.storage.onChanged.addListener((event) => {
-        if (event?.IS_DISCONNECTED?.newValue === true && modal) {
-          modal.remove();
-        }
-    });
-  };
-
   // <-----
 
   /* global chrome */
@@ -379,9 +309,10 @@ export const runContextMenu = () => {
   let predictedElement;
 
   const menuItems = (
-      { name, type, element_id, stopped, locator },
+      element,
       types
   ) => {
+    const { element_id, stopped, locator } = element;
     const menuItems = [
       {
         text: `Select locator`,
@@ -397,19 +328,15 @@ export const runContextMenu = () => {
         "type": ContextMenu.DIVIDER
       },
       {
-        text: `<span>Change name: ${name}</span> 
+        text: `<span>Edit</span> 
       <span><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M1.57843 12.1013L2.10457 8.41825L5.26143 11.5751L1.57843 12.1013Z" fill="white"/>
       <path fill-rule="evenodd" clip-rule="evenodd" d="M12.9726 3.86385C13.3631 3.47332 13.3631 2.84016 12.9726 2.44963L11.2299 0.706985C10.8394 0.316461 10.2062 0.31646 9.81572 0.706985L9.47052 1.05219L12.6273 4.20902L11.5751 5.2613L8.41823 2.10447L3.15682 7.36589L6.31368 10.5227L12.9726 3.86385Z" fill="white"/>
       </svg>
       </i>`,
         events: {
-          click: () => changeElementNameModal(element_id, name),
+          click: () => chrome.storage.sync.set({ OPEN_EDIT_LOCATOR: { isOpen: true, value: element, types} })
         },
-      },
-      {
-        text: `<b>Block type: ${type}</b>`,
-        sub: typesMenu(types),
       },
       {
         text: `<span>Settings</span> 
@@ -466,27 +393,6 @@ export const runContextMenu = () => {
     const generationOption = renderGenerationOption(element_id, locator, stopped);
     if (generationOption) menuItems.splice(5, 0, generationOption);
     return menuItems;
-  };
-
-  const typesMenu = (types) => {
-    return types
-        .map((type) => {
-          return {
-            text: type.jdi,
-            icon:
-          type.label === predictedElement.predicted_label ? `<svg width="13" height="9" viewBox="0 0 13 9" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M1 4.08L5.17241 8L12 1" stroke="#1582D8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          ` : "",
-            events: {
-              click: () =>
-                chrome.runtime.sendMessage({
-                  message: "CHANGE_TYPE",
-                  param: { id: predictedElement.element_id, newType: type.jdi },
-                }),
-            },
-          };
-        });
   };
 
   const renderGenerationOption = (element_id, locator, stopped) => {
@@ -561,7 +467,7 @@ export const runContextMenu = () => {
         message: "CM_ELEMENT_HIGHLIGHT_ON",
         param: predictedElement.element_id,
       });
-        el?.classList?.add('cm--selected');
+      el?.classList?.add('cm--selected');
     }
 
     if (message === "HIGHLIGHT_TOGGLED") {

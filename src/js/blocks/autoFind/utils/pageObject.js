@@ -11,8 +11,8 @@ const getPackage = (url) => {
       .join(".");
 };
 
-export const getLocator = ({fullXpath, robulaXpath}) => {
-  return robulaXpath || fullXpath || '';
+export const getLocator = ({fullXpath, robulaXpath, customXpath}) => {
+  return customXpath || robulaXpath || fullXpath || '';
 };
 
 export const createLocatorNames = (elements) => {
@@ -57,7 +57,7 @@ export const predictedToConvert = (elements) => {
   return elements.map((e) => {
     return {
       ...e,
-      Locator: e.locator.robulaXpath || e.locator.fullXpath,
+      Locator: getLocator(locator),
       Name: e.name,
       Type: e.type,
       parent: null,
