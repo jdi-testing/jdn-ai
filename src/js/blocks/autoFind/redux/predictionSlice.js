@@ -45,6 +45,7 @@ const predictionSlice = createSlice({
       }
       if (fullXpath !== locator && robulaXpath !== locator) {
         newValue.locator.customXpath = locator;
+        newValue.isCustomLocator = true;
       }
       locatorsAdapter.upsertOne(state, newValue);
     },

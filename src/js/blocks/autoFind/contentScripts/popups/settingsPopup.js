@@ -106,6 +106,7 @@ export const settingsPopup = () => {
       const checkboxLabel = document.createElement('label');
       checkboxLabel.innerHTML = label;
       checkboxLabel.classList.add('jdn-settings-popup__label');
+      checkboxLabel.classList.add("jdn-popup__label");
       checkboxLabel.append(formCheckbox);
 
       formCheckbox.addEventListener("change", (event) => {
@@ -133,6 +134,7 @@ export const settingsPopup = () => {
 
         const numberInputLabel = document.createElement('label');
         numberInputLabel.classList.add('jdn-settings-popup__label');
+        numberInputLabel.classList.add("jdn-popup__label");
         numberInputLabel.innerHTML = 'sec';
         numberInputLabel.append(numberInput);
         inputContainer.append(numberInputLabel);

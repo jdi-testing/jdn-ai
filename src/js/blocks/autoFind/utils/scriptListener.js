@@ -17,8 +17,7 @@ import { rerunGeneration, runXpathGeneration } from "../redux/thunks";
 import { connector, sendMessage } from "./connector";
 import { getTypesMenuOptions } from "./generationClassesMap";
 import { onStartCollectData, openSettingsMenu } from "./pageDataHandlers";
-import { locatorTaskStatus } from "../utils/locatorGenerationController";
-import { selectLocatorById } from "../redux/selectors";
+import { selectGeneratedLocators, selectLocatorById, selectLocatorsByProbability } from "../redux/selectors";
 
 export const createListeners = (dispatch, state) => {
   const [{}, { generateAllLocators }] = useAutoFind();
@@ -71,11 +70,9 @@ export const createListeners = (dispatch, state) => {
     },
     DOWNLOAD_POPUP: (payload) => {
       if (payload === 'all') {
-        generateAllLocators(state.locators);
+        generateAllLocators(selectLocatorsByProbability(state));
       } else if (payload === 'generated') {
-        generateAllLocators(state.locators.filter((loc) => {
-          return loc.locator.taskStatus === locatorTaskStatus.SUCCESS;
-        }));
+        generateAllLocators(selectGeneratedLocators(state));
       }
     },
     UPDATE_LOCATOR: (payload) => dispatch(changeLocatorAttributes(payload)),

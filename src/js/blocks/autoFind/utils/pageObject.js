@@ -57,7 +57,7 @@ export const predictedToConvert = (elements) => {
   return elements.map((e) => {
     return {
       ...e,
-      Locator: getLocator(locator),
+      Locator: getLocator(e.locator),
       Name: e.name,
       Type: e.type,
       parent: null,
