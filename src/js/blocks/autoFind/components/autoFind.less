@@ -327,13 +327,12 @@
         font-size: 16px;
         font-weight: 700;
         display: flex;
-        justify-content: space-between;
+        flex-wrap: wrap;
         padding: 8px 8px 8px 12px;
 
-        & > * {
-          margin-top: auto;
-          margin-bottom: auto;
-          height: 32px;
+        &-title {
+          flex-grow: 1;
+          flex-shrink: 0;
         }
 
         &:first-child {
@@ -356,7 +355,10 @@
           }
         }
 
-        &-buttons > * {
+        &-buttons {
+          display: flex;
+          flex-wrap: nowrap;
+          gap: 8px;
           margin-left: 8px;
         }
 
@@ -613,6 +615,38 @@
 
       &__header-link {
         display: none;
+      }
+    }
+  }
+
+  @media screen and (max-width: 500px) {
+    .jdn__locatorsList {
+      &-header {
+        justify-content: space-between;
+        align-items: center;
+
+        &-title {
+          flex-basis: 100%;
+        }
+      }
+
+      &-content {
+        height: calc(100vh - 262px);
+      }
+    }
+  }
+
+  @media screen and (max-width: 400px) {
+    .jdn__locatorsList-header {
+      justify-content: end;
+
+      &-title {
+        flex-basis: auto;
+      }
+
+      .ant-select-multiple .ant-select-selection-item {
+        margin-inline-end: 0 !important;
+        margin-bottom: 6px;
       }
     }
   }
