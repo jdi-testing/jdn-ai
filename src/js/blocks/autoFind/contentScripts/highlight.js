@@ -99,9 +99,9 @@ export const highlightOnPage = () => {
     const tooltipInnerHTML = () => {
       const el = predictedElements.find((e) => e.element_id === element_id);
       return `
-      <p class='jdn__tooltip-paragraph'><b>Name:</b> ${el.name}</p>
-      <p class='jdn__tooltip-paragraph'><b>Type:</b> ${el.type}</p>
-      <p class='jdn__tooltip-paragraph'><b>Prediction accuracy:</b> ${Math.round(el.predicted_probability * 100)}%</p>`;
+      <p class="jdn-tooltip-paragraph"><b>Name:</b> ${el.name}</p>
+      <p class="jdn-tooltip-paragraph"><b>Type:</b> ${el.type}</p>
+      <p class="jdn-tooltip-paragraph"><b>Prediction accuracy:</b> ${Math.round(el.predicted_probability * 100)}%</p>`;
     };
     const div = document.createElement("div");
     div.id = element_id;

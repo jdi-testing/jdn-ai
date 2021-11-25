@@ -156,11 +156,11 @@
   white-space: nowrap;
 }
 
-.jdn__tooltip-paragraph {
+.jdn-tooltip-paragraph {
   margin: 0 0 5px;
 }
 
-.jdn__tooltip-paragraph:last-child {
+.jdn-tooltip-paragraph:last-child {
   margin: 0;
 }
 
