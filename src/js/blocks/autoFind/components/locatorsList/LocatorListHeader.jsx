@@ -78,14 +78,14 @@ export const LocatorListHeader = ({
 
   return (
     <div className="jdn__locatorsList-header">
-      <span>Locators list</span>
-      <span className="jdn__locatorsList-header-buttons">
-        <Chip
-          hidden={!size(selected)}
-          primaryLabel={size(selected)}
-          secondaryLabel={"selected"}
-          onDelete={() => dispatch(toggleElementGroupGeneration(selected))}
-        />
+      <span className="jdn__locatorsList-header-title">Locators list</span>
+      <Chip
+        hidden={!size(selected)}
+        primaryLabel={size(selected)}
+        secondaryLabel={"selected"}
+        onDelete={() => dispatch(toggleElementGroupGeneration(selected))}
+      />
+      <div className="jdn__locatorsList-header-buttons">
         <Button
           hidden={!size(deletedSelected)}
           className="jdn__buttons"
@@ -123,7 +123,7 @@ export const LocatorListHeader = ({
           <Icon component={DownloadSvg} fill="#c15f0f" />
           Download
         </Button>
-      </span>
+      </div>
     </div>
   );
 };
