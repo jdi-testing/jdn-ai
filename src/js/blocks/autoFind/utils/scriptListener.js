@@ -14,11 +14,11 @@ import {
   addCmElementHighlight,
 } from "../redux/predictionSlice";
 import { useAutoFind } from "../autoFindProvider/AutoFindProvider";
-import { rerunGeneration, runXpathGeneration } from "../redux/thunks";
+import { rerunGeneration } from "../redux/thunks";
 import { connector, sendMessage } from "./connector";
 import { getJdiClassName, JDIclasses } from "./generationClassesMap";
 import { onStartCollectData, openSettingsMenu } from "./pageDataHandlers";
-import { locatorTaskStatus } from "../utils/locatorGenerationController";
+import { selectGeneratedLocators, selectLocatorById, selectLocatorsByProbability } from "../redux/selectors";
 
 export const createListeners = (dispatch, state) => {
   const [{}, { generateAllLocators }] = useAutoFind();
@@ -37,7 +37,7 @@ export const createListeners = (dispatch, state) => {
           if (!locator.stopped) {
             const _locator = {...locator, locator: {...locator.locator, settings: {} }};
             _locator.locator.settings = newSettings;
-            dispatch(runXpathGeneration([_locator]));
+            dispatch(rerunGeneration([_locator]));
           }
           return {element_id: id, locator: {...locator.locator, settings: newSettings}};
         });
@@ -78,11 +78,9 @@ export const createListeners = (dispatch, state) => {
     },
     DOWNLOAD_POPUP: (payload) => {
       if (payload === 'all') {
-        generateAllLocators(state.locators);
+        generateAllLocators(selectLocatorsByProbability(state));
       } else if (payload === 'generated') {
-        generateAllLocators(state.locators.filter((loc) => {
-          return loc.locator.taskStatus === locatorTaskStatus.SUCCESS;
-        }));
+        generateAllLocators(selectGeneratedLocators(state));
       }
     }
   };

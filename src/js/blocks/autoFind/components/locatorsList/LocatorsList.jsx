@@ -14,7 +14,7 @@ import CheckedkSvg from "../../../../../icons/checked-outlined.svg";
 import DeletedSvg from "../../../../../icons/deleted.svg";
 import { Locator } from "./Locator";
 import { toggleElementGroupGeneration } from "../../redux/predictionSlice";
-import { selectLocatorsByProbability } from "../../redux/selectors";
+import { selectGeneratedLocators, selectLocatorsByProbability } from "../../redux/selectors";
 
 export const LocatorsList = () => {
   const dispatch = useDispatch();
@@ -38,10 +38,7 @@ export const LocatorsList = () => {
         ),
       [byProbability]
   );
-  const generated = useMemo(
-      () => byProbability.filter((el) => el.locator.taskStatus === locatorTaskStatus.SUCCESS && !el.deleted),
-      [byProbability]
-  );
+  const generated = useMemo(() => selectGeneratedLocators(state), [byProbability]);
   const deleted = useMemo(() => byProbability.filter((el) => el.deleted), [byProbability]);
 
   const waitingSelected = filter(waiting, "generate");
