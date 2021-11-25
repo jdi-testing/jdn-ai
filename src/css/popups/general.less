@@ -15,6 +15,7 @@
   background-color: @color-black;
   border: 1px solid @modal-border;
   z-index: @z-index-11000;
+  // font-family: @font-style; TODO: uncomment with issue 67 and remove from other popups
 
   &__header {
     padding: 10px 16px;
@@ -25,6 +26,7 @@
     line-height: @line-height-s;
     font-style: normal;
     font-weight: bold;
+    font-family: inherit;
     text-transform: none;
   }
 
@@ -85,5 +87,18 @@
         color: @jdn-light-blue;
       }
     }
+  }
+
+  &__label {
+    display: flex;    
+    align-items: center;
+    gap: @gap-s;
+    font-size: @font-size-s;
+    line-height: @line-height-l;
+    color: @color-white;
+    font-style: normal;
+    font-weight: normal;
+    font-family: inherit;
+    align-items: start;
   }
 }
