@@ -13,7 +13,7 @@ import {
   changeLocatorAttributes,
 } from "../redux/predictionSlice";
 import { useAutoFind } from "../autoFindProvider/AutoFindProvider";
-import { rerunGeneration, runXpathGeneration } from "../redux/thunks";
+import { rerunGeneration } from "../redux/thunks";
 import { connector, sendMessage } from "./connector";
 import { getTypesMenuOptions } from "./generationClassesMap";
 import { onStartCollectData, openSettingsMenu } from "./pageDataHandlers";
@@ -35,7 +35,7 @@ export const createListeners = (dispatch, state) => {
           if (!locator.stopped) {
             const _locator = {...locator, locator: {...locator.locator, settings: {} }};
             _locator.locator.settings = newSettings;
-            dispatch(runXpathGeneration([_locator]));
+            dispatch(rerunGeneration([_locator]));
           }
           return {element_id: id, locator: {...locator.locator, settings: newSettings}};
         });

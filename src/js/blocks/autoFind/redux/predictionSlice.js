@@ -4,7 +4,7 @@ import { autoFindStatus, xpathGenerationStatus } from "../autoFindProvider/AutoF
 import { getJdiClassName } from "../utils/generationClassesMap";
 import { stopGenerationHandler } from "../utils/locatorGenerationController";
 import { locatorsAdapter, simpleSelectLocatorById } from "./selectors";
-import { generateLocators, identifyElements } from "./thunks";
+import { generateLocators, identifyElements, rerunGeneration } from "./thunks";
 
 const initialState = {
   status: autoFindStatus.noStatus,
@@ -150,6 +150,12 @@ const predictionSlice = createSlice({
         })
         .addCase(generateLocators.rejected, (state, { error }) => {
           throw new Error(error.stack);
+        })
+        .addCase(rerunGeneration.pending, (state, {meta}) => {
+          const {arg} = meta;
+          arg.forEach(({element_id}) => {
+            locatorsAdapter.upsertOne(state, {element_id, stopped: false});
+          });
         });
   },
 });

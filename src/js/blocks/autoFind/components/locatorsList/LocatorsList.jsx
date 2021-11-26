@@ -22,7 +22,7 @@ export const LocatorsList = () => {
   const state = useSelector((state) => state);
   const xpathConfig = useSelector((state) => state.main.xpathConfig);
   const xpathStatus = useSelector((state) => state.main.xpathStatus);
-  const [activePanel, setActivePanel] = useState();
+  const [activePanel, setActivePanel] = useState("1");
   const [isProgressActive, setIsProgressActive] = useState(false);
 
   const byProbability = selectLocatorsByProbability(state);
@@ -38,10 +38,7 @@ export const LocatorsList = () => {
         ),
       [byProbability]
   );
-  const generated = useMemo(
-      () => selectGeneratedLocators(state),
-      [byProbability]
-  );
+  const generated = useMemo(() => selectGeneratedLocators(state), [byProbability]);
   const deleted = useMemo(() => byProbability.filter((el) => el.deleted), [byProbability]);
 
   const waitingSelected = filter(waiting, "generate");
