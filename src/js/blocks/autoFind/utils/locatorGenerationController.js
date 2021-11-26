@@ -23,7 +23,7 @@ export const runGenerationHandler = async (elements, settings, elementCallback) 
   const document = await documentResult[0].result;
 
   elements.forEach((element) => {
-    const callback = (elementId, locator) => {
+    const callback = (element_id, locator) => {
       elementCallback({ ...element, locator: { ...element.locator, ...locator } });
     };
     locatorGenerationController.scheduleTask(

@@ -46,6 +46,7 @@ const predictionSlice = createSlice({
       if (fullXpath !== locator && robulaXpath !== locator) {
         newValue.locator.customXpath = locator;
         newValue.isCustomLocator = true;
+        if (newValue.stopped) newValue.stopped = false;
       }
       locatorsAdapter.upsertOne(state, newValue);
     },
@@ -115,8 +116,14 @@ const predictionSlice = createSlice({
     toggleBackdrop(state, {payload}) {
       state.isModalOpen = payload;
     },
-    updateLocator(state, { payload }) {
-      locatorsAdapter.upsertOne(state, payload);
+    updateLocator(state, {payload}) {
+      const { element_id, locator } = payload;
+      const isLocaotrExists = simpleSelectLocatorById(state, element_id);
+      if (isLocaotrExists) {
+        locatorsAdapter.upsertOne(state, {element_id, locator: locator});
+      } else {
+        locatorsAdapter.addOne(state, payload);
+      }
     },
     xPathGenerationStarted(state) {
       state.xpathStatus = xpathGenerationStatus.started;

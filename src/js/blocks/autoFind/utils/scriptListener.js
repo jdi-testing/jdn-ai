@@ -18,6 +18,7 @@ import { connector, sendMessage } from "./connector";
 import { getTypesMenuOptions } from "./generationClassesMap";
 import { onStartCollectData, openSettingsMenu } from "./pageDataHandlers";
 import { selectGeneratedLocators, selectLocatorById, selectLocatorsByProbability } from "../redux/selectors";
+import { isProgressStatus } from "./locatorGenerationController";
 
 export const createListeners = (dispatch, state) => {
   const [{}, { generateAllLocators }] = useAutoFind();
@@ -33,6 +34,9 @@ export const createListeners = (dispatch, state) => {
             return value === "indeterminate" ? elementSettings[key] || state.main.xpathConfig[key] : value;
           });
           if (!locator.stopped) {
+            if (isProgressStatus(locator.locator.taskStatus)) {
+              dispatch(stopXpathGeneration(locator.element_id));
+            }
             const _locator = {...locator, locator: {...locator.locator, settings: {} }};
             _locator.locator.settings = newSettings;
             dispatch(rerunGeneration([_locator]));
