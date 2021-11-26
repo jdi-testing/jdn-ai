@@ -15,7 +15,6 @@ export const editLocatorPopup = () => {
     const { type, name, locator, element_id } = locatorElement;
 
     const onFormSubmit = ({ target: { type, name, locator } }) => {
-      console.log([type, name, locator]);
       chrome.runtime.sendMessage({
         message: "UPDATE_LOCATOR",
         param: {
@@ -69,11 +68,20 @@ export const editLocatorPopup = () => {
     selectType.setAttribute("name", "type");
     labelType.appendChild(selectType);
 
+    const isJdiType = types.find((_type) => _type.label === type);
+    if (!isJdiType) {
+      const option = document.createElement("option");
+      option.setAttribute("selected", true);
+      option.setAttribute("value", type);
+      option.innerHTML = type;
+      selectType.appendChild(option);
+    };
+
     types.forEach(({ label, jdi }) => {
       const option = document.createElement("option");
       option.setAttribute("value", label);
       option.innerHTML = jdi;
-      if (label === type) option.setAttribute("selected", true);
+      if (isJdiType && label === type) option.setAttribute("selected", true);
       selectType.appendChild(option);
     });
 

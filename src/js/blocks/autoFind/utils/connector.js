@@ -1,5 +1,5 @@
 import { runContextMenu } from "../contentScripts/contextMenu/contextmenu";
-import { editLocatorPopup } from "../contentScripts/editLocatorPopup";
+import { editLocatorPopup } from "../contentScripts/popups/editLocatorPopup";
 import { highlightOnPage } from "../contentScripts/highlight";
 import { highlightOrder } from "../contentScripts/highlightOrder";
 import { urlListener } from "../contentScripts/urlListener";
