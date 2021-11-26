@@ -128,7 +128,7 @@ export const settingsPopup = () => {
         numberInput.setAttribute('value', settings.maximum_generation_time);
         numberInput.addEventListener("change", (event) => {
           event.preventDefault();
-          settings[event.target.name] = event.target.value;
+          settings[event.target.name] = parseInt(event.target.value, 10);
         });
 
         const numberInputLabel = document.createElement('label');

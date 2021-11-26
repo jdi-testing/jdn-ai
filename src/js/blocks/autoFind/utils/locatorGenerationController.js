@@ -19,14 +19,12 @@ export const locatorTaskStatus = {
 export const isProgressStatus = (taskStatus) => locatorProgressStatus.hasOwnProperty(taskStatus);
 
 export const runGenerationHandler = async (elements, settings, elementCallback) => {
-  const documentResult = await connector.attachContentScript(
-      (() => JSON.stringify(document.documentElement.innerHTML))
-  );
+  const documentResult = await connector.attachContentScript(() => JSON.stringify(document.documentElement.innerHTML));
   const document = await documentResult[0].result;
 
   elements.forEach((element) => {
     const callback = (elementId, locator) => {
-      elementCallback({...element, locator: { ...element.locator, ...locator}});
+      elementCallback({ ...element, locator: { ...element.locator, ...locator } });
     };
     locatorGenerationController.scheduleTask(
         element.element_id,
@@ -35,6 +33,23 @@ export const runGenerationHandler = async (elements, settings, elementCallback) 
         callback
     );
   });
+};
+
+const getSettingsRequestConfig = (settings) => {
+  const {
+    allow_indexes_at_the_beginning,
+    allow_indexes_in_the_middle,
+    allow_indexes_at_the_end,
+    limit_maximum_generation_time,
+    maximum_generation_time,
+  } = settings;
+  const newConfig = {
+    allow_indexes_at_the_beginning,
+    allow_indexes_in_the_middle,
+    allow_indexes_at_the_end,
+  };
+  if (limit_maximum_generation_time) return {...newConfig, maximum_generation_time};
+  else return newConfig;
 };
 
 export const stopGenerationHandler = (element_id) => {
@@ -52,7 +67,7 @@ export class LocatorGenerationScheduler {
     this.requestInProgress = false;
 
     this.scheduleGeneration();
-  };
+  }
 
   updateSettings(newSettings) {
     if (this.taskStatus !== locatorTaskStatus.STARTED) {
@@ -64,13 +79,16 @@ export class LocatorGenerationScheduler {
   }
 
   async scheduleGeneration() {
-    const result = await request.post(SHEDULE_XPATH_GENERATION, JSON.stringify({
-      document: this.document,
-      id: this.elementId,
-      config: this.settings,
-    }));
+    const result = await request.post(
+        SHEDULE_XPATH_GENERATION,
+        JSON.stringify({
+          document: this.document,
+          id: this.elementId,
+          config: getSettingsRequestConfig(this.settings),
+        })
+    );
     this.taskId = result.task_id;
-    this.statusCallback(this.elementId, {taskStatus: locatorTaskStatus.PENDING});
+    this.statusCallback(this.elementId, { taskStatus: locatorTaskStatus.PENDING });
     this.runStatusChecker();
   }
 
@@ -79,19 +97,25 @@ export class LocatorGenerationScheduler {
   }
 
   async getTaskResult() {
-    const result = await request.post(GET_TASK_RESULT, JSON.stringify({
-      id: this.taskId,
-    }));
-    this.statusCallback(this.elementId, {taskStatus: locatorTaskStatus.SUCCESS, robulaXpath: result.result});
+    const result = await request.post(
+        GET_TASK_RESULT,
+        JSON.stringify({
+          id: this.taskId,
+        })
+    );
+    this.statusCallback(this.elementId, { taskStatus: locatorTaskStatus.SUCCESS, robulaXpath: result.result });
   }
 
   async checkTaskStatus() {
     if (this.requestInProgress) return;
 
     this.requestInProgress = true;
-    const result = await request.post(GET_TASK_STATUS, JSON.stringify({
-      id: this.taskId,
-    }));
+    const result = await request.post(
+        GET_TASK_STATUS,
+        JSON.stringify({
+          id: this.taskId,
+        })
+    );
     this.taskStatus = result.status;
     this.requestInProgress = false;
 
@@ -102,16 +126,19 @@ export class LocatorGenerationScheduler {
     if (this.taskStatus === locatorTaskStatus.SUCCESS) {
       this.getTaskResult();
     } else {
-      this.statusCallback(this.elementId, {taskStatus: this.taskStatus});
+      this.statusCallback(this.elementId, { taskStatus: this.taskStatus });
     }
   }
 
   async revokeTask() {
-    await request.post(REVOKE_TASK, JSON.stringify({
-      id: this.taskId,
-    }));
+    await request.post(
+        REVOKE_TASK,
+        JSON.stringify({
+          id: this.taskId,
+        })
+    );
   }
-};
+}
 
 class LocatorGenerationController {
   constructor() {
@@ -119,7 +146,7 @@ class LocatorGenerationController {
   }
 
   getTaskById(elementId) {
-    return find(this.scheduledGenerations, {elementId: elementId});
+    return find(this.scheduledGenerations, { elementId: elementId });
   }
 
   scheduleTask(elementId, settings, document, callback) {
@@ -129,12 +156,12 @@ class LocatorGenerationController {
       else {
         const success = task.scheduler.updateSettings(settings);
         if (success) return;
-      };
+      }
     }
 
     this.scheduledGenerations.push({
       elementId,
-      scheduler: new LocatorGenerationScheduler(elementId, settings, document, callback)
+      scheduler: new LocatorGenerationScheduler(elementId, settings, document, callback),
     });
   }
 
