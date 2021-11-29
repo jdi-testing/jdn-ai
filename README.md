@@ -15,9 +15,9 @@ Current version of JDN plugin is client-server application with to independent p
 #### macOS/Linux
 ```shell
 curl --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/develop/docker-compose.yaml && docker compose up
-```shell
-#### Windows
 ```
+#### Windows
+```shell
 curl.exe --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/develop/docker-compose.yaml && docker compose up
 ```
 * In Windows 10 use PowerShell instead of regular command-line interpreter, for macOS use native terminal.
