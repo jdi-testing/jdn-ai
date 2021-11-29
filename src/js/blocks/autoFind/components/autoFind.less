@@ -14,26 +14,30 @@
   padding: 12px;
 }
 
-.ant-dropdown-menu {
-  min-width: 145px;
-  background-color: #000;
-  padding: 0;
+.ant-dropdown {
+  z-index: 11000;
 
-  &-item,
-  &-submenu-title {
-    font-size: 12px;
-    line-height: 16px;
-    color: #fff;
+  &-menu {
+    min-width: 145px;
     background-color: #000;
-    padding: 7px 12px;
+    padding: 0;
 
-    &:hover {
-      color: #1582d8;
-      background: #202126;
-    }
-
-    &-icon {
+    &-item,
+    &-submenu-title {
+      font-size: 12px;
+      line-height: 16px;
       color: #fff;
+      background-color: #000;
+      padding: 7px 12px;
+
+      &:hover {
+        color: #1582d8;
+        background: #202126;
+      }
+
+      &-icon {
+        color: #fff;
+      }
     }
   }
 }
