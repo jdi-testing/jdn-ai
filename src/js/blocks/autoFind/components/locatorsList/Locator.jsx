@@ -14,7 +14,7 @@ import ClockSvg from "../../../../../icons/clock-outlined.svg";
 import WarningSvg from "../../../../../icons/warning.svg";
 import EllipsisSvg from "../../../../../icons/ellipsis.svg";
 import SettingsSvg from "../../../../../icons/settings.svg";
-// import PencilSvg from "../../../../../icons/pencil.svg";
+import PencilSvg from "../../../../../icons/pencil.svg";
 import PlaySvg from "../../../../../icons/play.svg";
 import PauseSvg from "../../../../../icons/pause.svg";
 import PauseOutlinedSvg from "../../../../../icons/pause-outlined.svg";
@@ -23,6 +23,7 @@ import RestoreSvg from "../../../../../icons/restore.svg";
 import { openSettingsMenu } from "../../utils/pageDataHandlers";
 import { stopXpathGeneration, toggleDeleted, toggleElementGeneration } from "../../redux/predictionSlice";
 import { rerunGeneration } from "../../redux/thunks";
+import { getTypesMenuOptions } from "../../utils/generationClassesMap";
 
 export const Locator = ({ element, xpathConfig, noScrolling }) => {
   const dispatch = useDispatch();
@@ -43,6 +44,10 @@ export const Locator = ({ element, xpathConfig, noScrolling }) => {
 
   const handleSettingsOption = () => {
     openSettingsMenu(element.locator.settings || xpathConfig, [element.element_id]);
+  };
+
+  const handleEditClick = () => {
+    chrome.storage.sync.set({ OPEN_EDIT_LOCATOR: { isOpen: true, value: element, types: getTypesMenuOptions()} });
   };
 
   const renderIcon = () => {
@@ -69,7 +74,7 @@ export const Locator = ({ element, xpathConfig, noScrolling }) => {
       <React.Fragment>
         @UI(
         <span className="jdn__xpath_item-locator">&quot;{getLocator(locator)}&quot;</span>)
-        <span className="jdn__xpath_item-type">public</span>
+        <span className="jdn__xpath_item-type">&nbsp;public</span>
         <span>&nbsp;{type}&nbsp;</span>
         {name}
       </React.Fragment>
@@ -88,9 +93,9 @@ export const Locator = ({ element, xpathConfig, noScrolling }) => {
     } else {
       return (
         <Menu>
-          {/* <Menu.Item key="1" icon={<PencilSvg />} onClick={handleMenuClick(1)}>
+          <Menu.Item key="1" icon={<PencilSvg />} onClick={handleEditClick}>
             Edit
-          </Menu.Item>*/}
+          </Menu.Item>
           <Menu.Item key="2" icon={<SettingsSvg />} onClick={handleSettingsOption}>
             Settings
           </Menu.Item>

@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { Button, notification } from "antd";
 import {
   cancelLastNotification,
-  changeElementName,
+  changeLocatorAttributes,
   handleLastNotification,
   stopXpathGeneration,
   stopXpathGenerationGroup,
@@ -52,10 +52,10 @@ export const Notifications = () => {
       dispatch(handleLastNotification());
     } else {
       switch (action?.type) {
-        case "main/changeElementName":
-          const { element_id: id, name } = prevValue;
+        case "main/changeLocatorAttributes":
+          const { element_id, type, name, locator } = prevValue;
           notificationMessage = messages().EDITED;
-          cancelAction = changeElementName({ id, name });
+          cancelAction = changeLocatorAttributes({ type, name, element_id, locator: locator.customXpath });
           break;
         case "main/changeLocatorSettings":
           notificationMessage =

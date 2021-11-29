@@ -18,5 +18,5 @@ export const selectLocatorsByProbability = createSelector(
 );
 
 export const selectGeneratedLocators = createSelector(selectLocatorsByProbability, (items) =>
-  items.filter((el) => (el.locator.taskStatus === locatorTaskStatus.SUCCESS && !el.deleted))
+  items.filter((el) => (el.locator.taskStatus === locatorTaskStatus.SUCCESS || el.isCustomLocator) && !el.deleted)
 );

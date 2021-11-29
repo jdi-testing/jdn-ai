@@ -25,7 +25,7 @@ export const settingsPopup = () => {
   chrome.storage.sync.get(['XPATH_CONFIG'], ({XPATH_CONFIG}) => {
     const {xpathConfig, elementIds, hasGeneratedSelected} = XPATH_CONFIG;
     chrome.runtime.sendMessage({
-      message: "IS_OPEN_XPATH_CONFIG_MODAL",
+      message: "IS_OPEN_MODAL",
       param: true,
     });
     const settings = xpathConfig;
@@ -106,6 +106,7 @@ export const settingsPopup = () => {
       const checkboxLabel = document.createElement('label');
       checkboxLabel.innerHTML = label;
       checkboxLabel.classList.add('jdn-settings-popup__label');
+      checkboxLabel.classList.add("jdn-popup__label");
       checkboxLabel.append(formCheckbox);
 
       formCheckbox.addEventListener("change", (event) => {
@@ -133,6 +134,7 @@ export const settingsPopup = () => {
 
         const numberInputLabel = document.createElement('label');
         numberInputLabel.classList.add('jdn-settings-popup__label');
+        numberInputLabel.classList.add("jdn-popup__label");
         numberInputLabel.innerHTML = 'sec';
         numberInputLabel.append(numberInput);
         inputContainer.append(numberInputLabel);
@@ -177,7 +179,7 @@ export const settingsPopup = () => {
 
     function removePopup() {
       chrome.runtime.sendMessage({
-        message: "IS_OPEN_XPATH_CONFIG_MODAL",
+        message: "IS_OPEN_MODAL",
         param: false,
       });
       background.remove();
