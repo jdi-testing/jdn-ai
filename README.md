@@ -11,10 +11,14 @@ Current version of JDN plugin is client-server application with to independent p
 * Account on GitLab is essential: https://gitlab.com/users/sign_in. Register new account if it’s necessary or use existing one
 * Send the email of account project data scientist Vyacheslav Fuga (skype: live:.cid.ffcd60dc4c98309 ) to get access
 * Setup Docker https://www.docker.com/products/docker-desktop
-* Create container using the command 
+* Create container using the command
+#### macOS/Linux
+```shell
+curl --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/develop/docker-compose.yaml && docker compose up
 ```
-docker login registry.gitlab.com
-docker run -p 127.0.0.1:5000:5000/tcp -ti --rm --name jdi-ml registry.gitlab.com/vfuga/jdi-qasp-ml:latest
+#### Windows
+```shell
+curl.exe --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/develop/docker-compose.yaml && docker compose up
 ```
 * In Windows 10 use PowerShell instead of regular command-line interpreter, for macOS use native terminal.
 * After finishing of downloading check that container is created and the number of version is displayed in JDN plugin tab.
