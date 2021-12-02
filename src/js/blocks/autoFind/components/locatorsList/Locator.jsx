@@ -22,8 +22,9 @@ import TrashBinSvg from "../../../../../icons/trash-bin.svg";
 import RestoreSvg from "../../../../../icons/restore.svg";
 import { openSettingsMenu } from "../../utils/pageDataHandlers";
 import { toggleDeleted, toggleElementGeneration } from "../../redux/predictionSlice";
-import { rerunGeneration, stopGeneration } from "../../redux/thunks";
 import { getTypesMenuOptions } from "../../utils/generationClassesMap";
+import { stopGeneration } from "../../redux/thunks/stopGeneration";
+import { rerunGeneration } from "../../redux/thunks/rerunGeneration";
 
 export const Locator = ({ element, xpathConfig, noScrolling }) => {
   const dispatch = useDispatch();

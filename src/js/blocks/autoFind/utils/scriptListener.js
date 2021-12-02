@@ -12,12 +12,13 @@ import {
   changeLocatorAttributes,
 } from "../redux/predictionSlice";
 import { useAutoFind } from "../autoFindProvider/AutoFindProvider";
-import { rerunGeneration, stopGeneration } from "../redux/thunks";
 import { connector, sendMessage } from "./connector";
 import { getTypesMenuOptions } from "./generationClassesMap";
 import { onStartCollectData, openSettingsMenu } from "./pageDataHandlers";
 import { selectGeneratedLocators, selectLocatorById, selectLocatorsByProbability } from "../redux/selectors";
-import { isProgressStatus } from "./locatorGenerationController";
+import { isProgressStatus, stopGenerationHandler } from "./locatorGenerationController";
+import { stopGeneration } from "../redux/thunks/stopGeneration";
+import { rerunGeneration } from "../redux/thunks/rerunGeneration";
 
 export const createListeners = (dispatch, state) => {
   const [{}, { generateAllLocators }] = useAutoFind();
@@ -34,7 +35,8 @@ export const createListeners = (dispatch, state) => {
           });
           if (!locator.stopped) {
             if (isProgressStatus(locator.locator.taskStatus)) {
-              dispatch(stopGeneration(locator.element_id));
+              // dispatch(stopGeneration(locator.element_id));
+              stopGenerationHandler(locator.element_id);
             }
             const _locator = {...locator, locator: {...locator.locator, settings: {} }};
             _locator.locator.settings = newSettings;

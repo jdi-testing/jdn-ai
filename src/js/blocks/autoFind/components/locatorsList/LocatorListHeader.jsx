@@ -20,7 +20,8 @@ import {
   toggleDeletedGroup,
   toggleElementGroupGeneration,
 } from "../../redux/predictionSlice";
-import { rerunGeneration, stopGenerationGroup } from "../../redux/thunks";
+import { stopGenerationGroup } from "../../redux/thunks/stopGenerationGroup";
+import { rerunGeneration } from "../../redux/thunks/rerunGeneration";
 
 export const LocatorListHeader = ({
   generatedSelected,

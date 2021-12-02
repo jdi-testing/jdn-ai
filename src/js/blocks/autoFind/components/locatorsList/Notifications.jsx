@@ -10,12 +10,10 @@ import {
 } from "../../redux/predictionSlice";
 import { last, size } from "lodash";
 import { selectLocators } from "../../redux/selectors";
-import {
-  cancelStopGeneration,
-  revertSettings,
-  stopGeneration,
-  stopGenerationGroup,
-} from "../../redux/thunks";
+import { stopGeneration } from "../../redux/thunks/stopGeneration";
+import { stopGenerationGroup } from "../../redux/thunks/stopGenerationGroup";
+import { cancelStopGeneration } from "../../redux/thunks/cancelStopGeneration";
+import { revertSettings } from "../../redux/thunks/revertSettings";
 
 const messages = (value) => {
   return {

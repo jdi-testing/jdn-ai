@@ -2,16 +2,13 @@ import { createSlice } from "@reduxjs/toolkit";
 import { size } from "lodash";
 import { autoFindStatus, xpathGenerationStatus } from "../autoFindProvider/AutoFindProvider";
 import { getJdiClassName } from "../utils/generationClassesMap";
-import { locatorTaskStatus } from "../utils/locatorGenerationController";
 import { locatorsAdapter, simpleSelectLocatorById } from "./selectors";
-import {
-  cancelStopGeneration,
-  generateLocators,
-  identifyElements,
-  rerunGeneration,
-  stopGeneration,
-  stopGenerationGroup,
-} from "./thunks";
+import { cancelStopGenerationReducer } from "./thunks/cancelStopGeneration";
+import { generateLocatorsReducer } from "./thunks/generateLocators";
+import { identifyElementsReducer } from "./thunks/identifyElements";
+import { rerunGenerationReducer } from "./thunks/rerunGeneration";
+import { stopGenerationReducer } from "./thunks/stopGeneration";
+import { stopGenerationGroupReducer } from "./thunks/stopGenerationGroup";
 
 const initialState = {
   status: autoFindStatus.noStatus,
@@ -130,82 +127,12 @@ const predictionSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder
-        .addCase(identifyElements.pending, (state, action) => {
-          state.status = autoFindStatus.loading;
-          state.allowIdentifyElements = false;
-        })
-        .addCase(identifyElements.fulfilled, (state, { payload }) => {
-          state.status = autoFindStatus.success;
-          state.allowRemoveElements = true;
-          state.predictedElements = payload;
-        })
-        .addCase(identifyElements.rejected, (state, { error }) => {
-          throw new Error(error.stack);
-        })
-        .addCase(generateLocators.pending, (state, action) => {
-          state.schedulerStatus = "pending";
-        })
-        .addCase(generateLocators.fulfilled, (state, { payload }) => {
-          state.schedulerStatus = "scheduled";
-        })
-        .addCase(generateLocators.rejected, (state, { error }) => {
-          throw new Error(error.stack);
-        })
-        .addCase(stopGeneration.pending, (state, { meta }) => {
-          state.showBackdrop = true;
-          const element_id = meta.arg;
-          locatorsAdapter.upsertOne(state, { element_id, stopped: true });
-        })
-        .addCase(stopGeneration.fulfilled, (state, { meta }) => {
-          state.showBackdrop = false;
-          const element = simpleSelectLocatorById(state, meta.arg);
-          const { element_id, locator } = element;
-          locatorsAdapter.upsertOne(state, {
-            element_id,
-            locator: { ...locator, taskStatus: locatorTaskStatus.REVOKED },
-          });
-        })
-        .addCase(stopGeneration.rejected, (state, { error }) => {
-          state.showBackdrop = false;
-          throw new Error(error.stack);
-        })
-        .addCase(stopGenerationGroup.pending, (state, { meta }) => {
-          state.showBackdrop = true;
-          const newValue = meta.arg.map(({ element_id }) => {
-            return {
-              element_id,
-              stopped: true,
-            };
-          });
-          locatorsAdapter.upsertMany(state, newValue);
-        })
-        .addCase(stopGenerationGroup.fulfilled, (state, { meta }) => {
-          state.showBackdrop = false;
-          const newStatuses = meta.arg.map(({ element_id, locator }) => {
-            return {
-              element_id,
-              locator: { ...locator, taskStatus: locatorTaskStatus.REVOKED },
-            };
-          });
-          locatorsAdapter.upsertMany(state, newStatuses);
-        })
-        .addCase(stopGenerationGroup.rejected, (state, { error }) => {
-          state.showBackdrop = false;
-          throw new Error(error.stack);
-        })
-        .addCase(rerunGeneration.pending, (state, { meta }) => {
-          const { arg } = meta;
-          arg.forEach(({ element_id }) => {
-            locatorsAdapter.upsertOne(state, { element_id, stopped: false });
-          });
-        })
-        .addCase(cancelStopGeneration.pending, (state, { meta }) => {
-          const { arg } = meta;
-          arg.forEach(({ element_id }) => {
-            locatorsAdapter.upsertOne(state, { element_id, stopped: false });
-          });
-        });
+    identifyElementsReducer(builder),
+    generateLocatorsReducer(builder),
+    stopGenerationReducer(builder),
+    stopGenerationGroupReducer(builder),
+    cancelStopGenerationReducer(builder),
+    rerunGenerationReducer(builder);
   },
 });
 
