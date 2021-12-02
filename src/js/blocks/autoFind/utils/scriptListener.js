@@ -35,7 +35,6 @@ export const createListeners = (dispatch, state) => {
           });
           if (!locator.stopped) {
             if (isProgressStatus(locator.locator.taskStatus)) {
-              // dispatch(stopGeneration(locator.element_id));
               stopGenerationHandler(locator.element_id);
             }
             const _locator = {...locator, locator: {...locator.locator, settings: {} }};
