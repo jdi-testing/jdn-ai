@@ -2,9 +2,9 @@ import React from "react";
 import { useSelector } from "react-redux";
 import './Backdrop.less';
 export const Backdrop = () => {
-  const isModalOpen = useSelector((state) => state.main.isModalOpen);
+  const showBackdrop = useSelector((state) => state.main.showBackdrop);
 
-  if (isModalOpen) {
+  if (showBackdrop) {
     return (
       <div className="backdrop"></div>
     );

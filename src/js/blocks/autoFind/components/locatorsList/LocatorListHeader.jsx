@@ -17,11 +17,10 @@ import { locatorTaskStatus } from "../../utils/locatorGenerationController";
 import { openSettingsMenu } from "../../utils/pageDataHandlers";
 import {
   pushNotification,
-  stopXpathGenerationGroup,
   toggleDeletedGroup,
   toggleElementGroupGeneration,
 } from "../../redux/predictionSlice";
-import { rerunGeneration } from "../../redux/thunks";
+import { rerunGeneration, stopGenerationGroup } from "../../redux/thunks";
 
 export const LocatorListHeader = ({
   generatedSelected,
@@ -100,7 +99,7 @@ export const LocatorListHeader = ({
         <Button
           hidden={!size(inProgressSelected)}
           danger
-          onClick={() => dispatch(stopXpathGenerationGroup(inProgressSelected))}
+          onClick={() => dispatch(stopGenerationGroup(inProgressSelected))}
         >
           <Icon component={PauseSVG} />
         </Button>

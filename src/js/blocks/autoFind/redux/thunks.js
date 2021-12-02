@@ -1,8 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { sendMessage } from "../utils/connector";
-import { isProgressStatus, runGenerationHandler } from "../utils/locatorGenerationController";
+import { isProgressStatus, runGenerationHandler, stopGenerationHandler } from "../utils/locatorGenerationController";
 import { getElements, requestGenerationData } from "../utils/pageDataHandlers";
-import { changeLocatorSettings, stopXpathGeneration, updateLocator, xPathGenerationStarted } from "./predictionSlice";
+import { changeLocatorSettings, updateLocator, xPathGenerationStarted } from "./predictionSlice";
 import { selectLocatorById, selectLocators } from "./selectors";
 
 export const identifyElements = createAsyncThunk("main/identifyElements", async (data, thunkAPI) => {
@@ -45,6 +45,23 @@ export const runXpathGeneration = createAsyncThunk("main/scheduleGeneration", as
   return generationData;
 });
 
+export const stopGeneration = createAsyncThunk("main/stopGeneration", async (element_id) => {
+  return stopGenerationHandler(element_id);
+});
+
+export const stopGenerationGroup = createAsyncThunk("main/stopGenerationGroup", async (elements, thunkAPI) => {
+  const stopPromises = elements.map(({element_id}) => {
+    return stopGenerationHandler(element_id);
+  });
+  return Promise.all(stopPromises).then((values) => {
+    return thunkAPI.fulfillWithValue(values);
+  });
+});
+
+export const cancelStopGeneration = createAsyncThunk("main/cancelStopGeneration", async (generationData, thunkAPI) => {
+  thunkAPI.dispatch(runXpathGeneration(generationData));
+});
+
 export const rerunGeneration = createAsyncThunk("main/rerunGeneration", async (generationData, thunkAPI) => {
   thunkAPI.dispatch(runXpathGeneration(generationData));
 });
@@ -58,7 +75,7 @@ export const revertSettings = createAsyncThunk(
         const currentValue = selectLocatorById(state, id);
 
         if (isProgressStatus(currentValue.locator.taskStatus)) {
-          thunkAPI.dispatch(stopXpathGeneration(id));
+          thunkAPI.dispatch(stopGeneration(id));
         }
 
         thunkAPI.dispatch(changeLocatorSettings([previousElement]));

@@ -53,7 +53,7 @@ const getSettingsRequestConfig = (settings) => {
 };
 
 export const stopGenerationHandler = (element_id) => {
-  locatorGenerationController.revokeTask(element_id);
+  return locatorGenerationController.revokeTask(element_id);
 };
 
 export class LocatorGenerationScheduler {
@@ -131,12 +131,15 @@ export class LocatorGenerationScheduler {
   }
 
   async revokeTask() {
-    await request.post(
+    clearInterval(this.ping);
+    locatorGenerationController.unscheduleTask(this.elementId);
+    const res = await request.post(
         REVOKE_TASK,
         JSON.stringify({
           id: this.taskId,
         })
     );
+    return {res, element_id: this.elementId};
   }
 }
 
@@ -174,7 +177,7 @@ class LocatorGenerationController {
     const task = this.getTaskById(elementId);
     if (!task) return;
     this.unscheduleTask(elementId);
-    task.scheduler.revokeTask();
+    return task.scheduler.revokeTask();
   }
 }
 
