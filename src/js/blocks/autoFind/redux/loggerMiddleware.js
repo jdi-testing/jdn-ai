@@ -28,11 +28,13 @@ const notify = (state, action, prevState, store) => {
     case "main/rerunGeneration/pending":
       pushNotificationHandler(payload);
       break;
-    case "main/stopXpathGeneration":
+    case "main/stopGeneration/fulfilled":
       pushNotificationHandler(payload);
+      sendMessage.changeStatus(selectLocatorById(state, payload.element_id));
       break;
-    case "main/stopXpathGenerationGroup":
+    case "main/stopGenerationGroup/fulfilled":
       pushNotificationHandler(payload);
+      payload.forEach(({element_id}) => sendMessage.changeStatus(selectLocatorById(state, element_id)));
     case "main/toggleElementGeneration":
       sendMessage.toggle(selectLocatorById(state, payload));
       break;

@@ -5,14 +5,15 @@ import {
   cancelLastNotification,
   changeLocatorAttributes,
   handleLastNotification,
-  stopXpathGeneration,
-  stopXpathGenerationGroup,
   toggleDeleted,
   toggleDeletedGroup,
 } from "../../redux/predictionSlice";
 import { last, size } from "lodash";
 import { selectLocators } from "../../redux/selectors";
-import { revertSettings, runXpathGeneration } from "../../redux/thunks";
+import { stopGeneration } from "../../redux/thunks/stopGeneration";
+import { stopGenerationGroup } from "../../redux/thunks/stopGenerationGroup";
+import { cancelStopGeneration } from "../../redux/thunks/cancelStopGeneration";
+import { revertSettings } from "../../redux/thunks/revertSettings";
 
 const messages = (value) => {
   return {
@@ -66,19 +67,19 @@ export const Notifications = () => {
           const { arg } = action.meta;
           if (size(arg) === 1) {
             notificationMessage = messages().RERUN;
-            cancelAction = stopXpathGeneration(arg[0].element_id);
+            cancelAction = stopGeneration(arg[0].element_id);
           } else {
             notificationMessage = messages(length).RERUN_GROUP;
-            cancelAction = stopXpathGenerationGroup(arg);
+            cancelAction = stopGenerationGroup(arg);
           }
           break;
-        case "main/stopXpathGeneration":
+        case "main/stopGeneration/fulfilled":
           notificationMessage = messages().STOP_GENERATION;
-          cancelAction = runXpathGeneration([locators.find((_loc) => _loc.element_id === action.payload)]);
+          cancelAction = cancelStopGeneration([locators.find((_loc) => _loc.element_id === action.meta.arg)]);
           break;
-        case "main/stopXpathGenerationGroup":
-          notificationMessage = messages(size(action.payload)).STOP_GENERATION_GROUP;
-          cancelAction = runXpathGeneration(action.payload);
+        case "main/stopGenerationGroup/fulfilled":
+          notificationMessage = messages(size(action.meta.arg)).STOP_GENERATION_GROUP;
+          cancelAction = cancelStopGeneration(action.meta.arg);
           break;
         case "main/toggleDeleted":
           notificationMessage = prevValue.deleted ? messages().RESTORE : messages().DELETE;

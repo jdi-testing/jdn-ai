@@ -10,7 +10,7 @@ import Settings from "../../../../icons/settings.svg";
 import { openSettingsMenu } from "../utils/pageDataHandlers";
 import { clearAll } from "../redux/predictionSlice";
 import { sendMessage } from "../utils/connector";
-import { identifyElements } from "../redux/thunks";
+import { identifyElements } from "../redux/thunks/identifyElements";
 
 export const GenerationButtons = () => {
   const status = useSelector((state) => state.main.status);
