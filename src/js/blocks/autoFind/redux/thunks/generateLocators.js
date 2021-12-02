@@ -29,10 +29,10 @@ export const generateLocators = createAsyncThunk("main/generateLocators", async 
 
 export const generateLocatorsReducer = (builder) => {
   return builder
-      .addCase(generateLocators.pending, (state, action) => {
+      .addCase(generateLocators.pending, (state) => {
         state.schedulerStatus = "pending";
       })
-      .addCase(generateLocators.fulfilled, (state, { payload }) => {
+      .addCase(generateLocators.fulfilled, (state) => {
         state.schedulerStatus = "scheduled";
       })
       .addCase(generateLocators.rejected, (state, { error }) => {

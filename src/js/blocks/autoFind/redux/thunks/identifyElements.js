@@ -15,7 +15,7 @@ export const identifyElements = createAsyncThunk("main/identifyElements", async 
 
 export const identifyElementsReducer = (builder) => {
   return builder
-      .addCase(identifyElements.pending, (state, action) => {
+      .addCase(identifyElements.pending, (state) => {
         state.status = autoFindStatus.loading;
         state.allowIdentifyElements = false;
       })
