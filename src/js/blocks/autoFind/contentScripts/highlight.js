@@ -154,7 +154,7 @@ export const highlightOnPage = () => {
 
   const findAndHighlight = (param) => {
     if (param) {
-      predictedElements = param.elements;
+      if (!predictedElements) predictedElements = param.elements;
       perception = param.perception;
     }
     let query = "";

@@ -1,6 +1,6 @@
 import React from "react";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Text from "antd/lib/typography/Text";
 import { Col, Row, Slider, Tooltip } from "antd";
 import Icon from "@ant-design/icons";
@@ -10,6 +10,7 @@ import { changePerception } from "../redux/predictionSlice";
 
 let sliderTimer;
 export const PerceptionTreshold = () => {
+  const dispatch = useDispatch();
   const perception = useSelector((state) => state.main.perception);
 
   const [perceptionOutput, setPerceptionOutput] = useState(0.5);
@@ -18,7 +19,7 @@ export const PerceptionTreshold = () => {
     setPerceptionOutput(value);
     if (sliderTimer) clearTimeout(sliderTimer);
     sliderTimer = setTimeout(() => {
-      changePerception(value);
+      dispatch(changePerception(value));
     }, 300);
   };
 
