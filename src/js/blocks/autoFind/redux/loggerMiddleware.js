@@ -35,8 +35,6 @@ const notify = (state, action, prevState, store) => {
     case "main/stopGenerationGroup/fulfilled":
       const _arr = _.compact(payload);
       pushNotificationHandler(_arr);
-      console.log(payload);
-      console.log(_arr);
       _arr.forEach((element) => {
         const {element_id} = element;
         sendMessage.changeStatus(selectLocatorById(state, element_id));
