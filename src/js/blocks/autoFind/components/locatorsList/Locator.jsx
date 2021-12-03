@@ -5,7 +5,7 @@ import { Checkbox, Dropdown, Menu, Spin, Typography } from "antd";
 import Icon from "@ant-design/icons";
 import Text from "antd/lib/typography/Text";
 
-import { isProgressStatus, locatorTaskStatus } from "../../utils/locatorGenerationController";
+import { isGeneratedStatus, isProgressStatus, locatorTaskStatus } from "../../utils/locatorGenerationController";
 import { getLocator } from "../../utils/pageObject";
 
 import CheckedkSvg from "../../../../../icons/checked-outlined.svg";
@@ -44,7 +44,11 @@ export const Locator = ({ element, xpathConfig, noScrolling }) => {
   }, [generate]);
 
   const handleSettingsOption = () => {
-    openSettingsMenu(element.locator.settings || xpathConfig, [element.element_id]);
+    openSettingsMenu(
+        element.locator.settings || xpathConfig,
+        [element.element_id],
+        isGeneratedStatus(element.locator.taskStatus)
+    );
   };
 
   const handleEditClick = () => {
