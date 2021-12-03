@@ -65,7 +65,8 @@ export const Notifications = () => {
           break;
         case "main/rerunGeneration/pending":
           const { arg } = action.meta;
-          if (size(arg) === 1) {
+          const length = size(arg);
+          if (length === 1) {
             notificationMessage = messages().RERUN;
             cancelAction = stopGeneration(arg[0].element_id);
           } else {
