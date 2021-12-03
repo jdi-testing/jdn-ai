@@ -25,6 +25,9 @@ const notify = (state, action, prevState, store) => {
       });
       pushNotificationHandler(prevValues);
       break;
+    case "main/changePerception":
+      sendMessage.setHighlight({perception: payload});
+      break;
     case "main/rerunGeneration/pending":
       pushNotificationHandler(payload);
       break;
