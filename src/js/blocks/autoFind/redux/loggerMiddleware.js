@@ -13,7 +13,7 @@ const notify = (state, action, prevState, store) => {
     store.dispatch(pushNotification({action, prevValue}));
   };
 
-  const {type, payload} = action;
+  const {type, payload, meta} = action;
   switch (type) {
     case "main/changeLocatorAttributes":
       sendMessage.changeElementName(selectLocatorById(state, payload.element_id));
@@ -26,15 +26,21 @@ const notify = (state, action, prevState, store) => {
       pushNotificationHandler(prevValues);
       break;
     case "main/rerunGeneration/pending":
-      pushNotificationHandler(payload);
+      pushNotificationHandler(meta.arg);
       break;
     case "main/stopGeneration/fulfilled":
       pushNotificationHandler(payload);
       sendMessage.changeStatus(selectLocatorById(state, payload.element_id));
       break;
     case "main/stopGenerationGroup/fulfilled":
-      pushNotificationHandler(payload);
-      payload.forEach(({element_id}) => sendMessage.changeStatus(selectLocatorById(state, element_id)));
+      const _arr = _.compact(payload);
+      pushNotificationHandler(_arr);
+      console.log(payload);
+      console.log(_arr);
+      _arr.forEach((element) => {
+        const {element_id} = element;
+        sendMessage.changeStatus(selectLocatorById(state, element_id));
+      });
     case "main/toggleElementGeneration":
       sendMessage.toggle(selectLocatorById(state, payload));
       break;
