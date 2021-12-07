@@ -93,7 +93,7 @@ export const LocatorsList = () => {
 
   const readinessPercentage = useMemo(() => {
     const readyCount = size(generated);
-    const total = size(byProbability);
+    const total = size(byProbability) - size(deleted);
     if (!total && !readyCount) {
       return 0;
     }
@@ -119,7 +119,7 @@ export const LocatorsList = () => {
 
   useEffect(() => {
     const readyCount = size(generated);
-    const total = size(byProbability);
+    const total = size(byProbability) - size(deleted);
     if (readyCount > 0 && total > 0 && readyCount === total) {
       setTimeout(hideProgressInformation, 10000);
     }
@@ -186,7 +186,7 @@ export const LocatorsList = () => {
           </Collapse.Panel>
         </Collapse>
         <div>
-          <Notifications {...{ deletedSelected, generatedSelected }} />
+          <Notifications />
           <div className="jdn__locatorsList-progress">
             <Progress
               percent={readinessPercentage}
