@@ -1,9 +1,9 @@
 .jdn-edit-popup {
   width: 400px;
-  font-family: @font-family;
 
   &__label {
     justify-content: space-between;
+    margin-bottom: 13px;
 
     &-text {
       vertical-align: initial;
@@ -13,7 +13,7 @@
   input,
   textarea,
   select {
-    font-family: @font-family;
+    font-family: inherit;
     width: 298px;
     min-height: 30px;
     padding: 0 16px;
@@ -26,5 +26,7 @@
 
   textarea {
     resize: vertical;
+    padding-top: 6px;
+    padding-bottom: 6px;
   }
 }
