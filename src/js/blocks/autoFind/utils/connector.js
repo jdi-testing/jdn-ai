@@ -45,11 +45,7 @@ class Connector {
   updateMessageListener(callback) {
     if (this.onmessage) chrome.runtime.onMessage.removeListener(this.onmessage);
     this.onmessage = callback;
-    chrome.runtime.onMessage.addListener((request, sender) => {
-      if (sender.tab.id === this.tab.id) {
-        this.onmessage(request);
-      }
-    });
+    chrome.runtime.onMessage.addListener(this.onmessage);
   }
 
   onTabUpdate(callback) {
