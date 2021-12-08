@@ -3,6 +3,7 @@
 
   z-index: @z-index-13000;
   background-color: @modal-background;
+  letter-spacing: 0;
 }
 
 .jdn-popup {
@@ -10,12 +11,13 @@
   position: relative;
   top: 50%;
   margin: 0 auto;
+  padding: 0;
   transform: translateY(-50%);
   color: @color-white;
   background-color: @color-black;
   border: 1px solid @modal-border;
   z-index: @z-index-15000;
-  // font-family: @font-style; TODO: uncomment with issue 67 and remove from other popups
+  font-family: @font-family;
 
   &__header {
     padding: 10px 16px;
@@ -51,6 +53,7 @@
 
     &_primary {
       background-color: @jdn-light-blue;
+      color: @color-white;
 
       &:hover {
         background-color: @jdn-dark-blue;
@@ -67,8 +70,13 @@
       }
     }
 
-    &_tertiary:hover {
-      color: @light-grey;
+    &_tertiary {
+      color: @color-white;
+      box-shadow: none;
+      
+      &:hover {
+        color: @light-grey;
+      }
     }
 
     &_close {
@@ -92,6 +100,7 @@
   &__label {
     display: flex;
     gap: @gap-s;
+    margin: 0;
     font-size: @font-size-s;
     line-height: @line-height-l;
     color: @color-white;
