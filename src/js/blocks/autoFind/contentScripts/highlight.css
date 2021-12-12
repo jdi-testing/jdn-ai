@@ -154,6 +154,7 @@
   line-height: 12px;
   padding: 0 4px;
   white-space: nowrap;
+  cursor: default;
 }
 
 .jdn-tooltip-paragraph {
@@ -179,13 +180,28 @@
   margin-top: 15px;
 }
 
-.jdn-tooltip::after {
+.jdn-tooltip-hidden {
+  display: none !important;
+}
+
+.jdn-tooltip::after {  
   content: "";
   position: absolute;
   right: 10px;
   top: -18px;
   border: 9px solid transparent;
   border-bottom: 10px solid rgba(0, 0, 0, 0.8);
+}
+
+.jdn-tooltip-right::after {
+  left: 10px;
+  right: unset;
+}
+
+.jdn-tooltip-top::after {
+  border-color: rgba(0, 0, 0, 0.8) transparent transparent;
+  bottom: -19px;
+  top: unset;
 }
 
 .jdn-tooltip b {
