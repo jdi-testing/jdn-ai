@@ -103,12 +103,9 @@ export const highlightOnPage = () => {
       <p class="jdn-tooltip-paragraph"><b>Type:</b> ${el.type}</p>
       <p class="jdn-tooltip-paragraph"><b>Prediction accuracy:</b> ${Math.round(el.predicted_probability * 100)}%</p>`;
     };
+
     const checkTooltipVisibility = (tooltip, label) => {
-      const {
-        left: tooltipLeft,
-        right: tooltipRight,
-        width: tooltipWidth,
-      } = tooltip.getBoundingClientRect();
+      const { left: tooltipLeft, right: tooltipRight, width: tooltipWidth } = tooltip.getBoundingClientRect();
       const { bottom: bodyBottom } = document.body.getBoundingClientRect();
       const { top: labelTop, height: labelHeight } = label.getBoundingClientRect();
       if (tooltipLeft < 0) {
@@ -117,13 +114,9 @@ export const highlightOnPage = () => {
         tooltip.classList.add("jdn-tooltip-right");
         document.body.appendChild(tooltip);
       }
-      const {
-        bottom: tooltipBottom,
-      } = tooltip.getBoundingClientRect();
+      const { bottom: tooltipBottom } = tooltip.getBoundingClientRect();
       if (bodyBottom < tooltipBottom) {
-        const {
-          height: tooltipHeight,
-        } = tooltip.getBoundingClientRect();
+        const { height: tooltipHeight } = tooltip.getBoundingClientRect();
         const cornerHeight = 19;
         document.body.removeChild(tooltip);
         tooltip.style.top = `${labelTop + window.pageYOffset - tooltipHeight - cornerHeight - labelHeight}px`;

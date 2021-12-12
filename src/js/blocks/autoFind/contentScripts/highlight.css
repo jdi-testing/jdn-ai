@@ -180,10 +180,6 @@
   margin-top: 15px;
 }
 
-.jdn-tooltip-hidden {
-  display: none !important;
-}
-
 .jdn-tooltip::after {  
   content: "";
   position: absolute;
