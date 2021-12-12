@@ -106,7 +106,6 @@ export const highlightOnPage = () => {
 
     const checkTooltipVisibility = (tooltip, label) => {
       const { left: tooltipLeft, right: tooltipRight, width: tooltipWidth } = tooltip.getBoundingClientRect();
-      const { bottom: bodyBottom } = document.body.getBoundingClientRect();
       const { top: labelTop, height: labelHeight } = label.getBoundingClientRect();
       if (tooltipLeft < 0) {
         document.body.removeChild(tooltip);
@@ -114,6 +113,8 @@ export const highlightOnPage = () => {
         tooltip.classList.add("jdn-tooltip-right");
         document.body.appendChild(tooltip);
       }
+
+      const { bottom: bodyBottom } = document.body.getBoundingClientRect();
       const { bottom: tooltipBottom } = tooltip.getBoundingClientRect();
       if (bodyBottom < tooltipBottom) {
         const { height: tooltipHeight } = tooltip.getBoundingClientRect();
