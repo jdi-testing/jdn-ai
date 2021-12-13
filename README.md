@@ -34,6 +34,14 @@ The ML part of plugin presented on its first tab – 'Auto Find Objects' tab.
 * Click 'Generate and Download' button to create the result file containing all predicted locators.
 * If some elements were predicted wrong, you can unmark them with just simple clicking or change they type via context menu of those elements. All changes will be transferred to the result file.
 
+**Branching**
+
+```master``` - base branch
+```issue_<YOUR_ISSUE_NUMBER>``` - feature or bugfix branch, started from master and merged into master when feature is ready
+```release_<RELEASE_NUMBER>``` - release branch, start from master
+```hotfix_<ISSUE_NUMBER>```  - fix for release, start from release branch and merged into it
+
+
 **How to update version**
 
 For updating version in package.json and manifest.json you can run 
@@ -45,3 +53,7 @@ or manualy change version in this files.
 Commit and push changes.
 
 When your request has been merged, github actions will create draft of release with current package.json version tag.
+
+**CI/CD**
+
+Delivery pack is builded autimatically on commit in master.
