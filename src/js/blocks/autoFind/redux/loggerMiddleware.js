@@ -45,11 +45,6 @@ const notify = (state, action, prevState, store) => {
     case "main/toggleElementGeneration":
       sendMessage.toggle(selectLocatorById(state, payload));
       break;
-    case "main/toggleElementGroupGeneration":
-      payload.forEach((element) => {
-        sendMessage.toggle(selectLocatorById(state, element.element_id));
-      });
-      break;
     case "main/toggleDeleted":
       sendMessage.toggleDeleted(selectLocatorById(state, payload));
       pushNotificationHandler(selectLocatorById(prevState, payload));

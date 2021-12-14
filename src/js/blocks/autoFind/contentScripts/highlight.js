@@ -46,7 +46,7 @@ export const highlightOnPage = () => {
       div.className = getClassName(element);
     }
     const originDiv = document.querySelector(`[jdn-hash='${element.element_id}']`);
-    if (!isInViewport(originDiv)) {
+    if (!isInViewport(originDiv) && element.generate) {
       originDiv.scrollIntoView({ behavior: "smooth" });
     }
   };
