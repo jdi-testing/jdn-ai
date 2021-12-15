@@ -1,7 +1,7 @@
 import { connector, sendMessage } from "./connector";
 import { getGenerationAttributes } from "./../contentScripts/generationData";
 import { getPageData } from "./../contentScripts/pageData";
-import { createLocatorNames, getPage, predictedToConvert } from "./pageObject";
+import { createLocatorNames } from "./pageObject";
 import { reportPopup, settingsPopup, downloadPopup } from "../contentScripts/popups";
 import { MUI_PREDICT, request } from "./backend";
 /* global chrome*/
@@ -69,14 +69,6 @@ export const requestGenerationData = async (elements) => {
   const generationTags = await requestGenerationAttributes(elements);
   const generationData = createLocatorNames(generationTags);
   return { generationData, unreachableNodes: [] };
-};
-
-export const generatePageObject = (elements, mainModel) => {
-  const elToConvert = predictedToConvert(elements);
-  getPage(elToConvert, (page) => {
-    mainModel.conversionModel.genPageCode(page, mainModel, true);
-    mainModel.conversionModel.downloadPageCode(page, ".java");
-  });
 };
 
 export const reportProblem = (predictedElements) => {

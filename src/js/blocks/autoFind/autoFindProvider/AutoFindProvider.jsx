@@ -3,8 +3,9 @@ import { filter } from "lodash";
 import React from "react";
 import { inject, observer } from "mobx-react";
 import { useContext } from "react";
-import { generatePageObject, openDownloadPopup } from "./../utils/pageDataHandlers";
+import { openDownloadPopup } from "./../utils/pageDataHandlers";
 import { locatorTaskStatus } from "./../utils/locatorGenerationController";
+import { generatePageObject } from "../utils/pageObject";
 
 export const autoFindStatus = {
   noStatus: "",

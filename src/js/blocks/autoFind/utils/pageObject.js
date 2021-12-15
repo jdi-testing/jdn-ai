@@ -1,6 +1,7 @@
 import { camelCase } from "../../../models/GenerateBlockModel";
 import { getJDILabel } from "./generationClassesMap";
 import { connector } from "./connector";
+import { pageObjectTemplate } from "./pageObjectTemplate";
 
 const getPackage = (url) => {
   const urlObject = new URL(url);
@@ -73,4 +74,26 @@ export const getPage = (elToConvert, callback) => {
     name: camelCase(connector.tab.title),
     package: getPackage(connector.tab.url),
   });
+};
+
+export const generatePageObject = (elements, mainModel) => {
+  const elToConvert = predictedToConvert(elements);
+  getPage(elToConvert, (page) => {
+    mainModel.conversionModel.genPageCode(page, mainModel, true);
+    mainModel.conversionModel.downloadPageCode(page, ".java");
+  });
+};
+
+export const _generatePageObject = async (locators) => {
+  const location = await connector.attachContentScript(() => {
+    const {hostname, pathname, origin, host} = document.location;
+    return {hostname, pathname, origin, host};
+  });
+
+  const title = await connector.attachContentScript(() => {
+    return document.title;
+  });
+
+  const pageObject = pageObjectTemplate(locators, location[0].result, title[0].result);
+  return pageObject;
 };
