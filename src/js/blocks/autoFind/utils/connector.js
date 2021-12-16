@@ -131,7 +131,7 @@ export const connector = new Connector();
 
 // messages, are sent from plugun to content scripts
 export const sendMessage = {
-  toggle: (el) => connector.sendMessage("HIGHLIGHT_TOGGLED", el),
+  toggle: (payload) => connector.sendMessage("HIGHLIGHT_TOGGLED", payload),
   toggleDeleted: (el) => connector.sendMessage("TOGGLE_DLETED", el),
   // restore: (el) => connector.sendMessage("RESTORE_ELEMENT", el),
   changeElementName: (el) => connector.sendMessage("CHANGE_ELEMENT_NAME", el),

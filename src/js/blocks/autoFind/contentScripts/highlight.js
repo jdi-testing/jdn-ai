@@ -40,14 +40,16 @@ export const highlightOnPage = () => {
     return div;
   };
 
-  const toggleElement = (element) => {
+  const toggleElement = ({element, skipScroll}) => {
     const div = updateElement(element);
     if (div) {
       div.className = getClassName(element);
     }
-    const originDiv = document.querySelector(`[jdn-hash='${element.element_id}']`);
-    if (!isInViewport(originDiv) && element.generate) {
-      originDiv.scrollIntoView({ behavior: "smooth" });
+    if (!skipScroll) {
+      const originDiv = document.querySelector(`[jdn-hash='${element.element_id}']`);
+      if (!isInViewport(originDiv) && element.generate) {
+        originDiv.scrollIntoView({ behavior: "smooth" });
+      }
     }
   };
 
@@ -294,6 +296,10 @@ export const highlightOnPage = () => {
 
     if (message === "HIGHLIGHT_TOGGLED") {
       toggleElement(param);
+    }
+
+    if (message === "HIGHLIGHT_TOGGLED_GROUP") {
+
     }
 
     if (message === "TOGGLE_DLETED") {

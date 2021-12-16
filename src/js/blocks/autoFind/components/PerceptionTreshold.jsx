@@ -14,6 +14,12 @@ export const PerceptionTreshold = () => {
   const perception = useSelector((state) => state.main.perception);
 
   const [perceptionOutput, setPerceptionOutput] = useState(0.5);
+  const floatToPercent = (value) => {
+    // wse need to show percents, but multiply float * 100 provides an unexpected result and leads to bugs
+    const integer = String(value).slice(2);
+    if (integer.length === 1) return `${integer}0`;
+    else return integer;
+  };
 
   const handlePerceptionChange = (value) => {
     setPerceptionOutput(value);
@@ -26,7 +32,7 @@ export const PerceptionTreshold = () => {
   return (
     <div className="jdn__perception-treshold">
       <Text strong level={5}>
-        Prediction accuracy: {perception * 100}%
+        Prediction accuracy: {floatToPercent(perception)}%
       </Text>
       <Tooltip
         title="The minimum value of the
@@ -47,7 +53,7 @@ export const PerceptionTreshold = () => {
             step={0.01}
             onChange={handlePerceptionChange}
             value={perceptionOutput}
-            tipFormatter={(value) => `${value * 100}%`}
+            tipFormatter={(value) => `${floatToPercent(value)}%`}
           />
         </Col>
         <Col span={2} className="jdn__slider-perception-max">
