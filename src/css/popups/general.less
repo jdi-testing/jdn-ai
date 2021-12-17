@@ -1,4 +1,13 @@
-.jdn-popup-bg {
+#jdn-popup-wrapper,
+#jdn-popup-wrapper::before,
+#jdn-popup-wrapper::after,
+#jdn-popup-wrapper *,
+#jdn-popup-wrapper *::before,
+#jdn-popup-wrapper *::after {
+  all: revert;
+}
+
+#jdn-popup-wrapper .jdn-popup-bg {
   .all-screen();
 
   z-index: @z-index-13000;
@@ -6,7 +15,7 @@
   letter-spacing: 0;
 }
 
-.jdn-popup {
+#jdn-popup-wrapper .jdn-popup {
   display: block;
   position: relative;
   top: 50%;
