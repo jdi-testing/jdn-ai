@@ -66,6 +66,7 @@ export class LocatorGenerationScheduler {
     this.taskStatus = null;
     this.ping = null;
     this.requestInProgress = false;
+    this.revoked = false;
 
     this.scheduleGeneration();
   }
@@ -120,6 +121,8 @@ export class LocatorGenerationScheduler {
     this.taskStatus = result.status;
     this.requestInProgress = false;
 
+    if (this.revoked) return;
+
     if (!isProgressStatus(this.taskStatus)) {
       clearInterval(this.ping);
       locatorGenerationController.unscheduleTask(this.elementId);
@@ -132,6 +135,7 @@ export class LocatorGenerationScheduler {
   }
 
   async revokeTask() {
+    this.revoked = true;
     clearInterval(this.ping);
     locatorGenerationController.unscheduleTask(this.elementId);
     const res = await request.post(
@@ -179,6 +183,11 @@ class LocatorGenerationController {
     if (!task) return;
     this.unscheduleTask(elementId);
     return task.scheduler.revokeTask();
+  }
+
+  revokeAll() {
+    const taskIds = this.scheduledGenerations.map((task) => task.elementId);
+    taskIds.forEach((id) => this.revokeTask(id));
   }
 }
 

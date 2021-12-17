@@ -64,11 +64,11 @@ const predictionSlice = createSlice({
       state.xpathConfig = payload;
     },
     clearAll(state) {
+      state.status = autoFindStatus.removed;
       Object.keys(initialState).forEach((key) => {
         state[key] = initialState[key];
       });
       locatorsAdapter.removeAll(state);
-      state.status = autoFindStatus.removed;
     },
     pushNotification(state, { payload }) {
       state.notifications.push(payload);
