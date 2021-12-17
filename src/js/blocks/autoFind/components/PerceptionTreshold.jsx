@@ -7,6 +7,7 @@ import Icon from "@ant-design/icons";
 
 import QuestionFilled from "../../../../icons/question-filled.svg";
 import { changePerception } from "../redux/predictionSlice";
+import { floatToPercent } from "../utils/helpers";
 
 let sliderTimer;
 export const PerceptionTreshold = () => {
@@ -14,12 +15,6 @@ export const PerceptionTreshold = () => {
   const perception = useSelector((state) => state.main.perception);
 
   const [perceptionOutput, setPerceptionOutput] = useState(0.5);
-  const floatToPercent = (value) => {
-    // wse need to show percents, but multiply float * 100 provides an unexpected result and leads to bugs
-    const integer = String(value).slice(2);
-    if (integer.length === 1) return `${integer}0`;
-    else return integer;
-  };
 
   const handlePerceptionChange = (value) => {
     setPerceptionOutput(value);
