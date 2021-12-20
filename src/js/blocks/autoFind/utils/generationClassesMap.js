@@ -18,11 +18,11 @@ const MUIclasses = {
   list: "Lists",
   menu: "Menu",
   progress: "ProgressBar",
-  radio: "RadioButtons",
+  // radio: "RadioButtons",
   radiogroup: "RadioButtons",
   select: "Select",
   slider: "Slider",
-  snackbar: "Text",
+  snackbar: "Snackbar",
   stepper: "Stepper",
   switch: "Switch",
   tabs: "Tabs",
@@ -33,7 +33,7 @@ const MUIclasses = {
 
 export const JDIclasses = MUIclasses;
 
-export const getJDILabel = (label) => JDIclasses[label] || label;
+export const getJDILabel = (label) => JDIclasses[label] || defaultClass;
 
 export const getJdiClassName = (label) => {
   let jdiClass = getJDILabel(label);
