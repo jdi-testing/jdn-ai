@@ -1,60 +1,56 @@
-import { mapValues, sortBy } from "lodash";
+import { mapValues } from "lodash";
 import {
-  changeElementName,
-  changeLocatorXpathSettings,
-  changeType,
+  changeLocatorSettings,
   changeXpathSettings,
   clearAll,
   setUnactualPrediction,
-  stopXpathGeneration,
   toggleBackdrop,
   toggleDeleted,
   toggleElementGeneration,
-  updateLocator,
   clearCmElementHighlight,
   addCmElementHighlight,
+  changeLocatorAttributes,
 } from "../redux/predictionSlice";
-import { runXpathGeneration } from "../redux/thunks";
+import { useAutoFind } from "../autoFindProvider/AutoFindProvider";
 import { connector, sendMessage } from "./connector";
-import { getJdiClassName, JDIclasses } from "./generationClassesMap";
-import { onStartCollectData, openSettingsMenu, runGenerationHandler } from "./pageDataHandlers";
+import { getTypesMenuOptions } from "./generationClassesMap";
+import { onStartCollectData, openSettingsMenu } from "./pageDataHandlers";
+import { selectGeneratedLocators, selectLocatorById, selectLocatorsByProbability } from "../redux/selectors";
+import { isProgressStatus, stopGenerationHandler } from "./locatorGenerationController";
+import { stopGeneration } from "../redux/thunks/stopGeneration";
+import { rerunGeneration } from "../redux/thunks/rerunGeneration";
 
 export const createListeners = (dispatch, state) => {
+  const [{}, { generateAllLocators }] = useAutoFind();
   const actions = {
-    CHANGE_ELEMENT_NAME: (payload) => dispatch(changeElementName(payload)),
     CHANGE_XPATH_SETTINGS: ({settings, elementIds}) => {
       if (!elementIds) {
         dispatch(changeXpathSettings(settings));
       } else {
-        elementIds.forEach((id) => {
-          const locator = state.locators.find((el) => el.element_id === id);
+        const newPayload = elementIds.map((id) => {
+          const locator = selectLocatorById(state, id);
           const elementSettings = locator.locator.settings || {};
           const newSettings = mapValues(settings, (value, key) => {
-            return value === "indeterminate" ? elementSettings[key] || xpathConfig[key] : value;
+            return value === "indeterminate" ? elementSettings[key] || state.main.xpathConfig[key] : value;
           });
-          dispatch(changeLocatorXpathSettings({id, settings: newSettings}));
-
           if (!locator.stopped) {
+            if (isProgressStatus(locator.locator.taskStatus)) {
+              stopGenerationHandler(locator.element_id);
+            }
             const _locator = {...locator, locator: {...locator.locator, settings: {} }};
             _locator.locator.settings = newSettings;
-            runGenerationHandler([_locator], state.xpathConfig, (el) =>
-              dispatch(updateLocator(el))
-            );
+            dispatch(rerunGeneration([_locator]));
           }
+          return {element_id: id, locator: {...locator.locator, settings: newSettings}};
         });
+        dispatch(changeLocatorSettings(newPayload));
       }
     },
-    CHANGE_TYPE: (payload) => dispatch(changeType(payload)),
     GET_ELEMENT: (id) => {
-      const element = state.locators.find((e) => e.element_id === id);
+      const element = selectLocatorById(state, id);
       sendMessage.elementData({
         element,
-        types: sortBy(
-            Object.keys(JDIclasses).map((label) => {
-              return { label, jdi: getJdiClassName(label) };
-            }),
-            ["jdi"]
-        ),
+        types: getTypesMenuOptions(),
       });
     },
     HIGHLIGHT_OFF: () => {
@@ -66,16 +62,24 @@ export const createListeners = (dispatch, state) => {
     CM_ELEMENT_HIGHLIGHT_OFF: (payload) => {
       dispatch(clearCmElementHighlight(payload));
     },
-    IS_OPEN_XPATH_CONFIG_MODAL: (payload) => dispatch(toggleBackdrop(payload)),
-    OPEN_XPATH_CONFIG: (payload) => openSettingsMenu(state.xpathConfig, payload),
+    IS_OPEN_MODAL: (payload) => dispatch(toggleBackdrop(payload)),
+    OPEN_XPATH_CONFIG: (payload) => openSettingsMenu(state.main.xpathConfig, payload),
     PREDICTION_IS_UNACTUAL: () => dispatch(setUnactualPrediction(true)),
     REMOVE_ELEMENT: (payload) => dispatch(toggleDeleted(payload)),
-    RERUN_GENERATION: (payload) => dispatch(runXpathGeneration([payload])),
+    RERUN_GENERATION: (payload) => dispatch(rerunGeneration([selectLocatorById(state, payload)])),
     START_COLLECT_DATA: onStartCollectData,
-    STOP_GENERATION: (payload) => dispatch(stopXpathGeneration(payload)),
+    STOP_GENERATION: (payload) => dispatch(stopGeneration(payload)),
     TOGGLE_ELEMENT: (payload) => {
       dispatch(toggleElementGeneration(payload));
     },
+    DOWNLOAD_POPUP: (payload) => {
+      if (payload === 'all') {
+        generateAllLocators(selectLocatorsByProbability(state));
+      } else if (payload === 'generated') {
+        generateAllLocators(selectGeneratedLocators(state));
+      }
+    },
+    UPDATE_LOCATOR: (payload) => dispatch(changeLocatorAttributes(payload)),
   };
 
   const messageHandler = ({ message, param }, _actions) => {

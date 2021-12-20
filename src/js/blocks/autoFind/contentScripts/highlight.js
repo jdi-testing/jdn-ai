@@ -24,54 +24,56 @@ export const highlightOnPage = () => {
     return val;
   };
 
-  const toggleElement = ({element_id, generate}) => {
-    predictedElements.find((e) => {
-      if (e.element_id === element_id) e.generate = generate;
-    });
-
-    const div = document.getElementById(element_id);
-    if (div) div.className = `jdn-highlight ${generate ? 'jdn-primary' : 'jdn-secondary'}`;
-  };
-
-  const toggleDeletedElement = (element) => {
-    predictedElements.find((e) => {
-      if (e.element_id === element.element_id) e.deleted = element.deleted;
-    });
-
-    if (element.deleted) {
-      const div = document.getElementById(element.element_id);
-      if (div) div.remove();
-    } else {
-      findAndHighlight();
-    }
-  };
-
   const createLabelText = (element) => {
     const predictedProbabilityPercent = Math.round(element.predicted_probability * 100);
     return `${predictedProbabilityPercent}%, ${element.name}`;
   };
 
-  const getBorderClass = (element) => {
-    if (element.locator.taskStatus === "PENDING" || element.locator.taskStatus === "STARTED") {
-      return element.generate ? "jdn-pending-primary" : "jdn-pending-secondary";
-    } else return null;
+  const getClassName = (element) => {
+    return `jdn-highlight ${element.generate ? 'jdn-primary' : 'jdn-secondary'}`;
   };
 
   const updateElement = (element) => {
     const i = predictedElements.findIndex((e) => e.element_id === element.element_id);
-    predictedElements[i] = {...predictedElements[i], element};
-    return predictedElements[i];
+    predictedElements[i] = {...predictedElements[i], ...element};
+    const div = document.getElementById(element.element_id);
+    return div;
+  };
+
+  const toggleElement = ({element, skipScroll}) => {
+    const div = updateElement(element);
+    if (div) {
+      div.className = getClassName(element);
+    }
+    if (!skipScroll) {
+      const originDiv = document.querySelector(`[jdn-hash='${element.element_id}']`);
+      if (!isInViewport(originDiv) && element.generate) {
+        originDiv.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+  };
+
+  const toggleDeletedElement = (element) => {
+    const div = updateElement(element);
+
+    if (element.deleted) {
+      if (div) {
+        const i = highlightElements.findIndex((e) => e.getAttribute('jdn-hash') === element.element_id);
+        highlightElements.splice(i, 1);
+        div.remove();
+      }
+    } else {
+      findAndHighlight();
+    }
   };
 
   const changeElementName = (element) => {
-    updateElement(element);
-    const div = document.getElementById(element.element_id);
+    const div = updateElement(element);
     div.querySelector(".jdn-class").textContent = createLabelText(element);
   };
 
   const changeGenerationStatus = (element) => {
-    updateElement(element);
-    const div = document.getElementById(element.element_id);
+    const div = updateElement(element);
     if (!div) return;
     div.setAttribute("jdn-status", element.locator.taskStatus);
   };
@@ -80,7 +82,7 @@ export const highlightOnPage = () => {
       element,
       predictedElement
   ) => {
-    const { element_id, generate } = predictedElement;
+    const { element_id } = predictedElement;
     const divDefaultStyle = (rect) => {
       const { top, left, height, width } = rect || {};
       return rect ?
@@ -102,13 +104,36 @@ export const highlightOnPage = () => {
     const tooltipInnerHTML = () => {
       const el = predictedElements.find((e) => e.element_id === element_id);
       return `
-      <p><b>Name:</b> ${el.name}</p>
-      <p><b>Type:</b> ${el.type}</p>
-      <p><b>Prediction accuracy:</b> ${Math.round(el.predicted_probability * 100)}%</p>`;
+      <p class="jdn-tooltip-paragraph"><b>Name:</b> ${el.name}</p>
+      <p class="jdn-tooltip-paragraph"><b>Type:</b> ${el.type}</p>
+      <p class="jdn-tooltip-paragraph"><b>Prediction accuracy:</b> ${Math.round(el.predicted_probability * 100)}%</p>`;
     };
+
+    const checkTooltipVisibility = (tooltip, label) => {
+      const { left: tooltipLeft, right: tooltipRight, width: tooltipWidth } = tooltip.getBoundingClientRect();
+      const { top: labelTop, height: labelHeight } = label.getBoundingClientRect();
+      if (tooltipLeft < 0) {
+        document.body.removeChild(tooltip);
+        tooltip.style.right = `calc(100% - ${tooltipRight}px - ${tooltipWidth}px - ${window.pageXOffset}px)`;
+        tooltip.classList.add("jdn-tooltip-right");
+        document.body.appendChild(tooltip);
+      }
+
+      const { bottom: bodyBottom } = document.body.getBoundingClientRect();
+      const { bottom: tooltipBottom } = tooltip.getBoundingClientRect();
+      if (bodyBottom < tooltipBottom) {
+        const { height: tooltipHeight } = tooltip.getBoundingClientRect();
+        const cornerHeight = 19;
+        document.body.removeChild(tooltip);
+        tooltip.style.top = `${labelTop + window.pageYOffset - tooltipHeight - cornerHeight - labelHeight}px`;
+        tooltip.classList.add("jdn-tooltip-top");
+        document.body.appendChild(tooltip);
+      }
+    };
+
     const div = document.createElement("div");
     div.id = element_id;
-    div.className = `jdn-highlight ${generate ? 'jdn-primary' : 'jdn-secondary'} ${getBorderClass(predictedElement)}`;
+    div.className = getClassName(predictedElement);
     div.setAttribute("jdn-highlight", true);
     const tooltip = document.createElement('div');
     tooltip.className = 'jdn-tooltip';
@@ -120,6 +145,7 @@ export const highlightOnPage = () => {
       Object.assign(tooltip.style, tooltipDefaultStyle(label.getBoundingClientRect()));
       tooltip.innerHTML = tooltipInnerHTML();
       document.body.appendChild(tooltip);
+      checkTooltipVisibility(tooltip, label);
     });
     label.addEventListener('mouseout', () => {
       document.body.removeChild(tooltip);
@@ -157,7 +183,7 @@ export const highlightOnPage = () => {
 
   const findAndHighlight = (param) => {
     if (param) {
-      predictedElements = param.elements;
+      if (!predictedElements) predictedElements = param.elements;
       perception = param.perception;
     }
     let query = "";
@@ -215,7 +241,8 @@ export const highlightOnPage = () => {
           isCurrentElement = true;
           return;
         } else {
-          document.getElementById(element.getAttribute("jdn-hash")).click();
+          const div = document.getElementById(element.getAttribute("jdn-hash"));
+          div.click();
         }
       }
     });
@@ -271,8 +298,16 @@ export const highlightOnPage = () => {
       toggleElement(param);
     }
 
+    if (message === "HIGHLIGHT_TOGGLED_GROUP") {
+
+    }
+
     if (message === "TOGGLE_DLETED") {
       toggleDeletedElement(param);
+    }
+
+    if (message === "CHANGE_ELEMENT_TYPE") {
+      updateElement(param);
     }
 
     if (message === "CHANGE_ELEMENT_NAME") {
@@ -290,6 +325,7 @@ export const highlightOnPage = () => {
 
   const disconnectHandler = () => {
     removeHighlight(() => console.log("JDN highlight has been killed"))();
+    chrome.storage.sync.set({ IS_DISCONNECTED: true });
   };
 
   chrome.runtime.onConnect.addListener((p) => {

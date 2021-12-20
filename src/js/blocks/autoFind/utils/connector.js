@@ -1,4 +1,5 @@
 import { runContextMenu } from "../contentScripts/contextMenu/contextmenu";
+import { editLocatorPopup } from "../contentScripts/popups/editLocatorPopup";
 import { highlightOnPage } from "../contentScripts/highlight";
 import { highlightOrder } from "../contentScripts/highlightOrder";
 import { urlListener } from "../contentScripts/urlListener";
@@ -117,8 +118,10 @@ class Connector {
   attachStaticScripts() {
     this.attachContentScript(highlightOnPage).then(() => {
       this.createPort();
+      chrome.storage.sync.set({ IS_DISCONNECTED: false });
     });
     this.attachContentScript(runContextMenu);
+    this.attachContentScript(editLocatorPopup);
     this.attachContentScript(highlightOrder);
     this.attachContentScript(urlListener);
   }
@@ -128,10 +131,11 @@ export const connector = new Connector();
 
 // messages, are sent from plugun to content scripts
 export const sendMessage = {
-  toggle: (el) => connector.sendMessage("HIGHLIGHT_TOGGLED", el),
+  toggle: (payload) => connector.sendMessage("HIGHLIGHT_TOGGLED", payload),
   toggleDeleted: (el) => connector.sendMessage("TOGGLE_DLETED", el),
   // restore: (el) => connector.sendMessage("RESTORE_ELEMENT", el),
   changeElementName: (el) => connector.sendMessage("CHANGE_ELEMENT_NAME", el),
+  changeElementType: (el) => connector.sendMessage("CHANGE_ELEMENT_TYPE", el),
   changeStatus: (el) => connector.sendMessage("CHANGE_STATUS", el),
   elementData: (payload) => connector.sendMessage("ELEMENT_DATA", payload),
   setHighlight: (payload) => connector.sendMessage("SET_HIGHLIGHT", payload),

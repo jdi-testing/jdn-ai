@@ -1,56 +1,82 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch } from "react-redux";
 
 import { Checkbox, Dropdown, Menu, Spin, Typography } from "antd";
 import Icon from "@ant-design/icons";
 import Text from "antd/lib/typography/Text";
 
-import { locatorTaskStatus } from "../../utils/locatorGenerationController";
+import { isGeneratedStatus, isProgressStatus, locatorTaskStatus } from "../../utils/locatorGenerationController";
 import { getLocator } from "../../utils/pageObject";
 
 import CheckedkSvg from "../../../../../icons/checked-outlined.svg";
-import InvisibleSvg from "../../../../../icons/invisible.svg";
+import DeletedSvg from "../../../../../icons/deleted.svg";
 import ClockSvg from "../../../../../icons/clock-outlined.svg";
 import WarningSvg from "../../../../../icons/warning.svg";
 import EllipsisSvg from "../../../../../icons/ellipsis.svg";
 import SettingsSvg from "../../../../../icons/settings.svg";
-// import PencilSvg from "../../../../../icons/pencil.svg";
+import PencilSvg from "../../../../../icons/pencil.svg";
 import PlaySvg from "../../../../../icons/play.svg";
 import PauseSvg from "../../../../../icons/pause.svg";
 import PauseOutlinedSvg from "../../../../../icons/pause-outlined.svg";
 import TrashBinSvg from "../../../../../icons/trash-bin.svg";
 import RestoreSvg from "../../../../../icons/restore.svg";
-import { locatorProgressStatus } from "../../utils/locatorGenerationController";
 import { openSettingsMenu } from "../../utils/pageDataHandlers";
 import { toggleDeleted, toggleElementGeneration } from "../../redux/predictionSlice";
+import { getTypesMenuOptions } from "../../utils/generationClassesMap";
+import { stopGeneration } from "../../redux/thunks/stopGeneration";
+import { rerunGeneration } from "../../redux/thunks/rerunGeneration";
 
-export const Locator = ({ element, xpathConfig, stopXpathGeneration, runXpathGenerationHandler }) => {
+export const Locator = ({ element, xpathConfig, noScrolling }) => {
   const dispatch = useDispatch();
 
-  const { element_id, type, name, locator, generate, isCmHighlighted} = element;
+  const { element_id, type, name, locator, generate, isCmHighlighted } = element;
+
+  const ref = useRef(null);
 
   const handleOnChange = (value) => {
     dispatch(toggleElementGeneration(element_id));
   };
 
+  useEffect(() => {
+    if (generate && !noScrolling) {
+      ref.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+  }, [generate]);
+
   const handleSettingsOption = () => {
-    openSettingsMenu((element.locator.settings || xpathConfig), [element.element_id]);
+    openSettingsMenu(
+        element.locator.settings || xpathConfig,
+        [element.element_id],
+        isGeneratedStatus(element.locator.taskStatus)
+    );
+  };
+
+  const handleEditClick = () => {
+    chrome.storage.sync.set({ OPEN_EDIT_LOCATOR: { isOpen: true, value: element, types: getTypesMenuOptions() } });
   };
 
   const renderIcon = () => {
-    if (element.deleted) return <Icon component={InvisibleSvg} className="jdn__locatorsList-status" />;
+    const successIcon = <Icon component={CheckedkSvg} className="jdn__locatorsList-status" />;
+    const startedIcon = <Spin size="small" />;
+    const pendingIcon = <Icon component={ClockSvg} className="jdn__locatorsList-status" />;
+    const revokedIcon = <Icon component={PauseOutlinedSvg} className="jdn__locatorsList-status" />;
+    const failureIcon = <Icon component={WarningSvg} className="jdn__locatorsList-status" />;
+    const deletedIcon = <Icon component={DeletedSvg} className="jdn__locatorsList-status" />;
+
+    if (element.deleted) return deletedIcon;
+    if (element.stopped && element.locator.taskStatus !== locatorTaskStatus.SUCCESS) return revokedIcon;
 
     switch (element.locator.taskStatus) {
       case locatorTaskStatus.SUCCESS:
-        return <Icon component={CheckedkSvg} className="jdn__locatorsList-status" />;
+        return successIcon;
       case locatorTaskStatus.STARTED:
-        return <Spin size="small" />;
+        return startedIcon;
       case locatorTaskStatus.PENDING:
-        return <Icon component={ClockSvg} className="jdn__locatorsList-status" />;
+        return pendingIcon;
       case locatorTaskStatus.REVOKED:
-        return <Icon component={PauseOutlinedSvg} className="jdn__locatorsList-status" />;
+        return revokedIcon;
       case locatorTaskStatus.FAILURE:
-        return <Icon component={WarningSvg} className="jdn__locatorsList-status" />;
+        return failureIcon;
       default:
         break;
     }
@@ -60,13 +86,9 @@ export const Locator = ({ element, xpathConfig, stopXpathGeneration, runXpathGen
     return (
       <React.Fragment>
         @UI(
-        <span className="jdn__xpath_item-locator">
-          &quot;{getLocator(locator)}&quot;
-        </span>
-        )
-        <span className="jdn__xpath_item-type">
-          &nbsp;{type}&nbsp;
-        </span>
+        <span className="jdn__xpath_item-locator">&quot;{getLocator(locator)}&quot;</span>)
+        <span className="jdn__xpath_item-type">&nbsp;public</span>
+        <span>&nbsp;{type}&nbsp;</span>
         {name}
       </React.Fragment>
     );
@@ -84,19 +106,19 @@ export const Locator = ({ element, xpathConfig, stopXpathGeneration, runXpathGen
     } else {
       return (
         <Menu>
-          {/* <Menu.Item key="1" icon={<PencilSvg />} onClick={handleMenuClick(1)}>
+          <Menu.Item key="1" icon={<PencilSvg />} onClick={handleEditClick}>
             Edit
-          </Menu.Item>*/}
+          </Menu.Item>
           <Menu.Item key="2" icon={<SettingsSvg />} onClick={handleSettingsOption}>
             Settings
           </Menu.Item>
-          {locatorProgressStatus.hasOwnProperty(locator.taskStatus) ? (
-            <Menu.Item key="3" icon={<PauseSvg />} onClick={() => dispatch(stopXpathGeneration(element.element_id))}>
+          {isProgressStatus(locator.taskStatus) ? (
+            <Menu.Item key="3" icon={<PauseSvg />} onClick={() => dispatch(stopGeneration(element.element_id))}>
               Stop generation
             </Menu.Item>
           ) : null}
           {locator.taskStatus === locatorTaskStatus.REVOKED ? (
-            <Menu.Item key="4" icon={<PlaySvg />} onClick={() => runXpathGenerationHandler([element])}>
+            <Menu.Item key="4" icon={<PlaySvg />} onClick={() => dispatch(rerunGeneration([element]))}>
               Rerun
             </Menu.Item>
           ) : null}
@@ -109,8 +131,11 @@ export const Locator = ({ element, xpathConfig, stopXpathGeneration, runXpathGen
   };
 
   return (
-    <div className={`${generate ? 'jdn__xpath_container--selected' : ''}
-     ${isCmHighlighted ? 'jdn__xpath_container--cm-selected' : ''}`}>
+    <div
+      ref={ref}
+      className={`${generate ? "jdn__xpath_container--selected" : "jdn__xpath_container--shift"}
+     ${isCmHighlighted ? "jdn__xpath_container--cm-selected" : ""}`}
+    >
       <Checkbox checked={generate} onChange={handleOnChange}>
         <Text className="jdn__xpath_item">
           {renderIcon()}

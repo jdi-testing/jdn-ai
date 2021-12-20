@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { Divider, Space, Menu, Dropdown } from "antd";
 import Icon from "@ant-design/icons";
 
@@ -36,11 +36,11 @@ export const ControlBar = () => {
         Report a problem
       </Menu.Item>
       <Menu.Item key="1">
-        <a href="https://github.com/jdi-testing/jdn" target="_blank" rel="noreferrer">
+        <a href="https://github.com/jdi-testing/jdn-ai" target="_blank" rel="noreferrer">
           Readme
         </a>
       </Menu.Item>
-      <Menu.Item key="3">Upgrade</Menu.Item>
+      {/* <Menu.Item key="3">Upgrade</Menu.Item> */}
     </Menu>
   );
 
@@ -58,12 +58,12 @@ export const ControlBar = () => {
         <a className="jdn__header-link" href="#" hidden={!allowRemoveElements} onClick={handleReportProblem}>
           Report a problem
         </a>
-        <a className="jdn__header-link" href="https://github.com/jdi-testing/jdn" target="_blank" rel="noreferrer">
+        <a className="jdn__header-link" href="https://github.com/jdi-testing/jdn-ai" target="_blank" rel="noreferrer">
           Readme
         </a>
-        <a className="jdn__header-link" href="#">
+        {/* <a className="jdn__header-link" href="#">
           Upgrade
-        </a>
+        </a> */}
         <a className="jdn__header-kebab">
           <Dropdown overlay={kebabMenu} trigger={["click"]}>
             <Icon component={kebab_menu} onClick={(e) => e.preventDefault()} />

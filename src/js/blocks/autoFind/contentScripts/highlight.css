@@ -154,6 +154,15 @@
   line-height: 12px;
   padding: 0 4px;
   white-space: nowrap;
+  cursor: default;
+}
+
+.jdn-tooltip-paragraph {
+  margin: 0 0 5px;
+}
+
+.jdn-tooltip-paragraph:last-child {
+  margin: 0;
 }
 
 .jdn-tooltip {
@@ -163,10 +172,11 @@
   border-radius: 4px;
   color: #fff;
   z-index: 5500;
-  font-size: 10px;
+  font-size: 12px;
   font-family: "Noto Sans", sans-serif;
-  line-height: 16px;
-  padding: 10px 8px 15px 10px;
+  line-height: 18px;
+  letter-spacing: 0;
+  padding: 12px;
   margin-top: 15px;
 }
 
@@ -177,6 +187,17 @@
   top: -18px;
   border: 9px solid transparent;
   border-bottom: 10px solid rgba(0, 0, 0, 0.8);
+}
+
+.jdn-tooltip-right::after {
+  left: 10px;
+  right: unset;
+}
+
+.jdn-tooltip-top::after {
+  border-color: rgba(0, 0, 0, 0.8) transparent transparent;
+  bottom: -19px;
+  top: unset;
 }
 
 .jdn-tooltip b {
@@ -196,6 +217,7 @@
 }
 
 .jdn-tooltip--light {
+  font-family: "Noto Sans", sans-serif;
   width: 250px;
   top: -14px;
   position: absolute;
@@ -205,9 +227,10 @@
   border-radius: 4px;
   color: #fff;
   z-index: 5500;
-  font-size: 10px;
-  line-height: 16px;
-  padding: 10px 8px 15px 10px;
+  font-size: 12px;
+  line-height: 18px;
+  letter-spacing: 0;
+  padding: 12px;
 }
 
 .jdn-tooltip--light::after {

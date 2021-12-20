@@ -1,8 +1,8 @@
 Current version of JDN plugin is client-server application with to independent parts and both parts should be installed separately.
 
 **Setup plugin to Chrome**
-* Download the last version of the plugin: https://github.com/jdi-testing/jdn/tags as archive
-* Unpack the content to any convenient place
+* Download the last version of the plugin: https://github.com/jdi-testing/jdn-ai/releases (you need an archive named like the JDN version) as archive
+* Unpack the content to any convenient place (the result folder name is 'dist')
 * Open Chrome Settings -> choose option 'More tools' -> choose option Extensions -> Click 'Load unpacked'
 * Select unpacked folder with the plugin on subfolders level (in the way that the contend as 'CSS' and 'Images', don’t do it just for 'dist' folder)
 * Open Chrome developer tools by F12 -> JDN tab should be added as the last tab at the Devtools
@@ -11,10 +11,14 @@ Current version of JDN plugin is client-server application with to independent p
 * Account on GitLab is essential: https://gitlab.com/users/sign_in. Register new account if it’s necessary or use existing one
 * Send the email of account project data scientist Vyacheslav Fuga (skype: live:.cid.ffcd60dc4c98309 ) to get access
 * Setup Docker https://www.docker.com/products/docker-desktop
-* Create container using the command 
+* Create container using the command
+#### macOS/Linux
+```shell
+curl --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/develop/docker-compose.yaml && docker compose up
 ```
-docker login registry.gitlab.com
-docker run -p 127.0.0.1:5000:5000/tcp -ti --rm --name jdi-ml registry.gitlab.com/vfuga/jdi-qasp-ml:latest_
+#### Windows
+```shell
+curl.exe --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/develop/docker-compose.yaml && docker compose up
 ```
 * In Windows 10 use PowerShell instead of regular command-line interpreter, for macOS use native terminal.
 * After finishing of downloading check that container is created and the number of version is displayed in JDN plugin tab.
@@ -30,6 +34,14 @@ The ML part of plugin presented on its first tab – 'Auto Find Objects' tab.
 * Click 'Generate and Download' button to create the result file containing all predicted locators.
 * If some elements were predicted wrong, you can unmark them with just simple clicking or change they type via context menu of those elements. All changes will be transferred to the result file.
 
+**Branching**
+
+```master``` - base branch
+```issue_<YOUR_ISSUE_NUMBER>``` - feature or bugfix branch, started from master and merged into master when feature is ready
+```release_<RELEASE_NUMBER>``` - release branch, start from master
+```hotfix_<ISSUE_NUMBER>```  - fix for release, start from release branch and merged into it
+
+
 **How to update version**
 
 For updating version in package.json and manifest.json you can run 
@@ -41,3 +53,7 @@ or manualy change version in this files.
 Commit and push changes.
 
 When your request has been merged, github actions will create draft of release with current package.json version tag.
+
+**CI/CD**
+
+Delivery pack is builded autimatically on commit in master.

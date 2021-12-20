@@ -1,15 +1,17 @@
 import React from "react";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Text from "antd/lib/typography/Text";
 import { Col, Row, Slider, Tooltip } from "antd";
 import Icon from "@ant-design/icons";
 
 import QuestionFilled from "../../../../icons/question-filled.svg";
 import { changePerception } from "../redux/predictionSlice";
+import { floatToPercent } from "../utils/helpers";
 
 let sliderTimer;
 export const PerceptionTreshold = () => {
+  const dispatch = useDispatch();
   const perception = useSelector((state) => state.main.perception);
 
   const [perceptionOutput, setPerceptionOutput] = useState(0.5);
@@ -18,14 +20,14 @@ export const PerceptionTreshold = () => {
     setPerceptionOutput(value);
     if (sliderTimer) clearTimeout(sliderTimer);
     sliderTimer = setTimeout(() => {
-      changePerception(value);
+      dispatch(changePerception(value));
     }, 300);
   };
 
   return (
     <div className="jdn__perception-treshold">
       <Text strong level={5}>
-        Prediction accuracy: {perception * 100}%
+        Prediction accuracy: {floatToPercent(perception)}%
       </Text>
       <Tooltip
         title="The minimum value of the
@@ -46,7 +48,7 @@ export const PerceptionTreshold = () => {
             step={0.01}
             onChange={handlePerceptionChange}
             value={perceptionOutput}
-            tipFormatter={(value) => `${value * 100}%`}
+            tipFormatter={(value) => `${floatToPercent(value)}%`}
           />
         </Col>
         <Col span={2} className="jdn__slider-perception-max">

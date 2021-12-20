@@ -10,7 +10,8 @@ import Settings from "../../../../icons/settings.svg";
 import { openSettingsMenu } from "../utils/pageDataHandlers";
 import { clearAll } from "../redux/predictionSlice";
 import { sendMessage } from "../utils/connector";
-import { identifyElements } from "../redux/thunks";
+import { identifyElements } from "../redux/thunks/identifyElements";
+import { locatorGenerationController } from "../utils/locatorGenerationController";
 
 export const GenerationButtons = () => {
   const status = useSelector((state) => state.main.status);
@@ -22,6 +23,7 @@ export const GenerationButtons = () => {
   const handleClearAll = () => {
     dispatch(clearAll());
     sendMessage.killHighlight();
+    locatorGenerationController.revokeAll();
   };
 
   return (

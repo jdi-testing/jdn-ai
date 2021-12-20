@@ -7,7 +7,7 @@ export const GET_TASK_STATUS = 'get_task_status';
 export const REVOKE_TASK = 'revoke_task';
 export const GET_TASK_RESULT = 'get_task_result';
 
-export const BASE_URL = 'http:localhost:5000';
+export const BASE_URL = 'http:localhost:5050';
 
 class Request {
   constructor() {

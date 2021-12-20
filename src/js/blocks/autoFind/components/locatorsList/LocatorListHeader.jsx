@@ -1,5 +1,5 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { filter, isEmpty, map, reduce, size } from "lodash";
 import { Button } from "antd";
 import Icon from "@ant-design/icons";
@@ -15,16 +15,20 @@ import { useAutoFind } from "../../autoFindProvider/AutoFindProvider";
 import { Chip } from "./Chip";
 import { locatorTaskStatus } from "../../utils/locatorGenerationController";
 import { openSettingsMenu } from "../../utils/pageDataHandlers";
+import {
+  pushNotification,
+  toggleDeletedGroup,
+  toggleElementGroupGeneration,
+} from "../../redux/predictionSlice";
+import { stopGenerationGroup } from "../../redux/thunks/stopGenerationGroup";
+import { rerunGeneration } from "../../redux/thunks/rerunGeneration";
 
 export const LocatorListHeader = ({
   generatedSelected,
   waitingSelected,
   deletedSelected,
-  toggleLocatorsGroup,
-  toggleDeletedGroup,
-  runXpathGenerationHandler,
-  stopXpathGroupGeneration,
 }) => {
+  const dispatch = useDispatch();
   const [{}, { generateAndDownload }] = useAutoFind();
   const xpathConfig = useSelector((state) => state.main.xpathConfig);
 
@@ -32,6 +36,7 @@ export const LocatorListHeader = ({
   const activeSelected = [...generatedSelected, ...waitingSelected];
   const stoppedSelected = filter(waitingSelected, (el) => el.locator.taskStatus === locatorTaskStatus.REVOKED);
   const inProgressSelected = filter(waitingSelected, (el) => el.locator.taskStatus !== locatorTaskStatus.REVOKED);
+  const hasGeneratedSelected = generatedSelected?.length > 0;
 
   const handleOnClickSettings = () => {
     const reduceSettingsObject = (result, itemSettings) => {
@@ -63,30 +68,47 @@ export const LocatorListHeader = ({
     };
 
     const settings = size(activeSelected) === 1 ? activeSelected[0].locator.settings : reduceSettingsArray();
-    openSettingsMenu(settings || xpathConfig, map(activeSelected, "element_id"));
+    openSettingsMenu(settings || xpathConfig, map(activeSelected, "element_id"), hasGeneratedSelected);
+  };
+
+  const handleDownload = () => {
+    dispatch(pushNotification("Download"));
+    generateAndDownload(activeSelected);
   };
 
   return (
     <div className="jdn__locatorsList-header">
-      <span>Locators list</span>
-      <span className="jdn__locatorsList-header-buttons">
-        <Chip
-          hidden={!size(selected)}
-          primaryLabel={size(selected)}
-          secondaryLabel={"selected"}
-          onDelete={() => toggleLocatorsGroup(selected)}
-        />
-        <Button hidden={!size(deletedSelected)} className="jdn__buttons" onClick={() => toggleDeletedGroup(selected)}>
+      <span className="jdn__locatorsList-header-title">Locators list</span>
+      <Chip
+        hidden={!size(selected)}
+        primaryLabel={size(selected)}
+        secondaryLabel={"selected"}
+        onDelete={() => dispatch(toggleElementGroupGeneration(selected))}
+      />
+      <div className="jdn__locatorsList-header-buttons">
+        <Button
+          hidden={!size(deletedSelected)}
+          className="jdn__buttons"
+          onClick={() => dispatch(toggleDeletedGroup(deletedSelected))}
+        >
           <Icon component={RestoreSvg} />
           Restore
         </Button>
-        <Button hidden={!size(stoppedSelected)} onClick={() => runXpathGenerationHandler(stoppedSelected)}>
+        <Button hidden={!size(stoppedSelected)} onClick={() => dispatch(rerunGeneration(stoppedSelected))}>
           <Icon component={PlaySvg} />
         </Button>
-        <Button hidden={!size(inProgressSelected)} danger onClick={() => stopXpathGroupGeneration(inProgressSelected)}>
+        <Button
+          hidden={!size(inProgressSelected)}
+          danger
+          onClick={() => dispatch(stopGenerationGroup(inProgressSelected))}
+        >
           <Icon component={PauseSVG} />
         </Button>
-        <Button hidden={!size(activeSelected)} danger onClick={() => toggleDeletedGroup(activeSelected, true)}>
+        <Button
+          hidden={!size(activeSelected)}
+          danger
+          onClick={() => dispatch(toggleDeletedGroup(activeSelected, true))}
+        >
           <Icon fill="#D82C15" component={TrashBinSVG} />
         </Button>
         <Button id="locatorListSettings" hidden={!size(activeSelected)} onClick={handleOnClickSettings}>
@@ -96,12 +118,12 @@ export const LocatorListHeader = ({
           hidden={!size(generatedSelected)}
           type="primary"
           className="jdn__buttons"
-          onClick={() => generateAndDownload(activeSelected)}
+          onClick={handleDownload}
         >
           <Icon component={DownloadSvg} fill="#c15f0f" />
           Download
         </Button>
-      </span>
+      </div>
     </div>
   );
 };

@@ -8,23 +8,22 @@ import Layout, { Content, Header } from "antd/lib/layout/layout";
 import { GenerationButtons } from "../GenerationButtons";
 import { PerceptionTreshold } from "../PerceptionTreshold";
 import { ControlBar } from "../ControlBar";
-// import { XPathSettings } from "../XPathSettings";
 import { LocatorsList } from "../locatorsList/LocatorsList";
 import { xpathGenerationStatus } from "../../autoFindProvider/AutoFindProvider";
 
-// import { store } from "../../redux/store";
 import { createListeners } from "../../utils/scriptListener";
 import { connector } from "../../utils/connector";
 import { removeOverlay } from "../../utils/pageDataHandlers";
 import { clearAll } from "../../redux/predictionSlice";
+import { locatorGenerationController } from "../../utils/locatorGenerationController";
 
 const AutoFind = () => {
   const xpathStatus = useSelector((state) => state.main.xpathStatus);
 
   const dispatch = useDispatch();
-  createListeners(
+  createListeners( // in the future, move it to connector
       dispatch,
-      useSelector((state) => state.main)
+      useSelector((state) => state)
   );
 
   // add document listeners
@@ -32,6 +31,7 @@ const AutoFind = () => {
     connector.attachStaticScripts();
     connector.onTabUpdate(() => {
       dispatch(clearAll());
+      locatorGenerationController.revokeAll();
       removeOverlay();
       connector.attachStaticScripts();
     });

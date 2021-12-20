@@ -1,3 +1,5 @@
+import { sortBy } from "lodash";
+
 export const defaultClass = "UIElement";
 
 const MUIclasses = {
@@ -38,3 +40,10 @@ export const getJdiClassName = (label) => {
   if (jdiClass === defaultClass) jdiClass += ` (${label})`;
   return jdiClass ? jdiClass : label;
 };
+
+export const getTypesMenuOptions = () => sortBy(
+    Object.keys(JDIclasses).map((label) => {
+      return { label, jdi: getJdiClassName(label) };
+    }),
+    ["jdi"]
+);
