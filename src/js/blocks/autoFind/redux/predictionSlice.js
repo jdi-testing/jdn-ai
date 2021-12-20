@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { size } from "lodash";
+import { lowerFirst, size } from "lodash";
 import { autoFindStatus, xpathGenerationStatus } from "../autoFindProvider/AutoFindProvider";
-import { getJdiClassName } from "../utils/generationClassesMap";
+import { getJdiClassName, getJDILabel } from "../utils/generationClassesMap";
 import { locatorsAdapter, simpleSelectLocatorById } from "./selectors";
 import { cancelStopGenerationReducer } from "./thunks/cancelStopGeneration";
 import { generateLocatorsReducer } from "./thunks/generateLocators";
@@ -44,8 +44,8 @@ const predictionSlice = createSlice({
         newValue.isCustomName = true;
       }
       if (_locator.type !== type && !newValue.isCustomName) {
-        newValue.name = getJdiClassName(type);
-        newValue.type = type;
+        newValue.name = lowerFirst(getJdiClassName(type));
+        newValue.type = getJDILabel(type);
       }
       if (fullXpath !== locator && robulaXpath !== locator) {
         newValue.locator.customXpath = locator;
