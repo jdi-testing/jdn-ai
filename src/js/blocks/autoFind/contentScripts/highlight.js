@@ -5,7 +5,6 @@
 /* global chrome */
 export const highlightOnPage = () => {
   let highlightElements = [];
-  let isHighlightElementsReverse = false;
   let port;
   let nodes;
   let predictedElements;
@@ -220,34 +219,6 @@ export const highlightOnPage = () => {
     }, 300);
   };
 
-  const selectAllElementsOnClick = (event) => {
-    if (!isHighlightElementsReverse) {
-      highlightElements.reverse();
-      isHighlightElementsReverse = true;
-    }
-
-    let isCurrentElement = false;
-
-    highlightElements.forEach((element) => {
-      const { top, right, bottom, left } = element.getBoundingClientRect();
-
-      if (
-        event.clientX > left &&
-        event.clientX < right &&
-        event.clientY > top &&
-        event.clientY < bottom
-      ) {
-        if (!isCurrentElement) {
-          isCurrentElement = true;
-          return;
-        } else {
-          const div = document.getElementById(element.getAttribute("jdn-hash"));
-          div.click();
-        }
-      }
-    });
-  };
-
   const removeHighlightElements = (callback) => {
     if (predictedElements) {
       predictedElements.forEach(({ element_id: elementId }) => {
@@ -273,7 +244,6 @@ export const highlightOnPage = () => {
 
   const clickListener = (event) => {
     if (!event.clientX && !event.clientY) return;
-    selectAllElementsOnClick(event);
   };
 
   const setDocumentListeners = () => {
