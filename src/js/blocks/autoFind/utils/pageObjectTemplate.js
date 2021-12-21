@@ -26,27 +26,23 @@ export const getClassName = (title) => {
     // eslint-disable-next-line new-cap
     className = CyrillicToTranslit().transform(className, " ");
   }
-  if (
-    className.length > 4 &&
-    className.substr(-4).toLowerCase() !== "page"
-  ) className += "Page";
+  if (className.length > 4 && className.substr(-4).toLowerCase() !== "page") className += "Page";
   return className;
 };
 
-export const pageObjectTemplate = (locators, {host}, title) => {
+export const pageObjectTemplate = (locators, { host }, title) => {
   const sitePackage = host ?
-  host
-      .split(".")
-      .reverse()
-      .map((e) => e.replace(/[^a-zA-Z0-9]+/g, ""))
-      .join(".") :
-  "";
+    host
+        .split(".")
+        .reverse()
+        .map((e) => e.replace(/[^a-zA-Z0-9]+/g, ""))
+        .join(".") :
+    "";
 
   const className = getClassName(title);
   const locatorsCode = locators.map((loc) => `    @UI("${getLocator(loc.locator)}") public ${loc.type} ${loc.name};`);
 
-  return (`
-package ${sitePackage}.pages;
+  const pageCode = `package ${sitePackage}.pages;
 
 import com.epam.jdi.light.elements.pageobjects.annotations.locators.*;
 import com.epam.jdi.light.elements.composite.*;
@@ -61,5 +57,7 @@ import ${sitePackage}.sections.*;
 public class ${className} extends WebPage {
 ${locatorsCode.join("\n")}
 }
-`);
+`;
+
+  return { pageCode, title: className };
 };

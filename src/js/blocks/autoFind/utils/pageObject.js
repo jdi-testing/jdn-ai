@@ -1,16 +1,6 @@
-import { camelCase } from "../../../models/GenerateBlockModel";
 import { getJDILabel } from "./generationClassesMap";
 import { connector } from "./connector";
 import { pageObjectTemplate } from "./pageObjectTemplate";
-
-const getPackage = (url) => {
-  const urlObject = new URL(url);
-  return urlObject.hostname
-      .split(".")
-      .reverse()
-      .map((e) => e.replace(/[^a-zA-Z0-9]+/g, ""))
-      .join(".");
-};
 
 export const getLocator = ({fullXpath, robulaXpath, customXpath}) => {
   return customXpath || robulaXpath || fullXpath || '';
@@ -54,37 +44,7 @@ export const createLocatorNames = (elements) => {
   });
 };
 
-export const predictedToConvert = (elements) => {
-  return elements.map((e) => {
-    return {
-      ...e,
-      Locator: getLocator(e.locator),
-      Name: e.name,
-      Type: e.type,
-      parent: null,
-      parentId: null,
-      elId: e.element_id,
-    };
-  });
-};
-
-export const getPage = (elToConvert, callback) => {
-  callback({
-    elements: elToConvert,
-    name: camelCase(connector.tab.title),
-    package: getPackage(connector.tab.url),
-  });
-};
-
-export const generatePageObject = (elements, mainModel) => {
-  const elToConvert = predictedToConvert(elements);
-  getPage(elToConvert, (page) => {
-    mainModel.conversionModel.genPageCode(page, mainModel, true);
-    mainModel.conversionModel.downloadPageCode(page, ".java");
-  });
-};
-
-export const _generatePageObject = async (locators) => {
+export const getPage = async (locators) => {
   const location = await connector.attachContentScript(() => {
     const {hostname, pathname, origin, host} = document.location;
     return {hostname, pathname, origin, host};
@@ -96,4 +56,12 @@ export const _generatePageObject = async (locators) => {
 
   const pageObject = pageObjectTemplate(locators, location[0].result, title[0].result);
   return pageObject;
+};
+
+export const generatePageObject = async (elements) => {
+  const page = await getPage(elements);
+  const blob = new Blob([page.pageCode], {
+    type: "text/plain;charset=utf-8",
+  });
+  saveAs(blob, `${page.title}.java`);
 };
