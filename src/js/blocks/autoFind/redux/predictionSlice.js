@@ -43,8 +43,10 @@ const predictionSlice = createSlice({
         newValue.name = name;
         newValue.isCustomName = true;
       }
-      if (_locator.type !== type && !newValue.isCustomName) {
-        newValue.name = lowerFirst(getJdiClassName(type));
+      if (_locator.type !== type) {
+        if (!newValue.isCustomName) {
+          newValue.name = lowerFirst(getJdiClassName(type));
+        }
         newValue.type = getJDILabel(type);
       }
       if (fullXpath !== locator && robulaXpath !== locator) {
