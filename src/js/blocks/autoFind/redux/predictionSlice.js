@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { size } from "lodash";
+import { lowerFirst, size } from "lodash";
 import { autoFindStatus, xpathGenerationStatus } from "../autoFindProvider/AutoFindProvider";
-import { getJdiClassName } from "../utils/generationClassesMap";
+import { getJdiClassName, getJDILabel } from "../utils/generationClassesMap";
 import { locatorsAdapter, simpleSelectLocatorById } from "./selectors";
 import { cancelStopGenerationReducer } from "./thunks/cancelStopGeneration";
 import { generateLocatorsReducer } from "./thunks/generateLocators";
@@ -43,9 +43,11 @@ const predictionSlice = createSlice({
         newValue.name = name;
         newValue.isCustomName = true;
       }
-      if (_locator.type !== type && !newValue.isCustomName) {
-        newValue.name = getJdiClassName(type);
-        newValue.type = type;
+      if (_locator.type !== type) {
+        if (!newValue.isCustomName) {
+          newValue.name = lowerFirst(getJdiClassName(type));
+        }
+        newValue.type = getJDILabel(type);
       }
       if (fullXpath !== locator && robulaXpath !== locator) {
         newValue.locator.customXpath = locator;
@@ -64,11 +66,11 @@ const predictionSlice = createSlice({
       state.xpathConfig = payload;
     },
     clearAll(state) {
+      state.status = autoFindStatus.removed;
       Object.keys(initialState).forEach((key) => {
         state[key] = initialState[key];
       });
       locatorsAdapter.removeAll(state);
-      state.status = autoFindStatus.removed;
     },
     pushNotification(state, { payload }) {
       state.notifications.push(payload);

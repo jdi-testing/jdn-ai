@@ -5,7 +5,6 @@
 /* global chrome */
 export const highlightOnPage = () => {
   let highlightElements = [];
-  let isHighlightElementsReverse = false;
   let port;
   let nodes;
   let predictedElements;
@@ -40,14 +39,16 @@ export const highlightOnPage = () => {
     return div;
   };
 
-  const toggleElement = (element) => {
+  const toggleElement = ({element, skipScroll}) => {
     const div = updateElement(element);
     if (div) {
       div.className = getClassName(element);
     }
-    const originDiv = document.querySelector(`[jdn-hash='${element.element_id}']`);
-    if (!isInViewport(originDiv)) {
-      originDiv.scrollIntoView({ behavior: "smooth" });
+    if (!skipScroll) {
+      const originDiv = document.querySelector(`[jdn-hash='${element.element_id}']`);
+      if (!isInViewport(originDiv) && element.generate) {
+        originDiv.scrollIntoView({ behavior: "smooth" });
+      }
     }
   };
 
@@ -218,34 +219,6 @@ export const highlightOnPage = () => {
     }, 300);
   };
 
-  const selectAllElementsOnClick = (event) => {
-    if (!isHighlightElementsReverse) {
-      highlightElements.reverse();
-      isHighlightElementsReverse = true;
-    }
-
-    let isCurrentElement = false;
-
-    highlightElements.forEach((element) => {
-      const { top, right, bottom, left } = element.getBoundingClientRect();
-
-      if (
-        event.clientX > left &&
-        event.clientX < right &&
-        event.clientY > top &&
-        event.clientY < bottom
-      ) {
-        if (!isCurrentElement) {
-          isCurrentElement = true;
-          return;
-        } else {
-          const div = document.getElementById(element.getAttribute("jdn-hash"));
-          div.click();
-        }
-      }
-    });
-  };
-
   const removeHighlightElements = (callback) => {
     if (predictedElements) {
       predictedElements.forEach(({ element_id: elementId }) => {
@@ -271,7 +244,6 @@ export const highlightOnPage = () => {
 
   const clickListener = (event) => {
     if (!event.clientX && !event.clientY) return;
-    selectAllElementsOnClick(event);
   };
 
   const setDocumentListeners = () => {
@@ -294,6 +266,10 @@ export const highlightOnPage = () => {
 
     if (message === "HIGHLIGHT_TOGGLED") {
       toggleElement(param);
+    }
+
+    if (message === "HIGHLIGHT_TOGGLED_GROUP") {
+
     }
 
     if (message === "TOGGLE_DLETED") {

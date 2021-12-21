@@ -2,30 +2,38 @@ import { sortBy } from "lodash";
 
 export const defaultClass = "UIElement";
 
-export const JDIclasses = {
+const MUIclasses = {
+  accordion: "Accordion",
+  // alert: "UIElement",
+  badge: "Badge",
+  ["bottom-navigation"]: "BottomNavigation",
   button: "Button",
-  link: "Link",
-  iframe: defaultClass,
-  textfield: "TextField",
-  dropdown: "Dropdown",
+  ["button-group"]: "ButtonGroup",
+  breadcrumbs: "Breadcrumbs",
   checkbox: "Checkbox",
-  textarea: "TextArea",
-  label: "Label",
-  text: "Text",
-  fileinput: "FileInput",
-  image: "Image",
-  colorpicker: defaultClass,
-  range: defaultClass,
-  progressbar: defaultClass,
-  datetimeselector: defaultClass,
-  numberselector: defaultClass,
-  dropdownselector: "Dropdown selector",
-  checklist: "CheckList",
-  radiobutton: "RadioButtons",
+  chip: "Chip",
+  dialog: "Dialog",
+  drawer: "Drawer",
+  link: "Link",
+  list: "Lists",
+  menu: "Menu",
+  progress: "ProgressBar",
+  // radio: "RadioButtons",
+  radiogroup: "RadioButtons",
+  select: "Select",
+  slider: "Slider",
+  snackbar: "Snackbar",
+  stepper: "Stepper",
+  switch: "Switch",
+  tabs: "Tabs",
   table: "Table",
+  ["textarea-autosize"]: "TextArea",
+  ["text-field"]: "TextField",
 };
 
-export const getJDILabel = (label) => JDIclasses[label] || label;
+export const JDIclasses = MUIclasses;
+
+export const getJDILabel = (label) => JDIclasses[label] || defaultClass;
 
 export const getJdiClassName = (label) => {
   let jdiClass = getJDILabel(label);

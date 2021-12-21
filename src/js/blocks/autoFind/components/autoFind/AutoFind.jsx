@@ -15,6 +15,7 @@ import { createListeners } from "../../utils/scriptListener";
 import { connector } from "../../utils/connector";
 import { removeOverlay } from "../../utils/pageDataHandlers";
 import { clearAll } from "../../redux/predictionSlice";
+import { locatorGenerationController } from "../../utils/locatorGenerationController";
 
 const AutoFind = () => {
   const xpathStatus = useSelector((state) => state.main.xpathStatus);
@@ -30,6 +31,7 @@ const AutoFind = () => {
     connector.attachStaticScripts();
     connector.onTabUpdate(() => {
       dispatch(clearAll());
+      locatorGenerationController.revokeAll();
       removeOverlay();
       connector.attachStaticScripts();
     });

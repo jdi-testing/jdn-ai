@@ -43,11 +43,11 @@ const notify = (state, action, prevState, store) => {
         sendMessage.changeStatus(selectLocatorById(state, element_id));
       });
     case "main/toggleElementGeneration":
-      sendMessage.toggle(selectLocatorById(state, payload));
+      sendMessage.toggle({element: selectLocatorById(state, payload)});
       break;
     case "main/toggleElementGroupGeneration":
       payload.forEach((element) => {
-        sendMessage.toggle(selectLocatorById(state, element.element_id));
+        sendMessage.toggle({element: selectLocatorById(state, element.element_id), skipScroll: true});
       });
       break;
     case "main/toggleDeleted":

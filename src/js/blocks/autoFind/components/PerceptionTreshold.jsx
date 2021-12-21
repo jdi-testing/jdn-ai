@@ -7,6 +7,7 @@ import Icon from "@ant-design/icons";
 
 import QuestionFilled from "../../../../icons/question-filled.svg";
 import { changePerception } from "../redux/predictionSlice";
+import { floatToPercent } from "../utils/helpers";
 
 let sliderTimer;
 export const PerceptionTreshold = () => {
@@ -26,7 +27,7 @@ export const PerceptionTreshold = () => {
   return (
     <div className="jdn__perception-treshold">
       <Text strong level={5}>
-        Prediction accuracy: {perception * 100}%
+        Prediction accuracy: {floatToPercent(perception)}%
       </Text>
       <Tooltip
         title="The minimum value of the
@@ -47,7 +48,7 @@ export const PerceptionTreshold = () => {
             step={0.01}
             onChange={handlePerceptionChange}
             value={perceptionOutput}
-            tipFormatter={(value) => `${value * 100}%`}
+            tipFormatter={(value) => `${floatToPercent(value)}%`}
           />
         </Col>
         <Col span={2} className="jdn__slider-perception-max">
