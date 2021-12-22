@@ -5,7 +5,7 @@ import Text from "antd/lib/typography/Text";
 import { Col, Row, Slider, Tooltip } from "antd";
 import Icon from "@ant-design/icons";
 
-import QuestionFilled from "../../../../icons/question-filled.svg";
+import QuestionFilled from "../../icons/question-filled.svg";
 import { changePerception } from "../redux/predictionSlice";
 import { floatToPercent } from "../utils/helpers";
 

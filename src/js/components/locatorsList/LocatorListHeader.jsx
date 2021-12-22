@@ -4,12 +4,12 @@ import { filter, isEmpty, map, reduce, size } from "lodash";
 import { Button } from "antd";
 import Icon from "@ant-design/icons";
 
-import SettingsSVG from "../../../../../icons/settings.svg";
-import TrashBinSVG from "../../../../../icons/trash-bin.svg";
-import PauseSVG from "../../../../../icons/pause.svg";
-import DownloadSvg from "../../../../../icons/download.svg";
-import PlaySvg from "../../../../../icons/play.svg";
-import RestoreSvg from "../../../../../icons/restore.svg";
+import SettingsSVG from "../../../icons/settings.svg";
+import TrashBinSVG from "../../../icons/trash-bin.svg";
+import PauseSVG from "../../../icons/pause.svg";
+import DownloadSvg from "../../../icons/download.svg";
+import PlaySvg from "../../../icons/play.svg";
+import RestoreSvg from "../../../icons/restore.svg";
 
 import { Chip } from "./Chip";
 import { locatorTaskStatus } from "../../utils/locatorGenerationController";

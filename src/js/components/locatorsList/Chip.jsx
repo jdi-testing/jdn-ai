@@ -1,6 +1,6 @@
 import React from "react";
 
-import CloseSVG from "../../../../../icons/close.svg";
+import CloseSVG from "../../../icons/close.svg";
 
 export const Chip = ({ hidden, primaryLabel, secondaryLabel, onDelete }) => {
   return (

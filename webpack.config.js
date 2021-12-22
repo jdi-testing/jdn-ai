@@ -6,7 +6,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const mainConfig = {
   devtool: "inline-cheap-module-source-map",
   mode: "development",
-  entry: ["./src/js/main.jsx", "./manifest.json"],
+  entry: ["./src/js/App.jsx", "./manifest.json"],
   output: {
     path: path.join(__dirname, "dist"),
     filename: "[name].bundle.js",
@@ -142,7 +142,7 @@ const indexConfig = {
 
 const highlightCssConfig = {
   entry:
-    "./src/js/blocks/autoFind/contentScripts/highlight.css",
+    "./src/js/contentScripts/highlight.css",
   mode: "production",
   plugins: [new MiniCssExtractPlugin({ filename: "highlight.css" })],
   module: {

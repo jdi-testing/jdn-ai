@@ -4,8 +4,8 @@ import { useSelector, useDispatch } from "react-redux";
 import Icon, { SearchOutlined } from "@ant-design/icons";
 import { Button, Space } from "antd";
 
-import ClearAllSvg from "../../../../icons/clear-all.svg";
-import Settings from "../../../../icons/settings.svg";
+import ClearAllSvg from "../../icons/clear-all.svg";
+import Settings from "../../icons/settings.svg";
 import { openSettingsMenu } from "../utils/pageDataHandlers";
 import { clearAll } from "../redux/predictionSlice";
 import { sendMessage } from "../utils/connector";

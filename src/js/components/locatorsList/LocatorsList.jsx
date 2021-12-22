@@ -9,9 +9,9 @@ import { isProgressStatus, locatorTaskStatus } from "../../utils/locatorGenerati
 import { LocatorListHeader } from "./LocatorListHeader";
 import { Notifications } from "./Notifications";
 
-import CaretDownSvg from "../../../../../icons/caret-down.svg";
-import CheckedkSvg from "../../../../../icons/checked-outlined.svg";
-import DeletedSvg from "../../../../../icons/deleted.svg";
+import CaretDownSvg from "../../../icons/caret-down.svg";
+import CheckedkSvg from "../../../icons/checked-outlined.svg";
+import DeletedSvg from "../../../icons/deleted.svg";
 import { Locator } from "./Locator";
 import { toggleElementGroupGeneration } from "../../redux/predictionSlice";
 import { selectGeneratedLocators, selectLocatorsByProbability } from "../../redux/selectors";

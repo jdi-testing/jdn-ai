@@ -5,7 +5,7 @@ import Icon from "@ant-design/icons";
 
 import { BUILD, request } from "../utils/backend";
 import { reportProblem } from "../utils/pageDataHandlers";
-import kebab_menu from "../../../../icons/Kebab_menu.svg";
+import kebab_menu from "../../icons/Kebab_menu.svg";
 
 export const ControlBar = () => {
   const [backendVer, setBackendVer] = useState("");
