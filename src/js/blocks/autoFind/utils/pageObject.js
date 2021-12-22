@@ -1,6 +1,7 @@
 import { getJDILabel } from "./generationClassesMap";
 import { connector } from "./connector";
 import { pageObjectTemplate } from "./pageObjectTemplate";
+import { replace } from "lodash";
 
 export const getLocator = ({fullXpath, robulaXpath, customXpath}) => {
   return customXpath || robulaXpath || fullXpath || '';
@@ -19,7 +20,7 @@ export const createLocatorNames = (elements) => {
 
   return f.map((e, i) => {
     let elementName = getElementName(e);
-    let elementTagId = e.predictedAttrId.replaceAll(" ", "");
+    let elementTagId = replace(e.predictedAttrId, new RegExp(" ", "g"), "");
 
     const startsWithNumber = new RegExp('^[0-9].+$');
     elementTagId = elementTagId.match(startsWithNumber) ? `name${elementTagId}` : elementTagId;
@@ -30,9 +31,7 @@ export const createLocatorNames = (elements) => {
 
     const name = e.isCustomName ?
       e.name :
-      elementTagId ?
-        elementTagId :
-        elementName;
+      elementTagId || elementName;
 
     const type = getJDILabel(e.predicted_label);
 

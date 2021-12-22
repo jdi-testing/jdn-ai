@@ -1,5 +1,6 @@
+import { createLocatorNames } from "../../utils/pageObject";
 import { pageObjectTemplate } from "../../utils/pageObjectTemplate";
-import { locators, pageObject, pageObjectCiryllic } from "./pageObject.mock";
+import { elementsWithNames, elementsWithoutNames, locators, pageObject, pageObjectCiryllic } from "./pageObject.mock";
 
 describe("page object code generation", () => {
   test("page object generated", () => {
@@ -15,8 +16,10 @@ describe("page object code generation", () => {
   });
 });
 
-// describe("create locators names", () => {
-
-// });
+describe("create locators names", () => {
+  test("create unique names, create name by Id,  if exists; transform ID to name correctly", () => {
+    expect(createLocatorNames(elementsWithoutNames)).toStrictEqual(elementsWithNames);
+  });
+});
 
 

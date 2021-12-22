@@ -1,6 +1,6 @@
-import { changeLocatorAttributes, updateLocator } from "../redux/predictionSlice";
-import { selectLocatorById } from "../redux/selectors";
-import { store } from "../redux/store";
+import { changeLocatorAttributes, updateLocator } from "../../redux/predictionSlice";
+import { selectLocatorById } from "../../redux/selectors";
+import { store } from "../../redux/store";
 import { locator1 } from "./locator.mock";
 
 describe("changeLocatorAttributes reducer", () => {

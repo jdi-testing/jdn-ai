@@ -103,7 +103,6 @@ export const getGenerationAttributes = () => {
       if (!element) {
         return;
       }
-      predictedElement.attrId = element.id;
       predictedElement.predictedAttrId = element.id ?
         camelCase(element.id) :
         "";
