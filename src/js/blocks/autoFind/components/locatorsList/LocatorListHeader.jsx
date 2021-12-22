@@ -11,7 +11,6 @@ import DownloadSvg from "../../../../../icons/download.svg";
 import PlaySvg from "../../../../../icons/play.svg";
 import RestoreSvg from "../../../../../icons/restore.svg";
 
-import { useAutoFind } from "../../autoFindProvider/AutoFindProvider";
 import { Chip } from "./Chip";
 import { locatorTaskStatus } from "../../utils/locatorGenerationController";
 import { openSettingsMenu } from "../../utils/pageDataHandlers";
@@ -22,6 +21,7 @@ import {
 } from "../../redux/predictionSlice";
 import { stopGenerationGroup } from "../../redux/thunks/stopGenerationGroup";
 import { rerunGeneration } from "../../redux/thunks/rerunGeneration";
+import { generateAndDownload } from "../../utils/pageObject";
 
 export const LocatorListHeader = ({
   generatedSelected,
@@ -29,7 +29,6 @@ export const LocatorListHeader = ({
   deletedSelected,
 }) => {
   const dispatch = useDispatch();
-  const [{}, { generateAndDownload }] = useAutoFind();
   const xpathConfig = useSelector((state) => state.main.xpathConfig);
 
   const selected = [...generatedSelected, ...waitingSelected, ...deletedSelected];

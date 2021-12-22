@@ -9,13 +9,13 @@ import { GenerationButtons } from "../GenerationButtons";
 import { PerceptionTreshold } from "../PerceptionTreshold";
 import { ControlBar } from "../ControlBar";
 import { LocatorsList } from "../locatorsList/LocatorsList";
-import { xpathGenerationStatus } from "../../autoFindProvider/AutoFindProvider";
 
 import { createListeners } from "../../utils/scriptListener";
 import { connector } from "../../utils/connector";
 import { removeOverlay } from "../../utils/pageDataHandlers";
 import { clearAll } from "../../redux/predictionSlice";
 import { locatorGenerationController } from "../../utils/locatorGenerationController";
+import { xpathGenerationStatus } from "../../utils/constants";
 
 const AutoFind = () => {
   const xpathStatus = useSelector((state) => state.main.xpathStatus);

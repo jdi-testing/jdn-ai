@@ -1,10 +1,12 @@
+import { filter, replace } from "lodash";
 import { getJDILabel } from "./generationClassesMap";
 import { connector } from "./connector";
 import { pageObjectTemplate } from "./pageObjectTemplate";
-import { replace } from "lodash";
+import { openDownloadPopup } from "./pageDataHandlers";
+import { locatorTaskStatus } from "./locatorGenerationController";
 
-export const getLocator = ({fullXpath, robulaXpath, customXpath}) => {
-  return customXpath || robulaXpath || fullXpath || '';
+export const getLocator = ({ fullXpath, robulaXpath, customXpath }) => {
+  return customXpath || robulaXpath || fullXpath || "";
 };
 
 export const createLocatorNames = (elements) => {
@@ -13,7 +15,7 @@ export const createLocatorNames = (elements) => {
 
   const getElementName = (element) => {
     const jdiLabel = getJDILabel(element.predicted_label).toLowerCase();
-    return element.tagName === 'a' || jdiLabel === element.tagName.toLowerCase() ?
+    return element.tagName === "a" || jdiLabel === element.tagName.toLowerCase() ?
       jdiLabel :
       jdiLabel + element.tagName[0].toUpperCase() + element.tagName.slice(1);
   };
@@ -22,16 +24,14 @@ export const createLocatorNames = (elements) => {
     let elementName = getElementName(e);
     let elementTagId = replace(e.predictedAttrId, new RegExp(" ", "g"), "");
 
-    const startsWithNumber = new RegExp('^[0-9].+$');
+    const startsWithNumber = new RegExp("^[0-9].+$");
     elementTagId = elementTagId.match(startsWithNumber) ? `name${elementTagId}` : elementTagId;
 
     if (uniqueNames.indexOf(elementName) >= 0) elementName += i;
     if (elementTagId && uniqueNames.indexOf(elementTagId) >= 0) elementTagId += i;
     uniqueNames.push(elementTagId, elementName);
 
-    const name = e.isCustomName ?
-      e.name :
-      elementTagId || elementName;
+    const name = e.isCustomName ? e.name : elementTagId || elementName;
 
     const type = getJDILabel(e.predicted_label);
 
@@ -45,8 +45,8 @@ export const createLocatorNames = (elements) => {
 
 export const getPage = async (locators) => {
   const location = await connector.attachContentScript(() => {
-    const {hostname, pathname, origin, host} = document.location;
-    return {hostname, pathname, origin, host};
+    const { hostname, pathname, origin, host } = document.location;
+    return { hostname, pathname, origin, host };
   });
 
   const title = await connector.attachContentScript(() => {
@@ -63,4 +63,19 @@ export const generatePageObject = async (elements) => {
     type: "text/plain;charset=utf-8",
   });
   saveAs(blob, `${page.title}.java`);
+};
+
+const hasNotGeneratedLocators = (locators) =>
+  locators.some((loc) => {
+    return loc.locator.taskStatus === locatorTaskStatus.STARTED || loc.locator.taskStatus === locatorTaskStatus.PENDING;
+  });
+
+export const generateAllLocators = (locators) => generatePageObject(filter(locators, (loc) => !loc.deleted));
+
+export const generateAndDownload = (locators) => {
+  if (hasNotGeneratedLocators(locators)) {
+    openDownloadPopup();
+  } else {
+    generateAllLocators(locators);
+  }
 };

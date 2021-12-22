@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { lowerFirst, size } from "lodash";
-import { autoFindStatus, xpathGenerationStatus } from "../autoFindProvider/AutoFindProvider";
+import { autoFindStatus, xpathGenerationStatus } from "../utils/constants";
 import { getJdiClassName, getJDILabel } from "../utils/generationClassesMap";
 import { locatorsAdapter, simpleSelectLocatorById } from "./selectors";
 import { cancelStopGenerationReducer } from "./thunks/cancelStopGeneration";

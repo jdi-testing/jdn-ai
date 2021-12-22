@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { autoFindStatus } from "../../autoFindProvider/AutoFindProvider";
+import { autoFindStatus } from "../../utils/constants";
 import { getElements } from "../../utils/pageDataHandlers";
 import { generateLocators } from "./generateLocators";
 

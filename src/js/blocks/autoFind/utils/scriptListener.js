@@ -11,7 +11,6 @@ import {
   addCmElementHighlight,
   changeLocatorAttributes,
 } from "../redux/predictionSlice";
-import { useAutoFind } from "../autoFindProvider/AutoFindProvider";
 import { connector, sendMessage } from "./connector";
 import { getTypesMenuOptions } from "./generationClassesMap";
 import { onStartCollectData, openSettingsMenu } from "./pageDataHandlers";
@@ -19,9 +18,9 @@ import { selectGeneratedLocators, selectLocatorById, selectLocatorsByProbability
 import { isProgressStatus, stopGenerationHandler } from "./locatorGenerationController";
 import { stopGeneration } from "../redux/thunks/stopGeneration";
 import { rerunGeneration } from "../redux/thunks/rerunGeneration";
+import { generateAllLocators } from "./pageObject";
 
 export const createListeners = (dispatch, state) => {
-  const [{}, { generateAllLocators }] = useAutoFind();
   const actions = {
     CHANGE_XPATH_SETTINGS: ({settings, elementIds}) => {
       if (!elementIds) {

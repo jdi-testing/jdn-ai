@@ -22,7 +22,6 @@ import "antd/dist/antd.less";
 import "../css/main.less";
 import LogComponentWrapper from "./blocks/log/LogComponent";
 import AutoFind from "./blocks/autoFind/components/autoFind/AutoFind";
-import { AutoFindProvider } from "./blocks/autoFind/autoFindProvider/AutoFindProvider";
 import { Backdrop } from "./blocks/autoFind/components/Backdrop/Backdrop";
 
 import { store } from "./blocks/autoFind/redux/store";
@@ -72,7 +71,6 @@ class App extends React.Component {
     const { classes } = this.props;
     return (
       <Provider mainModel={this.mainModel}>
-        <AutoFindProvider>
           <ReduxProvider {...{ store }}>
             <div className={classes.commonContainer}>
               <Backdrop />
@@ -127,7 +125,6 @@ class App extends React.Component {
               {this.tab === "auto_find" && <AutoFind key="auto_find" />}
             </div>
           </ReduxProvider>
-        </AutoFindProvider>
       </Provider>
     );
   }

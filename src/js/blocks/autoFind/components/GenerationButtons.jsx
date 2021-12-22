@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from "react-redux";
 
 import Icon, { SearchOutlined } from "@ant-design/icons";
 import { Button, Space } from "antd";
-import { autoFindStatus } from "../autoFindProvider/AutoFindProvider";
 
 import ClearAllSvg from "../../../../icons/clear-all.svg";
 import Settings from "../../../../icons/settings.svg";
@@ -12,6 +11,7 @@ import { clearAll } from "../redux/predictionSlice";
 import { sendMessage } from "../utils/connector";
 import { identifyElements } from "../redux/thunks/identifyElements";
 import { locatorGenerationController } from "../utils/locatorGenerationController";
+import { autoFindStatus } from "../utils/constants";
 
 export const GenerationButtons = () => {
   const status = useSelector((state) => state.main.status);
