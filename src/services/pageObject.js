@@ -1,10 +1,11 @@
 import { filter, replace } from "lodash";
+import { saveAs } from "file-saver";
 
 import { connector } from "./connector";
 import { getJDILabel } from "../utils/generationClassesMap";
+import { locatorTaskStatus } from "../utils/constants";
 import { openDownloadPopup } from "./pageDataHandlers";
 import { pageObjectTemplate } from "./pageObjectTemplate";
-import { locatorTaskStatus } from "../utils/constants";
 
 export const getLocator = ({ fullXpath, robulaXpath, customXpath }) => {
   return customXpath || robulaXpath || fullXpath || "";
