@@ -220,7 +220,7 @@
   display: inline-block;
 }
 
-#jdn-popup-wrapper .jdn-tooltip--light {
+#jdn-popup-wrapper .jdn-hint-icon .jdn-tooltip--light {
   font-family: "Noto Sans", sans-serif;
   width: 250px;
   top: -14px;
@@ -237,7 +237,7 @@
   padding: 12px;
 }
 
-#jdn-popup-wrapper .jdn-tooltip--light::after {
+#jdn-popup-wrapper .jdn-hint-icon .jdn-tooltip--light::after {
   content: "";
   position: absolute;
   left: -15px;
