@@ -1,4 +1,7 @@
 export const reportPopup = () => {
+  const wrapper = document.createElement("div");
+  wrapper.setAttribute("id", "jdn-popup-wrapper");
+
   const background = document.createElement("div");
   background.classList.add("jdn-popup-bg");
 
@@ -90,7 +93,8 @@ export const reportPopup = () => {
   modal.append(main);
 
   background.append(modal);
-  document.body.append(background);
+  wrapper.append(background);
+  document.body.append(wrapper);
 
   chrome.storage.onChanged.addListener((event) => {
     if (event?.IS_DISCONNECTED?.newValue === true && modal) {

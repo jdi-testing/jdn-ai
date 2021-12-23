@@ -27,6 +27,9 @@ export const editLocatorPopup = () => {
       removePopup();
     };
 
+    const wrapper = document.createElement("div");
+    wrapper.setAttribute("id", "jdn-popup-wrapper");
+
     backgroundModal = document.createElement("div");
     backgroundModal.classList.add("jdn-popup-bg");
 
@@ -129,7 +132,8 @@ export const editLocatorPopup = () => {
     buttonContainer.appendChild(buttonOk);
 
     backgroundModal.append(modal);
-    document.body.append(backgroundModal);
+    wrapper.append(backgroundModal);
+    document.body.append(wrapper);
   };
 
   chrome.storage.onChanged.addListener((event) => {

@@ -6,6 +6,8 @@
   transition: transform 0.1s;
   transform-origin: top left;
   padding: 0;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 12px;
   z-index: 6000;
 }
 
@@ -141,6 +143,8 @@
   position: absolute;
   z-index: 5000;
   color: rgba(255, 255, 255, 1);
+  font-family: "Noto Sans", sans-serif;
+  font-size: 9px;
 }
 
 .jdn-highlight div {
@@ -165,7 +169,7 @@
   margin: 0;
 }
 
-.jdn-tooltip {
+#jdn-popup-wrapper .jdn-tooltip {
   position: absolute;
   display: inline-block;
   background-color: rgba(0, 0, 0, 0.8);
@@ -180,7 +184,7 @@
   margin-top: 15px;
 }
 
-.jdn-tooltip::after {
+#jdn-popup-wrapper .jdn-tooltip::after {
   content: "";
   position: absolute;
   right: 10px;
@@ -204,19 +208,19 @@
   font-weight: bold;
 }
 
-.jdn-hint-icon {
+#jdn-popup-wrapper .jdn-hint-icon {
   position: relative;
 }
 
-.jdn-hint-icon .jdn-tooltip--light {
+#jdn-popup-wrapper .jdn-hint-icon .jdn-tooltip--light {
   display: none;
 }
 
-.jdn-hint-icon:hover .jdn-tooltip--light {
+#jdn-popup-wrapper .jdn-hint-icon:hover .jdn-tooltip--light {
   display: inline-block;
 }
 
-.jdn-tooltip--light {
+#jdn-popup-wrapper .jdn-tooltip--light {
   font-family: "Noto Sans", sans-serif;
   width: 250px;
   top: -14px;
@@ -233,7 +237,7 @@
   padding: 12px;
 }
 
-.jdn-tooltip--light::after {
+#jdn-popup-wrapper .jdn-tooltip--light::after {
   content: "";
   position: absolute;
   left: -15px;

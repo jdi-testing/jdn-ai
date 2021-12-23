@@ -43,6 +43,8 @@
 
   &__main {
     padding: 0 16px 16px;
+    font-size: 12px;
+    line-height: 16px;
   }
 
   &__button-container {
@@ -59,6 +61,7 @@
     border-radius: @default-radius;
     background-color: @color-black;
     box-shadow: @primary-button-shadow;
+    cursor: pointer;
 
     &_primary {
       background-color: @jdn-light-blue;
@@ -82,7 +85,7 @@
     &_tertiary {
       color: @color-white;
       box-shadow: none;
-      
+
       &:hover {
         color: @light-grey;
       }
