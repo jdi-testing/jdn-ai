@@ -169,7 +169,7 @@
   margin: 0;
 }
 
-#jdn-popup-wrapper .jdn-tooltip {
+.jdn-tooltip {
   position: absolute;
   display: inline-block;
   background-color: rgba(0, 0, 0, 0.8);
@@ -184,7 +184,7 @@
   margin-top: 15px;
 }
 
-#jdn-popup-wrapper .jdn-tooltip::after {
+.jdn-tooltip::after {
   content: "";
   position: absolute;
   right: 10px;
