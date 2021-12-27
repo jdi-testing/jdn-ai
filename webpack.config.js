@@ -6,7 +6,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const mainConfig = {
   devtool: "inline-cheap-module-source-map",
   mode: "development",
-  entry: ["./src/js/main.jsx", "./manifest.json"],
+  entry: ["./src/components/App.jsx", "./manifest.json"],
   output: {
     path: path.join(__dirname, "dist"),
     filename: "[name].bundle.js",
@@ -68,18 +68,20 @@ const mainConfig = {
                 javascriptEnabled: true,
                 modifyVars: {
                   "primary-color": "#1582d8",
-                  "normal-color": "#b2b5C2",
+                  "primary-color-hover": "#0f73c1",
+                  "primary-color-active": "#0f73c1",
+                  "disabled-color": "#ffffff",
+                  "disabled-bg": "#b2b5c2",
+                  // "normal-color": "#b2b5C2",
+                  "success-color": "#1582d8", // success state color
+                  "warning-color": "#d8a115", // warning state color
+                  "error-color": "#d82c15",
                   "btn-default-color": "#1582d8",
                   "btn-default-border": "#1582d8",
-                  "menu-horizontal-line-height": "26px",
-                  "menu-bg": "#f3f3f2",
-                  "border-radius-base": "3px",
-                  "font-family": "'Source Sans Pro', sans-serif",
-                  "menu-item-font-size": "14px",
-                  "menu-item-color": "#222",
-                  "border-color-base": "#d8d8d8",
-                  "checkbox-size": "13px",
-                  "btn-group-border": "#777777",
+                  "menu-horizontal-line-height": "36px",
+                  "menu-bg": "#000000",
+                  "border-radius-base": "0px",
+                  "checkbox-size": "14px",
                 },
               },
             },
@@ -88,7 +90,7 @@ const mainConfig = {
             loader: 'style-resources-loader',
             options: {
               patterns: [
-                path.resolve(__dirname, 'src/css/variables.less')
+                path.resolve(__dirname, 'src/contentScripts/css/variables.less')
               ],
             },
           },
@@ -142,7 +144,7 @@ const indexConfig = {
 
 const highlightCssConfig = {
   entry:
-    "./src/js/blocks/autoFind/contentScripts/highlight.css",
+    "./src/contentScripts/highlight.css",
   mode: "production",
   plugins: [new MiniCssExtractPlugin({ filename: "highlight.css" })],
   module: {
@@ -165,7 +167,7 @@ const highlightCssConfig = {
 
 const contentScripts = {
   entry:
-    "./src/css/contentScripts.less",
+    "./src/contentScripts/css/contentScripts.less",
   mode: "production",
   plugins: [new MiniCssExtractPlugin({ filename: "contentScripts.css" })],
   module: {
@@ -185,7 +187,7 @@ const contentScripts = {
             loader: 'style-resources-loader',
             options: {
               patterns: [
-                path.resolve(__dirname, 'src/css/variables.less'),
+                path.resolve(__dirname, 'src/contentScripts/css/variables.less'),
               ],
             },
           },
