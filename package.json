@@ -1,7 +1,7 @@
 {
-  "name": "jdi-react-extension",
-  "version": "3.0.106",
-  "description": "jdi react extension",
+  "name": "jdn-ai-chrome-extension",
+  "version": "3.1.106",
+  "description": "jdn-ai chrome extension",
   "scripts": {
     "start": "npm run webpack",
     "webpack": "webpack",
