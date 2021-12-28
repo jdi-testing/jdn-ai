@@ -1,7 +1,7 @@
 #jdn-popup-wrapper,
 #jdn-popup-wrapper::before,
 #jdn-popup-wrapper::after,
-#jdn-popup-wrapper *,
+#jdn-popup-wrapper *:not(circle, path),
 #jdn-popup-wrapper *::before,
 #jdn-popup-wrapper *::after {
   all: revert;
@@ -28,6 +28,15 @@
   z-index: @z-index-15000;
   font-family: @font-family;
 
+  input,
+  textarea,
+  select {
+    box-sizing: border-box;
+    color: @color-black;
+    background: @color-white;
+    border: 1px solid @jdn-light-blue;
+  }
+
   &__header {
     padding: 10px 16px;
     margin-bottom: 16px;
@@ -43,6 +52,8 @@
 
   &__main {
     padding: 0 16px 16px;
+    font-size: 12px;
+    line-height: 16px;
   }
 
   &__button-container {
@@ -59,6 +70,7 @@
     border-radius: @default-radius;
     background-color: @color-black;
     box-shadow: @primary-button-shadow;
+    cursor: pointer;
 
     &_primary {
       background-color: @jdn-light-blue;
@@ -82,7 +94,7 @@
     &_tertiary {
       color: @color-white;
       box-shadow: none;
-      
+
       &:hover {
         color: @light-grey;
       }

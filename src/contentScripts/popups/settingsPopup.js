@@ -186,8 +186,7 @@ export const settingsPopup = () => {
         message: "IS_OPEN_MODAL",
         param: false,
       });
-      background.remove();
-      modal.remove();
+      wrapper.remove();
     }
   });
 };
