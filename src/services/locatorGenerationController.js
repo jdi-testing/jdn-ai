@@ -77,7 +77,7 @@ export class LocatorGenerationScheduler {
           config: getSettingsRequestConfig(this.settings),
         })
     );
-    this.taskId = result.task_id;
+    this.taskId = result.id;
     this.statusCallback(this.elementId, { taskStatus: locatorTaskStatus.PENDING });
     this.runStatusChecker();
   }
@@ -87,11 +87,11 @@ export class LocatorGenerationScheduler {
   }
 
   async getTaskResult() {
-    const result = await request.post(
+    const result = await request.get(
         GET_TASK_RESULT,
-        JSON.stringify({
+        {
           id: this.taskId,
-        })
+        }
     );
     this.statusCallback(this.elementId, { taskStatus: locatorTaskStatus.SUCCESS, robulaXpath: result.result });
   }
@@ -100,11 +100,11 @@ export class LocatorGenerationScheduler {
     if (this.requestInProgress) return;
 
     this.requestInProgress = true;
-    const result = await request.post(
+    const result = await request.get(
         GET_TASK_STATUS,
-        JSON.stringify({
+        {
           id: this.taskId,
-        })
+        }
     );
     this.taskStatus = result.status;
     this.requestInProgress = false;
@@ -129,7 +129,7 @@ export class LocatorGenerationScheduler {
     const res = await request.post(
         REVOKE_TASK,
         JSON.stringify({
-          id: this.taskId,
+          id: [this.taskId],
         })
     );
     return {res, element_id: this.elementId};
