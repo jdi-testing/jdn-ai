@@ -33,6 +33,7 @@ curl.exe --output docker-compose.yaml --url https://raw.githubusercontent.com/jd
 * In _Windows 10_ can be used both, PowerShell and regular command-line, for _macOS_ native terminal can be used.
 * <span style="color:orange">Attention! The first time, when you build the docker image, it can take significant time<span>
 * After finishing of downloading check that container is created. The number of back-end version should be displayed in JDN plugin tab near the front-end version.
+* The plugin doesn't work properly in "Dock to bottom" view. Please use another dock side view. 
 
 
 
@@ -45,8 +46,8 @@ The plugin allows generating Page Objects:
 
 
 ### Page object generation
-Attention! Before start the locatoers recognizing, you need to check that the back-end is running.
-The number of back-end version should be displayed in JDN plugin tab near the front-end version, it is the simplest way to check that back-end is installed properly and connected.
+Attention! Before start the locators recognizing, you need to check that the back-end is running.
+The current version of back-end should be displayed in JDN plugin tab near the front-end version, it is the simplest way to check that back-end is installed properly and connected.
  
 * open the plugin (Open Chrome Developer Tools with F12 -> open the last tab on JDN Devtools);
 * open the target page, which you want to generate a page object for, and click 'Identify' button;
