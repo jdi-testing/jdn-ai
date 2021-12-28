@@ -4,6 +4,9 @@ export const downloadPopup = () => {
     param: true,
   });
 
+  const wrapper = document.createElement("div");
+  wrapper.setAttribute("id", "jdn-popup-wrapper");
+
   const background = document.createElement("div");
   background.classList.add("jdn-popup-bg");
 
@@ -25,9 +28,8 @@ export const downloadPopup = () => {
   main.classList.add("jdn-popup__main");
   main.innerHTML = `
     <strong class="jdn-download-popup__warning">Attention!</strong>
-    Not all selected locators have already been <br>
-    generated. We recommend waiting until the generation is complete.
-    <br>
+    Not all selected locators have already been<br>
+    generated. We recommend waiting until the generation is<br>complete.
   `;
 
   const downloadGeneratedButton = document.createElement("button");
@@ -61,15 +63,15 @@ export const downloadPopup = () => {
   modal.append(main);
 
   background.append(modal);
-  document.body.append(background);
+  wrapper.append(background);
+  document.body.append(wrapper);
 
   function removePopup() {
     chrome.runtime.sendMessage({
       message: "IS_OPEN_DOWNLOAD_POPUP",
       param: false,
     });
-    background.remove();
-    modal.remove();
+    wrapper.remove();
   }
 
   function downloadAll() {
@@ -77,8 +79,7 @@ export const downloadPopup = () => {
       message: "DOWNLOAD_POPUP",
       param: 'all'
     });
-    background.remove();
-    modal.remove();
+    wrapper.remove();
   }
 
   function downloadGenerated() {
@@ -86,7 +87,6 @@ export const downloadPopup = () => {
       message: "DOWNLOAD_POPUP",
       param: 'generated'
     });
-    background.remove();
-    modal.remove();
+    wrapper.remove();
   }
 };
