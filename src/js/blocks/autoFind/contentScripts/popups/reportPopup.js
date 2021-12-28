@@ -103,8 +103,7 @@ export const reportPopup = () => {
   });
 
   function removePopup() {
-    background.remove();
-    modal.remove();
+    wrapper.remove();
   }
 
   function mailTo() {

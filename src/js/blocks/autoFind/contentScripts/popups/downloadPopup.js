@@ -71,8 +71,7 @@ export const downloadPopup = () => {
       message: "IS_OPEN_DOWNLOAD_POPUP",
       param: false,
     });
-    background.remove();
-    modal.remove();
+    wrapper.remove();
   }
 
   function downloadAll() {
@@ -80,8 +79,7 @@ export const downloadPopup = () => {
       message: "DOWNLOAD_POPUP",
       param: 'all'
     });
-    background.remove();
-    modal.remove();
+    wrapper.remove();
   }
 
   function downloadGenerated() {
@@ -89,7 +87,6 @@ export const downloadPopup = () => {
       message: "DOWNLOAD_POPUP",
       param: 'generated'
     });
-    background.remove();
-    modal.remove();
+    wrapper.remove();
   }
 };

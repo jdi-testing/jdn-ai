@@ -1,13 +1,14 @@
 export const editLocatorPopup = () => {
   let backgroundModal;
   let modal;
+  let wrapper;
 
   const removePopup = () => {
     chrome.runtime.sendMessage({
       message: "IS_OPEN_MODAL",
       param: false,
     });
-    backgroundModal.remove();
+    wrapper.remove();
     chrome.storage.sync.set({ OPEN_EDIT_LOCATOR: { isOpen: false } });
   };
 
@@ -27,7 +28,7 @@ export const editLocatorPopup = () => {
       removePopup();
     };
 
-    const wrapper = document.createElement("div");
+    wrapper = document.createElement("div");
     wrapper.setAttribute("id", "jdn-popup-wrapper");
 
     backgroundModal = document.createElement("div");
