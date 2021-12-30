@@ -135,3 +135,20 @@
     background-color: rgba(216, 161, 21, 1);
   }
 }
+
+.jdn-indeterminate {
+  position: relative;
+
+  &::after {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 5px;
+    height: 5px;
+    background-color: #1582d8;
+    border: 0;
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    content: " ";
+  }
+}
