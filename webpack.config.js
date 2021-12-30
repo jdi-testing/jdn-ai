@@ -142,29 +142,6 @@ const indexConfig = {
   },
 };
 
-const highlightCssConfig = {
-  entry:
-    "./src/contentScripts/highlight.css",
-  mode: "production",
-  plugins: [new MiniCssExtractPlugin({ filename: "highlight.css" })],
-  module: {
-    rules: [
-      {
-        test: /highlight.css$/i,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader,
-            options: {
-              publicPath: "./",
-            },
-          },
-          "css-loader",
-        ],
-      },
-    ],
-  },
-};
-
 const contentScripts = {
   entry:
     "./src/contentScripts/css/contentScripts.less",
@@ -197,4 +174,4 @@ const contentScripts = {
   },
 };
 
-module.exports = [mainConfig, indexConfig, highlightCssConfig, contentScripts];
+module.exports = [mainConfig, indexConfig, contentScripts];
