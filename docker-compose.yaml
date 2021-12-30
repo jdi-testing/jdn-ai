@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  api:
+    image: "ghcr.io/jdi-testing/jdi-qasp-ml:stable"
+    command: uwsgi --socket 0.0.0.0:5000 --process=1 --protocol=http -w app.main:api
+    ports:
+      - "5050:5000"
+
+  celery:
+    image: "ghcr.io/jdi-testing/jdi-qasp-ml:stable"
+    command: celery -A app.celery:celery worker -l info
+
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"

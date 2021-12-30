@@ -1,0 +1,274 @@
+.jdn-highlight {
+  position: absolute;
+  z-index: 5000;
+  color: rgba(255, 255, 255, 1);
+  font-family: "Noto Sans", sans-serif;
+  font-size: 9px;
+
+  div {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
+
+.jdn-label {
+  font-weight: 700;
+  font-size: 9px;
+  line-height: 12px;
+  padding: 0 4px;
+  white-space: nowrap;
+  cursor: default;
+}
+
+.jdn-tooltip-paragraph {
+  margin: 0 0 5px;
+
+  &:last-child {
+    margin: 0;
+  }
+}
+
+.jdn-tooltip {
+  position: absolute;
+  display: inline-block;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 4px;
+  color: #fff;
+  z-index: 5500;
+  font-size: 12px;
+  font-family: "Noto Sans", sans-serif;
+  line-height: 18px;
+  letter-spacing: 0;
+  padding: 12px;
+  margin-top: 15px;
+
+  &::after {
+    content: "";
+    position: absolute;
+    right: 10px;
+    top: -18px;
+    border: 9px solid transparent;
+    border-bottom: 10px solid rgba(0, 0, 0, 0.8);
+  }
+
+  &-right::after {
+    left: 10px;
+    right: unset;
+  }
+
+  &-top::after {
+    border-color: rgba(0, 0, 0, 0.8) transparent transparent;
+    bottom: -19px;
+    top: unset;
+  }
+
+  b {
+    font-weight: bold;
+  }
+}
+
+.jdn-primary {
+  background-color: rgba(21, 130, 216, 0.4);
+  border: 1px solid rgba(21, 130, 216, 1);
+
+  &.cm--selected {
+    border: 2px solid #10b6db;
+    background-color: rgba(16, 182, 219, 0.2);
+
+    .jdn-label {
+      background-color: #10b6db;
+    }
+  }
+
+  .jdn-label {
+    background-color: rgba(21, 130, 216, 1);
+  }
+}
+
+
+[jdn-status="PENDING"],
+[jdn-status="STARTED"] {
+  &.jdn-primary {
+    background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%231582D8FF' stroke-width='2' stroke-dasharray='5%2c 10' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+    border: none;
+
+    &.cm--selected {
+      background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%2310B6DBFF' stroke-width='4' stroke-dasharray='5%2c 10' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+      border: none;
+    }
+  }
+
+  &.jdn-secondary {
+    background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23D8A115FF' stroke-width='2' stroke-dasharray='5%2c 10' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+    border: none;
+
+    &.cm--selected {
+      background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' stroke='%23F18B14FF' stroke-width='4' stroke-dasharray='5%2c 10' stroke-dashoffset='0' stroke-linecap='square'/%3e%3c/svg%3e");
+      border: none;
+    }
+  }
+}
+
+[jdn-status="FAILURE"] {
+  border: 1px solid rgba(216, 44, 21, 1);
+  background-color: rgba(216, 44, 21, 0.2);
+
+  .jdn-label {
+    background-color: rgba(216, 44, 21, 1);
+  }
+}
+
+.jdn-secondary {
+  border: 1px solid rgba(216, 161, 21, 1);
+  background-color: rgba(216, 161, 21, 0.2);
+
+  &.cm--selected {
+    border: 2px solid #f18b14;
+    background-color: rgba(241, 139, 20, 0.2);
+
+    .jdn-label {
+      background-color: #f18b14;
+    }
+  }
+
+  .jdn-label {
+    background-color: rgba(216, 161, 21, 1);
+  }
+}
+
+/***************************
+  CHANGE ELEMENT NAME MODAL
+****************************/
+.jdn-change-element-name-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  width: 270px;
+  height: 86px;
+  padding: 9px 18px 17px;
+  background-color: #000;
+  transform: translate(-50%, -50%);
+  z-index: 11111;
+  transition: all 0.5s ease-in-out;
+
+  &--success {
+    width: 145px;
+    height: 100px;
+  }
+
+  &__close-link {
+    position: absolute;
+    top: 1px;
+    right: 15px;
+    font-size: 23px;
+    text-decoration: none;
+    color: #fff;
+    cursor: pointer;
+
+    &:hover {
+      color: #1582d8;
+    }
+  }
+
+  &__title {
+    margin: 0 0 14px;
+    font-weight: 700;
+    color: #fff;
+    transition: all 0.5s ease-in-out;
+
+    &--success {
+      margin: 0 0 5px;
+      padding: 50px 9px 0px;
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: 18px;
+        right: 59px;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        border: 1px solid #1582d8;
+        opacity: 0;
+        animation-name: cirlce;
+        animation-duration: 0.25s;
+        animation-delay: 1s;
+        animation-iteration-count: 1;
+        animation-fill-mode: forwards;
+        animation-play-state: running;
+      }
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: 27px;
+        right: 66px;
+        transform: rotate(-45deg);
+        animation-name: appearance;
+        animation-duration: 0.25s;
+        animation-delay: 0.5s;
+        animation-iteration-count: 1;
+        animation-fill-mode: forwards;
+        animation-play-state: running;
+      }
+    }
+  }
+
+  &__form {
+    &-input {
+      width: 180px;
+      padding: 3px 5px 4px;
+      margin: 0 5px 0 0;
+      color: #000;
+      border: 1px solid #1582d8;
+      border-radius: 3px;
+    }
+
+    &-button {
+      padding: 5px 10px;
+      background: #1582d8;
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+    }
+  }
+}
+
+@keyframes appearance {
+  0% {
+    width: 0;
+    height: 0;
+  }
+  100% {
+    width: 15px;
+    height: 8px;
+    border-bottom: 1px solid #1582d8;
+    border-left: 1px solid #1582d8;
+  }
+}
+
+@keyframes cirlce {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.jdn-indeterminate {
+  position: relative;
+
+  &::after {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 5px;
+    height: 5px;
+    background-color: #1582d8;
+    border: 0;
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+    content: " ";
+  }
+}
