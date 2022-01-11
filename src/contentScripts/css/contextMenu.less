@@ -1,0 +1,153 @@
+div[id^="jdn_cm_"] {
+  all: revert;
+
+  &::before,
+  &::after,
+  *:not(circle, path),
+  *::before,
+  *::after {
+    all: revert;
+  }
+
+  &.cm_container {
+    width: 204px;
+    position: fixed;
+    box-sizing: border-box;
+    opacity: 0;
+    transform: scale(0);
+    transition: transform 0.1s;
+    transform-origin: top left;
+    padding: 0;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 12px;
+    z-index: 6000;
+
+    &.display {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    * {
+      position: relative;
+      box-sizing: border-box;
+    }
+
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+      background-color: #000;
+      color: #fff;
+      box-shadow: 0 0 5px #333;
+    }
+
+    li {
+      padding: 10px 12px 10px 16px;
+      cursor: pointer;
+      white-space: nowrap;
+
+      &:hover {
+        background-color: #212228;
+        color: #1582d8;
+      }
+
+      .cm_container_warning-option {
+        color: #d82c15;
+      }
+
+      .cm_icon_span {
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 6px;
+        position: absolute;
+        display: inline-block;
+      }
+
+      .cm_text {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+
+        &_icon {
+          display: inline-block;
+          margin: 0 0 0 10px;
+          transform: scale(-1, 1);
+        }
+      }
+
+      .cm_sub_span {
+        width: 1em;
+        display: inline-block;
+        text-align: center;
+        position: absolute;
+        top: 50%;
+        right: 0.5em;
+        transform: translateY(-50%);
+      }
+
+      > ul {
+        position: absolute;
+        top: 0;
+        left: 100%;
+        opacity: 0;
+        transition: opacity 0.2s;
+        visibility: hidden;
+        max-height: 190px;
+        overflow-y: auto;
+
+        &::-webkit-scrollbar {
+          width: 4px;
+
+          &-thumb {
+            background-color: rgba(102, 104, 118, 1);
+            border-radius: 10px;
+
+            &:active {
+              background-color: rgb(157, 157, 163);
+              border-radius: 10px;
+            }
+          }
+
+          &-track {
+            background-color: #000;
+          }
+        }
+      }
+
+      &:hover > ul {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      &.cm_divider {
+        border-bottom: 1px solid rgba(56, 56, 56, 1);
+        padding: 0;
+        cursor: default;
+
+        &:hover {
+          background-color: inherit;
+        }
+      }
+
+      &.cm_border_right > ul ul {
+        left: unset;
+        right: 100%;
+      }
+
+      &.cm_border_bottom > ul ul {
+        top: unset;
+        bottom: 0;
+      }
+
+      &[disabled=""] {
+        color: #777;
+        cursor: default;
+
+        &:hover {
+          background-color: inherit;
+        }
+      }
+    }
+  }
+}
