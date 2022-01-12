@@ -6,7 +6,7 @@ import { urlListener } from "../contentScripts/urlListener";
 
 class Connector {
   constructor() {
-    this.tab = null;
+    this.tabId = null;
     this.port = null;
     this.getTab();
 
@@ -19,16 +19,13 @@ class Connector {
   }
 
   getTab() {
-    chrome.tabs.query({ active: true, currentWindow: true }, (res) => {
-      if (res && res[0]) this.tab = res[0];
-      else this.handleError("Connector: active page id is not available.");
-    });
+    this.tabId = chrome.devtools.inspectedWindow.tabId;
   }
 
   sendMessage(action, payload, onResponse) {
     const callback = () => {
       chrome.tabs.sendMessage(
-          this.tab.id,
+          this.tabId,
           {
             message: action,
             param: payload,
@@ -37,7 +34,7 @@ class Connector {
       );
     };
 
-    if (!this.tab) {
+    if (!this.tabId) {
       setTimeout(callback, 0);
     } else callback();
   }
@@ -53,7 +50,7 @@ class Connector {
       if (
         changeinfo &&
         changeinfo.status === "complete" &&
-        this.tab.id === tabId
+        this.tabId === tabId
       ) {
         this.getTab();
         if (this.port) {
@@ -71,7 +68,7 @@ class Connector {
 
   createPort() {
     if (!this.port) {
-      this.port = chrome.tabs.connect(this.tab.id, {
+      this.port = chrome.tabs.connect(this.tabId, {
         name: `JDN_connect_${Date.now()}`,
       });
     }
@@ -84,7 +81,7 @@ class Connector {
         if (result) return resolve(true);
         chrome.scripting.executeScript(
             {
-              target: { tabId: this.tab.id },
+              target: { tabId: this.tabId },
               function: script
             },
             (invoked) => {
@@ -97,7 +94,7 @@ class Connector {
 
   attachCSS(file) {
     chrome.scripting.insertCSS({
-      target: { tabId: this.tab.id },
+      target: { tabId: this.tabId },
       files: [file],
     });
   }

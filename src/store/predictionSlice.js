@@ -34,6 +34,9 @@ const predictionSlice = createSlice({
   name: "main",
   initialState: locatorsAdapter.getInitialState(initialState),
   reducers: {
+    addLocators(state, {payload}) {
+      locatorsAdapter.addMany(state, payload);
+    },
     changeLocatorAttributes(state, { payload }) {
       const { type, name, locator, element_id } = payload;
       const _locator = simpleSelectLocatorById(state, element_id);
@@ -111,12 +114,8 @@ const predictionSlice = createSlice({
     },
     updateLocator(state, { payload }) {
       const { element_id, locator } = payload;
-      const isLocaotrExists = simpleSelectLocatorById(state, element_id);
-      if (isLocaotrExists) {
-        locatorsAdapter.upsertOne(state, { element_id, locator: locator });
-      } else {
-        locatorsAdapter.addOne(state, payload);
-      }
+      const existingLocator = simpleSelectLocatorById(state, element_id);
+      locatorsAdapter.upsertOne(state, { element_id, locator: {...existingLocator.locator, ...locator} });
     },
     xPathGenerationStarted(state) {
       state.xpathStatus = xpathGenerationStatus.started;
@@ -140,6 +139,7 @@ const predictionSlice = createSlice({
 
 export default predictionSlice.reducer;
 export const {
+  addLocators,
   cancelLastNotification,
   changeLocatorAttributes,
   changeLocatorSettings,

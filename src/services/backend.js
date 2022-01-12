@@ -6,6 +6,7 @@ export const SHEDULE_XPATH_GENERATION = 'schedule_xpath_generation';
 export const GET_TASK_STATUS = 'get_task_status';
 export const REVOKE_TASK = 'revoke_task';
 export const GET_TASK_RESULT = 'get_task_result';
+export const CPU_COUNT = 'cpu-count';
 
 export const BASE_URL = 'http:localhost:5050';
 
@@ -32,7 +33,6 @@ class Request {
   }
 
   async get(url, payload) {
-    // const urlParams = `${url}?${(new URLSearchParams(payload)).toString()}`;
     const r = await fetch(`${this.baseURL}/${this.concatGetUrl(url, payload)}`, {
       method: "GET",
       headers,
