@@ -7,6 +7,7 @@ import { connector } from "../services/connector";
 import { ControlBar } from "./ControlBar";
 import { createListeners } from "../services/scriptListener";
 import { GenerationButtons } from "./GenerationButtons";
+import { SeveralTabsWarning } from "./SeveralTabsWarning";
 import { locatorGenerationController } from "../services/locatorGenerationController";
 import { LocatorsList } from "./locatorsList/LocatorsList";
 import { PerceptionTreshold } from "./PerceptionTreshold/PerceptionTreshold";
@@ -14,6 +15,7 @@ import { removeOverlay } from "../services/pageDataHandlers";
 import { xpathGenerationStatus } from "../utils/constants";
 
 const AutoFind = () => {
+  const isInvalidSession = localStorage.getItem('secondSession');
   const xpathStatus = useSelector((state) => state.main.xpathStatus);
 
   const dispatch = useDispatch();
@@ -40,7 +42,7 @@ const AutoFind = () => {
           <ControlBar />
         </Header>
         <Content className="jdn__content">
-          <GenerationButtons />
+          {isInvalidSession ? (<SeveralTabsWarning />) : (<GenerationButtons />)}
           {xpathStatus === xpathGenerationStatus.started ? (
             <React.Fragment>
               <LocatorsList />

@@ -75,7 +75,7 @@
     &-close {
       top: 4px;
       color: #ffffff;
-  
+
       &:hover {
         color: rgb(255, 255, 255, 0.7);
       }
@@ -233,6 +233,48 @@
     padding-top: 16px;
     font-size: 13px;
     line-height: 17.71px;
+  }
+
+  /*
+    Several tabs warning
+  */
+
+  &__severalTabsWarning {
+    display: flex;
+    margin-top: 28px;
+
+    &-icon {
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      background: rgba(198, 68, 51);
+      border-radius: 4px 0 0 4px;
+
+      svg {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    &-text {
+      flex-grow: 1;
+      padding: 10px 16px;
+      background: rgba(198, 68, 51, 0.2);
+      border-radius: 0 4px 4px 0;
+
+      h1 {
+        font-size: 13px;
+        line-height: 18px;
+        font-weight: 700;
+        color: #D82C15;
+      }
+
+      p {
+        margin: 0;
+        font-size: 12px;
+        line-height: 18px;
+      }
+    }
   }
 
   /*
