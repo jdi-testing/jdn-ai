@@ -25,6 +25,23 @@ class App extends React.Component {
 }
 
 const div = document.getElementById("chromeExtensionReactApp");
+const currentSession = Date.now();
+
+if (!localStorage.getItem('firstSession')) {
+  localStorage.setItem('firstSession', currentSession);
+}
+if (localStorage.getItem('firstSession') && localStorage.getItem('firstSession') != currentSession) {
+  localStorage.setItem('secondSession', currentSession);
+}
+
+window.onbeforeunload = () => {
+  if (localStorage.getItem('secondSession')) {
+    localStorage.removeItem('secondSession');
+  } else {
+    localStorage.removeItem('firstSession');
+    localStorage.removeItem('secondSession');
+  }
+};
 
 if (div instanceof Element) {
   ReactDOM.render(<App />, div);
