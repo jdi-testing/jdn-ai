@@ -93,7 +93,7 @@ class LocatorGenerationController {
     this.socket = new WebSocket("ws://localhost:5050/ws");
     this.readyState = this.socket.readyState;
 
-    this.socket.addEventListener("open", (event) => {
+    this.socket.addEventListener("open", () => {
       this.readyState = this.socket.readyState;
     });
 
