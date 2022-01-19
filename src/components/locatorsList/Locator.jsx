@@ -39,7 +39,7 @@ export const Locator = ({ element, xpathConfig, noScrolling }) => {
 
   useEffect(() => {
     if (generate && !noScrolling) {
-      ref.current.scrollIntoView({ behavior: "smooth", block: "nearest" });
+      ref.current.scrollIntoView({ behavior: "smooth", block: "center" });
     }
   }, [generate]);
 
