@@ -5,23 +5,21 @@ import { stopGenerationHandler } from "../../services/locatorGenerationControlle
 import { locatorTaskStatus } from "../../utils/constants";
 
 export const stopGeneration = createAsyncThunk("main/stopGeneration", async (element_id) => {
-  return stopGenerationHandler(element_id);
+  return stopGenerationHandler([element_id]);
 });
 
 export const stopGenerationReducer = (builder) => {
   return builder.addCase(stopGeneration.pending, (state, { meta }) => {
     state.showBackdrop = true;
     const element_id = meta.arg;
-    locatorsAdapter.upsertOne(state, { element_id, stopped: true });
+    const existingLocator = simpleSelectLocatorById(state, element_id);
+    locatorsAdapter.upsertOne(state, {
+      element_id,
+      locator: { ...existingLocator.locator, taskStatus: locatorTaskStatus.REVOKED },
+    });
   })
       .addCase(stopGeneration.fulfilled, (state, { meta }) => {
         state.showBackdrop = false;
-        const element = simpleSelectLocatorById(state, meta.arg);
-        const { element_id, locator } = element;
-        locatorsAdapter.upsertOne(state, {
-          element_id,
-          locator: { ...locator, taskStatus: locatorTaskStatus.REVOKED },
-        });
       })
       .addCase(stopGeneration.rejected, (state, { error }) => {
         state.showBackdrop = false;

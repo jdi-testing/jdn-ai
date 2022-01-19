@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 
 import { runGenerationHandler } from "../../services/locatorGenerationController";
 import { updateLocator } from "../predictionSlice";
-import { selectFirstPendingLocator } from "../selectors";
+import { selectPendingLocators } from "../selectors";
 
 export const runXpathGeneration = createAsyncThunk("main/scheduleGeneration", async (generationData, thunkAPI) => {
   const state = thunkAPI.getState();
@@ -10,7 +10,7 @@ export const runXpathGeneration = createAsyncThunk("main/scheduleGeneration", as
   await runGenerationHandler(generationData, xpathConfig, (el) => {
     thunkAPI.dispatch(updateLocator(el));
   },
-  () => selectFirstPendingLocator(thunkAPI.getState()),
+  () => selectPendingLocators(thunkAPI.getState()),
   );
   return generationData;
 });

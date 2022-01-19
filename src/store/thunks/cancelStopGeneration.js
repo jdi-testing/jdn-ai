@@ -10,7 +10,11 @@ export const cancelStopGenerationReducer = (builder) => {
   return builder.addCase(cancelStopGeneration.pending, (state, { meta }) => {
     const { arg } = meta;
     arg.forEach(({ element_id }) => {
-      locatorsAdapter.upsertOne(state, { element_id, stopped: false });
+      const existingLocator = simpleSelectLocatorById(state, element_id);
+      locatorsAdapter.upsertOne(state, {
+        element_id,
+        locator: { ...existingLocator.locator, taskStatus: locatorTaskStatus.PENDING },
+      });
     });
   });
 };

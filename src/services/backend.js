@@ -5,6 +5,7 @@ export const GENERATE_XPATH = 'generate_xpath';
 export const SHEDULE_XPATH_GENERATION = 'schedule_xpath_generation';
 export const GET_TASK_STATUS = 'get_task_status';
 export const REVOKE_TASK = 'revoke_task';
+export const REVOKE_TASKS= 'revoke_tasks';
 export const GET_TASK_RESULT = 'get_task_result';
 export const CPU_COUNT = 'cpu-count';
 

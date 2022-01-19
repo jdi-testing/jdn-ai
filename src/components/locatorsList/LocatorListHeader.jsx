@@ -15,20 +15,12 @@ import RestoreSvg from "../../assets/restore.svg";
 import SettingsSVG from "../../assets/settings.svg";
 import TrashBinSVG from "../../assets/trash-bin.svg";
 
-import {
-  pushNotification,
-  toggleDeletedGroup,
-  toggleElementGroupGeneration,
-} from "../../store/predictionSlice";
+import { pushNotification, toggleDeletedGroup, toggleElementGroupGeneration } from "../../store/predictionSlice";
 import { stopGenerationGroup } from "../../store/thunks/stopGenerationGroup";
 import { rerunGeneration } from "../../store/thunks/rerunGeneration";
 import { locatorTaskStatus } from "../../utils/constants";
 
-export const LocatorListHeader = ({
-  generatedSelected,
-  waitingSelected,
-  deletedSelected,
-}) => {
+export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedSelected }) => {
   const dispatch = useDispatch();
   const xpathConfig = useSelector((state) => state.main.xpathConfig);
 
@@ -114,12 +106,7 @@ export const LocatorListHeader = ({
         <Button id="locatorListSettings" hidden={!size(activeSelected)} onClick={handleOnClickSettings}>
           <Icon component={SettingsSVG} />
         </Button>
-        <Button
-          hidden={!size(generatedSelected)}
-          type="primary"
-          className="jdn__buttons"
-          onClick={handleDownload}
-        >
+        <Button hidden={!size(generatedSelected)} type="primary" className="jdn__buttons" onClick={handleDownload}>
           <Icon component={DownloadSvg} fill="#c15f0f" />
           Download
         </Button>

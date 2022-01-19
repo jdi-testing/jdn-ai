@@ -1,12 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { lowerFirst, size } from "lodash";
-import { autoFindStatus, xpathGenerationStatus } from "../utils/constants";
+import { autoFindStatus, locatorTaskStatus, xpathGenerationStatus } from "../utils/constants";
 import { getJdiClassName, getJDILabel } from "../utils/generationClassesMap";
 import { locatorsAdapter, simpleSelectLocatorById } from "./selectors";
 import { cancelStopGenerationReducer } from "./thunks/cancelStopGeneration";
 import { generateLocatorsReducer } from "./thunks/generateLocators";
 import { identifyElementsReducer } from "./thunks/identifyElements";
-import { rerunGenerationReducer } from "./thunks/rerunGeneration";
 import { stopGenerationReducer } from "./thunks/stopGeneration";
 import { stopGenerationGroupReducer } from "./thunks/stopGenerationGroup";
 
@@ -34,7 +33,7 @@ const predictionSlice = createSlice({
   name: "main",
   initialState: locatorsAdapter.getInitialState(initialState),
   reducers: {
-    addLocators(state, {payload}) {
+    addLocators(state, { payload }) {
       locatorsAdapter.addMany(state, payload);
     },
     changeLocatorAttributes(state, { payload }) {
@@ -55,7 +54,9 @@ const predictionSlice = createSlice({
       if (fullXpath !== locator && robulaXpath !== locator) {
         newValue.locator.customXpath = locator;
         newValue.isCustomLocator = true;
-        if (newValue.stopped) newValue.stopped = false;
+        if ((newValue.locator.taskStatus = locatorTaskStatus.REVOKED)) {
+          newValue.locator.taskStatus = locatorTaskStatus.SUCCESS;
+        }
       }
       locatorsAdapter.upsertOne(state, newValue);
     },
@@ -115,7 +116,7 @@ const predictionSlice = createSlice({
     updateLocator(state, { payload }) {
       const { element_id, locator } = payload;
       const existingLocator = simpleSelectLocatorById(state, element_id);
-      locatorsAdapter.upsertOne(state, { element_id, locator: {...existingLocator.locator, ...locator} });
+      locatorsAdapter.upsertOne(state, { element_id, locator: { ...existingLocator.locator, ...locator } });
     },
     xPathGenerationStarted(state) {
       state.xpathStatus = xpathGenerationStatus.started;
@@ -132,8 +133,7 @@ const predictionSlice = createSlice({
     generateLocatorsReducer(builder),
     stopGenerationReducer(builder),
     stopGenerationGroupReducer(builder),
-    cancelStopGenerationReducer(builder),
-    rerunGenerationReducer(builder);
+    cancelStopGenerationReducer(builder);
   },
 });
 

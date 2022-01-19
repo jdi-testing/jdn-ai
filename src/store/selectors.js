@@ -25,3 +25,8 @@ export const selectGeneratedLocators = createSelector(selectLocatorsByProbabilit
 export const selectFirstPendingLocator = createSelector(selectLocatorsByProbability, (items) =>
   items.find((el) => el.locator.taskStatus === locatorTaskStatus.PENDING && !el.deleted)
 );
+
+export const selectPendingLocators = createSelector(
+    selectLocatorsByProbability,
+    (items) => items.filter((el) => el.locator.taskStatus === locatorTaskStatus.PENDING && !el.deleted)
+);
