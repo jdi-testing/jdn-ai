@@ -67,15 +67,15 @@ export const runContextMenu = () => {
     };
 
     this.reload = function() {
-      if (document.getElementById("cm_" + num) == null) {
+      if (document.getElementById("jdn_cm_" + num) == null) {
         const cnt = document.createElement("div");
         cnt.className = "cm_container";
-        cnt.id = "cm_" + num;
+        cnt.id = "jdn_cm_" + num;
 
         document.body.appendChild(cnt);
       }
 
-      const container = document.getElementById("cm_" + num);
+      const container = document.getElementById("jdn_cm_" + num);
       container.innerHTML = "";
 
       container.appendChild(renderLevel(menu));
@@ -171,7 +171,7 @@ export const runContextMenu = () => {
         self.contextTarget = e.target;
       }
 
-      const menu = document.getElementById("cm_" + num);
+      const menu = document.getElementById("jdn_cm_" + num);
 
       const clickCoords = { x: e.clientX, y: e.clientY };
       const clickCoordsX = clickCoords.x;
@@ -225,13 +225,13 @@ export const runContextMenu = () => {
     };
 
     this.hide = function() {
-      document.getElementById("cm_" + num).classList.remove("display");
+      document.getElementById("jdn_cm_" + num).classList.remove("display");
       removeHighlight();
       window.removeEventListener("click", documentClick);
     };
 
     this.remove = function() {
-      document.getElementById("cm_" + num).remove();
+      document.getElementById("jdn_cm_" + num).remove();
       removeHighlight();
       window.removeEventListener("click", documentClick);
       window.removeEventListener("resize", onResize);
@@ -328,7 +328,7 @@ export const runContextMenu = () => {
         "type": ContextMenu.DIVIDER
       },
       {
-        text: `<span>Edit</span> 
+        text: `<span>Edit</span>
       <span><svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M1.57843 12.1013L2.10457 8.41825L5.26143 11.5751L1.57843 12.1013Z" fill="white"/>
       <path fill-rule="evenodd" clip-rule="evenodd" d="M12.9726 3.86385C13.3631 3.47332 13.3631 2.84016 12.9726 2.44963L11.2299 0.706985C10.8394 0.316461 10.2062 0.31646 9.81572 0.706985L9.47052 1.05219L12.6273 4.20902L11.5751 5.2613L8.41823 2.10447L3.15682 7.36589L6.31368 10.5227L12.9726 3.86385Z" fill="white"/>
@@ -339,10 +339,10 @@ export const runContextMenu = () => {
         },
       },
       {
-        text: `<span>Settings</span> 
+        text: `<span>Settings</span>
       <span><svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M5.09452 0C4.80712 0 4.56144 0.203156 4.50624 0.485156L4.30585 1.51406C3.81339 1.70028 3.35804 1.96044 2.95819 2.28867L1.97147 1.94883C1.69967 1.85523 1.40063 1.96762 1.25663 2.21602L0.351944 3.78398C0.208544 4.03298 0.260734 4.3491 0.477334 4.5375L1.26835 5.22539C1.22721 5.4782 1.20038 5.73557 1.20038 6C1.20038 6.26443 1.22721 6.5218 1.26835 6.77461L0.477334 7.4625C0.260734 7.6509 0.208544 7.96702 0.351944 8.21602L1.25663 9.78399C1.40003 10.033 1.69967 10.1453 1.97147 10.0523L2.95819 9.7125C3.35791 10.0405 3.81362 10.2998 4.30585 10.4859L4.50624 11.5148C4.56144 11.7968 4.80712 12 5.09452 12H6.90624C7.19364 12 7.43932 11.7968 7.49452 11.5148L7.69491 10.4859C8.18737 10.2997 8.64272 10.0396 9.04257 9.71133L10.0293 10.0512C10.3011 10.1448 10.6001 10.033 10.7441 9.78399L11.6488 8.21484C11.7922 7.96584 11.74 7.6509 11.5234 7.4625L10.7324 6.77461C10.7735 6.5218 10.8004 6.26443 10.8004 6C10.8004 5.73557 10.7735 5.4782 10.7324 5.22539L11.5234 4.5375C11.74 4.3491 11.7922 4.03298 11.6488 3.78398L10.7441 2.21602C10.6007 1.96702 10.3011 1.85466 10.0293 1.94766L9.04257 2.2875C8.64285 1.95948 8.18714 1.7002 7.69491 1.51406L7.49452 0.485156C7.43932 0.203156 7.19364 0 6.90624 0H5.09452ZM6.00038 3.6C7.32578 3.6 8.40038 4.6746 8.40038 6C8.40038 7.3254 7.32578 8.4 6.00038 8.4C4.67498 8.4 3.60038 7.3254 3.60038 6C3.60038 4.6746 4.67498 3.6 6.00038 3.6Z" fill="white"/>
-      </svg>      
+      </svg>
       </span>`,
         events: {
           click: () => chrome.runtime.sendMessage({
@@ -398,12 +398,12 @@ export const runContextMenu = () => {
   const renderGenerationOption = (element_id, locator) => {
     if (locator.taskStatus === "PENDING" || locator.taskStatus === "STARTED") {
       return {
-        text: `<span>Stop generation</span> 
+        text: `<span>Stop generation</span>
         <span>
         <svg width="7" height="11" viewBox="0 0 7 11" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect width="2" height="11" rx="1" fill="white"/>
           <rect x="5" width="2" height="11" rx="1" fill="white"/>
-        </svg>      
+        </svg>
         </span>`,
         events: {
           click: () =>
@@ -416,11 +416,11 @@ export const runContextMenu = () => {
     };
     if (locator.taskStatus === "REVOKED") {
       return {
-        text: `<span>Rerun</span> 
+        text: `<span>Rerun</span>
         <span>
           <svg width="8" height="11" viewBox="0 0 8 11" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M1 10V1L7 5.5L1 10Z" fill="white" stroke="white" stroke-width="1.75" stroke-linejoin="round"/>
-          </svg>      
+          </svg>
         </span>`,
         events: {
           click: () =>

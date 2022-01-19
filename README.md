@@ -2,9 +2,10 @@
 Current version of JDN plugin is client-server application with two independent parts and both parts should be installed separately.
 
 ### **Setup plugin to Chrome**
-* Download the last version of the plugin: https://github.com/jdi-testing/jdn-ai/releases (you need an archive named like the JDN version) as archive (.zip file)
+* Download the version 3.1.106 of the plugin: https://github.com/jdi-testing/jdn-ai/releases/download/3.1.106/3.1.106.zip
+  * For developers only: Download the last version of the plugin: https://github.com/jdi-testing/jdn-ai/releases (you need an archive named like the JDN version) as archive (.zip file)
 * Unpack the content to any convenient place (the result folder name is 'dist')
-* Open Chrome Settings -> choose option 'More tools' -> choose option Extensions -> Click 'Load unpacked'
+* Open Chrome Settings -> choose option 'More tools' -> choose option Extensions ->Turn on the Developer mode -> Click 'Load unpacked'
 * Select unpacked folder with the plugin on subfolders level (in the way that the contend as 'CSS' and 'Images', don’t do it just for 'dist' folder)
 * Open Chrome developer tools via F12 hotkey -> JDN tab should be added as the last tab at the Devtools
 
@@ -33,6 +34,7 @@ curl.exe --output docker-compose.yaml --url https://raw.githubusercontent.com/jd
 * In _Windows 10_ can be used both, PowerShell and regular command-line, for _macOS_ native terminal can be used.
 * <span style="color:orange">Attention! The first time, when you build the docker image, it can take significant time<span>
 * After finishing of downloading check that container is created. The number of back-end version should be displayed in JDN plugin tab near the front-end version.
+* The plugin doesn't work properly in "Dock to bottom" view. Please use another dock side view. 
 
 
 
@@ -45,8 +47,8 @@ The plugin allows generating Page Objects:
 
 
 ### Page object generation
-Attention! Before start the locatoers recognizing, you need to check that the back-end is running.
-The number of back-end version should be displayed in JDN plugin tab near the front-end version, it is the simplest way to check that back-end is installed properly and connected.
+Attention! Before start the locators recognizing, you need to check that the back-end is running.
+The current version of back-end should be displayed in JDN plugin tab near the front-end version, it is the simplest way to check that back-end is installed properly and connected.
  
 * open the plugin (Open Chrome Developer Tools with F12 -> open the last tab on JDN Devtools);
 * open the target page, which you want to generate a page object for, and click 'Identify' button;

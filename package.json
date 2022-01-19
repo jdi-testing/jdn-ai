@@ -1,7 +1,7 @@
 {
-  "name": "jdi-ai-chrome-extension",
-  "version": "3.0.107",
-  "description": "jdi-ai chrome extension",
+  "name": "jdn-ai-chrome-extension",
+  "version": "3.1.110",
+  "description": "jdn-ai chrome extension",
   "scripts": {
     "start": "webpack --watch",
     "build": "webpack",
