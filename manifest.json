@@ -3,7 +3,7 @@
   "name": "JDN",
   "description": "",
   "devtools_page": "index.html",
-  "version": "3.1.110",
+  "version": "3.1.111",
   "permissions": [
     "tabs",
     "scripting",
@@ -24,8 +24,7 @@
         "https://*/*"
       ],
       "css": [
-        "contentScripts.css",
-        "highlight.css"
+        "contentScripts.css"
       ]
     }
   ]
