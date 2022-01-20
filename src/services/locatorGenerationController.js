@@ -48,8 +48,8 @@ class LocatorGenerationController {
     this.queueSettings = null;
   }
 
-  getIdByTask(taskId) {
-    const t = [...this.scheduledTasks].find(([key, value]) => taskId === value);
+  getElementId(taskId) {
+    const t = [...this.scheduledTasks].find(([elementId, scheduledTaskId]) => taskId === scheduledTaskId);
     return t && t[0];
   }
 
@@ -104,17 +104,17 @@ class LocatorGenerationController {
           this.scheduledTasks.set(Object.keys(payload)[0], Object.values(payload)[0]);
           break;
         case "status_changed":
-          this.onStatusChange(this.getIdByTask(payload.id), { taskStatus: payload.status });
+          this.onStatusChange(this.getElementId(payload.id), { taskStatus: payload.status });
           break;
         case "result_ready":
-          this.onStatusChange(this.getIdByTask(payload.id), { robulaXpath: payload.result });
-          this.scheduledTasks.delete(this.getIdByTask(payload.id));
+          this.onStatusChange(this.getElementId(payload.id), { robulaXpath: payload.result });
+          this.scheduledTasks.delete(this.getElementId(payload.id));
           const nextLocator = this.getNextPendingLocator();
           if (nextLocator) this.scheduleTask(nextLocator);
           break;
         case "tasks_revoked":
           payload.id.forEach((task) => {
-            this.scheduledTasks.delete(this.getIdByTask(task));
+            this.scheduledTasks.delete(this.getElementId(task));
           });
           if (this.getPendingLocators) this.scheduleTaskQueue();
         default:
