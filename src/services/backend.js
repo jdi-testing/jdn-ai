@@ -5,13 +5,23 @@ export const GENERATE_XPATH = 'generate_xpath';
 export const SHEDULE_XPATH_GENERATION = 'schedule_xpath_generation';
 export const GET_TASK_STATUS = 'get_task_status';
 export const REVOKE_TASK = 'revoke_task';
+export const REVOKE_TASKS= 'revoke_tasks';
 export const GET_TASK_RESULT = 'get_task_result';
+export const CPU_COUNT = 'cpu-count';
 
 export const BASE_URL = 'http:localhost:5050';
+
+const headers = {
+  'Content-Type': 'application/json',
+};
 
 class Request {
   constructor() {
     this.baseURL = BASE_URL;
+  }
+
+  concatGetUrl(url, payload) {
+    return `${url}?${(new URLSearchParams(payload)).toString()}`;
   }
 
   async responseHandler(response) {
@@ -24,9 +34,9 @@ class Request {
   }
 
   async get(url, payload) {
-    const urlParams = `${url}?${(new URLSearchParams(payload)).toString()}`;
-    const r = await fetch(`${this.baseURL}/${urlParams}`, {
+    const r = await fetch(`${this.baseURL}/${this.concatGetUrl(url, payload)}`, {
       method: "GET",
+      headers,
     });
     return await this.responseHandler(r);
   }
@@ -35,6 +45,7 @@ class Request {
     const r = await fetch(`${this.baseURL}/${url}`, {
       method: "POST",
       body: payload,
+      headers,
     });
     return await this.responseHandler(r);
   }

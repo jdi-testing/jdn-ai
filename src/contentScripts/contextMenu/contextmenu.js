@@ -312,7 +312,7 @@ export const runContextMenu = () => {
       element,
       types
   ) => {
-    const { element_id, stopped, locator } = element;
+    const { element_id, locator } = element;
     const menuItems = [
       {
         text: `Select locator`,
@@ -390,12 +390,12 @@ export const runContextMenu = () => {
       }
     ];
 
-    const generationOption = renderGenerationOption(element_id, locator, stopped);
+    const generationOption = renderGenerationOption(element_id, locator);
     if (generationOption) menuItems.splice(5, 0, generationOption);
     return menuItems;
   };
 
-  const renderGenerationOption = (element_id, locator, stopped) => {
+  const renderGenerationOption = (element_id, locator) => {
     if (locator.taskStatus === "PENDING" || locator.taskStatus === "STARTED") {
       return {
         text: `<span>Stop generation</span>
@@ -414,7 +414,7 @@ export const runContextMenu = () => {
         },
       };
     };
-    if (stopped) {
+    if (locator.taskStatus === "REVOKED") {
       return {
         text: `<span>Rerun</span>
         <span>

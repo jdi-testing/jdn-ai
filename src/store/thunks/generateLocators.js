@@ -4,7 +4,7 @@ import { requestGenerationData } from "../../services/pageDataHandlers";
 import { runXpathGeneration } from "./runXpathGeneration";
 import { selectLocators } from "../selectors";
 import { sendMessage } from "../../services/connector";
-import { xPathGenerationStarted } from "../predictionSlice";
+import { addLocators, xPathGenerationStarted } from "../predictionSlice";
 
 const filterByProbability = (elements, perception) => {
   return elements.filter((e) => e.predicted_probability >= perception);
@@ -22,6 +22,7 @@ export const generateLocators = createAsyncThunk("main/generateLocators", async 
     if (noLocator.length) {
       const { generationData } = await requestGenerationData(noLocator);
       sendMessage.setHighlight({ elements: generationData, perception });
+      thunkAPI.dispatch(addLocators(generationData));
       thunkAPI.dispatch(xPathGenerationStarted());
       thunkAPI.dispatch(runXpathGeneration(generationData));
     }

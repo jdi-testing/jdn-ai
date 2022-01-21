@@ -20,6 +20,7 @@ import { isProgressStatus, stopGenerationHandler } from "./locatorGenerationCont
 import { stopGeneration } from "../store/thunks/stopGeneration";
 import { rerunGeneration } from "../store/thunks/rerunGeneration";
 import { generateAllLocators } from "./pageObject";
+import { locatorTaskStatus } from "../utils/constants";
 
 export const createListeners = (dispatch, state) => {
   const actions = {
@@ -33,7 +34,7 @@ export const createListeners = (dispatch, state) => {
           const newSettings = mapValues(settings, (value, key) => {
             return value === "indeterminate" ? elementSettings[key] || state.main.xpathConfig[key] : value;
           });
-          if (!locator.stopped) {
+          if (!locator.locator.taskStatus === locatorTaskStatus.REVOKED) {
             if (isProgressStatus(locator.locator.taskStatus)) {
               stopGenerationHandler(locator.element_id);
             }
