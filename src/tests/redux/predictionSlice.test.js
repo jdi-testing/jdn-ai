@@ -9,7 +9,6 @@ describe("changeLocatorAttributes reducer", () => {
   });
 
   test("edit type, name changed automatically", () => {
-    debugger;
     store.dispatch(
         changeLocatorAttributes({
           element_id: "8736312404689610766421832473",
