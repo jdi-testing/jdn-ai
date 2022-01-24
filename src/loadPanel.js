@@ -5,3 +5,14 @@ window.onload = () => {
     console.log(panel);
   });
 };
+
+window.onbeforeunload = clearTabSession;
+
+function clearTabSession() {
+  if (localStorage.getItem('secondSession')) {
+    localStorage.removeItem('secondSession');
+  } else {
+    localStorage.removeItem('firstSession');
+    localStorage.removeItem('secondSession');
+  }
+}
