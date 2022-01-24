@@ -1,11 +1,11 @@
-import { changeLocatorAttributes, updateLocator } from "../../store/predictionSlice";
+import { addLocators, changeLocatorAttributes } from "../../store/predictionSlice";
 import { selectLocatorById } from "../../store/selectors";
 import { store } from "../../store/store";
 import { locator1 } from "./locator.mock";
 
 describe("changeLocatorAttributes reducer", () => {
   beforeAll(() => {
-    store.dispatch(updateLocator(locator1));
+    store.dispatch(addLocators([locator1]));
   });
 
   test("edit type, name changed automatically", () => {
