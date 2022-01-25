@@ -1,12 +1,11 @@
 import React from "react";
-import Icon from "@ant-design/icons";
 import Unreachable from "../assets/unreachable.svg";
 
 export const SeveralTabsWarning = () => {
   return (
     <div className="jdn__severalTabsWarning">
       <div className="jdn__severalTabsWarning-icon">
-        <Icon component={Unreachable} />
+        <Unreachable width="20px" height="20px"/>
       </div>
       <div className="jdn__severalTabsWarning-text">
         <h1>You can use the plugin only within 1 tab!</h1>
