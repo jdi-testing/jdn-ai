@@ -3,7 +3,8 @@
 
   &__label {
     justify-content: space-between;
-    margin-bottom: 13px;
+    margin-bottom: 24px;
+    position: relative;
 
     &-text {
       vertical-align: initial;
@@ -17,6 +18,38 @@
     width: 298px;
     min-height: 30px;
     padding: 0 16px;
+
+    & ~ i {
+      display: none;
+      position: absolute;
+      right: 8px;
+      top: 5px;
+    }
+
+    & ~ .jdn-input-message {
+      position: absolute;
+      bottom: -24px;
+      left: 70px;
+      color: @jdn-light-blue;
+    }
+
+    &.jdn-input-error {
+      border: 1px solid @warning-color;
+      & ~ .jdn-input-message {
+        color: @warning-color;
+      }
+    }
+
+    &.jdn-input-warning {
+      border: 1px solid @warning-yellow-color;
+      & ~ .jdn-input-message {
+        color: @warning-yellow-color;
+      }
+    }
+
+    &:invalid ~ i {
+      display: block;
+    }
   }
 
   &__select {

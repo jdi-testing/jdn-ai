@@ -15,7 +15,8 @@ export const editLocatorPopup = () => {
   const showDialog = (locatorElement, types) => {
     const { type, name, locator, element_id } = locatorElement;
 
-    const onFormSubmit = ({ target: { type, name, locator } }) => {
+    const onFormSubmit = ({ target }) => {
+      const { type, name, locator } = target;
       chrome.runtime.sendMessage({
         message: "UPDATE_LOCATOR",
         param: {
@@ -23,9 +24,34 @@ export const editLocatorPopup = () => {
           type: type.value,
           name: name.value,
           locator: locator.value,
+          validity: {
+            type: "__",
+            message: "...",
+          }
         },
       });
       removePopup();
+    };
+
+    const addValidation = (input, invalidInputClass, messageContainer, getErrorMessage) => {
+      const checkInput = (targetInput) => {
+        if (targetInput.validity.valueMissing) {
+          targetInput.setCustomValidity("Please fill out his field");
+        } else if (getErrorMessage) {
+          const message = getErrorMessage(targetInput);
+          console.log(message);
+          targetInput.setCustomValidity(message);
+        } else targetInput.setCustomValidity("");
+        messageContainer.innerHTML = targetInput.validationMessage;
+        if (!targetInput.validity.valid) targetInput.classList.add(invalidInputClass);
+        else targetInput.classList.remove(invalidInputClass);
+      };
+      input.addEventListener("blur", (event) => {
+        checkInput(event.target);
+      });
+      input.addEventListener("input", (event) => {
+        checkInput(event.target);
+      });
     };
 
     wrapper = document.createElement("div");
@@ -55,6 +81,7 @@ export const editLocatorPopup = () => {
     modal.appendChild(main);
 
     const form = document.createElement("form");
+    form.setAttribute("novalidate", true);
     form.onsubmit = (event) => {
       event.preventDefault();
       onFormSubmit(event);
@@ -79,7 +106,7 @@ export const editLocatorPopup = () => {
       option.setAttribute("value", type);
       option.innerHTML = type;
       selectType.appendChild(option);
-    };
+    }
 
     types.forEach(({ label, jdi }) => {
       const option = document.createElement("option");
@@ -97,13 +124,22 @@ export const editLocatorPopup = () => {
 
     const inputName = document.createElement("input");
     inputName.setAttribute("name", "name");
+    inputName.setAttribute("required", true);
     inputName.value = name;
-    labelName.appendChild(inputName);
+    const errorIcon = document.createElement("i");
+    errorIcon.innerHTML = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M7 13C10.3137 13 13 10.3137 13 7C13 3.68629 10.3137 1 7 1C3.68629 1 1 3.68629 1 7C1 10.3137 3.68629 13 7 13ZM7 14C10.866 14 14 10.866 14 7C14 3.13401 10.866 0 7 0C3.13401 0 0 3.13401 0 7C0 10.866 3.13401 14 7 14Z" fill="#D82C15"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M4.58136 4.58136C4.68984 4.47288 4.86572 4.47288 4.97419 4.58136L9.41864 9.0258C9.52712 9.13428 9.52712 9.31016 9.41864 9.41864C9.31016 9.52712 9.13428 9.52712 9.02581 9.41864L4.58136 4.9742C4.47288 4.86572 4.47288 4.68984 4.58136 4.58136Z" fill="#D82C15" stroke="#D82C15" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M9.41864 4.58136C9.31016 4.47288 9.13428 4.47288 9.02581 4.58136L4.58136 9.0258C4.47288 9.13428 4.47288 9.31016 4.58136 9.41864C4.68984 9.52712 4.86572 9.52712 4.97419 9.41864L9.41864 4.9742C9.52712 4.86572 9.52712 4.68984 9.41864 4.58136Z" fill="#D82C15" stroke="#D82C15" stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>`;
+    const nameError = document.createElement("div");
+    nameError.classList.add("jdn-input-message");
+    labelName.append(inputName, errorIcon, nameError);
+    addValidation(inputName, "jdn-input-error", nameError);
 
     const labelLocator = document.createElement("label");
     labelLocator.classList.add("jdn-edit-popup__label");
     labelLocator.classList.add("jdn-popup__label");
-    // labelLocator.innerHTML = "<span className='jdn-edit-popup__label-text'>Locator:</span>";
     labelLocator.innerHTML = "Locator:";
     form.appendChild(labelLocator);
 
@@ -111,8 +147,41 @@ export const editLocatorPopup = () => {
     inputLocator.setAttribute("name", "locator");
     inputLocator.setAttribute("rows", "5");
     inputLocator.setAttribute("cols", "30");
+    inputLocator.setAttribute("required", true);
     inputLocator.value = locator.customXpath || locator.robulaXpath || locator.fullXpath;
-    labelLocator.appendChild(inputLocator);
+    const warningIcon = document.createElement("i");
+    warningIcon.innerHTML = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M7.33111 1.27639C7.14685 0.907869 6.62095 0.907869 6.43669 1.27639L1.05472 12.0403C0.888497 12.3728 1.13024 12.7639 1.50194 12.7639H12.2659C12.6376 12.7639 12.8793 12.3728 12.7131 12.0403L7.33111 1.27639ZM5.54226 0.82918C6.09505 -0.276392 7.67276 -0.276394 8.22554 0.829179L13.6075 11.5931C14.1062 12.5905 13.3809 13.7639 12.2659 13.7639H1.50194C0.386863 13.7639 -0.338381 12.5905 0.160295 11.5931L5.54226 0.82918Z" fill="#F69A0E"/>
+    <path fill-rule="evenodd" clip-rule="evenodd" d="M6.97754 4.07617C7.39175 4.07617 7.72754 4.41196 7.72754 4.82617V8.57617C7.72754 8.99039 7.39175 9.32617 6.97754 9.32617C6.56333 9.32617 6.22754 8.99039 6.22754 8.57617V4.82617C6.22754 4.41196 6.56333 4.07617 6.97754 4.07617Z" fill="#F69A0E"/>
+    <path d="M7.72754 10.9512C7.72754 11.3654 7.39175 11.7012 6.97754 11.7012C6.56333 11.7012 6.22754 11.3654 6.22754 10.9512C6.22754 10.537 6.56333 10.2012 6.97754 10.2012C7.39175 10.2012 7.72754 10.537 7.72754 10.9512Z" fill="#F69A0E"/>
+    </svg>`;
+    const locatorError = document.createElement("div");
+    locatorError.classList.add("jdn-input-message");
+    labelLocator.append(inputLocator, warningIcon, locatorError);
+
+    const getLocatorErrorMessage = ({ value }) => {
+      let nodesSnapshot;
+      try {
+        nodesSnapshot = document.evaluate(value, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+      } catch (error) {
+        return "The locator was not found on the page";
+      }
+      if (nodesSnapshot.snapshotLength === 0) {
+        return "The locator was not found on the page";
+      } else if (nodesSnapshot.snapshotLength > 1) {
+        return `${nodesSnapshot.snapshotLength} elements were found with this locator`;
+      } else if (nodesSnapshot.snapshotLength === 1) {
+        const foundElement = nodesSnapshot.snapshotItem(0);
+        if (foundElement.getAttribute("jdn-hash") !== element_id) {
+          return "The locator leads to the new element. If you click Save, the other element will be highlighted on the page.";
+        } else {
+          locatorError.innerHTML = "Validation...";
+          // checkLocatorAlreadyExists(); return message from callback
+          return "";
+        }
+      } else return "";
+    };
+    addValidation(inputLocator, "jdn-input-warning", locatorError, getLocatorErrorMessage);
 
     const buttonContainer = document.createElement("div");
     buttonContainer.classList.add("jdn-popup__button-container");
@@ -131,6 +200,13 @@ export const editLocatorPopup = () => {
     buttonOk.setAttribute("type", "submit");
     buttonOk.innerText = "Save";
     buttonContainer.appendChild(buttonOk);
+
+    inputName.addEventListener("invalid", () => {
+      buttonOk.classList.replace("jdn-popup__button_primary", "jdn-popup__button_disabled");
+    });
+    inputName.addEventListener("valid", () => {
+      buttonOk.classList.remove("jdn-popup__button_disabled", "jdn-popup__button_primary");
+    });
 
     backgroundModal.append(modal);
     wrapper.append(backgroundModal);

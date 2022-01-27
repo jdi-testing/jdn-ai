@@ -37,6 +37,7 @@
       color: @color-black;
       background: @color-white;
       border: 1px solid @jdn-light-blue;
+      outline: none;
     }
 
     &__header {
@@ -102,12 +103,17 @@
         }
       }
 
+      &_disabled {
+        background-color: @medium-grey;
+        color: @color-white;
+      }
+
       &_close {
         .unborder();
 
         position: absolute;
         top: 1px;
-        right: 15px;
+        right: 8px;
         font-size: @font-size-l;
         text-decoration: none;
         color: @color-white;
