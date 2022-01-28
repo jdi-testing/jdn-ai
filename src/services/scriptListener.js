@@ -15,16 +15,21 @@ import {
 import { connector, sendMessage } from "./connector";
 import { getTypesMenuOptions } from "../utils/generationClassesMap";
 import { onStartCollectData, openSettingsMenu } from "./pageDataHandlers";
-import { selectGeneratedLocators, selectLocatorById, selectLocatorsByProbability } from "../store/selectors";
+import {
+  selectGeneratedLocators,
+  selectLocatorById,
+  selectLocatorsByProbability,
+  selectLocators,
+} from "../store/selectors";
 import { isProgressStatus, stopGenerationHandler } from "./locatorGenerationController";
 import { stopGeneration } from "../store/thunks/stopGeneration";
 import { rerunGeneration } from "../store/thunks/rerunGeneration";
-import { generateAllLocators } from "./pageObject";
+import { generateAllLocators, isNameUnique, isStringMatchesReservedWord, VALIDATION_ERROR_TYPE } from "./pageObject";
 import { locatorTaskStatus } from "../utils/constants";
 
 export const createListeners = (dispatch, state) => {
   const actions = {
-    CHANGE_XPATH_SETTINGS: ({settings, elementIds}) => {
+    CHANGE_XPATH_SETTINGS: ({ settings, elementIds }) => {
       if (!elementIds) {
         dispatch(changeXpathSettings(settings));
       } else {
@@ -38,11 +43,11 @@ export const createListeners = (dispatch, state) => {
             if (isProgressStatus(locator.locator.taskStatus)) {
               stopGenerationHandler(locator.element_id);
             }
-            const _locator = {...locator, locator: {...locator.locator, settings: {} }};
+            const _locator = { ...locator, locator: { ...locator.locator, settings: {} } };
             _locator.locator.settings = newSettings;
             dispatch(rerunGeneration([_locator]));
           }
-          return {element_id: id, locator: {...locator.locator, settings: newSettings}};
+          return { element_id: id, locator: { ...locator.locator, settings: newSettings } };
         });
         dispatch(changeLocatorSettings(newPayload));
       }
@@ -74,20 +79,34 @@ export const createListeners = (dispatch, state) => {
       dispatch(toggleElementGeneration(payload));
     },
     DOWNLOAD_POPUP: (payload) => {
-      if (payload === 'all') {
+      if (payload === "all") {
         generateAllLocators(selectLocatorsByProbability(state));
-      } else if (payload === 'generated') {
+      } else if (payload === "generated") {
         generateAllLocators(selectGeneratedLocators(state));
       }
     },
     UPDATE_LOCATOR: (payload) => dispatch(changeLocatorAttributes(payload)),
+    CHECK_NAME_VALIDITY: ({ element_id, newName }, sender, sendResponse) => {
+      if (!isNameUnique(selectLocators(state), element_id, newName)) {
+        sendResponse(VALIDATION_ERROR_TYPE.DUPLICATED_NAME);
+      }
+      if (isStringMatchesReservedWord(newName)) sendResponse(VALIDATION_ERROR_TYPE.INVALID_NAME);
+    },
+    CHECK_LOCATOR_VALIDITY: ({ newElementId }, sender, sendResponse) => {
+      const validationMessage = selectLocatorById(state, newElementId) ?
+        VALIDATION_ERROR_TYPE.DUPLICATED_LOCATOR :
+        "";
+      sendResponse(validationMessage);
+    },
   };
 
-  const messageHandler = ({ message, param }, _actions) => {
+  const messageHandler = ({ message, param }, sender, sendResponse, _actions) => {
     if (_actions[message]) {
-      _actions[message](param);
+      _actions[message](param, sender, sendResponse);
     }
   };
 
-  connector.updateMessageListener((payload) => messageHandler(payload, actions));
+  connector.updateMessageListener((payload, sender, sendResponse) =>
+    messageHandler(payload, sender, sendResponse, actions)
+  );
 };

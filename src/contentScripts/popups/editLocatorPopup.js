@@ -3,6 +3,27 @@ export const editLocatorPopup = () => {
   let modal;
   let wrapper;
 
+  const ERROR_TYPE = {
+    DUPLICATED_NAME: "DUPLICATED_NAME",
+    DUPLICATED_LOCATOR: "DUPLICATED_LOCATOR",
+    EMPTY_VALUE: "EMPTY_VALUE",
+    INVALID_NAME: "INVALID_NAME",
+    MULTIPLE_ELEMENTS: "MULTIPLE_ELEMENTS",
+    NEW_ELEMENT: "NEW_ELEMENT",
+    NOT_FOUND: "NOT_FOUND",
+  };
+
+  const ERROR_MESSAGE = {
+    [ERROR_TYPE.DUPLICATED_NAME]: "This name already exists in the page object.",
+    [ERROR_TYPE.DUPLICATED_LOCATOR]: "The locator for this element already exists.",
+    [ERROR_TYPE.EMPTY_VALUE]: "Please fill out this field.",
+    [ERROR_TYPE.INVALID_NAME]: "This name is not valid.",
+    [ERROR_TYPE.MULTIPLE_ELEMENTS]: "elements were found with this locator",
+    [ERROR_TYPE.NEW_ELEMENT]: `The locator leads to the new element. If you click Save,
+    the other element will be highlighted on the page.`,
+    [ERROR_TYPE.NOT_FOUND]: "The locator was not found on the page.",
+  };
+
   const removePopup = () => {
     chrome.runtime.sendMessage({
       message: "IS_OPEN_MODAL",
@@ -14,6 +35,7 @@ export const editLocatorPopup = () => {
 
   const showDialog = (locatorElement, types) => {
     const { type, name, locator, element_id } = locatorElement;
+    currentElement = element_id;
 
     const onFormSubmit = ({ target }) => {
       const { type, name, locator } = target;
@@ -25,28 +47,92 @@ export const editLocatorPopup = () => {
           name: name.value,
           locator: locator.value,
           validity: {
-            type: "__",
-            message: "...",
-          }
+            locatorValidity: inputLocator.validationMessage
+          },
         },
       });
       removePopup();
     };
 
+    const getNameValidationMessage = ({ value }) => {
+      return new Promise((resolve) => {
+        chrome.runtime.sendMessage(
+            {
+              message: "CHECK_NAME_VALIDITY",
+              param: {
+                element_id,
+                newName: value,
+              },
+            },
+            (response) => resolve(response)
+        );
+      });
+    };
+
+    const getLocatorErrorMessage = ({ value }) => {
+      let nodesSnapshot;
+      try {
+        nodesSnapshot = document.evaluate(value, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+      } catch (error) {
+        return ERROR_TYPE.NOT_FOUND;
+      }
+      if (nodesSnapshot.snapshotLength === 0) {
+        return ERROR_TYPE.NOT_FOUND;
+      } else if (nodesSnapshot.snapshotLength > 1) {
+        return `${nodesSnapshot.snapshotLength} ${ERROR_TYPE.MULTIPLE_ELEMENTS}`;
+      } else if (nodesSnapshot.snapshotLength === 1) {
+        const foundElement = nodesSnapshot.snapshotItem(0);
+        if (foundElement.getAttribute("jdn-hash") !== element_id) {
+          return new Promise((resolve) => {
+            chrome.runtime.sendMessage(
+                {
+                  message: "CHECK_LOCATOR_VALIDITY",
+                  param: { newElementId: element_id },
+                },
+                (response) => {
+                  if (response.length) resolve(response);
+                  else {
+                    resolve(ERROR_TYPE.NEW_ELEMENT);
+                  }
+                }
+            );
+          });
+        }
+      } else return "";
+    };
+
     const addValidation = (input, invalidInputClass, messageContainer, getErrorMessage) => {
-      const checkInput = (targetInput) => {
+      const checkInput = async (targetInput) => {
         if (targetInput.validity.valueMissing) {
-          targetInput.setCustomValidity("Please fill out his field");
+          targetInput.setCustomValidity(ERROR_TYPE.EMPTY_VALUE);
         } else if (getErrorMessage) {
-          const message = getErrorMessage(targetInput);
-          console.log(message);
-          targetInput.setCustomValidity(message);
+          const message = await getErrorMessage(targetInput);
+          targetInput.setCustomValidity(message || "");
         } else targetInput.setCustomValidity("");
-        messageContainer.innerHTML = targetInput.validationMessage;
-        if (!targetInput.validity.valid) targetInput.classList.add(invalidInputClass);
-        else targetInput.classList.remove(invalidInputClass);
+
+        messageContainer.innerHTML = ERROR_MESSAGE[targetInput.validationMessage] || "";
+        input.checkValidity();
+
+        // format input
+        if (!targetInput.validity.valid) {
+          targetInput.classList.add(invalidInputClass);
+        } else {
+          targetInput.classList.remove(invalidInputClass);
+        }
+
+        // format Save button
+        if (inputName.validity.valid) {
+          buttonOk.classList.replace("jdn-popup__button_disabled", "jdn-popup__button_primary");
+          buttonOk.removeAttribute("disabled");
+        } else {
+          buttonOk.classList.replace("jdn-popup__button_primary", "jdn-popup__button_disabled");
+          buttonOk.setAttribute("disabled", true);
+        }
       };
+
+      // here the validity check is runned
       input.addEventListener("blur", (event) => {
+        console.log("blur");
         checkInput(event.target);
       });
       input.addEventListener("input", (event) => {
@@ -135,7 +221,7 @@ export const editLocatorPopup = () => {
     const nameError = document.createElement("div");
     nameError.classList.add("jdn-input-message");
     labelName.append(inputName, errorIcon, nameError);
-    addValidation(inputName, "jdn-input-error", nameError);
+    addValidation(inputName, "jdn-input-error", nameError, getNameValidationMessage);
 
     const labelLocator = document.createElement("label");
     labelLocator.classList.add("jdn-edit-popup__label");
@@ -159,28 +245,6 @@ export const editLocatorPopup = () => {
     locatorError.classList.add("jdn-input-message");
     labelLocator.append(inputLocator, warningIcon, locatorError);
 
-    const getLocatorErrorMessage = ({ value }) => {
-      let nodesSnapshot;
-      try {
-        nodesSnapshot = document.evaluate(value, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-      } catch (error) {
-        return "The locator was not found on the page";
-      }
-      if (nodesSnapshot.snapshotLength === 0) {
-        return "The locator was not found on the page";
-      } else if (nodesSnapshot.snapshotLength > 1) {
-        return `${nodesSnapshot.snapshotLength} elements were found with this locator`;
-      } else if (nodesSnapshot.snapshotLength === 1) {
-        const foundElement = nodesSnapshot.snapshotItem(0);
-        if (foundElement.getAttribute("jdn-hash") !== element_id) {
-          return "The locator leads to the new element. If you click Save, the other element will be highlighted on the page.";
-        } else {
-          locatorError.innerHTML = "Validation...";
-          // checkLocatorAlreadyExists(); return message from callback
-          return "";
-        }
-      } else return "";
-    };
     addValidation(inputLocator, "jdn-input-warning", locatorError, getLocatorErrorMessage);
 
     const buttonContainer = document.createElement("div");
@@ -201,13 +265,6 @@ export const editLocatorPopup = () => {
     buttonOk.innerText = "Save";
     buttonContainer.appendChild(buttonOk);
 
-    inputName.addEventListener("invalid", () => {
-      buttonOk.classList.replace("jdn-popup__button_primary", "jdn-popup__button_disabled");
-    });
-    inputName.addEventListener("valid", () => {
-      buttonOk.classList.remove("jdn-popup__button_disabled", "jdn-popup__button_primary");
-    });
-
     backgroundModal.append(modal);
     wrapper.append(backgroundModal);
     document.body.append(wrapper);
@@ -222,9 +279,6 @@ export const editLocatorPopup = () => {
       });
       showDialog(newValue.value, newValue.types);
     }
-  });
-
-  chrome.storage.onChanged.addListener((event) => {
     if (event?.IS_DISCONNECTED?.newValue === true) {
       removePopup();
     }

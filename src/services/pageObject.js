@@ -6,10 +6,22 @@ import { getJDILabel } from "../utils/generationClassesMap";
 import { locatorTaskStatus } from "../utils/constants";
 import { openDownloadPopup } from "./pageDataHandlers";
 import { pageObjectTemplate } from "./pageObjectTemplate";
+import javaReservedWords from "./javaReservedWords.json";
+
+export const VALIDATION_ERROR_TYPE = {
+  DUPLICATED_NAME: "DUPLICATED_NAME",
+  DUPLICATED_LOCATOR: "DUPLICATED_LOCATOR",
+  INVALID_NAME: "INVALID_NAME",
+};
+
+export const isStringMatchesReservedWord = (string) => javaReservedWords.includes(string);
 
 export const getLocator = ({ fullXpath, robulaXpath, customXpath }) => {
   return customXpath || robulaXpath || fullXpath || "";
 };
+
+export const isNameUnique = (elements, element_id, newName) =>
+  !elements.find((elem) => elem.name === newName && elem.element_id !== element_id);
 
 export const createLocatorNames = (elements) => {
   const f = elements.filter((el) => el && !el.deleted);
