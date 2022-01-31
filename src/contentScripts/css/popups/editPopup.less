@@ -6,6 +6,10 @@
     margin-bottom: 24px;
     position: relative;
 
+    &:last-child {
+      margin-bottom: 40px;
+    }
+
     &-text {
       vertical-align: initial;
     }
@@ -28,9 +32,11 @@
 
     & ~ .jdn-input-message {
       position: absolute;
-      bottom: -24px;
+      bottom: -34px;
       left: 70px;
+      height: 30px;
       color: @jdn-light-blue;
+      line-height: 15px;      
     }
 
     &.jdn-input-error {

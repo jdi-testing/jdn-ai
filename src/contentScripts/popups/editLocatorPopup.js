@@ -5,12 +5,12 @@ export const editLocatorPopup = () => {
 
   const ERROR_TYPE = {
     DUPLICATED_NAME: "DUPLICATED_NAME",
-    DUPLICATED_LOCATOR: "DUPLICATED_LOCATOR",
+    DUPLICATED_LOCATOR: "DUPLICATED_LOCATOR", // warn
     EMPTY_VALUE: "EMPTY_VALUE",
     INVALID_NAME: "INVALID_NAME",
-    MULTIPLE_ELEMENTS: "MULTIPLE_ELEMENTS",
-    NEW_ELEMENT: "NEW_ELEMENT",
-    NOT_FOUND: "NOT_FOUND",
+    MULTIPLE_ELEMENTS: "MULTIPLE_ELEMENTS", // warn
+    NEW_ELEMENT: "NEW_ELEMENT", // success
+    NOT_FOUND: "NOT_FOUND", // warn
   };
 
   const ERROR_MESSAGE = {
@@ -47,7 +47,7 @@ export const editLocatorPopup = () => {
           name: name.value,
           locator: locator.value,
           validity: {
-            locatorValidity: inputLocator.validationMessage
+            locator: inputLocator.validationMessage
           },
         },
       });
@@ -82,12 +82,13 @@ export const editLocatorPopup = () => {
         return `${nodesSnapshot.snapshotLength} ${ERROR_TYPE.MULTIPLE_ELEMENTS}`;
       } else if (nodesSnapshot.snapshotLength === 1) {
         const foundElement = nodesSnapshot.snapshotItem(0);
-        if (foundElement.getAttribute("jdn-hash") !== element_id) {
+        const foundId = foundElement.getAttribute("jdn-hash");
+        if (foundId !== element_id) {
           return new Promise((resolve) => {
             chrome.runtime.sendMessage(
                 {
                   message: "CHECK_LOCATOR_VALIDITY",
-                  param: { newElementId: element_id },
+                  param: { newElementId: foundId },
                 },
                 (response) => {
                   if (response.length) resolve(response);

@@ -10,8 +10,12 @@ import javaReservedWords from "./javaReservedWords.json";
 
 export const VALIDATION_ERROR_TYPE = {
   DUPLICATED_NAME: "DUPLICATED_NAME",
-  DUPLICATED_LOCATOR: "DUPLICATED_LOCATOR",
+  DUPLICATED_LOCATOR: "DUPLICATED_LOCATOR", // warn
   INVALID_NAME: "INVALID_NAME",
+  EMPTY_VALUE: "EMPTY_VALUE",
+  MULTIPLE_ELEMENTS: "MULTIPLE_ELEMENTS", // warn
+  NEW_ELEMENT: "NEW_ELEMENT", // success
+  NOT_FOUND: "NOT_FOUND", // warn
 };
 
 export const isStringMatchesReservedWord = (string) => javaReservedWords.includes(string);

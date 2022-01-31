@@ -37,10 +37,10 @@ const predictionSlice = createSlice({
       locatorsAdapter.addMany(state, payload);
     },
     changeLocatorAttributes(state, { payload }) {
-      const { type, name, locator, element_id } = payload;
+      const { type, name, locator, element_id, validity } = payload;
       const _locator = simpleSelectLocatorById(state, element_id);
       const { fullXpath, robulaXpath } = _locator.locator;
-      const newValue = { ..._locator, locator: { ..._locator.locator } };
+      const newValue = { ..._locator, locator: { ..._locator.locator }, validity };
       if (_locator.name !== name) {
         newValue.name = name;
         newValue.isCustomName = true;
