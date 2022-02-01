@@ -4,8 +4,8 @@ import { autoFindStatus } from "../../utils/constants";
 import { generateLocators } from "./generateLocators";
 import { getElements } from "../../services/pageDataHandlers";
 
-export const identifyElements = createAsyncThunk("main/identifyElements", async (data, thunkAPI) => {
-  const res = await getElements();
+export const identifyElements = createAsyncThunk("main/identifyElements", async (endpoint, thunkAPI) => {
+  const res = await getElements(endpoint);
   const rounded = res.map((el) => ({
     ...el,
     predicted_probability: Math.round(el.predicted_probability * 100) / 100,
