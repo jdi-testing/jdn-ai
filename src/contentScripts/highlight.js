@@ -310,10 +310,6 @@ export const highlightOnPage = () => {
       changeGenerationStatus(param);
     }
 
-    if (message === "ADD_HIGHLIGHT_ELEMENT") {
-      addHighlightElement(param);
-    }
-
     if (message === "PING_SCRIPT" && (param.scriptName === "highlightOnPage")) {
       sendResponse({ message: true });
     }
