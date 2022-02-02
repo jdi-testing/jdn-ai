@@ -236,6 +236,43 @@
   }
 
   /*
+    Several tabs warning
+  */
+
+  &__severalTabsWarning {
+    display: flex;
+    margin-top: 28px;
+
+    &-icon {
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      background: rgba(198, 68, 51);
+      border-radius: 4px 0 0 4px;
+    }
+
+    &-text {
+      flex-grow: 1;
+      padding: 10px 16px;
+      background: rgba(198, 68, 51, 0.2);
+      border-radius: 0 4px 4px 0;
+
+      h1 {
+        font-size: 13px;
+        line-height: 18px;
+        font-weight: 700;
+        color: @error-color;
+      }
+
+      p {
+        margin: 0;
+        font-size: 12px;
+        line-height: 18px;
+      }
+    }
+  }
+
+  /*
     Generation Buttons
      */
 
