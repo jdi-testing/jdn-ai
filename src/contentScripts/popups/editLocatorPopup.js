@@ -74,6 +74,9 @@ export const editLocatorPopup = () => {
     };
 
     const getNameValidationMessage = ({ value }) => {
+      const isValidJavaVariable = /^[a-zA-Z_$]([a-zA-Z0-9_])*$/.test(value);
+      if (!isValidJavaVariable) return ERROR_TYPE.INVALID_NAME;
+
       return new Promise((resolve) => {
         chrome.runtime.sendMessage(
             {
@@ -88,7 +91,7 @@ export const editLocatorPopup = () => {
       });
     };
 
-    const getLocatorErrorMessage = ({ value }) => {
+    const getLocatorValidationMessage = ({ value }) => {
       let nodesSnapshot;
       try {
         nodesSnapshot = document.evaluate(value, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
@@ -154,7 +157,6 @@ export const editLocatorPopup = () => {
 
       // here the validity check is runned
       input.addEventListener("blur", (event) => {
-        console.log("blur");
         checkInput(event.target);
       });
       input.addEventListener("input", (event) => {
@@ -267,7 +269,7 @@ export const editLocatorPopup = () => {
     locatorError.classList.add("jdn-input-message");
     labelLocator.append(inputLocator, warningIcon, locatorError);
 
-    addValidation(inputLocator, "jdn-input-warning", locatorError, getLocatorErrorMessage);
+    addValidation(inputLocator, "jdn-input-warning", locatorError, getLocatorValidationMessage);
 
     const buttonContainer = document.createElement("div");
     buttonContainer.classList.add("jdn-popup__button-container");
