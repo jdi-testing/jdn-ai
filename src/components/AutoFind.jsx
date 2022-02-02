@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import Layout, { Content, Header } from "antd/lib/layout/layout";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import { clearAll } from "../store/predictionSlice";
 import { connector } from "../services/connector";
@@ -15,7 +15,7 @@ import { removeOverlay } from "../services/pageDataHandlers";
 import { xpathGenerationStatus } from "../utils/constants";
 
 const AutoFind = () => {
-  const isInvalidSession = localStorage.getItem('secondSession');
+  const [isInvalidSession, setIsInvalidSession] = useState(localStorage.getItem('secondSession'));
   const xpathStatus = useSelector((state) => state.main.xpathStatus);
 
   const dispatch = useDispatch();
@@ -26,6 +26,9 @@ const AutoFind = () => {
 
   // add document listeners
   useEffect(() => {
+    window.addEventListener('storage', () => {
+      localStorage.getItem('secondSession') ? setIsInvalidSession(true) : setIsInvalidSession(false);
+    });
     connector.attachStaticScripts();
     connector.onTabUpdate(() => {
       dispatch(clearAll());
@@ -43,7 +46,7 @@ const AutoFind = () => {
         </Header>
         <Content className="jdn__content">
           {isInvalidSession ? (<SeveralTabsWarning />) : (<GenerationButtons />)}
-          {xpathStatus === xpathGenerationStatus.started ? (
+          {!isInvalidSession && xpathStatus === xpathGenerationStatus.started ? (
             <React.Fragment>
               <LocatorsList />
               <PerceptionTreshold />
