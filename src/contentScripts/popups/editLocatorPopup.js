@@ -24,6 +24,18 @@ export const editLocatorPopup = () => {
     [ERROR_TYPE.NOT_FOUND]: "The locator was not found on the page.",
   };
 
+  const getNewElementLocation = (element_id) => {
+    const div = document.querySelector(`[jdn-hash='${element_id}']`);
+    const { x, y, width, height } = div.getBoundingClientRect();
+    return {
+      element_id,
+      x,
+      y,
+      width,
+      height,
+    };
+  };
+
   const removePopup = () => {
     chrome.runtime.sendMessage({
       message: "IS_OPEN_MODAL",
@@ -37,8 +49,14 @@ export const editLocatorPopup = () => {
     const { type, name, locator, element_id } = locatorElement;
     currentElement = element_id;
 
+    let newElementId;
+
     const onFormSubmit = ({ target }) => {
       const { type, name, locator } = target;
+
+      const newElement =
+        inputLocator.validationMessage === ERROR_TYPE.NEW_ELEMENT ? getNewElementLocation(newElementId) : null;
+
       chrome.runtime.sendMessage({
         message: "UPDATE_LOCATOR",
         param: {
@@ -47,8 +65,9 @@ export const editLocatorPopup = () => {
           name: name.value,
           locator: locator.value,
           validity: {
-            locator: inputLocator.validationMessage
+            locator: inputLocator.validationMessage,
           },
+          newElement,
         },
       });
       removePopup();
@@ -84,6 +103,7 @@ export const editLocatorPopup = () => {
         const foundElement = nodesSnapshot.snapshotItem(0);
         const foundId = foundElement.getAttribute("jdn-hash");
         if (foundId !== element_id) {
+          newElement = { element_id: foundId };
           return new Promise((resolve) => {
             chrome.runtime.sendMessage(
                 {
@@ -93,6 +113,7 @@ export const editLocatorPopup = () => {
                 (response) => {
                   if (response.length) resolve(response);
                   else {
+                    newElementId = foundId;
                     resolve(ERROR_TYPE.NEW_ELEMENT);
                   }
                 }

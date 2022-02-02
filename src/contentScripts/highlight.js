@@ -66,6 +66,22 @@ export const highlightOnPage = () => {
     }
   };
 
+  const removeElement = (element) => {
+    const div = document.getElementById(element.element_id);
+    const i = highlightElements.findIndex((e) => e.getAttribute('jdn-hash') === element.element_id);
+    highlightElements.splice(i, 1);
+
+    const j = predictedElements.findIndex((e) => e.element_id === element.element_id);
+    predictedElements.splice(j, 1);
+
+    div.remove();
+  };
+
+  const addHighlightElement = (element) => {
+    predictedElements.push(element);
+    findAndHighlight();
+  };
+
   const changeElementName = (element) => {
     const div = updateElement(element);
     div.querySelector(".jdn-class").textContent = createLabelText(element);
@@ -268,12 +284,18 @@ export const highlightOnPage = () => {
       toggleElement(param);
     }
 
-    if (message === "HIGHLIGHT_TOGGLED_GROUP") {
-
-    }
-
     if (message === "TOGGLE_DLETED") {
       toggleDeletedElement(param);
+    }
+
+    if (message === "REPLACE_ELEMENT") {
+      const {oldElement, newElement} = param;
+      removeElement(oldElement);
+      addHighlightElement(newElement);
+    }
+
+    if (message === "REMOVE_ELEMENT") {
+      removeElement(param);
     }
 
     if (message === "CHANGE_ELEMENT_TYPE") {
@@ -286,6 +308,10 @@ export const highlightOnPage = () => {
 
     if (message === "CHANGE_STATUS") {
       changeGenerationStatus(param);
+    }
+
+    if (message === "ADD_HIGHLIGHT_ELEMENT") {
+      addHighlightElement(param);
     }
 
     if (message === "PING_SCRIPT" && (param.scriptName === "highlightOnPage")) {

@@ -4,10 +4,10 @@ import Icon from "@ant-design/icons";
 import React, { useEffect, useRef } from "react";
 import Text from "antd/lib/typography/Text";
 
-import { getLocator, VALIDATION_ERROR_TYPE } from "../../services/pageObject";
+import { getLocator } from "../../services/pageObject";
 import { getTypesMenuOptions } from "../../utils/generationClassesMap";
 import { isGeneratedStatus, isProgressStatus } from "../../services/locatorGenerationController";
-import { locatorTaskStatus } from "../../utils/constants";
+import { locatorTaskStatus, VALIDATION_ERROR_TYPE } from "../../utils/constants";
 import { openSettingsMenu } from "../../services/pageDataHandlers";
 import { rerunGeneration } from "../../store/thunks/rerunGeneration";
 import { stopGeneration } from "../../store/thunks/stopGeneration";

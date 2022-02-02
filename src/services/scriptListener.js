@@ -24,8 +24,8 @@ import {
 import { isProgressStatus, stopGenerationHandler } from "./locatorGenerationController";
 import { stopGeneration } from "../store/thunks/stopGeneration";
 import { rerunGeneration } from "../store/thunks/rerunGeneration";
-import { generateAllLocators, isNameUnique, isStringMatchesReservedWord, VALIDATION_ERROR_TYPE } from "./pageObject";
-import { locatorTaskStatus } from "../utils/constants";
+import { generateAllLocators, isNameUnique, isStringMatchesReservedWord } from "./pageObject";
+import { locatorTaskStatus, VALIDATION_ERROR_TYPE } from "../utils/constants";
 
 export const createListeners = (dispatch, state) => {
   const actions = {
@@ -85,7 +85,9 @@ export const createListeners = (dispatch, state) => {
         generateAllLocators(selectGeneratedLocators(state));
       }
     },
-    UPDATE_LOCATOR: (payload) => dispatch(changeLocatorAttributes(payload)),
+    UPDATE_LOCATOR: (payload) => {
+      dispatch(changeLocatorAttributes(payload));
+    },
     CHECK_NAME_VALIDITY: ({ element_id, newName }, sender, sendResponse) => {
       if (!isNameUnique(selectLocators(state), element_id, newName)) {
         sendResponse(VALIDATION_ERROR_TYPE.DUPLICATED_NAME);
