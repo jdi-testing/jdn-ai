@@ -11,7 +11,6 @@ import { openSettingsMenu } from "../services/pageDataHandlers";
 import { sendMessage } from "../services/connector";
 import { MUI_PREDICT, HTML5_PREDICT } from "../services/backend";
 
-import ClearAllSvg from "../assets/clear-all.svg";
 import Settings from "../assets/settings.svg";
 
 export const GenerationButtons = () => {
@@ -26,10 +25,6 @@ export const GenerationButtons = () => {
     dispatch(clearAll());
     sendMessage.killHighlight();
     locatorGenerationController.revokeAll();
-  };
-
-  const handleEndpointSelect = (val) => {
-    setEndpoint(val);
   };
 
   const renderSettingsButton = () => {
@@ -59,10 +54,6 @@ export const GenerationButtons = () => {
           "jdn__buttons--secondary"
         ]}
       >
-        <Icon
-          component={ClearAllSvg}
-          className={`${!allowRemoveElements ? "jdn__icon--disabled" : ""}`}
-        />
         Clear all
       </Button>
     );
@@ -87,7 +78,7 @@ export const GenerationButtons = () => {
             defaultValue={endpoint}
             disabled={!allowIdentifyElements}
             className="jdn__select"
-            onChange={handleEndpointSelect}
+            onChange={setEndpoint}
           >
             <Select.Option value={MUI_PREDICT}>Material UI</Select.Option>
             <Select.Option value={HTML5_PREDICT}>HTML 5</Select.Option>
