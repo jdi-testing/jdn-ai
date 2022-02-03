@@ -3,7 +3,7 @@ import { getGenerationAttributes } from "./../contentScripts/generationData";
 import { getPageData } from "./../contentScripts/pageData";
 import { createLocatorNames } from "./pageObject";
 import { reportPopup, settingsPopup, downloadPopup } from "../contentScripts/popups";
-import { MUI_PREDICT, request } from "../services/backend";
+import { request } from "../services/backend";
 /* global chrome*/
 
 let overlayID;
@@ -27,23 +27,23 @@ export const onStartCollectData = (payload) => {
   overlayID = payload.overlayID;
 };
 
-const uploadElements = async ([{ result }]) => {
+const uploadElements = async ([{ result }], enpoint) => {
   const payload = result[0];
   const r = await request.post(
-      MUI_PREDICT,
+      enpoint,
       payload
   );
 
   return r;
 };
 
-export const getElements = () => {
+export const getElements = (endpoint) => {
   pageAccessTimeout = setTimeout(() => {
     console.log('Script is blocked. Close all popups');
   }, 5000);
 
   return connector.attachContentScript(getPageData)
-      .then(uploadElements)
+      .then((data) => uploadElements(data, endpoint))
       .then((data) => {
         removeOverlay();
         return data;

@@ -1,6 +1,7 @@
 export const BUILD = 'build';
 export const PREDICT = 'predict';
 export const MUI_PREDICT = 'mui-predict';
+export const HTML5_PREDICT = 'html5-predict';
 export const GENERATE_XPATH = 'generate_xpath';
 export const SHEDULE_XPATH_GENERATION = 'schedule_xpath_generation';
 export const GET_TASK_STATUS = 'get_task_status';
