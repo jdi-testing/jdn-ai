@@ -10,7 +10,7 @@ export const locator1 = {
   name: "radiobuttonsUl",
   predictedAttrId: "",
   predicted_label: "radiogroup",
-  predicted_probability: 1,
+  predicted_probability: 0.85,
   sort_key: 40266.6687011719,
   tagName: "ul",
   type: "RadioButtons",

@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { lowerFirst, size } from "lodash";
-import { autoFindStatus, locatorTaskStatus, xpathGenerationStatus } from "../utils/constants";
+import { autoFindStatus, locatorTaskStatus, VALIDATION_ERROR_TYPE, xpathGenerationStatus } from "../utils/constants";
 import { getJdiClassName, getJDILabel } from "../utils/generationClassesMap";
 import { locatorsAdapter, simpleSelectLocatorById } from "./selectors";
 import { cancelStopGenerationReducer } from "./thunks/cancelStopGeneration";
@@ -37,10 +37,10 @@ const predictionSlice = createSlice({
       locatorsAdapter.addMany(state, payload);
     },
     changeLocatorAttributes(state, { payload }) {
-      const { type, name, locator, element_id } = payload;
+      const { type, name, locator, element_id, validity, newElement } = payload;
       const _locator = simpleSelectLocatorById(state, element_id);
       const { fullXpath, robulaXpath } = _locator.locator;
-      const newValue = { ..._locator, locator: { ..._locator.locator } };
+      let newValue = { ..._locator, locator: { ..._locator.locator }, validity };
       if (_locator.name !== name) {
         newValue.name = name;
         newValue.isCustomName = true;
@@ -54,9 +54,14 @@ const predictionSlice = createSlice({
       if (fullXpath !== locator && robulaXpath !== locator) {
         newValue.locator.customXpath = locator;
         newValue.isCustomLocator = true;
-        if ((newValue.locator.taskStatus = locatorTaskStatus.REVOKED)) {
+        if (newValue.locator.taskStatus === locatorTaskStatus.REVOKED) {
           newValue.locator.taskStatus = locatorTaskStatus.SUCCESS;
         }
+      }
+      if (validity && (validity.locator === VALIDATION_ERROR_TYPE.NEW_ELEMENT)) {
+        locatorsAdapter.removeOne(state, element_id);
+        newValue = {...newValue, ...newElement};
+        newValue.predicted_probability = 1;
       }
       locatorsAdapter.upsertOne(state, newValue);
     },

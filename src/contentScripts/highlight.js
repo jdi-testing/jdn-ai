@@ -43,11 +43,11 @@ export const highlightOnPage = () => {
     const div = updateElement(element);
     if (div) {
       div.className = getClassName(element);
-    }
-    if (!skipScroll) {
-      const originDiv = document.querySelector(`[jdn-hash='${element.element_id}']`);
-      if (!isInViewport(originDiv) && element.generate) {
-        originDiv.scrollIntoView({ behavior: "smooth" });
+      if (!skipScroll) {
+        const originDiv = document.querySelector(`[jdn-hash='${element.element_id}']`);
+        if (!isInViewport(originDiv) && element.generate) {
+          originDiv.scrollIntoView({ behavior: "smooth" });
+        }
       }
     }
   };
@@ -64,6 +64,22 @@ export const highlightOnPage = () => {
     } else {
       findAndHighlight();
     }
+  };
+
+  const removeElement = (element) => {
+    const div = document.getElementById(element.element_id);
+    const i = highlightElements.findIndex((e) => e.getAttribute('jdn-hash') === element.element_id);
+    highlightElements.splice(i, 1);
+
+    const j = predictedElements.findIndex((e) => e.element_id === element.element_id);
+    predictedElements.splice(j, 1);
+
+    div.remove();
+  };
+
+  const addHighlightElement = (element) => {
+    predictedElements.push(element);
+    findAndHighlight();
   };
 
   const changeElementName = (element) => {
@@ -268,12 +284,18 @@ export const highlightOnPage = () => {
       toggleElement(param);
     }
 
-    if (message === "HIGHLIGHT_TOGGLED_GROUP") {
-
-    }
-
     if (message === "TOGGLE_DLETED") {
       toggleDeletedElement(param);
+    }
+
+    if (message === "REPLACE_ELEMENT") {
+      const {oldElement, newElement} = param;
+      removeElement(oldElement);
+      addHighlightElement(newElement);
+    }
+
+    if (message === "REMOVE_ELEMENT") {
+      removeElement(param);
     }
 
     if (message === "CHANGE_ELEMENT_TYPE") {
