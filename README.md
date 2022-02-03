@@ -120,6 +120,15 @@ or manualy change version in this files.
 Commit and push changes.
 
 When your request has been merged, github actions will create draft of release with current package.json version tag.
+ 
+ # **How to update backend version**
+ 
+ Abort the currently running process is terminal (Ctrl + C)
+ 
+ ```
+  docker system prune
+```
+ Run curl again
 
 # **CI/CD**
 
