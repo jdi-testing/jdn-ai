@@ -69,7 +69,6 @@ export const getPageData = () => {
         onmouseenter: el.onmouseenter,
         attributes: collect_attributes(el),
         text: el.innerText,
-        style: window.getComputedStyle(el),
       };
     });
   }
