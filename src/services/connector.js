@@ -130,7 +130,6 @@ export const connector = new Connector();
 export const sendMessage = {
   toggle: (payload) => connector.sendMessage("HIGHLIGHT_TOGGLED", payload),
   toggleDeleted: (el) => connector.sendMessage("TOGGLE_DLETED", el),
-  // restore: (el) => connector.sendMessage("RESTORE_ELEMENT", el),
   changeElementName: (el) => connector.sendMessage("CHANGE_ELEMENT_NAME", el),
   changeElementType: (el) => connector.sendMessage("CHANGE_ELEMENT_TYPE", el),
   changeStatus: (el) => connector.sendMessage("CHANGE_STATUS", el),
@@ -144,6 +143,8 @@ export const sendMessage = {
     connector.sendMessage("PING_SCRIPT", payload, onResponse),
   highlightUnreached: (payload) => connector.sendMessage("HIGHLIGHT_ERRORS", payload),
   changeXpathSettings: (payload) => connector.sendMessage("CHANGE_XPATH_SETTINGS", payload),
+  replaceElement: (payload) => connector.sendMessage("REPLACE_ELEMENT", payload),
+  removeElement: (payload) => connector.sendMessage("REMOVE_ELEMENT", payload),
 };
 
 export default Connector;

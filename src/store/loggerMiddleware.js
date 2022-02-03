@@ -3,6 +3,7 @@ import { last } from "lodash";
 import { pushNotification } from "./predictionSlice";
 import { selectLocatorById } from "./selectors";
 import { sendMessage } from "../services/connector";
+import { VALIDATION_ERROR_TYPE } from "../utils/constants";
 
 const notify = (state, action, prevState, store) => {
   const pushNotificationHandler = (prevValue) => {
@@ -17,8 +18,16 @@ const notify = (state, action, prevState, store) => {
   const {type, payload, meta} = action;
   switch (type) {
     case "main/changeLocatorAttributes":
-      sendMessage.changeElementName(selectLocatorById(state, payload.element_id));
-      pushNotificationHandler(selectLocatorById(prevState, payload.element_id));
+      const oldElement = selectLocatorById(prevState, payload.element_id);
+      pushNotificationHandler(oldElement);
+      if (!payload.validity) {
+        sendMessage.changeElementName(selectLocatorById(state, payload.element_id));
+      } else if (payload.validity.locator === VALIDATION_ERROR_TYPE.NEW_ELEMENT) {
+        const newElement = selectLocatorById(state, payload.newElement.element_id);
+        sendMessage.replaceElement({oldElement, newElement});
+      } else {
+        sendMessage.removeElement(oldElement);
+      };
       break;
     case "main/changeLocatorSettings":
       const prevValues = payload.map((el) => {
