@@ -39,7 +39,7 @@ export const createListeners = (dispatch, state) => {
           const newSettings = mapValues(settings, (value, key) => {
             return value === "indeterminate" ? elementSettings[key] || state.main.xpathConfig[key] : value;
           });
-          if (!locator.locator.taskStatus === locatorTaskStatus.REVOKED) {
+          if (locator.locator.taskStatus !== locatorTaskStatus.REVOKED) {
             if (isProgressStatus(locator.locator.taskStatus)) {
               stopGenerationHandler(locator.element_id);
             }
