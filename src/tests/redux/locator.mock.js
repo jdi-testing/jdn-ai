@@ -18,3 +18,45 @@ export const locator1 = {
   x: 0,
   y: 60,
 };
+
+export const locator2 = {
+  attrId: "",
+  element_id: "2222222222",
+  height: 201.3333435059,
+  locator: {
+    fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul",
+    robulaXpath: "//*[@class='sidebar-menu left']",
+    taskStatus: "SUCCESS",
+  },
+  name: "radiobuttonsUl",
+  predictedAttrId: "",
+  predicted_label: "radiogroup",
+  predicted_probability: 0.85,
+  sort_key: 40266.6687011719,
+  tagName: "ul",
+  type: "RadioButtons",
+  width: 200,
+  x: 0,
+  y: 60,
+};
+
+export const locator3 = {
+  attrId: "",
+  element_id: "333333333333333",
+  height: 201.3333435059,
+  locator: {
+    fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul",
+    robulaXpath: "//*[@class='sidebar-menu left']",
+    taskStatus: "SUCCESS",
+  },
+  name: "radiobuttonsUl",
+  predictedAttrId: "",
+  predicted_label: "radiogroup",
+  predicted_probability: 0.85,
+  sort_key: 40266.6687011719,
+  tagName: "ul",
+  type: "RadioButtons",
+  width: 200,
+  x: 0,
+  y: 60,
+};
