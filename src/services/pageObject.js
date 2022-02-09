@@ -51,15 +51,19 @@ export const createLocatorNames = (elements) => {
   });
 };
 
+export const getPageTitle = async () => {
+  return await connector.attachContentScript(() => {
+    return document.title;
+  });
+};
+
 export const getPage = async (locators) => {
   const location = await connector.attachContentScript(() => {
     const { hostname, pathname, origin, host } = document.location;
     return { hostname, pathname, origin, host };
   });
 
-  const title = await connector.attachContentScript(() => {
-    return document.title;
-  });
+  const title = await getPageTitle();
 
   const pageObject = pageObjectTemplate(locators, location[0].result, title[0].result);
   return pageObject;

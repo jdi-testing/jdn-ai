@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { simpleSelectLocatorById } from "./selectors";
 import { pageObjAdapter } from "./selectors/pageObjectSelectors";
+import { addPageObjReducer } from "./thunks/addPageObject";
 
 const initialState = {};
 
@@ -8,9 +9,6 @@ const pageObjSlice = createSlice({
   name: "pageObject",
   initialState: pageObjAdapter.getInitialState(initialState),
   reducers: {
-    addPageObj(state, {payload}) {
-      pageObjAdapter.addOne(state, payload);
-    },
     addLocatorToPageObj(state, {payload}) {
       const {pageObjId, locatorId} = payload;
       const pageObj = simpleSelectLocatorById(state, pageObjId);
@@ -23,8 +21,12 @@ const pageObjSlice = createSlice({
       const locators = [...pageObj.locators || [], ...locatorIds];
       pageObjAdapter.upsertOne(state, {id: pageObjId, locators});
     }
+  },
+  extraReducers: (builder) => {
+    addPageObjReducer(builder);
   }
+
 });
 
 export default pageObjSlice.reducer;
-export const {addPageObj, addLocatorToPageObj, addLocatorsToPageObj} = pageObjSlice.actions;
+export const {addLocatorToPageObj, addLocatorsToPageObj} = pageObjSlice.actions;

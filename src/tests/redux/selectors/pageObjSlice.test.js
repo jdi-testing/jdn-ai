@@ -1,20 +1,23 @@
-import { addLocatorsToPageObj, addLocatorToPageObj, addPageObj } from "../../../store/pageObjectSlice";
+import { addLocatorsToPageObj, addLocatorToPageObj } from "../../../store/pageObjectSlice";
 import { clearAll } from "../../../store/predictionSlice";
 import { selectPageObjById, selectPageObjects } from "../../../store/selectors/pageObjectSelectors";
 import { store } from "../../../store/store";
-import pageObjects from "./pageObjects.mock.json";
+import { addPageObj } from "../../../store/thunks/addPageObject";
+import * as pageObject from "../../../services/pageObject";
 
 describe("pageObject reducers", () => {
-  beforeAll(() => {
+  beforeAll(async () => {
     store.dispatch(clearAll());
 
-    store.dispatch(addPageObj(pageObjects[0]));
-    store.dispatch(addPageObj(pageObjects[1]));
-    store.dispatch(addPageObj(pageObjects[2]));
+    jest.spyOn(pageObject, "getPageTitle").mockImplementation(() => [{result: "HomePage"}]);
+
+    store.dispatch(addPageObj());
+    store.dispatch(addPageObj());
+    store.dispatch(addPageObj());
   });
 
   test("add locator to page object", () => {
-    const pageObjId = "1111";
+    const pageObjId = 1;
     const locatorId = "8736312404689610766421832473";
     store.dispatch(addLocatorToPageObj({pageObjId, locatorId}));
 
@@ -23,7 +26,7 @@ describe("pageObject reducers", () => {
   });
 
   test("add many locators to page object", () => {
-    const pageObjId = "2222";
+    const pageObjId = 2;
     const locatorIds = ["8736312404689610766421832473", "2222222222", "333333333333333"];
     store.dispatch(addLocatorsToPageObj({pageObjId, locatorIds}));
 

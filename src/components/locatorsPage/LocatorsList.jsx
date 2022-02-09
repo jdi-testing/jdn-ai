@@ -16,6 +16,7 @@ import { toggleElementGroupGeneration } from "../../store/predictionSlice";
 import CaretDownSvg from "../../assets/caret-down.svg";
 import CheckedkSvg from "../../assets/checked-outlined.svg";
 import DeletedSvg from "../../assets/deleted.svg";
+// import { PerceptionTreshold } from "../PerceptionTreshold/PerceptionTreshold";
 
 export const LocatorsList = () => {
   const dispatch = useDispatch();
