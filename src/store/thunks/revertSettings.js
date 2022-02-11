@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-import { changeLocatorSettings, updateLocator } from "../predictionSlice";
+import { changeLocatorSettings, updateLocator } from "../locatorsSlice";
 import { isProgressStatus } from "../../services/locatorGenerationController";
 import { runXpathGeneration } from "./runXpathGeneration";
 import { selectLocatorById } from "../selectors";

@@ -1,5 +1,5 @@
 import { sendMessage } from "../../services/connector";
-import { addLocators, changeLocatorAttributes } from "../../store/predictionSlice";
+import { addLocators, changeLocatorAttributes } from "../../store/locatorsSlice";
 import { selectLocatorById } from "../../store/selectors";
 import { store } from "../../store/store";
 import { locator1 } from "./locator.mock";

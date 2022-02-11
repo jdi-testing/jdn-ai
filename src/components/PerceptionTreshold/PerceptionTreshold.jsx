@@ -5,7 +5,7 @@ import Icon from "@ant-design/icons";
 import React from "react";
 import Text from "antd/lib/typography/Text";
 
-import { changePerception } from "../../store/predictionSlice";
+import { changePerception } from "../../store/mainSlice";
 import { floatToPercent } from "../../utils/helpers";
 
 import "./slider.less";

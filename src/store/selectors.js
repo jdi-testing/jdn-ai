@@ -7,7 +7,7 @@ export const locatorsAdapter = createEntityAdapter({
 });
 
 export const { selectAll: selectLocators, selectById: selectLocatorById } = locatorsAdapter.getSelectors(
-    (state) => state.main
+    (state) => state.locators
 );
 
 export const { selectAll: simpleSelectLocators, selectById: simpleSelectLocatorById } = locatorsAdapter.getSelectors();

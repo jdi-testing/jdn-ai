@@ -1,5 +1,5 @@
 import { Checkbox, Dropdown, Menu, Spin, Tooltip, Typography } from "antd";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Icon from "@ant-design/icons";
 import React, { useEffect, useRef } from "react";
 import Text from "antd/lib/typography/Text";
@@ -7,11 +7,11 @@ import Text from "antd/lib/typography/Text";
 import { getLocator } from "../../services/pageObject";
 import { getTypesMenuOptions } from "../../utils/generationClassesMap";
 import { isGeneratedStatus, isProgressStatus } from "../../services/locatorGenerationController";
-import { locatorTaskStatus, VALIDATION_ERROR_TYPE } from "../../utils/constants";
+import { locatorTaskStatus, VALIDATION_ERROR_TYPE, pageType } from "../../utils/constants";
 import { openSettingsMenu } from "../../services/pageDataHandlers";
 import { rerunGeneration } from "../../store/thunks/rerunGeneration";
 import { stopGeneration } from "../../store/thunks/stopGeneration";
-import { toggleDeleted, toggleElementGeneration } from "../../store/predictionSlice";
+import { toggleDeleted, toggleElementGeneration } from "../../store/locatorsSlice";
 
 import CheckedkSvg from "../../assets/checked-outlined.svg";
 import CheckedEdited from "../../assets/checked-edited.svg";
@@ -41,6 +41,7 @@ const isValidLocator = ({ locator, validity }) =>
   !validity?.locator.length || validity.locator === VALIDATION_ERROR_TYPE.NEW_ELEMENT;
 
 export const Locator = ({ element, xpathConfig, noScrolling }) => {
+  const currentPage = useSelector((state) => state.main.currentPage);
   const dispatch = useDispatch();
 
   const { element_id, type, name, locator, generate, isCmHighlighted, validity } = element;
@@ -169,17 +170,23 @@ export const Locator = ({ element, xpathConfig, noScrolling }) => {
       className={`${generate ? "jdn__xpath_container--selected" : "jdn__xpath_container--shift"}
      ${isCmHighlighted ? "jdn__xpath_container--cm-selected" : ""}`}
     >
-      <Checkbox checked={generate} onChange={handleOnChange}>
-        <Text className="jdn__xpath_item">
-          {renderIcon()}
-          {renderColorizedString()}
-        </Text>
-      </Checkbox>
-      <a>
-        <Dropdown trigger="click" overlay={renderMenu()}>
-          <Icon component={EllipsisSvg} onClick={(e) => e.preventDefault()} />
-        </Dropdown>
-      </a>
+      {currentPage === pageType.locatorsList ? (
+        <React.Fragment>
+          <Checkbox checked={generate} onChange={handleOnChange}>
+            <Text className="jdn__xpath_item">
+              {renderIcon()}
+              {renderColorizedString()}
+            </Text>
+          </Checkbox>
+          <a>
+            <Dropdown trigger="click" overlay={renderMenu()}>
+              <Icon component={EllipsisSvg} onClick={(e) => e.preventDefault()} />
+            </Dropdown>
+          </a>
+        </React.Fragment>
+      ) : (
+        renderColorizedString()
+      )}
     </div>
   );
 };

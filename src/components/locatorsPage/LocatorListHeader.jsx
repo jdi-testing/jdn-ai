@@ -15,10 +15,11 @@ import RestoreSvg from "../../assets/restore.svg";
 import SettingsSVG from "../../assets/settings.svg";
 import TrashBinSVG from "../../assets/trash-bin.svg";
 
-import { pushNotification, toggleDeletedGroup, toggleElementGroupGeneration } from "../../store/predictionSlice";
+import { toggleDeletedGroup, toggleElementGroupGeneration } from "../../store/locatorsSlice";
 import { stopGenerationGroup } from "../../store/thunks/stopGenerationGroup";
 import { rerunGeneration } from "../../store/thunks/rerunGeneration";
 import { locatorTaskStatus } from "../../utils/constants";
+import { pushNotification } from "../../store/mainSlice";
 
 export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedSelected }) => {
   const dispatch = useDispatch();

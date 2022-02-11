@@ -57,6 +57,13 @@ export const getPageTitle = async () => {
   });
 };
 
+export const getPageAttributes = async () => {
+  return await connector.attachContentScript(() => {
+    const {title, URL} = document;
+    return {title, url: URL};
+  });
+};
+
 export const getPage = async (locators) => {
   const location = await connector.attachContentScript(() => {
     const { hostname, pathname, origin, host } = document.location;

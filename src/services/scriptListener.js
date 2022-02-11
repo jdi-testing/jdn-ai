@@ -2,16 +2,12 @@ import { mapValues } from "lodash";
 
 import {
   changeLocatorSettings,
-  changeXpathSettings,
-  clearAll,
-  setUnactualPrediction,
-  toggleBackdrop,
   toggleDeleted,
   toggleElementGeneration,
   clearCmElementHighlight,
   addCmElementHighlight,
   changeLocatorAttributes,
-} from "../store/predictionSlice";
+} from "../store/locatorsSlice";
 import { connector, sendMessage } from "./connector";
 import { getTypesMenuOptions } from "../utils/generationClassesMap";
 import { onStartCollectData, openSettingsMenu } from "./pageDataHandlers";
@@ -26,6 +22,7 @@ import { stopGeneration } from "../store/thunks/stopGeneration";
 import { rerunGeneration } from "../store/thunks/rerunGeneration";
 import { generateAllLocators, isNameUnique, isStringMatchesReservedWord } from "./pageObject";
 import { locatorTaskStatus, VALIDATION_ERROR_TYPE } from "../utils/constants";
+import { changeXpathSettings, clearAll, setUnactualPrediction, toggleBackdrop } from "../store/mainSlice";
 
 export const createListeners = (dispatch, state) => {
   const actions = {

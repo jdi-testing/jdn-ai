@@ -3,7 +3,9 @@ import { simpleSelectLocatorById } from "./selectors";
 import { pageObjAdapter } from "./selectors/pageObjectSelectors";
 import { addPageObjReducer } from "./thunks/addPageObject";
 
-const initialState = {};
+const initialState = {
+  currentPageObject: null,
+};
 
 const pageObjSlice = createSlice({
   name: "pageObject",
@@ -16,11 +18,14 @@ const pageObjSlice = createSlice({
       pageObjAdapter.upsertOne(state, {id: pageObjId, locators});
     },
     addLocatorsToPageObj(state, {payload}) {
-      const {pageObjId, locatorIds} = payload;
-      const pageObj = simpleSelectLocatorById(state, pageObjId);
-      const locators = [...pageObj.locators || [], ...locatorIds];
-      pageObjAdapter.upsertOne(state, {id: pageObjId, locators});
-    }
+      // const {pageObjId, locatorIds} = payload;
+      const pageObj = simpleSelectLocatorById(state, state.currentPageObject);
+      const locators = [...pageObj.locators || [], ...payload];
+      pageObjAdapter.upsertOne(state, {id: pageObj.id, locators});
+    },
+    setCurrentPageObj(state, {payload}) {
+      state.currentPageObject = payload;
+    },
   },
   extraReducers: (builder) => {
     addPageObjReducer(builder);
@@ -29,4 +34,4 @@ const pageObjSlice = createSlice({
 });
 
 export default pageObjSlice.reducer;
-export const {addLocatorToPageObj, addLocatorsToPageObj} = pageObjSlice.actions;
+export const {addLocatorToPageObj, addLocatorsToPageObj, setCurrentPageObj} = pageObjSlice.actions;

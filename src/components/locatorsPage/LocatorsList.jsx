@@ -11,7 +11,7 @@ import { LocatorListHeader } from "./LocatorListHeader";
 import { locatorTaskStatus } from "../../utils/constants";
 import { Notifications } from "./Notifications";
 import { selectGeneratedLocators, selectLocatorsByProbability } from "../../store/selectors";
-import { toggleElementGroupGeneration } from "../../store/predictionSlice";
+import { toggleElementGroupGeneration } from "../../store/locatorsSlice";
 
 import CaretDownSvg from "../../assets/caret-down.svg";
 import CheckedkSvg from "../../assets/checked-outlined.svg";

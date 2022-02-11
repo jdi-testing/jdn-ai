@@ -1,6 +1,6 @@
 import { last } from "lodash";
 
-import { pushNotification } from "./predictionSlice";
+import { pushNotification } from "./mainSlice";
 import { selectLocatorById } from "./selectors";
 import { sendMessage } from "../services/connector";
 import { VALIDATION_ERROR_TYPE } from "../utils/constants";

@@ -1,10 +1,13 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-import { autoFindStatus } from "../../utils/constants";
+import { identificationStatus } from "../../utils/constants";
 import { generateLocators } from "./generateLocators";
 import { getElements } from "../../services/pageDataHandlers";
+import { setCurrentPageObj } from "../pageObjectSlice";
 
-export const identifyElements = createAsyncThunk("main/identifyElements", async (endpoint, thunkAPI) => {
+export const identifyElements = createAsyncThunk("main/identifyElements", async ({endpoint, pageObj}, thunkAPI) => {
+  thunkAPI.dispatch(setCurrentPageObj(pageObj));
+
   const res = await getElements(endpoint);
   const rounded = res.map((el) => ({
     ...el,
@@ -17,11 +20,11 @@ export const identifyElements = createAsyncThunk("main/identifyElements", async 
 export const identifyElementsReducer = (builder) => {
   return builder
       .addCase(identifyElements.pending, (state) => {
-        state.status = autoFindStatus.loading;
+        state.status = identificationStatus.loading;
         state.allowIdentifyElements = false;
       })
       .addCase(identifyElements.fulfilled, (state, { payload }) => {
-        state.status = autoFindStatus.success;
+        state.status = identificationStatus.success;
         state.allowRemoveElements = true;
         state.predictedElements = payload;
       })

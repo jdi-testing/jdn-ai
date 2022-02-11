@@ -2,28 +2,27 @@ import { useDispatch, useSelector } from "react-redux";
 import Layout, { Content, Header } from "antd/lib/layout/layout";
 import React, { useEffect, useState } from "react";
 
-import { clearAll } from "../store/predictionSlice";
+import { changePage, clearAll } from "../store/mainSlice";
 import { connector } from "../services/connector";
 import { ControlBar } from "./ControlBar";
 import { createListeners } from "../services/scriptListener";
 import { SeveralTabsWarning } from "./SeveralTabsWarning";
 import { locatorGenerationController } from "../services/locatorGenerationController";
 import { removeOverlay } from "../services/pageDataHandlers";
-import { PageObjPage } from "./pageObjPage/pageObjPage";
+import { PageObjPage } from "./pageObjectsPage/pageObjPage";
 import { LocatorsPage } from "./locatorsPage/LocatorsPage";
-
-const modes = {
-  pageObject: "pageObject",
-  locatorsList: "locatorsList",
-};
+import { identificationStatus, pageType } from "../utils/constants";
+import { Button } from "antd";
 
 const AutoFind = () => {
-  const [viewMode, setViewMode] = useState(modes.pageObject);
+  // const [currentPage, setcurrentPage] = useState(pageType.pageObject);
   const [isInvalidSession, setIsInvalidSession] = useState(localStorage.getItem("secondSession"));
-
+  const status = useSelector((state) => state.locators.status);
+  const currentPage = useSelector((state) => state.main.currentPage);
   const dispatch = useDispatch();
+
   createListeners(
-      // in the future, move it to connector
+      // in a beautiful future, move it to connector
       dispatch,
       useSelector((state) => state)
   );
@@ -42,8 +41,14 @@ const AutoFind = () => {
     });
   }, []);
 
+  useEffect(() => {
+    if (status === identificationStatus.success) {
+      dispatch(changePage(pageType.locatorsList));
+    }
+  }, [status]);
+
   const renderPage = () => {
-    return viewMode === modes.pageObject ? <PageObjPage /> : <LocatorsPage />;
+    return currentPage === pageType.pageObject ? <PageObjPage /> : <LocatorsPage />;
   };
 
   return (
@@ -60,6 +65,11 @@ const AutoFind = () => {
               <PerceptionTreshold />
             </React.Fragment>
           ) : null} */}
+          {currentPage === pageType.locatorsList ? (
+            <Button type="primary" onClick={() => dispatch(changePage(pageType.pageObject))}>
+              Confirm
+            </Button>
+          ) : null}
         </Content>
       </Layout>
     </React.Fragment>
