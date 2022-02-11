@@ -11,6 +11,8 @@ export const identifyElements = createAsyncThunk("main/identifyElements", async 
   const res = await getElements(endpoint);
   const rounded = res.map((el) => ({
     ...el,
+    element_id: `${el.element_id}_${pageObj}`,
+    jdnHash: el.element_id,
     predicted_probability: Math.round(el.predicted_probability * 100) / 100,
   }));
   thunkAPI.dispatch(generateLocators(rounded));

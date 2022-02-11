@@ -1,5 +1,5 @@
 import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
-import { selectLocators } from "../selectors";
+import { selectGeneratedLocators, selectLocators, selectLocatorsByProbability } from "../selectors";
 
 export const pageObjAdapter = createEntityAdapter({
   selectId: (pageObj) => pageObj.id,
@@ -15,7 +15,8 @@ export const {
   selectById: simpleSelectPageObjById,
 } = pageObjAdapter.getSelectors();
 
-export const selectMaxId = createSelector(simpleSelectPageObjects,
+export const selectMaxId = createSelector(
+    simpleSelectPageObjects,
     (items) => {
       // eslint-disable-next-line
       const res = Math.max.apply(Math, items.map((po) => po.id));
@@ -25,18 +26,27 @@ export const selectMaxId = createSelector(simpleSelectPageObjects,
 
 export const selectLocatorsByPageObject = createSelector(
     selectLocators,
-    (state, pageObjId) => {
-      return selectPageObjById(state, pageObjId);
-    },
+    selectPageObjById,
     (elements, pageObj) => {
       const {locators: locatorIds} = pageObj;
-      return locatorIds.map((id) => elements.find(({element_id}) => element_id === id));
+      return locatorIds ? locatorIds.map((id) => elements.find(({element_id}) => element_id === id)) : [];
     }
+);
+
+export const selectPageObjLocatorsByProbability = createSelector(
+    selectLocatorsByProbability,
+    (state, pageObjId) => selectPageObjById(state, pageObjId).locators || [],
+    (locByProbability, locByPageObj) => locByProbability.filter((loc) => locByPageObj.includes(loc.element_id))
 );
 
 export const selectConfirmedLocators = createSelector(
     selectLocatorsByPageObject,
-    (elements, pageObj) => {
-      return elements.filter((elem) => elem.generate);
-    }
+    (elements, pageObj) => elements.filter((elem) => elem.generate)
+);
+
+export const selectGeneratedLocatorsByPageObj = createSelector(
+    selectGeneratedLocators,
+    (state, pageObjId) => selectPageObjById(state, pageObjId).locators || [],
+    (locators, locByPageObj) =>
+      locators.filter((loc) => locByPageObj.includes(loc.element_id))
 );

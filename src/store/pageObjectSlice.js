@@ -1,6 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { simpleSelectLocatorById } from "./selectors";
-import { pageObjAdapter } from "./selectors/pageObjectSelectors";
+import { pageObjAdapter, simpleSelectPageObjById } from "./selectors/pageObjectSelectors";
 import { addPageObjReducer } from "./thunks/addPageObject";
 
 const initialState = {
@@ -13,13 +12,13 @@ const pageObjSlice = createSlice({
   reducers: {
     addLocatorToPageObj(state, {payload}) {
       const {pageObjId, locatorId} = payload;
-      const pageObj = simpleSelectLocatorById(state, pageObjId);
+      const pageObj = simpleSelectPageObjById(state, pageObjId);
       const locators = [...pageObj.locators || [], locatorId];
       pageObjAdapter.upsertOne(state, {id: pageObjId, locators});
     },
     addLocatorsToPageObj(state, {payload}) {
       // const {pageObjId, locatorIds} = payload;
-      const pageObj = simpleSelectLocatorById(state, state.currentPageObject);
+      const pageObj = simpleSelectPageObjById(state, state.currentPageObject);
       const locators = [...pageObj.locators || [], ...payload];
       pageObjAdapter.upsertOne(state, {id: pageObj.id, locators});
     },
