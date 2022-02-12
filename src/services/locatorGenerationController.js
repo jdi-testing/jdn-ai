@@ -70,7 +70,6 @@ class LocatorGenerationController {
   }
 
   async init() {
-    await this.getDocument();
     this.openWebSocket();
     return;
   }
@@ -165,6 +164,7 @@ class LocatorGenerationController {
     if (getNextLocator) this.getPendingLocators = getNextLocator;
     if (settings) this.queueSettings = settings;
     if (onStatusChange) this.onStatusChange = onStatusChange;
+
     if (isNull(this.cpuCapacity)) {
       await this.getCpu();
     }
@@ -172,6 +172,8 @@ class LocatorGenerationController {
       await this.init(onStatusChange);
     }
     const availableCpu = this.getAvailableCpu();
+    await this.getDocument();
+
     if (elements) {
       elements.forEach(({ element_id }) => onStatusChange(element_id, { taskStatus: locatorTaskStatus.PENDING }));
       const toSchedule = take(elements, availableCpu);

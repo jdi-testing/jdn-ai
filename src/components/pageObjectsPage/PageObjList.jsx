@@ -19,7 +19,11 @@ export const PageObjList = () => {
 
   const renderLocators = (pageObjId) => {
     const elements = selectConfirmedLocators(state, pageObjId);
-    return elements.map((element) => <Locator key={element.element_id} {...{ element, xpathConfig }} />);
+    if (size(elements)) {
+      return elements.map((element) => <Locator key={element.element_id} {...{ element, xpathConfig }} />);
+    } else {
+      return "No locators selected";
+    }
   };
 
   return (

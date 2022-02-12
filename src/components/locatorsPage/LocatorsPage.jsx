@@ -1,12 +1,12 @@
 import React from "react";
 import { LocatorsList } from "./LocatorsList";
+import { PerceptionTreshold } from "../PerceptionTreshold/PerceptionTreshold";
 
 export const LocatorsPage = () => {
   return (
     <React.Fragment>
       <LocatorsList />
-      Perception Treshold:
-      {/* <PerceptionTreshold /> */}
+      <PerceptionTreshold />
     </React.Fragment>
   );
 };

@@ -1,5 +1,5 @@
 import React from "react";
-import { PageObjList } from "./pageObjList";
+import { PageObjList } from "./PageObjList";
 
 export const PageObjPage = () => {
   return <PageObjList />;
