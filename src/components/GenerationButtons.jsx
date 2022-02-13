@@ -19,6 +19,8 @@ export const GenerationButtons = ({ pageObj }) => {
   const allowRemoveElements = useSelector((state) => state.main.allowRemoveElements);
   const xpathConfig = useSelector((state) => state.main.xpathConfig);
   const currentPage = useSelector((state) => state.main.currentPage);
+  const currentPageObject = useSelector((state) => state.pageObject.currentPageObject);
+
   const dispatch = useDispatch();
   const [endpoint, setEndpoint] = useState(MUI_PREDICT);
 
@@ -79,7 +81,7 @@ export const GenerationButtons = ({ pageObj }) => {
           <Button
             icon={<SearchOutlined />}
             type="primary"
-            loading={status === identificationStatus.loading}
+            loading={status === identificationStatus.loading && currentPageObject === pageObj}
             disabled={!allowIdentifyElements}
             onClick={() => dispatch(identifyElements({ endpoint, pageObj }))}
             className="jdn__buttons"

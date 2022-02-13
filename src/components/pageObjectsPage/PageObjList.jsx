@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import Icon from "@ant-design/icons";
 import { Collapse } from "antd";
@@ -14,8 +14,14 @@ import { GenerationButtons } from "../GenerationButtons";
 
 export const PageObjList = () => {
   const state = useSelector((state) => state);
+  const currentPageObject = useSelector((state) => state.pageObject.currentPageObject);
   const pageObjects = useSelector(selectPageObjects);
   const xpathConfig = useSelector((state) => state.main.xpathConfig);
+  const [activePanel, setActivePanel] = useState([]);
+
+  useEffect(() => {
+    setActivePanel([...activePanel, currentPageObject]);
+  }, [currentPageObject]);
 
   const renderLocators = (pageObjId) => {
     const elements = selectConfirmedLocators(state, pageObjId);
@@ -26,6 +32,15 @@ export const PageObjList = () => {
     }
   };
 
+  const renderPageObjSettings = (pageObjId, url) => {
+    return (
+      <div className="jdn__pageObject__settings">
+        <div className="jdn__pageObject__settings-url">{url}</div>
+        <GenerationButtons pageObj={pageObjId} />
+      </div>
+    );
+  };
+
   return (
     <div className="jdn__locatorsList">
       <PageObjListHeader />
@@ -33,6 +48,8 @@ export const PageObjList = () => {
         <Collapse
           className="jdn__collapse"
           expandIcon={({ isActive }) => <Icon component={CaretDownSvg} rotate={isActive ? 180 : 0} />}
+          activeKey={activePanel}
+          onChange={setActivePanel}
         >
           {pageObjects.map(({ id, name, url, locators }) => (
             <Collapse.Panel
@@ -45,7 +62,7 @@ export const PageObjList = () => {
               }
               className="jdn__collapse-panel"
             >
-              {size(locators) ? renderLocators(id) : <GenerationButtons pageObj={id} />}
+              {size(locators) ? renderLocators(id) : renderPageObjSettings(id, url)}
             </Collapse.Panel>
           ))}
         </Collapse>

@@ -7,7 +7,7 @@ import { selectLocatorById } from "../selectors";
 import { stopGeneration } from "./stopGeneration";
 
 export const revertSettings = createAsyncThunk(
-    "main/revertLocatorSettings",
+    "locators/revertLocatorSettings",
     async ({ prevValue }, thunkAPI) => {
       prevValue.forEach((previousElement) => {
         const {element_id: id, locator} = previousElement;

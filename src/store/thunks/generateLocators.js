@@ -12,7 +12,7 @@ const filterByProbability = (elements, perception) => {
   return elements.filter((e) => e.predicted_probability >= perception);
 };
 
-export const generateLocators = createAsyncThunk("main/generateLocators", async (predictedElements, thunkAPI) => {
+export const generateLocators = createAsyncThunk("locators/generateLocators", async (predictedElements, thunkAPI) => {
   const availableForGeneration = filterByProbability(predictedElements, 0.5);
   const state = thunkAPI.getState();
   const { perception } = state.main;

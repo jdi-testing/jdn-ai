@@ -300,7 +300,6 @@
   }
 
   &__buttons {
-    width: 109px;
     height: 30px;
     font-style: normal;
     font-weight: bold;
@@ -426,6 +425,10 @@
 
       .ant-btn {
         height: 30px;
+
+        .anticon {
+          vertical-align: middle;
+        }
       }
 
       .ant-btn-dangerous {
@@ -656,6 +659,16 @@
         color: @xpath-item-color-type;
       }
     }
+  }
+
+  &__pageObject {
+    &__settings {
+      background-color: #ecf7ff;
+      &-url {
+        color: #1582d8;
+      }
+    }    
+
   }
 }
 

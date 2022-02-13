@@ -26,9 +26,8 @@ export const PageObjListHeader = () => {
     <div className="jdn__locatorsList-header">
       <span className="jdn__locatorsList-header-title">Page Objects</span>
       <div className="jdn__locatorsList-header-buttons">
-        <Button type="primary" className="jdn__buttons" onClick={handleDownload}>
+        <Button type="primary" onClick={handleDownload}>
           <Icon component={DownloadSvg} fill="#c15f0f" />
-          Download
         </Button>
         <Button className="jdn__buttons" onClick={handleAddPageObject}>
           <Icon component={PlusSvg} />

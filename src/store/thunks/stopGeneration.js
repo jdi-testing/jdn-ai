@@ -4,7 +4,7 @@ import { locatorsAdapter, simpleSelectLocatorById } from "../selectors";
 import { stopGenerationHandler } from "../../services/locatorGenerationController";
 import { locatorTaskStatus } from "../../utils/constants";
 
-export const stopGeneration = createAsyncThunk("main/stopGeneration", async (element_id) => {
+export const stopGeneration = createAsyncThunk("locators/stopGeneration", async (element_id) => {
   return stopGenerationHandler([element_id]);
 });
 
