@@ -4,11 +4,8 @@ import Icon, { SearchOutlined } from "@ant-design/icons";
 import React, { useState } from "react";
 
 import { identificationStatus, pageType } from "../utils/constants";
-import { clearAll } from "../store/mainSlice";
 import { identifyElements } from "../store/thunks/identifyElements";
-import { locatorGenerationController } from "../services/locatorGenerationController";
 import { openSettingsMenu } from "../services/pageDataHandlers";
-import { sendMessage } from "../services/connector";
 import { MUI_PREDICT, HTML5_PREDICT } from "../services/backend";
 
 import Settings from "../assets/settings.svg";
@@ -16,19 +13,12 @@ import Settings from "../assets/settings.svg";
 export const GenerationButtons = ({ pageObj }) => {
   const status = useSelector((state) => state.locators.status);
   const allowIdentifyElements = useSelector((state) => state.main.allowIdentifyElements);
-  const allowRemoveElements = useSelector((state) => state.main.allowRemoveElements);
   const xpathConfig = useSelector((state) => state.main.xpathConfig);
   const currentPage = useSelector((state) => state.main.currentPage);
   const currentPageObject = useSelector((state) => state.pageObject.currentPageObject);
 
   const dispatch = useDispatch();
   const [endpoint, setEndpoint] = useState(MUI_PREDICT);
-
-  const handleClearAll = () => {
-    dispatch(clearAll());
-    sendMessage.killHighlight();
-    locatorGenerationController.revokeAll();
-  };
 
   const renderSettingsButton = () => {
     return (
@@ -40,18 +30,6 @@ export const GenerationButtons = ({ pageObj }) => {
       >
         <Icon component={Settings} />
         Settings
-      </Button>
-    );
-  };
-
-  const renderClearAllButton = () => {
-    return (
-      <Button
-        disabled={!allowRemoveElements}
-        onClick={handleClearAll}
-        className={["jdn__buttons", "jdn__buttons--secondary"]}
-      >
-        Clear al
       </Button>
     );
   };
@@ -77,7 +55,7 @@ export const GenerationButtons = ({ pageObj }) => {
         <Space direction="horizontal" size={8}>
           {(currentPage === pageType.locatorsList) && allowIdentifyElements ?
             renderSettingsButton() :
-            renderClearAllButton()}
+            null}
           <Button
             icon={<SearchOutlined />}
             type="primary"

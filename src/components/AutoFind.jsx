@@ -1,6 +1,7 @@
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Layout, { Content, Header } from "antd/lib/layout/layout";
-import React, { useEffect, useState } from "react";
+import { Button } from "antd";
 
 import { changePage, clearAll } from "../store/mainSlice";
 import { connector } from "../services/connector";
@@ -12,7 +13,6 @@ import { removeOverlay } from "../services/pageDataHandlers";
 import { PageObjPage } from "./pageObjectsPage/pageObjPage";
 import { LocatorsPage } from "./locatorsPage/LocatorsPage";
 import { identificationStatus, pageType } from "../utils/constants";
-import { Button } from "antd";
 
 const AutoFind = () => {
   // const [currentPage, setcurrentPage] = useState(pageType.pageObject);
@@ -51,6 +51,11 @@ const AutoFind = () => {
     return currentPage === pageType.pageObject ? <PageObjPage /> : <LocatorsPage />;
   };
 
+  const handleConfirm = () => {
+    locatorGenerationController.revokeAll();
+    dispatch(changePage(pageType.pageObject));
+  };
+
   return (
     <React.Fragment>
       <Layout className="jdn__autofind">
@@ -59,14 +64,8 @@ const AutoFind = () => {
         </Header>
         <Content className="jdn__content">
           {isInvalidSession ? <SeveralTabsWarning /> : renderPage()}
-          {/* {!isInvalidSession && xpathStatus === xpathGenerationStatus.started ? (
-            <React.Fragment>
-              <LocatorsList />
-              <PerceptionTreshold />
-            </React.Fragment>
-          ) : null} */}
           {currentPage === pageType.locatorsList ? (
-            <Button type="primary" onClick={() => dispatch(changePage(pageType.pageObject))}>
+            <Button type="primary" onClick={handleConfirm} className="jdn__buttons">
               Confirm
             </Button>
           ) : null}

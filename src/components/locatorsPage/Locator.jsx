@@ -167,7 +167,11 @@ export const Locator = ({ element, xpathConfig, noScrolling }) => {
   return (
     <div
       ref={ref}
-      className={`${generate ? "jdn__xpath_container--selected" : "jdn__xpath_container--shift"}
+      className={`${
+        generate && currentPage === pageType.locatorsList ?
+          "jdn__xpath_container--selected" :
+          "jdn__xpath_container--shift"
+      }
      ${isCmHighlighted ? "jdn__xpath_container--cm-selected" : ""}`}
     >
       {currentPage === pageType.locatorsList ? (
@@ -185,7 +189,7 @@ export const Locator = ({ element, xpathConfig, noScrolling }) => {
           </a>
         </React.Fragment>
       ) : (
-        renderColorizedString()
+        <Text className="jdn__xpath_item">{renderColorizedString()}</Text>
       )}
     </div>
   );
