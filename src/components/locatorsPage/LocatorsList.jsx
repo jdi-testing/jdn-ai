@@ -19,7 +19,6 @@ import {
   selectGeneratedLocatorsByPageObj,
   selectPageObjLocatorsByProbability,
 } from "../../store/selectors/pageObjectSelectors";
-// import { PerceptionTreshold } from "../PerceptionTreshold/PerceptionTreshold";
 
 export const LocatorsList = ({ pageObject }) => {
   const dispatch = useDispatch();
@@ -146,7 +145,7 @@ export const LocatorsList = ({ pageObject }) => {
           onChange={togglePanel}
           activeKey={activePanel}
           accordion
-          expandIcon={({ isActive }) => <Icon component={CaretDownSvg} rotate={isActive ? 180 : 0} />}
+          expandIcon={({ isActive }) => <Icon component={CaretDownSvg} rotate={isActive ? 180 : 0} fill="#808080" />}
         >
           {size(generated) && (
             <Collapse.Panel

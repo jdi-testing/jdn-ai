@@ -47,7 +47,7 @@ export const PageObjList = () => {
       <div className="jdn__locatorsList-content jdn__pageObj-content">
         <Collapse
           className="jdn__collapse"
-          expandIcon={({ isActive }) => <Icon component={CaretDownSvg} rotate={isActive ? 180 : 0} />}
+          expandIcon={({ isActive }) => <Icon component={CaretDownSvg} rotate={isActive ? 180 : 270} fill="#808080" />}
           activeKey={activePanel}
           onChange={setActivePanel}
         >

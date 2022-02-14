@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Layout, { Content, Header } from "antd/lib/layout/layout";
 import { Button } from "antd";
+import Icon from "@ant-design/icons";
 
 import { changePage, clearAll } from "../store/mainSlice";
 import { connector } from "../services/connector";
@@ -13,6 +14,8 @@ import { removeOverlay } from "../services/pageDataHandlers";
 import { PageObjPage } from "./pageObjectsPage/pageObjPage";
 import { LocatorsPage } from "./locatorsPage/LocatorsPage";
 import { identificationStatus, pageType } from "../utils/constants";
+
+import CaretDownSvg from "../assets/caret-down.svg";
 
 const AutoFind = () => {
   // const [currentPage, setcurrentPage] = useState(pageType.pageObject);
@@ -65,9 +68,12 @@ const AutoFind = () => {
         <Content className="jdn__content">
           {isInvalidSession ? <SeveralTabsWarning /> : renderPage()}
           {currentPage === pageType.locatorsList ? (
-            <Button type="primary" onClick={handleConfirm} className="jdn__buttons">
-              Confirm
-            </Button>
+            <div className="jdn__navigation">
+              <Button type="primary" onClick={handleConfirm} className="jdn__buttons">
+                Confirm
+                <Icon component={CaretDownSvg} rotate={270} fill="#ffffff" />
+              </Button>
+            </div>
           ) : null}
         </Content>
       </Layout>

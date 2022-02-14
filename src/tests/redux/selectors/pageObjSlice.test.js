@@ -29,7 +29,7 @@ describe("pageObject reducers", () => {
     expect(pageObj.locators).toContain(locatorId);
   });
 
-  test("add many locators to page object", () => {
+  xtest("add many locators to page object", () => {
     const pageObjId = 2;
     const locatorIds = ["8736312404689610766421832473", "2222222222", "333333333333333"];
     store.dispatch(addLocatorsToPageObj({ pageObjId, locatorIds }));
