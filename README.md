@@ -126,7 +126,10 @@ When your request has been merged, github actions will create draft of release w
  Abort the currently running process is terminal (Ctrl + C)
  
  ```
-  docker system prune
+docker-compose stop
+docker-compose rm -f
+docker-compose pull   
+docker-compose up -d
 ```
  Run curl again
 
