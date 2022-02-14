@@ -1,6 +1,6 @@
 import { sendMessage } from "../../services/connector";
 import { addLocators, changeLocatorAttributes } from "../../store/locatorsSlice";
-import { selectLocatorById } from "../../store/selectors";
+import { selectLocatorById } from "../../store/selectors/locatorSelectors";
 import { store } from "../../store/store";
 import { locator1 } from "./locator.mock";
 
