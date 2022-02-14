@@ -1,5 +1,5 @@
 import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
-import { selectGeneratedLocators, selectLocators, selectLocatorsByProbability } from "../selectors";
+import { selectGeneratedLocators, selectLocators, selectLocatorsByProbability } from "./locatorSelectors";
 
 export const pageObjAdapter = createEntityAdapter({
   selectId: (pageObj) => pageObj.id,
@@ -41,7 +41,7 @@ export const selectPageObjLocatorsByProbability = createSelector(
 
 export const selectConfirmedLocators = createSelector(
     selectLocatorsByPageObject,
-    (elements, pageObj) => elements.filter((elem) => elem.generate)
+    (elements) => elements.filter((elem) => elem.generate)
 );
 
 export const selectGeneratedLocatorsByPageObj = createSelector(

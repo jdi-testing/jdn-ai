@@ -16,7 +16,7 @@ import {
   selectLocatorById,
   selectLocatorsByProbability,
   selectLocators,
-} from "../store/selectors";
+} from "../store/selectors/locatorSelectors";
 import { isProgressStatus, stopGenerationHandler } from "./locatorGenerationController";
 import { stopGeneration } from "../store/thunks/stopGeneration";
 import { rerunGeneration } from "../store/thunks/rerunGeneration";

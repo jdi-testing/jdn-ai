@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { locatorsAdapter } from "../selectors";
+import { locatorsAdapter } from "../selectors/locatorSelectors";
 import { runXpathGeneration } from "./runXpathGeneration";
 
 export const cancelStopGeneration = createAsyncThunk(

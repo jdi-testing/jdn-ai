@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { lowerFirst } from "lodash";
 import { identificationStatus, locatorTaskStatus, VALIDATION_ERROR_TYPE } from "../utils/constants";
 import { getJdiClassName, getJDILabel } from "../utils/generationClassesMap";
-import { locatorsAdapter, simpleSelectLocatorById } from "./selectors";
+import { locatorsAdapter, simpleSelectLocatorById } from "./selectors/locatorSelectors";
 import { cancelStopGenerationReducer } from "./thunks/cancelStopGeneration";
 import { generateLocatorsReducer } from "./thunks/generateLocators";
 import { identifyElementsReducer } from "./thunks/identifyElements";

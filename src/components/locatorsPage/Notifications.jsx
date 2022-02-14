@@ -8,7 +8,7 @@ import {
   toggleDeleted,
   toggleDeletedGroup,
 } from "../../store/locatorsSlice";
-import { selectLocators } from "../../store/selectors";
+import { selectLocators } from "../../store/selectors/locatorSelectors";
 import { stopGeneration } from "../../store/thunks/stopGeneration";
 import { stopGenerationGroup } from "../../store/thunks/stopGenerationGroup";
 import { cancelStopGeneration } from "../../store/thunks/cancelStopGeneration";

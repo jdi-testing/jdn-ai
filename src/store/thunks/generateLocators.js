@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 
 import { requestGenerationData } from "../../services/pageDataHandlers";
 import { runXpathGeneration } from "./runXpathGeneration";
-import { selectLocators } from "../selectors";
+import { selectLocators } from "../selectors/locatorSelectors";
 import { sendMessage } from "../../services/connector";
 import { addLocators } from "../locatorsSlice";
 import { addLocatorsToPageObj } from "../pageObjectSlice";

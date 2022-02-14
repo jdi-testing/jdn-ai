@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-import { locatorsAdapter, simpleSelectLocatorById } from "../selectors";
+import { locatorsAdapter, simpleSelectLocatorById } from "../selectors/locatorSelectors";
 import { stopGenerationHandler } from "../../services/locatorGenerationController";
 import { locatorTaskStatus } from "../../utils/constants";
 

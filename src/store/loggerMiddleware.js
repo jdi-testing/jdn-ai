@@ -1,7 +1,7 @@
 import { last } from "lodash";
 
 import { pushNotification } from "./mainSlice";
-import { selectLocatorById } from "./selectors";
+import { selectLocatorById } from "./selectors/locatorSelectors";
 import { sendMessage } from "../services/connector";
 import { pageType, VALIDATION_ERROR_TYPE } from "../utils/constants";
 
