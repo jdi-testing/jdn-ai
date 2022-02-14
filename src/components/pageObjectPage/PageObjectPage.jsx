@@ -1,6 +1,6 @@
 import React from "react";
 import { PageObjList } from "./PageObjList";
 
-export const PageObjPage = () => {
+export const PageObjectPage = () => {
   return <div className="jdn__pageObject"><PageObjList /></div>;
 };

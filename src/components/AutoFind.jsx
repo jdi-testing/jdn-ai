@@ -11,14 +11,13 @@ import { createListeners } from "../services/scriptListener";
 import { SeveralTabsWarning } from "./SeveralTabsWarning";
 import { locatorGenerationController } from "../services/locatorGenerationController";
 import { removeOverlay } from "../services/pageDataHandlers";
-import { PageObjPage } from "./pageObjectsPage/pageObjPage";
 import { LocatorsPage } from "./locatorsPage/LocatorsPage";
 import { identificationStatus, pageType } from "../utils/constants";
+import { PageObjectPage } from "./pageObjectPage/PageObjectPage";
 
 import CaretDownSvg from "../assets/caret-down.svg";
 
 const AutoFind = () => {
-  // const [currentPage, setcurrentPage] = useState(pageType.pageObject);
   const [isInvalidSession, setIsInvalidSession] = useState(localStorage.getItem("secondSession"));
   const status = useSelector((state) => state.locators.status);
   const currentPage = useSelector((state) => state.main.currentPage);
@@ -51,7 +50,7 @@ const AutoFind = () => {
   }, [status]);
 
   const renderPage = () => {
-    return currentPage === pageType.pageObject ? <PageObjPage /> : <LocatorsPage />;
+    return currentPage === pageType.pageObject ? <PageObjectPage /> : <LocatorsPage />;
   };
 
   const handleConfirm = () => {

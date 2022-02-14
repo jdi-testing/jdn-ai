@@ -39,7 +39,6 @@ const mainSlice = createSlice({
       Object.keys(initialState).forEach((key) => {
         state[key] = initialState[key];
       });
-    //   locatorsAdapter.removeAll(state);
     },
     pushNotification(state, { payload }) {
       state.notifications.push(payload);
