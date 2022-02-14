@@ -70,7 +70,6 @@ class LocatorGenerationController {
   }
 
   async init() {
-    await this.getDocument();
     this.openWebSocket();
     return;
   }
@@ -101,7 +100,12 @@ class LocatorGenerationController {
       const { payload, action, result } = JSON.parse(event.data);
       switch (action || result) {
         case "tasks_scheduled":
-          this.scheduledTasks.set(Object.keys(payload)[0], Object.values(payload)[0]);
+          const jdnHash = Object.keys(payload)[0];
+          const element_id = [...this.scheduledTasks].find(
+              ([elementId, scheduledTaskId]) =>
+                jdnHash === elementId.substr(0, elementId.indexOf("_")) && !scheduledTaskId
+          );
+          this.scheduledTasks.set(element_id[0], Object.values(payload)[0]);
           break;
         case "status_changed":
           this.onStatusChange(this.getElementId(payload.id), { taskStatus: payload.status });
@@ -137,7 +141,7 @@ class LocatorGenerationController {
   }
 
   async scheduleTask(element) {
-    const {element_id, locator} = element;
+    const { element_id, locator, jdnHash } = element;
     if (this.readyState === 0) {
       setTimeout(() => this.scheduleTask(element), 1000);
     } else if (this.readyState === 1) {
@@ -147,7 +151,7 @@ class LocatorGenerationController {
             action: SHEDULE_XPATH_GENERATION,
             payload: {
               document: this.document,
-              id: element_id,
+              id: jdnHash,
               config: getSettingsRequestConfig(locator.settings || this.queueSettings),
             },
           })
@@ -160,6 +164,7 @@ class LocatorGenerationController {
     if (getNextLocator) this.getPendingLocators = getNextLocator;
     if (settings) this.queueSettings = settings;
     if (onStatusChange) this.onStatusChange = onStatusChange;
+
     if (isNull(this.cpuCapacity)) {
       await this.getCpu();
     }
@@ -167,8 +172,10 @@ class LocatorGenerationController {
       await this.init(onStatusChange);
     }
     const availableCpu = this.getAvailableCpu();
+    await this.getDocument();
+
     if (elements) {
-      elements.forEach(({element_id}) => onStatusChange(element_id, { taskStatus: locatorTaskStatus.PENDING }));
+      elements.forEach(({ element_id }) => onStatusChange(element_id, { taskStatus: locatorTaskStatus.PENDING }));
       const toSchedule = take(elements, availableCpu);
       toSchedule.forEach((element) => this.scheduleTask(element));
     } else {
@@ -182,7 +189,7 @@ class LocatorGenerationController {
     this.socket.send(
         JSON.stringify({
           action: REVOKE_TASKS,
-          payload: {id: taskIds},
+          payload: { id: taskIds },
         })
     );
   }

@@ -1,13 +1,13 @@
 import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
 
-import { locatorTaskStatus } from "../utils/constants";
+import { locatorTaskStatus } from "../../utils/constants";
 
 export const locatorsAdapter = createEntityAdapter({
   selectId: (locator) => locator.element_id,
 });
 
 export const { selectAll: selectLocators, selectById: selectLocatorById } = locatorsAdapter.getSelectors(
-    (state) => state.main
+    (state) => state.locators
 );
 
 export const { selectAll: simpleSelectLocators, selectById: simpleSelectLocatorById } = locatorsAdapter.getSelectors();

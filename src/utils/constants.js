@@ -1,4 +1,4 @@
-export const autoFindStatus = {
+export const identificationStatus = {
   noStatus: "",
   loading: "Loading...",
   success: "Successful!",
@@ -35,4 +35,9 @@ export const VALIDATION_ERROR_TYPE = {
   MULTIPLE_ELEMENTS: "MULTIPLE_ELEMENTS", // warn
   NEW_ELEMENT: "NEW_ELEMENT", // success
   NOT_FOUND: "NOT_FOUND", // warn
+};
+
+export const pageType = {
+  pageObject: "pageObject",
+  locatorsList: "locatorsList",
 };

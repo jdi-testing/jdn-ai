@@ -1,6 +1,6 @@
 {
   "name": "jdn-ai-chrome-extension",
-  "version": "3.1.118",
+  "version": "3.1.119",
   "description": "jdn-ai chrome extension",
   "scripts": {
     "start": "webpack --watch",
@@ -39,6 +39,7 @@
     "@reduxjs/toolkit": "^1.6.2",
     "antd": "^4.14.0",
     "cyrillic-to-translit-js": "^3.1.0",
+    "jszip": "^3.7.1",
     "lodash": "^4.17.21",
     "mversion": "^2.0.1",
     "react": "^17.0.1",

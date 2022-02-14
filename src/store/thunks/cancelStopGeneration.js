@@ -1,10 +1,13 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { locatorsAdapter } from "../selectors";
+import { locatorsAdapter } from "../selectors/locatorSelectors";
 import { runXpathGeneration } from "./runXpathGeneration";
 
-export const cancelStopGeneration = createAsyncThunk("main/cancelStopGeneration", async (generationData, thunkAPI) => {
-  thunkAPI.dispatch(runXpathGeneration(generationData));
-});
+export const cancelStopGeneration = createAsyncThunk(
+    "locators/cancelStopGeneration",
+    async (generationData, thunkAPI) => {
+      thunkAPI.dispatch(runXpathGeneration(generationData));
+    }
+);
 
 export const cancelStopGenerationReducer = (builder) => {
   return builder.addCase(cancelStopGeneration.pending, (state, { meta }) => {

@@ -1,33 +1,38 @@
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Layout, { Content, Header } from "antd/lib/layout/layout";
-import React, { useEffect, useState } from "react";
+import { Button } from "antd";
+import Icon from "@ant-design/icons";
 
-import { clearAll } from "../store/predictionSlice";
+import { changePage, clearAll } from "../store/mainSlice";
 import { connector } from "../services/connector";
 import { ControlBar } from "./ControlBar";
 import { createListeners } from "../services/scriptListener";
-import { GenerationButtons } from "./GenerationButtons";
 import { SeveralTabsWarning } from "./SeveralTabsWarning";
 import { locatorGenerationController } from "../services/locatorGenerationController";
-import { LocatorsList } from "./locatorsList/LocatorsList";
-import { PerceptionTreshold } from "./PerceptionTreshold/PerceptionTreshold";
 import { removeOverlay } from "../services/pageDataHandlers";
-import { xpathGenerationStatus } from "../utils/constants";
+import { LocatorsPage } from "./locatorsPage/LocatorsPage";
+import { identificationStatus, pageType } from "../utils/constants";
+import { PageObjectPage } from "./pageObjectPage/PageObjectPage";
+
+import CaretDownSvg from "../assets/caret-down.svg";
 
 const AutoFind = () => {
-  const [isInvalidSession, setIsInvalidSession] = useState(localStorage.getItem('secondSession'));
-  const xpathStatus = useSelector((state) => state.main.xpathStatus);
-
+  const [isInvalidSession, setIsInvalidSession] = useState(localStorage.getItem("secondSession"));
+  const status = useSelector((state) => state.locators.status);
+  const currentPage = useSelector((state) => state.main.currentPage);
   const dispatch = useDispatch();
-  createListeners( // in the future, move it to connector
+
+  createListeners(
+      // in a beautiful future, move it to connector
       dispatch,
       useSelector((state) => state)
   );
 
   // add document listeners
   useEffect(() => {
-    window.addEventListener('storage', () => {
-      localStorage.getItem('secondSession') ? setIsInvalidSession(true) : setIsInvalidSession(false);
+    window.addEventListener("storage", () => {
+      localStorage.getItem("secondSession") ? setIsInvalidSession(true) : setIsInvalidSession(false);
     });
     connector.attachStaticScripts();
     connector.onTabUpdate(() => {
@@ -38,6 +43,21 @@ const AutoFind = () => {
     });
   }, []);
 
+  useEffect(() => {
+    if (status === identificationStatus.success) {
+      dispatch(changePage(pageType.locatorsList));
+    }
+  }, [status]);
+
+  const renderPage = () => {
+    return currentPage === pageType.pageObject ? <PageObjectPage /> : <LocatorsPage />;
+  };
+
+  const handleConfirm = () => {
+    locatorGenerationController.revokeAll();
+    dispatch(changePage(pageType.pageObject));
+  };
+
   return (
     <React.Fragment>
       <Layout className="jdn__autofind">
@@ -45,14 +65,15 @@ const AutoFind = () => {
           <ControlBar />
         </Header>
         <Content className="jdn__content">
-          {isInvalidSession ? (<SeveralTabsWarning />) : (<GenerationButtons />)}
-          {!isInvalidSession && xpathStatus === xpathGenerationStatus.started ? (
-            <React.Fragment>
-              <LocatorsList />
-              <PerceptionTreshold />
-            </React.Fragment>
+          {isInvalidSession ? <SeveralTabsWarning /> : renderPage()}
+          {currentPage === pageType.locatorsList ? (
+            <div className="jdn__navigation">
+              <Button type="primary" onClick={handleConfirm} className="jdn__buttons">
+                Confirm
+                <Icon component={CaretDownSvg} rotate={270} fill="#ffffff" />
+              </Button>
+            </div>
           ) : null}
-          {/* <XPathSettings />*/}
         </Content>
       </Layout>
     </React.Fragment>

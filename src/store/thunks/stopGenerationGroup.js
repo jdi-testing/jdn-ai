@@ -1,10 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-import { locatorsAdapter } from "../selectors";
+import { locatorsAdapter } from "../selectors/locatorSelectors";
 import { locatorTaskStatus } from "../../utils/constants";
 import { stopGenerationHandler } from "../../services/locatorGenerationController";
 
-export const stopGenerationGroup = createAsyncThunk("main/stopGenerationGroup", async (elements, thunkAPI) => {
+export const stopGenerationGroup = createAsyncThunk("locators/stopGenerationGroup", async (elements) => {
   const ids = elements.map(({element_id}) => element_id);
   return stopGenerationHandler(ids);
 });
@@ -20,7 +20,7 @@ export const stopGenerationGroupReducer = (builder) => {
     });
     locatorsAdapter.upsertMany(state, newValue);
   })
-      .addCase(stopGenerationGroup.fulfilled, (state, { meta }) => {
+      .addCase(stopGenerationGroup.fulfilled, (state) => {
         state.showBackdrop = false;
       })
       .addCase(stopGenerationGroup.rejected, (state, { error }) => {

@@ -1,5 +1,6 @@
 import { filter, replace } from "lodash";
 import { saveAs } from "file-saver";
+import JSZip from "jszip";
 
 import { connector } from "./connector";
 import { getJDILabel } from "../utils/generationClassesMap";
@@ -7,6 +8,7 @@ import { locatorTaskStatus } from "../utils/constants";
 import { openDownloadPopup } from "./pageDataHandlers";
 import { pageObjectTemplate } from "./pageObjectTemplate";
 import javaReservedWords from "../utils/javaReservedWords.json";
+import { selectConfirmedLocators, selectPageObjects } from "../store/selectors/pageObjectSelectors";
 
 export const isStringMatchesReservedWord = (string) => javaReservedWords.includes(string);
 
@@ -51,17 +53,29 @@ export const createLocatorNames = (elements) => {
   });
 };
 
-export const getPage = async (locators) => {
+export const getPageTitle = async () => {
+  const res = await connector.attachContentScript(() => {
+    return document.title;
+  });
+  return res[0].result;
+};
+
+export const getPageAttributes = async () => {
+  return await connector.attachContentScript(() => {
+    const {title, URL} = document;
+    return {title, url: URL};
+  });
+};
+
+export const getPage = async (locators, pageTitle) => {
   const location = await connector.attachContentScript(() => {
     const { hostname, pathname, origin, host } = document.location;
     return { hostname, pathname, origin, host };
   });
 
-  const title = await connector.attachContentScript(() => {
-    return document.title;
-  });
+  const title = pageTitle || await getPageTitle();
 
-  const pageObject = pageObjectTemplate(locators, location[0].result, title[0].result);
+  const pageObject = pageObjectTemplate(locators, location[0].result, title);
   return pageObject;
 };
 
@@ -86,4 +100,19 @@ export const generateAndDownload = (locators) => {
   } else {
     generateAllLocators(locators);
   }
+};
+
+export const generateAndDownloadZip = async (state) => {
+  const zip = new JSZip();
+
+  const pageObjects = selectPageObjects(state);
+
+  for (const po of pageObjects) {
+    const locators = selectConfirmedLocators(state, po.id);
+    const page = await getPage(locators, po.name);
+    zip.file(`${page.title}.java`, page.pageCode, {binary: true});
+  }
+
+  const blob = await zip.generateAsync({ type: "blob" });
+  saveAs(blob, "pageObjects.zip");
 };

@@ -300,7 +300,6 @@
   }
 
   &__buttons {
-    width: 109px;
     height: 30px;
     font-style: normal;
     font-weight: bold;
@@ -426,6 +425,10 @@
 
       .ant-btn {
         height: 30px;
+
+        .anticon {
+          vertical-align: middle;
+        }
       }
 
       .ant-btn-dangerous {
@@ -467,6 +470,10 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+
+      &.jdn__pageObj-content {
+        height: calc(100vh - 168px);
+      }
 
       .ant-spin {
         margin: 0 8px;
@@ -651,6 +658,33 @@
       &-type {
         color: @xpath-item-color-type;
       }
+    }
+  }
+
+  &__pageObject {
+    &__settings {
+      background-color: #ecf7ff;
+      padding: 12px 52px 16px;
+
+      &-url {
+        color: #1582d8;
+        font-size: 12px;
+      }
+    }
+
+    & .jdn__xpath_container--shift {
+      padding-left: 48px;
+    }
+
+    & .ant-collapse > .ant-collapse-item > .ant-collapse-header .ant-collapse-arrow {
+      position: relative;
+      margin-right: 0;
+    }
+  }
+
+  &__navigation {
+    & .jdn__buttons {
+      padding: 4px 12px;
     }
   }
 }

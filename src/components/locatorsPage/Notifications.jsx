@@ -4,17 +4,16 @@ import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect } from "react";
 
 import {
-  cancelLastNotification,
   changeLocatorAttributes,
-  handleLastNotification,
   toggleDeleted,
   toggleDeletedGroup,
-} from "../../store/predictionSlice";
-import { selectLocators } from "../../store/selectors";
+} from "../../store/locatorsSlice";
+import { selectLocators } from "../../store/selectors/locatorSelectors";
 import { stopGeneration } from "../../store/thunks/stopGeneration";
 import { stopGenerationGroup } from "../../store/thunks/stopGenerationGroup";
 import { cancelStopGeneration } from "../../store/thunks/cancelStopGeneration";
 import { revertSettings } from "../../store/thunks/revertSettings";
+import { cancelLastNotification, handleLastNotification } from "../../store/mainSlice";
 
 const messages = (value) => {
   return {

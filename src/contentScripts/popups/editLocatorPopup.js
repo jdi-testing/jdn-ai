@@ -46,7 +46,7 @@ export const editLocatorPopup = () => {
   };
 
   const showDialog = (locatorElement, types) => {
-    const { type, name, locator, element_id } = locatorElement;
+    const { type, name, locator, element_id, jdnHash } = locatorElement;
     currentElement = element_id;
 
     let newElementId;
@@ -105,7 +105,7 @@ export const editLocatorPopup = () => {
       } else if (nodesSnapshot.snapshotLength === 1) {
         const foundElement = nodesSnapshot.snapshotItem(0);
         const foundId = foundElement.getAttribute("jdn-hash");
-        if (foundId !== element_id) {
+        if (foundId !== jdnHash) {
           newElement = { element_id: foundId };
           return new Promise((resolve) => {
             chrome.runtime.sendMessage(

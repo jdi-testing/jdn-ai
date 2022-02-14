@@ -10,23 +10,27 @@ import { Locator } from "./Locator";
 import { LocatorListHeader } from "./LocatorListHeader";
 import { locatorTaskStatus } from "../../utils/constants";
 import { Notifications } from "./Notifications";
-import { selectGeneratedLocators, selectLocatorsByProbability } from "../../store/selectors";
-import { toggleElementGroupGeneration } from "../../store/predictionSlice";
+import { toggleElementGroupGeneration } from "../../store/locatorsSlice";
 
 import CaretDownSvg from "../../assets/caret-down.svg";
 import CheckedkSvg from "../../assets/checked-outlined.svg";
 import DeletedSvg from "../../assets/deleted.svg";
+import {
+  selectGeneratedLocatorsByPageObj,
+  selectPageObjLocatorsByProbability,
+} from "../../store/selectors/pageObjectSelectors";
 
-export const LocatorsList = () => {
+export const LocatorsList = ({ pageObject }) => {
   const dispatch = useDispatch();
 
   const state = useSelector((state) => state);
   const xpathConfig = useSelector((state) => state.main.xpathConfig);
   const xpathStatus = useSelector((state) => state.main.xpathStatus);
+  const currentPageObject = pageObject ? pageObject.id : useSelector((state) => state.pageObject.currentPageObject);
   const [activePanel, setActivePanel] = useState("1");
   const [isProgressActive, setIsProgressActive] = useState(false);
 
-  const byProbability = selectLocatorsByProbability(state);
+  const byProbability = selectPageObjLocatorsByProbability(state, currentPageObject);
 
   const waiting = useMemo(
       () =>
@@ -39,7 +43,7 @@ export const LocatorsList = () => {
         ),
       [byProbability]
   );
-  const generated = useMemo(() => selectGeneratedLocators(state), [byProbability]);
+  const generated = useMemo(() => selectGeneratedLocatorsByPageObj(state, currentPageObject), [byProbability]);
   const deleted = useMemo(() => byProbability.filter((el) => el.deleted), [byProbability]);
 
   const waitingSelected = filter(waiting, "generate");
@@ -141,7 +145,7 @@ export const LocatorsList = () => {
           onChange={togglePanel}
           activeKey={activePanel}
           accordion
-          expandIcon={({ isActive }) => <Icon component={CaretDownSvg} rotate={isActive ? 180 : 0} />}
+          expandIcon={({ isActive }) => <Icon component={CaretDownSvg} rotate={isActive ? 180 : 0} fill="#808080" />}
         >
           {size(generated) && (
             <Collapse.Panel

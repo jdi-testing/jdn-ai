@@ -10,6 +10,12 @@ export const highlightOnPage = () => {
   let predictedElements;
   let perception;
 
+  const clearState = () => {
+    highlightElements = [];
+    nodes = null;
+    predictedElements = null;
+  };
+
   const isInViewport = (element) => {
     const { top, right, bottom, left } = element.getBoundingClientRect();
 
@@ -35,7 +41,7 @@ export const highlightOnPage = () => {
   const updateElement = (element) => {
     const i = predictedElements.findIndex((e) => e.element_id === element.element_id);
     predictedElements[i] = {...predictedElements[i], ...element};
-    const div = document.getElementById(element.element_id);
+    const div = document.getElementById(predictedElements[i].jdnHash);
     return div;
   };
 
@@ -44,7 +50,7 @@ export const highlightOnPage = () => {
     if (div) {
       div.className = getClassName(element);
       if (!skipScroll) {
-        const originDiv = document.querySelector(`[jdn-hash='${element.element_id}']`);
+        const originDiv = document.querySelector(`[jdn-hash='${element.jdnHash}']`);
         if (!isInViewport(originDiv) && element.generate) {
           originDiv.scrollIntoView({ behavior: "smooth" });
         }
@@ -57,7 +63,7 @@ export const highlightOnPage = () => {
 
     if (element.deleted) {
       if (div) {
-        const i = highlightElements.findIndex((e) => e.getAttribute('jdn-hash') === element.element_id);
+        const i = highlightElements.findIndex((e) => e.getAttribute('jdn-hash') === element.jdnHash);
         highlightElements.splice(i, 1);
         div.remove();
       }
@@ -67,8 +73,8 @@ export const highlightOnPage = () => {
   };
 
   const removeElement = (element) => {
-    const div = document.getElementById(element.element_id);
-    const i = highlightElements.findIndex((e) => e.getAttribute('jdn-hash') === element.element_id);
+    const div = document.getElementById(element.jdnHash);
+    const i = highlightElements.findIndex((e) => e.getAttribute('jdn-hash') === element.jdnHash);
     highlightElements.splice(i, 1);
 
     const j = predictedElements.findIndex((e) => e.element_id === element.element_id);
@@ -97,7 +103,7 @@ export const highlightOnPage = () => {
       element,
       predictedElement
   ) => {
-    const { element_id } = predictedElement;
+    const { element_id, jdnHash } = predictedElement;
     const divDefaultStyle = (rect) => {
       const { top, left, height, width } = rect || {};
       return rect ?
@@ -147,7 +153,7 @@ export const highlightOnPage = () => {
     };
 
     const div = document.createElement("div");
-    div.id = element_id;
+    div.id = jdnHash;
     div.className = getClassName(predictedElement);
     div.setAttribute("jdn-highlight", true);
     const tooltip = document.createElement('div');
@@ -184,7 +190,7 @@ export const highlightOnPage = () => {
     nodes.forEach((node) => {
       if (parent.contains(node)) {
         const id = node.getAttribute('jdn-hash');
-        predictedElements.find((elem) => elem.element_id === id).deleted = true;
+        predictedElements.find((elem) => elem.jdnHash === id).deleted = true;
         chrome.runtime.sendMessage({
           message: "REMOVE_ELEMENT",
           param: id,
@@ -202,9 +208,9 @@ export const highlightOnPage = () => {
       perception = param.perception;
     }
     let query = "";
-    predictedElements.forEach(({ element_id, deleted }) => {
+    predictedElements.forEach(({ element_id, deleted, jdnHash }) => {
       if (deleted) return;
-      query += `${!!query.length ? ", " : ""}[jdn-hash='${element_id}']`;
+      query += `${!!query.length ? ", " : ""}[jdn-hash='${jdnHash}']`;
     });
     nodes = document.querySelectorAll(query);
     nodes.forEach((element) => {
@@ -212,13 +218,13 @@ export const highlightOnPage = () => {
         const hash = element.getAttribute("jdn-hash");
         const highlightElement = document.getElementById(hash);
         const isAbovePerceptionTreshold = predictedElements.find((e) => {
-          return hash === e.element_id && e.predicted_probability >= perception;
+          return hash === e.jdnHash && e.predicted_probability >= perception;
         });
         if (!!highlightElement && !isAbovePerceptionTreshold) {
           highlightElement.remove();
         } else if (!highlightElement && isAbovePerceptionTreshold) {
           const predicted = predictedElements.find(
-              (e) => e.element_id === hash
+              (e) => e.jdnHash === hash
           );
           drawRectangle(element, predicted);
         }
@@ -237,11 +243,11 @@ export const highlightOnPage = () => {
 
   const removeHighlightElements = (callback) => {
     if (predictedElements) {
-      predictedElements.forEach(({ element_id: elementId }) => {
-        const el = document.getElementById(elementId);
+      predictedElements.forEach(({ jdnHash }) => {
+        const el = document.getElementById(jdnHash);
         if (el) el.remove();
       });
-      highlightElements = [];
+      clearState();
       callback();
     }
   };

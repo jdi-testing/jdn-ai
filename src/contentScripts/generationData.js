@@ -98,7 +98,7 @@ export const getGenerationAttributes = () => {
   const mapElements = (elements) => {
     const generationAttributes = (elements.map((predictedElement) => {
       const element = document.querySelector(
-          `[jdn-hash='${predictedElement.element_id}']`
+          `[jdn-hash='${predictedElement.jdnHash}']`
       );
       if (!element) {
         return;

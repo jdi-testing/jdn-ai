@@ -1,8 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { lowerFirst, size } from "lodash";
-import { autoFindStatus, locatorTaskStatus, VALIDATION_ERROR_TYPE, xpathGenerationStatus } from "../utils/constants";
+import { lowerFirst } from "lodash";
+import { identificationStatus, locatorTaskStatus, VALIDATION_ERROR_TYPE } from "../utils/constants";
 import { getJdiClassName, getJDILabel } from "../utils/generationClassesMap";
-import { locatorsAdapter, simpleSelectLocatorById } from "./selectors";
+import { locatorsAdapter, simpleSelectLocatorById } from "./selectors/locatorSelectors";
 import { cancelStopGenerationReducer } from "./thunks/cancelStopGeneration";
 import { generateLocatorsReducer } from "./thunks/generateLocators";
 import { identifyElementsReducer } from "./thunks/identifyElements";
@@ -10,27 +10,12 @@ import { stopGenerationReducer } from "./thunks/stopGeneration";
 import { stopGenerationGroupReducer } from "./thunks/stopGenerationGroup";
 
 const initialState = {
-  status: autoFindStatus.noStatus,
-  allowIdentifyElements: true,
-  allowRemoveElements: false,
-  showBackdrop: false,
-  notifications: [],
-  perception: 0.5,
+  status: identificationStatus.noStatus,
   predictedElements: [],
-  unactualPrediction: false,
-  unreachableNodes: [], // sendMessage.highlightUnreached(unreachableNodes);
-  xpathStatus: xpathGenerationStatus.noStatus,
-  xpathConfig: {
-    maximum_generation_time: 10,
-    allow_indexes_at_the_beginning: false,
-    allow_indexes_in_the_middle: false,
-    allow_indexes_at_the_end: true,
-    limit_maximum_generation_time: true,
-  },
 };
 
-const predictionSlice = createSlice({
-  name: "main",
+const locatorsSlice = createSlice({
+  name: "locators",
   initialState: locatorsAdapter.getInitialState(initialState),
   reducers: {
     addLocators(state, { payload }) {
@@ -68,31 +53,6 @@ const predictionSlice = createSlice({
     changeLocatorSettings(state, { payload }) {
       locatorsAdapter.upsertMany(state, payload);
     },
-    changePerception(state, { payload }) {
-      state.perception = payload;
-    },
-    changeXpathSettings(state, { payload }) {
-      state.xpathConfig = payload;
-    },
-    clearAll(state) {
-      state.status = autoFindStatus.removed;
-      Object.keys(initialState).forEach((key) => {
-        state[key] = initialState[key];
-      });
-      locatorsAdapter.removeAll(state);
-    },
-    pushNotification(state, { payload }) {
-      state.notifications.push(payload);
-    },
-    cancelLastNotification(state) {
-      state.notifications[size(state.notifications) - 1].isCanceled = true;
-    },
-    handleLastNotification(state) {
-      state.notifications[size(state.notifications) - 1].isHandled = true;
-    },
-    setUnactualPrediction(state, { payload }) {
-      state.unactualPrediction = payload;
-    },
     toggleElementGeneration(state, { payload }) {
       const locator = simpleSelectLocatorById(state, payload);
       locatorsAdapter.upsertOne(state, { ...locator, generate: !locator.generate });
@@ -115,16 +75,10 @@ const predictionSlice = createSlice({
       });
       locatorsAdapter.upsertMany(state, newValue);
     },
-    toggleBackdrop(state, { payload }) {
-      state.showBackdrop = payload;
-    },
     updateLocator(state, { payload }) {
       const { element_id, locator } = payload;
       const existingLocator = simpleSelectLocatorById(state, element_id);
       locatorsAdapter.upsertOne(state, { element_id, locator: { ...existingLocator.locator, ...locator } });
-    },
-    xPathGenerationStarted(state) {
-      state.xpathStatus = xpathGenerationStatus.started;
     },
     addCmElementHighlight(state, { payload }) {
       locatorsAdapter.upsertOne(state, { element_id: payload, isCmHighlighted: true });
@@ -142,25 +96,16 @@ const predictionSlice = createSlice({
   },
 });
 
-export default predictionSlice.reducer;
+export default locatorsSlice.reducer;
 export const {
   addLocators,
-  cancelLastNotification,
   changeLocatorAttributes,
   changeLocatorSettings,
-  changeXpathSettings,
-  clearAll,
-  changePerception,
-  handleLastNotification,
-  pushNotification,
-  setUnactualPrediction,
   toggleElementGeneration,
   toggleElementGroupGeneration,
   toggleDeleted,
   toggleDeletedGroup,
-  toggleBackdrop,
   updateLocator,
-  xPathGenerationStarted,
   addCmElementHighlight,
   clearCmElementHighlight,
-} = predictionSlice.actions;
+} = locatorsSlice.actions;

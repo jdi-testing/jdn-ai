@@ -2,15 +2,17 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 
 import { requestGenerationData } from "../../services/pageDataHandlers";
 import { runXpathGeneration } from "./runXpathGeneration";
-import { selectLocators } from "../selectors";
+import { selectLocators } from "../selectors/locatorSelectors";
 import { sendMessage } from "../../services/connector";
-import { addLocators, xPathGenerationStarted } from "../predictionSlice";
+import { addLocators } from "../locatorsSlice";
+import { addLocatorsToPageObj } from "../pageObjectSlice";
+import { xPathGenerationStarted } from "../mainSlice";
 
 const filterByProbability = (elements, perception) => {
   return elements.filter((e) => e.predicted_probability >= perception);
 };
 
-export const generateLocators = createAsyncThunk("main/generateLocators", async (predictedElements, thunkAPI) => {
+export const generateLocators = createAsyncThunk("locators/generateLocators", async (predictedElements, thunkAPI) => {
   const availableForGeneration = filterByProbability(predictedElements, 0.5);
   const state = thunkAPI.getState();
   const { perception } = state.main;
@@ -23,6 +25,10 @@ export const generateLocators = createAsyncThunk("main/generateLocators", async 
       const { generationData } = await requestGenerationData(noLocator);
       sendMessage.setHighlight({ elements: generationData, perception });
       thunkAPI.dispatch(addLocators(generationData));
+
+      const ids = generationData.map(({element_id}) => element_id);
+      thunkAPI.dispatch(addLocatorsToPageObj(ids));
+
       thunkAPI.dispatch(xPathGenerationStarted());
       thunkAPI.dispatch(runXpathGeneration(generationData));
     }

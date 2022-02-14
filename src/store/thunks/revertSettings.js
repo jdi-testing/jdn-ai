@@ -1,13 +1,13 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-import { changeLocatorSettings, updateLocator } from "../predictionSlice";
+import { changeLocatorSettings, updateLocator } from "../locatorsSlice";
 import { isProgressStatus } from "../../services/locatorGenerationController";
 import { runXpathGeneration } from "./runXpathGeneration";
-import { selectLocatorById } from "../selectors";
+import { selectLocatorById } from "../selectors/locatorSelectors";
 import { stopGeneration } from "./stopGeneration";
 
 export const revertSettings = createAsyncThunk(
-    "main/revertLocatorSettings",
+    "locators/revertLocatorSettings",
     async ({ prevValue }, thunkAPI) => {
       prevValue.forEach((previousElement) => {
         const {element_id: id, locator} = previousElement;

@@ -3,29 +3,22 @@ import { useSelector, useDispatch } from "react-redux";
 import Icon, { SearchOutlined } from "@ant-design/icons";
 import React, { useState } from "react";
 
-import { autoFindStatus } from "../utils/constants";
-import { clearAll } from "../store/predictionSlice";
+import { identificationStatus, pageType } from "../utils/constants";
 import { identifyElements } from "../store/thunks/identifyElements";
-import { locatorGenerationController } from "../services/locatorGenerationController";
 import { openSettingsMenu } from "../services/pageDataHandlers";
-import { sendMessage } from "../services/connector";
 import { MUI_PREDICT, HTML5_PREDICT } from "../services/backend";
 
 import Settings from "../assets/settings.svg";
 
-export const GenerationButtons = () => {
-  const status = useSelector((state) => state.main.status);
+export const GenerationButtons = ({ pageObj }) => {
+  const status = useSelector((state) => state.locators.status);
   const allowIdentifyElements = useSelector((state) => state.main.allowIdentifyElements);
-  const allowRemoveElements = useSelector((state) => state.main.allowRemoveElements);
   const xpathConfig = useSelector((state) => state.main.xpathConfig);
+  const currentPage = useSelector((state) => state.main.currentPage);
+  const currentPageObject = useSelector((state) => state.pageObject.currentPageObject);
+
   const dispatch = useDispatch();
   const [endpoint, setEndpoint] = useState(MUI_PREDICT);
-
-  const handleClearAll = () => {
-    dispatch(clearAll());
-    sendMessage.killHighlight();
-    locatorGenerationController.revokeAll();
-  };
 
   const renderSettingsButton = () => {
     return (
@@ -33,10 +26,7 @@ export const GenerationButtons = () => {
         onClick={() => {
           openSettingsMenu(xpathConfig);
         }}
-        className={[
-          "jdn__buttons",
-          "jdn__buttons--secondary"
-        ]}
+        className={["jdn__buttons", "jdn__buttons--secondary"]}
       >
         <Icon component={Settings} />
         Settings
@@ -44,33 +34,11 @@ export const GenerationButtons = () => {
     );
   };
 
-  const renderClearAllButton = () => {
-    return (
-      <Button
-        disabled={!allowRemoveElements}
-        onClick={handleClearAll}
-        className={[
-          "jdn__buttons",
-          "jdn__buttons--secondary"
-        ]}
-      >
-        Clear all
-      </Button>
-    );
-  };
-
   return (
     <div className="jdn__generationButtons">
       <Space direction="vertical" size={16}>
-        <Space
-          direction="horizontal"
-          size={8}
-          align="center"
-        >
-          <label
-            htmlFor="library"
-            className={`${!allowIdentifyElements ? "jdn__label--disabled" : ""}`}
-          >
+        <Space direction="horizontal" size={8} align="center">
+          <label htmlFor="library" className={`${!allowIdentifyElements ? "jdn__label--disabled" : ""}`}>
             Library:
           </label>
           <Select
@@ -84,20 +52,19 @@ export const GenerationButtons = () => {
             <Select.Option value={HTML5_PREDICT}>HTML 5</Select.Option>
           </Select>
         </Space>
-        <Space
-          direction="horizontal"
-          size={8}
-        >
-          {allowIdentifyElements ? renderSettingsButton() : renderClearAllButton()}
+        <Space direction="horizontal" size={8}>
+          {(currentPage === pageType.locatorsList) && allowIdentifyElements ?
+            renderSettingsButton() :
+            null}
           <Button
             icon={<SearchOutlined />}
             type="primary"
-            loading={status === autoFindStatus.loading}
+            loading={status === identificationStatus.loading && currentPageObject === pageObj}
             disabled={!allowIdentifyElements}
-            onClick={() => dispatch(identifyElements(endpoint))}
+            onClick={() => dispatch(identifyElements({ endpoint, pageObj }))}
             className="jdn__buttons"
           >
-            Identify
+            Generate
           </Button>
         </Space>
       </Space>
