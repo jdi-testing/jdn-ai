@@ -1,16 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { size } from "lodash";
-import { identificationStatus, pageType, xpathGenerationStatus } from "../utils/constants";
+import { identificationStatus, xpathGenerationStatus } from "../../utils/constants";
 
 const initialState = {
-  currentPage: pageType.pageObject,
   allowIdentifyElements: true,
   allowRemoveElements: false,
-  showBackdrop: false,
+  // currentPage: pageType.pageObject,
   notifications: [],
+  pageHistory: [],
   perception: 0.5,
+  showBackdrop: false,
   unactualPrediction: false,
-  unreachableNodes: [], // sendMessage.highlightUnreached(unreachableNodes);
   xpathStatus: xpathGenerationStatus.noStatus,
   xpathConfig: {
     maximum_generation_time: 10,
@@ -26,7 +26,11 @@ const mainSlice = createSlice({
   initialState,
   reducers: {
     changePage(state, {payload}) {
-      state.currentPage = payload;
+      // state.currentPage = payload;
+      state.pageHistory.push(payload);
+    },
+    changePageBack(state) {
+      state.pageHistory.pop();
     },
     changePerception(state, { payload }) {
       state.perception = payload;
@@ -64,6 +68,7 @@ const mainSlice = createSlice({
 export default mainSlice.reducer;
 export const {
   changePage,
+  changePageBack,
   cancelLastNotification,
   changePerception,
   changeXpathSettings,

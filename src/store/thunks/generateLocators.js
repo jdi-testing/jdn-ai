@@ -4,9 +4,9 @@ import { requestGenerationData } from "../../services/pageDataHandlers";
 import { runXpathGeneration } from "./runXpathGeneration";
 import { selectLocators } from "../selectors/locatorSelectors";
 import { sendMessage } from "../../services/connector";
-import { addLocators } from "../locatorsSlice";
-import { addLocatorsToPageObj } from "../pageObjectSlice";
-import { xPathGenerationStarted } from "../mainSlice";
+import { addLocators } from "../slices/locatorsSlice";
+import { addLocatorsToPageObj } from "../slices/pageObjectSlice";
+import { xPathGenerationStarted } from "../slices/mainSlice";
 
 const filterByProbability = (elements, perception) => {
   return elements.filter((e) => e.predicted_probability >= perception);

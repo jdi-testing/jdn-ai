@@ -10,7 +10,7 @@ import { Locator } from "./Locator";
 import { LocatorListHeader } from "./LocatorListHeader";
 import { locatorTaskStatus } from "../../utils/constants";
 import { Notifications } from "./Notifications";
-import { toggleElementGroupGeneration } from "../../store/locatorsSlice";
+import { toggleElementGroupGeneration } from "../../store/slices/locatorsSlice";
 
 import CaretDownSvg from "../../assets/caret-down.svg";
 import CheckedkSvg from "../../assets/checked-outlined.svg";

@@ -1,8 +1,8 @@
 import {configureStore} from "@reduxjs/toolkit";
-import locatorsSlice from "./locatorsSlice";
+import locatorsSlice from "./slices/locatorsSlice";
 import { logger } from "./loggerMiddleware";
-import mainSlice from "./mainSlice";
-import pageObjectSlice from "./pageObjectSlice";
+import mainSlice from "./slices/mainSlice";
+import pageObjectSlice from "./slices/pageObjectSlice";
 
 const rootReducer = {
   main: mainSlice,

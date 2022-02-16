@@ -1,4 +1,4 @@
-export const downloadPopup = () => {
+export const confirmPopup = () => {
   chrome.runtime.sendMessage({
     message: "IS_OPEN_MODAL",
     param: true,
@@ -17,7 +17,7 @@ export const downloadPopup = () => {
 
   const header = document.createElement('h4');
   header.classList.add('jdn-popup__header');
-  header.innerHTML = 'Download';
+  header.innerHTML = 'Go back to the previous page?';
 
   const closeButton = document.createElement('button');
   closeButton.innerHTML = "&#215;";
@@ -26,23 +26,13 @@ export const downloadPopup = () => {
 
   const main = document.createElement('div');
   main.classList.add("jdn-popup__main");
-  main.innerHTML = `
-    <strong class="jdn-download-popup__warning">Attention!</strong>
-    Not all selected locators have already been<br>
-    generated. We recommend waiting until the generation is<br>complete.
-  `;
+  main.innerHTML = `Your generation process will be cleared. You haven't selected any locators for this page object.`;
 
-  const downloadGeneratedButton = document.createElement("button");
-  downloadGeneratedButton.classList.add("jdn-popup__button");
-  downloadGeneratedButton.classList.add("jdn-popup__button_primary");
-  downloadGeneratedButton.innerText = "Download generated";
-  downloadGeneratedButton.onclick = downloadGenerated;
-
-  const downloadAllButton = document.createElement("button");
-  downloadAllButton.classList.add("jdn-popup__button");
-  downloadAllButton.classList.add("jdn-popup__button_secondary");
-  downloadAllButton.innerText = "Download all";
-  downloadAllButton.onclick = downloadAll;
+  const confirmButton = document.createElement("button");
+  confirmButton.classList.add("jdn-popup__button");
+  confirmButton.classList.add("jdn-popup__button_primary");
+  confirmButton.innerText = "Go to the previous page";
+  confirmButton.onclick = confirm;
 
   const cancelButton = document.createElement("button");
   cancelButton.classList.add("jdn-popup__button");
@@ -53,8 +43,7 @@ export const downloadPopup = () => {
   const buttonContainer = document.createElement("div");
   buttonContainer.classList.add("jdn-popup__button-container");
   buttonContainer.append(cancelButton);
-  buttonContainer.append(downloadAllButton);
-  buttonContainer.append(downloadGeneratedButton);
+  buttonContainer.append(confirmButton);
 
   main.append(buttonContainer);
 
@@ -74,18 +63,10 @@ export const downloadPopup = () => {
     wrapper.remove();
   }
 
-  function downloadAll() {
+  function confirm() {
     chrome.runtime.sendMessage({
-      message: "DOWNLOAD_POPUP",
-      param: 'all'
-    });
-    wrapper.remove();
-  }
-
-  function downloadGenerated() {
-    chrome.runtime.sendMessage({
-      message: "DOWNLOAD_POPUP",
-      param: 'generated'
+      message: "CONFIRM_POPUP",
+      param: "clear"
     });
     wrapper.remove();
   }

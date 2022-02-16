@@ -1,13 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { lowerFirst } from "lodash";
-import { identificationStatus, locatorTaskStatus, VALIDATION_ERROR_TYPE } from "../utils/constants";
-import { getJdiClassName, getJDILabel } from "../utils/generationClassesMap";
-import { locatorsAdapter, simpleSelectLocatorById } from "./selectors/locatorSelectors";
-import { cancelStopGenerationReducer } from "./thunks/cancelStopGeneration";
-import { generateLocatorsReducer } from "./thunks/generateLocators";
-import { identifyElementsReducer } from "./thunks/identifyElements";
-import { stopGenerationReducer } from "./thunks/stopGeneration";
-import { stopGenerationGroupReducer } from "./thunks/stopGenerationGroup";
+import { identificationStatus, locatorTaskStatus, VALIDATION_ERROR_TYPE } from "../../utils/constants";
+import { getJdiClassName, getJDILabel } from "../../utils/generationClassesMap";
+import { locatorsAdapter, simpleSelectLocatorById } from "../selectors/locatorSelectors";
+import { cancelStopGenerationReducer } from "../thunks/cancelStopGeneration";
+import { generateLocatorsReducer } from "../thunks/generateLocators";
+import { identifyElementsReducer } from "../thunks/identifyElements";
+import { stopGenerationReducer } from "../thunks/stopGeneration";
+import { stopGenerationGroupReducer } from "../thunks/stopGenerationGroup";
 
 const initialState = {
   status: identificationStatus.noStatus,
@@ -52,6 +52,9 @@ const locatorsSlice = createSlice({
     },
     changeLocatorSettings(state, { payload }) {
       locatorsAdapter.upsertMany(state, payload);
+    },
+    removeLocators(state, {payload}) {
+      locatorsAdapter.removeMany(state, payload);
     },
     toggleElementGeneration(state, { payload }) {
       const locator = simpleSelectLocatorById(state, payload);
@@ -101,6 +104,7 @@ export const {
   addLocators,
   changeLocatorAttributes,
   changeLocatorSettings,
+  removeLocators,
   toggleElementGeneration,
   toggleElementGroupGeneration,
   toggleDeleted,

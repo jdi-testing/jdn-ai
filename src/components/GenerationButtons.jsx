@@ -9,12 +9,13 @@ import { openSettingsMenu } from "../services/pageDataHandlers";
 import { MUI_PREDICT, HTML5_PREDICT } from "../services/backend";
 
 import Settings from "../assets/settings.svg";
+import { selectCurrentPage } from "../store/selectors/mainSelectors";
 
 export const GenerationButtons = ({ pageObj }) => {
   const status = useSelector((state) => state.locators.status);
   const allowIdentifyElements = useSelector((state) => state.main.allowIdentifyElements);
   const xpathConfig = useSelector((state) => state.main.xpathConfig);
-  const currentPage = useSelector((state) => state.main.currentPage);
+  const currentPage = useSelector(selectCurrentPage).page;
   const currentPageObject = useSelector((state) => state.pageObject.currentPageObject);
 
   const dispatch = useDispatch();

@@ -1,9 +1,9 @@
-import { addLocatorsToPageObj, addLocatorToPageObj } from "../../../store/pageObjectSlice";
+import { addLocatorsToPageObj, addLocatorToPageObj } from "../../../store/slices/pageObjectSlice";
 import { selectPageObjById, selectPageObjects } from "../../../store/selectors/pageObjectSelectors";
 import { store } from "../../../store/store";
 import { addPageObj } from "../../../store/thunks/addPageObject";
 import * as pageObject from "../../../services/pageObject";
-import { clearAll } from "../../../store/mainSlice";
+import { clearAll } from "../../../store/slices/mainSlice";
 
 describe("pageObject reducers", () => {
   beforeAll(async () => {
@@ -29,10 +29,10 @@ describe("pageObject reducers", () => {
     expect(pageObj.locators).toContain(locatorId);
   });
 
-  xtest("add many locators to page object", () => {
+  test("add many locators to page object", () => {
     const pageObjId = 2;
     const locatorIds = ["8736312404689610766421832473", "2222222222", "333333333333333"];
-    store.dispatch(addLocatorsToPageObj({ pageObjId, locatorIds }));
+    store.dispatch(addLocatorsToPageObj(locatorIds));
 
     const pageObj = selectPageObjById(store.getState(), pageObjId);
     expect(pageObj.locators).toHaveLength(3);
@@ -43,7 +43,6 @@ describe("pageObject reducers", () => {
 
   test("select list of pageObjects", () => {
     const pageObjList = selectPageObjects(store.getState());
-    console.log(pageObjList);
     expect(pageObjList).toHaveLength(3);
   });
 });

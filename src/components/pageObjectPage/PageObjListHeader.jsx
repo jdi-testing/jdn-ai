@@ -9,7 +9,7 @@ import { generateAndDownloadZip } from "../../services/pageObject";
 
 import PlusSvg from "../../assets/plus.svg";
 import DownloadSvg from "../../assets/download.svg";
-import { pushNotification } from "../../store/mainSlice";
+import { pushNotification } from "../../store/slices/mainSlice";
 
 export const PageObjListHeader = () => {
   const state = useSelector((state) => state);

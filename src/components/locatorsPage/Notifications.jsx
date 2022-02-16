@@ -7,13 +7,13 @@ import {
   changeLocatorAttributes,
   toggleDeleted,
   toggleDeletedGroup,
-} from "../../store/locatorsSlice";
+} from "../../store/slices/locatorsSlice";
 import { selectLocators } from "../../store/selectors/locatorSelectors";
 import { stopGeneration } from "../../store/thunks/stopGeneration";
 import { stopGenerationGroup } from "../../store/thunks/stopGenerationGroup";
 import { cancelStopGeneration } from "../../store/thunks/cancelStopGeneration";
 import { revertSettings } from "../../store/thunks/revertSettings";
-import { cancelLastNotification, handleLastNotification } from "../../store/mainSlice";
+import { cancelLastNotification, handleLastNotification } from "../../store/slices/mainSlice";
 
 const messages = (value) => {
   return {

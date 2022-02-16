@@ -3,7 +3,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { identificationStatus } from "../../utils/constants";
 import { generateLocators } from "./generateLocators";
 import { getElements } from "../../services/pageDataHandlers";
-import { setCurrentPageObj } from "../pageObjectSlice";
+import { setCurrentPageObj } from "../slices/pageObjectSlice";
 
 export const identifyElements = createAsyncThunk(
     "locators/identifyElements",

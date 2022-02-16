@@ -4,23 +4,29 @@ import Layout, { Content, Header } from "antd/lib/layout/layout";
 import { Button } from "antd";
 import Icon from "@ant-design/icons";
 
-import { changePage, clearAll } from "../store/mainSlice";
+import { changePage, changePageBack, clearAll } from "../store/slices/mainSlice";
 import { connector } from "../services/connector";
 import { ControlBar } from "./ControlBar";
 import { createListeners } from "../services/scriptListener";
 import { SeveralTabsWarning } from "./SeveralTabsWarning";
 import { locatorGenerationController } from "../services/locatorGenerationController";
-import { removeOverlay } from "../services/pageDataHandlers";
+import { openConfirmPopup, removeOverlay } from "../services/pageDataHandlers";
 import { LocatorsPage } from "./locatorsPage/LocatorsPage";
 import { identificationStatus, pageType } from "../utils/constants";
 import { PageObjectPage } from "./pageObjectPage/PageObjectPage";
 
 import CaretDownSvg from "../assets/caret-down.svg";
+import { selectCurrentPage } from "../store/selectors/mainSelectors";
+import { selectPageObjById } from "../store/selectors/pageObjectSelectors";
+import { size } from "lodash";
+import { setConfirmed } from "../store/slices/pageObjectSlice";
 
 const AutoFind = () => {
   const [isInvalidSession, setIsInvalidSession] = useState(localStorage.getItem("secondSession"));
+  const state = useSelector((state) => state);
   const status = useSelector((state) => state.locators.status);
-  const currentPage = useSelector((state) => state.main.currentPage);
+  const currentPage = useSelector(selectCurrentPage).page;
+  const currentPageObject = useSelector((state) => state.pageObject.currentPageObject);
   const dispatch = useDispatch();
 
   createListeners(
@@ -45,7 +51,7 @@ const AutoFind = () => {
 
   useEffect(() => {
     if (status === identificationStatus.success) {
-      dispatch(changePage(pageType.locatorsList));
+      dispatch(changePage({ page: pageType.locatorsList, pageObj: currentPageObject }));
     }
   }, [status]);
 
@@ -55,7 +61,46 @@ const AutoFind = () => {
 
   const handleConfirm = () => {
     locatorGenerationController.revokeAll();
-    dispatch(changePage(pageType.pageObject));
+    dispatch(setConfirmed(currentPageObject));
+    dispatch(changePage({ page: pageType.pageObject, pageObj: currentPageObject }));
+  };
+
+  const handleBack = () => {
+    const pageObject = selectPageObjById(state, currentPageObject);
+    if (!pageObject.confirmed) {
+      openConfirmPopup();
+    } else {
+      dispatch(changePageBack());
+    }
+  };
+
+  const renderBackButton = () => {
+    const pageObject = selectPageObjById(state, currentPageObject);
+    const historyExists = size(useSelector((state) => state.main.pageHistory)) > 1;
+    return (
+      <React.Fragment>
+        {(currentPage === pageType.pageObject && size(pageObject && pageObject.locators) && historyExists) ||
+        currentPage === pageType.locatorsList ? (
+          <Button onClick={handleBack} className="jdn__buttons">
+            <Icon component={CaretDownSvg} rotate={90} fill="#1582D8" />
+            Back
+          </Button>
+        ) : null}
+      </React.Fragment>
+    );
+  };
+
+  const renderConfirmButton = () => {
+    return (
+      <React.Fragment>
+        {currentPage === pageType.locatorsList ? (
+          <Button type="primary" onClick={handleConfirm} className="jdn__buttons">
+            Confirm
+            <Icon component={CaretDownSvg} rotate={270} fill="#ffffff" />
+          </Button>
+        ) : null}
+      </React.Fragment>
+    );
   };
 
   return (
@@ -66,14 +111,10 @@ const AutoFind = () => {
         </Header>
         <Content className="jdn__content">
           {isInvalidSession ? <SeveralTabsWarning /> : renderPage()}
-          {currentPage === pageType.locatorsList ? (
-            <div className="jdn__navigation">
-              <Button type="primary" onClick={handleConfirm} className="jdn__buttons">
-                Confirm
-                <Icon component={CaretDownSvg} rotate={270} fill="#ffffff" />
-              </Button>
-            </div>
-          ) : null}
+          <div className="jdn__navigation">
+            {renderBackButton()}
+            {renderConfirmButton()}
+          </div>
         </Content>
       </Layout>
     </React.Fragment>

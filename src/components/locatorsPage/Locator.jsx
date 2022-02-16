@@ -11,7 +11,7 @@ import { locatorTaskStatus, VALIDATION_ERROR_TYPE, pageType } from "../../utils/
 import { openSettingsMenu } from "../../services/pageDataHandlers";
 import { rerunGeneration } from "../../store/thunks/rerunGeneration";
 import { stopGeneration } from "../../store/thunks/stopGeneration";
-import { toggleDeleted, toggleElementGeneration } from "../../store/locatorsSlice";
+import { toggleDeleted, toggleElementGeneration } from "../../store/slices/locatorsSlice";
 
 import CheckedkSvg from "../../assets/checked-outlined.svg";
 import CheckedEdited from "../../assets/checked-edited.svg";
@@ -27,6 +27,7 @@ import SettingsSvg from "../../assets/settings.svg";
 import TrashBinSvg from "../../assets/trash-bin.svg";
 import WarningSvg from "../../assets/warning.svg";
 import WarningEditedSvg from "../../assets/warning-edited.svg";
+import { selectCurrentPage } from "../../store/selectors/mainSelectors";
 
 export const VALIDATION_ERROR_MESSAGES = {
   [VALIDATION_ERROR_TYPE.DUPLICATED_LOCATOR]: "The locator for this element already exists.", // warn
@@ -41,7 +42,7 @@ const isValidLocator = ({ locator, validity }) =>
   !validity?.locator.length || validity.locator === VALIDATION_ERROR_TYPE.NEW_ELEMENT;
 
 export const Locator = ({ element, xpathConfig, noScrolling }) => {
-  const currentPage = useSelector((state) => state.main.currentPage);
+  const currentPage = useSelector(selectCurrentPage).page;
   const dispatch = useDispatch();
 
   const { element_id, type, name, locator, generate, isCmHighlighted, validity } = element;
