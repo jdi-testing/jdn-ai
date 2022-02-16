@@ -50,3 +50,9 @@ export const selectGeneratedLocatorsByPageObj = createSelector(
     (locators, locByPageObj) =>
       locators.filter((loc) => locByPageObj.includes(loc.element_id))
 );
+
+export const selectLocatorByJdnHash = createSelector(
+    (state, jdnHash) => selectLocators(state).filter((loc) => loc.jdnHash === jdnHash),
+    (state) => selectPageObjById(state, state.pageObject.currentPageObject).locators,
+    (locators, pageObjLocators) => locators.find(({element_id}) => pageObjLocators.includes(element_id))
+);
