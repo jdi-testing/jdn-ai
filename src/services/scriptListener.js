@@ -18,7 +18,7 @@ import {
   selectLocatorsByProbability,
   selectLocators,
 } from "../store/selectors/locatorSelectors";
-import { isProgressStatus, stopGenerationHandler } from "./locatorGenerationController";
+import { isProgressStatus, locatorGenerationController, stopGenerationHandler } from "./locatorGenerationController";
 import { stopGeneration } from "../store/thunks/stopGeneration";
 import { rerunGeneration } from "../store/thunks/rerunGeneration";
 import { generateAllLocators, isNameUnique, isStringMatchesReservedWord } from "./pageObject";
@@ -31,7 +31,7 @@ import {
   toggleBackdrop,
 } from "../store/slices/mainSlice";
 import { clearLocators } from "../store/slices/pageObjectSlice";
-import { selectPageObjById } from "../store/selectors/pageObjectSelectors";
+import { selectLocatorByJdnHash, selectPageObjById } from "../store/selectors/pageObjectSelectors";
 
 export const createListeners = (dispatch, state) => {
   const actions = {
@@ -59,7 +59,7 @@ export const createListeners = (dispatch, state) => {
       }
     },
     GET_ELEMENT: (id) => {
-      const element = selectLocatorById(state, id);
+      const element = selectLocatorByJdnHash(state, id);
       sendMessage.elementData({
         element,
         types: getTypesMenuOptions(),
@@ -77,6 +77,7 @@ export const createListeners = (dispatch, state) => {
     CONFIRM_POPUP: () => {
       const currentPageObject = state.pageObject.currentPageObject;
       const locatorIds = selectPageObjById(state, currentPageObject).locators;
+      locatorGenerationController.revokeAll();
       dispatch(clearLocators(currentPageObject));
       dispatch(removeLocators(locatorIds));
       dispatch(changePageBack());
