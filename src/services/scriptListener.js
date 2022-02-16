@@ -7,6 +7,7 @@ import {
   clearCmElementHighlight,
   addCmElementHighlight,
   changeLocatorAttributes,
+  removeLocators,
 } from "../store/slices/locatorsSlice";
 import { connector, sendMessage } from "./connector";
 import { getTypesMenuOptions } from "../utils/generationClassesMap";
@@ -22,7 +23,15 @@ import { stopGeneration } from "../store/thunks/stopGeneration";
 import { rerunGeneration } from "../store/thunks/rerunGeneration";
 import { generateAllLocators, isNameUnique, isStringMatchesReservedWord } from "./pageObject";
 import { locatorTaskStatus, VALIDATION_ERROR_TYPE } from "../utils/constants";
-import { changeXpathSettings, clearAll, setUnactualPrediction, toggleBackdrop } from "../store/slices/mainSlice";
+import {
+  changePageBack,
+  changeXpathSettings,
+  clearAll,
+  setUnactualPrediction,
+  toggleBackdrop,
+} from "../store/slices/mainSlice";
+import { clearLocators } from "../store/slices/pageObjectSlice";
+import { selectPageObjById } from "../store/selectors/pageObjectSelectors";
 
 export const createListeners = (dispatch, state) => {
   const actions = {
@@ -65,6 +74,14 @@ export const createListeners = (dispatch, state) => {
     CM_ELEMENT_HIGHLIGHT_OFF: (payload) => {
       dispatch(clearCmElementHighlight(payload));
     },
+    CONFIRM_POPUP: () => {
+      const currentPageObject = state.pageObject.currentPageObject;
+      const locatorIds = selectPageObjById(state, currentPageObject).locators;
+      dispatch(clearLocators(currentPageObject));
+      dispatch(removeLocators(locatorIds));
+      dispatch(changePageBack());
+      dispatch(toggleBackdrop(false));
+    },
     IS_OPEN_MODAL: (payload) => dispatch(toggleBackdrop(payload)),
     OPEN_XPATH_CONFIG: (payload) => openSettingsMenu(state.main.xpathConfig, payload),
     PREDICTION_IS_UNACTUAL: () => dispatch(setUnactualPrediction(true)),
@@ -92,9 +109,7 @@ export const createListeners = (dispatch, state) => {
       if (isStringMatchesReservedWord(newName)) sendResponse(VALIDATION_ERROR_TYPE.INVALID_NAME);
     },
     CHECK_LOCATOR_VALIDITY: ({ newElementId }, sender, sendResponse) => {
-      const validationMessage = selectLocatorById(state, newElementId) ?
-        VALIDATION_ERROR_TYPE.DUPLICATED_LOCATOR :
-        "";
+      const validationMessage = selectLocatorById(state, newElementId) ? VALIDATION_ERROR_TYPE.DUPLICATED_LOCATOR : "";
       sendResponse(validationMessage);
     },
   };

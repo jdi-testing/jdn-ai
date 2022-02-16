@@ -4,6 +4,7 @@ import { getPageData } from "./../contentScripts/pageData";
 import { createLocatorNames } from "./pageObject";
 import { reportPopup, settingsPopup, downloadPopup } from "../contentScripts/popups";
 import { request } from "../services/backend";
+import { confirmPopup } from "../contentScripts/popups/confirmPopup";
 /* global chrome*/
 
 let overlayID;
@@ -82,4 +83,8 @@ export const openSettingsMenu = (xpathConfig, elementIds, hasGeneratedSelected) 
 
 export const openDownloadPopup = () => {
   connector.attachContentScript(downloadPopup);
+};
+
+export const openConfirmPopup = () => {
+  connector.attachContentScript(confirmPopup);
 };

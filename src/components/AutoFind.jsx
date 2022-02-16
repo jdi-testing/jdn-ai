@@ -10,7 +10,7 @@ import { ControlBar } from "./ControlBar";
 import { createListeners } from "../services/scriptListener";
 import { SeveralTabsWarning } from "./SeveralTabsWarning";
 import { locatorGenerationController } from "../services/locatorGenerationController";
-import { removeOverlay } from "../services/pageDataHandlers";
+import { openConfirmPopup, removeOverlay } from "../services/pageDataHandlers";
 import { LocatorsPage } from "./locatorsPage/LocatorsPage";
 import { identificationStatus, pageType } from "../utils/constants";
 import { PageObjectPage } from "./pageObjectPage/PageObjectPage";
@@ -68,7 +68,7 @@ const AutoFind = () => {
   const handleBack = () => {
     const pageObject = selectPageObjById(state, currentPageObject);
     if (!pageObject.confirmed) {
-      // show dialog
+      openConfirmPopup();
     } else {
       dispatch(changePageBack());
     }
@@ -76,7 +76,6 @@ const AutoFind = () => {
 
   const renderBackButton = () => {
     const pageObject = selectPageObjById(state, currentPageObject);
-    const h = useSelector((state) => state.main.pageHistory);
     const historyExists = size(useSelector((state) => state.main.pageHistory)) > 1;
     return (
       <React.Fragment>
@@ -84,7 +83,7 @@ const AutoFind = () => {
         currentPage === pageType.locatorsList ? (
           <Button onClick={handleBack} className="jdn__buttons">
             <Icon component={CaretDownSvg} rotate={90} fill="#1582D8" />
-            Back ({size(h)})
+            Back
           </Button>
         ) : null}
       </React.Fragment>
@@ -112,12 +111,10 @@ const AutoFind = () => {
         </Header>
         <Content className="jdn__content">
           {isInvalidSession ? <SeveralTabsWarning /> : renderPage()}
-          {/* {currentPage === pageType.locatorsList ? ( */}
           <div className="jdn__navigation">
             {renderBackButton()}
             {renderConfirmButton()}
           </div>
-          {/* ) : null} */}
         </Content>
       </Layout>
     </React.Fragment>

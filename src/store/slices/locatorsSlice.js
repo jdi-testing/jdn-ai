@@ -53,6 +53,9 @@ const locatorsSlice = createSlice({
     changeLocatorSettings(state, { payload }) {
       locatorsAdapter.upsertMany(state, payload);
     },
+    removeLocators(state, {payload}) {
+      locatorsAdapter.removeMany(state, payload);
+    },
     toggleElementGeneration(state, { payload }) {
       const locator = simpleSelectLocatorById(state, payload);
       locatorsAdapter.upsertOne(state, { ...locator, generate: !locator.generate });
@@ -101,6 +104,7 @@ export const {
   addLocators,
   changeLocatorAttributes,
   changeLocatorSettings,
+  removeLocators,
   toggleElementGeneration,
   toggleElementGroupGeneration,
   toggleDeleted,

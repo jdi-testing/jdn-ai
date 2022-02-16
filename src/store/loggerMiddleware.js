@@ -39,6 +39,9 @@ const notify = (state, action, prevState, store) => {
     case "main/changePage":
       if (selectCurrentPage(state).page === pageType.pageObject) sendMessage.killHighlight();
       break;
+    case "main/changePageBack":
+      if (selectCurrentPage(state).page === pageType.pageObject) sendMessage.killHighlight();
+      break;
     case "main/changePerception":
       sendMessage.setHighlight({perception: payload});
       break;
