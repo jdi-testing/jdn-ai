@@ -68,7 +68,7 @@ const requestGenerationAttributes = async (elements) => {
 export const requestGenerationData = async (elements) => {
   const generationTags = await requestGenerationAttributes(elements);
   const generationData = createLocatorNames(generationTags);
-  return { generationData, unreachableNodes: [] };
+  return { generationData };
 };
 
 export const reportProblem = (predictedElements) => {

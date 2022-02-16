@@ -1,9 +1,10 @@
 import { last } from "lodash";
 
-import { pushNotification } from "./mainSlice";
+import { pushNotification } from "./slices/mainSlice";
 import { selectLocatorById } from "./selectors/locatorSelectors";
 import { sendMessage } from "../services/connector";
 import { pageType, VALIDATION_ERROR_TYPE } from "../utils/constants";
+import { selectCurrentPage } from "./selectors/mainSelectors";
 
 const notify = (state, action, prevState, store) => {
   const pushNotificationHandler = (prevValue) => {
@@ -36,7 +37,7 @@ const notify = (state, action, prevState, store) => {
       pushNotificationHandler(prevValues);
       break;
     case "main/changePage":
-      if (payload === pageType.pageObject) sendMessage.killHighlight();
+      if (selectCurrentPage(state).page === pageType.pageObject) sendMessage.killHighlight();
       break;
     case "main/changePerception":
       sendMessage.setHighlight({perception: payload});
