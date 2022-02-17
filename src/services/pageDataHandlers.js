@@ -98,7 +98,8 @@ export const openConfirmBackPopup = () => {
 export const openConfirmInProgressPopup = () => {
   const config = {
     header: "Сonfirm the selection",
-    content: `<span>Attention!</span> Not all of the selected locators have already been generated. 
+    content: `<strong class="jdn-download-popup__warning">Attention!</strong> 
+    Not all of the selected locators have already been generated. 
     We recommend waiting until the generation is complete.`,
     buttonConfirmText: "Сonfirm the selection",
     scriptMessage: "CONFIRM_IN_PROGRESS_POPUP",

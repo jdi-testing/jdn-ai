@@ -11,6 +11,7 @@ import PageSvg from "../../assets/page.svg";
 import { selectConfirmedLocators, selectPageObjects } from "../../store/selectors/pageObjectSelectors";
 import { Locator } from "../locatorsPage/Locator";
 import { GenerationButtons } from "../GenerationButtons";
+import { PageObjectPlaceholder } from "./PageObjectPlaceholder";
 
 export const PageObjList = () => {
   const state = useSelector((state) => state);
@@ -45,27 +46,33 @@ export const PageObjList = () => {
     <div className="jdn__locatorsList">
       <PageObjListHeader />
       <div className="jdn__locatorsList-content jdn__pageObj-content">
-        <Collapse
-          className="jdn__collapse"
-          expandIcon={({ isActive }) => <Icon component={CaretDownSvg} rotate={isActive ? 180 : 270} fill="#808080" />}
-          activeKey={activePanel}
-          onChange={setActivePanel}
-        >
-          {pageObjects.map(({ id, name, url, locators }) => (
-            <Collapse.Panel
-              key={id}
-              header={
-                <React.Fragment>
-                  <Icon component={PageSvg} className="jdn__locatorsList-status" />
-                  {name}
-                </React.Fragment>
-              }
-              className="jdn__collapse-panel"
-            >
-              {size(locators) ? renderLocators(id) : renderPageObjSettings(id, url)}
-            </Collapse.Panel>
-          ))}
-        </Collapse>
+        {size(pageObjects) ? (
+          <Collapse
+            className="jdn__collapse"
+            expandIcon={({ isActive }) => (
+              <Icon component={CaretDownSvg} rotate={isActive ? 180 : 270} fill="#808080" />
+            )}
+            activeKey={activePanel}
+            onChange={setActivePanel}
+          >
+            {pageObjects.map(({ id, name, url, locators }) => (
+              <Collapse.Panel
+                key={id}
+                header={
+                  <React.Fragment>
+                    <Icon component={PageSvg} className="jdn__locatorsList-status" />
+                    {name}
+                  </React.Fragment>
+                }
+                className="jdn__collapse-panel"
+              >
+                {size(locators) ? renderLocators(id) : renderPageObjSettings(id, url)}
+              </Collapse.Panel>
+            ))}
+          </Collapse>
+        ) : (
+          <PageObjectPlaceholder />
+        )}
       </div>
     </div>
   );
