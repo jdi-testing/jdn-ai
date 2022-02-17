@@ -17,10 +17,9 @@ import { PageObjectPage } from "./pageObjectPage/PageObjectPage";
 
 import CaretDownSvg from "../assets/caret-down.svg";
 import { selectCurrentPage } from "../store/selectors/mainSelectors";
-import { selectPageObjById } from "../store/selectors/pageObjectSelectors";
+import { selectLocatorsToConfirm, selectPageObjById } from "../store/selectors/pageObjectSelectors";
 import { size } from "lodash";
 import { setConfirmed } from "../store/slices/pageObjectSlice";
-import { selectInProgressLocators } from "../store/selectors/locatorSelectors";
 
 const AutoFind = () => {
   const [isInvalidSession, setIsInvalidSession] = useState(localStorage.getItem("secondSession"));
@@ -61,7 +60,7 @@ const AutoFind = () => {
   };
 
   const handleConfirm = () => {
-    const inProgress = selectInProgressLocators(state);
+    const inProgress = selectLocatorsToConfirm(state);
     if (size(inProgress)) {
       openConfirmInProgressPopup();
     } else {
