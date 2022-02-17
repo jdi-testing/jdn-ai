@@ -20,6 +20,8 @@ import {
   selectPageObjLocatorsByProbability,
 } from "../../store/selectors/pageObjectSelectors";
 
+let timer;
+
 export const LocatorsList = ({ pageObject }) => {
   const dispatch = useDispatch();
 
@@ -126,9 +128,10 @@ export const LocatorsList = ({ pageObject }) => {
     const readyCount = size(generated);
     const total = size(byProbability) - size(deleted);
     if (readyCount > 0 && total > 0 && readyCount === total) {
-      setTimeout(hideProgressInformation, 10000);
+      timer = setTimeout(hideProgressInformation, 10000);
     }
-  });
+    return () => clearTimeout(timer);
+  }, [byProbability, generated, deleted]);
 
   return (
     <div className="jdn__locatorsList">

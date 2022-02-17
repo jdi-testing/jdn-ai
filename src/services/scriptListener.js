@@ -22,15 +22,16 @@ import { isProgressStatus, locatorGenerationController, stopGenerationHandler } 
 import { stopGeneration } from "../store/thunks/stopGeneration";
 import { rerunGeneration } from "../store/thunks/rerunGeneration";
 import { generateAllLocators, isNameUnique, isStringMatchesReservedWord } from "./pageObject";
-import { locatorTaskStatus, VALIDATION_ERROR_TYPE } from "../utils/constants";
+import { locatorTaskStatus, pageType, VALIDATION_ERROR_TYPE } from "../utils/constants";
 import {
+  changePage,
   changePageBack,
   changeXpathSettings,
   clearAll,
   setUnactualPrediction,
   toggleBackdrop,
 } from "../store/slices/mainSlice";
-import { clearLocators } from "../store/slices/pageObjectSlice";
+import { clearLocators, setConfirmed } from "../store/slices/pageObjectSlice";
 import { selectLocatorByJdnHash, selectPageObjById } from "../store/selectors/pageObjectSelectors";
 
 export const createListeners = (dispatch, state) => {
@@ -74,13 +75,20 @@ export const createListeners = (dispatch, state) => {
     CM_ELEMENT_HIGHLIGHT_OFF: (payload) => {
       dispatch(clearCmElementHighlight(payload));
     },
-    CONFIRM_POPUP: () => {
+    CONFIRM_BACK_POPUP: () => {
       const currentPageObject = state.pageObject.currentPageObject;
       const locatorIds = selectPageObjById(state, currentPageObject).locators;
       locatorGenerationController.revokeAll();
       dispatch(clearLocators(currentPageObject));
       dispatch(removeLocators(locatorIds));
       dispatch(changePageBack());
+      dispatch(toggleBackdrop(false));
+    },
+    CONFIRM_IN_PROGRESS_POPUP: () => {
+      locatorGenerationController.revokeAll();
+      const currentPageObject = state.pageObject.currentPageObject;
+      dispatch(setConfirmed(currentPageObject));
+      dispatch(changePage({ page: pageType.pageObject, pageObj: currentPageObject }));
       dispatch(toggleBackdrop(false));
     },
     IS_OPEN_MODAL: (payload) => dispatch(toggleBackdrop(payload)),

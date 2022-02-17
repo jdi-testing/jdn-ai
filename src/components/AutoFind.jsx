@@ -10,7 +10,7 @@ import { ControlBar } from "./ControlBar";
 import { createListeners } from "../services/scriptListener";
 import { SeveralTabsWarning } from "./SeveralTabsWarning";
 import { locatorGenerationController } from "../services/locatorGenerationController";
-import { openConfirmPopup, removeOverlay } from "../services/pageDataHandlers";
+import { openConfirmBackPopup, openConfirmInProgressPopup, removeOverlay } from "../services/pageDataHandlers";
 import { LocatorsPage } from "./locatorsPage/LocatorsPage";
 import { identificationStatus, pageType } from "../utils/constants";
 import { PageObjectPage } from "./pageObjectPage/PageObjectPage";
@@ -20,6 +20,7 @@ import { selectCurrentPage } from "../store/selectors/mainSelectors";
 import { selectPageObjById } from "../store/selectors/pageObjectSelectors";
 import { size } from "lodash";
 import { setConfirmed } from "../store/slices/pageObjectSlice";
+import { selectInProgressLocators } from "../store/selectors/locatorSelectors";
 
 const AutoFind = () => {
   const [isInvalidSession, setIsInvalidSession] = useState(localStorage.getItem("secondSession"));
@@ -60,15 +61,20 @@ const AutoFind = () => {
   };
 
   const handleConfirm = () => {
-    locatorGenerationController.revokeAll();
-    dispatch(setConfirmed(currentPageObject));
-    dispatch(changePage({ page: pageType.pageObject, pageObj: currentPageObject }));
+    const inProgress = selectInProgressLocators(state);
+    if (size(inProgress)) {
+      openConfirmInProgressPopup();
+    } else {
+      locatorGenerationController.revokeAll();
+      dispatch(setConfirmed(currentPageObject));
+      dispatch(changePage({ page: pageType.pageObject, pageObj: currentPageObject }));
+    }
   };
 
   const handleBack = () => {
     const pageObject = selectPageObjById(state, currentPageObject);
     if (!pageObject.confirmed) {
-      openConfirmPopup();
+      openConfirmBackPopup();
     } else {
       dispatch(changePageBack());
     }

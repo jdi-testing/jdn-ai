@@ -1,4 +1,5 @@
 import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
+import { isProgressStatus } from "../../services/locatorGenerationController";
 
 import { locatorTaskStatus } from "../../utils/constants";
 
@@ -29,4 +30,9 @@ export const selectFirstPendingLocator = createSelector(selectLocatorsByProbabil
 export const selectPendingLocators = createSelector(
     selectLocatorsByProbability,
     (items) => items.filter((el) => el.locator.taskStatus === locatorTaskStatus.PENDING && !el.deleted)
+);
+
+export const selectInProgressLocators = createSelector(
+    selectLocatorsByProbability,
+    (items) => items.filter((item) => isProgressStatus(item.locator.taskStatus)),
 );
