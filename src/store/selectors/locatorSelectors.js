@@ -34,5 +34,5 @@ export const selectPendingLocators = createSelector(
 
 export const selectInProgressLocators = createSelector(
     selectLocatorsByProbability,
-    (items) => items.filter((item) => isProgressStatus(item.locator.taskStatus)),
+    (items) => items.filter((item) => isProgressStatus(item.locator.taskStatus) && !item.deleted),
 );
