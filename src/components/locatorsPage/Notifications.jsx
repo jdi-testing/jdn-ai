@@ -53,17 +53,17 @@ export const Notifications = () => {
       dispatch(handleLastNotification());
     } else {
       switch (action?.type) {
-        case "main/changeLocatorAttributes":
+        case "locators/changeLocatorAttributes":
           const { element_id, type, name, locator } = prevValue;
           notificationMessage = messages().EDITED;
           cancelAction = changeLocatorAttributes({ type, name, element_id, locator: locator.customXpath });
           break;
-        case "main/changeLocatorSettings":
+        case "locators/changeLocatorSettings":
           notificationMessage =
             size(prevValue) === 1 ? messages().SETTINGS_CHANGED : messages(size(prevValue)).SETTINGS_CHANGED_GROUP;
           cancelAction = revertSettings({ payload: action.payload, prevValue });
           break;
-        case "main/rerunGeneration/pending":
+        case "locators/rerunGeneration/pending":
           const { arg } = action.meta;
           const length = size(arg);
           if (length === 1) {
@@ -74,19 +74,19 @@ export const Notifications = () => {
             cancelAction = stopGenerationGroup(arg);
           }
           break;
-        case "main/stopGeneration/fulfilled":
+        case "locators/stopGeneration/fulfilled":
           notificationMessage = messages().STOP_GENERATION;
           cancelAction = cancelStopGeneration([locators.find((_loc) => _loc.element_id === action.meta.arg)]);
           break;
-        case "main/stopGenerationGroup/fulfilled":
+        case "locators/stopGenerationGroup/fulfilled":
           notificationMessage = messages(size(action.meta.arg)).STOP_GENERATION_GROUP;
           cancelAction = cancelStopGeneration(action.meta.arg);
           break;
-        case "main/toggleDeleted":
+        case "locators/toggleDeleted":
           notificationMessage = prevValue.deleted ? messages().RESTORE : messages().DELETE;
           cancelAction = toggleDeleted(action.payload);
           break;
-        case "main/toggleDeletedGroup":
+        case "locators/toggleDeletedGroup":
           notificationMessage = prevValue[0].deleted ?
             messages(size(prevValue)).RESTORE_GROUP :
             messages(size(prevValue)).DELETE_GROUP;

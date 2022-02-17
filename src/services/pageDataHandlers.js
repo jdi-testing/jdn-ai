@@ -85,6 +85,23 @@ export const openDownloadPopup = () => {
   connector.attachContentScript(downloadPopup);
 };
 
-export const openConfirmPopup = () => {
-  connector.attachContentScript(confirmPopup);
+export const openConfirmBackPopup = () => {
+  const config = {
+    header: "Go back to the previous page?",
+    content: "Your generation process will be cleared. You haven't selected any locators for this page object.",
+    buttonConfirmText: "Go to the previous page",
+    scriptMessage: "CONFIRM_BACK_POPUP",
+  };
+  chrome.storage.sync.set({POPUP_CONFIG: config}, connector.attachContentScript(confirmPopup));
+};
+
+export const openConfirmInProgressPopup = () => {
+  const config = {
+    header: "Сonfirm the selection",
+    content: `<span>Attention!</span> Not all of the selected locators have already been generated. 
+    We recommend waiting until the generation is complete.`,
+    buttonConfirmText: "Сonfirm the selection",
+    scriptMessage: "CONFIRM_IN_PROGRESS_POPUP",
+  };
+  chrome.storage.sync.set({POPUP_CONFIG: config}, connector.attachContentScript(confirmPopup));
 };
