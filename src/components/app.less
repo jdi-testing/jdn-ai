@@ -355,7 +355,7 @@
       border-radius: 0;
     }
 
-    .ant-collapse > .ant-collapse-item {
+    .ant-collapse > .ant-collapse-item:last-child {
       border-bottom: 0;
     }
 
@@ -597,6 +597,7 @@
         }
 
         &:first-child {
+          border-bottom: initial;
           top: 0;
 
           .ant-collapse-header {

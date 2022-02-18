@@ -10,7 +10,7 @@ import CaretDownSvg from "../../assets/caret-down.svg";
 import PageSvg from "../../assets/page.svg";
 import { selectConfirmedLocators, selectPageObjects } from "../../store/selectors/pageObjectSelectors";
 import { Locator } from "../locatorsPage/Locator";
-import { GenerationButtons } from "../GenerationButtons";
+import { GenerationButtons } from "./GenerationButtons";
 import { PageObjectPlaceholder } from "./PageObjectPlaceholder";
 
 export const PageObjList = () => {
@@ -48,7 +48,6 @@ export const PageObjList = () => {
       <div className="jdn__locatorsList-content jdn__pageObj-content">
         {size(pageObjects) ? (
           <Collapse
-            className="jdn__collapse"
             expandIcon={({ isActive }) => (
               <Icon component={CaretDownSvg} rotate={isActive ? 180 : 270} fill="#808080" />
             )}
@@ -64,7 +63,6 @@ export const PageObjList = () => {
                     {name}
                   </React.Fragment>
                 }
-                className="jdn__collapse-panel"
               >
                 {size(locators) ? renderLocators(id) : renderPageObjSettings(id, url)}
               </Collapse.Panel>
