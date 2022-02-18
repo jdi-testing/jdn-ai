@@ -1,4 +1,4 @@
-import { filter, replace } from "lodash";
+import { replace } from "lodash";
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
 
@@ -83,12 +83,6 @@ export const generatePageObject = async (elements) => {
     type: "text/plain;charset=utf-8",
   });
   saveAs(blob, `${page.title}.java`);
-};
-
-export const generateAllLocators = (locators) => generatePageObject(filter(locators, (loc) => !loc.deleted));
-
-export const generateAndDownload = (locators) => {
-  generateAllLocators(locators);
 };
 
 export const generateAndDownloadZip = async (state) => {
