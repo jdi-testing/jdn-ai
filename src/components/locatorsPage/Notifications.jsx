@@ -41,10 +41,6 @@ export const Notifications = () => {
   useEffect(() => {
     if (!lastNotification) return;
 
-    if (lastNotification === "Download") {
-      notificationMessage = "Java file downloaded successfully!";
-    }
-
     const { isCanceled, isHandled, action, prevValue } = lastNotification;
 
     if (isCanceled && isHandled) return;
@@ -110,7 +106,7 @@ export const Notifications = () => {
   const openNotification = () => {
     notification.destroy();
 
-    if (notificationMessage !== "Action canceled." && lastNotification !== "Download") {
+    if (notificationMessage !== "Action canceled.") {
       const btn = (
         <Button type="primary" size="small" className="jdn__notification-close-btn" onClick={cancelNotification}>
           Cancel

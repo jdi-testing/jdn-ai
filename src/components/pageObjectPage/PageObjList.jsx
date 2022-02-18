@@ -24,8 +24,7 @@ export const PageObjList = () => {
     setActivePanel([...activePanel, currentPageObject]);
   }, [currentPageObject]);
 
-  const renderLocators = (pageObjId) => {
-    const elements = selectConfirmedLocators(state, pageObjId);
+  const renderLocators = (elements) => {
     if (size(elements)) {
       return elements.map((element) => <Locator key={element.element_id} {...{ element, xpathConfig }} />);
     } else {
@@ -40,6 +39,15 @@ export const PageObjList = () => {
         <GenerationButtons pageObj={pageObjId} />
       </div>
     );
+  };
+
+  const renderContent = (pageObjId, url) => {
+    const elements = selectConfirmedLocators(state, pageObjId);
+    if (size(elements)) {
+      return renderLocators(elements);
+    } else {
+      return renderPageObjSettings(pageObjId, url);
+    }
   };
 
   return (
@@ -64,7 +72,7 @@ export const PageObjList = () => {
                   </React.Fragment>
                 }
               >
-                {size(locators) ? renderLocators(id) : renderPageObjSettings(id, url)}
+                {renderContent(id, url)}
               </Collapse.Panel>
             ))}
           </Collapse>

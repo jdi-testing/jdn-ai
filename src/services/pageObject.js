@@ -4,8 +4,6 @@ import JSZip from "jszip";
 
 import { connector } from "./connector";
 import { getJDILabel } from "../utils/generationClassesMap";
-import { locatorTaskStatus } from "../utils/constants";
-import { openDownloadPopup } from "./pageDataHandlers";
 import { pageObjectTemplate } from "./pageObjectTemplate";
 import javaReservedWords from "../utils/javaReservedWords.json";
 import { selectConfirmedLocators, selectPageObjects } from "../store/selectors/pageObjectSelectors";
@@ -87,19 +85,10 @@ export const generatePageObject = async (elements) => {
   saveAs(blob, `${page.title}.java`);
 };
 
-const hasNotGeneratedLocators = (locators) =>
-  locators.some((loc) => {
-    return loc.locator.taskStatus === locatorTaskStatus.STARTED || loc.locator.taskStatus === locatorTaskStatus.PENDING;
-  });
-
 export const generateAllLocators = (locators) => generatePageObject(filter(locators, (loc) => !loc.deleted));
 
 export const generateAndDownload = (locators) => {
-  if (hasNotGeneratedLocators(locators)) {
-    openDownloadPopup();
-  } else {
-    generateAllLocators(locators);
-  }
+  generateAllLocators(locators);
 };
 
 export const generateAndDownloadZip = async (state) => {

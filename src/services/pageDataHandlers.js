@@ -2,7 +2,7 @@ import { connector, sendMessage } from "./connector";
 import { getGenerationAttributes } from "./../contentScripts/generationData";
 import { getPageData } from "./../contentScripts/pageData";
 import { createLocatorNames } from "./pageObject";
-import { reportPopup, settingsPopup, downloadPopup } from "../contentScripts/popups";
+import { reportPopup, settingsPopup } from "../contentScripts/popups";
 import { request } from "../services/backend";
 import { confirmPopup } from "../contentScripts/popups/confirmPopup";
 /* global chrome*/
@@ -81,10 +81,6 @@ export const openSettingsMenu = (xpathConfig, elementIds, hasGeneratedSelected) 
       connector.attachContentScript(settingsPopup));
 };
 
-export const openDownloadPopup = () => {
-  connector.attachContentScript(downloadPopup);
-};
-
 export const openConfirmBackPopup = () => {
   const config = {
     header: "Go back to the previous page?",
@@ -98,7 +94,7 @@ export const openConfirmBackPopup = () => {
 export const openConfirmInProgressPopup = () => {
   const config = {
     header: "Сonfirm the selection",
-    content: `<strong class="jdn-download-popup__warning">Attention!</strong> 
+    content: `<strong class="jdn-confirm-popup__warning">Attention!</strong> 
     Not all of the selected locators have already been generated. 
     We recommend waiting until the generation is complete.`,
     buttonConfirmText: "Сonfirm the selection",

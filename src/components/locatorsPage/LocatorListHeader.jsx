@@ -5,10 +5,8 @@ import Icon from "@ant-design/icons";
 import React from "react";
 
 import { Chip } from "./Chip";
-import { generateAndDownload } from "../../services/pageObject";
 import { openSettingsMenu } from "../../services/pageDataHandlers";
 
-import DownloadSvg from "../../assets/download.svg";
 import PauseSVG from "../../assets/pause.svg";
 import PlaySvg from "../../assets/play.svg";
 import RestoreSvg from "../../assets/restore.svg";
@@ -19,7 +17,6 @@ import { toggleDeletedGroup, toggleElementGroupGeneration } from "../../store/sl
 import { stopGenerationGroup } from "../../store/thunks/stopGenerationGroup";
 import { rerunGeneration } from "../../store/thunks/rerunGeneration";
 import { locatorTaskStatus } from "../../utils/constants";
-import { pushNotification } from "../../store/slices/mainSlice";
 
 export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedSelected }) => {
   const dispatch = useDispatch();
@@ -64,11 +61,6 @@ export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedS
     openSettingsMenu(settings || xpathConfig, map(activeSelected, "element_id"), hasGeneratedSelected);
   };
 
-  const handleDownload = () => {
-    dispatch(pushNotification("Download"));
-    generateAndDownload(activeSelected);
-  };
-
   return (
     <div className="jdn__locatorsList-header">
       <span className="jdn__locatorsList-header-title">Locators list</span>
@@ -106,10 +98,6 @@ export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedS
         </Button>
         <Button id="locatorListSettings" hidden={!size(activeSelected)} onClick={handleOnClickSettings}>
           <Icon component={SettingsSVG} />
-        </Button>
-        <Button hidden={!size(generatedSelected)} type="primary" className="jdn__buttons" onClick={handleDownload}>
-          <Icon component={DownloadSvg} fill="#c15f0f" />
-          Download
         </Button>
       </div>
     </div>

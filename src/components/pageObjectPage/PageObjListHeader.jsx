@@ -10,9 +10,12 @@ import { generateAndDownloadZip } from "../../services/pageObject";
 import PlusSvg from "../../assets/plus.svg";
 import DownloadSvg from "../../assets/download.svg";
 import { pushNotification } from "../../store/slices/mainSlice";
+import { size } from "lodash";
+import { selectPageObjects } from "../../store/selectors/pageObjectSelectors";
 
 export const PageObjListHeader = () => {
   const state = useSelector((state) => state);
+  const pageObjects = useSelector(selectPageObjects);
 
   const dispatch = useDispatch();
   const handleAddPageObject = () => dispatch(addPageObj());
@@ -26,9 +29,11 @@ export const PageObjListHeader = () => {
     <div className="jdn__locatorsList-header">
       <span className="jdn__locatorsList-header-title">Page Objects</span>
       <div className="jdn__locatorsList-header-buttons">
-        <Button type="primary" onClick={handleDownload}>
-          <Icon component={DownloadSvg} fill="#c15f0f" />
-        </Button>
+        {size(pageObjects) ? (
+          <Button type="primary" onClick={handleDownload}>
+            <Icon component={DownloadSvg} fill="#c15f0f" />
+          </Button>
+        ) : null}
         <Button className="jdn__buttons" onClick={handleAddPageObject}>
           <Icon component={PlusSvg} />
           New page object
