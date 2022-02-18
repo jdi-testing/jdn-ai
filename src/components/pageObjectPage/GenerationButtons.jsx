@@ -3,20 +3,20 @@ import { useSelector, useDispatch } from "react-redux";
 import Icon, { SearchOutlined } from "@ant-design/icons";
 import React, { useState } from "react";
 
-import { identificationStatus, pageType } from "../utils/constants";
-import { identifyElements } from "../store/thunks/identifyElements";
-import { openSettingsMenu } from "../services/pageDataHandlers";
-import { MUI_PREDICT, HTML5_PREDICT } from "../services/backend";
+import { identificationStatus, pageType } from "../../utils/constants";
+import { identifyElements } from "../../store/thunks/identifyElements";
+import { openSettingsMenu } from "../../services/pageDataHandlers";
+import { MUI_PREDICT, HTML5_PREDICT } from "../../services/backend";
 
-import Settings from "../assets/settings.svg";
-import { selectCurrentPage } from "../store/selectors/mainSelectors";
+import Settings from "../../assets/settings.svg";
+import { selectCurrentPage } from "../../store/selectors/mainSelectors";
 
 export const GenerationButtons = ({ pageObj }) => {
   const status = useSelector((state) => state.locators.status);
   const allowIdentifyElements = useSelector((state) => state.main.allowIdentifyElements);
   const xpathConfig = useSelector((state) => state.main.xpathConfig);
-  const currentPage = useSelector(selectCurrentPage).page;
   const currentPageObject = useSelector((state) => state.pageObject.currentPageObject);
+  const currentPage = useSelector(selectCurrentPage).page;
 
   const dispatch = useDispatch();
   const [endpoint, setEndpoint] = useState(MUI_PREDICT);
@@ -54,9 +54,7 @@ export const GenerationButtons = ({ pageObj }) => {
           </Select>
         </Space>
         <Space direction="horizontal" size={8}>
-          {(currentPage === pageType.locatorsList) && allowIdentifyElements ?
-            renderSettingsButton() :
-            null}
+          {(currentPage === pageType.locatorsList) ? renderSettingsButton() : null}
           <Button
             icon={<SearchOutlined />}
             type="primary"

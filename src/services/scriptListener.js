@@ -13,15 +13,13 @@ import { connector, sendMessage } from "./connector";
 import { getTypesMenuOptions } from "../utils/generationClassesMap";
 import { onStartCollectData, openSettingsMenu } from "./pageDataHandlers";
 import {
-  selectGeneratedLocators,
   selectLocatorById,
-  selectLocatorsByProbability,
   selectLocators,
 } from "../store/selectors/locatorSelectors";
 import { isProgressStatus, locatorGenerationController, stopGenerationHandler } from "./locatorGenerationController";
 import { stopGeneration } from "../store/thunks/stopGeneration";
 import { rerunGeneration } from "../store/thunks/rerunGeneration";
-import { generateAllLocators, isNameUnique, isStringMatchesReservedWord } from "./pageObject";
+import { isNameUnique, isStringMatchesReservedWord } from "./pageObject";
 import { locatorTaskStatus, pageType, VALIDATION_ERROR_TYPE } from "../utils/constants";
 import {
   changePage,
@@ -100,13 +98,6 @@ export const createListeners = (dispatch, state) => {
     STOP_GENERATION: (payload) => dispatch(stopGeneration(payload)),
     TOGGLE_ELEMENT: (payload) => {
       dispatch(toggleElementGeneration(payload));
-    },
-    DOWNLOAD_POPUP: (payload) => {
-      if (payload === "all") {
-        generateAllLocators(selectLocatorsByProbability(state));
-      } else if (payload === "generated") {
-        generateAllLocators(selectGeneratedLocators(state));
-      }
     },
     UPDATE_LOCATOR: (payload) => {
       dispatch(changeLocatorAttributes(payload));

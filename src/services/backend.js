@@ -43,12 +43,16 @@ class Request {
   }
 
   async post(url, payload) {
-    const r = await fetch(`${this.baseURL}/${url}`, {
-      method: "POST",
-      body: payload,
-      headers,
-    });
-    return await this.responseHandler(r);
+    try {
+      const r = await fetch(`${this.baseURL}/${url}`, {
+        method: "POST",
+        body: payload,
+        headers,
+      });
+      return await this.responseHandler(r);
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 }
 

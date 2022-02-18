@@ -10,7 +10,7 @@ import CaretDownSvg from "../../assets/caret-down.svg";
 import PageSvg from "../../assets/page.svg";
 import { selectConfirmedLocators, selectPageObjects } from "../../store/selectors/pageObjectSelectors";
 import { Locator } from "../locatorsPage/Locator";
-import { GenerationButtons } from "../GenerationButtons";
+import { GenerationButtons } from "./GenerationButtons";
 import { PageObjectPlaceholder } from "./PageObjectPlaceholder";
 
 export const PageObjList = () => {
@@ -24,8 +24,7 @@ export const PageObjList = () => {
     setActivePanel([...activePanel, currentPageObject]);
   }, [currentPageObject]);
 
-  const renderLocators = (pageObjId) => {
-    const elements = selectConfirmedLocators(state, pageObjId);
+  const renderLocators = (elements) => {
     if (size(elements)) {
       return elements.map((element) => <Locator key={element.element_id} {...{ element, xpathConfig }} />);
     } else {
@@ -42,13 +41,21 @@ export const PageObjList = () => {
     );
   };
 
+  const renderContent = (pageObjId, url) => {
+    const elements = selectConfirmedLocators(state, pageObjId);
+    if (size(elements)) {
+      return renderLocators(elements);
+    } else {
+      return renderPageObjSettings(pageObjId, url);
+    }
+  };
+
   return (
     <div className="jdn__locatorsList">
       <PageObjListHeader />
       <div className="jdn__locatorsList-content jdn__pageObj-content">
         {size(pageObjects) ? (
           <Collapse
-            className="jdn__collapse"
             expandIcon={({ isActive }) => (
               <Icon component={CaretDownSvg} rotate={isActive ? 180 : 270} fill="#808080" />
             )}
@@ -64,9 +71,8 @@ export const PageObjList = () => {
                     {name}
                   </React.Fragment>
                 }
-                className="jdn__collapse-panel"
               >
-                {size(locators) ? renderLocators(id) : renderPageObjSettings(id, url)}
+                {renderContent(id, url)}
               </Collapse.Panel>
             ))}
           </Collapse>

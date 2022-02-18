@@ -1,9 +1,9 @@
-import { downloadPopup } from "./downloadPopup";
 import { reportPopup } from "./reportPopup";
 import { settingsPopup } from "./settingsPopup";
+import { confirmPopup } from "./confirmPopup";
 
 export {
-  downloadPopup,
+  confirmPopup,
   reportPopup,
   settingsPopup
 };

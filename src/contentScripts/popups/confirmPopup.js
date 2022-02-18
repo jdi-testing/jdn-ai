@@ -16,7 +16,7 @@ export const confirmPopup = () => {
     const modal = document.createElement("dialog");
     modal.setAttribute('open', true);
     modal.classList.add("jdn-popup");
-    modal.classList.add("jdn-download-popup");
+    modal.classList.add("jdn-confirm-popup");
 
     const header = document.createElement('h4');
     header.classList.add('jdn-popup__header');
