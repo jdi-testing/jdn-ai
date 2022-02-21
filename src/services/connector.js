@@ -142,7 +142,6 @@ export const sendMessage = {
   pingScript: (payload, onResponse) =>
     connector.sendMessage("PING_SCRIPT", payload, onResponse),
   highlightUnreached: (payload) => connector.sendMessage("HIGHLIGHT_ERRORS", payload),
-  changeXpathSettings: (payload) => connector.sendMessage("CHANGE_XPATH_SETTINGS", payload),
   replaceElement: (payload) => connector.sendMessage("REPLACE_ELEMENT", payload),
   removeElement: (payload) => connector.sendMessage("REMOVE_ELEMENT", payload),
 };

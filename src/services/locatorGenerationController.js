@@ -16,23 +16,6 @@ export const runGenerationHandler = async (elements, settings, onStatusChange, g
   );
 };
 
-const getSettingsRequestConfig = (settings) => {
-  const {
-    allow_indexes_at_the_beginning,
-    allow_indexes_in_the_middle,
-    allow_indexes_at_the_end,
-    limit_maximum_generation_time,
-    maximum_generation_time,
-  } = settings;
-  const newConfig = {
-    allow_indexes_at_the_beginning,
-    allow_indexes_in_the_middle,
-    allow_indexes_at_the_end,
-  };
-  if (limit_maximum_generation_time) return { ...newConfig, maximum_generation_time };
-  else return newConfig;
-};
-
 export const stopGenerationHandler = (ids) => {
   return locatorGenerationController.revokeTasks(ids);
 };
@@ -141,7 +124,7 @@ class LocatorGenerationController {
   }
 
   async scheduleTask(element) {
-    const { element_id, locator, jdnHash } = element;
+    const { element_id, jdnHash } = element;
     if (this.readyState === 0) {
       setTimeout(() => this.scheduleTask(element), 1000);
     } else if (this.readyState === 1) {
@@ -152,7 +135,7 @@ class LocatorGenerationController {
             payload: {
               document: this.document,
               id: jdnHash,
-              config: getSettingsRequestConfig(locator.settings || this.queueSettings),
+              config: this.queueSettings,
             },
           })
       );

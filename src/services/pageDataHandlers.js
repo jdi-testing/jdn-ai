@@ -2,7 +2,7 @@ import { connector, sendMessage } from "./connector";
 import { getGenerationAttributes } from "./../contentScripts/generationData";
 import { getPageData } from "./../contentScripts/pageData";
 import { createLocatorNames } from "./pageObject";
-import { reportPopup, settingsPopup } from "../contentScripts/popups";
+import { reportPopup } from "../contentScripts/popups";
 import { request } from "../services/backend";
 import { confirmPopup } from "../contentScripts/popups/confirmPopup";
 /* global chrome*/
@@ -74,11 +74,6 @@ export const requestGenerationData = async (elements) => {
 
 export const reportProblem = (predictedElements) => {
   chrome.storage.sync.set({ predictedElements }, connector.attachContentScript(reportPopup));
-};
-
-export const openSettingsMenu = (xpathConfig, elementIds, hasGeneratedSelected) => {
-  chrome.storage.sync.set({ XPATH_CONFIG: {xpathConfig, elementIds, hasGeneratedSelected} },
-      connector.attachContentScript(settingsPopup));
 };
 
 export const openConfirmBackPopup = () => {

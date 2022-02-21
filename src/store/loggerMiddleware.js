@@ -30,12 +30,6 @@ const notify = (state, action, prevState, store) => {
         sendMessage.removeElement(oldElement);
       };
       break;
-    case "locators/changeLocatorSettings":
-      const prevValues = payload.map((el) => {
-        return selectLocatorById(prevState, el.element_id);
-      });
-      pushNotificationHandler(prevValues);
-      break;
     case "main/changePage":
       if (selectCurrentPage(state).page === pageType.pageObject) sendMessage.killHighlight();
       break;
