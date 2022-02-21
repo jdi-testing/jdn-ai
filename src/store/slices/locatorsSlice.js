@@ -50,9 +50,6 @@ const locatorsSlice = createSlice({
       }
       locatorsAdapter.upsertOne(state, newValue);
     },
-    changeLocatorSettings(state, { payload }) {
-      locatorsAdapter.upsertMany(state, payload);
-    },
     removeLocators(state, {payload}) {
       locatorsAdapter.removeMany(state, payload);
     },
@@ -103,7 +100,6 @@ export default locatorsSlice.reducer;
 export const {
   addLocators,
   changeLocatorAttributes,
-  changeLocatorSettings,
   removeLocators,
   toggleElementGeneration,
   toggleElementGroupGeneration,

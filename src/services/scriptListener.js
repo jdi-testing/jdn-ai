@@ -1,7 +1,4 @@
-import { mapValues } from "lodash";
-
 import {
-  changeLocatorSettings,
   toggleDeleted,
   toggleElementGeneration,
   clearCmElementHighlight,
@@ -11,20 +8,19 @@ import {
 } from "../store/slices/locatorsSlice";
 import { connector, sendMessage } from "./connector";
 import { getTypesMenuOptions } from "../utils/generationClassesMap";
-import { onStartCollectData, openSettingsMenu } from "./pageDataHandlers";
+import { onStartCollectData } from "./pageDataHandlers";
 import {
   selectLocatorById,
   selectLocators,
 } from "../store/selectors/locatorSelectors";
-import { isProgressStatus, locatorGenerationController, stopGenerationHandler } from "./locatorGenerationController";
+import { locatorGenerationController } from "./locatorGenerationController";
 import { stopGeneration } from "../store/thunks/stopGeneration";
 import { rerunGeneration } from "../store/thunks/rerunGeneration";
 import { isNameUnique, isStringMatchesReservedWord } from "./pageObject";
-import { locatorTaskStatus, pageType, VALIDATION_ERROR_TYPE } from "../utils/constants";
+import { pageType, VALIDATION_ERROR_TYPE } from "../utils/constants";
 import {
   changePage,
   changePageBack,
-  changeXpathSettings,
   clearAll,
   setUnactualPrediction,
   toggleBackdrop,
@@ -90,7 +86,6 @@ export const createListeners = (dispatch, state) => {
       dispatch(toggleBackdrop(false));
     },
     IS_OPEN_MODAL: (payload) => dispatch(toggleBackdrop(payload)),
-    OPEN_XPATH_CONFIG: (payload) => openSettingsMenu(state.main.xpathConfig, payload),
     PREDICTION_IS_UNACTUAL: () => dispatch(setUnactualPrediction(true)),
     REMOVE_ELEMENT: (payload) => dispatch(toggleDeleted(payload)),
     RERUN_GENERATION: (payload) => dispatch(rerunGeneration([selectLocatorById(state, payload)])),

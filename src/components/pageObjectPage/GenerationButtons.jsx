@@ -1,39 +1,19 @@
 import { Button, Space, Select } from "antd";
 import { useSelector, useDispatch } from "react-redux";
-import Icon, { SearchOutlined } from "@ant-design/icons";
+import { SearchOutlined } from "@ant-design/icons";
 import React, { useState } from "react";
 
-import { identificationStatus, pageType } from "../../utils/constants";
+import { identificationStatus } from "../../utils/constants";
 import { identifyElements } from "../../store/thunks/identifyElements";
-import { openSettingsMenu } from "../../services/pageDataHandlers";
 import { MUI_PREDICT, HTML5_PREDICT } from "../../services/backend";
-
-import Settings from "../../assets/settings.svg";
-import { selectCurrentPage } from "../../store/selectors/mainSelectors";
 
 export const GenerationButtons = ({ pageObj }) => {
   const status = useSelector((state) => state.locators.status);
   const allowIdentifyElements = useSelector((state) => state.main.allowIdentifyElements);
-  const xpathConfig = useSelector((state) => state.main.xpathConfig);
   const currentPageObject = useSelector((state) => state.pageObject.currentPageObject);
-  const currentPage = useSelector(selectCurrentPage).page;
 
   const dispatch = useDispatch();
   const [endpoint, setEndpoint] = useState(MUI_PREDICT);
-
-  const renderSettingsButton = () => {
-    return (
-      <Button
-        onClick={() => {
-          openSettingsMenu(xpathConfig);
-        }}
-        className={["jdn__buttons", "jdn__buttons--secondary"]}
-      >
-        <Icon component={Settings} />
-        Settings
-      </Button>
-    );
-  };
 
   return (
     <div className="jdn__generationButtons">
@@ -54,7 +34,6 @@ export const GenerationButtons = ({ pageObj }) => {
           </Select>
         </Space>
         <Space direction="horizontal" size={8}>
-          {(currentPage === pageType.locatorsList) ? renderSettingsButton() : null}
           <Button
             icon={<SearchOutlined />}
             type="primary"

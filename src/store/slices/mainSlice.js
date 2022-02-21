@@ -16,8 +16,7 @@ const initialState = {
     maximum_generation_time: 10,
     allow_indexes_at_the_beginning: false,
     allow_indexes_in_the_middle: false,
-    allow_indexes_at_the_end: true,
-    limit_maximum_generation_time: true,
+    allow_indexes_at_the_end: false,
   },
 };
 
@@ -34,9 +33,6 @@ const mainSlice = createSlice({
     },
     changePerception(state, { payload }) {
       state.perception = payload;
-    },
-    changeXpathSettings(state, { payload }) {
-      state.xpathConfig = payload;
     },
     clearAll(state) {
       state.status = identificationStatus.removed;
@@ -71,7 +67,6 @@ export const {
   changePageBack,
   cancelLastNotification,
   changePerception,
-  changeXpathSettings,
   clearAll,
   handleLastNotification,
   pushNotification,

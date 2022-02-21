@@ -12,14 +12,11 @@ import { selectLocators } from "../../store/selectors/locatorSelectors";
 import { stopGeneration } from "../../store/thunks/stopGeneration";
 import { stopGenerationGroup } from "../../store/thunks/stopGenerationGroup";
 import { cancelStopGeneration } from "../../store/thunks/cancelStopGeneration";
-import { revertSettings } from "../../store/thunks/revertSettings";
 import { cancelLastNotification, handleLastNotification } from "../../store/slices/mainSlice";
 
 const messages = (value) => {
   return {
     EDITED: "Locator edited successfully!",
-    SETTINGS_CHANGED: "Locator settings changed successfully!",
-    SETTINGS_CHANGED_GROUP: `Settings of ${value} changed successfully!`,
     RERUN: "The locator generation rerunned successfully",
     RERUN_GROUP: `Generation of ${value} rerunned successfully`,
     STOP_GENERATION: "The locator generation stopped successfully!",
@@ -53,11 +50,6 @@ export const Notifications = () => {
           const { element_id, type, name, locator } = prevValue;
           notificationMessage = messages().EDITED;
           cancelAction = changeLocatorAttributes({ type, name, element_id, locator: locator.customXpath });
-          break;
-        case "locators/changeLocatorSettings":
-          notificationMessage =
-            size(prevValue) === 1 ? messages().SETTINGS_CHANGED : messages(size(prevValue)).SETTINGS_CHANGED_GROUP;
-          cancelAction = revertSettings({ payload: action.payload, prevValue });
           break;
         case "locators/rerunGeneration/pending":
           const { arg } = action.meta;
