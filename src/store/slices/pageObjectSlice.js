@@ -25,6 +25,9 @@ const pageObjSlice = createSlice({
       const id = payload || state.currentPageObject;
       pageObjAdapter.upsertOne(state, { id, locators: [] });
     },
+    removeAll(state) {
+      pageObjAdapter.removeAll(state);
+    },
     setConfirmed(state, { payload }) {
       pageObjAdapter.upsertOne(state, { id: payload, confirmed: true });
     },
@@ -42,6 +45,7 @@ export const {
   addLocatorToPageObj,
   addLocatorsToPageObj,
   clearLocators,
+  removeAll,
   setConfirmed,
   setCurrentPageObj,
 } = pageObjSlice.actions;
