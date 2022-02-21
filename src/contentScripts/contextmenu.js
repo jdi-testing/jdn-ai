@@ -31,6 +31,7 @@ export const runContextMenu = () => {
 
     function removeHighlight() {
       const el = document.querySelector('.cm--selected');
+      console.log(el);
       if (el) {
         el.classList.remove('cm--selected');
         chrome.runtime.sendMessage({
@@ -462,7 +463,7 @@ export const runContextMenu = () => {
       elementMenu && elementMenu.remove();
       elementMenu = new ContextMenu(menuItems(param.element, param.types));
       elementMenu.display(contextEvent);
-      const el = document.getElementById(predictedElement.element_id);
+      const el = document.getElementById(predictedElement.jdnHash);
       chrome.runtime.sendMessage({
         message: "CM_ELEMENT_HIGHLIGHT_ON",
         param: predictedElement.element_id,

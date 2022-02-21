@@ -57,8 +57,8 @@ export const createListeners = (dispatch, state) => {
         dispatch(changeLocatorSettings(newPayload));
       }
     },
-    GET_ELEMENT: (id) => {
-      const element = selectLocatorByJdnHash(state, id);
+    GET_ELEMENT: (jdnHash) => {
+      const element = selectLocatorByJdnHash(state, jdnHash);
       sendMessage.elementData({
         element,
         types: getTypesMenuOptions(),
@@ -71,7 +71,7 @@ export const createListeners = (dispatch, state) => {
       dispatch(addCmElementHighlight(payload));
     },
     CM_ELEMENT_HIGHLIGHT_OFF: (payload) => {
-      dispatch(clearCmElementHighlight(payload));
+      dispatch(clearCmElementHighlight(selectLocatorByJdnHash(state, payload).element_id));
     },
     CONFIRM_BACK_POPUP: () => {
       const currentPageObject = state.pageObject.currentPageObject;
