@@ -30,8 +30,31 @@ import { selectLocatorByJdnHash, selectPageObjById } from "../store/selectors/pa
 
 export const createListeners = (dispatch, state) => {
   const actions = {
-    GET_ELEMENT: (id) => {
-      const element = selectLocatorByJdnHash(state, id);
+    CHANGE_XPATH_SETTINGS: ({ settings, elementIds }) => {
+      if (!elementIds) {
+        dispatch(changeXpathSettings(settings));
+      } else {
+        const newPayload = elementIds.map((id) => {
+          const locator = selectLocatorById(state, id);
+          const elementSettings = locator.locator.settings || {};
+          const newSettings = mapValues(settings, (value, key) => {
+            return value === "indeterminate" ? elementSettings[key] || state.main.xpathConfig[key] : value;
+          });
+          if (locator.locator.taskStatus !== locatorTaskStatus.REVOKED) {
+            if (isProgressStatus(locator.locator.taskStatus)) {
+              stopGenerationHandler(locator.element_id);
+            }
+            const _locator = { ...locator, locator: { ...locator.locator, settings: {} } };
+            _locator.locator.settings = newSettings;
+            dispatch(rerunGeneration([_locator]));
+          }
+          return { element_id: id, locator: { ...locator.locator, settings: newSettings } };
+        });
+        dispatch(changeLocatorSettings(newPayload));
+      }
+    },
+    GET_ELEMENT: (jdnHash) => {
+      const element = selectLocatorByJdnHash(state, jdnHash);
       sendMessage.elementData({
         element,
         types: getTypesMenuOptions(),
@@ -44,7 +67,7 @@ export const createListeners = (dispatch, state) => {
       dispatch(addCmElementHighlight(payload));
     },
     CM_ELEMENT_HIGHLIGHT_OFF: (payload) => {
-      dispatch(clearCmElementHighlight(payload));
+      dispatch(clearCmElementHighlight(selectLocatorByJdnHash(state, payload).element_id));
     },
     CONFIRM_BACK_POPUP: () => {
       const currentPageObject = state.pageObject.currentPageObject;

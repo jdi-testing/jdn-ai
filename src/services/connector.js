@@ -1,4 +1,4 @@
-import { runContextMenu } from "../contentScripts/contextMenu/contextmenu";
+import { runContextMenu } from "../contentScripts/contextmenu";
 import { editLocatorPopup } from "../contentScripts/popups/editLocatorPopup";
 import { highlightOnPage } from "../contentScripts/highlight";
 import { highlightOrder } from "../contentScripts/highlightOrder";
