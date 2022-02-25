@@ -33,7 +33,7 @@ export const confirmPopup = () => {
 
     const confirmButton = document.createElement("button");
     confirmButton.classList.add("jdn-popup__button");
-    confirmButton.classList.add("jdn-popup__button_primary");
+    confirmButton.classList.add(config.buttonConfirmClass || "jdn-popup__button_primary");
     confirmButton.innerText = config.buttonConfirmText;
     confirmButton.onclick = confirm;
 

@@ -111,6 +111,15 @@
         cursor: not-allowed;
       }
 
+      &_warning {
+        background-color: @warning-color;
+        color: @color-white;
+
+        &:hover {
+          background-color: @warning-dark-color;
+        }
+      }
+
       &_close {
         .unborder();
 
