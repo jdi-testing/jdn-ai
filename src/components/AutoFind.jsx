@@ -19,7 +19,7 @@ import { selectCurrentPage } from "../store/selectors/mainSelectors";
 import { selectLocatorsToConfirm, selectPageObjById } from "../store/selectors/pageObjectSelectors";
 import { size } from "lodash";
 import { setConfirmed } from "../store/slices/pageObjectSlice";
-import { PageObjectPage } from "./pageObject/PageObjectPage";
+import { PageObjectPage } from "./pageObjectPage/PageObjectPage";
 
 const AutoFind = () => {
   const [isInvalidSession, setIsInvalidSession] = useState(localStorage.getItem("secondSession"));
