@@ -13,13 +13,13 @@ import { locatorGenerationController } from "../services/locatorGenerationContro
 import { openConfirmBackPopup, openConfirmInProgressPopup, removeOverlay } from "../services/pageDataHandlers";
 import { LocatorsPage } from "./locatorsPage/LocatorsPage";
 import { identificationStatus, pageType } from "../utils/constants";
-import { PageObjectPage } from "./pageObjectPage/PageObjectPage";
 
 import CaretDownSvg from "../assets/caret-down.svg";
 import { selectCurrentPage } from "../store/selectors/mainSelectors";
 import { selectLocatorsToConfirm, selectPageObjById } from "../store/selectors/pageObjectSelectors";
 import { size } from "lodash";
 import { setConfirmed } from "../store/slices/pageObjectSlice";
+import { PageObjectPage } from "./pageObject/PageObjectPage";
 
 const AutoFind = () => {
   const [isInvalidSession, setIsInvalidSession] = useState(localStorage.getItem("secondSession"));
