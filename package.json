@@ -34,6 +34,9 @@
   "lint-staged": {
     "**/*": "prettier --write src/**/*.jsx"
   },
+  "modulePaths": [
+    "<rootDir>"
+  ],
   "dependencies": {
     "@ant-design/icons": "^4.6.2",
     "@reduxjs/toolkit": "^1.6.2",
