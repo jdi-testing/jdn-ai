@@ -2,17 +2,16 @@ import React from "react";
 import { Provider } from "react-redux";
 import { render, unmountComponentAtNode } from "react-dom";
 import { act } from "react-dom/test-utils";
-// import { PageObjList } from "../../components/pageObjectPage/pageObjList";
 import { store } from "../../store/store";
 import { jest } from "@jest/globals";
+import { PageObjList } from "../../components/PageObjects/PageObjList";
 
 xdescribe("application launch", () => {
   let container = null;
 
   const TestComponent = () => (
     <Provider {...{ store }}>
-      {/* <PageObjList /> */}
-      <div></div>
+      <PageObjList />
     </Provider>
   );
 
