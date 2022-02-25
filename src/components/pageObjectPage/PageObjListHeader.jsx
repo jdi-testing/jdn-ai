@@ -13,8 +13,7 @@ import { size } from "lodash";
 import { selectPageObjects } from "../../store/selectors/pageObjectSelectors";
 
 import TrashBinSVG from "../../assets/trash-bin.svg";
-import { removeAll as removeAllPageObjects } from "../../store/slices/pageObjectSlice";
-import { removeAll as removeAllLocators } from "../../store/slices/locatorsSlice";
+import { openDeleteAllPopup } from "../../services/pageDataHandlers";
 
 export const PageObjListHeader = () => {
   const state = useSelector((state) => state);
@@ -29,8 +28,7 @@ export const PageObjListHeader = () => {
   };
 
   const handleRemoveAll = () => {
-    dispatch(removeAllPageObjects());
-    dispatch(removeAllLocators());
+    openDeleteAllPopup();
   };
 
   return (

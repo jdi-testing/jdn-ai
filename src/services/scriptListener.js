@@ -5,6 +5,7 @@ import {
   addCmElementHighlight,
   changeLocatorAttributes,
   removeLocators,
+  removeAll as removeAllLocators,
 } from "../store/slices/locatorsSlice";
 import { connector, sendMessage } from "./connector";
 import { getTypesMenuOptions } from "../utils/generationClassesMap";
@@ -25,7 +26,7 @@ import {
   setUnactualPrediction,
   toggleBackdrop,
 } from "../store/slices/mainSlice";
-import { clearLocators, setConfirmed } from "../store/slices/pageObjectSlice";
+import { clearLocators, removeAll as removeAllPageObjects, setConfirmed } from "../store/slices/pageObjectSlice";
 import { selectLocatorByJdnHash, selectPageObjById } from "../store/selectors/pageObjectSelectors";
 
 export const createListeners = (dispatch, state) => {
@@ -52,6 +53,11 @@ export const createListeners = (dispatch, state) => {
         });
         dispatch(changeLocatorSettings(newPayload));
       }
+    },
+    DELETE_ALL_PAGE_OBJECTS: () => {
+      dispatch(removeAllPageObjects());
+      dispatch(removeAllLocators());
+      dispatch(toggleBackdrop(false));
     },
     GET_ELEMENT: (jdnHash) => {
       const element = selectLocatorByJdnHash(state, jdnHash);

@@ -97,3 +97,15 @@ export const openConfirmInProgressPopup = () => {
   };
   chrome.storage.sync.set({POPUP_CONFIG: config}, connector.attachContentScript(confirmPopup));
 };
+
+export const openDeleteAllPopup = () => {
+  const config = {
+    header: "Delete all",
+    content: `All page objects and packages will be cleared and you can lose all your data. 
+    You cannot undo this action.`,
+    buttonConfirmText: "Delete all",
+    buttonConfirmClass: "jdn-popup__button_warning",
+    scriptMessage: "DELETE_ALL_PAGE_OBJECTS",
+  };
+  chrome.storage.sync.set({POPUP_CONFIG: config}, connector.attachContentScript(confirmPopup));
+};
