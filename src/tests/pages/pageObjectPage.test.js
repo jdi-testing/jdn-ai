@@ -1,8 +1,7 @@
 import React from "react";
 import "@testing-library/jest-dom";
-import renderer from "react-test-renderer";
 
-import { cleanup, fireEvent, render, screen, waitFor, waitForElementToBeRemoved } from "@testing-library/react";
+import { cleanup, render, screen, waitForElementToBeRemoved } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
 import { jest } from "@jest/globals";
