@@ -1,6 +1,6 @@
 {
   "name": "jdn-ai-chrome-extension",
-  "version": "3.1.128",
+  "version": "3.1.129",
   "description": "jdn-ai chrome extension",
   "scripts": {
     "start": "webpack --watch",
@@ -59,7 +59,9 @@
     "@babel/preset-env": "^7.13.10",
     "@babel/preset-react": "^7.12.13",
     "@svgr/webpack": "^5.5.0",
+    "@testing-library/jest-dom": "^5.16.2",
     "@testing-library/react": "^12.0.0",
+    "@testing-library/user-event": "^13.5.0",
     "babel-jest": "^27.5.1",
     "babel-loader": "^8.2.2",
     "babel-plugin-transform-object-rest-spread": "^7.0.0-beta.3",
@@ -77,6 +79,7 @@
     "html-webpack-plugin": "^5.3.1",
     "jest": "^27.0.0",
     "jest-chrome": "^0.7.2",
+    "jest-environment-jsdom": "^27.5.1",
     "jest-transform-stub": "^2.0.0",
     "json-loader": "^0.5.7",
     "less": "^4.1.1",

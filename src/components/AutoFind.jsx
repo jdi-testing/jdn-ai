@@ -11,7 +11,7 @@ import { createListeners } from "../services/scriptListener";
 import { SeveralTabsWarning } from "./SeveralTabsWarning";
 import { locatorGenerationController } from "../services/locatorGenerationController";
 import { openConfirmBackPopup, openConfirmInProgressPopup, removeOverlay } from "../services/pageDataHandlers";
-import { LocatorsPage } from "./locatorsPage/LocatorsPage";
+import { LocatorsPage } from "./Locators/LocatorsPage";
 import { identificationStatus, pageType } from "../utils/constants";
 
 import CaretDownSvg from "../assets/caret-down.svg";
@@ -19,7 +19,7 @@ import { selectCurrentPage } from "../store/selectors/mainSelectors";
 import { selectLocatorsToConfirm, selectPageObjById } from "../store/selectors/pageObjectSelectors";
 import { size } from "lodash";
 import { setConfirmed } from "../store/slices/pageObjectSlice";
-import { PageObjectPage } from "./pageObjectPage/PageObjectPage";
+import { PageObjectPage } from "./PageObjects/PageObjectPage";
 
 const AutoFind = () => {
   const [isInvalidSession, setIsInvalidSession] = useState(localStorage.getItem("secondSession"));

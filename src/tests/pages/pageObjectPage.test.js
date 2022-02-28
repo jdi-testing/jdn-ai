@@ -1,38 +1,47 @@
 import React from "react";
+import "@testing-library/jest-dom";
+
+import { cleanup, render, screen, waitForElementToBeRemoved } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { Provider } from "react-redux";
-import { render, unmountComponentAtNode } from "react-dom";
-import { act } from "react-dom/test-utils";
-// import { PageObjList } from "../../components/pageObjectPage/pageObjList";
-import { store } from "../../store/store";
 import { jest } from "@jest/globals";
 
-xdescribe("application launch", () => {
-  let container = null;
+import { store } from "../../store/store";
+import { PageObjList } from "../../components/PageObjects/PageObjList";
+import * as pageObject from "../../services/pageObject";
 
+describe("application launch", () => {
   const TestComponent = () => (
     <Provider {...{ store }}>
-      {/* <PageObjList /> */}
-      <div></div>
+      <PageObjList />
     </Provider>
   );
 
-  beforeEach(() => {
-    container = document.createElement("div");
-    document.body.appendChild(container);
-
+  beforeAll(() => {
     jest.mock("@ant-design/icons");
+    jest.spyOn(pageObject, "getPageAttributes").mockImplementation(() => [
+      {
+        result: {
+          title: "HomePage",
+          url: "https://jdi-testing.github.io/jdi-light/contacts.html",
+        },
+      },
+    ]);
   });
 
-  afterEach(() => {
-    unmountComponentAtNode(container);
-    container.remove();
-    container = null;
-  });
+  afterEach(() => cleanup());
 
   test("placeholder is shown for empty PO list", () => {
-    act(() => {
-      render(<TestComponent />, container);
-    });
-    expect(container.textContent).toContain("There are no created page objects.");
+    render(<TestComponent />).container;
+    expect(screen.getByText("There are no created page objects.")).toBeInTheDocument();
+  });
+
+  test("new PO is added by clicking button", async () => {
+    render(<TestComponent />);
+    await userEvent.click(screen.getByRole("button"));
+    await userEvent.click(screen.getByRole("button"));
+    await waitForElementToBeRemoved(() => screen.getByText("There are no created page objects."));
+    const items = await screen.findAllByText(/HomePage/);
+    expect(items).toHaveLength(2);
   });
 });
