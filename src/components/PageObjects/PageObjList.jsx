@@ -21,7 +21,7 @@ export const PageObjList = () => {
   const [activePanel, setActivePanel] = useState([]);
 
   useEffect(() => {
-    setActivePanel([...activePanel, currentPageObject]);
+    setActivePanel([currentPageObject]);
   }, [currentPageObject]);
 
   const renderLocators = (elements) => {
@@ -53,6 +53,7 @@ export const PageObjList = () => {
   return (
     <div className="jdn__locatorsList">
       <PageObjListHeader />
+      <span>current: {currentPageObject}</span><span> active: {activePanel}</span>
       <div className="jdn__locatorsList-content jdn__pageObj-content">
         {size(pageObjects) ? (
           <Collapse
