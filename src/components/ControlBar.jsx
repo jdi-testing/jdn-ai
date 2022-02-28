@@ -12,8 +12,8 @@ export const ControlBar = () => {
   const [backendVer, setBackendVer] = useState("");
   const [pluginVer, setPluginVer] = useState("");
 
-  const predictedElements = useSelector((state) => state.main.predictedElements);
-  const allowRemoveElements = useSelector((state) => state.main.allowRemoveElements);
+  const predictedElements = useSelector((state) => state.locators.predictedElements);
+  const allowRemoveElements = useSelector((state) => state.locators.allowRemoveElements);
 
   useEffect(() => {
     const fetchData = async () => {
