@@ -26,7 +26,9 @@ export const PageObjList = () => {
 
   const renderLocators = (elements) => {
     if (size(elements)) {
-      return elements.map((element) => <Locator key={element.element_id} {...{ element, xpathConfig }} />);
+      return elements.map((element) => (
+        <Locator key={element.element_id} {...{ element, xpathConfig }} noScrolling={true} />
+      ));
     } else {
       return "No locators selected";
     }
