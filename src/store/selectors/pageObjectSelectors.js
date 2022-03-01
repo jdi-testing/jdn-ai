@@ -1,4 +1,6 @@
 import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
+import { isProgressStatus } from "../../services/locatorGenerationController";
+import { locatorTaskStatus } from "../../utils/constants";
 import {
   selectGeneratedLocators,
   selectInProgressLocators,
@@ -43,10 +45,37 @@ export const selectConfirmedLocators = createSelector(selectLocatorsByPageObject
   elements.filter((elem) => elem.generate)
 );
 
-export const selectGeneratedLocatorsByPageObj = createSelector(
+export const selectGeneratedByPageObj = createSelector(
     selectGeneratedLocators,
     (state, pageObjId) => selectPageObjById(state, pageObjId).locators || [],
     (locators, locByPageObj) => locators.filter((loc) => locByPageObj.includes(loc.element_id))
+);
+
+export const selectGeneratedSelectedByPageObj = createSelector(
+    selectGeneratedByPageObj,
+    (items) => items.filter((item) => item.generate),
+);
+
+export const selectDeletedByPageObj = createSelector(selectPageObjLocatorsByProbability, (items) =>
+  items.filter((el) => el.deleted)
+);
+
+export const selectDeletedSelectedByPageObj = createSelector(selectDeletedByPageObj,
+    (items) => items.filter((item) => item.generate),
+);
+
+export const selectWaitingByPageObj = createSelector(selectPageObjLocatorsByProbability, (elements) =>
+  elements.filter(
+      (el) =>
+        (isProgressStatus(el.locator.taskStatus) ||
+        el.locator.taskStatus === locatorTaskStatus.REVOKED ||
+        el.locator.taskStatus === locatorTaskStatus.FAILURE) &&
+      !el.deleted
+  )
+);
+
+export const selectWaitingSelectedByPageObj = createSelector(selectWaitingByPageObj,
+    (items) => items.filter((item) => item.generate),
 );
 
 export const selectLocatorByJdnHash = createSelector(
