@@ -26,7 +26,9 @@ export const PageObjList = () => {
 
   const renderLocators = (elements) => {
     if (size(elements)) {
-      return elements.map((element) => <Locator key={element.element_id} {...{ element, xpathConfig }} />);
+      return elements.map((element) => (
+        <Locator key={element.element_id} {...{ element, xpathConfig }} noScrolling={true} />
+      ));
     } else {
       return "No locators selected";
     }
@@ -53,7 +55,6 @@ export const PageObjList = () => {
   return (
     <div className="jdn__locatorsList">
       <PageObjListHeader />
-      <span>current: {currentPageObject}</span><span> active: {activePanel}</span>
       <div className="jdn__locatorsList-content jdn__pageObj-content">
         {size(pageObjects) ? (
           <Collapse
