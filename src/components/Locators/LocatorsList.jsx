@@ -5,10 +5,8 @@ import { useDispatch, useSelector } from "react-redux";
 import Icon from "@ant-design/icons";
 import React, { useEffect, useMemo, useState, useCallback } from "react";
 
-import { isProgressStatus } from "../../services/locatorGenerationController";
 import { Locator } from "./Locator";
 import { LocatorListHeader } from "./LocatorListHeader";
-import { locatorTaskStatus } from "../../utils/constants";
 import { Notifications } from "./Notifications";
 import { toggleElementGroupGeneration } from "../../store/slices/locatorsSlice";
 
@@ -16,8 +14,13 @@ import CaretDownSvg from "../../assets/caret-down.svg";
 import CheckedkSvg from "../../assets/checked-outlined.svg";
 import DeletedSvg from "../../assets/deleted.svg";
 import {
-  selectGeneratedLocatorsByPageObj,
+  selectDeletedByPageObj,
+  selectDeletedSelectedByPageObj,
+  selectGeneratedByPageObj,
+  selectGeneratedSelectedByPageObj,
   selectPageObjLocatorsByProbability,
+  selectWaitingByPageObj,
+  selectWaitingSelectedByPageObj,
 } from "../../store/selectors/pageObjectSelectors";
 
 let timer;
@@ -34,23 +37,13 @@ export const LocatorsList = ({ pageObject }) => {
 
   const byProbability = selectPageObjLocatorsByProbability(state, currentPageObject);
 
-  const waiting = useMemo(
-      () =>
-        byProbability.filter(
-            (el) =>
-              (isProgressStatus(el.locator.taskStatus) ||
-            el.locator.taskStatus === locatorTaskStatus.REVOKED ||
-            el.locator.taskStatus === locatorTaskStatus.FAILURE) &&
-          !el.deleted
-        ),
-      [byProbability]
-  );
-  const generated = useMemo(() => selectGeneratedLocatorsByPageObj(state, currentPageObject), [byProbability]);
-  const deleted = useMemo(() => byProbability.filter((el) => el.deleted), [byProbability]);
+  const waiting = useSelector((_state) => selectWaitingByPageObj(_state, currentPageObject));
+  const generated = useSelector((_state) => selectGeneratedByPageObj(_state, currentPageObject));
+  const deleted = useSelector((_state) => selectDeletedByPageObj(_state, currentPageObject));
 
-  const waitingSelected = filter(waiting, "generate");
-  const generatedSelected = filter(generated, "generate");
-  const deletedSelected = filter(deleted, "generate");
+  const waitingSelected = useSelector((_state) => selectWaitingSelectedByPageObj(_state, currentPageObject));
+  const generatedSelected = useSelector((_state) => selectGeneratedSelectedByPageObj(_state, currentPageObject));
+  const deletedSelected = useSelector((_state) => selectDeletedSelectedByPageObj(_state, currentPageObject));
 
   const hasGeneratedSelected = useMemo(
       () => size(generatedSelected) > 0 && size(generatedSelected) !== size(generated),

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Layout, { Content, Header } from "antd/lib/layout/layout";
-import { Button } from "antd";
+import { Button, Space } from "antd";
 import Icon from "@ant-design/icons";
 
 import { changePage, changePageBack, clearAll } from "../store/slices/mainSlice";
@@ -16,7 +16,12 @@ import { identificationStatus, pageType } from "../utils/constants";
 
 import CaretDownSvg from "../assets/caret-down.svg";
 import { selectCurrentPage } from "../store/selectors/mainSelectors";
-import { selectLocatorsToConfirm, selectPageObjById } from "../store/selectors/pageObjectSelectors";
+import {
+  selectGeneratedSelectedByPageObj,
+  selectLocatorsToConfirm,
+  selectPageObjById,
+  selectWaitingSelectedByPageObj,
+} from "../store/selectors/pageObjectSelectors";
 import { size } from "lodash";
 import { setConfirmed } from "../store/slices/pageObjectSlice";
 import { PageObjectPage } from "./PageObjects/PageObjectPage";
@@ -96,16 +101,19 @@ const AutoFind = () => {
   };
 
   const renderConfirmButton = () => {
-    return (
-      <React.Fragment>
-        {currentPage === pageType.locatorsList ? (
-          <Button type="primary" onClick={handleConfirm} className="jdn__buttons">
+    if (currentPage === pageType.locatorsList) {
+      const waitingSelected = selectWaitingSelectedByPageObj(state, currentPageObject);
+      const generatedSelected = selectGeneratedSelectedByPageObj(state, currentPageObject);
+      const isDisabled = !size(waitingSelected) && !size(generatedSelected);
+      return (
+        <React.Fragment>
+          <Button type="primary" onClick={handleConfirm} className="jdn__buttons" disabled={isDisabled}>
             Confirm
             <Icon component={CaretDownSvg} rotate={270} fill="#ffffff" />
           </Button>
-        ) : null}
-      </React.Fragment>
-    );
+        </React.Fragment>
+      );
+    } else return null;
   };
 
   return (
@@ -117,8 +125,10 @@ const AutoFind = () => {
         <Content className="jdn__content">
           {isInvalidSession ? <SeveralTabsWarning /> : renderPage()}
           <div className="jdn__navigation">
-            {renderBackButton()}
-            {renderConfirmButton()}
+            <Space direction="horizontal" size={8}>
+              {renderBackButton()}
+              {renderConfirmButton()}
+            </Space>
           </div>
         </Content>
       </Layout>
