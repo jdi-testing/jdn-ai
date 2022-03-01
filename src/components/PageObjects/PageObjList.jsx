@@ -53,7 +53,6 @@ export const PageObjList = () => {
   return (
     <div className="jdn__locatorsList">
       <PageObjListHeader />
-      <span>current: {currentPageObject}</span><span> active: {activePanel}</span>
       <div className="jdn__locatorsList-content jdn__pageObj-content">
         {size(pageObjects) ? (
           <Collapse
