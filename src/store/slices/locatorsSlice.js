@@ -43,9 +43,9 @@ const locatorsSlice = createSlice({
           newValue.locator.taskStatus = locatorTaskStatus.SUCCESS;
         }
       }
-      if (validity && (validity.locator === VALIDATION_ERROR_TYPE.NEW_ELEMENT)) {
+      if (validity && validity.locator === VALIDATION_ERROR_TYPE.NEW_ELEMENT) {
         locatorsAdapter.removeOne(state, element_id);
-        newValue = {...newValue, ...newElement};
+        newValue = { ...newValue, ...newElement };
         newValue.predicted_probability = 1;
       }
       locatorsAdapter.upsertOne(state, newValue);
@@ -53,8 +53,8 @@ const locatorsSlice = createSlice({
     removeAll(state) {
       locatorsAdapter.removeAll(state);
     },
-    removeLocators(state, {payload}) {
-      locatorsAdapter.removeMany(state, payload);
+    removeLocators(state, { payload: ids }) {
+      locatorsAdapter.removeMany(state, ids);
     },
     toggleElementGeneration(state, { payload }) {
       const locator = simpleSelectLocatorById(state, payload);

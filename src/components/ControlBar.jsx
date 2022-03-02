@@ -7,13 +7,15 @@ import { BUILD, request } from "../services/backend";
 import { reportProblem } from "../services/pageDataHandlers";
 
 import kebab_menu from "../assets/Kebab_menu.svg";
+import { selectLocators } from "../store/selectors/locatorSelectors";
+import { size } from "lodash";
 
 export const ControlBar = () => {
   const [backendVer, setBackendVer] = useState("");
   const [pluginVer, setPluginVer] = useState("");
 
-  const predictedElements = useSelector((state) => state.locators.predictedElements);
-  const allowRemoveElements = useSelector((state) => state.locators.allowRemoveElements);
+  const predictedElements = useSelector(selectLocators);
+  const allowRemoveElements = size(predictedElements);
 
   useEffect(() => {
     const fetchData = async () => {

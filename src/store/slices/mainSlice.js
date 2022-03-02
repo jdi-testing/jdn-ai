@@ -4,8 +4,6 @@ import { identificationStatus, xpathGenerationStatus } from "../../utils/constan
 
 const initialState = {
   allowIdentifyElements: true,
-  allowRemoveElements: false,
-  // currentPage: pageType.pageObject,
   notifications: [],
   pageHistory: [],
   perception: 0.5,

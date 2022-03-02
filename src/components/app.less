@@ -331,7 +331,7 @@
     padding-top: 28px;
 
     &-status {
-      margin: 0 8px;
+      margin-right: 8px;
       font-size: 14px;
 
       &-large {
@@ -362,9 +362,17 @@
       border-radius: 0;
     }
 
-    .ant-collapse > .ant-collapse-item > .ant-collapse-header .ant-collapse-arrow {
-      position: absolute;
-      right: 0;
+    .ant-collapse > .ant-collapse-item > .ant-collapse-header {
+      & .ant-collapse-arrow {
+        right: 12px;
+      }
+      & .ant-checkbox-wrapper {
+        margin-right: 8px;
+
+        & .ant-checkbox {
+          top: 0.05em;
+        }
+      }
     }
 
     .ant-collapse-content > .ant-collapse-content-box {
@@ -468,7 +476,7 @@
       }
 
       .ant-spin {
-        margin: 0 8px;
+        margin-right: 8px;
       }
 
       .ant-spin-sm .ant-spin-dot {
@@ -670,8 +678,7 @@
     }
 
     & .ant-collapse > .ant-collapse-item > .ant-collapse-header .ant-collapse-arrow {
-      position: relative;
-      margin-right: 0;
+      margin-right: 8px;
     }
 
     &_placeholder {
