@@ -107,6 +107,11 @@
   border: 1px solid @primary-color;
   color: @primary-color;
   background: transparent;
+  height: 30px;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 16px;
 
   .anticon {
     svg {
@@ -296,20 +301,6 @@
       .ant-select-arrow {
         color: #b2b5c2 !important;
       }
-    }
-  }
-
-  &__buttons {
-    height: 30px;
-    font-style: normal;
-    font-weight: bold;
-    font-size: 12px;
-    line-height: 16px;
-
-    &--secondary[disabled] {
-      background: transparent;
-      border-color: #b2b5c2;
-      color: #b2b5c2;
     }
   }
 
@@ -704,9 +695,12 @@
 
   &__navigation {
     margin-top: 16px;
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
 
-    & .jdn__buttons {
-      padding: 4px 12px;
+    & button {
+      width: 96px;
     }
   }
 }
