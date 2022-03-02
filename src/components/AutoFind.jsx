@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Layout, { Content, Header } from "antd/lib/layout/layout";
-import { Button, Space } from "antd";
+import { Button, Tooltip } from "antd";
 import Icon from "@ant-design/icons";
 
 import { changePage, changePageBack, clearAll } from "../store/slices/mainSlice";
@@ -107,10 +107,15 @@ const AutoFind = () => {
       const isDisabled = !size(waitingSelected) && !size(generatedSelected);
       return (
         <React.Fragment>
-          <Button type="primary" onClick={handleConfirm} className="jdn__buttons" disabled={isDisabled}>
-            Confirm
-            <Icon component={CaretDownSvg} rotate={270} fill="#ffffff" />
-          </Button>
+          <Tooltip
+            overlayClassName="jdn__button-tooltip"
+            title={isDisabled ? "Please select locators for your current page object." : ""}
+          >
+            <Button type="primary" onClick={handleConfirm} className="jdn__buttons" disabled={isDisabled}>
+              Confirm
+              <Icon component={CaretDownSvg} rotate={270} fill="#ffffff" />
+            </Button>
+          </Tooltip>
         </React.Fragment>
       );
     } else return null;
@@ -125,10 +130,8 @@ const AutoFind = () => {
         <Content className="jdn__content">
           {isInvalidSession ? <SeveralTabsWarning /> : renderPage()}
           <div className="jdn__navigation">
-            <Space direction="horizontal" size={8}>
-              {renderBackButton()}
-              {renderConfirmButton()}
-            </Space>
+            {renderBackButton()}
+            {renderConfirmButton()}
           </div>
         </Content>
       </Layout>
