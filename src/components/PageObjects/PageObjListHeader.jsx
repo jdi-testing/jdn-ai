@@ -42,7 +42,7 @@ export const PageObjListHeader = () => {
         {size(pageObjects) ? (
           <React.Fragment>
             <Tooltip placement="bottom" title="Delete all">
-              <Button hidden={!size(pageObjects)} danger onClick={handleRemoveAll}>
+              <Button hidden={!size(pageObjects)} danger onClick={handleRemoveAll} data-testid="remove-button">
                 <Icon fill="#D82C15" component={TrashBinSVG} />
               </Button>
             </Tooltip>

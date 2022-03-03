@@ -2,7 +2,7 @@ import { sendMessage } from "../../services/connector";
 import { addLocators, changeLocatorAttributes } from "../../store/slices/locatorsSlice";
 import { selectLocatorById } from "../../store/selectors/locatorSelectors";
 import { store } from "../../store/store";
-import { locator1 } from "./locator.mock";
+import { locator1 } from "../__mocks__/locator.mock";
 
 /* global jest*/
 

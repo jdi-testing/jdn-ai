@@ -31,9 +31,9 @@ describe("application launch", () => {
 
   afterEach(() => cleanup());
 
-  test("placeholder is shown for empty PO list", () => {
-    render(<TestComponent />).container;
-    expect(screen.getByText("There are no created page objects.")).toBeInTheDocument();
+  test("renders properly for empty PO list", () => {
+    const { container } = render(<TestComponent />);
+    expect(container).toMatchSnapshot();
   });
 
   test("new PO is added by clicking button", async () => {

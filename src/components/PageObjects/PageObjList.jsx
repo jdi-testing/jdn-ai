@@ -95,7 +95,7 @@ export const PageObjList = () => {
                 }
                 extra={
                   <a onClick={(e) => e.stopPropagation()}>
-                    <Dropdown trigger="click" overlay={renderMenu(id, locators)}>
+                    <Dropdown trigger="click" overlay={renderMenu(id, locators)} data-testid="dropdown-button">
                       <Icon component={EllipsisSvg} />
                     </Dropdown>
                   </a>

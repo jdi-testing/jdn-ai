@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`application launch renders properly for empty PO list 1`] = `
+<div>
+  <div
+    class="jdn__locatorsList"
+  >
+    <div
+      class="jdn__locatorsList-header"
+    >
+      <span
+        class="jdn__locatorsList-header-title"
+      >
+        Page Objects
+      </span>
+      <div
+        class="jdn__locatorsList-header-buttons"
+      >
+        <button
+          class="ant-btn ant-btn-default jdn__buttons"
+          type="button"
+        >
+          <span
+            class="anticon"
+            role="img"
+          />
+          <span>
+            New page object
+          </span>
+        </button>
+      </div>
+    </div>
+    <div
+      class="jdn__locatorsList-content jdn__pageObj-content"
+    >
+      <div
+        class="jdn__pageObject_placeholder"
+      >
+        <span
+          class="anticon"
+          role="img"
+        />
+        <article
+          class="ant-typography"
+        >
+          There are no created page objects.
+        </article>
+        <article
+          class="ant-typography"
+        >
+          Open the needed page and click the "New page object" button to get started.
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+`;
