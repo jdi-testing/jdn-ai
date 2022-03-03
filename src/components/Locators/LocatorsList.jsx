@@ -142,6 +142,7 @@ export const LocatorsList = ({ pageObject }) => {
           activeKey={activePanel}
           accordion
           expandIcon={({ isActive }) => <Icon component={CaretDownSvg} rotate={isActive ? 180 : 0} fill="#808080" />}
+          expandIconPosition="right"
         >
           {size(generated) && (
             <Collapse.Panel

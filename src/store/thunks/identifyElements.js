@@ -30,8 +30,6 @@ export const identifyElementsReducer = (builder) => {
       })
       .addCase(identifyElements.fulfilled, (state, { payload }) => {
         state.status = identificationStatus.success;
-        state.allowRemoveElements = true;
-        state.predictedElements = payload;
       })
       .addCase(identifyElements.rejected, (state, { error }) => {
         throw new Error(error.stack);

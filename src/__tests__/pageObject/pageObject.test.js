@@ -1,6 +1,12 @@
 import { createLocatorNames } from "../../services/pageObject";
 import { pageObjectTemplate } from "../../services/pageObjectTemplate";
-import { elementsWithNames, elementsWithoutNames, locators, pageObject, pageObjectCiryllic } from "./pageObject.mock";
+import {
+  elementsWithNames,
+  elementsWithoutNames,
+  locators,
+  pageObject,
+  pageObjectCiryllic,
+} from "../__mocks__/pageObject.mock";
 
 describe("page object code generation", () => {
   test("page object generated", () => {
@@ -21,5 +27,3 @@ describe("create locators names", () => {
     expect(createLocatorNames(elementsWithoutNames)).toStrictEqual(elementsWithNames);
   });
 });
-
-
