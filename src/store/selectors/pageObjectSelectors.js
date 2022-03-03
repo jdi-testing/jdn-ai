@@ -42,7 +42,7 @@ export const selectPageObjLocatorsByProbability = createSelector(
 );
 
 export const selectConfirmedLocators = createSelector(selectLocatorsByPageObject, (elements) =>
-  elements.filter((elem) => elem.generate)
+  elements.filter((elem) => elem.generate && !elem.deleted)
 );
 
 export const selectGeneratedByPageObj = createSelector(
