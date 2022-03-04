@@ -24,7 +24,6 @@ export const PageObjList = () => {
   const dispatch = useDispatch();
   const currentPageObject = useSelector((state) => state.pageObject.currentPageObject);
   const pageObjects = useSelector(selectPageObjects);
-  const xpathConfig = useSelector((state) => state.main.xpathConfig);
   const [activePanel, setActivePanel] = useState([]);
 
   useEffect(() => {
@@ -34,7 +33,7 @@ export const PageObjList = () => {
   const renderLocators = (elements) => {
     if (size(elements)) {
       return elements.map((element) => (
-        <Locator key={element.element_id} {...{ element, xpathConfig }} noScrolling={true} />
+        <Locator key={element.element_id} {...{ element }} noScrolling={true} />
       ));
     } else {
       return "No locators selected";
@@ -107,11 +106,10 @@ export const PageObjList = () => {
                     </React.Fragment>
                   }
                   extra={
-                    <a onClick={(e) => e.stopPropagation()}>
+                    <a onClick={(e) => e.stopPropagation()} data-testid="dropdown-button">
                       <Dropdown
                         trigger="click"
                         overlay={renderMenu(id, locators, elements)}
-                        data-testid="dropdown-button"
                       >
                         <Icon component={EllipsisSvg} />
                       </Dropdown>
