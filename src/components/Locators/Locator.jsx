@@ -39,7 +39,7 @@ const isEdited = (element) => element.isCustomName || element.locator.customXpat
 const isValidLocator = ({ locator, validity }) =>
   !validity?.locator.length || validity.locator === VALIDATION_ERROR_TYPE.NEW_ELEMENT;
 
-export const Locator = ({ element, xpathConfig, noScrolling }) => {
+export const Locator = ({ element, noScrolling }) => {
   const currentPage = useSelector(selectCurrentPage).page;
   const dispatch = useDispatch();
 
