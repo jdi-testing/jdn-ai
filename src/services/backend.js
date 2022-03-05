@@ -35,11 +35,15 @@ class Request {
   }
 
   async get(url, payload) {
-    const r = await fetch(`${this.baseURL}/${this.concatGetUrl(url, payload)}`, {
-      method: "GET",
-      headers,
-    });
-    return await this.responseHandler(r);
+    try {
+      const r = await fetch(`${this.baseURL}/${this.concatGetUrl(url, payload)}`, {
+        method: "GET",
+        headers,
+      });
+      return await this.responseHandler(r);
+    } catch (error) {
+      throw new Error(error);
+    }
   }
 
   async post(url, payload) {

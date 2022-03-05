@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 
 import { runGenerationHandler } from "../../services/locatorGenerationController";
 import { updateLocator } from "../slices/locatorsSlice";
-import { selectPendingLocators } from "../selectors/locatorSelectors";
+import { selectPendingLocatorsByPageObj } from "../selectors/pageObjectSelectors";
 
 export const runXpathGeneration = createAsyncThunk("locators/scheduleGeneration", async (generationData, thunkAPI) => {
   const state = thunkAPI.getState();
@@ -10,7 +10,7 @@ export const runXpathGeneration = createAsyncThunk("locators/scheduleGeneration"
   await runGenerationHandler(generationData, xpathConfig, (el) => {
     thunkAPI.dispatch(updateLocator(el));
   },
-  () => selectPendingLocators(thunkAPI.getState()),
+  () => selectPendingLocatorsByPageObj(thunkAPI.getState()),
   );
   return generationData;
 });
