@@ -6,6 +6,7 @@ import {
   selectInProgressLocators,
   selectLocators,
   selectLocatorsByProbability,
+  selectPendingLocators,
 } from "./locatorSelectors";
 
 export const pageObjAdapter = createEntityAdapter({
@@ -88,5 +89,11 @@ export const selectLocatorsToConfirm = createSelector(
     selectInProgressLocators,
     (state) => selectPageObjById(state, state.pageObject.currentPageObject).locators,
     (locators, pageObjLocators) =>
-      locators.find(({ element_id, generate }) => pageObjLocators.includes(element_id) && generate)
+      locators.filter(({ element_id, generate }) => pageObjLocators.includes(element_id) && generate)
+);
+
+export const selectPendingLocatorsByPageObj = createSelector(
+    selectPendingLocators,
+    (state) => selectPageObjById(state, state.pageObject.currentPageObject).locators,
+    (locators, pageObjLocators) => locators.filter(({ element_id }) => pageObjLocators.includes(element_id))
 );

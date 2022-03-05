@@ -92,18 +92,16 @@ class LocatorGenerationController {
           break;
         case "status_changed":
           this.onStatusChange(this.getElementId(payload.id), { taskStatus: payload.status });
+          if (payload.status === locatorTaskStatus.REVOKED) {
+            this.scheduledTasks.delete(this.getElementId(payload.id));
+            this.scheduleNextLocator();
+          }
           break;
         case "result_ready":
           this.onStatusChange(this.getElementId(payload.id), { robulaXpath: payload.result });
           this.scheduledTasks.delete(this.getElementId(payload.id));
-          const nextLocator = this.getNextPendingLocator();
-          if (nextLocator) this.scheduleTask(nextLocator);
+          this.scheduleNextLocator();
           break;
-        case "tasks_revoked":
-          payload.id.forEach((task) => {
-            this.scheduledTasks.delete(this.getElementId(task));
-          });
-          if (this.getPendingLocators) this.scheduleTaskQueue();
         default:
           break;
       }
@@ -121,6 +119,11 @@ class LocatorGenerationController {
 
   closeWebSocket() {
     this.socket.close();
+  }
+
+  scheduleNextLocator() {
+    const nextLocator = this.getPendingLocators ? this.getNextPendingLocator() : null;
+    if (nextLocator) this.scheduleTask(nextLocator);
   }
 
   async scheduleTask(element) {
