@@ -1,7 +1,7 @@
 import { Button, Checkbox, Dropdown, Menu, Spin, Tooltip, Typography } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import Icon from "@ant-design/icons";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Text from "antd/lib/typography/Text";
 
 import { getLocator } from "../../services/pageObject";
@@ -41,6 +41,7 @@ const isValidLocator = ({ locator, validity }) =>
   !validity?.locator.length || validity.locator === VALIDATION_ERROR_TYPE.NEW_ELEMENT;
 
 export const Locator = ({ element, noScrolling }) => {
+  const [copyTooltipText, setTooltipText] = useState("Copy");
   const currentPage = useSelector(selectCurrentPage).page;
   const dispatch = useDispatch();
 
@@ -109,18 +110,20 @@ export const Locator = ({ element, noScrolling }) => {
   };
 
   const handleCopy = () => {
-    console.log("copy!");
+    const text = (document.getElementById(element_id).innerText).replace(/'/g, "\\'");
+    chrome.devtools.inspectedWindow.eval(`copy('${text}')`);
+    setTooltipText("Copied");
   };
 
   const renderColorizedString = () => {
     return (
-      <React.Fragment>
+      <span id={element_id}>
         @UI(
         <span className="jdn__xpath_item-locator">&quot;{getLocator(locator)}&quot;</span>)
         <span className="jdn__xpath_item-type">&nbsp;public</span>
         <span>&nbsp;{type}&nbsp;</span>
         {name}
-      </React.Fragment>
+      </span>
     );
   };
 
@@ -174,7 +177,7 @@ export const Locator = ({ element, noScrolling }) => {
             {renderIcon()}
             {renderColorizedString()}
           </Text>
-          <Tooltip placement="bottom" title="Copy">
+          <Tooltip placement="bottom" title={copyTooltipText}>
             <Button type="text" onClick={handleCopy} className="jdn__buttons" icon={<Icon component={CopySvg} />} />
           </Tooltip>
           <a>
