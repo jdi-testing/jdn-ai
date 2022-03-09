@@ -110,7 +110,7 @@ export const Locator = ({ element, noScrolling }) => {
   };
 
   const handleCopy = () => {
-    const text = (document.getElementById(element_id).innerText).replace(/'/g, "\\'");
+    const text = (ref.current.innerText).replace(/'/g, "\\'");
     chrome.devtools.inspectedWindow.eval(`copy('${text}')`);
     setTooltipText("Copied");
   };
