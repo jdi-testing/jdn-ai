@@ -1,7 +1,7 @@
-import { Checkbox, Dropdown, Menu, Spin, Tooltip, Typography } from "antd";
+import { Button, Checkbox, Dropdown, Menu, Spin, Tooltip, Typography } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import Icon from "@ant-design/icons";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Text from "antd/lib/typography/Text";
 
 import { getLocator } from "../../services/pageObject";
@@ -11,6 +11,7 @@ import { locatorTaskStatus, VALIDATION_ERROR_TYPE, pageType } from "../../utils/
 import { rerunGeneration } from "../../store/thunks/rerunGeneration";
 import { stopGeneration } from "../../store/thunks/stopGeneration";
 import { toggleDeleted, toggleElementGeneration } from "../../store/slices/locatorsSlice";
+import { selectCurrentPage } from "../../store/selectors/mainSelectors";
 
 import CheckedkSvg from "../../assets/checked-outlined.svg";
 import CheckedEdited from "../../assets/checked-edited.svg";
@@ -25,7 +26,7 @@ import RestoreSvg from "../../assets/restore.svg";
 import TrashBinSvg from "../../assets/trash-bin.svg";
 import WarningSvg from "../../assets/warning.svg";
 import WarningEditedSvg from "../../assets/warning-edited.svg";
-import { selectCurrentPage } from "../../store/selectors/mainSelectors";
+import CopySvg from "../../assets/copy.svg";
 
 export const VALIDATION_ERROR_MESSAGES = {
   [VALIDATION_ERROR_TYPE.DUPLICATED_LOCATOR]: "The locator for this element already exists.", // warn
@@ -39,7 +40,13 @@ const isEdited = (element) => element.isCustomName || element.locator.customXpat
 const isValidLocator = ({ locator, validity }) =>
   !validity?.locator.length || validity.locator === VALIDATION_ERROR_TYPE.NEW_ELEMENT;
 
+const copyTitle = {
+  Copy: "Copy",
+  Copied: "Copied"
+};
+
 export const Locator = ({ element, noScrolling }) => {
+  const [copyTooltipTitle, setTooltipTitle] = useState(copyTitle.Copy);
   const currentPage = useSelector(selectCurrentPage).page;
   const dispatch = useDispatch();
 
@@ -107,6 +114,16 @@ export const Locator = ({ element, noScrolling }) => {
     }
   };
 
+  const handleCopy = () => {
+    const text = ref.current.innerText.replace(/'/g, "\\'");
+    chrome.devtools.inspectedWindow.eval(`copy('${text}')`);
+    setTooltipTitle(copyTitle.Copied);
+  };
+
+  const handleMouseEnter = () => {
+    if (copyTooltipTitle === copyTitle.Copied) setTooltipTitle(copyTitle.Copy);
+  };
+
   const renderColorizedString = () => {
     return (
       <React.Fragment>
@@ -155,7 +172,7 @@ export const Locator = ({ element, noScrolling }) => {
   return (
     <div
       ref={ref}
-      className={`${
+      className={`jdn__xpath_container ${
         generate && currentPage === pageType.locatorsList ?
           "jdn__xpath_container--selected" :
           "jdn__xpath_container--shift"
@@ -164,12 +181,20 @@ export const Locator = ({ element, noScrolling }) => {
     >
       {currentPage === pageType.locatorsList ? (
         <React.Fragment>
-          <Checkbox checked={generate} onChange={handleOnChange}>
-            <Text className="jdn__xpath_item">
-              {renderIcon()}
-              {renderColorizedString()}
-            </Text>
-          </Checkbox>
+          <Checkbox checked={generate} onChange={handleOnChange}></Checkbox>
+          <Text className="jdn__xpath_item">
+            {renderIcon()}
+            {renderColorizedString()}
+          </Text>
+          <Tooltip placement="bottom" title={copyTooltipTitle}>
+            <Button
+              type="text"
+              onClick={handleCopy}
+              onMouseEnter={handleMouseEnter}
+              className="jdn__buttons"
+              icon={<Icon component={CopySvg} />}
+            />
+          </Tooltip>
           <a>
             <Dropdown trigger="click" overlay={renderMenu()}>
               <Icon component={EllipsisSvg} onClick={(e) => e.preventDefault()} />
