@@ -395,6 +395,7 @@
 
       .ant-checkbox-wrapper {
         width: 32px;
+        vertical-align: top;
       }
     }
 
@@ -696,8 +697,10 @@
     }
     &_item {
       font-size: 12px;
-      word-break: break-all;
+      word-break: break-word;
       line-height: 26px;
+      display: inline-block;
+      width: calc(100% - 72px);
 
       &-locator {
         color: @xpath-item-color-locator;
