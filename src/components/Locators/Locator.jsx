@@ -40,8 +40,13 @@ const isEdited = (element) => element.isCustomName || element.locator.customXpat
 const isValidLocator = ({ locator, validity }) =>
   !validity?.locator.length || validity.locator === VALIDATION_ERROR_TYPE.NEW_ELEMENT;
 
+const copyTitle = {
+  Copy: "Copy",
+  Copied: "Copied"
+};
+
 export const Locator = ({ element, noScrolling }) => {
-  const [copyTooltipText, setTooltipText] = useState("Copy");
+  const [copyTooltipTitle, setTooltipTitle] = useState(copyTitle.Copy);
   const currentPage = useSelector(selectCurrentPage).page;
   const dispatch = useDispatch();
 
@@ -110,20 +115,24 @@ export const Locator = ({ element, noScrolling }) => {
   };
 
   const handleCopy = () => {
-    const text = (ref.current.innerText).replace(/'/g, "\\'");
+    const text = ref.current.innerText.replace(/'/g, "\\'");
     chrome.devtools.inspectedWindow.eval(`copy('${text}')`);
-    setTooltipText("Copied");
+    setTooltipTitle(copyTitle.Copied);
+  };
+
+  const handleMouseEnter = () => {
+    if (copyTooltipTitle === copyTitle.Copied) setTooltipTitle(copyTitle.Copy);
   };
 
   const renderColorizedString = () => {
     return (
-      <span id={element_id}>
+      <React.Fragment>
         @UI(
         <span className="jdn__xpath_item-locator">&quot;{getLocator(locator)}&quot;</span>)
         <span className="jdn__xpath_item-type">&nbsp;public</span>
         <span>&nbsp;{type}&nbsp;</span>
         {name}
-      </span>
+      </React.Fragment>
     );
   };
 
@@ -177,8 +186,14 @@ export const Locator = ({ element, noScrolling }) => {
             {renderIcon()}
             {renderColorizedString()}
           </Text>
-          <Tooltip placement="bottom" title={copyTooltipText}>
-            <Button type="text" onClick={handleCopy} className="jdn__buttons" icon={<Icon component={CopySvg} />} />
+          <Tooltip placement="bottom" title={copyTooltipTitle}>
+            <Button
+              type="text"
+              onClick={handleCopy}
+              onMouseEnter={handleMouseEnter}
+              className="jdn__buttons"
+              icon={<Icon component={CopySvg} />}
+            />
           </Tooltip>
           <a>
             <Dropdown trigger="click" overlay={renderMenu()}>
