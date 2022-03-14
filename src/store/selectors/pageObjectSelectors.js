@@ -6,6 +6,7 @@ import {
   selectInProgressLocators,
   selectLocators,
   selectLocatorsByProbability,
+  selectLocatorsToGenerate,
   selectPendingLocators,
 } from "./locatorSelectors";
 
@@ -42,8 +43,15 @@ export const selectPageObjLocatorsByProbability = createSelector(
     (locByProbability, locByPageObj) => locByProbability.filter((loc) => locByPageObj.includes(loc.element_id))
 );
 
-export const selectConfirmedLocators = createSelector(selectLocatorsByPageObject, (elements) =>
-  elements.filter((elem) => elem.generate && !elem.deleted)
+export const selectConfirmedLocators = createSelector(selectLocators, selectPageObjById, (elements, pageObj) => {
+  const { confirmedLocators: locatorIds } = pageObj;
+  return locatorIds ? locatorIds.map((id) => elements.find(({ element_id }) => element_id === id)) : [];
+});
+
+export const selectUnconfirmedLocators = createSelector(
+    selectLocatorsToGenerate,
+    selectPageObjById,
+    (elements, {confirmedLocators: locatorIds}) => elements.filter(({element_id}) => locatorIds.includes(element_id))
 );
 
 export const selectGeneratedByPageObj = createSelector(
@@ -85,7 +93,7 @@ export const selectLocatorByJdnHash = createSelector(
     (locators, pageObjLocators) => locators.find(({ element_id }) => pageObjLocators.includes(element_id))
 );
 
-export const selectLocatorsToConfirm = createSelector(
+export const selectInProgressToConfirm = createSelector(
     selectInProgressLocators,
     (state) => selectPageObjById(state, state.pageObject.currentPageObject).locators,
     (locators, pageObjLocators) =>
@@ -96,4 +104,8 @@ export const selectPendingLocatorsByPageObj = createSelector(
     selectPendingLocators,
     (state) => selectPageObjById(state, state.pageObject.currentPageObject).locators,
     (locators, pageObjLocators) => locators.filter(({ element_id }) => pageObjLocators.includes(element_id))
+);
+
+export const selectLocatorsToConfirm = createSelector(selectLocatorsByPageObject, (elements) =>
+  elements.filter((elem) => elem.generate && !elem.deleted)
 );

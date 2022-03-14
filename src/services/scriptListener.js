@@ -26,7 +26,7 @@ import {
   setUnactualPrediction,
   toggleBackdrop,
 } from "../store/slices/mainSlice";
-import { clearLocators, removeAll as removeAllPageObjects, setConfirmed } from "../store/slices/pageObjectSlice";
+import { clearLocators, removeAll as removeAllPageObjects } from "../store/slices/pageObjectSlice";
 import { selectLocatorByJdnHash, selectPageObjById } from "../store/selectors/pageObjectSelectors";
 
 export const createListeners = (dispatch, state) => {
@@ -87,7 +87,7 @@ export const createListeners = (dispatch, state) => {
     CONFIRM_IN_PROGRESS_POPUP: () => {
       locatorGenerationController.revokeAll();
       const currentPageObject = state.pageObject.currentPageObject;
-      dispatch(setConfirmed(currentPageObject));
+      // dispatch(confirmPageObject(currentPageObject));
       dispatch(changePage({ page: pageType.pageObject, pageObj: currentPageObject }));
       dispatch(toggleBackdrop(false));
     },

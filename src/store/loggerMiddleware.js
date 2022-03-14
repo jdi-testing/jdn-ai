@@ -79,11 +79,11 @@ const notify = (state, action, prevState, store) => {
 
 export const logger = (store) => (next) => (action) => {
   const prevState = store.getState();
-  // console.group(action.type);
-  // console.info('dispatching', action);
+  console.group(action.type);
+  console.info('dispatching', action);
   const result = next(action);
-  // console.log('next state', store.getState());
-  // console.groupEnd();
+  console.log('next state', store.getState());
+  console.groupEnd();
 
   notify(store.getState(), action, prevState, store);
   return result;

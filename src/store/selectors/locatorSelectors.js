@@ -36,3 +36,8 @@ export const selectInProgressLocators = createSelector(
     selectLocatorsByProbability,
     (items) => items.filter((item) => isProgressStatus(item.locator.taskStatus) && !item.deleted),
 );
+
+export const selectLocatorsToGenerate = createSelector(
+    selectLocatorsByProbability,
+    (elements) => elements.filter((elem) => elem.generate && !elem.deleted),
+);

@@ -18,13 +18,16 @@ import CaretDownSvg from "../assets/caret-down.svg";
 import { selectCurrentPage } from "../store/selectors/mainSelectors";
 import {
   selectGeneratedSelectedByPageObj,
+  selectInProgressToConfirm,
   selectLocatorsToConfirm,
   selectPageObjById,
+  selectUnconfirmedLocators,
   selectWaitingSelectedByPageObj,
 } from "../store/selectors/pageObjectSelectors";
 import { size } from "lodash";
-import { setConfirmed } from "../store/slices/pageObjectSlice";
+import { confirmLocators } from "../store/slices/pageObjectSlice";
 import { PageObjectPage } from "./PageObjects/PageObjectPage";
+import { toggleElementGroupGeneration } from "../store/slices/locatorsSlice";
 
 const AutoFind = () => {
   const [isInvalidSession, setIsInvalidSession] = useState(localStorage.getItem("secondSession"));
@@ -65,21 +68,24 @@ const AutoFind = () => {
   };
 
   const handleConfirm = () => {
-    const inProgress = selectLocatorsToConfirm(state);
+    const inProgress = selectInProgressToConfirm(state);
     if (size(inProgress)) {
       openConfirmInProgressPopup();
     } else {
       locatorGenerationController.revokeAll();
-      dispatch(setConfirmed(currentPageObject));
+      const locatorIds = selectLocatorsToConfirm(state, currentPageObject).map((loc) => loc.element_id);
+      dispatch(confirmLocators({ id: currentPageObject, locatorIds: locatorIds }));
       dispatch(changePage({ page: pageType.pageObject, pageObj: currentPageObject }));
     }
   };
 
   const handleBack = () => {
-    const pageObject = selectPageObjById(state, currentPageObject);
-    if (!pageObject.confirmed) {
+    const locators = selectLocatorsToConfirm(state, currentPageObject);
+    if (!size(locators)) {
       openConfirmBackPopup();
     } else {
+      const unconfirmedLocators = selectUnconfirmedLocators(state, currentPageObject);
+      dispatch(toggleElementGroupGeneration(unconfirmedLocators));
       dispatch(changePageBack());
     }
   };
