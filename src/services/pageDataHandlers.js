@@ -72,6 +72,8 @@ export const requestGenerationData = async (elements) => {
   return { generationData };
 };
 
+// export const confirmPageObject
+
 export const reportProblem = (predictedElements) => {
   chrome.storage.sync.set({ predictedElements }, connector.attachContentScript(reportPopup));
 };

@@ -4,7 +4,7 @@ import Layout, { Content, Header } from "antd/lib/layout/layout";
 import { Button, Tooltip } from "antd";
 import Icon from "@ant-design/icons";
 
-import { changePage, changePageBack, clearAll } from "../store/slices/mainSlice";
+import { changePage, clearAll } from "../store/slices/mainSlice";
 import { connector } from "../services/connector";
 import { ControlBar } from "./ControlBar";
 import { createListeners } from "../services/scriptListener";
@@ -18,12 +18,12 @@ import CaretDownSvg from "../assets/caret-down.svg";
 import { selectCurrentPage } from "../store/selectors/mainSelectors";
 import {
   selectGeneratedSelectedByPageObj,
+  selectInProgressToConfirm,
   selectLocatorsToConfirm,
-  selectPageObjById,
   selectWaitingSelectedByPageObj,
 } from "../store/selectors/pageObjectSelectors";
 import { size } from "lodash";
-import { setConfirmed } from "../store/slices/pageObjectSlice";
+import { confirmLocators, removeEmptyPOs } from "../store/slices/pageObjectSlice";
 import { PageObjectPage } from "./PageObjects/PageObjectPage";
 
 const AutoFind = () => {
@@ -49,6 +49,7 @@ const AutoFind = () => {
     connector.onTabUpdate(() => {
       dispatch(clearAll());
       locatorGenerationController.revokeAll();
+      dispatch(removeEmptyPOs());
       removeOverlay();
       connector.attachStaticScripts();
     });
@@ -65,32 +66,25 @@ const AutoFind = () => {
   };
 
   const handleConfirm = () => {
-    const inProgress = selectLocatorsToConfirm(state);
+    const inProgress = selectInProgressToConfirm(state);
     if (size(inProgress)) {
       openConfirmInProgressPopup();
     } else {
       locatorGenerationController.revokeAll();
-      dispatch(setConfirmed(currentPageObject));
+      const locatorIds = selectLocatorsToConfirm(state, currentPageObject).map((loc) => loc.element_id);
+      dispatch(confirmLocators({ id: currentPageObject, locatorIds: locatorIds }));
       dispatch(changePage({ page: pageType.pageObject, pageObj: currentPageObject }));
     }
   };
 
   const handleBack = () => {
-    const pageObject = selectPageObjById(state, currentPageObject);
-    if (!pageObject.confirmed) {
-      openConfirmBackPopup();
-    } else {
-      dispatch(changePageBack());
-    }
+    openConfirmBackPopup();
   };
 
   const renderBackButton = () => {
-    const pageObject = selectPageObjById(state, currentPageObject);
-    const historyExists = size(useSelector((state) => state.main.pageHistory)) > 1;
     return (
       <React.Fragment>
-        {(currentPage === pageType.pageObject && size(pageObject && pageObject.locators) && historyExists) ||
-        currentPage === pageType.locatorsList ? (
+        {currentPage === pageType.locatorsList ? (
           <Button onClick={handleBack} className="jdn__buttons">
             <Icon component={CaretDownSvg} rotate={90} fill="#1582D8" />
             Back
