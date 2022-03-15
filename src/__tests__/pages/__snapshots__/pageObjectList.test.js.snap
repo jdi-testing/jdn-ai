@@ -17,7 +17,7 @@ exports[`pageObjectList component renders empty page object 1`] = `
         class="jdn__locatorsList-header-buttons"
       >
         <button
-          class="ant-btn ant-btn-default jdn__buttons"
+          class="ant-btn jdn__buttons"
           type="button"
         >
           <span
@@ -29,7 +29,7 @@ exports[`pageObjectList component renders empty page object 1`] = `
           </span>
         </button>
         <button
-          class="ant-btn ant-btn-default ant-btn-dangerous"
+          class="ant-btn ant-btn-dangerous"
           data-testid="remove-button"
           type="button"
         >
@@ -66,13 +66,11 @@ exports[`pageObjectList component renders empty page object 1`] = `
             role="button"
             tabindex="0"
           >
-            <div>
-              <span
-                class="anticon ant-collapse-arrow"
-                fill="#808080"
-                role="img"
-              />
-            </div>
+            <span
+              class="anticon ant-collapse-arrow"
+              fill="#808080"
+              role="img"
+            />
             <span
               class="anticon jdn__locatorsList-status"
               role="img"
