@@ -10,24 +10,16 @@ import {
 import { connector, sendMessage } from "./connector";
 import { getTypesMenuOptions } from "../utils/generationClassesMap";
 import { onStartCollectData } from "./pageDataHandlers";
-import {
-  selectLocatorById,
-  selectLocators,
-} from "../store/selectors/locatorSelectors";
+import { selectLocatorById, selectLocators } from "../store/selectors/locatorSelectors";
 import { locatorGenerationController } from "./locatorGenerationController";
 import { stopGeneration } from "../store/thunks/stopGeneration";
 import { rerunGeneration } from "../store/thunks/rerunGeneration";
 import { isNameUnique, isStringMatchesReservedWord } from "./pageObject";
-import { pageType, VALIDATION_ERROR_TYPE } from "../utils/constants";
-import {
-  changePage,
-  changePageBack,
-  clearAll,
-  setUnactualPrediction,
-  toggleBackdrop,
-} from "../store/slices/mainSlice";
+import { VALIDATION_ERROR_TYPE } from "../utils/constants";
+import { changePageBack, clearAll, setUnactualPrediction, toggleBackdrop } from "../store/slices/mainSlice";
 import { clearLocators, removeAll as removeAllPageObjects } from "../store/slices/pageObjectSlice";
 import { selectLocatorByJdnHash, selectPageObjById } from "../store/selectors/pageObjectSelectors";
+import { confirmSelectedLocators } from "../components/AutoFind";
 
 export const createListeners = (dispatch, state) => {
   const actions = {
@@ -85,10 +77,8 @@ export const createListeners = (dispatch, state) => {
       dispatch(toggleBackdrop(false));
     },
     CONFIRM_IN_PROGRESS_POPUP: () => {
-      locatorGenerationController.revokeAll();
       const currentPageObject = state.pageObject.currentPageObject;
-      // dispatch(confirmPageObject(currentPageObject));
-      dispatch(changePage({ page: pageType.pageObject, pageObj: currentPageObject }));
+      confirmSelectedLocators(dispatch, state, currentPageObject);
       dispatch(toggleBackdrop(false));
     },
     IS_OPEN_MODAL: (payload) => dispatch(toggleBackdrop(payload)),
