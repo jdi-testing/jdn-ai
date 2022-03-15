@@ -4,7 +4,7 @@ import Layout, { Content, Header } from "antd/lib/layout/layout";
 import { Button, Tooltip } from "antd";
 import Icon from "@ant-design/icons";
 
-import { changePage, changePageBack, clearAll } from "../store/slices/mainSlice";
+import { changePage, clearAll } from "../store/slices/mainSlice";
 import { connector } from "../services/connector";
 import { ControlBar } from "./ControlBar";
 import { createListeners } from "../services/scriptListener";
@@ -20,14 +20,11 @@ import {
   selectGeneratedSelectedByPageObj,
   selectInProgressToConfirm,
   selectLocatorsToConfirm,
-  selectPageObjById,
-  selectUnconfirmedLocators,
   selectWaitingSelectedByPageObj,
 } from "../store/selectors/pageObjectSelectors";
 import { size } from "lodash";
-import { confirmLocators } from "../store/slices/pageObjectSlice";
+import { confirmLocators, removeEmptyPOs } from "../store/slices/pageObjectSlice";
 import { PageObjectPage } from "./PageObjects/PageObjectPage";
-import { toggleElementGroupGeneration } from "../store/slices/locatorsSlice";
 
 const AutoFind = () => {
   const [isInvalidSession, setIsInvalidSession] = useState(localStorage.getItem("secondSession"));
@@ -52,6 +49,7 @@ const AutoFind = () => {
     connector.onTabUpdate(() => {
       dispatch(clearAll());
       locatorGenerationController.revokeAll();
+      dispatch(removeEmptyPOs());
       removeOverlay();
       connector.attachStaticScripts();
     });
@@ -80,23 +78,13 @@ const AutoFind = () => {
   };
 
   const handleBack = () => {
-    const locators = selectLocatorsToConfirm(state, currentPageObject);
-    if (!size(locators)) {
-      openConfirmBackPopup();
-    } else {
-      const unconfirmedLocators = selectUnconfirmedLocators(state, currentPageObject);
-      dispatch(toggleElementGroupGeneration(unconfirmedLocators));
-      dispatch(changePageBack());
-    }
+    openConfirmBackPopup();
   };
 
   const renderBackButton = () => {
-    const pageObject = selectPageObjById(state, currentPageObject);
-    const historyExists = size(useSelector((state) => state.main.pageHistory)) > 1;
     return (
       <React.Fragment>
-        {(currentPage === pageType.pageObject && size(pageObject && pageObject.locators) && historyExists) ||
-        currentPage === pageType.locatorsList ? (
+        {currentPage === pageType.locatorsList ? (
           <Button onClick={handleBack} className="jdn__buttons">
             <Icon component={CaretDownSvg} rotate={90} fill="#1582D8" />
             Back

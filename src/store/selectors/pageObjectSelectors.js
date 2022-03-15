@@ -1,4 +1,5 @@
 import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
+import { size } from "lodash";
 import { isProgressStatus } from "../../services/locatorGenerationController";
 import { locatorTaskStatus } from "../../utils/constants";
 import {
@@ -6,7 +7,6 @@ import {
   selectInProgressLocators,
   selectLocators,
   selectLocatorsByProbability,
-  selectLocatorsToGenerate,
   selectPendingLocators,
 } from "./locatorSelectors";
 
@@ -48,29 +48,22 @@ export const selectConfirmedLocators = createSelector(selectLocators, selectPage
   return locatorIds ? locatorIds.map((id) => elements.find(({ element_id }) => element_id === id)) : [];
 });
 
-export const selectUnconfirmedLocators = createSelector(
-    selectLocatorsToGenerate,
-    selectPageObjById,
-    (elements, {confirmedLocators: locatorIds}) => elements.filter(({element_id}) => locatorIds.includes(element_id))
-);
-
 export const selectGeneratedByPageObj = createSelector(
     selectGeneratedLocators,
     (state, pageObjId) => selectPageObjById(state, pageObjId).locators || [],
     (locators, locByPageObj) => locators.filter((loc) => locByPageObj.includes(loc.element_id))
 );
 
-export const selectGeneratedSelectedByPageObj = createSelector(
-    selectGeneratedByPageObj,
-    (items) => items.filter((item) => item.generate),
+export const selectGeneratedSelectedByPageObj = createSelector(selectGeneratedByPageObj, (items) =>
+  items.filter((item) => item.generate)
 );
 
 export const selectDeletedByPageObj = createSelector(selectPageObjLocatorsByProbability, (items) =>
   items.filter((el) => el.deleted)
 );
 
-export const selectDeletedSelectedByPageObj = createSelector(selectDeletedByPageObj,
-    (items) => items.filter((item) => item.generate),
+export const selectDeletedSelectedByPageObj = createSelector(selectDeletedByPageObj, (items) =>
+  items.filter((item) => item.generate)
 );
 
 export const selectWaitingByPageObj = createSelector(selectPageObjLocatorsByProbability, (elements) =>
@@ -83,8 +76,8 @@ export const selectWaitingByPageObj = createSelector(selectPageObjLocatorsByProb
   )
 );
 
-export const selectWaitingSelectedByPageObj = createSelector(selectWaitingByPageObj,
-    (items) => items.filter((item) => item.generate),
+export const selectWaitingSelectedByPageObj = createSelector(selectWaitingByPageObj, (items) =>
+  items.filter((item) => item.generate)
 );
 
 export const selectLocatorByJdnHash = createSelector(
@@ -108,4 +101,8 @@ export const selectPendingLocatorsByPageObj = createSelector(
 
 export const selectLocatorsToConfirm = createSelector(selectLocatorsByPageObject, (elements) =>
   elements.filter((elem) => elem.generate && !elem.deleted)
+);
+
+export const selectEmptyPOs = createSelector(simpleSelectPageObjects, (items) =>
+  items.filter((item) => !size(item.confirmedLocators))
 );
