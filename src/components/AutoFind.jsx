@@ -26,6 +26,13 @@ import { size } from "lodash";
 import { confirmLocators, removeEmptyPOs } from "../store/slices/pageObjectSlice";
 import { PageObjectPage } from "./PageObjects/PageObjectPage";
 
+export const confirmSelectedLocators = (dispatch, state, currentPageObject) => {
+  locatorGenerationController.revokeAll();
+  const locatorIds = selectLocatorsToConfirm(state, currentPageObject).map((loc) => loc.element_id);
+  dispatch(confirmLocators({ id: currentPageObject, locatorIds: locatorIds }));
+  dispatch(changePage({ page: pageType.pageObject, pageObj: currentPageObject }));
+};
+
 const AutoFind = () => {
   const [isInvalidSession, setIsInvalidSession] = useState(localStorage.getItem("secondSession"));
   const state = useSelector((state) => state);
@@ -70,10 +77,7 @@ const AutoFind = () => {
     if (size(inProgress)) {
       openConfirmInProgressPopup();
     } else {
-      locatorGenerationController.revokeAll();
-      const locatorIds = selectLocatorsToConfirm(state, currentPageObject).map((loc) => loc.element_id);
-      dispatch(confirmLocators({ id: currentPageObject, locatorIds: locatorIds }));
-      dispatch(changePage({ page: pageType.pageObject, pageObj: currentPageObject }));
+      confirmSelectedLocators(dispatch, state, currentPageObject);
     }
   };
 
