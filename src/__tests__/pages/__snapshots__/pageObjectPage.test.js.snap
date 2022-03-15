@@ -17,7 +17,7 @@ exports[`application launch renders properly for empty PO list 1`] = `
         class="jdn__locatorsList-header-buttons"
       >
         <button
-          class="ant-btn jdn__buttons"
+          class="ant-btn ant-btn-default jdn__buttons"
           type="button"
         >
           <span
