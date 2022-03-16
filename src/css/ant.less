@@ -182,6 +182,15 @@
   border-radius: 0;
 }
 
+.ant-collapse-content > .ant-collapse-content-box {
+  padding: 0 0;
+
+  .ant-checkbox-wrapper {
+    width: 32px;
+    vertical-align: top;
+  }
+}
+
 .ant-collapse > .ant-collapse-item > .ant-collapse-header {
   background: #fff;
   padding: 6px 12px;
@@ -192,21 +201,13 @@
   & .ant-collapse-arrow {
     right: 12px;
   }
+  
   & .ant-checkbox-wrapper {
     margin-right: 8px;
 
     & .ant-checkbox {
       top: 0.05em;
     }
-  }
-}
-
-.ant-collapse-content > .ant-collapse-content-box {
-  padding: 0 0;
-
-  .ant-checkbox-wrapper {
-    width: 32px;
-    vertical-align: top;
   }
 }
 
