@@ -8,7 +8,7 @@
   padding: 12px;
 }
 
-// Dropdown
+/* Dropdown */
 
 .ant-dropdown {
   z-index: 11000;
@@ -38,7 +38,7 @@
   }
 }
 
-// Notification
+/* Notification */
 
 .ant-notification {
   position: inherit;
@@ -81,7 +81,7 @@
   }
 }
 
-// Buttons
+/* Buttons */
 
 .ant-btn,
 .ant-btn:focus,
@@ -143,7 +143,7 @@
   padding: 0 16px;
 }
 
-// Typography
+/* Typography */
 
 .ant-typography {
   &-success {
@@ -159,7 +159,7 @@
   }
 }
 
-// Checkbox
+/* Checkbox */
 
 .ant-checkbox-wrapper + .ant-checkbox-wrapper {
   margin-left: 0px;
@@ -171,10 +171,14 @@
   }
 }
 
-// Collapse
+/* Collapse */
 
 .ant-collapse {
   border: none;
+  border-radius: 0;
+}
+
+.ant-collapse-item:last-child > .ant-collapse-content {
   border-radius: 0;
 }
 
@@ -184,13 +188,7 @@
   font-weight: bold;
   font-size: 12px;
   line-height: 16px;
-}
 
-.ant-collapse-item:last-child > .ant-collapse-content {
-  border-radius: 0;
-}
-
-.ant-collapse > .ant-collapse-item > .ant-collapse-header {
   & .ant-collapse-arrow {
     right: 12px;
   }
