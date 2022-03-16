@@ -8,7 +8,6 @@ import Text from "antd/lib/typography/Text";
 import { changePerception } from "../../store/slices/mainSlice";
 import { floatToPercent } from "../../utils/helpers";
 
-import "./slider.less";
 import QuestionFilled from "../../assets/question-filled.svg";
 
 let sliderTimer;

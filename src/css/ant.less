@@ -1,0 +1,219 @@
+@import "./variables.less";
+
+.ant-tooltip-inner {
+  font-family: "Noto Sans", sans-serif;
+  font-size: 12px;
+  line-height: 18px;
+  letter-spacing: 0;
+  padding: 12px;
+}
+
+// Dropdown
+
+.ant-dropdown {
+  z-index: 11000;
+
+  &-menu {
+    min-width: 145px;
+    background-color: #000;
+    padding: 0;
+
+    &-item,
+    &-submenu-title {
+      font-size: 12px;
+      line-height: 16px;
+      color: #fff;
+      background-color: #000;
+      padding: 7px 12px;
+
+      &:hover {
+        color: #1582d8;
+        background: #202126;
+      }
+
+      &-icon {
+        color: #fff;
+      }
+    }
+  }
+}
+
+// Notification
+
+.ant-notification {
+  position: inherit;
+  margin-right: 0;
+
+  &-notice {
+    width: 100%;
+    margin: 0;
+    max-width: 100%;
+    border-radius: 0;
+    padding: 3px 13px;
+    height: 28px;
+    background: @notification-background;
+
+    &-close {
+      top: 4px;
+      color: #ffffff;
+
+      &:hover {
+        color: rgb(255, 255, 255, 0.7);
+      }
+    }
+
+    &-message {
+      color: #ffffff;
+      font-style: normal;
+      font-weight: normal;
+      font-size: 12px;
+      line-height: 22px;
+      margin-bottom: 0;
+    }
+
+    &-btn {
+      position: absolute;
+      margin-top: 0;
+      top: 2px;
+      right: 40px;
+      background: transparent;
+    }
+  }
+}
+
+// Buttons
+
+.ant-btn,
+.ant-btn:focus,
+.ant-btn:active {
+  border-radius: 4px;
+  border: 1px solid @primary-color;
+  color: @primary-color;
+  background: transparent;
+  height: 30px;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 16px;
+
+  .anticon {
+    svg {
+      min-width: 14px;
+      min-height: 14px;
+    }
+  }
+
+  &.ant-btn-text {
+    border-color: transparent;
+    color: #777777;
+    height: auto;
+  }
+
+  &.ant-btn-icon-only > * {
+    font-size: 14px;
+  }
+}
+
+.ant-btn:hover {
+  color: @primary-active-color;
+  border: 1px solid @primary-active-color;
+  background: transparent;
+
+  &.ant-btn-text {
+    border-color: transparent;
+    color: @primary-active-color;
+  }
+}
+
+.ant-btn-primary {
+  color: #fff;
+  background: @primary-color;
+}
+
+.ant-btn-primary:hover {
+  color: #fff;
+  background-color: @primary-active-color;
+}
+
+.ant-btn.ant-btn-loading::before {
+  display: none;
+}
+
+.ant-layout-content {
+  padding: 0 16px;
+}
+
+// Typography
+
+.ant-typography {
+  &-success {
+    color: @primary-color !important;
+  }
+
+  &-warning {
+    color: #d8a115;
+  }
+
+  &-danger {
+    color: #d82c15;
+  }
+}
+
+// Checkbox
+
+.ant-checkbox-wrapper + .ant-checkbox-wrapper {
+  margin-left: 0px;
+}
+
+.ant-checkbox {
+  &-inner {
+    border-radius: 0px;
+  }
+}
+
+// Collapse
+
+.ant-collapse {
+  border: none;
+  border-radius: 0;
+}
+
+.ant-collapse > .ant-collapse-item > .ant-collapse-header {
+  background: #fff;
+  padding: 6px 12px;
+  font-weight: bold;
+  font-size: 12px;
+  line-height: 16px;
+}
+
+.ant-collapse-item:last-child > .ant-collapse-content {
+  border-radius: 0;
+}
+
+.ant-collapse > .ant-collapse-item > .ant-collapse-header {
+  & .ant-collapse-arrow {
+    right: 12px;
+  }
+  & .ant-checkbox-wrapper {
+    margin-right: 8px;
+
+    & .ant-checkbox {
+      top: 0.05em;
+    }
+  }
+}
+
+.ant-collapse-content > .ant-collapse-content-box {
+  padding: 0 0;
+
+  .ant-checkbox-wrapper {
+    width: 32px;
+    vertical-align: top;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .header__space {
+    gap: 0 !important;
+  }
+}
