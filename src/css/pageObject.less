@@ -1,0 +1,41 @@
+@import "./variables.less";
+
+.jdn {
+  &__pageObject {
+    &__settings {
+      background-color: #ecf7ff;
+      padding: 12px 52px 16px;
+
+      &-url {
+        color: #1582d8;
+        font-size: 12px;
+      }
+    }
+
+    & .jdn__xpath_container--shift {
+      padding-left: 48px;
+    }
+
+    & .ant-collapse > .ant-collapse-item > .ant-collapse-header .ant-collapse-arrow {
+      margin-right: 8px;
+    }
+
+    &_placeholder {
+      display: flex;
+      flex-direction: column;
+
+      .anticon svg {
+        height: 50px;
+        width: 50px;
+        margin-top: 40px;
+        margin-bottom: 24px;
+      }
+
+      .ant-typography {
+        text-align: center;
+        margin-bottom: 16px;
+        font-size: 12px;
+      }
+    }
+  }
+}

@@ -1,0 +1,75 @@
+@import "./variables.less";
+
+.jdn {
+  /*
+      XPATHES
+      */
+
+  &__xpath {
+    &_container {
+      position: relative;
+
+      & .ant-btn-text {
+        display: none;
+        position: absolute;
+        right: 26px;
+        top: 2px;
+      }
+
+      & a {
+        position: absolute;
+        right: 12px;
+        top: 2px;
+      }
+
+      &:hover {
+        background-color: #f2f2f2;
+
+        & .ant-btn-text {
+          display: inline-block;
+        }
+      }
+
+      &--selected {
+        background-color: #ecf7ff;
+        padding: 0 12px;
+
+        &:hover {
+          background-color: #d4eefa;
+        }
+
+        &.jdn__xpath_container--cm-selected {
+          background-color: #d4eefa;
+        }
+      }
+
+      &--shift {
+        padding: 0 12px;
+
+        &:hover {
+          background-color: #f2f2f2;
+        }
+      }
+
+      &--cm-selected {
+        background-color: #f2f2f2;
+      }
+    }
+
+    &_item {
+      font-size: 12px;
+      word-break: break-word;
+      line-height: 26px;
+      display: inline-block;
+      width: calc(100% - 72px);
+
+      &-locator {
+        color: @xpath-item-color-locator;
+      }
+
+      &-type {
+        color: @xpath-item-color-type;
+      }
+    }
+  }
+}

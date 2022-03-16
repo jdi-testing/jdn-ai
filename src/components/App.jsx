@@ -9,7 +9,7 @@ import { Backdrop } from "./Backdrop/Backdrop";
 import { store } from "../store/store";
 import AutoFind from "./AutoFind";
 
-import "./app.less";
+import "../css/index.less";
 
 class App extends React.Component {
   render() {

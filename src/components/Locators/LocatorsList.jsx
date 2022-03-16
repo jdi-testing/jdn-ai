@@ -137,7 +137,7 @@ export const LocatorsList = ({ pageObject }) => {
       />
       <div className="jdn__locatorsList-content">
         <Collapse
-          className="jdn__collapse"
+          className="jdn__sticky-collapse"
           onChange={togglePanel}
           activeKey={activePanel}
           accordion
@@ -153,7 +153,7 @@ export const LocatorsList = ({ pageObject }) => {
                   generatedSelected,
                   <Icon component={CheckedkSvg} className="jdn__locatorsList-status" />
               )}
-              className="jdn__collapse-panel"
+              className="jdn__sticky-collapse-panel"
             >
               {renderList(generated, generatedSelected)}
             </Collapse.Panel>
@@ -161,31 +161,31 @@ export const LocatorsList = ({ pageObject }) => {
           {size(waiting) && (
             <Collapse.Panel
               key="2"
-              style={{ display: !size(waiting) ? "none" : "block" }}
               header={renderGroupHeader(
                   `Waiting for generation (${size(waiting)})`,
                   waiting,
                   waitingSelected,
                   <Spin size="small" />
               )}
-              className={`jdn__collapse-panel ${size(deleted) ? "jdn__collapse-panel-middle" : ""}`}
+              className={`jdn__sticky-collapse-panel ${size(deleted) ? "jdn__sticky-collapse-panel-middle" : ""}`}
             >
               {renderList(waiting, waitingSelected)}
             </Collapse.Panel>
           )}
-          <Collapse.Panel
-            key="3"
-            style={{ display: !size(deleted) ? "none" : "block" }}
-            header={renderGroupHeader(
-                `Deleted (${size(deleted)})`,
-                deleted,
-                deletedSelected,
-                <Icon component={DeletedSvg} className="jdn__locatorsList-status" />
-            )}
-            className="jdn__collapse-panel"
-          >
-            {renderList(deleted, deletedSelected)}
-          </Collapse.Panel>
+          {size(deleted) && (
+            <Collapse.Panel
+              key="3"
+              header={renderGroupHeader(
+                  `Deleted (${size(deleted)})`,
+                  deleted,
+                  deletedSelected,
+                  <Icon component={DeletedSvg} className="jdn__locatorsList-status" />
+              )}
+              className="jdn__sticky-collapse-panel"
+            >
+              {renderList(deleted, deletedSelected)}
+            </Collapse.Panel>
+          )}
         </Collapse>
         <div>
           <Notifications />
