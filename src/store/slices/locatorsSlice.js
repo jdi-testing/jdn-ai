@@ -57,7 +57,7 @@ const locatorsSlice = createSlice({
       locatorsAdapter.removeMany(state, ids);
     },
     toggleElementGeneration(state, { payload }) {
-      const locator = simpleSelectLocatorById(state, payload);
+      const locator = typeof payload === "string" ? simpleSelectLocatorById(state, payload) : payload;
       locatorsAdapter.upsertOne(state, { ...locator, generate: !locator.generate });
     },
     toggleElementGroupGeneration(state, { payload }) {

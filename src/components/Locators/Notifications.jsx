@@ -74,17 +74,18 @@ export const Notifications = () => {
           break;
         case "locators/toggleDeleted":
           notificationMessage = prevValue.deleted ? messages().RESTORE : messages().DELETE;
-          cancelAction = [toggleDeleted(action.payload)];
-          if (!prevValue.deleted && prevValue.generate) {
-            cancelAction.push(toggleElementGeneration(prevValue.element_id));
-          }
+          cancelAction = [
+            toggleDeleted(action.payload),
+            toggleElementGeneration({...prevValue, generate: !prevValue.generate}),
+          ];
           break;
         case "locators/toggleDeletedGroup":
           notificationMessage = prevValue[0].deleted ?
             messages(size(prevValue)).RESTORE_GROUP :
             messages(size(prevValue)).DELETE_GROUP;
           const elements = prevValue.map((loc) => locators.find((_loc) => _loc.element_id === loc.element_id));
-          cancelAction = [toggleDeletedGroup(elements), toggleElementGroupGeneration(elements)];
+          const prevGenerateValues = prevValue.map((_loc) => ({..._loc, generate: !_loc.generate}));
+          cancelAction = [toggleDeletedGroup(elements), toggleElementGroupGeneration(prevGenerateValues)];
           break;
         default:
           break;
