@@ -62,8 +62,8 @@ const locatorsSlice = createSlice({
     },
     toggleElementGroupGeneration(state, { payload }) {
       const newValue = [];
-      payload.forEach((locator) => {
-        newValue.push({ ...locator, generate: !locator.generate });
+      payload.forEach(({element_id, generate}) => {
+        newValue.push({ element_id, generate: !generate });
       });
       locatorsAdapter.upsertMany(state, newValue);
     },
@@ -78,9 +78,9 @@ const locatorsSlice = createSlice({
     },
     toggleDeletedGroup(state, { payload }) {
       const newValue = [];
-      payload.forEach((locator) => {
+      payload.forEach(({element_id, deleted, generate }) => {
         // when we delete locator, we uncheck it, when restore - keep generate state as is
-        newValue.push({ ...locator, deleted: !locator.deleted, generate: !locator.deleted ? false : locator.generate });
+        newValue.push({ element_id, deleted: !deleted, generate: !deleted ? false : generate });
       });
       locatorsAdapter.upsertMany(state, newValue);
     },
