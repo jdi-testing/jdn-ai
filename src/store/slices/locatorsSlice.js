@@ -69,12 +69,18 @@ const locatorsSlice = createSlice({
     },
     toggleDeleted(state, { payload }) {
       const locator = simpleSelectLocatorById(state, payload);
-      locatorsAdapter.upsertOne(state, { ...locator, deleted: !locator.deleted });
+      locatorsAdapter.upsertOne(state, {
+        ...locator,
+        deleted: !locator.deleted,
+        // when we delete locator, we uncheck it, when restore - keep generate state as is
+        generate: !locator.deleted ? false : locator.generate,
+      });
     },
     toggleDeletedGroup(state, { payload }) {
       const newValue = [];
       payload.forEach((locator) => {
-        newValue.push({ ...locator, deleted: !locator.deleted });
+        // when we delete locator, we uncheck it, when restore - keep generate state as is
+        newValue.push({ ...locator, deleted: !locator.deleted, generate: !locator.deleted ? false : locator.generate });
       });
       locatorsAdapter.upsertMany(state, newValue);
     },

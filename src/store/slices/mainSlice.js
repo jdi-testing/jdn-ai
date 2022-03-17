@@ -69,7 +69,6 @@ export const {
   handleLastNotification,
   pushNotification,
   setUnactualPrediction,
-  toggleDeleted,
   toggleBackdrop,
   xPathGenerationStarted,
 } = mainSlice.actions;
