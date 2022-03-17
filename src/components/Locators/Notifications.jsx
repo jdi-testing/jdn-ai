@@ -7,6 +7,8 @@ import {
   changeLocatorAttributes,
   toggleDeleted,
   toggleDeletedGroup,
+  toggleElementGeneration,
+  toggleElementGroupGeneration,
 } from "../../store/slices/locatorsSlice";
 import { selectLocators } from "../../store/selectors/locatorSelectors";
 import { stopGeneration } from "../../store/thunks/stopGeneration";
@@ -72,15 +74,17 @@ export const Notifications = () => {
           break;
         case "locators/toggleDeleted":
           notificationMessage = prevValue.deleted ? messages().RESTORE : messages().DELETE;
-          cancelAction = toggleDeleted(action.payload);
+          cancelAction = [toggleDeleted(action.payload)];
+          if (!prevValue.deleted && prevValue.generate) {
+            cancelAction.push(toggleElementGeneration(prevValue.element_id));
+          }
           break;
         case "locators/toggleDeletedGroup":
           notificationMessage = prevValue[0].deleted ?
             messages(size(prevValue)).RESTORE_GROUP :
             messages(size(prevValue)).DELETE_GROUP;
-          cancelAction = toggleDeletedGroup(
-              prevValue.map((loc) => locators.find((_loc) => _loc.element_id === loc.element_id))
-          );
+          const elements = prevValue.map((loc) => locators.find((_loc) => _loc.element_id === loc.element_id));
+          cancelAction = [toggleDeletedGroup(elements), toggleElementGroupGeneration(elements)];
           break;
         default:
           break;
@@ -92,7 +96,11 @@ export const Notifications = () => {
 
   const cancelNotification = () => {
     dispatch(cancelLastNotification());
-    dispatch(cancelAction);
+    if (Array.isArray(cancelAction)) {
+      cancelAction.forEach((action) => {
+        dispatch(action);
+      });
+    } else dispatch(cancelAction);
   };
 
   const openNotification = () => {
