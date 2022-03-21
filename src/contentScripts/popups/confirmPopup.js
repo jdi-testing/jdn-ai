@@ -31,6 +31,12 @@ export const confirmPopup = () => {
     main.classList.add("jdn-popup__main");
     main.innerHTML = config.content;
 
+    const altButton = document.createElement("button");
+    altButton.classList.add("jdn-popup__button");
+    altButton.classList.add("jdn-popup__button_primary");
+    altButton.innerText = config.altButtonText;
+    altButton.onclick = altAction;
+
     const confirmButton = document.createElement("button");
     confirmButton.classList.add("jdn-popup__button");
     confirmButton.classList.add(config.buttonConfirmClass || "jdn-popup__button_primary");
@@ -47,6 +53,7 @@ export const confirmPopup = () => {
     buttonContainer.classList.add("jdn-popup__button-container");
     buttonContainer.append(cancelButton);
     buttonContainer.append(confirmButton);
+    config.altButtonText && buttonContainer.append(altButton);
 
     main.append(buttonContainer);
 
@@ -69,6 +76,13 @@ export const confirmPopup = () => {
     function confirm() {
       chrome.runtime.sendMessage({
         message: config.scriptMessage,
+      });
+      wrapper.remove();
+    }
+
+    function altAction() {
+      chrome.runtime.sendMessage({
+        message: config.altScriptMessage,
       });
       wrapper.remove();
     }

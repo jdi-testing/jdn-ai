@@ -25,17 +25,15 @@ import {
 
 let timer;
 
-export const LocatorsList = ({ pageObject }) => {
+export const LocatorsList = ({ pageObject: currentPageObject }) => {
   const dispatch = useDispatch();
 
-  const state = useSelector((state) => state);
   const xpathConfig = useSelector((state) => state.main.xpathConfig);
   const xpathStatus = useSelector((state) => state.main.xpathStatus);
-  const currentPageObject = pageObject ? pageObject.id : useSelector((state) => state.pageObject.currentPageObject);
   const [activePanel, setActivePanel] = useState("1");
   const [isProgressActive, setIsProgressActive] = useState(false);
 
-  const byProbability = selectPageObjLocatorsByProbability(state, currentPageObject);
+  const byProbability = useSelector((_state) => selectPageObjLocatorsByProbability(_state, currentPageObject));
 
   const waiting = useSelector((_state) => selectWaitingByPageObj(_state, currentPageObject));
   const generated = useSelector((_state) => selectGeneratedByPageObj(_state, currentPageObject));

@@ -4,7 +4,6 @@ import { isProgressStatus } from "../../services/locatorGenerationController";
 import { locatorTaskStatus } from "../../utils/constants";
 import {
   selectGeneratedLocators,
-  selectInProgressLocators,
   selectLocators,
   selectLocatorsByProbability,
   selectPendingLocators,
@@ -84,13 +83,6 @@ export const selectLocatorByJdnHash = createSelector(
     (state, jdnHash) => selectLocators(state).filter((loc) => loc.jdnHash === jdnHash),
     (state) => selectPageObjById(state, state.pageObject.currentPageObject).locators,
     (locators, pageObjLocators) => locators.find(({ element_id }) => pageObjLocators.includes(element_id))
-);
-
-export const selectInProgressToConfirm = createSelector(
-    selectInProgressLocators,
-    (state) => selectPageObjById(state, state.pageObject.currentPageObject).locators,
-    (locators, pageObjLocators) =>
-      locators.filter(({ element_id, generate }) => pageObjLocators.includes(element_id) && generate)
 );
 
 export const selectPendingLocatorsByPageObj = createSelector(

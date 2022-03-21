@@ -80,10 +80,13 @@ export const reportProblem = (predictedElements) => {
 
 export const openConfirmBackPopup = () => {
   const config = {
-    header: "Go back to the previous page?",
-    content: "Your generation process will be cleared. You haven't selected any locators for this page object.",
-    buttonConfirmText: "Go to the previous page",
+    header: "You have unsaved changes",
+    content: "The list has been edited and the changes have not been accepted, do you want to save them?",
+    buttonConfirmText: "Discard",
+    buttonConfirmClass: "jdn-popup__button_warning",
     scriptMessage: "CONFIRM_BACK_POPUP",
+    altButtonText: "Save",
+    altScriptMessage: "CONFIRM_SAVE_CHANGES",
   };
   chrome.storage.sync.set({POPUP_CONFIG: config}, connector.attachContentScript(confirmPopup));
 };

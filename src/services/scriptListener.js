@@ -19,7 +19,7 @@ import { VALIDATION_ERROR_TYPE } from "../utils/constants";
 import { changePageBack, clearAll, setUnactualPrediction, toggleBackdrop } from "../store/slices/mainSlice";
 import { clearLocators, removeAll as removeAllPageObjects } from "../store/slices/pageObjectSlice";
 import { selectLocatorByJdnHash, selectPageObjById } from "../store/selectors/pageObjectSelectors";
-import { confirmSelectedLocators } from "../components/AutoFind";
+import { confirmSelectedLocators } from "../components/Locators/LocatorsPage";
 
 export const createListeners = (dispatch, state) => {
   const actions = {
@@ -78,7 +78,7 @@ export const createListeners = (dispatch, state) => {
     },
     CONFIRM_IN_PROGRESS_POPUP: () => {
       const currentPageObject = state.pageObject.currentPageObject;
-      confirmSelectedLocators(dispatch, state, currentPageObject);
+      confirmSelectedLocators(dispatch, currentPageObject);
       dispatch(toggleBackdrop(false));
     },
     IS_OPEN_MODAL: (payload) => dispatch(toggleBackdrop(payload)),
