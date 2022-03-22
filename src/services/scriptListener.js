@@ -4,22 +4,19 @@ import {
   clearCmElementHighlight,
   addCmElementHighlight,
   changeLocatorAttributes,
-  removeLocators,
   removeAll as removeAllLocators,
 } from "../store/slices/locatorsSlice";
 import { connector, sendMessage } from "./connector";
 import { getTypesMenuOptions } from "../utils/generationClassesMap";
 import { onStartCollectData } from "./pageDataHandlers";
 import { selectLocatorById, selectLocators } from "../store/selectors/locatorSelectors";
-import { locatorGenerationController } from "./locatorGenerationController";
 import { stopGeneration } from "../store/thunks/stopGeneration";
 import { rerunGeneration } from "../store/thunks/rerunGeneration";
 import { isNameUnique, isStringMatchesReservedWord } from "./pageObject";
 import { VALIDATION_ERROR_TYPE } from "../utils/constants";
-import { changePageBack, clearAll, setUnactualPrediction, toggleBackdrop } from "../store/slices/mainSlice";
-import { clearLocators, removeAll as removeAllPageObjects } from "../store/slices/pageObjectSlice";
-import { selectLocatorByJdnHash, selectPageObjById } from "../store/selectors/pageObjectSelectors";
-import { confirmSelectedLocators } from "../components/Locators/LocatorsPage";
+import { clearAll, setScriptMessage, setUnactualPrediction, toggleBackdrop } from "../store/slices/mainSlice";
+import { removeAll as removeAllPageObjects } from "../store/slices/pageObjectSlice";
+import { selectLocatorByJdnHash } from "../store/selectors/pageObjectSelectors";
 
 export const createListeners = (dispatch, state) => {
   const actions = {
@@ -68,18 +65,13 @@ export const createListeners = (dispatch, state) => {
       dispatch(clearCmElementHighlight(selectLocatorByJdnHash(state, payload).element_id));
     },
     CONFIRM_BACK_POPUP: () => {
-      const currentPageObject = state.pageObject.currentPageObject;
-      const locatorIds = selectPageObjById(state, currentPageObject).locators;
-      locatorGenerationController.revokeAll();
-      dispatch(clearLocators(currentPageObject));
-      dispatch(removeLocators(locatorIds));
-      dispatch(changePageBack());
-      dispatch(toggleBackdrop(false));
+      // handled in LocatorsPage
     },
     CONFIRM_IN_PROGRESS_POPUP: () => {
-      const currentPageObject = state.pageObject.currentPageObject;
-      confirmSelectedLocators(dispatch, currentPageObject);
-      dispatch(toggleBackdrop(false));
+      // handled in LocatorsPage
+    },
+    CONFIRM_SAVE_CHANGES: () => {
+      // handled in LocatorsPage
     },
     IS_OPEN_MODAL: (payload) => dispatch(toggleBackdrop(payload)),
     PREDICTION_IS_UNACTUAL: () => dispatch(setUnactualPrediction(true)),
@@ -108,6 +100,7 @@ export const createListeners = (dispatch, state) => {
   const messageHandler = ({ message, param }, sender, sendResponse, _actions) => {
     if (_actions[message]) {
       _actions[message](param, sender, sendResponse);
+      dispatch(setScriptMessage({ message, param }));
     }
   };
 

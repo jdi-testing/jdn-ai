@@ -87,7 +87,12 @@ const locatorsSlice = createSlice({
     updateLocator(state, { payload }) {
       const { element_id, locator } = payload;
       const existingLocator = simpleSelectLocatorById(state, element_id);
-      locatorsAdapter.upsertOne(state, { element_id, locator: { ...existingLocator.locator, ...locator } });
+      if (existingLocator) {
+        locatorsAdapter.upsertOne(state, { element_id, locator: { ...existingLocator.locator, ...locator } });
+      }
+    },
+    restoreLocators(state, { payload: locators }) {
+      locatorsAdapter.setMany(state, locators);
     },
     addCmElementHighlight(state, { payload }) {
       locatorsAdapter.upsertOne(state, { element_id: payload, isCmHighlighted: true });
@@ -116,6 +121,7 @@ export const {
   toggleDeleted,
   toggleDeletedGroup,
   updateLocator,
+  restoreLocators,
   addCmElementHighlight,
   clearCmElementHighlight,
 } = locatorsSlice.actions;

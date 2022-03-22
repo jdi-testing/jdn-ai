@@ -13,8 +13,8 @@ import { LocatorsPage } from "./Locators/LocatorsPage";
 import { identificationStatus, pageType } from "../utils/constants";
 
 import { selectCurrentPage } from "../store/selectors/mainSelectors";
-import { removeEmptyPOs } from "../store/slices/pageObjectSlice";
 import { PageObjectPage } from "./PageObjects/PageObjectPage";
+import { removeEmptyPageObjects } from "../store/thunks/removeEmptyPageObjects";
 
 const AutoFind = () => {
   const [isInvalidSession, setIsInvalidSession] = useState(localStorage.getItem("secondSession"));
@@ -38,7 +38,7 @@ const AutoFind = () => {
     connector.onTabUpdate(() => {
       dispatch(clearAll());
       locatorGenerationController.revokeAll();
-      dispatch(removeEmptyPOs());
+      dispatch(removeEmptyPageObjects());
       removeOverlay();
       connector.attachStaticScripts();
     });

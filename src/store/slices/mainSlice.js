@@ -7,6 +7,7 @@ const initialState = {
   notifications: [],
   pageHistory: [],
   perception: 0.5,
+  scriptMessage: null,
   showBackdrop: false,
   unactualPrediction: false,
   xpathStatus: xpathGenerationStatus.noStatus,
@@ -22,8 +23,7 @@ const mainSlice = createSlice({
   name: "main",
   initialState,
   reducers: {
-    changePage(state, {payload}) {
-      // state.currentPage = payload;
+    changePage(state, { payload }) {
       state.pageHistory.push(payload);
     },
     changePageBack(state) {
@@ -47,6 +47,9 @@ const mainSlice = createSlice({
     handleLastNotification(state) {
       state.notifications[size(state.notifications) - 1].isHandled = true;
     },
+    setScriptMessage(state, { payload }) {
+      state.scriptMessage = payload;
+    },
     setUnactualPrediction(state, { payload }) {
       state.unactualPrediction = payload;
     },
@@ -68,6 +71,7 @@ export const {
   clearAll,
   handleLastNotification,
   pushNotification,
+  setScriptMessage,
   setUnactualPrediction,
   toggleBackdrop,
   xPathGenerationStarted,
