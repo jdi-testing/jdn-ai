@@ -78,15 +78,17 @@ export const reportProblem = (predictedElements) => {
   chrome.storage.sync.set({ predictedElements }, connector.attachContentScript(reportPopup));
 };
 
-export const openConfirmBackPopup = () => {
+export const openConfirmBackPopup = (enableSave) => {
   const config = {
     header: "You have unsaved changes",
     content: "The list has been edited and the changes have not been accepted, do you want to save them?",
     buttonConfirmText: "Discard",
     buttonConfirmClass: "jdn-popup__button_warning",
     scriptMessage: "CONFIRM_BACK_POPUP",
-    altButtonText: "Save",
-    altScriptMessage: "CONFIRM_SAVE_CHANGES",
+  };
+  if (enableSave) {
+    config.altButtonText = "Save";
+    config.altScriptMessage = "CONFIRM_SAVE_CHANGES";
   };
   chrome.storage.sync.set({POPUP_CONFIG: config}, connector.attachContentScript(confirmPopup));
 };

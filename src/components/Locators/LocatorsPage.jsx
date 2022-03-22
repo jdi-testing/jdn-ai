@@ -19,7 +19,7 @@ import { selectCurrentPage } from "../../store/selectors/mainSelectors";
 import { pageType } from "../../utils/constants";
 import { locatorGenerationController } from "../../services/locatorGenerationController";
 import { clearLocators } from "../../store/slices/pageObjectSlice";
-import { changePageBack, toggleBackdrop } from "../../store/slices/mainSlice";
+import { changePageBack, setScriptMessage, toggleBackdrop } from "../../store/slices/mainSlice";
 import { removeLocators, restoreLocators } from "../../store/slices/locatorsSlice";
 
 export const LocatorsPage = () => {
@@ -35,13 +35,17 @@ export const LocatorsPage = () => {
   const [locatorsSnapshot] = useState(locators);
 
   const pageBack = () => {
+    dispatch(setScriptMessage({}));
     dispatch(changePageBack());
     dispatch(toggleBackdrop(false));
   };
 
   const handleBack = () => {
     if (isEqual(locators, locatorsSnapshot)) pageBack();
-    else openConfirmBackPopup();
+    else {
+      const enableSave = size(waitingSelected) || size(generatedSelected);
+      openConfirmBackPopup(enableSave);
+    };
   };
 
   const handleConfirm = () => {
