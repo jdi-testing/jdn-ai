@@ -5,7 +5,12 @@ import Icon from "@ant-design/icons";
 
 import { LocatorsList } from "./LocatorsList";
 import { PerceptionTreshold } from "../PerceptionTreshold/PerceptionTreshold";
-import { openConfirmBackPopup, openConfirmInProgressPopup } from "../../services/pageDataHandlers";
+import {
+  showOverlay,
+  openConfirmBackPopup,
+  openConfirmInProgressPopup,
+  removeOverlay,
+} from "../../services/pageDataHandlers";
 import {
   selectGeneratedSelectedByPageObj,
   selectPageObjById,
@@ -22,7 +27,7 @@ import { clearLocators } from "../../store/slices/pageObjectSlice";
 import { changePageBack, setScriptMessage, toggleBackdrop } from "../../store/slices/mainSlice";
 import { removeLocators, restoreLocators } from "../../store/slices/locatorsSlice";
 
-export const LocatorsPage = () => {
+export const LocatorsPage = ({ alreadyGenerated }) => {
   const dispatch = useDispatch();
   const currentPageObject = useSelector((_state) => _state.pageObject.currentPageObject);
   const currentPage = useSelector(selectCurrentPage).page;
@@ -45,13 +50,20 @@ export const LocatorsPage = () => {
     else {
       const enableSave = size(waitingSelected) || size(generatedSelected);
       openConfirmBackPopup(enableSave);
-    };
+    }
   };
 
   const handleConfirm = () => {
     if (size(waitingSelected)) openConfirmInProgressPopup();
     else pageBack();
   };
+
+  useEffect(() => {
+    if (alreadyGenerated) {
+      showOverlay();
+    }
+    return () => removeOverlay();
+  }, []);
 
   useEffect(() => {
     const { message } = scriptMessage;
@@ -98,13 +110,8 @@ export const LocatorsPage = () => {
             overlayClassName="jdn__button-tooltip"
             title={isDisabled ? "Please select locators for your current page object." : ""}
           >
-            <Button
-              type="primary"
-              onClick={handleConfirm}
-              className="jdn__buttons"
-              disabled={isDisabled}
-            >
-              Confirm
+            <Button type="primary" onClick={handleConfirm} className="jdn__buttons" disabled={isDisabled}>
+              Save changes
               <Icon component={CaretDownSvg} rotate={270} fill="#ffffff" />
             </Button>
           </Tooltip>

@@ -69,7 +69,7 @@ export const PageObjList = () => {
     };
 
     const handleEdit = () => {
-      dispatch(changePage({ page: pageType.locatorsList, pageObj: currentPageObject }));
+      dispatch(changePage({ page: pageType.locatorsList, pageObj: currentPageObject, alreadyGenerated: true }));
     };
 
     return (

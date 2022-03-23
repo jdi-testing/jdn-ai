@@ -19,7 +19,7 @@ import { removeEmptyPageObjects } from "../store/thunks/removeEmptyPageObjects";
 const AutoFind = () => {
   const [isInvalidSession, setIsInvalidSession] = useState(localStorage.getItem("secondSession"));
   const status = useSelector((state) => state.locators.status);
-  const currentPage = useSelector(selectCurrentPage).page;
+  const currentPage = useSelector(selectCurrentPage);
   const currentPageObject = useSelector((state) => state.pageObject.currentPageObject);
   const dispatch = useDispatch();
 
@@ -51,7 +51,8 @@ const AutoFind = () => {
   }, [status]);
 
   const renderPage = () => {
-    return currentPage === pageType.pageObject ? <PageObjectPage /> : <LocatorsPage />;
+    const { page, alreadyGenerated } = currentPage;
+    return page === pageType.pageObject ? <PageObjectPage /> : <LocatorsPage {...{ alreadyGenerated }} />;
   };
 
   return (

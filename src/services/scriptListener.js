@@ -8,7 +8,7 @@ import {
 } from "../store/slices/locatorsSlice";
 import { connector, sendMessage } from "./connector";
 import { getTypesMenuOptions } from "../utils/generationClassesMap";
-import { onStartCollectData } from "./pageDataHandlers";
+import { showOverlay } from "./pageDataHandlers";
 import { selectLocatorById, selectLocators } from "../store/selectors/locatorSelectors";
 import { stopGeneration } from "../store/thunks/stopGeneration";
 import { rerunGeneration } from "../store/thunks/rerunGeneration";
@@ -77,7 +77,7 @@ export const createListeners = (dispatch, state) => {
     PREDICTION_IS_UNACTUAL: () => dispatch(setUnactualPrediction(true)),
     REMOVE_ELEMENT: (payload) => dispatch(toggleDeleted(payload)),
     RERUN_GENERATION: (payload) => dispatch(rerunGeneration([selectLocatorById(state, payload)])),
-    START_COLLECT_DATA: onStartCollectData,
+    START_COLLECT_DATA: showOverlay,
     STOP_GENERATION: (payload) => dispatch(stopGeneration(payload)),
     TOGGLE_ELEMENT: (payload) => {
       dispatch(toggleElementGeneration(payload));

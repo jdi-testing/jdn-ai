@@ -1,25 +1,5 @@
 export const getPageData = () => {
-  function createOverlay() {
-    const overlayID = "jdn-overlay-" + Date.now().toString().substring(5);
-    const overlay = document.createElement("div");
-    overlay.id = overlayID;
-    const overlayStyle = {
-      top: 0,
-      left: 0,
-      position: "fixed",
-      width: "100%",
-      height: "100%",
-      zIndex: 999999,
-      backgroundColor: "rgba(0,0,0,.3)",
-    };
-    Object.assign(overlay.style, overlayStyle);
-    document.body.appendChild(overlay);
-
-    return overlayID;
-  }
-  const overlayID = createOverlay();
-
-  chrome.runtime.sendMessage({ message: "START_COLLECT_DATA", param: { overlayID }});
+  chrome.runtime.sendMessage({ message: "START_COLLECT_DATA"});
 
   const hashAttribute = 'jdn-hash';
   function gen_uuid(e) {
@@ -35,7 +15,7 @@ export const getPageData = () => {
   }
 
   function assign_uuid() {
-    [...document.querySelectorAll(`*:not(#${overlayID}`)].forEach((el) => {
+    [...document.querySelectorAll('*:not([id^="jdn-overlay"])')].forEach((el) => {
       gen_uuid(el);
     });
   }
@@ -49,7 +29,7 @@ export const getPageData = () => {
   }
 
   function getTreeDataset() {
-    return [...document.querySelectorAll(`*:not(#${overlayID}`)].map((el) => {
+    return [...document.querySelectorAll('*:not([id^="jdn-overlay"])')].map((el) => {
       const _x = pageXOffset + el.getBoundingClientRect()["x"];
       const _y = pageYOffset + el.getBoundingClientRect()["y"];
       const _width = el.getBoundingClientRect()["width"];

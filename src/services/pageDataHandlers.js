@@ -5,10 +5,19 @@ import { createLocatorNames } from "./pageObject";
 import { reportPopup } from "../contentScripts/popups";
 import { request } from "../services/backend";
 import { confirmPopup } from "../contentScripts/popups/confirmPopup";
+import { createOverlay } from "../contentScripts/createOverlay";
 /* global chrome*/
 
 let overlayID;
 let pageAccessTimeout;
+
+export const showOverlay = () => {
+  connector.attachContentScript(createOverlay).then((data) => {
+    const _overlayID = data[0].result;
+    clearTimeout(pageAccessTimeout);
+    overlayID = _overlayID;
+  });
+};
 
 export const removeOverlay = () => {
   if (overlayID) {
@@ -21,11 +30,6 @@ export const removeOverlay = () => {
       });
     });
   }
-};
-
-export const onStartCollectData = (payload) => {
-  clearTimeout(pageAccessTimeout);
-  overlayID = payload.overlayID;
 };
 
 const uploadElements = async ([{ result }], enpoint) => {
