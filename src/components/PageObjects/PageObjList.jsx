@@ -58,14 +58,18 @@ export const PageObjList = () => {
     }
   };
 
-  const renderMenu = (id, locatorIds, locatorObjects) => {
+  const handleRename = (id, name) => {
+    chrome.storage.sync.set({ OPEN_EDIT_NAME: { isOpen: true, value: {id, name} } });
+  };
+
+  const renderMenu = (id, locatorIds, locatorObjects, name) => {
     const handleRemove = () => {
       dispatch(removePageObject(id));
       dispatch(removeLocators(locatorIds));
     };
 
     const handleDownload = () => {
-      generatePageObject(locatorObjects);
+      generatePageObject(locatorObjects, name);
     };
 
     const handleEdit = () => {
@@ -74,17 +78,20 @@ export const PageObjList = () => {
 
     return (
       <Menu>
+        <Menu.Item key="3" icon={<PencilSvg />} onClick={() => handleRename(id, name)}>
+          Rename
+        </Menu.Item>
         {size(locatorIds) ? (
           <React.Fragment>
-            <Menu.Item key="4" icon={<PencilSvg />} onClick={() => handleEdit()}>
+            <Menu.Item key="4" icon={<PencilSvg />} onClick={handleEdit}>
               Edit list
             </Menu.Item>
-            <Menu.Item key="5" icon={<DownloadSvg />} onClick={() => handleDownload()}>
+            <Menu.Item key="5" icon={<DownloadSvg />} onClick={handleDownload}>
               Download
             </Menu.Item>
           </React.Fragment>
         ) : null}
-        <Menu.Item key="6" icon={<TrashBinSvg />} onClick={() => handleRemove()}>
+        <Menu.Item key="6" icon={<TrashBinSvg />} onClick={handleRemove}>
           <Typography.Text type="danger">Delete</Typography.Text>
         </Menu.Item>
       </Menu>
@@ -117,7 +124,7 @@ export const PageObjList = () => {
                   }
                   extra={
                     <a onClick={(e) => e.stopPropagation()} data-testid="dropdown-button">
-                      <Dropdown trigger="click" overlay={renderMenu(id, locators, elements)}>
+                      <Dropdown trigger="click" overlay={renderMenu(id, locators, elements, name)}>
                         <Icon component={EllipsisSvg} />
                       </Dropdown>
                     </a>

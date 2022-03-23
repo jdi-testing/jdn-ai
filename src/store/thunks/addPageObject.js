@@ -22,7 +22,7 @@ export const addPageObjReducer = (builder) => {
         pageObjAdapter.addOne(state,
             {
               id,
-              name: size(existingName) ? `${className}(${size(existingName)})` : className,
+              name: size(existingName) ? `${className}${size(existingName)}` : className,
               url,
             }
         );

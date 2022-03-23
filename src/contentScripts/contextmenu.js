@@ -31,7 +31,6 @@ export const runContextMenu = () => {
 
     function removeHighlight() {
       const el = document.querySelector('.cm--selected');
-      console.log(el);
       if (el) {
         el.classList.remove('cm--selected');
         chrome.runtime.sendMessage({

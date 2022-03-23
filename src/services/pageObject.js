@@ -17,6 +17,9 @@ export const getLocator = ({ fullXpath, robulaXpath, customXpath }) => {
 export const isNameUnique = (elements, element_id, newName) =>
   !elements.find((elem) => elem.name === newName && elem.element_id !== element_id);
 
+export const isPONameUnique = (elements, id, newName) =>
+  !elements.find((elem) => elem.name === newName && elem.id !== id);
+
 export const createLocatorNames = (elements) => {
   const f = elements.filter((el) => el && !el.deleted);
   const uniqueNames = [];
@@ -51,13 +54,6 @@ export const createLocatorNames = (elements) => {
   });
 };
 
-export const getPageTitle = async () => {
-  const res = await connector.attachContentScript(() => {
-    return document.title;
-  });
-  return res[0].result;
-};
-
 export const getPageAttributes = async () => {
   return await connector.attachContentScript(() => {
     const {title, URL} = document;
@@ -65,20 +61,18 @@ export const getPageAttributes = async () => {
   });
 };
 
-export const getPage = async (locators, pageTitle) => {
+export const getPage = async (locators, title) => {
   const location = await connector.attachContentScript(() => {
     const { hostname, pathname, origin, host } = document.location;
     return { hostname, pathname, origin, host };
   });
 
-  const title = pageTitle || await getPageTitle();
-
   const pageObject = pageObjectTemplate(locators, location[0].result, title);
   return pageObject;
 };
 
-export const generatePageObject = async (elements) => {
-  const page = await getPage(elements);
+export const generatePageObject = async (elements, title) => {
+  const page = await getPage(elements, title);
   const blob = new Blob([page.pageCode], {
     type: "text/plain;charset=utf-8",
   });
