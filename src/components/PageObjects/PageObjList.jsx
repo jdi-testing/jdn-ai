@@ -11,6 +11,7 @@ import PageSvg from "../../assets/page.svg";
 import EllipsisSvg from "../../assets/ellipsis.svg";
 import TrashBinSvg from "../../assets/trash-bin.svg";
 import DownloadSvg from "../../assets/download.svg";
+import PencilSvg from "../../assets/pencil.svg";
 import { selectConfirmedLocators, selectPageObjects } from "../../store/selectors/pageObjectSelectors";
 import { Locator } from "../Locators/Locator";
 import { GenerationButtons } from "./GenerationButtons";
@@ -18,6 +19,8 @@ import { PageObjectPlaceholder } from "./PageObjectPlaceholder";
 import { removePageObject } from "../../store/slices/pageObjectSlice";
 import { removeLocators } from "../../store/slices/locatorsSlice";
 import { generatePageObject } from "../../services/pageObject";
+import { pageType } from "../../utils/constants";
+import { changePage } from "../../store/slices/mainSlice";
 
 export const PageObjList = () => {
   const state = useSelector((state) => state);
@@ -32,9 +35,7 @@ export const PageObjList = () => {
 
   const renderLocators = (elements) => {
     if (size(elements)) {
-      return elements.map((element) => (
-        <Locator key={element.element_id} {...{ element }} noScrolling={true} />
-      ));
+      return elements.map((element) => <Locator key={element.element_id} {...{ element }} noScrolling={true} />);
     } else {
       return "No locators selected";
     }
@@ -67,12 +68,21 @@ export const PageObjList = () => {
       generatePageObject(locatorObjects);
     };
 
+    const handleEdit = () => {
+      dispatch(changePage({ page: pageType.locatorsList, pageObj: currentPageObject, alreadyGenerated: true }));
+    };
+
     return (
       <Menu>
         {size(locatorIds) ? (
-          <Menu.Item key="5" icon={<DownloadSvg />} onClick={() => handleDownload()}>
-            Download
-          </Menu.Item>
+          <React.Fragment>
+            <Menu.Item key="4" icon={<PencilSvg />} onClick={() => handleEdit()}>
+              Edit list
+            </Menu.Item>
+            <Menu.Item key="5" icon={<DownloadSvg />} onClick={() => handleDownload()}>
+              Download
+            </Menu.Item>
+          </React.Fragment>
         ) : null}
         <Menu.Item key="6" icon={<TrashBinSvg />} onClick={() => handleRemove()}>
           <Typography.Text type="danger">Delete</Typography.Text>
@@ -107,10 +117,7 @@ export const PageObjList = () => {
                   }
                   extra={
                     <a onClick={(e) => e.stopPropagation()} data-testid="dropdown-button">
-                      <Dropdown
-                        trigger="click"
-                        overlay={renderMenu(id, locators, elements)}
-                      >
+                      <Dropdown trigger="click" overlay={renderMenu(id, locators, elements)}>
                         <Icon component={EllipsisSvg} />
                       </Dropdown>
                     </a>

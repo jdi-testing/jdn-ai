@@ -5,10 +5,19 @@ import { createLocatorNames } from "./pageObject";
 import { reportPopup } from "../contentScripts/popups";
 import { request } from "../services/backend";
 import { confirmPopup } from "../contentScripts/popups/confirmPopup";
+import { createOverlay } from "../contentScripts/createOverlay";
 /* global chrome*/
 
 let overlayID;
 let pageAccessTimeout;
+
+export const showOverlay = () => {
+  connector.attachContentScript(createOverlay).then((data) => {
+    const _overlayID = data[0].result;
+    clearTimeout(pageAccessTimeout);
+    overlayID = _overlayID;
+  });
+};
 
 export const removeOverlay = () => {
   if (overlayID) {
@@ -21,11 +30,6 @@ export const removeOverlay = () => {
       });
     });
   }
-};
-
-export const onStartCollectData = (payload) => {
-  clearTimeout(pageAccessTimeout);
-  overlayID = payload.overlayID;
 };
 
 const uploadElements = async ([{ result }], enpoint) => {
@@ -78,12 +82,17 @@ export const reportProblem = (predictedElements) => {
   chrome.storage.sync.set({ predictedElements }, connector.attachContentScript(reportPopup));
 };
 
-export const openConfirmBackPopup = () => {
+export const openConfirmBackPopup = (enableSave) => {
   const config = {
-    header: "Go back to the previous page?",
-    content: "Your generation process will be cleared. You haven't selected any locators for this page object.",
-    buttonConfirmText: "Go to the previous page",
+    header: "You have unsaved changes",
+    content: "The list has been edited and the changes have not been accepted, do you want to save them?",
+    buttonConfirmText: "Discard",
+    buttonConfirmClass: "jdn-popup__button_warning",
     scriptMessage: "CONFIRM_BACK_POPUP",
+  };
+  if (enableSave) {
+    config.altButtonText = "Save";
+    config.altScriptMessage = "CONFIRM_SAVE_CHANGES";
   };
   chrome.storage.sync.set({POPUP_CONFIG: config}, connector.attachContentScript(confirmPopup));
 };

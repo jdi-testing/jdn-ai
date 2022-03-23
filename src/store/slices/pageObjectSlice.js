@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { pageObjAdapter, selectEmptyPOs, simpleSelectPageObjById } from "../selectors/pageObjectSelectors";
+import { pageObjAdapter, simpleSelectPageObjById } from "../selectors/pageObjectSelectors";
 import { addPageObjReducer } from "../thunks/addPageObject";
 
 const initialState = {
@@ -25,16 +25,11 @@ const pageObjSlice = createSlice({
       const id = payload || state.currentPageObject;
       pageObjAdapter.upsertOne(state, { id, locators: [] });
     },
-    confirmLocators(state, { payload }) {
-      const { id, locatorIds } = payload;
-      pageObjAdapter.upsertOne(state, { id, confirmedLocators: locatorIds });
-    },
     removeAll(state) {
       pageObjAdapter.removeAll(state);
     },
-    removeEmptyPOs(state) {
-      const emptyPOids = selectEmptyPOs(state).map((item) => item.id);
-      pageObjAdapter.removeMany(state, emptyPOids);
+    removePageObjects(state, { payload: ids }) {
+      pageObjAdapter.removeMany(state, ids);
     },
     removePageObject(state, { payload: id }) {
       pageObjAdapter.removeOne(state, id);
@@ -53,9 +48,8 @@ export const {
   addLocatorToPageObj,
   addLocatorsToPageObj,
   clearLocators,
-  confirmLocators,
   removeAll,
-  removeEmptyPOs,
+  removePageObjects,
   removePageObject,
   setCurrentPageObj,
 } = pageObjSlice.actions;

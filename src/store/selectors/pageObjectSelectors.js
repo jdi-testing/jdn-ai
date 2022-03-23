@@ -4,7 +4,6 @@ import { isProgressStatus } from "../../services/locatorGenerationController";
 import { locatorTaskStatus } from "../../utils/constants";
 import {
   selectGeneratedLocators,
-  selectInProgressLocators,
   selectLocators,
   selectLocatorsByProbability,
   selectPendingLocators,
@@ -43,10 +42,12 @@ export const selectPageObjLocatorsByProbability = createSelector(
     (locByProbability, locByPageObj) => locByProbability.filter((loc) => locByPageObj.includes(loc.element_id))
 );
 
-export const selectConfirmedLocators = createSelector(selectLocators, selectPageObjById, (elements, pageObj) => {
-  const { confirmedLocators: locatorIds } = pageObj;
-  return locatorIds ? locatorIds.map((id) => elements.find(({ element_id }) => element_id === id)) : [];
-});
+
+export const selectLocatorsToConfirm = createSelector(selectLocatorsByPageObject, (elements) =>
+  elements.filter((elem) => elem.generate && !elem.deleted)
+);
+
+export const selectConfirmedLocators = selectLocatorsToConfirm;
 
 export const selectGeneratedByPageObj = createSelector(
     selectGeneratedLocators,
@@ -86,23 +87,23 @@ export const selectLocatorByJdnHash = createSelector(
     (locators, pageObjLocators) => locators.find(({ element_id }) => pageObjLocators.includes(element_id))
 );
 
-export const selectInProgressToConfirm = createSelector(
-    selectInProgressLocators,
-    (state) => selectPageObjById(state, state.pageObject.currentPageObject).locators,
-    (locators, pageObjLocators) =>
-      locators.filter(({ element_id, generate }) => pageObjLocators.includes(element_id) && generate)
-);
-
 export const selectPendingLocatorsByPageObj = createSelector(
     selectPendingLocators,
     (state) => selectPageObjById(state, state.pageObject.currentPageObject).locators,
     (locators, pageObjLocators) => locators.filter(({ element_id }) => pageObjLocators.includes(element_id))
 );
 
-export const selectLocatorsToConfirm = createSelector(selectLocatorsByPageObject, (elements) =>
-  elements.filter((elem) => elem.generate && !elem.deleted)
-);
-
-export const selectEmptyPOs = createSelector(simpleSelectPageObjects, (items) =>
-  items.filter((item) => !size(item.confirmedLocators))
+export const selectEmptyPageObjects = createSelector(
+    selectPageObjects,
+    (state) => state,
+    (pageObjects, state) => {
+      const emptyPOs = [];
+      if (pageObjects) {
+        pageObjects.forEach((po) => {
+          const loc = selectConfirmedLocators(state, po.id);
+          if (!size(loc)) emptyPOs.push(po.id);
+        });
+      }
+      return emptyPOs;
+    }
 );
