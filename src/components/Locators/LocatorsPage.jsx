@@ -66,7 +66,7 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
   }, []);
 
   useEffect(() => {
-    const { message } = scriptMessage;
+    const message = scriptMessage?.message;
     switch (message) {
       case "CONFIRM_BACK_POPUP":
         locatorGenerationController.revokeAll();
