@@ -8,7 +8,7 @@ export function createOverlay() {
     position: "fixed",
     width: "100%",
     height: "100%",
-    zIndex: 999999,
+    zIndex: 12000,
     backgroundColor: "rgba(0,0,0,.15)",
   };
   Object.assign(overlay.style, overlayStyle);
