@@ -43,6 +43,8 @@ describe("pageObjectList component", () => {
     },
     locators: {
       status: identificationStatus.success,
+      ids: [],
+      entities: {},
     }
   };
 

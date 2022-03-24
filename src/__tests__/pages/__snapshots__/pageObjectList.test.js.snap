@@ -39,16 +39,6 @@ exports[`pageObjectList component renders empty page object 1`] = `
             role="img"
           />
         </button>
-        <button
-          class="ant-btn ant-btn-primary"
-          type="button"
-        >
-          <span
-            class="anticon"
-            fill="#c15f0f"
-            role="img"
-          />
-        </button>
       </div>
     </div>
     <div
