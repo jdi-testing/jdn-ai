@@ -12,6 +12,7 @@ import EllipsisSvg from "../../assets/ellipsis.svg";
 import TrashBinSvg from "../../assets/trash-bin.svg";
 import DownloadSvg from "../../assets/download.svg";
 import PencilSvg from "../../assets/pencil.svg";
+import EditTextSvg from "../../assets/edit-text.svg";
 import { selectConfirmedLocators, selectPageObjects } from "../../store/selectors/pageObjectSelectors";
 import { Locator } from "../Locators/Locator";
 import { GenerationButtons } from "./GenerationButtons";
@@ -78,7 +79,7 @@ export const PageObjList = () => {
 
     return (
       <Menu>
-        <Menu.Item key="3" icon={<PencilSvg />} onClick={() => handleRename(id, name)}>
+        <Menu.Item key="3" icon={<EditTextSvg />} onClick={() => handleRename(id, name)}>
           Rename
         </Menu.Item>
         {size(locatorIds) ? (

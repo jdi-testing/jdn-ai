@@ -185,7 +185,6 @@ export const editNamePopup = () => {
   };
 
   chrome.storage.onChanged.addListener((event) => {
-    console.log(event);
     const newValue = event?.OPEN_EDIT_NAME?.newValue;
     if (newValue?.isOpen === true) {
       chrome.runtime.sendMessage({
@@ -198,6 +197,4 @@ export const editNamePopup = () => {
       removePopup();
     }
   });
-
-  console.log("attached");
 };
