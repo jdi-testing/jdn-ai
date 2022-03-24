@@ -2,6 +2,7 @@ export function createOverlay() {
   const overlayID = "jdn-overlay-" + Date.now().toString().substring(5);
   const overlay = document.createElement("div");
   overlay.id = overlayID;
+  overlay.setAttribute("jdn-highlight", true);
   const overlayStyle = {
     top: 0,
     left: 0,

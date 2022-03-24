@@ -1,4 +1,4 @@
-import { replace } from "lodash";
+import { replace, size } from "lodash";
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
 
@@ -86,6 +86,7 @@ export const generateAndDownloadZip = async (state) => {
 
   for (const po of pageObjects) {
     const locators = selectConfirmedLocators(state, po.id);
+    if (!size(locators)) continue;
     const page = await getPage(locators, po.name);
     zip.file(`${page.title}.java`, page.pageCode, {binary: true});
   }
