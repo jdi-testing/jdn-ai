@@ -1,5 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { isNull, size } from "lodash";
+import { isNull, map, size } from "lodash";
 import { getPageAttributes } from "../../services/pageObject";
 import { getClassName } from "../../services/pageObjectTemplate";
 import { pageObjAdapter, selectMaxId, simpleSelectPageObjects } from "../selectors/pageObjectSelectors";
@@ -18,11 +18,18 @@ export const addPageObjReducer = (builder) => {
         const {className, url} = payload;
         let maxExistingId = selectMaxId(state);
         const id = !isNull(maxExistingId) ? ++maxExistingId : 0;
-        const existingName = simpleSelectPageObjects(state).filter((po) => po.name.includes(className));
+        const names = map(simpleSelectPageObjects(state), "name");
+        let name = className;
+
+        for (let index = 0; names.includes(name); index++) {
+          const repeats = size(names.filter((_name) => _name.includes(className)));
+          name = `${className}${repeats + index}`;
+        }
+
         pageObjAdapter.addOne(state,
             {
               id,
-              name: size(existingName) ? `${className}(${size(existingName)})` : className,
+              name,
               url,
             }
         );

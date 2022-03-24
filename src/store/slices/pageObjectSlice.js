@@ -21,6 +21,10 @@ const pageObjSlice = createSlice({
       const locators = [...(pageObj.locators || []), ...payload];
       pageObjAdapter.upsertOne(state, { id: pageObj.id, locators });
     },
+    changeName(state, { payload }) {
+      const { id, name } = payload;
+      pageObjAdapter.upsertOne(state, { id, name });
+    },
     clearLocators(state, { payload }) {
       const id = payload || state.currentPageObject;
       pageObjAdapter.upsertOne(state, { id, locators: [] });
@@ -47,6 +51,7 @@ export default pageObjSlice.reducer;
 export const {
   addLocatorToPageObj,
   addLocatorsToPageObj,
+  changeName,
   clearLocators,
   removeAll,
   removePageObjects,

@@ -3,6 +3,7 @@ import { editLocatorPopup } from "../contentScripts/popups/editLocatorPopup";
 import { highlightOnPage } from "../contentScripts/highlight";
 import { highlightOrder } from "../contentScripts/highlightOrder";
 import { urlListener } from "../contentScripts/urlListener";
+import { editNamePopup } from "../contentScripts/popups/editNamePopup";
 
 class Connector {
   constructor() {
@@ -119,6 +120,7 @@ class Connector {
     });
     this.attachContentScript(runContextMenu);
     this.attachContentScript(editLocatorPopup);
+    this.attachContentScript(editNamePopup);
     this.attachContentScript(highlightOrder);
     this.attachContentScript(urlListener);
   }

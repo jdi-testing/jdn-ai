@@ -12,11 +12,11 @@ import { showOverlay } from "./pageDataHandlers";
 import { selectLocatorById, selectLocators } from "../store/selectors/locatorSelectors";
 import { stopGeneration } from "../store/thunks/stopGeneration";
 import { rerunGeneration } from "../store/thunks/rerunGeneration";
-import { isNameUnique, isStringMatchesReservedWord } from "./pageObject";
+import { isNameUnique, isPONameUnique, isStringMatchesReservedWord } from "./pageObject";
 import { VALIDATION_ERROR_TYPE } from "../utils/constants";
 import { clearAll, setScriptMessage, setUnactualPrediction, toggleBackdrop } from "../store/slices/mainSlice";
-import { removeAll as removeAllPageObjects } from "../store/slices/pageObjectSlice";
-import { selectLocatorByJdnHash } from "../store/selectors/pageObjectSelectors";
+import { changeName as changePageObjectName, removeAll as removeAllPageObjects } from "../store/slices/pageObjectSlice";
+import { selectLocatorByJdnHash, selectPageObjects } from "../store/selectors/pageObjectSelectors";
 
 export const createListeners = (dispatch, state) => {
   const actions = {
@@ -43,20 +43,21 @@ export const createListeners = (dispatch, state) => {
         dispatch(changeLocatorSettings(newPayload));
       }
     },
-    DELETE_ALL_PAGE_OBJECTS: () => {
-      dispatch(removeAllPageObjects());
-      dispatch(removeAllLocators());
-      dispatch(toggleBackdrop(false));
+    CHECK_NAME_VALIDITY: ({ element_id, newName }, sender, sendResponse) => {
+      if (!isNameUnique(selectLocators(state), element_id, newName)) {
+        sendResponse(VALIDATION_ERROR_TYPE.DUPLICATED_NAME);
+      }
+      if (isStringMatchesReservedWord(newName)) sendResponse(VALIDATION_ERROR_TYPE.INVALID_NAME);
     },
-    GET_ELEMENT: (jdnHash) => {
-      const element = selectLocatorByJdnHash(state, jdnHash);
-      sendMessage.elementData({
-        element,
-        types: getTypesMenuOptions(),
-      });
+    CHECK_LOCATOR_VALIDITY: ({ newElementId }, sender, sendResponse) => {
+      const validationMessage = selectLocatorById(state, newElementId) ? VALIDATION_ERROR_TYPE.DUPLICATED_LOCATOR : "";
+      sendResponse(validationMessage);
     },
-    HIGHLIGHT_OFF: () => {
-      dispatch(clearAll());
+    CHECK_PO_NAME_VALIDITY: ({ id, newName }, sender, sendResponse) => {
+      if (!isPONameUnique(selectPageObjects(state), id, newName)) {
+        sendResponse(VALIDATION_ERROR_TYPE.DUPLICATED_NAME);
+      }
+      if (isStringMatchesReservedWord(newName)) sendResponse(VALIDATION_ERROR_TYPE.INVALID_NAME);
     },
     CM_ELEMENT_HIGHLIGHT_ON: (payload) => {
       dispatch(addCmElementHighlight(payload));
@@ -73,6 +74,21 @@ export const createListeners = (dispatch, state) => {
     CONFIRM_SAVE_CHANGES: () => {
       // handled in LocatorsPage
     },
+    DELETE_ALL_PAGE_OBJECTS: () => {
+      dispatch(removeAllPageObjects());
+      dispatch(removeAllLocators());
+      dispatch(toggleBackdrop(false));
+    },
+    GET_ELEMENT: (jdnHash) => {
+      const element = selectLocatorByJdnHash(state, jdnHash);
+      sendMessage.elementData({
+        element,
+        types: getTypesMenuOptions(),
+      });
+    },
+    HIGHLIGHT_OFF: () => {
+      dispatch(clearAll());
+    },
     IS_OPEN_MODAL: (payload) => dispatch(toggleBackdrop(payload)),
     PREDICTION_IS_UNACTUAL: () => dispatch(setUnactualPrediction(true)),
     REMOVE_ELEMENT: (payload) => dispatch(toggleDeleted(payload)),
@@ -85,15 +101,8 @@ export const createListeners = (dispatch, state) => {
     UPDATE_LOCATOR: (payload) => {
       dispatch(changeLocatorAttributes(payload));
     },
-    CHECK_NAME_VALIDITY: ({ element_id, newName }, sender, sendResponse) => {
-      if (!isNameUnique(selectLocators(state), element_id, newName)) {
-        sendResponse(VALIDATION_ERROR_TYPE.DUPLICATED_NAME);
-      }
-      if (isStringMatchesReservedWord(newName)) sendResponse(VALIDATION_ERROR_TYPE.INVALID_NAME);
-    },
-    CHECK_LOCATOR_VALIDITY: ({ newElementId }, sender, sendResponse) => {
-      const validationMessage = selectLocatorById(state, newElementId) ? VALIDATION_ERROR_TYPE.DUPLICATED_LOCATOR : "";
-      sendResponse(validationMessage);
+    UPDATE_PAGE_OBJECT_NAME: (payload) => {
+      dispatch(changePageObjectName(payload));
     },
   };
 

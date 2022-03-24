@@ -4,7 +4,7 @@ import { getLocator } from "./pageObject";
 export function camelCase(n) {
   let name = "";
   if (n) {
-    const arrayName = n.split(/[^a-zA-Zа-яёА-ЯЁ0-9]/);
+    const arrayName = n.split(/[^a-zA-Zа-яёА-ЯЁ0-9_$]/);
     for (let j = 0; j < arrayName.length; j++) {
       if (arrayName[j]) {
         name += arrayName[j][0].toUpperCase() + arrayName[j].slice(1);
