@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Tooltip } from "antd";
 import Icon from "@ant-design/icons";
@@ -14,10 +14,13 @@ import { selectPageObjects } from "../../store/selectors/pageObjectSelectors";
 
 import TrashBinSVG from "../../assets/trash-bin.svg";
 import { openDeleteAllPopup } from "../../services/pageDataHandlers";
+import { selectLocatorsToGenerate } from "../../store/selectors/locatorSelectors";
 
 export const PageObjListHeader = () => {
   const state = useSelector((state) => state);
   const pageObjects = useSelector(selectPageObjects);
+  const locatorsToGenerate = useSelector(selectLocatorsToGenerate);
+  const enableDownload = useMemo(() => !!size(locatorsToGenerate), [locatorsToGenerate]);
 
   const dispatch = useDispatch();
   const handleAddPageObject = () => dispatch(addPageObj());
@@ -40,18 +43,18 @@ export const PageObjListHeader = () => {
           New page object
         </Button>
         {size(pageObjects) ? (
-          <React.Fragment>
-            <Tooltip placement="bottom" title="Delete all">
-              <Button hidden={!size(pageObjects)} danger onClick={handleRemoveAll} data-testid="remove-button">
-                <Icon fill="#D82C15" component={TrashBinSVG} />
-              </Button>
-            </Tooltip>
-            <Tooltip placement="bottom" title="Download all">
-              <Button type="primary" onClick={handleDownload}>
-                <Icon component={DownloadSvg} fill="#c15f0f" />
-              </Button>
-            </Tooltip>
-          </React.Fragment>
+          <Tooltip placement="bottom" title="Delete all">
+            <Button hidden={!size(pageObjects)} danger onClick={handleRemoveAll} data-testid="remove-button">
+              <Icon fill="#D82C15" component={TrashBinSVG} />
+            </Button>
+          </Tooltip>
+        ) : null}
+        {enableDownload ? (
+          <Tooltip placement="bottom" title="Download all">
+            <Button type="primary" onClick={handleDownload}>
+              <Icon component={DownloadSvg} fill="#c15f0f" />
+            </Button>
+          </Tooltip>
         ) : null}
       </div>
     </div>
