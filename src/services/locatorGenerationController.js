@@ -67,6 +67,7 @@ class LocatorGenerationController {
 
   async getCpu() {
     const res = await request.get(CPU_COUNT);
+    // if we'll use all cpu, the whole system won't respond
     this.cpuCapacity = res.cpu_count - 1;
     return;
   }
