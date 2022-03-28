@@ -5,20 +5,13 @@ import {
   elementsWithoutNames,
   locators,
   pageObject,
-  pageObjectCiryllic,
 } from "../__mocks__/pageObject.mock";
 
 describe("page object code generation", () => {
   test("page object generated", () => {
-    const page = pageObjectTemplate(locators, { host: "jdi - testing.github.io" }, "Home Page");
+    const page = pageObjectTemplate(locators, { host: "jdi - testing.github.io" }, "HomePage");
     expect(page.pageCode).toBe(pageObject);
     expect(page.title).toBe("HomePage");
-  });
-
-  test("page object generated with ciryllic title", () => {
-    const page = pageObjectTemplate([], { host: "jdi - testing.github.io" }, "Домашняя страница");
-    expect(page.pageCode).toBe(pageObjectCiryllic);
-    expect(page.title).toBe("DomashnyayaStranitsaPage");
   });
 });
 

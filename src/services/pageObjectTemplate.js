@@ -39,7 +39,7 @@ export const pageObjectTemplate = (locators, { host }, title) => {
         .join(".") :
     "";
 
-  const className = getClassName(title);
+  const className = title;
   const locatorsCode = locators.map((loc) => `    @UI("${getLocator(loc.locator)}") public ${loc.type} ${loc.name};`);
 
   const pageCode = `package ${sitePackage}.pages;
