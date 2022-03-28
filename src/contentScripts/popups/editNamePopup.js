@@ -14,7 +14,7 @@ export const editNamePopup = () => {
     [ERROR_TYPE.DUPLICATED_NAME]: "This name already exists.",
     [ERROR_TYPE.EMPTY_VALUE]: "Please fill out this field.",
     [ERROR_TYPE.INVALID_NAME]: "This name is not a valid Java class name.",
-    [ERROR_TYPE.LONG_NAME]: "Max name length is 255 characters.",
+    [ERROR_TYPE.LONG_NAME]: "Max name length is 60 characters.",
   };
 
   const removePopup = () => {
@@ -46,7 +46,7 @@ export const editNamePopup = () => {
     const getNameValidationMessage = ({ value }) => {
       const isValidJavaVariable = /^[A-Z][a-zA-Z0-9_$]*$/.test(value);
       if (!isValidJavaVariable) return ERROR_TYPE.INVALID_NAME;
-      if (value.length > 255) return ERROR_TYPE.LONG_NAME;
+      if (value.length > 60) return ERROR_TYPE.LONG_NAME;
 
       return new Promise((resolve) => {
         chrome.runtime.sendMessage(
