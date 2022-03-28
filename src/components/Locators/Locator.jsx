@@ -1,7 +1,7 @@
 import { Button, Checkbox, Dropdown, Menu, Spin, Tooltip, Typography } from "antd";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import Icon from "@ant-design/icons";
-import React, { useEffect, useRef, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import Text from "antd/lib/typography/Text";
 
 import { getLocator } from "../../services/pageObject";
@@ -11,7 +11,6 @@ import { locatorTaskStatus, VALIDATION_ERROR_TYPE, pageType } from "../../utils/
 import { rerunGeneration } from "../../store/thunks/rerunGeneration";
 import { stopGeneration } from "../../store/thunks/stopGeneration";
 import { toggleDeleted, toggleElementGeneration } from "../../store/slices/locatorsSlice";
-import { selectCurrentPage } from "../../store/selectors/mainSelectors";
 
 import CheckedkSvg from "../../assets/checked-outlined.svg";
 import CheckedEdited from "../../assets/checked-edited.svg";
@@ -42,19 +41,19 @@ const isValidLocator = ({ locator, validity }) =>
 
 const copyTitle = {
   Copy: "Copy",
-  Copied: "Copied"
+  Copied: "Copied",
 };
 
-export const Locator = ({ element, noScrolling }) => {
+// eslint-disable-next-line react/display-name
+export const Locator = memo(({ element, currentPage, noScrolling }) => {
   const [copyTooltipTitle, setTooltipTitle] = useState(copyTitle.Copy);
-  const currentPage = useSelector(selectCurrentPage).page;
   const dispatch = useDispatch();
 
   const { element_id, type, name, locator, generate, isCmHighlighted, validity } = element;
 
   const ref = useRef(null);
 
-  const handleOnChange = (value) => {
+  const handleOnChange = () => {
     dispatch(toggleElementGeneration(element_id));
   };
 
@@ -206,4 +205,4 @@ export const Locator = ({ element, noScrolling }) => {
       )}
     </div>
   );
-};
+});

@@ -22,12 +22,14 @@ import {
   selectWaitingByPageObj,
   selectWaitingSelectedByPageObj,
 } from "../../store/selectors/pageObjectSelectors";
+import { selectCurrentPage } from "../../store/selectors/mainSelectors";
 
 let timer;
 
 export const LocatorsList = ({ pageObject: currentPageObject }) => {
   const dispatch = useDispatch();
 
+  const currentPage = useSelector(selectCurrentPage).page;
   const xpathConfig = useSelector((state) => state.main.xpathConfig);
   const xpathStatus = useSelector((state) => state.main.xpathStatus);
   const [activePanel, setActivePanel] = useState("1");
@@ -83,7 +85,7 @@ export const LocatorsList = ({ pageObject: currentPageObject }) => {
         <Locator
           key={element.element_id}
           noScrolling={size(elements) && size(selectedElements) === size(elements)}
-          {...{ element, xpathConfig }}
+          {...{ element, xpathConfig, currentPage }}
         />
       );
     });
