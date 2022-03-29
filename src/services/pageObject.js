@@ -1,4 +1,4 @@
-import { replace, size } from "lodash";
+import { replace, size, toLower } from "lodash";
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
 
@@ -18,7 +18,7 @@ export const isNameUnique = (elements, element_id, newName) =>
   !elements.find((elem) => elem.name === newName && elem.element_id !== element_id);
 
 export const isPONameUnique = (elements, id, newName) =>
-  !elements.find((elem) => elem.name === newName && elem.id !== id);
+  !elements.find((elem) => toLower(elem.name) === toLower(newName) && elem.id !== id);
 
 export const createLocatorNames = (elements) => {
   const f = elements.filter((el) => el && !el.deleted);
