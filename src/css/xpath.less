@@ -23,10 +23,22 @@
       }
 
       &:hover {
-        background-color: #f2f2f2;
-
         & .ant-btn-text {
           display: inline-block;
+        }
+      }
+
+      // improve it to work in both directions
+      .sortable-chosen ~ &:hover {
+        background-color: initial;
+      }
+
+      .jdn__buttons--drag-handle {
+        cursor: grab;
+        right: 52px;
+
+        & .sortable-chosen {
+          cursor: grabbing;
         }
       }
 
@@ -53,6 +65,10 @@
 
       &--cm-selected {
         background-color: #f2f2f2;
+      }
+
+      &.sortable-ghost {
+        opacity: 0;
       }
     }
 
