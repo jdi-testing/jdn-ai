@@ -1,5 +1,5 @@
 import { Checkbox, Collapse, Spin } from "antd";
-import { filter, size } from "lodash";
+import { filter, isNil, size } from "lodash";
 import { Progress } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import Icon from "@ant-design/icons";
@@ -8,7 +8,7 @@ import React, { useEffect, useMemo, useState, useCallback } from "react";
 import { Locator } from "./Locator";
 import { LocatorListHeader } from "./LocatorListHeader";
 import { Notifications } from "./Notifications";
-import { toggleElementGroupGeneration } from "../../store/slices/locatorsSlice";
+import { reorderLocators, toggleElementGroupGeneration } from "../../store/slices/locatorsSlice";
 
 import CaretDownSvg from "../../assets/caret-down.svg";
 import CheckedkSvg from "../../assets/checked-outlined.svg";
@@ -23,6 +23,7 @@ import {
   selectWaitingSelectedByPageObj,
 } from "../../store/selectors/pageObjectSelectors";
 import { selectCurrentPage } from "../../store/selectors/mainSelectors";
+import { SortableList } from "./SortableList";
 
 let timer;
 
@@ -79,17 +80,14 @@ export const LocatorsList = ({ pageObject: currentPageObject }) => {
     );
   };
 
-  const renderList = (elements, selectedElements) => {
-    return elements.map((element) => {
-      return (
-        <Locator
-          key={element.element_id}
-          noScrolling={size(elements) && size(selectedElements) === size(elements)}
-          {...{ element, xpathConfig, currentPage }}
-        />
-      );
-    });
-  };
+  const renderList = (elements, selectedElements) =>
+    elements.map((element) => (
+      <Locator
+        key={element.element_id}
+        noScrolling={size(elements) && size(selectedElements) === size(elements)}
+        {...{ element, xpathConfig, currentPage }}
+      />
+    ));
 
   const readinessPercentage = useMemo(() => {
     const readyCount = size(generated);
@@ -125,6 +123,19 @@ export const LocatorsList = ({ pageObject: currentPageObject }) => {
     }
     return () => clearTimeout(timer);
   }, [byProbability, generated, deleted]);
+
+  const handleSort = (item, newIndex, oldIndex, beforeItem, nextItem) => {
+    // return newOrder for sorted item
+    let newOrder;
+    if (newIndex < oldIndex) {
+      // move up
+      newOrder = isNil(beforeItem) ? 0 : beforeItem.order + 1;
+    } else if (newIndex > oldIndex) {
+      // move down
+      newOrder = isNil(nextItem) ? beforeItem.order : nextItem.order - 1;
+    }
+    dispatch(reorderLocators({ locators: [...generated, ...waiting, ...deleted], item, newOrder }));
+  };
 
   return (
     <div className="jdn__locatorsList">
@@ -169,7 +180,12 @@ export const LocatorsList = ({ pageObject: currentPageObject }) => {
               )}
               className={`jdn__sticky-collapse-panel ${size(deleted) ? "jdn__sticky-collapse-panel-middle" : ""}`}
             >
-              {renderList(waiting, waitingSelected)}
+              <SortableList
+                items={waiting}
+                selectedItems={waitingSelected}
+                renderList={renderList}
+                onChange={handleSort}
+              ></SortableList>
             </Collapse.Panel>
           )}
           {size(deleted) && (

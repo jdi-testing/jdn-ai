@@ -172,6 +172,7 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
   return (
     <div
       ref={ref}
+      data-id={element_id}
       className={`jdn__xpath_container ${
         generate && currentPage === pageType.locatorsList ?
           "jdn__xpath_container--selected" :
