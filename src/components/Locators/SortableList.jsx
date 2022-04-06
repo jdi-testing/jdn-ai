@@ -17,7 +17,7 @@ export const SortableList = ({ items, selectedItems, renderList, onChange }) => 
 
   const changeHandler = (event) => {
     const { item, newIndex, oldIndex } = event;
-    const beforeItem = list[newIndex - 1]; // newIndex === 0 handling is needed
+    const beforeItem = list[newIndex - 1];
     const nextItem = list[newIndex + 1];
     onChange(find(list, ["element_id", item.dataset.id]), newIndex, oldIndex, beforeItem, nextItem);
   };
