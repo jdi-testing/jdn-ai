@@ -7,6 +7,7 @@ export const SortableList = ({ items, selectedItems, renderList, onChange }) => 
     ...item,
   }));
   const [list, setList] = useState(_items);
+  const [choosingIsActive, setChoosing] = useState(false);
 
   useEffect(() => {
     setList(_items);
@@ -22,7 +23,14 @@ export const SortableList = ({ items, selectedItems, renderList, onChange }) => 
   };
 
   return (
-    <ReactSortable {...{ list, setList }} onEnd={changeHandler} handle=".jdn__buttons--drag-handle">
+    <ReactSortable
+      {...{ list, setList }}
+      onEnd={changeHandler}
+      onChoose={() => setChoosing(true)}
+      onUnchoose={() => setChoosing(false)}
+      handle=".jdn__buttons--drag-handle"
+      className={choosingIsActive ? "jdn__sortable--choosing" : ""}
+    >
       {content}
     </ReactSortable>
   );
