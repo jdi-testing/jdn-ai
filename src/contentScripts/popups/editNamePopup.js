@@ -27,8 +27,7 @@ export const editNamePopup = () => {
   };
 
   const showDialog = (value) => {
-    const { name, element_id, id } = value;
-    currentElement = element_id;
+    const { name, id } = value;
 
     const onFormSubmit = ({ target }) => {
       const { name } = target;
@@ -53,7 +52,7 @@ export const editNamePopup = () => {
             {
               message: "CHECK_PO_NAME_VALIDITY",
               param: {
-                element_id,
+                id,
                 newName: value,
               },
             },
