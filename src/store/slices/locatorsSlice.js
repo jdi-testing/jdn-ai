@@ -19,7 +19,11 @@ const locatorsSlice = createSlice({
   initialState: locatorsAdapter.getInitialState(initialState),
   reducers: {
     addLocators(state, { payload }) {
-      locatorsAdapter.addMany(state, payload);
+      // this reducer works fine for case of primary adding generated locators to page object.
+      // for other (future) cases additional "order" handling is needed.
+      // IMPORTANT! "order" can have same values for locators from different page objects
+      const orderedLocators = payload.map((locator, index) => ({ ...locator, order: index }));
+      locatorsAdapter.addMany(state, orderedLocators);
     },
     changeLocatorAttributes(state, { payload }) {
       const { type, name, locator, element_id, validity, newElement } = payload;
@@ -56,13 +60,30 @@ const locatorsSlice = createSlice({
     removeLocators(state, { payload: ids }) {
       locatorsAdapter.removeMany(state, ids);
     },
+    reorderLocators(state, { payload }) {
+      // locators are taken by PageObject
+      const { locators, item, newOrder } = payload;
+      const oldOrder = item.order;
+
+      let locatorsToReorder = [];
+      let reorderedLocators = [];
+
+      if (newOrder > oldOrder) { // move down
+        locatorsToReorder = locators.filter(({order}) => order > oldOrder && order <= newOrder);
+        reorderedLocators = locatorsToReorder.map(({element_id, order}) => ({element_id, order: order - 1}));
+      } else if (oldOrder > newOrder) { // move up
+        locatorsToReorder = locators.filter(({order}) => order < oldOrder && order >= newOrder);
+        reorderedLocators = locatorsToReorder.map(({element_id, order}) => ({element_id, order: order + 1}));
+      }
+      locatorsAdapter.upsertMany(state, [...reorderedLocators, { element_id: item.element_id, order: newOrder }]);
+    },
     toggleElementGeneration(state, { payload }) {
       const locator = typeof payload === "string" ? simpleSelectLocatorById(state, payload) : payload;
       locatorsAdapter.upsertOne(state, { ...locator, generate: !locator.generate });
     },
     toggleElementGroupGeneration(state, { payload }) {
       const newValue = [];
-      payload.forEach(({element_id, generate}) => {
+      payload.forEach(({ element_id, generate }) => {
         newValue.push({ element_id, generate: !generate });
       });
       locatorsAdapter.upsertMany(state, newValue);
@@ -78,7 +99,7 @@ const locatorsSlice = createSlice({
     },
     toggleDeletedGroup(state, { payload }) {
       const newValue = [];
-      payload.forEach(({element_id, deleted, generate }) => {
+      payload.forEach(({ element_id, deleted, generate }) => {
         // when we delete locator, we uncheck it, when restore - keep generate state as is
         newValue.push({ element_id, deleted: !deleted, generate: !deleted ? false : generate });
       });
@@ -116,6 +137,7 @@ export const {
   changeLocatorAttributes,
   removeLocators,
   removeAll,
+  reorderLocators,
   toggleElementGeneration,
   toggleElementGroupGeneration,
   toggleDeleted,

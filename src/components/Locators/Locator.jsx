@@ -26,6 +26,7 @@ import TrashBinSvg from "../../assets/trash-bin.svg";
 import WarningSvg from "../../assets/warning.svg";
 import WarningEditedSvg from "../../assets/warning-edited.svg";
 import CopySvg from "../../assets/copy.svg";
+import HandleSvg from "../../assets/handle.svg";
 
 export const VALIDATION_ERROR_MESSAGES = {
   [VALIDATION_ERROR_TYPE.DUPLICATED_LOCATOR]: "The locator for this element already exists.", // warn
@@ -171,6 +172,7 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
   return (
     <div
       ref={ref}
+      data-id={element_id}
       className={`jdn__xpath_container ${
         generate && currentPage === pageType.locatorsList ?
           "jdn__xpath_container--selected" :
@@ -194,6 +196,11 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
               icon={<Icon component={CopySvg} />}
             />
           </Tooltip>
+          <Button
+            type="text"
+            className="jdn__buttons jdn__buttons--drag-handle"
+            icon={<Icon component={HandleSvg} />}
+          />
           <a>
             <Dropdown trigger="click" overlay={renderMenu()}>
               <Icon component={EllipsisSvg} onClick={(e) => e.preventDefault()} />

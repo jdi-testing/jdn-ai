@@ -1,5 +1,5 @@
 import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
-import { size } from "lodash";
+import { chain, size } from "lodash";
 import { isProgressStatus } from "../../services/locatorGenerationController";
 import { locatorTaskStatus } from "../../utils/constants";
 import {
@@ -42,7 +42,6 @@ export const selectPageObjLocatorsByProbability = createSelector(
     (locByProbability, locByPageObj) => locByProbability.filter((loc) => locByPageObj.includes(loc.element_id))
 );
 
-
 export const selectLocatorsToConfirm = createSelector(selectLocatorsByPageObject, (elements) =>
   elements.filter((elem) => elem.generate && !elem.deleted)
 );
@@ -52,7 +51,11 @@ export const selectConfirmedLocators = selectLocatorsToConfirm;
 export const selectGeneratedByPageObj = createSelector(
     selectGeneratedLocators,
     (state, pageObjId) => selectPageObjById(state, pageObjId).locators || [],
-    (locators, locByPageObj) => locators.filter((loc) => locByPageObj.includes(loc.element_id))
+    (locators, locByPageObj) =>
+      chain(locators)
+          .filter((loc) => locByPageObj.includes(loc.element_id))
+          .sortBy("order")
+          .value()
 );
 
 export const selectGeneratedSelectedByPageObj = createSelector(selectGeneratedByPageObj, (items) =>
@@ -60,7 +63,10 @@ export const selectGeneratedSelectedByPageObj = createSelector(selectGeneratedBy
 );
 
 export const selectDeletedByPageObj = createSelector(selectPageObjLocatorsByProbability, (items) =>
-  items.filter((el) => el.deleted)
+  chain(items)
+      .filter((el) => el.deleted)
+      .sortBy("order")
+      .value()
 );
 
 export const selectDeletedSelectedByPageObj = createSelector(selectDeletedByPageObj, (items) =>
@@ -68,13 +74,16 @@ export const selectDeletedSelectedByPageObj = createSelector(selectDeletedByPage
 );
 
 export const selectWaitingByPageObj = createSelector(selectPageObjLocatorsByProbability, (elements) =>
-  elements.filter(
-      (el) =>
-        (isProgressStatus(el.locator.taskStatus) ||
-        el.locator.taskStatus === locatorTaskStatus.REVOKED ||
-        el.locator.taskStatus === locatorTaskStatus.FAILURE) &&
-      !el.deleted
-  )
+  chain(elements)
+      .filter(
+          (el) =>
+            (isProgressStatus(el.locator.taskStatus) ||
+          el.locator.taskStatus === locatorTaskStatus.REVOKED ||
+          el.locator.taskStatus === locatorTaskStatus.FAILURE) &&
+        !el.deleted
+      )
+      .sortBy("order")
+      .value()
 );
 
 export const selectWaitingSelectedByPageObj = createSelector(selectWaitingByPageObj, (items) =>
@@ -90,7 +99,11 @@ export const selectLocatorByJdnHash = createSelector(
 export const selectPendingLocatorsByPageObj = createSelector(
     selectPendingLocators,
     (state) => selectPageObjById(state, state.pageObject.currentPageObject).locators,
-    (locators, pageObjLocators) => locators.filter(({ element_id }) => pageObjLocators.includes(element_id))
+    (locators, pageObjLocators) =>
+      chain(locators)
+          .filter(({ element_id }) => pageObjLocators.includes(element_id))
+          .sortBy("order")
+          .value()
 );
 
 export const selectEmptyPageObjects = createSelector(
