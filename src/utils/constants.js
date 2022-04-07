@@ -1,3 +1,5 @@
+export const readmeLinkAddress = "https://github.com/jdi-testing/jdn-ai#readme";
+
 export const identificationStatus = {
   noStatus: "",
   loading: "Loading...",

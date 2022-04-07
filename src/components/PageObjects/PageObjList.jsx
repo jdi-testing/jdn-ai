@@ -120,7 +120,7 @@ export const PageObjList = () => {
                   header={
                     <React.Fragment>
                       <Icon component={PageSvg} className="jdn__locatorsList-status" />
-                      {name}
+                      <span className="jdn__pageObject-content-text">{name}</span>
                     </React.Fragment>
                   }
                   extra={
