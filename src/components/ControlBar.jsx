@@ -9,6 +9,7 @@ import { reportProblem } from "../services/pageDataHandlers";
 import kebab_menu from "../assets/Kebab_menu.svg";
 import { selectLocators } from "../store/selectors/locatorSelectors";
 import { size } from "lodash";
+import { readmeLinkAddress } from "../utils/constants";
 
 export const ControlBar = () => {
   const [backendVer, setBackendVer] = useState("");
@@ -39,7 +40,7 @@ export const ControlBar = () => {
         Report a problem
       </Menu.Item>
       <Menu.Item key="1">
-        <a href="https://github.com/jdi-testing/jdn-ai" target="_blank" rel="noreferrer">
+        <a href={readmeLinkAddress} target="_blank" rel="noreferrer">
           Readme
         </a>
       </Menu.Item>
@@ -61,7 +62,7 @@ export const ControlBar = () => {
         <a className="jdn__header-link" href="#" hidden={!allowRemoveElements} onClick={handleReportProblem}>
           Report a problem
         </a>
-        <a className="jdn__header-link" href="https://github.com/jdi-testing/jdn-ai" target="_blank" rel="noreferrer">
+        <a className="jdn__header-link" href={readmeLinkAddress} target="_blank" rel="noreferrer">
           Readme
         </a>
         {/* <a className="jdn__header-link" href="#">

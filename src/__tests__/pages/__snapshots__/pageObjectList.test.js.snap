@@ -67,7 +67,11 @@ exports[`pageObjectList component renders empty page object 1`] = `
               class="anticon jdn__locatorsList-status"
               role="img"
             />
-            pageObject1
+            <span
+              class="jdn__pageObject-content-text"
+            >
+              pageObject1
+            </span>
             <div
               class="ant-collapse-extra"
             >
