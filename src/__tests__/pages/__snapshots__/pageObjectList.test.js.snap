@@ -81,7 +81,6 @@ exports[`pageObjectList component renders empty page object 1`] = `
                 <span
                   class="anticon ant-dropdown-trigger"
                   role="img"
-                  tabindex="-1"
                 />
               </a>
             </div>
