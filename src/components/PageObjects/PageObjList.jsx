@@ -29,6 +29,7 @@ export const PageObjList = () => {
   const currentPageObject = useSelector((state) => state.pageObject.currentPageObject);
   const pageObjects = useSelector(selectPageObjects);
   const [activePanel, setActivePanel] = useState([]);
+  const [menuVisible, setMenuVisible] = useState(false);
 
   useEffect(() => {
     setActivePanel([currentPageObject]);
@@ -60,7 +61,7 @@ export const PageObjList = () => {
   };
 
   const handleRename = (id, name) => {
-    chrome.storage.sync.set({ OPEN_EDIT_NAME: { isOpen: true, value: {id, name} } });
+    chrome.storage.sync.set({ OPEN_EDIT_NAME: { isOpen: true, value: { id, name } } });
   };
 
   const renderMenu = (id, locatorIds, locatorObjects, name) => {
@@ -124,8 +125,15 @@ export const PageObjList = () => {
                     </React.Fragment>
                   }
                   extra={
-                    <a onClick={(e) => e.stopPropagation()} data-testid="dropdown-button">
-                      <Dropdown trigger="click" overlay={renderMenu(id, locators, elements, name)}>
+                    <a
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setMenuVisible(true);
+                      }}
+                      onMouseLeave={() => setMenuVisible(false)}
+                      data-testid="dropdown-button"
+                    >
+                      <Dropdown visible={menuVisible} overlay={renderMenu(id, locators, elements, name)}>
                         <Icon component={EllipsisSvg} />
                       </Dropdown>
                     </a>

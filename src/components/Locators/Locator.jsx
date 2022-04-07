@@ -48,6 +48,7 @@ const copyTitle = {
 // eslint-disable-next-line react/display-name
 export const Locator = memo(({ element, currentPage, noScrolling }) => {
   const [copyTooltipTitle, setTooltipTitle] = useState(copyTitle.Copy);
+  const [menuVisible, setMenuVisible] = useState(false);
   const dispatch = useDispatch();
 
   const { element_id, type, name, locator, generate, isCmHighlighted, validity } = element;
@@ -201,8 +202,8 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
             className="jdn__buttons jdn__buttons--drag-handle"
             icon={<Icon component={HandleSvg} />}
           />
-          <a>
-            <Dropdown trigger="click" overlay={renderMenu()}>
+          <a onClick={() => setMenuVisible(true)} onMouseLeave={() => setMenuVisible(false)}>
+            <Dropdown overlay={renderMenu()} visible={menuVisible}>
               <Icon component={EllipsisSvg} onClick={(e) => e.preventDefault()} />
             </Dropdown>
           </a>
