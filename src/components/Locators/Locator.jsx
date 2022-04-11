@@ -127,13 +127,14 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
 
   const renderColorizedString = () => {
     return (
-      <React.Fragment>
+      <span>
         @UI(
         <span className="jdn__xpath_item-locator">&quot;{getLocator(locator)}&quot;</span>)
-        <span className="jdn__xpath_item-type">&nbsp;public</span>
+        <br/>
+        <span className="jdn__xpath_item-type">public</span>
         <span>&nbsp;{type}&nbsp;</span>
         {name}
-      </React.Fragment>
+      </span>
     );
   };
 
@@ -182,10 +183,12 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
      ${isCmHighlighted ? "jdn__xpath_container--cm-selected" : ""}`}
     >
       {currentPage === pageType.locatorsList ? (
-        <React.Fragment>
+        <div className="jdn__xpath_locators">
           <Checkbox checked={generate} onChange={handleOnChange}></Checkbox>
           <Text className="jdn__xpath_item">
-            {renderIcon()}
+            <div>
+              {renderIcon()}
+            </div>
             {renderColorizedString()}
           </Text>
           <Tooltip placement="bottom" title={copyTooltipTitle}>
@@ -207,7 +210,7 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
               <Icon component={EllipsisSvg} onClick={(e) => e.preventDefault()} />
             </Dropdown>
           </a>
-        </React.Fragment>
+        </div>
       ) : (
         <Text className="jdn__xpath_item">{renderColorizedString()}</Text>
       )}
