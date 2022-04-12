@@ -312,10 +312,10 @@ export const runContextMenu = () => {
       element,
       types
   ) => {
-    const { element_id, locator } = element;
+    const { element_id, locator, generate } = element;
     const menuItems = [
       {
-        text: `Select locator`,
+        text: `${!generate ? "Select" : "Unselect"} locator`,
         events: {
           click: () =>
             chrome.runtime.sendMessage({
