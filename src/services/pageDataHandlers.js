@@ -3,7 +3,7 @@ import { getGenerationAttributes } from "./../contentScripts/generationData";
 import { getPageData } from "./../contentScripts/pageData";
 import { createLocatorNames } from "./pageObject";
 import { reportPopup } from "../contentScripts/popups";
-import { request } from "../services/backend";
+import { REPORT_PROBLEM, request } from "../services/backend";
 import { confirmPopup } from "../contentScripts/popups/confirmPopup";
 import { createOverlay } from "../contentScripts/createOverlay";
 /* global chrome*/
@@ -76,7 +76,9 @@ export const requestGenerationData = async (elements) => {
   return { generationData };
 };
 
-// export const confirmPageObject
+export const sendProblemReport = (payload) => {
+  request.post(REPORT_PROBLEM, JSON.stringify(payload));
+};
 
 export const reportProblem = (predictedElements) => {
   chrome.storage.sync.set({ predictedElements }, connector.attachContentScript(reportPopup));

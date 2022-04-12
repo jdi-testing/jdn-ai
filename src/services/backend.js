@@ -9,6 +9,7 @@ export const REVOKE_TASK = 'revoke_task';
 export const REVOKE_TASKS= 'revoke_tasks';
 export const GET_TASK_RESULT = 'get_task_result';
 export const CPU_COUNT = 'cpu-count';
+export const REPORT_PROBLEM = 'report_problem';
 
 export const BASE_URL = 'http:localhost:5050';
 

@@ -11,51 +11,6 @@
     }
   }
 
-  input,
-  textarea,
-  select {
-    font-family: inherit;
-    width: 298px;
-    min-height: 30px;
-    padding: 0 16px;
-
-    & ~ i {
-      display: none;
-      position: absolute;
-      right: 8px;
-      top: 5px;
-    }
-
-    & ~ .jdn-input-message {
-      position: absolute;
-      bottom: -34px;
-      left: 70px;
-      height: 30px;
-      color: @jdn-light-blue;
-      line-height: 15px;
-    }
-
-    &.jdn-input-error {
-      border: 1px solid @warning-color;
-
-      & ~ .jdn-input-message {
-        color: @warning-color;
-      }
-    }
-
-    &.jdn-input-warning {
-      border: 1px solid @warning-yellow-color;
-
-      & ~ .jdn-input-message {
-        color: @warning-yellow-color;
-      }
-    }
-
-    &:invalid ~ i {
-      display: block;
-    }
-  }
-
   &__select {
     padding-left: 12px !important;
   }

@@ -9,13 +9,15 @@ import { reportProblem } from "../services/pageDataHandlers";
 import kebab_menu from "../assets/Kebab_menu.svg";
 import { selectLocators } from "../store/selectors/locatorSelectors";
 import { size } from "lodash";
-import { readmeLinkAddress } from "../utils/constants";
+import { pageType, readmeLinkAddress } from "../utils/constants";
+import { selectCurrentPage } from "../store/selectors/mainSelectors";
 
 export const ControlBar = () => {
   const [backendVer, setBackendVer] = useState("");
   const [pluginVer, setPluginVer] = useState("");
 
   const predictedElements = useSelector(selectLocators);
+  const currentPage = useSelector(selectCurrentPage).page;
   const allowRemoveElements = size(predictedElements);
 
   useEffect(() => {
@@ -36,7 +38,7 @@ export const ControlBar = () => {
 
   const kebabMenu = (
     <Menu>
-      <Menu.Item key="0" hidden={!allowRemoveElements} onClick={handleReportProblem}>
+      <Menu.Item key="0" hidden={currentPage === pageType.locatorsList} onClick={handleReportProblem}>
         Report a problem
       </Menu.Item>
       <Menu.Item key="1">
