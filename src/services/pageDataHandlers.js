@@ -80,8 +80,8 @@ export const sendProblemReport = (payload) => {
   request.post(REPORT_PROBLEM, JSON.stringify(payload));
 };
 
-export const reportProblem = (predictedElements) => {
-  chrome.storage.sync.set({ predictedElements }, connector.attachContentScript(reportPopup));
+export const reportProblem = () => {
+  connector.attachContentScript(reportPopup);
 };
 
 export const openConfirmBackPopup = (enableSave) => {

@@ -11,7 +11,6 @@ import { stopGenerationGroupReducer } from "../thunks/stopGenerationGroup";
 
 const initialState = {
   status: identificationStatus.noStatus,
-  predictedElements: [],
 };
 
 const locatorsSlice = createSlice({
