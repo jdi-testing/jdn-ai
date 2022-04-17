@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Icon from "@ant-design/icons";
-import { Collapse, Dropdown, Menu, Typography } from "antd";
+import { Collapse, Dropdown, Menu, Typography, Button, Tooltip } from "antd";
 import { size } from "lodash";
 
 import { PageObjListHeader } from "./PageObjListHeader";
@@ -13,6 +13,7 @@ import TrashBinSvg from "../../assets/trash-bin.svg";
 import DownloadSvg from "../../assets/download.svg";
 import PencilSvg from "../../assets/pencil.svg";
 import EditTextSvg from "../../assets/edit-text.svg";
+import CopySvg from "../../assets/copy.svg";
 import { selectConfirmedLocators, selectPageObjects } from "../../store/selectors/pageObjectSelectors";
 import { Locator } from "../Locators/Locator";
 import { GenerationButtons } from "./GenerationButtons";
@@ -20,8 +21,14 @@ import { PageObjectPlaceholder } from "./PageObjectPlaceholder";
 import { removePageObject } from "../../store/slices/pageObjectSlice";
 import { removeLocators } from "../../store/slices/locatorsSlice";
 import { generatePageObject } from "../../services/pageObject";
+import { getPageObjectForCopying } from "../../services/pageObjectTemplate";
 import { pageType } from "../../utils/constants";
 import { changePage } from "../../store/slices/mainSlice";
+
+const copyTitle = {
+  Copy: "Copy",
+  Copied: "Copied",
+};
 
 export const PageObjList = () => {
   const state = useSelector((state) => state);
@@ -30,6 +37,22 @@ export const PageObjList = () => {
   const pageObjects = useSelector(selectPageObjects);
   const [activePanel, setActivePanel] = useState([]);
   const [menuVisible, setMenuVisible] = useState(false);
+  const [copyButtonVisible, setCopyButtonVisible] = useState(false);
+  const [copyTooltipTitle, setTooltipTitle] = useState(copyTitle.Copy);
+
+  const handleCopy = (e, elements) => {
+    e.stopPropagation();
+
+    const pageObject = getPageObjectForCopying(elements);
+    const transformedPageObject = pageObject.replace(/'/g, "\\'").replace(/\n/g, '\\n');
+    chrome.devtools.inspectedWindow.eval(`copy('${transformedPageObject}')`);
+
+    setTooltipTitle(copyTitle.Copied);
+  };
+
+  const handleMouseEnter = () => {
+    if (copyTooltipTitle === copyTitle.Copied) setTooltipTitle(copyTitle.Copy);
+  };
 
   useEffect(() => {
     setActivePanel([currentPageObject]);
@@ -54,8 +77,10 @@ export const PageObjList = () => {
 
   const renderContent = (pageObjId, url, elements) => {
     if (size(elements)) {
+      if (!copyButtonVisible) setCopyButtonVisible(true);
       return renderLocators(elements);
     } else {
+      if (copyButtonVisible) setCopyButtonVisible(false);
       return renderPageObjSettings(pageObjId, url);
     }
   };
@@ -125,18 +150,30 @@ export const PageObjList = () => {
                     </React.Fragment>
                   }
                   extra={
-                    <a
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setMenuVisible(true);
-                      }}
-                      onMouseLeave={() => setMenuVisible(false)}
-                      data-testid="dropdown-button"
-                    >
-                      <Dropdown visible={menuVisible} overlay={renderMenu(id, locators, elements, name)}>
-                        <Icon component={EllipsisSvg} />
-                      </Dropdown>
-                    </a>
+                    <>
+                      {copyButtonVisible &&
+                        <Tooltip placement="bottom" title={copyTooltipTitle}>
+                          <Button
+                              type="text"
+                              icon={<Icon component={CopySvg} />}
+                              onMouseEnter={handleMouseEnter}
+                              onClick={(e)=>handleCopy(e, elements)}
+                            />
+                        </Tooltip>
+                      }
+                      <a
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setMenuVisible(true);
+                        }}
+                        onMouseLeave={() => setMenuVisible(false)}
+                        data-testid="dropdown-button"
+                      >
+                        <Dropdown visible={menuVisible} overlay={renderMenu(id, locators, elements, name)}>
+                          <Icon component={EllipsisSvg} />
+                        </Dropdown>
+                      </a>
+                    </>
                   }
                 >
                   {renderContent(id, url, elements)}
