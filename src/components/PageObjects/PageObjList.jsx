@@ -154,11 +154,11 @@ export const PageObjList = () => {
                       {copyButtonVisible &&
                         <Tooltip placement="bottom" title={copyTooltipTitle}>
                           <Button
-                              type="text"
-                              icon={<Icon component={CopySvg} />}
-                              onMouseEnter={handleMouseEnter}
-                              onClick={(e)=>handleCopy(e, elements)}
-                            />
+                            type="text"
+                            icon={<Icon component={CopySvg} />}
+                            onMouseEnter={handleMouseEnter}
+                            onClick={(e)=>handleCopy(e, elements)}
+                          />
                         </Tooltip>
                       }
                       <a

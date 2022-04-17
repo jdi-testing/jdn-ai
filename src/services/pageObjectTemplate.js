@@ -45,7 +45,9 @@ export const pageObjectTemplate = (locators, { host }, title) => {
     "";
 
   const className = title;
-  const locatorsCode = locators.map((loc) => `    @UI("${getLocator(loc.locator)}")\n    public ${loc.type} ${loc.name};`);
+  const locatorsCode = locators.map(
+      (loc) => `    @UI("${getLocator(loc.locator)}")\n    public ${loc.type} ${loc.name};`
+  );
 
   const pageCode = `package ${sitePackage}.pages;
 
