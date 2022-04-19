@@ -31,10 +31,6 @@ export const getClassName = (title) => {
   return className;
 };
 
-export const getPageObjectForCopying = (locators) => {
-  return locators.map((loc) => `@UI("${getLocator(loc.locator)}")\npublic ${loc.type} ${loc.name};`).join("\n\n");
-};
-
 export const pageObjectTemplate = (locators, { host }, title) => {
   const sitePackage = host ?
     host

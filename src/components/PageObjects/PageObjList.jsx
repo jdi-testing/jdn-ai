@@ -20,15 +20,9 @@ import { GenerationButtons } from "./GenerationButtons";
 import { PageObjectPlaceholder } from "./PageObjectPlaceholder";
 import { removePageObject } from "../../store/slices/pageObjectSlice";
 import { removeLocators } from "../../store/slices/locatorsSlice";
-import { generatePageObject } from "../../services/pageObject";
-import { getPageObjectForCopying } from "../../services/pageObjectTemplate";
-import { pageType } from "../../utils/constants";
+import { generatePageObject, getLocator } from "../../services/pageObject";
+import { pageType, copyTitle } from "../../utils/constants";
 import { changePage } from "../../store/slices/mainSlice";
-
-const copyTitle = {
-  Copy: "Copy",
-  Copied: "Copied",
-};
 
 export const PageObjList = () => {
   const state = useSelector((state) => state);
@@ -39,6 +33,10 @@ export const PageObjList = () => {
   const [menuVisible, setMenuVisible] = useState(false);
   const [copyButtonVisible, setCopyButtonVisible] = useState(false);
   const [copyTooltipTitle, setTooltipTitle] = useState(copyTitle.Copy);
+
+  const getPageObjectForCopying = (locators) => {
+    return locators.map((loc) => `@UI("${getLocator(loc.locator)}")\npublic ${loc.type} ${loc.name};`).join("\n\n");
+  };
 
   const handleCopy = (e, elements) => {
     e.stopPropagation();
