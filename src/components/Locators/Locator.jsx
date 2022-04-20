@@ -12,10 +12,8 @@ import { rerunGeneration } from "../../store/thunks/rerunGeneration";
 import { stopGeneration } from "../../store/thunks/stopGeneration";
 import { toggleDeleted, toggleElementGeneration } from "../../store/slices/locatorsSlice";
 
-import CheckedkSvg from "../../assets/checked-outlined.svg";
 import CheckedEdited from "../../assets/checked-edited.svg";
 import ClockSvg from "../../assets/clock-outlined.svg";
-import DeletedSvg from "../../assets/deleted.svg";
 import EllipsisSvg from "../../assets/ellipsis.svg";
 import PauseOutlinedSvg from "../../assets/pause-outlined.svg";
 import PauseSvg from "../../assets/pause.svg";
@@ -69,12 +67,10 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
   };
 
   const renderIcon = () => {
-    const successIcon = <Icon component={CheckedkSvg} className="jdn__locatorsList-status" />;
     const startedIcon = <Spin size="small" />;
     const pendingIcon = <Icon component={ClockSvg} className="jdn__locatorsList-status" />;
     const revokedIcon = <Icon component={PauseOutlinedSvg} className="jdn__locatorsList-status" />;
     const failureIcon = <Icon component={WarningSvg} className="jdn__locatorsList-status" />;
-    const deletedIcon = <Icon component={DeletedSvg} className="jdn__locatorsList-status" />;
 
     const successEditedIcon = (
       <Tooltip title={getTooltipText()}>
@@ -87,14 +83,12 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
       </Tooltip>
     );
 
-    if (element.deleted) return deletedIcon;
-
     switch (element.locator.taskStatus) {
       case locatorTaskStatus.SUCCESS: {
         if (isEdited(element)) {
           return isValidLocator(element) ? successEditedIcon : warningEditedIcon;
         } else {
-          return successIcon;
+          break;
         }
       }
       case locatorTaskStatus.STARTED:
