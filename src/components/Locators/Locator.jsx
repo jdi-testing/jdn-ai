@@ -7,7 +7,13 @@ import Text from "antd/lib/typography/Text";
 import { getLocator } from "../../services/pageObject";
 import { getTypesMenuOptions } from "../../utils/generationClassesMap";
 import { isProgressStatus } from "../../services/locatorGenerationController";
-import { locatorTaskStatus, locatorProgressStatus, VALIDATION_ERROR_TYPE, pageType, copyTitle } from "../../utils/constants";
+import { 
+  locatorTaskStatus, 
+  locatorProgressStatus, 
+  VALIDATION_ERROR_TYPE, 
+  pageType, 
+  copyTitle 
+} from "../../utils/constants";
 import { rerunGeneration } from "../../store/thunks/rerunGeneration";
 import { stopGeneration } from "../../store/thunks/stopGeneration";
 import { toggleDeleted, toggleElementGeneration } from "../../store/slices/locatorsSlice";
@@ -197,8 +203,7 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
               icon={<Icon component={CopySvg} />}
             />
           </Tooltip>
-          { 
-            isLocatorInProgress && <Button
+          { isLocatorInProgress && <Button
               type="text"
               className="jdn__buttons jdn__buttons--drag-handle"
               icon={<Icon component={HandleSvg} />}
