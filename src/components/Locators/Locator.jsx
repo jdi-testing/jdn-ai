@@ -8,13 +8,7 @@ import { getLocator } from "../../services/pageObject";
 import { getTypesMenuOptions } from "../../utils/generationClassesMap";
 import { copyToClipboard } from "../../utils/helpers";
 import { isProgressStatus } from "../../services/locatorGenerationController";
-import {
-  locatorTaskStatus,
-  locatorProgressStatus,
-  VALIDATION_ERROR_TYPE,
-  pageType,
-  copyTitle
-} from "../../utils/constants";
+import { locatorTaskStatus, VALIDATION_ERROR_TYPE, pageType, copyTitle } from "../../utils/constants";
 import { rerunGeneration } from "../../store/thunks/rerunGeneration";
 import { stopGeneration } from "../../store/thunks/stopGeneration";
 import { toggleDeleted, toggleElementGeneration } from "../../store/slices/locatorsSlice";
@@ -55,7 +49,7 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
 
   const ref = useRef(null);
 
-  const isLocatorInProgress = Object.values(locatorProgressStatus).includes(element.locator.taskStatus);
+  const isLocatorInProgress = isProgressStatus(locator.taskStatus);
 
   const handleOnChange = () => {
     dispatch(toggleElementGeneration(element_id));
@@ -150,7 +144,7 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
           <Menu.Item key="1" icon={<PencilSvg />} onClick={handleEditClick}>
             Edit
           </Menu.Item>
-          {isProgressStatus(locator.taskStatus) ? (
+          {isLocatorInProgress ? (
             <Menu.Item key="3" icon={<PauseSvg />} onClick={() => dispatch(stopGeneration(element.element_id))}>
               Stop generation
             </Menu.Item>
