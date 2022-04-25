@@ -49,6 +49,8 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
 
   const ref = useRef(null);
 
+  const isLocatorInProgress = isProgressStatus(locator.taskStatus);
+
   const handleOnChange = () => {
     dispatch(toggleElementGeneration(element_id));
   };
@@ -142,7 +144,7 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
           <Menu.Item key="1" icon={<PencilSvg />} onClick={handleEditClick}>
             Edit
           </Menu.Item>
-          {isProgressStatus(locator.taskStatus) ? (
+          {isLocatorInProgress ? (
             <Menu.Item key="3" icon={<PauseSvg />} onClick={() => dispatch(stopGeneration(element.element_id))}>
               Stop generation
             </Menu.Item>
@@ -189,11 +191,12 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
               icon={<Icon component={CopySvg} />}
             />
           </Tooltip>
-          <Button
+          { isLocatorInProgress && <Button
             type="text"
             className="jdn__buttons jdn__buttons--drag-handle"
             icon={<Icon component={HandleSvg} />}
           />
+          }
           <a onClick={() => setMenuVisible(true)} onMouseLeave={() => setMenuVisible(false)}>
             <Dropdown overlay={renderMenu()} visible={menuVisible}>
               <Icon component={EllipsisSvg} onClick={(e) => e.preventDefault()} />
