@@ -22,6 +22,7 @@ import { removePageObject } from "../../store/slices/pageObjectSlice";
 import { removeLocators } from "../../store/slices/locatorsSlice";
 import { generatePageObject, getLocator } from "../../services/pageObject";
 import { pageType, copyTitle } from "../../utils/constants";
+import { copyToClipboard } from "../../utils/helpers";
 import { changePage } from "../../store/slices/mainSlice";
 
 export const PageObjList = () => {
@@ -42,8 +43,7 @@ export const PageObjList = () => {
     e.stopPropagation();
 
     const pageObject = getPageObjectForCopying(elements);
-    const transformedPageObject = pageObject.replace(/'/g, "\\'").replace(/\n/g, '\\n');
-    chrome.devtools.inspectedWindow.eval(`copy('${transformedPageObject}')`);
+    copyToClipboard(pageObject);
 
     setTooltipTitle(copyTitle.Copied);
   };
