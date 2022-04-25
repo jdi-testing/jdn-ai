@@ -6,4 +6,4 @@ export const floatToPercent = (value) => {
 export const copyToClipboard = (text) => {
   const transformedText = text.replace(/'/g, "\\'").replace(/\n/g, '\\n');
   chrome.devtools.inspectedWindow.eval(`copy('${transformedText}')`);
-}
+};
