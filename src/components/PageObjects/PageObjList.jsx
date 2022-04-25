@@ -22,6 +22,7 @@ import { removePageObject } from "../../store/slices/pageObjectSlice";
 import { removeLocators } from "../../store/slices/locatorsSlice";
 import { generatePageObject, getLocator } from "../../services/pageObject";
 import { pageType, copyTitle } from "../../utils/constants";
+import { copyToClipboard } from "../../utils/helpers";
 import { changePage } from "../../store/slices/mainSlice";
 
 export const PageObjList = () => {
@@ -30,7 +31,7 @@ export const PageObjList = () => {
   const currentPageObject = useSelector((state) => state.pageObject.currentPageObject);
   const pageObjects = useSelector(selectPageObjects);
   const [activePanel, setActivePanel] = useState([]);
-  const [menuVisible, setMenuVisible] = useState(false);
+  const [menuVisible, setMenuVisible] = useState(new Map());
   const [copyButtonVisible, setCopyButtonVisible] = useState(false);
   const [copyTooltipTitle, setTooltipTitle] = useState(copyTitle.Copy);
 
@@ -42,8 +43,7 @@ export const PageObjList = () => {
     e.stopPropagation();
 
     const pageObject = getPageObjectForCopying(elements);
-    const transformedPageObject = pageObject.replace(/'/g, "\\'").replace(/\n/g, '\\n');
-    chrome.devtools.inspectedWindow.eval(`copy('${transformedPageObject}')`);
+    copyToClipboard(pageObject);
 
     setTooltipTitle(copyTitle.Copied);
   };
@@ -162,12 +162,12 @@ export const PageObjList = () => {
                       <a
                         onClick={(e) => {
                           e.stopPropagation();
-                          setMenuVisible(true);
+                          setMenuVisible(new Map(menuVisible.set(id, true)));
                         }}
-                        onMouseLeave={() => setMenuVisible(false)}
+                        onMouseLeave={() => setMenuVisible(new Map(menuVisible.set(id, false)))}
                         data-testid="dropdown-button"
                       >
-                        <Dropdown visible={menuVisible} overlay={renderMenu(id, locators, elements, name)}>
+                        <Dropdown visible={menuVisible.get(id)} overlay={renderMenu(id, locators, elements, name)}>
                           <Icon component={EllipsisSvg} />
                         </Dropdown>
                       </a>
