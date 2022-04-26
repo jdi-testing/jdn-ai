@@ -25,9 +25,9 @@ export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedS
   const inProgressSelected = filter(waitingSelected, (el) => el.locator.taskStatus !== locatorTaskStatus.REVOKED);
 
   const handleDelete = () => {
-    activeSelected.length > 1 
-    ? dispatch(toggleDeletedGroup(activeSelected, true))
-    : dispatch(toggleDeleted(activeSelected[0].element_id, true));
+    activeSelected.length > 1 ?
+    dispatch(toggleDeletedGroup(activeSelected, true)) :
+    dispatch(toggleDeleted(activeSelected[0].element_id, true));
   };
 
   return (
