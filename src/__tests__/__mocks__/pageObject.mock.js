@@ -73,9 +73,14 @@ import com.epam.jdi.light.ui.html.elements.common.*;
 import io.github.jditesting.sections.*;
 
 public class HomePage extends WebPage {
-    @UI("//*[@class='uui-navigation nav navbar-nav m-l8']") public list listUl;
-    @UI("//*[@class='footer-menu']") public list listUl7;
-    @UI("/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[1]/a") public badge badge;
+    @UI("//*[@class='uui-navigation nav navbar-nav m-l8']")
+    public list listUl;
+
+    @UI("//*[@class='footer-menu']")
+    public list listUl7;
+
+    @UI("/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[1]/a")
+    public badge badge;
 }
 `;
 
