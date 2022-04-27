@@ -18,6 +18,9 @@
     }
 
     &-text {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       flex-grow: 1;
       padding: 10px 16px;
       background: rgba(198, 68, 51, 0.2);
@@ -34,6 +37,12 @@
         margin: 0;
         font-size: 12px;
         line-height: 18px;
+      }
+    }
+
+    .ant-btn-dangerous {
+      &:hover {
+        background-color: #f6d1d1;
       }
     }
   }

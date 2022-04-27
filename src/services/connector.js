@@ -40,6 +40,20 @@ class Connector {
     } else callback();
   }
 
+  sendMessageToAllTabs(action, payload, onResponse) {
+    chrome.tabs.query({}, (tabs) => {
+      tabs.forEach((tab) => {
+        chrome.tabs.sendMessage(tab.id,
+            {
+              message: action,
+              param: payload,
+            },
+            onResponse,
+        );
+      });
+    });
+  }
+
   updateMessageListener(callback) {
     if (this.onmessage) chrome.runtime.onMessage.removeListener(this.onmessage);
     this.onmessage = callback;
@@ -114,15 +128,20 @@ class Connector {
   }
 
   attachStaticScripts() {
-    this.attachContentScript(highlightOnPage).then(() => {
-      this.createPort();
-      chrome.storage.sync.set({ IS_DISCONNECTED: false });
-    });
-    this.attachContentScript(runContextMenu);
-    this.attachContentScript(editLocatorPopup);
-    this.attachContentScript(editNamePopup);
-    this.attachContentScript(highlightOrder);
-    this.attachContentScript(urlListener);
+    return Promise.all([
+      this.attachContentScript(highlightOnPage).then(() => {
+        this.createPort();
+        chrome.storage.sync.set({ IS_DISCONNECTED: false });
+      }),
+      this.attachContentScript(runContextMenu),
+      this.attachContentScript(editLocatorPopup),
+      this.attachContentScript(editNamePopup),
+      this.attachContentScript(highlightOrder),
+      this.attachContentScript(urlListener).then(() => {
+        sendMessage.defineTabId(this.tabId);
+        sendMessage.setClosedSession({tabId: this.tabId, isClosed: false});
+      }),
+    ]);
   }
 }
 
@@ -135,7 +154,10 @@ export const sendMessage = {
   changeElementName: (el) => connector.sendMessage("CHANGE_ELEMENT_NAME", el),
   changeElementType: (el) => connector.sendMessage("CHANGE_ELEMENT_TYPE", el),
   changeStatus: (el) => connector.sendMessage("CHANGE_STATUS", el),
+  checkSession: (payload, onResponse) => connector.sendMessageToAllTabs("CHECK_SESSION", payload, onResponse),
+  defineTabId: (payload) => connector.sendMessage("DEFINE_TAB_ID", payload),
   elementData: (payload) => connector.sendMessage("ELEMENT_DATA", payload),
+  setClosedSession: (payload) => connector.sendMessage("SET_CLOSED_SESSION", payload),
   setHighlight: (payload) => connector.sendMessage("SET_HIGHLIGHT", payload),
   killHighlight: (payload, onResponse) =>
     connector.sendMessage("KILL_HIGHLIGHT", null, onResponse),

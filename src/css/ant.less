@@ -131,11 +131,21 @@
 .ant-btn-primary {
   color: #fff;
   background: @primary-color;
+
+  &:hover {
+    color: #fff;
+    background-color: @primary-active-color;
+  }
 }
 
-.ant-btn-primary:hover {
-  color: #fff;
-  background-color: @primary-active-color;
+.ant-btn-dangerous {
+  color: #d82c15;
+  border-color: #d82c15;
+
+  &:hover {
+    color: #d82c15;
+    border-color: #d82c15;
+  }
 }
 
 .ant-btn.ant-btn-loading::before {
@@ -204,7 +214,7 @@
   & .ant-collapse-arrow {
     right: 12px;
   }
-  
+
   & .ant-checkbox-wrapper {
     margin-right: 8px;
 

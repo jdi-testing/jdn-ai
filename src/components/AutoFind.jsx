@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Layout, { Content, Header } from "antd/lib/layout/layout";
 
 import { changePage, clearAll } from "../store/slices/mainSlice";
-import { connector } from "../services/connector";
+import { connector, sendMessage } from "../services/connector";
 import { ControlBar } from "./ControlBar";
 import { createListeners } from "../services/scriptListener";
 import { SeveralTabsWarning } from "./SeveralTabsWarning";
@@ -17,7 +17,7 @@ import { PageObjectPage } from "./PageObjects/PageObjectPage";
 import { removeEmptyPageObjects } from "../store/thunks/removeEmptyPageObjects";
 
 const AutoFind = () => {
-  const [isInvalidSession, setIsInvalidSession] = useState(localStorage.getItem("secondSession"));
+  const [isInvalidSession, setIsInvalidSession] = useState(false);
   const status = useSelector((state) => state.locators.status);
   const currentPage = useSelector(selectCurrentPage);
   const currentPageObject = useSelector((state) => state.pageObject.currentPageObject);
@@ -31,10 +31,9 @@ const AutoFind = () => {
 
   // add document listeners
   useEffect(() => {
-    window.addEventListener("storage", () => {
-      localStorage.getItem("secondSession") ? setIsInvalidSession(true) : setIsInvalidSession(false);
+    connector.attachStaticScripts().then(() => {
+      checkSession();
     });
-    connector.attachStaticScripts();
     connector.onTabUpdate(() => {
       dispatch(clearAll());
       locatorGenerationController.revokeAll();
@@ -50,6 +49,15 @@ const AutoFind = () => {
     }
   }, [status]);
 
+  const checkSession = () => {
+    setIsInvalidSession(false);
+    sendMessage.checkSession(null, (payload) => {
+      if (payload && payload.tabId !== connector.tabId) {
+        setIsInvalidSession(true);
+      }
+    });
+  };
+
   const renderPage = () => {
     const { page, alreadyGenerated } = currentPage;
     return page === pageType.pageObject ? <PageObjectPage /> : <LocatorsPage {...{ alreadyGenerated }} />;
@@ -61,7 +69,9 @@ const AutoFind = () => {
         <Header className="jdn__header">
           <ControlBar />
         </Header>
-        <Content className="jdn__content">{isInvalidSession ? <SeveralTabsWarning /> : renderPage()}</Content>
+        <Content className="jdn__content">
+          {isInvalidSession ? <SeveralTabsWarning {...{ checkSession }} /> : renderPage()}
+        </Content>
       </Layout>
     </React.Fragment>
   );
