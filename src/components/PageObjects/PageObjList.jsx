@@ -32,7 +32,6 @@ export const PageObjList = () => {
   const pageObjects = useSelector(selectPageObjects);
   const [activePanel, setActivePanel] = useState([]);
   const [menuVisible, setMenuVisible] = useState(new Map());
-  const [copyButtonVisible, setCopyButtonVisible] = useState(false);
   const [copyTooltipTitle, setTooltipTitle] = useState(copyTitle.Copy);
 
   const getPageObjectForCopying = (locators) => {
@@ -75,10 +74,8 @@ export const PageObjList = () => {
 
   const renderContent = (pageObjId, url, elements) => {
     if (size(elements)) {
-      if (!copyButtonVisible) setCopyButtonVisible(true);
       return renderLocators(elements);
     } else {
-      if (copyButtonVisible) setCopyButtonVisible(false);
       return renderPageObjSettings(pageObjId, url);
     }
   };
@@ -138,6 +135,7 @@ export const PageObjList = () => {
           >
             {pageObjects.map(({ id, name, url, locators }) => {
               const elements = selectConfirmedLocators(state, id);
+              const isPageObjectNotEmpty = !!size(elements);
               return (
                 <Collapse.Panel
                   key={id}
@@ -149,7 +147,7 @@ export const PageObjList = () => {
                   }
                   extra={
                     <>
-                      {copyButtonVisible &&
+                      {isPageObjectNotEmpty &&
                         <Tooltip placement="bottom" title={copyTooltipTitle}>
                           <Button
                             type="text"
