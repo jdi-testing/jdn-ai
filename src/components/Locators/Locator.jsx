@@ -6,7 +6,7 @@ import Text from "antd/lib/typography/Text";
 
 import { getLocator } from "../../services/pageObject";
 import { getTypesMenuOptions } from "../../utils/generationClassesMap";
-import { copyToClipboard } from "../../utils/helpers";
+import { copyToClipboard, getLocatorString } from "../../utils/helpers";
 import { isProgressStatus } from "../../services/locatorGenerationController";
 import { locatorTaskStatus, VALIDATION_ERROR_TYPE, pageType, copyTitle } from "../../utils/constants";
 import { rerunGeneration } from "../../store/thunks/rerunGeneration";
@@ -108,7 +108,8 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
   };
 
   const handleCopy = () => {
-    copyToClipboard(ref.current.innerText);
+    const locatorString = getLocatorString(element);
+    copyToClipboard(locatorString);
     setTooltipTitle(copyTitle.Copied);
   };
 

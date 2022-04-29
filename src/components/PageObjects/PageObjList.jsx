@@ -20,9 +20,9 @@ import { GenerationButtons } from "./GenerationButtons";
 import { PageObjectPlaceholder } from "./PageObjectPlaceholder";
 import { removePageObject, setCurrentPageObj } from "../../store/slices/pageObjectSlice";
 import { removeLocators } from "../../store/slices/locatorsSlice";
-import { generatePageObject, getLocator } from "../../services/pageObject";
+import { generatePageObject } from "../../services/pageObject";
 import { pageType, copyTitle } from "../../utils/constants";
-import { copyToClipboard } from "../../utils/helpers";
+import { copyToClipboard, getLocatorString } from "../../utils/helpers";
 import { changePage } from "../../store/slices/mainSlice";
 
 export const PageObjList = () => {
@@ -35,7 +35,7 @@ export const PageObjList = () => {
   const [copyTooltipTitle, setTooltipTitle] = useState(copyTitle.Copy);
 
   const getPageObjectForCopying = (locators) => {
-    return locators.map((loc) => `@UI("${getLocator(loc.locator)}")\npublic ${loc.type} ${loc.name};`).join("\n\n");
+    return locators.map((loc) => getLocatorString(loc)).join("\n\n");
   };
 
   const handleCopy = (e, elements) => {
