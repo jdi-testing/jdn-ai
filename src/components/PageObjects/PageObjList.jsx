@@ -18,7 +18,7 @@ import { selectConfirmedLocators, selectPageObjects } from "../../store/selector
 import { Locator } from "../Locators/Locator";
 import { GenerationButtons } from "./GenerationButtons";
 import { PageObjectPlaceholder } from "./PageObjectPlaceholder";
-import { removePageObject } from "../../store/slices/pageObjectSlice";
+import { removePageObject, setCurrentPageObj } from "../../store/slices/pageObjectSlice";
 import { removeLocators } from "../../store/slices/locatorsSlice";
 import { generatePageObject, getLocator } from "../../services/pageObject";
 import { pageType, copyTitle } from "../../utils/constants";
@@ -78,6 +78,12 @@ export const PageObjList = () => {
     } else {
       return renderPageObjSettings(pageObjId, url);
     }
+  };
+
+  const handleMenuClick = (e, id) => {
+    e.stopPropagation();
+    setMenuVisible(new Map(menuVisible.set(id, true)));
+    dispatch(setCurrentPageObj(id));
   };
 
   const handleRename = (id, name) => {
@@ -158,10 +164,7 @@ export const PageObjList = () => {
                         </Tooltip>
                       }
                       <a
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setMenuVisible(new Map(menuVisible.set(id, true)));
-                        }}
+                        onClick={(e) => handleMenuClick(e, id)}
                         onMouseLeave={() => setMenuVisible(new Map(menuVisible.set(id, false)))}
                         data-testid="dropdown-button"
                       >
