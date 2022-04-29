@@ -41,7 +41,9 @@ export const pageObjectTemplate = (locators, { host }, title) => {
     "";
 
   const className = title;
-  const locatorsCode = locators.map((loc) => `    @UI("${getLocator(loc.locator)}") public ${loc.type} ${loc.name};`);
+  const locatorsCode = locators.map(
+      (loc) => `    @UI("${getLocator(loc.locator)}")\n    public ${loc.type} ${loc.name};`
+  );
 
   const pageCode = `package ${sitePackage}.pages;
 
@@ -56,7 +58,7 @@ import com.epam.jdi.light.ui.html.elements.common.*;
 import ${sitePackage}.sections.*;
 
 public class ${className} extends WebPage {
-${locatorsCode.join("\n")}
+${locatorsCode.join("\n\n")}
 }
 `;
 

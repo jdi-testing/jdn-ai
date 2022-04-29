@@ -11,7 +11,7 @@ import PlaySvg from "../../assets/play.svg";
 import RestoreSvg from "../../assets/restore.svg";
 import TrashBinSVG from "../../assets/trash-bin.svg";
 
-import { toggleDeletedGroup, toggleElementGroupGeneration } from "../../store/slices/locatorsSlice";
+import { toggleDeleted, toggleDeletedGroup, toggleElementGroupGeneration } from "../../store/slices/locatorsSlice";
 import { stopGenerationGroup } from "../../store/thunks/stopGenerationGroup";
 import { rerunGeneration } from "../../store/thunks/rerunGeneration";
 import { locatorTaskStatus } from "../../utils/constants";
@@ -23,6 +23,12 @@ export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedS
   const activeSelected = [...generatedSelected, ...waitingSelected];
   const stoppedSelected = filter(waitingSelected, (el) => el.locator.taskStatus === locatorTaskStatus.REVOKED);
   const inProgressSelected = filter(waitingSelected, (el) => el.locator.taskStatus !== locatorTaskStatus.REVOKED);
+
+  const handleDelete = () => {
+    activeSelected.length > 1 ?
+    dispatch(toggleDeletedGroup(activeSelected, true)) :
+    dispatch(toggleDeleted(activeSelected[0].element_id, true));
+  };
 
   return (
     <div className="jdn__locatorsList-header">
@@ -55,7 +61,7 @@ export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedS
         <Button
           hidden={!size(activeSelected)}
           danger
-          onClick={() => dispatch(toggleDeletedGroup(activeSelected, true))}
+          onClick={handleDelete}
         >
           <Icon fill="#D82C15" component={TrashBinSVG} />
         </Button>

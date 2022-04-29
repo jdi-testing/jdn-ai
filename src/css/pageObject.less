@@ -19,11 +19,27 @@
     }
 
     & .jdn__xpath_container--shift {
-      padding-left: 48px;
+      padding-left: 54px;
     }
 
     & .ant-collapse > .ant-collapse-item > .ant-collapse-header .ant-collapse-arrow {
       margin-right: 8px;
+    }
+
+    .ant-collapse-header {
+      .ant-btn-icon-only {
+        padding: 0;
+      }
+
+      .ant-btn-text {
+        display: none;
+      }
+
+      &:hover {
+        .ant-btn-text {
+          display: inline-block;
+        }
+      }
     }
 
     &_placeholder {

@@ -47,6 +47,9 @@ const mainSlice = createSlice({
     handleLastNotification(state) {
       state.notifications[size(state.notifications) - 1].isHandled = true;
     },
+    resetNotifications(state) {
+      state.notifications.length = 0;
+    },
     setScriptMessage(state, { payload }) {
       state.scriptMessage = payload;
     },
@@ -75,4 +78,5 @@ export const {
   setUnactualPrediction,
   toggleBackdrop,
   xPathGenerationStarted,
+  resetNotifications,
 } = mainSlice.actions;

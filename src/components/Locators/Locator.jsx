@@ -6,16 +6,15 @@ import Text from "antd/lib/typography/Text";
 
 import { getLocator } from "../../services/pageObject";
 import { getTypesMenuOptions } from "../../utils/generationClassesMap";
+import { copyToClipboard } from "../../utils/helpers";
 import { isProgressStatus } from "../../services/locatorGenerationController";
-import { locatorTaskStatus, VALIDATION_ERROR_TYPE, pageType } from "../../utils/constants";
+import { locatorTaskStatus, VALIDATION_ERROR_TYPE, pageType, copyTitle } from "../../utils/constants";
 import { rerunGeneration } from "../../store/thunks/rerunGeneration";
 import { stopGeneration } from "../../store/thunks/stopGeneration";
 import { toggleDeleted, toggleElementGeneration } from "../../store/slices/locatorsSlice";
 
-import CheckedkSvg from "../../assets/checked-outlined.svg";
 import CheckedEdited from "../../assets/checked-edited.svg";
 import ClockSvg from "../../assets/clock-outlined.svg";
-import DeletedSvg from "../../assets/deleted.svg";
 import EllipsisSvg from "../../assets/ellipsis.svg";
 import PauseOutlinedSvg from "../../assets/pause-outlined.svg";
 import PauseSvg from "../../assets/pause.svg";
@@ -40,11 +39,6 @@ const isEdited = (element) => element.isCustomName || element.locator.customXpat
 const isValidLocator = ({ locator, validity }) =>
   !validity?.locator.length || validity.locator === VALIDATION_ERROR_TYPE.NEW_ELEMENT;
 
-const copyTitle = {
-  Copy: "Copy",
-  Copied: "Copied",
-};
-
 // eslint-disable-next-line react/display-name
 export const Locator = memo(({ element, currentPage, noScrolling }) => {
   const [copyTooltipTitle, setTooltipTitle] = useState(copyTitle.Copy);
@@ -54,6 +48,8 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
   const { element_id, type, name, locator, generate, isCmHighlighted, validity } = element;
 
   const ref = useRef(null);
+
+  const isLocatorInProgress = isProgressStatus(locator.taskStatus);
 
   const handleOnChange = () => {
     dispatch(toggleElementGeneration(element_id));
@@ -74,12 +70,10 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
   };
 
   const renderIcon = () => {
-    const successIcon = <Icon component={CheckedkSvg} className="jdn__locatorsList-status" />;
     const startedIcon = <Spin size="small" />;
     const pendingIcon = <Icon component={ClockSvg} className="jdn__locatorsList-status" />;
     const revokedIcon = <Icon component={PauseOutlinedSvg} className="jdn__locatorsList-status" />;
     const failureIcon = <Icon component={WarningSvg} className="jdn__locatorsList-status" />;
-    const deletedIcon = <Icon component={DeletedSvg} className="jdn__locatorsList-status" />;
 
     const successEditedIcon = (
       <Tooltip title={getTooltipText()}>
@@ -92,14 +86,12 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
       </Tooltip>
     );
 
-    if (element.deleted) return deletedIcon;
-
     switch (element.locator.taskStatus) {
       case locatorTaskStatus.SUCCESS: {
         if (isEdited(element)) {
           return isValidLocator(element) ? successEditedIcon : warningEditedIcon;
         } else {
-          return successIcon;
+          break;
         }
       }
       case locatorTaskStatus.STARTED:
@@ -116,8 +108,7 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
   };
 
   const handleCopy = () => {
-    const text = ref.current.innerText.replace(/'/g, "\\'");
-    chrome.devtools.inspectedWindow.eval(`copy('${text}')`);
+    copyToClipboard(ref.current.innerText);
     setTooltipTitle(copyTitle.Copied);
   };
 
@@ -127,13 +118,14 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
 
   const renderColorizedString = () => {
     return (
-      <React.Fragment>
+      <span>
         @UI(
         <span className="jdn__xpath_item-locator">&quot;{getLocator(locator)}&quot;</span>)
-        <span className="jdn__xpath_item-type">&nbsp;public</span>
+        <br/>
+        <span className="jdn__xpath_item-type">public</span>
         <span>&nbsp;{type}&nbsp;</span>
         {name}
-      </React.Fragment>
+      </span>
     );
   };
 
@@ -152,7 +144,7 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
           <Menu.Item key="1" icon={<PencilSvg />} onClick={handleEditClick}>
             Edit
           </Menu.Item>
-          {isProgressStatus(locator.taskStatus) ? (
+          {isLocatorInProgress ? (
             <Menu.Item key="3" icon={<PauseSvg />} onClick={() => dispatch(stopGeneration(element.element_id))}>
               Stop generation
             </Menu.Item>
@@ -182,10 +174,12 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
      ${isCmHighlighted ? "jdn__xpath_container--cm-selected" : ""}`}
     >
       {currentPage === pageType.locatorsList ? (
-        <React.Fragment>
+        <div className="jdn__xpath_locators">
           <Checkbox checked={generate} onChange={handleOnChange}></Checkbox>
           <Text className="jdn__xpath_item">
-            {renderIcon()}
+            <div>
+              {renderIcon()}
+            </div>
             {renderColorizedString()}
           </Text>
           <Tooltip placement="bottom" title={copyTooltipTitle}>
@@ -197,17 +191,18 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
               icon={<Icon component={CopySvg} />}
             />
           </Tooltip>
-          <Button
+          { isLocatorInProgress && <Button
             type="text"
             className="jdn__buttons jdn__buttons--drag-handle"
             icon={<Icon component={HandleSvg} />}
           />
+          }
           <a onClick={() => setMenuVisible(true)} onMouseLeave={() => setMenuVisible(false)}>
             <Dropdown overlay={renderMenu()} visible={menuVisible}>
               <Icon component={EllipsisSvg} onClick={(e) => e.preventDefault()} />
             </Dropdown>
           </a>
-        </React.Fragment>
+        </div>
       ) : (
         <Text className="jdn__xpath_item">{renderColorizedString()}</Text>
       )}

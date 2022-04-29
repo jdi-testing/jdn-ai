@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Icon from "@ant-design/icons";
-import { Collapse, Dropdown, Menu, Typography } from "antd";
+import { Collapse, Dropdown, Menu, Typography, Button, Tooltip } from "antd";
 import { size } from "lodash";
 
 import { PageObjListHeader } from "./PageObjListHeader";
@@ -13,14 +13,16 @@ import TrashBinSvg from "../../assets/trash-bin.svg";
 import DownloadSvg from "../../assets/download.svg";
 import PencilSvg from "../../assets/pencil.svg";
 import EditTextSvg from "../../assets/edit-text.svg";
+import CopySvg from "../../assets/copy.svg";
 import { selectConfirmedLocators, selectPageObjects } from "../../store/selectors/pageObjectSelectors";
 import { Locator } from "../Locators/Locator";
 import { GenerationButtons } from "./GenerationButtons";
 import { PageObjectPlaceholder } from "./PageObjectPlaceholder";
-import { removePageObject } from "../../store/slices/pageObjectSlice";
+import { removePageObject, setCurrentPageObj } from "../../store/slices/pageObjectSlice";
 import { removeLocators } from "../../store/slices/locatorsSlice";
-import { generatePageObject } from "../../services/pageObject";
-import { pageType } from "../../utils/constants";
+import { generatePageObject, getLocator } from "../../services/pageObject";
+import { pageType, copyTitle } from "../../utils/constants";
+import { copyToClipboard } from "../../utils/helpers";
 import { changePage } from "../../store/slices/mainSlice";
 
 export const PageObjList = () => {
@@ -29,7 +31,25 @@ export const PageObjList = () => {
   const currentPageObject = useSelector((state) => state.pageObject.currentPageObject);
   const pageObjects = useSelector(selectPageObjects);
   const [activePanel, setActivePanel] = useState([]);
-  const [menuVisible, setMenuVisible] = useState(false);
+  const [menuVisible, setMenuVisible] = useState(new Map());
+  const [copyTooltipTitle, setTooltipTitle] = useState(copyTitle.Copy);
+
+  const getPageObjectForCopying = (locators) => {
+    return locators.map((loc) => `@UI("${getLocator(loc.locator)}")\npublic ${loc.type} ${loc.name};`).join("\n\n");
+  };
+
+  const handleCopy = (e, elements) => {
+    e.stopPropagation();
+
+    const pageObject = getPageObjectForCopying(elements);
+    copyToClipboard(pageObject);
+
+    setTooltipTitle(copyTitle.Copied);
+  };
+
+  const handleMouseEnter = () => {
+    if (copyTooltipTitle === copyTitle.Copied) setTooltipTitle(copyTitle.Copy);
+  };
 
   useEffect(() => {
     setActivePanel([currentPageObject]);
@@ -58,6 +78,12 @@ export const PageObjList = () => {
     } else {
       return renderPageObjSettings(pageObjId, url);
     }
+  };
+
+  const handleMenuClick = (e, id) => {
+    e.stopPropagation();
+    setMenuVisible(new Map(menuVisible.set(id, true)));
+    dispatch(setCurrentPageObj(id));
   };
 
   const handleRename = (id, name) => {
@@ -115,6 +141,7 @@ export const PageObjList = () => {
           >
             {pageObjects.map(({ id, name, url, locators }) => {
               const elements = selectConfirmedLocators(state, id);
+              const isPageObjectNotEmpty = !!size(elements);
               return (
                 <Collapse.Panel
                   key={id}
@@ -125,18 +152,27 @@ export const PageObjList = () => {
                     </React.Fragment>
                   }
                   extra={
-                    <a
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setMenuVisible(true);
-                      }}
-                      onMouseLeave={() => setMenuVisible(false)}
-                      data-testid="dropdown-button"
-                    >
-                      <Dropdown visible={menuVisible} overlay={renderMenu(id, locators, elements, name)}>
-                        <Icon component={EllipsisSvg} />
-                      </Dropdown>
-                    </a>
+                    <>
+                      {isPageObjectNotEmpty &&
+                        <Tooltip placement="bottom" title={copyTooltipTitle}>
+                          <Button
+                            type="text"
+                            icon={<Icon component={CopySvg} />}
+                            onMouseEnter={handleMouseEnter}
+                            onClick={(e)=>handleCopy(e, elements)}
+                          />
+                        </Tooltip>
+                      }
+                      <a
+                        onClick={(e) => handleMenuClick(e, id)}
+                        onMouseLeave={() => setMenuVisible(new Map(menuVisible.set(id, false)))}
+                        data-testid="dropdown-button"
+                      >
+                        <Dropdown visible={menuVisible.get(id)} overlay={renderMenu(id, locators, elements, name)}>
+                          <Icon component={EllipsisSvg} />
+                        </Dropdown>
+                      </a>
+                    </>
                   }
                 >
                   {renderContent(id, url, elements)}

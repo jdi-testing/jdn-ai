@@ -24,7 +24,7 @@ import { selectCurrentPage } from "../../store/selectors/mainSelectors";
 import { pageType } from "../../utils/constants";
 import { locatorGenerationController } from "../../services/locatorGenerationController";
 import { clearLocators } from "../../store/slices/pageObjectSlice";
-import { changePageBack, setScriptMessage, toggleBackdrop } from "../../store/slices/mainSlice";
+import { changePageBack, setScriptMessage, toggleBackdrop, resetNotifications } from "../../store/slices/mainSlice";
 import { removeLocators, restoreLocators } from "../../store/slices/locatorsSlice";
 
 export const LocatorsPage = ({ alreadyGenerated }) => {
@@ -76,6 +76,7 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
         } else {
           dispatch(restoreLocators(locatorsSnapshot));
         }
+        dispatch(resetNotifications());
         pageBack();
         break;
       case "CONFIRM_SAVE_CHANGES":
