@@ -7,16 +7,14 @@ import { BUILD, request } from "../services/backend";
 import { reportProblem } from "../services/pageDataHandlers";
 
 import kebab_menu from "../assets/Kebab_menu.svg";
-import { selectLocators } from "../store/selectors/locatorSelectors";
-import { size } from "lodash";
-import { readmeLinkAddress } from "../utils/constants";
+import { pageType, readmeLinkAddress } from "../utils/constants";
+import { selectCurrentPage } from "../store/selectors/mainSelectors";
 
 export const ControlBar = () => {
   const [backendVer, setBackendVer] = useState("");
   const [pluginVer, setPluginVer] = useState("");
 
-  const predictedElements = useSelector(selectLocators);
-  const allowRemoveElements = size(predictedElements);
+  const currentPage = useSelector(selectCurrentPage).page;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,12 +29,12 @@ export const ControlBar = () => {
   }, []);
 
   const handleReportProblem = () => {
-    reportProblem(predictedElements);
+    reportProblem();
   };
 
   const kebabMenu = (
     <Menu>
-      <Menu.Item key="0" hidden={!allowRemoveElements} onClick={handleReportProblem}>
+      <Menu.Item key="0" hidden={currentPage === pageType.locatorsList} onClick={handleReportProblem}>
         Report a problem
       </Menu.Item>
       <Menu.Item key="1">
@@ -58,8 +56,13 @@ export const ControlBar = () => {
           <span className="jdn__header-text">Back-end v {backendVer}</span>
         </Space>
       </div>
-      <Space size={[30, 0]} className="header__space" >
-        <a className="jdn__header-link" href="#" hidden={!allowRemoveElements} onClick={handleReportProblem}>
+      <Space size={[30, 0]} className="header__space">
+        <a
+          className="jdn__header-link"
+          href="#"
+          hidden={currentPage === pageType.pageObject}
+          onClick={handleReportProblem}
+        >
           Report a problem
         </a>
         <a className="jdn__header-link" href={readmeLinkAddress} target="_blank" rel="noreferrer">

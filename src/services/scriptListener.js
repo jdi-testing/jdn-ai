@@ -8,7 +8,7 @@ import {
 } from "../store/slices/locatorsSlice";
 import { connector, sendMessage } from "./connector";
 import { getTypesMenuOptions } from "../utils/generationClassesMap";
-import { showOverlay } from "./pageDataHandlers";
+import { pageData, sendProblemReport, showOverlay } from "./pageDataHandlers";
 import { selectLocatorById, selectLocators } from "../store/selectors/locatorSelectors";
 import { stopGeneration } from "../store/thunks/stopGeneration";
 import { rerunGeneration } from "../store/thunks/rerunGeneration";
@@ -86,12 +86,14 @@ export const createListeners = (dispatch, state) => {
         types: getTypesMenuOptions(),
       });
     },
+    GET_PAGE_DATA_JSON: (payload, sender, sendResponse) => sendResponse(pageData),
     HIGHLIGHT_OFF: () => {
       dispatch(clearAll());
     },
     IS_OPEN_MODAL: (payload) => dispatch(toggleBackdrop(payload)),
     PREDICTION_IS_UNACTUAL: () => dispatch(setUnactualPrediction(true)),
     REMOVE_ELEMENT: (payload) => dispatch(toggleDeleted(payload)),
+    SEND_PROBLEM_REPORT: (payload) => sendProblemReport(payload),
     RERUN_GENERATION: (payload) => dispatch(rerunGeneration([selectLocatorById(state, payload)])),
     START_COLLECT_DATA: showOverlay,
     STOP_GENERATION: (payload) => dispatch(stopGeneration(payload)),

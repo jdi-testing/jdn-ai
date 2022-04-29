@@ -3,13 +3,14 @@ import { getGenerationAttributes } from "./../contentScripts/generationData";
 import { getPageData } from "./../contentScripts/pageData";
 import { createLocatorNames } from "./pageObject";
 import { reportPopup } from "../contentScripts/popups";
-import { request } from "../services/backend";
+import { REPORT_PROBLEM, request } from "../services/backend";
 import { confirmPopup } from "../contentScripts/popups/confirmPopup";
 import { createOverlay } from "../contentScripts/createOverlay";
 /* global chrome*/
 
 let overlayID;
 let pageAccessTimeout;
+export let pageData;
 
 export const showOverlay = () => {
   connector.attachContentScript(createOverlay).then((data) => {
@@ -32,7 +33,7 @@ export const removeOverlay = () => {
   }
 };
 
-const uploadElements = async ([{ result }], enpoint) => {
+const uploadElements = async (result, enpoint) => {
   const payload = result[0];
   const r = await request.post(
       enpoint,
@@ -48,7 +49,11 @@ export const getElements = (endpoint) => {
   }, 5000);
 
   return connector.attachContentScript(getPageData)
-      .then((data) => uploadElements(data, endpoint))
+      .then((data) => {
+        const {result} = data[0];
+        pageData = result[0];
+        return uploadElements(result, endpoint);
+      })
       .then((data) => {
         removeOverlay();
         return data;
@@ -76,10 +81,12 @@ export const requestGenerationData = async (elements) => {
   return { generationData };
 };
 
-// export const confirmPageObject
+export const sendProblemReport = (payload) => {
+  request.post(REPORT_PROBLEM, JSON.stringify(payload));
+};
 
-export const reportProblem = (predictedElements) => {
-  chrome.storage.sync.set({ predictedElements }, connector.attachContentScript(reportPopup));
+export const reportProblem = () => {
+  connector.attachContentScript(reportPopup);
 };
 
 export const openConfirmBackPopup = (enableSave) => {
