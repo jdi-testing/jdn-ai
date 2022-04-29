@@ -10,6 +10,7 @@ import { createOverlay } from "../contentScripts/createOverlay";
 
 let overlayID;
 let pageAccessTimeout;
+export let pageData;
 
 export const showOverlay = () => {
   connector.attachContentScript(createOverlay).then((data) => {
@@ -32,7 +33,7 @@ export const removeOverlay = () => {
   }
 };
 
-const uploadElements = async ([{ result }], enpoint) => {
+const uploadElements = async (result, enpoint) => {
   const payload = result[0];
   const r = await request.post(
       enpoint,
@@ -48,7 +49,11 @@ export const getElements = (endpoint) => {
   }, 5000);
 
   return connector.attachContentScript(getPageData)
-      .then((data) => uploadElements(data, endpoint))
+      .then((data) => {
+        const {result} = data[0];
+        pageData = result[0];
+        return uploadElements(result, endpoint);
+      })
       .then((data) => {
         removeOverlay();
         return data;
@@ -81,7 +86,7 @@ export const sendProblemReport = (payload) => {
 };
 
 export const reportProblem = () => {
-  connector.attachContentScript(reportPopup);
+  chrome.storage.sync.set({PAGE_DATA: "pageData"}, connector.attachContentScript(reportPopup));
 };
 
 export const openConfirmBackPopup = (enableSave) => {

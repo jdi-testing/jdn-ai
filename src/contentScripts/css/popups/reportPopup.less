@@ -1,7 +1,47 @@
 #jdn-popup-wrapper .jdn-report-popup {
+  width: 450px;
+
   input,
   textarea,
   select {
-    width: 288px;
+    width: 328px;
+  }
+
+  .jdn-input-message {
+    margin-left: 20px;
+  }
+
+  .jdn-popup__attachment {
+    background-color: #141414;
+    position: relative;
+    margin-top: 8px;
+    display: block;
+    text-decoration-line: none;
+
+    &:hover {
+      background-color: #1F1F1F;
+      color: #fff; 
+    }
+
+    div {
+      margin: 0 15px;
+    }
+
+    &-icon {
+      top: 7px;
+      position: absolute;
+
+      &-left {
+        left: 8px;
+      }
+  
+      &-right {
+        right: 8px;
+      }
+    }
+  }
+
+  .jdn-popup__button-container {
+    margin-top: 24px;
   }
 }
