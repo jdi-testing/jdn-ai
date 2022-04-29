@@ -86,7 +86,7 @@ export const sendProblemReport = (payload) => {
 };
 
 export const reportProblem = () => {
-  chrome.storage.sync.set({PAGE_DATA: "pageData"}, connector.attachContentScript(reportPopup));
+  connector.attachContentScript(reportPopup);
 };
 
 export const openConfirmBackPopup = (enableSave) => {
