@@ -85,6 +85,23 @@
   }
 }
 
+.jdn-secondary {
+  border: 1px solid rgba(216, 161, 21, 1);
+  background-color: rgba(216, 161, 21, 0.2);
+
+  &.cm--selected {
+    border: 2px solid #f18b14;
+    background-color: rgba(241, 139, 20, 0.2);
+
+    .jdn-label {
+      background-color: #f18b14;
+    }
+  }
+
+  .jdn-label {
+    background-color: rgba(216, 161, 21, 1);
+  }
+}
 
 [jdn-status="PENDING"],
 [jdn-status="STARTED"] {
@@ -110,45 +127,17 @@
 }
 
 [jdn-status="FAILURE"] {
-  border: 1px solid rgba(216, 44, 21, 1);
-  background-color: rgba(216, 44, 21, 0.2);
+  &.jdn-primary,
+  &.jdn-secondary {
+    border: 1px solid rgba(216, 44, 21, 1);
+    background-color: rgba(216, 44, 21, 0.2);
 
-  .jdn-label {
-    background-color: rgba(216, 44, 21, 1);
-  }
-}
-
-.jdn-secondary {
-  border: 1px solid rgba(216, 161, 21, 1);
-  background-color: rgba(216, 161, 21, 0.2);
-
-  &.cm--selected {
-    border: 2px solid #f18b14;
-    background-color: rgba(241, 139, 20, 0.2);
+    &.cm--selected {
+      border-width: 2px;
+    }
 
     .jdn-label {
-      background-color: #f18b14;
+      background-color: rgba(216, 44, 21, 1);
     }
-  }
-
-  .jdn-label {
-    background-color: rgba(216, 161, 21, 1);
-  }
-}
-
-.jdn-indeterminate {
-  position: relative;
-
-  &::after {
-    position: absolute;
-    top: 6px;
-    left: 6px;
-    width: 5px;
-    height: 5px;
-    background-color: #1582d8;
-    border: 0;
-    transform: translate(-50%, -50%) scale(1);
-    opacity: 1;
-    content: " ";
   }
 }
