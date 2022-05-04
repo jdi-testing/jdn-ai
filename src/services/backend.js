@@ -1,15 +1,12 @@
+// http enpoints
 export const BUILD = 'build';
-export const PREDICT = 'predict';
 export const MUI_PREDICT = 'mui-predict';
 export const HTML5_PREDICT = 'html5-predict';
-export const GENERATE_XPATH = 'generate_xpath';
-export const SHEDULE_XPATH_GENERATION = 'schedule_xpath_generation';
-export const GET_TASK_STATUS = 'get_task_status';
-export const REVOKE_TASK = 'revoke_task';
-export const REVOKE_TASKS= 'revoke_tasks';
-export const GET_TASK_RESULT = 'get_task_result';
-export const CPU_COUNT = 'cpu-count';
 export const REPORT_PROBLEM = 'report_problem';
+
+// endpoints also used as ws actions
+export const SHEDULE_XPATH_GENERATION = 'schedule_xpath_generation';
+export const REVOKE_TASKS = 'revoke_tasks';
 
 export const BASE_URL = 'http:localhost:5050';
 
