@@ -6,7 +6,6 @@ import {
   selectGeneratedLocators,
   selectLocators,
   selectLocatorsByProbability,
-  selectPendingLocators,
 } from "./locatorSelectors";
 
 export const pageObjAdapter = createEntityAdapter({
@@ -94,16 +93,6 @@ export const selectLocatorByJdnHash = createSelector(
     (state, jdnHash) => selectLocators(state).filter((loc) => loc.jdnHash === jdnHash),
     (state) => selectPageObjById(state, state.pageObject.currentPageObject).locators,
     (locators, pageObjLocators) => locators.find(({ element_id }) => pageObjLocators.includes(element_id))
-);
-
-export const selectPendingLocatorsByPageObj = createSelector(
-    selectPendingLocators,
-    (state) => selectPageObjById(state, state.pageObject.currentPageObject).locators,
-    (locators, pageObjLocators) =>
-      chain(locators)
-          .filter(({ element_id }) => pageObjLocators.includes(element_id))
-          .sortBy("order")
-          .value()
 );
 
 export const selectEmptyPageObjects = createSelector(
