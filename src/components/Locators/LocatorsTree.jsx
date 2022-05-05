@@ -11,26 +11,24 @@ const { TreeNode } = Tree;
 
 export const LocatorsTree = () => {
   const renderTreeNodes = (data) => {
-    return data.map((element) => {
-        return (
-          <TreeNode
-            key={element.key}
-            title={
-              <Locator
-                key={element.element_id}
-                {...{ element }}
-              />}
-          >
-            {size(element.children) ? renderTreeNodes(element.children) : null}
-          </TreeNode>
-        );
-    });
+    return data.map((element) => 
+      <TreeNode
+        key={element.key}
+        title={
+          <Locator
+            key={element.element_id}
+            {...{ element }}
+          />}
+      >
+        {size(element.children) ? renderTreeNodes(element.children) : null}
+      </TreeNode>
+    );
   };
 
   return (
     <div className="jdn__locatorsList">
       <div className="jdn__locatorsList-content">
-        <Tree switcherIcon={<DownOutlined />} defaultExpandAll> 
+        <Tree switcherIcon={<DownOutlined />} defaultExpandAll>
           {renderTreeNodes(generatedLocatorsTreeMock)}
         </Tree>
       </div>
