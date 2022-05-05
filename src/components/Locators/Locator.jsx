@@ -140,7 +140,7 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
       );
     } else {
       return (
-        <Menu>
+        <Menu disabled>
           <Menu.Item key="1" icon={<PencilSvg />} onClick={handleEditClick}>
             Edit
           </Menu.Item>

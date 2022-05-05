@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button, Tooltip } from "antd";
 import Icon from "@ant-design/icons";
 
-import { LocatorsList } from "./LocatorsList";
+import { LocatorsTree } from "./LocatorsTree";
 import { PerceptionTreshold } from "../PerceptionTreshold/PerceptionTreshold";
 import {
   showOverlay,
@@ -123,7 +123,7 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
 
   return (
     <React.Fragment>
-      <LocatorsList pageObject={currentPageObject} />
+      <LocatorsTree />
       <PerceptionTreshold />
       <div className="jdn__navigation">
         {renderBackButton()}
