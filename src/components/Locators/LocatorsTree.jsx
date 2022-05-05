@@ -11,7 +11,7 @@ const { TreeNode } = Tree;
 
 export const LocatorsTree = () => {
   const renderTreeNodes = (data) => {
-    return data.map((element) => 
+    return data.map((element) =>
       <TreeNode
         key={element.key}
         title={
