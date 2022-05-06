@@ -9,6 +9,7 @@ import { Locator } from "./Locator";
 import { LocatorListHeader } from "./LocatorListHeader";
 import { Notifications } from "./Notifications";
 import { reorderLocators, toggleElementGroupGeneration } from "../../store/slices/locatorsSlice";
+import { locatorsGenerationStatus } from "../../utils/constants";
 
 import CaretDownSvg from "../../assets/caret-down.svg";
 import CheckedkSvg from "../../assets/checked-outlined.svg";
@@ -32,7 +33,7 @@ export const LocatorsList = ({ pageObject: currentPageObject }) => {
 
   const currentPage = useSelector(selectCurrentPage).page;
   const xpathConfig = useSelector((state) => state.main.xpathConfig);
-  const xpathStatus = useSelector((state) => state.main.xpathStatus);
+  const locatorsStatus = useSelector((state) => state.main.locatorsStatus);
   const [activePanel, setActivePanel] = useState("1");
   const [isProgressActive, setIsProgressActive] = useState(false);
 
@@ -217,7 +218,7 @@ export const LocatorsList = ({ pageObject: currentPageObject }) => {
               style={{ display: isProgressActive ? "none" : "flex" }}
             />
             <p className="jdn__locatorsList-progress-text" style={{ display: isProgressActive ? "none" : "flex" }}>
-              {size(waiting) ? xpathStatus : `Locators generation is successfully completed`}
+              {size(waiting) ? locatorsStatus : locatorsGenerationStatus.complete}
             </p>
           </div>
         </div>

@@ -9,10 +9,10 @@ export const identificationStatus = {
   blocked: "Script is blocked. Close all popups",
 };
 
-export const xpathGenerationStatus = {
+export const locatorsGenerationStatus = {
   noStatus: "",
-  started: "XPath generation is running in background...",
-  complete: "XPathes generation is successfully completed",
+  started: "Locators generation is running in background...",
+  complete: "Locators generation is successfully completed",
 };
 
 export const locatorProgressStatus = {
