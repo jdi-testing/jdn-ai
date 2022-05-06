@@ -24,7 +24,7 @@ export const convertListToTree = (list) => {
   for (let i = 0; i < list.length; i++) {
     const node = list[i];
     if (node.parent_id !== "") {
-      list[map[node.parent_id]]?.children.push(node);
+      list[map[node.parent_id]].children.push(node);
     } else {
       tree.push(node);
     }
