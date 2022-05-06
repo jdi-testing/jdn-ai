@@ -47,8 +47,10 @@ export const highlightOnPage = () => {
     } = element.getBoundingClientRect();
 
     return (
-      (elementTop > containerBottom || elementBottom < containerTop) ||
-      (elementLeft > containerRight || elementRight < containerLeft)
+      elementTop > containerBottom ||
+      elementBottom < containerTop ||
+      elementLeft > containerRight ||
+      elementRight < containerLeft
     );
   };
 
@@ -72,11 +74,11 @@ export const highlightOnPage = () => {
     const div = updateElement(element);
     if (div) {
       div.className = getClassName(element);
-      if (!skipScroll) {
-        const originDiv = document.querySelector(`[jdn-hash='${element.jdnHash}']`);
-        if (!isInViewport(originDiv) && element.generate) {
-          originDiv.scrollIntoView({ behavior: "smooth" });
-        }
+    }
+    if (!skipScroll) {
+      const originDiv = document.querySelector(`[jdn-hash='${element.jdnHash}']`);
+      if ((!isInViewport(originDiv) || isHiddenByOverflow(originDiv)) && element.generate) {
+        originDiv.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
       }
     }
   };
@@ -204,10 +206,10 @@ export const highlightOnPage = () => {
   const clearContainer = (container) => {
     nodes.forEach((node) => {
       if (container.contains(node)) {
-        const jdnHash = node.getAttribute('jdn-hash');
+        const jdnHash = node.getAttribute("jdn-hash");
         const div = document.getElementById(jdnHash);
         if (div) div.remove();
-      };
+      }
     });
   };
 
@@ -309,6 +311,7 @@ export const highlightOnPage = () => {
 
   const messageHandler = ({ message, param }, sender, sendResponse) => {
     if (message === "SET_HIGHLIGHT") {
+      console.log(param);
       if (!listenersAreSet) setDocumentListeners();
       if (!scrollableContainers.length) detectScrollableContainers();
       findAndHighlight(param);
