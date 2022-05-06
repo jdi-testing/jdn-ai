@@ -9,7 +9,6 @@ const initialState = {
   perception: 0.5,
   scriptMessage: null,
   showBackdrop: false,
-  unactualPrediction: false,
   xpathStatus: xpathGenerationStatus.noStatus,
   xpathConfig: {
     maximum_generation_time: 10,
@@ -53,9 +52,6 @@ const mainSlice = createSlice({
     setScriptMessage(state, { payload }) {
       state.scriptMessage = payload;
     },
-    setUnactualPrediction(state, { payload }) {
-      state.unactualPrediction = payload;
-    },
     toggleBackdrop(state, { payload }) {
       state.showBackdrop = payload;
     },
@@ -75,7 +71,6 @@ export const {
   handleLastNotification,
   pushNotification,
   setScriptMessage,
-  setUnactualPrediction,
   toggleBackdrop,
   xPathGenerationStarted,
   resetNotifications,

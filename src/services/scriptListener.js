@@ -14,7 +14,7 @@ import { stopGeneration } from "../store/thunks/stopGeneration";
 import { rerunGeneration } from "../store/thunks/rerunGeneration";
 import { isNameUnique, isPONameUnique, isStringMatchesReservedWord } from "./pageObject";
 import { VALIDATION_ERROR_TYPE } from "../utils/constants";
-import { clearAll, setScriptMessage, setUnactualPrediction, toggleBackdrop } from "../store/slices/mainSlice";
+import { clearAll, setScriptMessage, toggleBackdrop } from "../store/slices/mainSlice";
 import { changeName as changePageObjectName, removeAll as removeAllPageObjects } from "../store/slices/pageObjectSlice";
 import { selectLocatorByJdnHash, selectPageObjects } from "../store/selectors/pageObjectSelectors";
 
@@ -91,7 +91,6 @@ export const createListeners = (dispatch, state) => {
       dispatch(clearAll());
     },
     IS_OPEN_MODAL: (payload) => dispatch(toggleBackdrop(payload)),
-    PREDICTION_IS_UNACTUAL: () => dispatch(setUnactualPrediction(true)),
     REMOVE_ELEMENT: (payload) => dispatch(toggleDeleted(payload)),
     SEND_PROBLEM_REPORT: (payload) => sendProblemReport(payload),
     RERUN_GENERATION: (payload) => dispatch(rerunGeneration([selectLocatorById(state, payload)])),
