@@ -57,8 +57,11 @@
     background: @notification-background;
 
     &-close {
-      top: 4px;
+      top: 0;
+      height: 100%;
       color: #ffffff;
+      display: flex;
+      align-items: center;
 
       &:hover {
         color: rgb(255, 255, 255, 0.7);
@@ -77,8 +80,9 @@
     &-btn {
       position: absolute;
       margin-top: 0;
-      top: 2px;
+      top: 0;
       right: 40px;
+      height: 100%;
       background: transparent;
     }
   }
