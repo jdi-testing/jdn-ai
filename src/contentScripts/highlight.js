@@ -246,7 +246,6 @@ export const highlightOnPage = () => {
     if (timer) clearTimeout(timer);
     timer = setTimeout(() => {
       if (scrollableContainers.includes(target)) {
-        console.log(target);
         clearContainer(target);
       }
       findAndHighlight();
@@ -304,14 +303,12 @@ export const highlightOnPage = () => {
     nodes.forEach((node) => {
       if ((hasVerticalScroll(node) || hasHorizontalScroll(node)) && !isRootNode(node)) {
         scrollableContainers.push(node);
-        console.log(scrollableContainers);
       }
     });
   };
 
   const messageHandler = ({ message, param }, sender, sendResponse) => {
     if (message === "SET_HIGHLIGHT") {
-      console.log(param);
       if (!listenersAreSet) setDocumentListeners();
       if (!scrollableContainers.length) detectScrollableContainers();
       findAndHighlight(param);
