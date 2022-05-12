@@ -11,7 +11,7 @@ import { isProgressStatus } from "../../services/locatorGenerationController";
 import { locatorTaskStatus, VALIDATION_ERROR_TYPE, pageType, copyTitle } from "../../utils/constants";
 import { rerunGeneration } from "../../store/thunks/rerunGeneration";
 import { stopGeneration } from "../../store/thunks/stopGeneration";
-import { toggleDeleted, toggleElementGeneration } from "../../store/slices/locatorsSlice";
+import { toggleDeleted } from "../../store/slices/locatorsSlice";
 
 import CheckedEdited from "../../assets/checked-edited.svg";
 import ClockSvg from "../../assets/clock-outlined.svg";
@@ -51,9 +51,9 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
 
   const isLocatorInProgress = isProgressStatus(locator.taskStatus);
 
-  const handleOnChange = () => {
-    dispatch(toggleElementGeneration(element_id));
-  };
+  // const handleOnChange = () => {
+  //   dispatch(toggleElementGeneration(element_id));
+  // };
 
   useEffect(() => {
     if (generate && !noScrolling) {
@@ -176,7 +176,7 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
     >
       {currentPage === pageType.locatorsList ? (
         <div className="jdn__xpath_locators">
-          <Checkbox checked={generate} onChange={handleOnChange}></Checkbox>
+          {/* <Checkbox checked={generate} onChange={handleOnChange}></Checkbox> */}
           <Text className="jdn__xpath_item">
             <div>
               {renderIcon()}
