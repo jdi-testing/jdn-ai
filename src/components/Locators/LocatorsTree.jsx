@@ -22,7 +22,7 @@ export const LocatorsTree = () => {
   const locatorsTree = convertListToTree(locatorsListMock);
 
   const onCheck = (checkedKeysValue) => {
-    console.log('checkedKeysValue', checkedKeysValue);
+    // console.log('checkedKeysValue', checkedKeysValue);
     setCheckedKeys(checkedKeysValue);
     // dispatch(toggleElementGroupGeneration(checkedKeysValue));
   };

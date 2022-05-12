@@ -14,7 +14,6 @@ import { stopGeneration } from "../../store/thunks/stopGeneration";
 import { toggleDeleted } from "../../store/slices/locatorsSlice";
 
 import CheckedEdited from "../../assets/checked-edited.svg";
-import ClockSvg from "../../assets/clock-outlined.svg";
 import EllipsisSvg from "../../assets/ellipsis.svg";
 import PauseOutlinedSvg from "../../assets/pause-outlined.svg";
 import PauseSvg from "../../assets/pause.svg";
@@ -71,7 +70,6 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
 
   const renderIcon = () => {
     const startedIcon = <Spin size="small" />;
-    const pendingIcon = <Icon component={ClockSvg} className="jdn__locatorsList-status" />;
     const revokedIcon = <Icon component={PauseOutlinedSvg} className="jdn__locatorsList-status" />;
     const failureIcon = <Icon component={WarningSvg} className="jdn__locatorsList-status" />;
 
@@ -95,9 +93,8 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
         }
       }
       case locatorTaskStatus.STARTED:
-        return startedIcon;
       case locatorTaskStatus.PENDING:
-        return pendingIcon;
+        return startedIcon;
       case locatorTaskStatus.REVOKED:
         return revokedIcon;
       case locatorTaskStatus.FAILURE:
