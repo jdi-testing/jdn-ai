@@ -5,7 +5,8 @@ export const locatorsTreeMock = [
     height: 0,
     jdnHash: "7967190244322359771369749968",
     locator: {
-      fullXpath: "/html/body/header/div/nav/ul[1]"
+      fullXpath: "/html/body/header/div/nav/ul[1]",
+      taskStatus: "SUCCESS"
     },
     name: "radiobuttonsUl",
     order: 0,
@@ -25,7 +26,8 @@ export const locatorsTreeMock = [
         height: 60,
         jdnHash: "3969471880322359761484771163",
         locator: {
-          fullXpath: "/html/body/header/div/nav/div[2]"
+          fullXpath: "/html/body/header/div/nav/div[2]",
+          taskStatus: "SUCCESS"
         },
         name: "buttonDiv",
         order: 1,
@@ -45,7 +47,8 @@ export const locatorsTreeMock = [
             height: 60,
             jdnHash: "0045220328322359764482356698",
             locator: {
-              fullXpath: "/html/body/header/div/nav/ul[1]/li[3]/a"
+              fullXpath: "/html/body/header/div/nav/ul[1]/li[3]/a",
+              taskStatus: "FAILURE"
             },
             name: "textarea",
             order: 2,
@@ -66,7 +69,8 @@ export const locatorsTreeMock = [
             height: 15.5,
             jdnHash: "6771529534322359778589411351",
             locator: {
-              fullXpath: "/html/body/footer/div/div/ul"
+              fullXpath: "/html/body/footer/div/div/ul",
+              taskStatus: "STARTED"
             },
             name: "listsUl",
             order: 3,
@@ -89,7 +93,8 @@ export const locatorsTreeMock = [
         height: 20.5,
         jdnHash: "4899732051322359779677566872",
         locator: {
-          fullXpath: "/html/body/header/div/nav/ul[2]/li/a"
+          fullXpath: "/html/body/header/div/nav/ul[2]/li/a",
+          taskStatus: "PENDING"
         },
         name: "link",
         order: 4,
@@ -109,7 +114,8 @@ export const locatorsTreeMock = [
             height: 0,
             jdnHash: "4829071593322359778594168519",
             locator: {
-              fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[3]/ul/li[3]"
+              fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[3]/ul/li[3]",
+              taskStatus: "PENDING"
             },
             name: "breadcrumbsLi",
             order: 5,
@@ -129,7 +135,8 @@ export const locatorsTreeMock = [
                 height: 0,
                 jdnHash: "9636042053322359773245578788",
                 locator: {
-                  fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[5]/ul/li[5]"
+                  fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[5]/ul/li[5]",
+                  taskStatus: "PENDING"
                 },
                 name: "breadcrumbsLi6",
                 order: 6,
@@ -150,7 +157,8 @@ export const locatorsTreeMock = [
                 height: 0,
                 jdnHash: "8381553594322359777170267551",
                 locator: {
-                  fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[3]/ul"
+                  fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[3]/ul",
+                  taskStatus: "PENDING"
                 },
                 name: "breadcrumbsUl",
                 order: 7,
