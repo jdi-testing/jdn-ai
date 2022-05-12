@@ -5,11 +5,11 @@ export const editLocatorPopup = () => {
 
   const ERROR_TYPE = {
     DUPLICATED_NAME: "DUPLICATED_NAME",
-    DUPLICATED_LOCATOR: "DUPLICATED_LOCATOR", // warn
+    DUPLICATED_LOCATOR: "DUPLICATED_LOCATOR", // error
     EMPTY_VALUE: "EMPTY_VALUE",
     INVALID_NAME: "INVALID_NAME",
     MULTIPLE_ELEMENTS: "MULTIPLE_ELEMENTS", // warn
-    NEW_ELEMENT: "NEW_ELEMENT", // success
+    NEW_ELEMENT: "NEW_ELEMENT", // error
     NOT_FOUND: "NOT_FOUND", // warn
   };
 
@@ -19,22 +19,19 @@ export const editLocatorPopup = () => {
     [ERROR_TYPE.EMPTY_VALUE]: "Please fill out this field.",
     [ERROR_TYPE.INVALID_NAME]: "This name is not valid.",
     [ERROR_TYPE.MULTIPLE_ELEMENTS]: "elements were found with this locator",
-    [ERROR_TYPE.NEW_ELEMENT]: `The locator leads to the new element. If you click Save,
-    the other element will be highlighted on the page.`,
+    [ERROR_TYPE.NEW_ELEMENT]: `The locator leads to the new element.`,
     [ERROR_TYPE.NOT_FOUND]: "The locator was not found on the page.",
   };
 
-  const getNewElementLocation = (element_id) => {
-    const div = document.querySelector(`[jdn-hash='${element_id}']`);
-    const { x, y, width, height } = div.getBoundingClientRect();
-    return {
-      element_id,
-      x,
-      y,
-      width,
-      height,
-    };
+  const VALIDATION_CLASS = {
+    ERROR: "jdn-input-error",
+    WARNING: "jdn-input-warning",
   };
+
+  const WARNING_TYPES = [ERROR_TYPE.MULTIPLE_ELEMENTS, ERROR_TYPE.NOT_FOUND];
+
+  const getValidationClass = (errorType) =>
+    WARNING_TYPES.includes(errorType) ? VALIDATION_CLASS.WARNING : VALIDATION_CLASS.ERROR;
 
   const removePopup = () => {
     chrome.runtime.sendMessage({
@@ -49,13 +46,8 @@ export const editLocatorPopup = () => {
     const { type, name, locator, element_id, jdnHash } = locatorElement;
     currentElement = element_id;
 
-    let newElementId;
-
     const onFormSubmit = ({ target }) => {
       const { type, name, locator } = target;
-
-      const newElement =
-        inputLocator.validationMessage === ERROR_TYPE.NEW_ELEMENT ? getNewElementLocation(newElementId) : null;
 
       chrome.runtime.sendMessage({
         message: "UPDATE_LOCATOR",
@@ -67,7 +59,6 @@ export const editLocatorPopup = () => {
           validity: {
             locator: inputLocator.validationMessage,
           },
-          newElement,
         },
       });
       removePopup();
@@ -106,19 +97,15 @@ export const editLocatorPopup = () => {
         const foundElement = nodesSnapshot.snapshotItem(0);
         const foundId = foundElement.getAttribute("jdn-hash");
         if (foundId !== jdnHash) {
-          newElement = { element_id: foundId };
           return new Promise((resolve) => {
             chrome.runtime.sendMessage(
                 {
                   message: "CHECK_LOCATOR_VALIDITY",
-                  param: { newElementId: foundId },
+                  param: { foundId },
                 },
                 (response) => {
                   if (response.length) resolve(response);
-                  else {
-                    newElementId = foundId;
-                    resolve(ERROR_TYPE.NEW_ELEMENT);
-                  }
+                  else resolve(ERROR_TYPE.NEW_ELEMENT);
                 }
             );
           });
@@ -126,7 +113,7 @@ export const editLocatorPopup = () => {
       } else return "";
     };
 
-    const addValidation = (input, invalidInputClass, messageContainer, getErrorMessage) => {
+    const addValidation = (input, messageContainer, getErrorMessage) => {
       const checkInput = async (targetInput) => {
         if (targetInput.validity.valueMissing) {
           targetInput.setCustomValidity(ERROR_TYPE.EMPTY_VALUE);
@@ -140,13 +127,18 @@ export const editLocatorPopup = () => {
 
         // format input
         if (!targetInput.validity.valid) {
-          targetInput.classList.add(invalidInputClass);
+          targetInput.classList.add(getValidationClass(targetInput.validationMessage));
         } else {
-          targetInput.classList.remove(invalidInputClass);
+          targetInput.classList.remove(VALIDATION_CLASS.ERROR);
+          targetInput.classList.remove(VALIDATION_CLASS.WARNING);
         }
 
         // format Save button
-        if (inputName.validity.valid) {
+        if (
+          inputName.validity.valid &&
+          (inputLocator.validity.valid ||
+          WARNING_TYPES.includes(inputLocator.validationMessage)) // disable Save button only for errors
+        ) {
           buttonOk.classList.replace("jdn-popup__button_disabled", "jdn-popup__button_primary");
           buttonOk.removeAttribute("disabled");
         } else {
@@ -154,6 +146,8 @@ export const editLocatorPopup = () => {
           buttonOk.setAttribute("disabled", true);
         }
       };
+
+      checkInput(input);
 
       // here the validity check is runned
       input.addEventListener("blur", (event) => {
@@ -254,7 +248,7 @@ export const editLocatorPopup = () => {
     const nameError = document.createElement("div");
     nameError.classList.add("jdn-input-message");
     labelName.append(inputName, errorIcon, nameError);
-    addValidation(inputName, "jdn-input-error", nameError, getNameValidationMessage);
+    addValidation(inputName, nameError, getNameValidationMessage);
 
     const labelLocator = document.createElement("label");
     labelLocator.classList.add("jdn-edit-popup__label");
@@ -285,9 +279,8 @@ export const editLocatorPopup = () => {
     </svg>`;
     const locatorError = document.createElement("div");
     locatorError.classList.add("jdn-input-message");
-    labelLocator.append(inputLocator, warningIcon, locatorError);
-
-    addValidation(inputLocator, "jdn-input-warning", locatorError, getLocatorValidationMessage);
+    labelLocator.append(inputLocator, errorIcon, locatorError);
+    addValidation(inputLocator, locatorError, getLocatorValidationMessage);
 
     const buttonContainer = document.createElement("div");
     buttonContainer.classList.add("jdn-popup__button-container");

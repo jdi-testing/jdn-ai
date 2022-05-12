@@ -15,7 +15,7 @@ import { rerunGeneration } from "../store/thunks/rerunGeneration";
 import { isNameUnique, isPONameUnique, isStringMatchesReservedWord } from "./pageObject";
 import { VALIDATION_ERROR_TYPE } from "../utils/constants";
 import { clearAll, setScriptMessage, setUnactualPrediction, toggleBackdrop } from "../store/slices/mainSlice";
-import { changeName as changePageObjectName, removeAll as removeAllPageObjects } from "../store/slices/pageObjectSlice";
+import { changeName as changePageObjectName, removeAll as removeAllPageObjects} from "../store/slices/pageObjectSlice";
 import { selectLocatorByJdnHash, selectPageObjects } from "../store/selectors/pageObjectSelectors";
 
 export const createListeners = (dispatch, state) => {
@@ -49,8 +49,8 @@ export const createListeners = (dispatch, state) => {
       }
       if (isStringMatchesReservedWord(newName)) sendResponse(VALIDATION_ERROR_TYPE.INVALID_NAME);
     },
-    CHECK_LOCATOR_VALIDITY: ({ newElementId }, sender, sendResponse) => {
-      const validationMessage = selectLocatorById(state, newElementId) ? VALIDATION_ERROR_TYPE.DUPLICATED_LOCATOR : "";
+    CHECK_LOCATOR_VALIDITY: ({ foundId }, sender, sendResponse) => {
+      const validationMessage = selectLocatorById(state, foundId) ? VALIDATION_ERROR_TYPE.DUPLICATED_LOCATOR : "";
       sendResponse(validationMessage);
     },
     CHECK_PO_NAME_VALIDITY: ({ id, newName }, sender, sendResponse) => {
