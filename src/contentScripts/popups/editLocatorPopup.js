@@ -28,7 +28,37 @@ export const editLocatorPopup = () => {
     WARNING: "jdn-input-warning",
   };
 
-  const WARNING_TYPES = [ERROR_TYPE.MULTIPLE_ELEMENTS, ERROR_TYPE.NOT_FOUND];
+  const WARNING_TYPES = [ERROR_TYPE.MULTIPLE_ELEMENTS, ERROR_TYPE.NOT_FOUND, ERROR_TYPE.EMPTY_VALUE];
+
+  const warningIconHTML = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" 
+  xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M7.33111 1.27639C7.14685 0.907869 6.62095 0.907869 6.43669 
+  1.27639L1.05472 12.0403C0.888497 12.3728 1.13024 12.7639 1.50194 12.7639H12.2659C12.6376 12.7639 12.8793 12.3728 
+  12.7131 12.0403L7.33111 1.27639ZM5.54226 0.82918C6.09505 -0.276392 7.67276 -0.276394 8.22554 0.829179L13.6075 
+  11.5931C14.1062 12.5905 13.3809 13.7639 12.2659 13.7639H1.50194C0.386863 13.7639 -0.338381 12.5905 0.160295 
+  11.5931L5.54226 0.82918Z" fill="#F69A0E"/>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M6.97754 4.07617C7.39175 4.07617 7.72754 4.41196 7.72754 
+  4.82617V8.57617C7.72754 8.99039 7.39175 9.32617 6.97754 9.32617C6.56333 9.32617 6.22754 8.99039 6.22754 
+  8.57617V4.82617C6.22754 4.41196 6.56333 4.07617 6.97754 4.07617Z" fill="#F69A0E"/>
+  <path d="M7.72754 10.9512C7.72754 11.3654 7.39175 11.7012 6.97754 11.7012C6.56333 11.7012 6.22754 11.3654 6.22754 
+  10.9512C6.22754 10.537 6.56333 10.2012 6.97754 10.2012C7.39175 10.2012 7.72754 10.537 7.72754 10.9512Z" 
+  fill="#F69A0E"/>
+  </svg>`;
+
+  const errorIconHTML = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" 
+  xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M7 13C10.3137 13 13 10.3137 13 7C13 3.68629 10.3137 1 7 1C3.68629 
+  1 1 3.68629 1 7C1 10.3137 3.68629 13 7 13ZM7 14C10.866 14 14 10.866 14 7C14 3.13401 10.866 0 7 0C3.13401 0 0 
+  3.13401 0 7C0 10.866 3.13401 14 7 14Z" fill="#D82C15"/>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M4.58136 4.58136C4.68984 4.47288 4.86572 4.47288 4.97419 
+  4.58136L9.41864 9.0258C9.52712 9.13428 9.52712 9.31016 9.41864 9.41864C9.31016 9.52712 9.13428 9.52712 9.02581 
+  9.41864L4.58136 4.9742C4.47288 4.86572 4.47288 4.68984 4.58136 4.58136Z" fill="#D82C15" stroke="#D82C15" 
+  stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path fill-rule="evenodd" clip-rule="evenodd" d="M9.41864 4.58136C9.31016 4.47288 9.13428 4.47288 9.02581 
+  4.58136L4.58136 9.0258C4.47288 9.13428 4.47288 9.31016 4.58136 9.41864C4.68984 9.52712 4.86572 9.52712 4.97419 
+  9.41864L9.41864 4.9742C9.52712 4.86572 9.52712 4.68984 9.41864 4.58136Z" fill="#D82C15" stroke="#D82C15" 
+  stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>`;
 
   const getValidationClass = (errorType) =>
     WARNING_TYPES.includes(errorType) ? VALIDATION_CLASS.WARNING : VALIDATION_CLASS.ERROR;
@@ -83,6 +113,7 @@ export const editLocatorPopup = () => {
     };
 
     const getLocatorValidationMessage = ({ value }) => {
+      if (!value.length) return ERROR_TYPE.EMPTY_VALUE;
       let nodesSnapshot;
       try {
         nodesSnapshot = document.evaluate(value, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
@@ -95,18 +126,15 @@ export const editLocatorPopup = () => {
         return `${nodesSnapshot.snapshotLength} ${ERROR_TYPE.MULTIPLE_ELEMENTS}`;
       } else if (nodesSnapshot.snapshotLength === 1) {
         const foundElement = nodesSnapshot.snapshotItem(0);
-        const foundId = foundElement.getAttribute("jdn-hash");
-        if (foundId !== jdnHash) {
+        const foundHash = foundElement.getAttribute("jdn-hash");
+        if (foundHash !== jdnHash) {
           return new Promise((resolve) => {
             chrome.runtime.sendMessage(
                 {
                   message: "CHECK_LOCATOR_VALIDITY",
-                  param: { foundId },
+                  param: { foundHash },
                 },
-                (response) => {
-                  if (response.length) resolve(response);
-                  else resolve(ERROR_TYPE.NEW_ELEMENT);
-                }
+                (response) => resolve(response)
             );
           });
         }
@@ -126,11 +154,13 @@ export const editLocatorPopup = () => {
         input.checkValidity();
 
         // format input
+        targetInput.classList.remove(VALIDATION_CLASS.ERROR);
+        targetInput.classList.remove(VALIDATION_CLASS.WARNING);
+
         if (!targetInput.validity.valid) {
-          targetInput.classList.add(getValidationClass(targetInput.validationMessage));
-        } else {
-          targetInput.classList.remove(VALIDATION_CLASS.ERROR);
-          targetInput.classList.remove(VALIDATION_CLASS.WARNING);
+          targetInput.classList.add(
+            targetInput.name === "name" ? VALIDATION_CLASS.ERROR : getValidationClass(targetInput.validationMessage)
+          );
         }
 
         // format Save button
@@ -230,21 +260,11 @@ export const editLocatorPopup = () => {
     inputName.setAttribute("name", "name");
     inputName.setAttribute("required", true);
     inputName.value = name;
+
     const errorIcon = document.createElement("i");
-    errorIcon.innerHTML = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" 
-    xmlns="http://www.w3.org/2000/svg">
-    <path fill-rule="evenodd" clip-rule="evenodd" d="M7 13C10.3137 13 13 10.3137 13 7C13 3.68629 10.3137 1 7 1C3.68629 
-    1 1 3.68629 1 7C1 10.3137 3.68629 13 7 13ZM7 14C10.866 14 14 10.866 14 7C14 3.13401 10.866 0 7 0C3.13401 0 0 
-    3.13401 0 7C0 10.866 3.13401 14 7 14Z" fill="#D82C15"/>
-    <path fill-rule="evenodd" clip-rule="evenodd" d="M4.58136 4.58136C4.68984 4.47288 4.86572 4.47288 4.97419 
-    4.58136L9.41864 9.0258C9.52712 9.13428 9.52712 9.31016 9.41864 9.41864C9.31016 9.52712 9.13428 9.52712 9.02581 
-    9.41864L4.58136 4.9742C4.47288 4.86572 4.47288 4.68984 4.58136 4.58136Z" fill="#D82C15" stroke="#D82C15" 
-    stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
-    <path fill-rule="evenodd" clip-rule="evenodd" d="M9.41864 4.58136C9.31016 4.47288 9.13428 4.47288 9.02581 
-    4.58136L4.58136 9.0258C4.47288 9.13428 4.47288 9.31016 4.58136 9.41864C4.68984 9.52712 4.86572 9.52712 4.97419 
-    9.41864L9.41864 4.9742C9.52712 4.86572 9.52712 4.68984 9.41864 4.58136Z" fill="#D82C15" stroke="#D82C15" 
-    stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>`;
+    errorIcon.classList.add("jdn-error-icon");
+    errorIcon.innerHTML = errorIconHTML;
+
     const nameError = document.createElement("div");
     nameError.classList.add("jdn-input-message");
     labelName.append(inputName, errorIcon, nameError);
@@ -260,26 +280,20 @@ export const editLocatorPopup = () => {
     inputLocator.setAttribute("name", "locator");
     inputLocator.setAttribute("rows", "5");
     inputLocator.setAttribute("cols", "30");
-    inputLocator.setAttribute("required", true);
+    // inputLocator.setAttribute("required", true);
     inputLocator.value = locator.customXpath || locator.robulaXpath || locator.fullXpath;
+
     const warningIcon = document.createElement("i");
-    warningIcon.innerHTML = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" 
-    xmlns="http://www.w3.org/2000/svg">
-    <path fill-rule="evenodd" clip-rule="evenodd" d="M7.33111 1.27639C7.14685 0.907869 6.62095 0.907869 6.43669 
-    1.27639L1.05472 12.0403C0.888497 12.3728 1.13024 12.7639 1.50194 12.7639H12.2659C12.6376 12.7639 12.8793 12.3728 
-    12.7131 12.0403L7.33111 1.27639ZM5.54226 0.82918C6.09505 -0.276392 7.67276 -0.276394 8.22554 0.829179L13.6075 
-    11.5931C14.1062 12.5905 13.3809 13.7639 12.2659 13.7639H1.50194C0.386863 13.7639 -0.338381 12.5905 0.160295 
-    11.5931L5.54226 0.82918Z" fill="#F69A0E"/>
-    <path fill-rule="evenodd" clip-rule="evenodd" d="M6.97754 4.07617C7.39175 4.07617 7.72754 4.41196 7.72754 
-    4.82617V8.57617C7.72754 8.99039 7.39175 9.32617 6.97754 9.32617C6.56333 9.32617 6.22754 8.99039 6.22754 
-    8.57617V4.82617C6.22754 4.41196 6.56333 4.07617 6.97754 4.07617Z" fill="#F69A0E"/>
-    <path d="M7.72754 10.9512C7.72754 11.3654 7.39175 11.7012 6.97754 11.7012C6.56333 11.7012 6.22754 11.3654 6.22754 
-    10.9512C6.22754 10.537 6.56333 10.2012 6.97754 10.2012C7.39175 10.2012 7.72754 10.537 7.72754 10.9512Z" 
-    fill="#F69A0E"/>
-    </svg>`;
+    warningIcon.classList.add("jdn-warning-icon");
+    warningIcon.innerHTML = warningIconHTML;
+
+    const errorLocatorIcon = document.createElement("i");
+    errorLocatorIcon.classList.add("jdn-error-icon");
+    errorLocatorIcon.innerHTML = errorIconHTML;
+
     const locatorError = document.createElement("div");
     locatorError.classList.add("jdn-input-message");
-    labelLocator.append(inputLocator, errorIcon, locatorError);
+    labelLocator.append(inputLocator, warningIcon, errorLocatorIcon, locatorError);
     addValidation(inputLocator, locatorError, getLocatorValidationMessage);
 
     const buttonContainer = document.createElement("div");

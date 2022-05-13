@@ -87,6 +87,8 @@ describe("changeLocatorAttributes reducer", () => {
         changeLocatorAttributes({
           element_id: "8736312404689610766421832473",
           locator: "//*[@class='any-class112']",
+          name: "myAwesomeLocator",
+          type: "Dialog",
           validity: {
             locator: "NOT_FOUND"
           }

@@ -49,8 +49,10 @@ export const createListeners = (dispatch, state) => {
       }
       if (isStringMatchesReservedWord(newName)) sendResponse(VALIDATION_ERROR_TYPE.INVALID_NAME);
     },
-    CHECK_LOCATOR_VALIDITY: ({ foundId }, sender, sendResponse) => {
-      const validationMessage = selectLocatorById(state, foundId) ? VALIDATION_ERROR_TYPE.DUPLICATED_LOCATOR : "";
+    CHECK_LOCATOR_VALIDITY: ({ foundHash }, sender, sendResponse) => {
+      const validationMessage = selectLocatorByJdnHash(state, foundHash) ?
+        VALIDATION_ERROR_TYPE.DUPLICATED_LOCATOR :
+        VALIDATION_ERROR_TYPE.NEW_ELEMENT;
       sendResponse(validationMessage);
     },
     CHECK_PO_NAME_VALIDITY: ({ id, newName }, sender, sendResponse) => {

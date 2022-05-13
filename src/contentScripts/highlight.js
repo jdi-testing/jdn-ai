@@ -9,7 +9,7 @@ export const highlightOnPage = () => {
   let predictedElements;
   let perception;
   let listenersAreSet;
-  const scrollableContainers = [];
+  let scrollableContainers = [];
 
   const clearState = () => {
     nodes = null;
