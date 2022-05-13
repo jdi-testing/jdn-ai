@@ -280,7 +280,6 @@ export const editLocatorPopup = () => {
     inputLocator.setAttribute("name", "locator");
     inputLocator.setAttribute("rows", "5");
     inputLocator.setAttribute("cols", "30");
-    // inputLocator.setAttribute("required", true);
     inputLocator.value = locator.customXpath || locator.robulaXpath || locator.fullXpath;
 
     const warningIcon = document.createElement("i");
