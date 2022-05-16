@@ -6,7 +6,6 @@ export const identificationStatus = {
   success: "Successful!",
   removed: "Removed",
   error: "An error occured",
-  blocked: "Script is blocked. Close all popups",
 };
 
 export const locatorsGenerationStatus = {
@@ -49,3 +48,7 @@ export const copyTitle = {
   Copied: "Copied",
 };
 
+export const SCRIPT_ERROR = {
+  NO_RESPONSE: "The message port closed before a response was received.",
+  NO_CONNECTION: "Could not establish connection. Receiving end does not exist.",
+};

@@ -17,12 +17,17 @@ export const editNamePopup = () => {
     [ERROR_TYPE.LONG_NAME]: "Max name length is 60 characters.",
   };
 
+  const sendMessage = (message) =>
+    chrome.runtime.sendMessage(message).catch((error) => {
+      if (error.message !== "The message port closed before a response was received.") throw new Error(error.message);
+    });
+
   const removePopup = () => {
-    chrome.runtime.sendMessage({
+    sendMessage({
       message: "IS_OPEN_MODAL",
       param: false,
     });
-    wrapper.remove();
+    wrapper && wrapper.remove();
     chrome.storage.sync.set({ OPEN_EDIT_NAME: { isOpen: false } });
   };
 
@@ -32,7 +37,7 @@ export const editNamePopup = () => {
     const onFormSubmit = ({ target }) => {
       const { name } = target;
 
-      chrome.runtime.sendMessage({
+      sendMessage({
         message: "UPDATE_PAGE_OBJECT_NAME",
         param: {
           id,
@@ -48,7 +53,7 @@ export const editNamePopup = () => {
       if (value.length > 60) return ERROR_TYPE.LONG_NAME;
 
       return new Promise((resolve) => {
-        chrome.runtime.sendMessage(
+        sendMessage(
             {
               message: "CHECK_PO_NAME_VALIDITY",
               param: {
@@ -189,7 +194,7 @@ export const editNamePopup = () => {
   chrome.storage.onChanged.addListener((event) => {
     const newValue = event?.OPEN_EDIT_NAME?.newValue;
     if (newValue?.isOpen === true) {
-      chrome.runtime.sendMessage({
+      sendMessage({
         message: "IS_OPEN_MODAL",
         param: true,
       });

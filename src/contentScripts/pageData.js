@@ -1,5 +1,7 @@
 export const getPageData = () => {
-  chrome.runtime.sendMessage({ message: "START_COLLECT_DATA"});
+  chrome.runtime.sendMessage({ message: "START_COLLECT_DATA" }).catch((error) => {
+    if (error.message !== "The message port closed before a response was received.") throw new Error(error.message);
+  });
 
   const hashAttribute = 'jdn-hash';
   function gen_uuid(e) {

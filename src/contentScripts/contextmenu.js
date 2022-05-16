@@ -4,6 +4,11 @@ export const runContextMenu = () => {
   ----->
 */
 
+  const sendMessage = (message) =>
+    chrome.runtime.sendMessage(message).catch((error) => {
+      if (error.message !== "The message port closed before a response was received.") throw new Error(error.message);
+    });
+
   function ContextMenu(menu, options) {
     const self = this;
     const num = ContextMenu.count++;
@@ -33,7 +38,7 @@ export const runContextMenu = () => {
       const el = document.querySelector('.cm--selected');
       if (el) {
         el.classList.remove('cm--selected');
-        chrome.runtime.sendMessage({
+        sendMessage({
           message: "CM_ELEMENT_HIGHLIGHT_OFF",
           param: el.id,
         });
@@ -318,7 +323,7 @@ export const runContextMenu = () => {
         text: `${!generate ? "Select" : "Unselect"} locator`,
         events: {
           click: () =>
-            chrome.runtime.sendMessage({
+            sendMessage({
               message: "TOGGLE_ELEMENT",
               param: element_id,
             }),
@@ -354,7 +359,7 @@ export const runContextMenu = () => {
         </svg>`,
         events: {
           click: () =>
-            chrome.runtime.sendMessage({
+            sendMessage({
               message: "REMOVE_ELEMENT",
               param: element_id,
             }),
@@ -394,7 +399,7 @@ export const runContextMenu = () => {
         </span>`,
         events: {
           click: () =>
-            chrome.runtime.sendMessage({
+            sendMessage({
               message: "STOP_GENERATION",
               param: element_id,
             }),
@@ -411,7 +416,7 @@ export const runContextMenu = () => {
         </span>`,
         events: {
           click: () =>
-            chrome.runtime.sendMessage({
+            sendMessage({
               message: "RERUN_GENERATION",
               param: element_id,
             }),
@@ -422,14 +427,29 @@ export const runContextMenu = () => {
 
   const contextMenuListener = (event) => {
     const highlightTarget = event.target.closest("[jdn-highlight=true]");
-    if (highlightTarget) {
-      event.preventDefault();
-      contextEvent = event;
-      chrome.runtime.sendMessage({
-        message: "GET_ELEMENT",
-        param: highlightTarget.id,
+    if (!highlightTarget) return;
+    event.preventDefault();
+    contextEvent = event;
+
+    sendMessage({
+      message: "GET_ELEMENT",
+      param: highlightTarget.id,
+    }).then(({ element, types }) => {
+      if (!element) return;
+      predictedElement = element;
+      types = types;
+      elementMenu && elementMenu.remove();
+      elementMenu = new ContextMenu(menuItems(element, types));
+      elementMenu.display(contextEvent);
+      const el = document.getElementById(predictedElement.jdnHash);
+
+      sendMessage({
+        message: "CM_ELEMENT_HIGHLIGHT_ON",
+        param: predictedElement.element_id,
       });
-    }
+
+      el?.classList?.add("cm--selected");
+    });
   };
 
   const mouseLeaveListener = () => {
@@ -442,21 +462,6 @@ export const runContextMenu = () => {
   };
 
   const messageHandler = ({ message, param }, sender, sendResponse) => {
-    if (message === "ELEMENT_DATA") {
-      if (!param.element) return;
-      predictedElement = param.element;
-      types = param.types;
-      elementMenu && elementMenu.remove();
-      elementMenu = new ContextMenu(menuItems(param.element, param.types));
-      elementMenu.display(contextEvent);
-      const el = document.getElementById(predictedElement.jdnHash);
-      chrome.runtime.sendMessage({
-        message: "CM_ELEMENT_HIGHLIGHT_ON",
-        param: predictedElement.element_id,
-      });
-      el?.classList?.add('cm--selected');
-    }
-
     if (message === "HIGHLIGHT_TOGGLED") {
       predictedElement = param;
     }

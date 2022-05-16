@@ -24,6 +24,11 @@ export const editLocatorPopup = () => {
     [ERROR_TYPE.NOT_FOUND]: "The locator was not found on the page.",
   };
 
+  const sendMessage = (message) =>
+    chrome.runtime.sendMessage(message).catch((error) => {
+      if (error.message !== "The message port closed before a response was received.") throw new Error(error.message);
+    });
+
   const getNewElementLocation = (element_id) => {
     const div = document.querySelector(`[jdn-hash='${element_id}']`);
     const { x, y, width, height } = div.getBoundingClientRect();
@@ -37,11 +42,11 @@ export const editLocatorPopup = () => {
   };
 
   const removePopup = () => {
-    chrome.runtime.sendMessage({
+    sendMessage({
       message: "IS_OPEN_MODAL",
       param: false,
     });
-    wrapper.remove();
+    wrapper && wrapper.remove();
     chrome.storage.sync.set({ OPEN_EDIT_LOCATOR: { isOpen: false } });
   };
 
@@ -57,7 +62,7 @@ export const editLocatorPopup = () => {
       const newElement =
         inputLocator.validationMessage === ERROR_TYPE.NEW_ELEMENT ? getNewElementLocation(newElementId) : null;
 
-      chrome.runtime.sendMessage({
+      sendMessage({
         message: "UPDATE_LOCATOR",
         param: {
           element_id: element_id,
@@ -78,7 +83,7 @@ export const editLocatorPopup = () => {
       if (!isValidJavaVariable) return ERROR_TYPE.INVALID_NAME;
 
       return new Promise((resolve) => {
-        chrome.runtime.sendMessage(
+        sendMessage(
             {
               message: "CHECK_NAME_VALIDITY",
               param: {
@@ -108,7 +113,7 @@ export const editLocatorPopup = () => {
         if (foundId !== jdnHash) {
           newElement = { element_id: foundId };
           return new Promise((resolve) => {
-            chrome.runtime.sendMessage(
+            sendMessage(
                 {
                   message: "CHECK_LOCATOR_VALIDITY",
                   param: { newElementId: foundId },
@@ -315,7 +320,7 @@ export const editLocatorPopup = () => {
   chrome.storage.onChanged.addListener((event) => {
     const newValue = event?.OPEN_EDIT_LOCATOR?.newValue;
     if (newValue?.isOpen === true) {
-      chrome.runtime.sendMessage({
+      sendMessage({
         message: "IS_OPEN_MODAL",
         param: true,
       });
