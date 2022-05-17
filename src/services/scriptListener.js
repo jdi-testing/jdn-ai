@@ -6,7 +6,7 @@ import {
   changeLocatorAttributes,
   removeAll as removeAllLocators,
 } from "../store/slices/locatorsSlice";
-import { connector, sendMessage } from "./connector";
+import { connector } from "./connector";
 import { getTypesMenuOptions } from "../utils/generationClassesMap";
 import { pageData, sendProblemReport, showOverlay } from "./pageDataHandlers";
 import { selectLocatorById, selectLocators } from "../store/selectors/locatorSelectors";
@@ -79,9 +79,9 @@ export const createListeners = (dispatch, state) => {
       dispatch(removeAllLocators());
       dispatch(toggleBackdrop(false));
     },
-    GET_ELEMENT: (jdnHash) => {
+    GET_ELEMENT: (jdnHash, sender, sendResponse) => {
       const element = selectLocatorByJdnHash(state, jdnHash);
-      sendMessage.elementData({
+      sendResponse({
         element,
         types: getTypesMenuOptions(),
       });

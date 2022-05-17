@@ -123,7 +123,7 @@ export const getGenerationAttributes = () => {
       sendResponse(mapElements(param));
     }
 
-    if (message === "PING_SCRIPT" && (param.scriptName === "generateXpathes")) {
+    if (message === "PING_SCRIPT" && (param.scriptName === "getGenerationAttributes")) {
       sendResponse({ message: true });
     }
   });

@@ -1,7 +1,13 @@
 export const confirmPopup = () => {
   let config = {};
 
-  chrome.runtime.sendMessage({
+
+  const sendMessage = (message) =>
+    chrome.runtime.sendMessage(message).catch((error) => {
+      if (error.message !== "The message port closed before a response was received.") throw new Error(error.message);
+    });
+
+  sendMessage({
     message: "IS_OPEN_MODAL",
     param: true,
   });
@@ -66,7 +72,7 @@ export const confirmPopup = () => {
     document.body.append(wrapper);
 
     function removePopup() {
-      chrome.runtime.sendMessage({
+      sendMessage({
         message: "IS_OPEN_MODAL",
         param: false,
       });
@@ -74,14 +80,14 @@ export const confirmPopup = () => {
     }
 
     function confirm() {
-      chrome.runtime.sendMessage({
+      sendMessage({
         message: config.scriptMessage,
       });
       wrapper.remove();
     }
 
     function altAction() {
-      chrome.runtime.sendMessage({
+      sendMessage({
         message: config.altScriptMessage,
       });
       wrapper.remove();

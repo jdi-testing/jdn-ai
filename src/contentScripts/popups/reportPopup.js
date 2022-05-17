@@ -19,6 +19,11 @@ export const reportPopup = () => {
     [ERROR_TYPE.INVALID_EMAIL]: "Invalid email.",
   };
 
+  const sendMessage = (message) =>
+    chrome.runtime.sendMessage(message).catch((error) => {
+      if (error.message !== "The message port closed before a response was received.") throw new Error(error.message);
+    });
+
   const longTextError = (number) => `Max length is ${number} characters.`;
 
   const wrapper = document.createElement("div");
@@ -309,7 +314,7 @@ export const reportPopup = () => {
 
   function requestPageData() {
     return new Promise((resolve) => {
-      chrome.runtime.sendMessage(
+      sendMessage(
           {
             message: "GET_PAGE_DATA_JSON",
           },
@@ -323,7 +328,7 @@ export const reportPopup = () => {
   }
 
   function sendReportProblemData({ email, subject, description }, frame) {
-    chrome.runtime.sendMessage({
+    sendMessage({
       message: "SEND_PROBLEM_REPORT",
       param: {
         email: email.value,
