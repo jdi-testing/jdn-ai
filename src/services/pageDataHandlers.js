@@ -9,14 +9,11 @@ import { createOverlay } from "../contentScripts/createOverlay";
 /* global chrome*/
 
 let overlayID;
-let pageAccessTimeout;
 export let pageData;
 
 export const showOverlay = () => {
   connector.attachContentScript(createOverlay).then((data) => {
-    const _overlayID = data[0].result;
-    clearTimeout(pageAccessTimeout);
-    overlayID = _overlayID;
+    overlayID = data[0].result;
   });
 };
 
@@ -35,22 +32,16 @@ export const removeOverlay = () => {
 
 const uploadElements = async (result, enpoint) => {
   const payload = result[0];
-  const r = await request.post(
-      enpoint,
-      payload
-  );
+  const r = await request.post(enpoint, payload);
 
   return r;
 };
 
-export const getElements = (endpoint) => {
-  pageAccessTimeout = setTimeout(() => {
-    console.log('Script is blocked. Close all popups');
-  }, 5000);
-
-  return connector.attachContentScript(getPageData)
+export const getElements = (endpoint) =>
+  connector
+      .attachContentScript(getPageData)
       .then((data) => {
-        const {result} = data[0];
+        const { result } = data[0];
         pageData = result[0];
         return uploadElements(result, endpoint);
       })
@@ -58,22 +49,16 @@ export const getElements = (endpoint) => {
         removeOverlay();
         return data;
       });
-};
 
-const requestGenerationAttributes = async (elements) => {
-  await connector.attachContentScript(getGenerationAttributes);
+const requestGenerationAttributes = (elements) =>
+  connector.attachContentScript(getGenerationAttributes).then(() =>
+    sendMessage.generateAttributes(elements).then((response) => {
+      if (chrome.runtime.lastError) return false;
 
-  return new Promise((resolve) => {
-    sendMessage.generateAttributes(elements, (response) => {
-      if (chrome.runtime.lastError) {
-        resolve(false);
-      }
-      if (response) {
-        resolve(response);
-      } else resolve(false);
-    });
-  });
-};
+      if (response) return response;
+      else return false;
+    })
+  );
 
 export const requestGenerationData = async (elements) => {
   const generationTags = await requestGenerationAttributes(elements);
@@ -100,8 +85,8 @@ export const openConfirmBackPopup = (enableSave) => {
   if (enableSave) {
     config.altButtonText = "Save";
     config.altScriptMessage = "CONFIRM_SAVE_CHANGES";
-  };
-  chrome.storage.sync.set({POPUP_CONFIG: config}, connector.attachContentScript(confirmPopup));
+  }
+  chrome.storage.sync.set({ POPUP_CONFIG: config }, connector.attachContentScript(confirmPopup));
 };
 
 export const openConfirmInProgressPopup = () => {
@@ -113,7 +98,7 @@ export const openConfirmInProgressPopup = () => {
     buttonConfirmText: "Сonfirm the selection",
     scriptMessage: "CONFIRM_IN_PROGRESS_POPUP",
   };
-  chrome.storage.sync.set({POPUP_CONFIG: config}, connector.attachContentScript(confirmPopup));
+  chrome.storage.sync.set({ POPUP_CONFIG: config }, connector.attachContentScript(confirmPopup));
 };
 
 export const openDeleteAllPopup = () => {
@@ -125,5 +110,5 @@ export const openDeleteAllPopup = () => {
     buttonConfirmClass: "jdn-popup__button_warning",
     scriptMessage: "DELETE_ALL_PAGE_OBJECTS",
   };
-  chrome.storage.sync.set({POPUP_CONFIG: config}, connector.attachContentScript(confirmPopup));
+  chrome.storage.sync.set({ POPUP_CONFIG: config }, connector.attachContentScript(confirmPopup));
 };

@@ -64,6 +64,7 @@ export const highlightOnPage = () => {
   };
 
   const updateElement = (element) => {
+    if (!predictedElements) return null;
     const i = predictedElements.findIndex((e) => e.element_id === element.element_id);
     predictedElements[i] = { ...predictedElements[i], ...element };
     const div = document.getElementById(predictedElements[i].jdnHash);
@@ -197,6 +198,8 @@ export const highlightOnPage = () => {
       chrome.runtime.sendMessage({
         message: "TOGGLE_ELEMENT",
         param: element_id,
+      }).catch((error) => {
+        if (error.message !== "The message port closed before a response was received.") throw new Error(error.message);
       });
     };
 

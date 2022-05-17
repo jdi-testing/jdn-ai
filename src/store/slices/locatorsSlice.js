@@ -55,7 +55,7 @@ const locatorsSlice = createSlice({
       locatorsAdapter.removeAll(state);
     },
     removeLocators(state, { payload: ids }) {
-      locatorsAdapter.removeMany(state, ids);
+      if (ids) locatorsAdapter.removeMany(state, ids);
     },
     reorderLocators(state, { payload }) {
       // locators are taken by PageObject

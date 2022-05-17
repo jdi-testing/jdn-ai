@@ -28,6 +28,11 @@ export const editLocatorPopup = () => {
     WARNING: "jdn-input-warning",
   };
 
+  const sendMessage = (message) =>
+    chrome.runtime.sendMessage(message).catch((error) => {
+      if (error.message !== "The message port closed before a response was received.") throw new Error(error.message);
+    });
+
   const WARNING_TYPES = [ERROR_TYPE.MULTIPLE_ELEMENTS, ERROR_TYPE.NOT_FOUND, ERROR_TYPE.EMPTY_VALUE];
 
   const warningIconHTML = `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" 
@@ -64,11 +69,11 @@ export const editLocatorPopup = () => {
     WARNING_TYPES.includes(errorType) ? VALIDATION_CLASS.WARNING : VALIDATION_CLASS.ERROR;
 
   const removePopup = () => {
-    chrome.runtime.sendMessage({
+    sendMessage({
       message: "IS_OPEN_MODAL",
       param: false,
     });
-    wrapper.remove();
+    wrapper && wrapper.remove();
     chrome.storage.sync.set({ OPEN_EDIT_LOCATOR: { isOpen: false } });
   };
 
@@ -79,7 +84,7 @@ export const editLocatorPopup = () => {
     const onFormSubmit = ({ target }) => {
       const { type, name, locator } = target;
 
-      chrome.runtime.sendMessage({
+      sendMessage({
         message: "UPDATE_LOCATOR",
         param: {
           element_id: element_id,
@@ -99,7 +104,7 @@ export const editLocatorPopup = () => {
       if (!isValidJavaVariable) return ERROR_TYPE.INVALID_NAME;
 
       return new Promise((resolve) => {
-        chrome.runtime.sendMessage(
+        sendMessage(
             {
               message: "CHECK_NAME_VALIDITY",
               param: {
@@ -129,7 +134,7 @@ export const editLocatorPopup = () => {
         const foundHash = foundElement.getAttribute("jdn-hash");
         if (foundHash !== jdnHash) {
           return new Promise((resolve) => {
-            chrome.runtime.sendMessage(
+            sendMessage(
                 {
                   message: "CHECK_LOCATOR_VALIDITY",
                   param: { foundHash },
@@ -321,7 +326,7 @@ export const editLocatorPopup = () => {
   chrome.storage.onChanged.addListener((event) => {
     const newValue = event?.OPEN_EDIT_LOCATOR?.newValue;
     if (newValue?.isOpen === true) {
-      chrome.runtime.sendMessage({
+      sendMessage({
         message: "IS_OPEN_MODAL",
         param: true,
       });

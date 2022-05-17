@@ -4,6 +4,8 @@ import { highlightOnPage } from "../contentScripts/highlight";
 import { highlightOrder } from "../contentScripts/highlightOrder";
 import { urlListener } from "../contentScripts/urlListener";
 import { editNamePopup } from "../contentScripts/popups/editNamePopup";
+import { isUndefined } from "lodash";
+import { SCRIPT_ERROR } from "../utils/constants";
 
 class Connector {
   constructor() {
@@ -23,35 +25,23 @@ class Connector {
     this.tabId = chrome.devtools.inspectedWindow.tabId;
   }
 
-  sendMessage(action, payload, onResponse) {
-    const callback = () => {
-      chrome.tabs.sendMessage(
-          this.tabId,
-          {
-            message: action,
-            param: payload,
-          },
-          onResponse
-      );
-    };
-
-    if (!this.tabId) {
-      setTimeout(callback, 0);
-    } else callback();
+  sendMessage(action, payload, onResponse, tabId) {
+    return chrome.tabs
+        .sendMessage(tabId || this.tabId, {
+          message: action,
+          param: payload,
+        })
+        .then((response) => response)
+        .catch((error) => {
+          if (error.message === SCRIPT_ERROR.NO_RESPONSE && isUndefined(onResponse)) return null;
+          return error;
+        });
   }
 
   sendMessageToAllTabs(action, payload, onResponse) {
-    chrome.tabs.query({}, (tabs) => {
-      tabs.forEach((tab) => {
-        chrome.tabs.sendMessage(tab.id,
-            {
-              message: action,
-              param: payload,
-            },
-            onResponse,
-        );
-      });
-    });
+    return chrome.tabs
+        .query({})
+        .then((tabs) => Promise.all(tabs.map((tab) => connector.sendMessage(action, payload, onResponse, tab.id))));
   }
 
   updateMessageListener(callback) {
@@ -62,11 +52,7 @@ class Connector {
 
   onTabUpdate(callback) {
     const listener = (tabId, changeinfo) => {
-      if (
-        changeinfo &&
-        changeinfo.status === "complete" &&
-        this.tabId === tabId
-      ) {
+      if (changeinfo && changeinfo.status === "complete" && this.tabId === tabId) {
         this.getTab();
         if (this.port) {
           this.port.disconnect();
@@ -78,7 +64,7 @@ class Connector {
 
     if (!chrome.tabs.onUpdated.hasListener(listener)) {
       chrome.tabs.onUpdated.addListener(listener);
-    };
+    }
   }
 
   createPort() {
@@ -92,18 +78,14 @@ class Connector {
 
   attachContentScript(script) {
     return this.scriptExists(script.name).then((result) => {
-      return new Promise((resolve) => {
-        if (result) return resolve(true);
-        chrome.scripting.executeScript(
-            {
-              target: { tabId: this.tabId },
-              function: script
-            },
-            (invoked) => {
-              resolve(invoked || true);
-            }
-        );
-      });
+      if (result) return true;
+      return chrome.scripting
+          .executeScript({
+            target: { tabId: this.tabId },
+            function: script,
+          })
+          .then((response) => response)
+          .catch((error) => error);
     });
   }
 
@@ -115,16 +97,17 @@ class Connector {
   }
 
   scriptExists(scriptName) {
-    return new Promise((resolve) => {
-      sendMessage.pingScript({ scriptName }, (response) => {
-        if (chrome.runtime.lastError) {
-          resolve(false);
-        }
-        if (response && response.message) {
-          resolve(true);
-        } else resolve(false);
-      });
-    });
+    if (!scriptName) return Promise.resolve(false);
+
+    return sendMessage
+        .pingScript({ scriptName })
+        .then((response) => {
+          if (chrome.runtime.lastError || response?.message === SCRIPT_ERROR.NO_CONNECTION) return false;
+          return response?.message;
+        })
+        .catch((error) => {
+          throw new Error(error);
+        });
   }
 
   attachStaticScripts() {
@@ -139,7 +122,7 @@ class Connector {
       this.attachContentScript(highlightOrder),
       this.attachContentScript(urlListener).then(() => {
         sendMessage.defineTabId(this.tabId);
-        sendMessage.setClosedSession({tabId: this.tabId, isClosed: false});
+        sendMessage.setClosedSession({ tabId: this.tabId, isClosed: false });
       }),
     ]);
   }
@@ -158,12 +141,9 @@ export const sendMessage = {
   elementData: (payload) => connector.sendMessage("ELEMENT_DATA", payload),
   setClosedSession: (payload) => connector.sendMessage("SET_CLOSED_SESSION", payload),
   setHighlight: (payload) => connector.sendMessage("SET_HIGHLIGHT", payload),
-  killHighlight: (payload, onResponse) =>
-    connector.sendMessage("KILL_HIGHLIGHT", null, onResponse),
-  generateAttributes: (payload, onResponse) =>
-    connector.sendMessage("GENERATE_ATTRIBUTES", payload, onResponse),
-  pingScript: (payload, onResponse) =>
-    connector.sendMessage("PING_SCRIPT", payload, onResponse),
+  killHighlight: (payload, onResponse) => connector.sendMessage("KILL_HIGHLIGHT", null, onResponse),
+  generateAttributes: (payload, onResponse) => connector.sendMessage("GENERATE_ATTRIBUTES", payload, onResponse),
+  pingScript: (payload, onResponse) => connector.sendMessage("PING_SCRIPT", payload, onResponse),
   removeElement: (payload) => connector.sendMessage("REMOVE_ELEMENT", payload),
   toggle: (payload) => connector.sendMessage("HIGHLIGHT_TOGGLED", payload),
   toggleDeleted: (el) => connector.sendMessage("TOGGLE_DLETED", el),

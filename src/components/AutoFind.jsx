@@ -10,7 +10,7 @@ import { SeveralTabsWarning } from "./SeveralTabsWarning";
 import { locatorGenerationController } from "../services/locatorGenerationController";
 import { removeOverlay } from "../services/pageDataHandlers";
 import { LocatorsPage } from "./Locators/LocatorsPage";
-import { identificationStatus, pageType } from "../utils/constants";
+import { identificationStatus, pageType, SCRIPT_ERROR } from "../utils/constants";
 
 import { selectCurrentPage } from "../store/selectors/mainSelectors";
 import { PageObjectPage } from "./PageObjects/PageObjectPage";
@@ -51,10 +51,12 @@ const AutoFind = () => {
 
   const checkSession = () => {
     setIsInvalidSession(false);
-    sendMessage.checkSession(null, (payload) => {
-      if (payload && payload.tabId !== connector.tabId) {
-        setIsInvalidSession(true);
-      }
+    sendMessage.checkSession(null).then((payloads) => {
+      payloads.forEach((payload) => {
+        if (payload && payload.message !== SCRIPT_ERROR.NO_CONNECTION && payload.tabId !== connector.tabId) {
+          setIsInvalidSession(true);
+        }
+      });
     });
   };
 
