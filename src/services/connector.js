@@ -112,7 +112,7 @@ class Connector {
 
   attachStaticScripts() {
     return Promise.all([
-      this.attachContentScript(highlightOnPage).then((result) => {
+      this.attachContentScript(highlightOnPage).then(() => {
         this.createPort();
         chrome.storage.sync.set({ IS_DISCONNECTED: false });
       }),
