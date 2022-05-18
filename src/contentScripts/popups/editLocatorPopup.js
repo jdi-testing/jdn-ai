@@ -172,7 +172,8 @@ export const editLocatorPopup = () => {
         // format Save button
         if (
           inputName.validity.valid &&
-          (inputLocator.validity.valid || WARNING_TYPES.includes(inputLocator.validationMessage)) // disable Save button only for errors
+          (inputLocator.validity.valid ||
+            WARNING_TYPES.includes(inputLocator.validationMessage)) // disable Save button only for errors
         ) {
           buttonOk.classList.replace("jdn-popup__button_disabled", "jdn-popup__button_primary");
           buttonOk.removeAttribute("disabled");
