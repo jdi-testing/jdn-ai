@@ -329,10 +329,8 @@ export const highlightOnPage = () => {
       toggleDeletedElement(param);
     }
 
-    if (message === "REPLACE_ELEMENT") {
-      const { oldElement, newElement } = param;
-      removeElement(oldElement);
-      addHighlightElement(newElement);
+    if (message === "ADD_ELEMENT") {
+      addHighlightElement(param);
     }
 
     if (message === "REMOVE_ELEMENT") {

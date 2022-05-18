@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { lowerFirst } from "lodash";
-import { identificationStatus, locatorTaskStatus, VALIDATION_ERROR_TYPE } from "../../utils/constants";
+import { isUndefined, lowerFirst } from "lodash";
+import { identificationStatus, locatorTaskStatus } from "../../utils/constants";
 import { getJdiClassName, getJDILabel } from "../../utils/generationClassesMap";
 import { locatorsAdapter, simpleSelectLocatorById } from "../selectors/locatorSelectors";
 import { cancelStopGenerationReducer } from "../thunks/cancelStopGeneration";
@@ -25,13 +25,13 @@ const locatorsSlice = createSlice({
       locatorsAdapter.addMany(state, orderedLocators);
     },
     changeLocatorAttributes(state, { payload }) {
-      const { type, name, locator, element_id, validity, newElement } = payload;
+      const { type, name, locator, element_id, validity, isCustomName } = payload;
       const _locator = simpleSelectLocatorById(state, element_id);
       const { fullXpath, robulaXpath } = _locator.locator;
-      let newValue = { ..._locator, locator: { ..._locator.locator }, validity };
+      const newValue = { ..._locator, locator: { ..._locator.locator }, validity };
       if (_locator.name !== name) {
         newValue.name = name;
-        newValue.isCustomName = true;
+        newValue.isCustomName = isUndefined(isCustomName) ? true : isCustomName;
       }
       if (_locator.type !== type) {
         if (!newValue.isCustomName) {
@@ -45,11 +45,9 @@ const locatorsSlice = createSlice({
         if (newValue.locator.taskStatus === locatorTaskStatus.REVOKED) {
           newValue.locator.taskStatus = locatorTaskStatus.SUCCESS;
         }
-      }
-      if (validity && validity.locator === VALIDATION_ERROR_TYPE.NEW_ELEMENT) {
-        locatorsAdapter.removeOne(state, element_id);
-        newValue = { ...newValue, ...newElement };
-        newValue.predicted_probability = 1;
+      } else {
+        delete newValue.locator.customXpath;
+        newValue.isCustomLocator = false;
       }
       locatorsAdapter.upsertOne(state, newValue);
     },

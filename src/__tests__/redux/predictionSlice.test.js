@@ -9,14 +9,12 @@ import { locator1 } from "../__mocks__/locator.mock";
 describe("changeLocatorAttributes reducer", () => {
   let changeElementNameSpy;
   let removeElementSpy;
-  let replaceElementSpy;
 
   beforeAll(() => {
     store.dispatch(addLocators([locator1]));
 
     changeElementNameSpy = jest.spyOn(sendMessage, "changeElementName");
     removeElementSpy = jest.spyOn(sendMessage, "removeElement");
-    replaceElementSpy = jest.spyOn(sendMessage, "replaceElement");
   });
 
   test("edit type, name changed automatically", () => {
@@ -89,6 +87,8 @@ describe("changeLocatorAttributes reducer", () => {
         changeLocatorAttributes({
           element_id: "8736312404689610766421832473",
           locator: "//*[@class='any-class112']",
+          name: "myAwesomeLocator",
+          type: "Dialog",
           validity: {
             locator: "NOT_FOUND"
           }
@@ -100,38 +100,5 @@ describe("changeLocatorAttributes reducer", () => {
 
     expect(removeElementSpy).toHaveBeenCalled();
     expect(removeElementSpy).toHaveBeenCalledWith(oldLocator);
-  });
-
-  test("replaces element with new coords and locator", () => {
-    const newId = "00000000000001";
-    const element_id = "8736312404689610766421832473";
-    const newXpath = "/html/body/div[1]/div[1]";
-
-    const oldElement = selectLocatorById(store.getState(), element_id);
-
-    store.dispatch(
-        changeLocatorAttributes({
-          newElement: {
-            element_id: newId,
-            x: 111,
-            y: 111,
-            width: 222,
-            height: 222
-          },
-          element_id,
-          locator: newXpath,
-          validity: {
-            locator: "NEW_ELEMENT"
-          }
-        })
-    );
-    const locator = selectLocatorById(store.getState(), newId);
-    expect(locator).toBeDefined();
-    expect(locator.locator.customXpath).toBe(newXpath);
-    expect(locator.predicted_probability).toBe(1);
-    expect(locator.validity).toStrictEqual({locator: "NEW_ELEMENT"});
-
-    expect(replaceElementSpy).toHaveBeenCalled();
-    expect(replaceElementSpy).toHaveBeenCalledWith({oldElement, newElement: {...locator}});
   });
 });

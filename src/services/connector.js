@@ -132,8 +132,7 @@ export const connector = new Connector();
 
 // messages, are sent from plugun to content scripts
 export const sendMessage = {
-  toggle: (payload) => connector.sendMessage("HIGHLIGHT_TOGGLED", payload),
-  toggleDeleted: (el) => connector.sendMessage("TOGGLE_DLETED", el),
+  addElement: (el) => connector.sendMessage("ADD_ELEMENT", el),
   changeElementName: (el) => connector.sendMessage("CHANGE_ELEMENT_NAME", el),
   changeElementType: (el) => connector.sendMessage("CHANGE_ELEMENT_TYPE", el),
   changeStatus: (el) => connector.sendMessage("CHANGE_STATUS", el),
@@ -145,9 +144,9 @@ export const sendMessage = {
   killHighlight: (payload, onResponse) => connector.sendMessage("KILL_HIGHLIGHT", null, onResponse),
   generateAttributes: (payload, onResponse) => connector.sendMessage("GENERATE_ATTRIBUTES", payload, onResponse),
   pingScript: (payload, onResponse) => connector.sendMessage("PING_SCRIPT", payload, onResponse),
-  highlightUnreached: (payload) => connector.sendMessage("HIGHLIGHT_ERRORS", payload),
-  replaceElement: (payload) => connector.sendMessage("REPLACE_ELEMENT", payload),
   removeElement: (payload) => connector.sendMessage("REMOVE_ELEMENT", payload),
+  toggle: (payload) => connector.sendMessage("HIGHLIGHT_TOGGLED", payload),
+  toggleDeleted: (el) => connector.sendMessage("TOGGLE_DLETED", el),
 };
 
 export default Connector;
