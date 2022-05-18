@@ -77,25 +77,31 @@ export const editLocatorPopup = () => {
     chrome.storage.sync.set({ OPEN_EDIT_LOCATOR: { isOpen: false } });
   };
 
+  const getLocatorValue = ({ customXpath, robulaXpath, fullXpath }) => customXpath || robulaXpath || fullXpath;
+
   const showDialog = (locatorElement, types) => {
     const { type, name, locator, element_id, jdnHash } = locatorElement;
     currentElement = element_id;
 
     const onFormSubmit = ({ target }) => {
-      const { type, name, locator } = target;
+      const { type: typeInput, name: nameInput, locator: locatorInput } = target;
 
-      sendMessage({
-        message: "UPDATE_LOCATOR",
-        param: {
-          element_id: element_id,
-          type: type.value,
-          name: name.value,
-          locator: locator.value,
-          validity: {
-            locator: inputLocator.validationMessage,
+      // if we do have any changes
+      if (name !== nameInput.value || type !== typeInput.value || getLocatorValue(locator) !== locatorInput.value) {
+        sendMessage({
+          message: "UPDATE_LOCATOR",
+          param: {
+            element_id: element_id,
+            type: typeInput.value,
+            name: nameInput.value,
+            locator: locatorInput.value,
+            validity: {
+              locator: inputLocator.validationMessage,
+            },
           },
-        },
-      });
+        });
+      }
+
       removePopup();
     };
 
@@ -103,17 +109,12 @@ export const editLocatorPopup = () => {
       const isValidJavaVariable = /^[a-zA-Z_$]([a-zA-Z0-9_])*$/.test(value);
       if (!isValidJavaVariable) return ERROR_TYPE.INVALID_NAME;
 
-      return new Promise((resolve) => {
-        sendMessage(
-            {
-              message: "CHECK_NAME_VALIDITY",
-              param: {
-                element_id,
-                newName: value,
-              },
-            },
-            (response) => resolve(response)
-        );
+      return sendMessage({
+        message: "CHECK_NAME_VALIDITY",
+        param: {
+          element_id,
+          newName: value,
+        },
       });
     };
 
@@ -171,8 +172,7 @@ export const editLocatorPopup = () => {
         // format Save button
         if (
           inputName.validity.valid &&
-          (inputLocator.validity.valid ||
-          WARNING_TYPES.includes(inputLocator.validationMessage)) // disable Save button only for errors
+          (inputLocator.validity.valid || WARNING_TYPES.includes(inputLocator.validationMessage)) // disable Save button only for errors
         ) {
           buttonOk.classList.replace("jdn-popup__button_disabled", "jdn-popup__button_primary");
           buttonOk.removeAttribute("disabled");
@@ -285,7 +285,7 @@ export const editLocatorPopup = () => {
     inputLocator.setAttribute("name", "locator");
     inputLocator.setAttribute("rows", "5");
     inputLocator.setAttribute("cols", "30");
-    inputLocator.value = locator.customXpath || locator.robulaXpath || locator.fullXpath;
+    inputLocator.value = getLocatorValue(locator);
 
     const warningIcon = document.createElement("i");
     warningIcon.classList.add("jdn-warning-icon");

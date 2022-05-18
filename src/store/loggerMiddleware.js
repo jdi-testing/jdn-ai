@@ -25,7 +25,7 @@ const notify = (state, action, prevState, store) => {
       pushNotificationHandler(prevValue);
       if (prevValue.type !== type || prevValue.name !== name) {
         sendMessage.changeElementName(selectLocatorById(state, element_id));
-      } else if (validity.locator === "" && isErrorValidationType(prevValue.validity.locator)) {
+      } else if (validity.locator === "" && isErrorValidationType(prevValue?.validity?.locator)) {
         // restore locator previously invalid locator
         const newValue = selectLocatorById(state, element_id);
         sendMessage.addElement(newValue);
