@@ -17,15 +17,8 @@ export const LocatorsTree = () => {
   const dispatch = useDispatch();
   const currentPage = useSelector(selectCurrentPage).page;
   const xpathConfig = useSelector((state) => state.main.xpathConfig);
-  const [checkedKeys, setCheckedKeys] = useState([]);
 
   const locatorsTree = convertListToTree(locatorsListMock);
-
-  const onCheck = (checkedKeysValue) => {
-    // console.log('checkedKeysValue', checkedKeysValue);
-    setCheckedKeys(checkedKeysValue);
-    // dispatch(toggleElementGroupGeneration(checkedKeysValue));
-  };
   
   const renderTreeNodes = (data) => {
     return data.map((element) =>
@@ -44,12 +37,7 @@ export const LocatorsTree = () => {
   return (
     <div className="jdn__locatorsList">
       <div className="jdn__locatorsList-content">
-        <Tree 
-          switcherIcon={<DownOutlined />}
-          defaultExpandAll
-          checkable
-          onCheck={onCheck}
-          checkedKeys={checkedKeys}>
+        <Tree switcherIcon={<DownOutlined />} defaultExpandAll>
           {renderTreeNodes(locatorsTree)}
         </Tree>
       </div>

@@ -17,6 +17,7 @@ const initialState = {
     allow_indexes_in_the_middle: false,
     allow_indexes_at_the_end: false,
   },
+  locatorsCheckability: {}
 };
 
 const mainSlice = createSlice({
@@ -62,6 +63,12 @@ const mainSlice = createSlice({
     locatorsGenerationStarted(state) {
       state.locatorsStatus = locatorsGenerationStatus.started;
     },
+    checkLocator(state, { payload }) {
+      state.locatorsCheckability[payload] = true;
+    },
+    uncheckLocator(state, { payload }) {
+      state.locatorsCheckability[payload] = false;
+    }
   },
 });
 
@@ -79,4 +86,6 @@ export const {
   toggleBackdrop,
   locatorsGenerationStarted,
   resetNotifications,
+  checkLocator,
+  uncheckLocator
 } = mainSlice.actions;

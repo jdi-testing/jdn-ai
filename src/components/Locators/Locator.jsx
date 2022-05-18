@@ -1,8 +1,9 @@
 import { Button, Checkbox, Dropdown, Menu, Spin, Tooltip, Typography } from "antd";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Icon from "@ant-design/icons";
 import React, { memo, useEffect, useRef, useState } from "react";
 import Text from "antd/lib/typography/Text";
+import { size } from "lodash";
 
 import { getLocator } from "../../services/pageObject";
 import { getTypesMenuOptions } from "../../utils/generationClassesMap";
@@ -12,6 +13,7 @@ import { locatorTaskStatus, VALIDATION_ERROR_TYPE, pageType, copyTitle } from ".
 import { rerunGeneration } from "../../store/thunks/rerunGeneration";
 import { stopGeneration } from "../../store/thunks/stopGeneration";
 import { toggleDeleted } from "../../store/slices/locatorsSlice";
+import { checkLocator, uncheckLocator } from "../../store/slices/mainSlice";
 
 import CheckedEdited from "../../assets/checked-edited.svg";
 import EllipsisSvg from "../../assets/ellipsis.svg";
@@ -50,9 +52,62 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
 
   const isLocatorInProgress = isProgressStatus(locator.taskStatus);
 
-  // const handleOnChange = () => {
-  //   dispatch(toggleElementGeneration(element_id));
-  // };
+  const isLocatorChecked = useSelector((state) => state.main.locatorsCheckability[element_id]);
+
+  const updateChildren = (element, check) => {
+    element.children.map((child) => {
+      child.checked = check;
+      dispatch(check ? checkLocator(child.element_id) : uncheckLocator(child.element_id));
+      if (size(child.children)) {
+        updateChildren(child, check);
+      }
+    });
+  };
+
+  let areChildrenChecked = false;
+
+  const verifyChildrenAreChecked = (element) => {
+    for (let child of element.children) {
+      if (!child.checked) {
+        areChildrenChecked = false;
+        break;
+      } else { 
+        if (size(child.children)) {
+          verifyChildrenAreChecked(child);
+        } else areChildrenChecked = true;
+      }
+    };
+  }
+
+  const checkElement = () => {
+    element.checked = true;
+    dispatch(checkLocator(element_id));
+  }
+
+  const uncheckElement = () => {
+    element.checked = false;
+    dispatch(uncheckLocator(element_id));
+  }
+
+  const transformElements = () => {
+    verifyChildrenAreChecked(element);
+    if (areChildrenChecked) {
+      uncheckElement();
+      updateChildren(element, false);
+    } else {
+      updateChildren(element, true);
+    }
+  }
+
+  const handleOnChange = () => {
+    if (!isLocatorChecked) {
+      checkElement();
+    } else {
+      if (size(element.children)) {
+        transformElements();
+      } else uncheckElement();
+    }
+  };
 
   useEffect(() => {
     if (generate && !noScrolling) {
@@ -173,7 +228,7 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
     >
       {currentPage === pageType.locatorsList ? (
         <div className="jdn__xpath_locators">
-          {/* <Checkbox checked={generate} onChange={handleOnChange}></Checkbox> */}
+          <Checkbox checked={isLocatorChecked} onClick={handleOnChange}></Checkbox>
           <Text className="jdn__xpath_item">
             <div>
               {renderIcon()}
