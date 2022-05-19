@@ -99,7 +99,7 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
     }
   }
 
-  const handleOnChange = () => {
+  const handleOnClick = () => {
     if (!isLocatorChecked) {
       checkElement();
     } else {
@@ -228,7 +228,7 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
     >
       {currentPage === pageType.locatorsList ? (
         <div className="jdn__xpath_locators">
-          <Checkbox checked={isLocatorChecked} onClick={handleOnChange}></Checkbox>
+          <Checkbox checked={isLocatorChecked} onClick={handleOnClick}></Checkbox>
           <Text className="jdn__xpath_item">
             <div>
               {renderIcon()}
