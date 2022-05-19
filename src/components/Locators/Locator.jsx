@@ -13,7 +13,7 @@ import { locatorTaskStatus, VALIDATION_ERROR_TYPE, pageType, copyTitle } from ".
 import { rerunGeneration } from "../../store/thunks/rerunGeneration";
 import { stopGeneration } from "../../store/thunks/stopGeneration";
 import { toggleDeleted } from "../../store/slices/locatorsSlice";
-import { checkLocator, uncheckLocator } from "../../store/slices/mainSlice";
+import { checkLocator, uncheckLocator, makeIndeterminate, unmakeIndeterminate } from "../../store/slices/mainSlice";
 
 import CheckedEdited from "../../assets/checked-edited.svg";
 import EllipsisSvg from "../../assets/ellipsis.svg";
@@ -53,10 +53,12 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
   const isLocatorInProgress = isProgressStatus(locator.taskStatus);
 
   const isLocatorChecked = useSelector((state) => state.main.locatorsCheckability[element_id]);
+  const isLocatorIndeterminate = useSelector((state) => state.main.locatorsIndeterminate[element_id]);
 
-  const updateChildren = (element, check) => {
-    element.children.map((child) => {
+  const updateChildren = (el, check) => {
+    el.children.map((child) => {
       child.checked = check;
+      unmakeIndeterminateElement(child);
       dispatch(check ? checkLocator(child.element_id) : uncheckLocator(child.element_id));
       if (size(child.children)) {
         updateChildren(child, check);
@@ -64,35 +66,49 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
     });
   };
 
-  let areChildrenChecked = false;
+  let notCheckedChildren = 0;
 
-  const verifyChildrenAreChecked = (element) => {
-    for (const child of element.children) {
+  const verifyNotCheckedChildren = (el) => {
+    for (const child of el.children) {
       if (!child.checked) {
-        areChildrenChecked = false;
-        break;
+        notCheckedChildren++;
       } else {
         if (size(child.children)) {
-          verifyChildrenAreChecked(child);
-        } else areChildrenChecked = true;
+          verifyNotCheckedChildren(child);
+        }
       }
     };
   };
 
-  const checkElement = () => {
-    element.checked = true;
-    dispatch(checkLocator(element_id));
+  const checkElement = (el) => {
+    el.checked = true;
+    dispatch(checkLocator(el.element_id));
+    unmakeIndeterminateElement(el);
   }
 
-  const uncheckElement = () => {
-    element.checked = false;
-    dispatch(uncheckLocator(element_id));
+  const uncheckElement = (el) => {
+    el.checked = false;
+    dispatch(uncheckLocator(el.element_id));
+  }
+
+  const unmakeIndeterminateElement = (el) => {
+    dispatch(unmakeIndeterminate(el.element_id));
+  }
+
+  const makeIndeterminateParent = (el) => {
+    dispatch(makeIndeterminate(el.parent_id));
+  }
+
+  const unmakeIndeterminateParent = (el) => {
+    dispatch(unmakeIndeterminate(el.parent_id));
   }
 
   const transformElements = () => {
-    verifyChildrenAreChecked(element);
-    if (areChildrenChecked) {
-      uncheckElement();
+    notCheckedChildren = 0;
+    verifyNotCheckedChildren(element);
+    if (notCheckedChildren === 0) {
+      uncheckElement(element);
+      unmakeIndeterminateElement(element);
       updateChildren(element, false);
     } else {
       updateChildren(element, true);
@@ -101,13 +117,27 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
 
   const handleOnClick = () => {
     if (!isLocatorChecked) {
-      checkElement();
+      checkElement(element);
+      unmakeIndeterminateElement(element);
+      makeIndeterminateParent(element);
     } else {
       if (size(element.children)) {
         transformElements();
-      } else uncheckElement();
+      } else {
+        uncheckElement(element);
+      }
     }
   };
+
+  useEffect(() => {
+    if (isLocatorIndeterminate)
+      makeIndeterminateParent(element);
+  }, [isLocatorIndeterminate]);
+
+  useEffect(() => {
+    if (!isLocatorIndeterminate && !isLocatorChecked)
+      unmakeIndeterminateParent(element);
+  }, [isLocatorIndeterminate, isLocatorChecked]);
 
   useEffect(() => {
     if (generate && !noScrolling) {
@@ -228,7 +258,7 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
     >
       {currentPage === pageType.locatorsList ? (
         <div className="jdn__xpath_locators">
-          <Checkbox checked={isLocatorChecked} onClick={handleOnClick}></Checkbox>
+          <Checkbox checked={isLocatorChecked} indeterminate={!isLocatorChecked && isLocatorIndeterminate} onClick={handleOnClick}></Checkbox>
           <Text className="jdn__xpath_item">
             <div>
               {renderIcon()}
