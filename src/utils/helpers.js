@@ -1,4 +1,5 @@
 import { getLocator } from "../services/pageObject";
+import { VALIDATION_ERROR_TYPE } from "./constants";
 
 export const floatToPercent = (value) => {
   // wse need to show percents, but multiply float * 100 provides an unexpected result and leads to bugs
@@ -32,3 +33,6 @@ export const convertListToTree = (list) => {
 
   return tree;
 };
+
+export const isErrorValidationType = (type) => VALIDATION_ERROR_TYPE.hasOwnProperty(type);
+

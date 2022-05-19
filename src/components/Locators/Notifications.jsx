@@ -1,5 +1,5 @@
 import { Button, notification } from "antd";
-import { last, size } from "lodash";
+import { isUndefined, last, size } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import React, { useEffect } from "react";
 
@@ -49,9 +49,16 @@ export const Notifications = () => {
     } else {
       switch (action?.type) {
         case "locators/changeLocatorAttributes":
-          const { element_id, type, name, locator } = prevValue;
+          const { element_id, type, name, locator, validity, isCustomName } = prevValue;
           notificationMessage = messages().EDITED;
-          cancelAction = changeLocatorAttributes({ type, name, element_id, locator: locator.customXpath });
+          cancelAction = changeLocatorAttributes({
+            type,
+            name,
+            isCustomName: isUndefined(isCustomName) ? false : true,
+            element_id,
+            locator: locator.customXpath,
+            validity,
+          });
           break;
         case "locators/rerunGeneration/pending":
           const { arg } = action.meta;
@@ -76,7 +83,7 @@ export const Notifications = () => {
           notificationMessage = prevValue.deleted ? messages().RESTORE : messages().DELETE;
           cancelAction = [
             toggleDeleted(action.payload),
-            toggleElementGeneration({...prevValue, generate: !prevValue.generate}),
+            toggleElementGeneration({ ...prevValue, generate: !prevValue.generate }),
           ];
           break;
         case "locators/toggleDeletedGroup":
@@ -84,7 +91,7 @@ export const Notifications = () => {
             messages(size(prevValue)).RESTORE_GROUP :
             messages(size(prevValue)).DELETE_GROUP;
           const elements = prevValue.map((loc) => locators.find((_loc) => _loc.element_id === loc.element_id));
-          const prevGenerateValues = prevValue.map((_loc) => ({..._loc, generate: !_loc.generate}));
+          const prevGenerateValues = prevValue.map((_loc) => ({ ..._loc, generate: !_loc.generate }));
           cancelAction = [toggleDeletedGroup(elements), toggleElementGroupGeneration(prevGenerateValues)];
           break;
         default:

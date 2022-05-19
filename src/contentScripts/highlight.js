@@ -4,29 +4,54 @@
 
 /* global chrome */
 export const highlightOnPage = () => {
-  let highlightElements = [];
   let port;
   let nodes;
   let predictedElements;
   let perception;
+  let listenersAreSet;
+  let scrollableContainers = [];
 
   const clearState = () => {
-    highlightElements = [];
     nodes = null;
     predictedElements = null;
+    scrollableContainers = [];
   };
 
   const isInViewport = (element) => {
     const { top, right, bottom, left } = element.getBoundingClientRect();
 
     // at least a part of an element should be in the viewport
-    const val =
-      ((top >= 0 && top <= window.innerHeight) ||
-        (bottom > 0 && bottom < window.innerHeight)) &&
-      ((left >= 0 && left < window.innerWidth) ||
-        (right >= 0 && right < window.innerWidth));
+    return (
+      ((top >= 0 && top <= window.innerHeight) || (bottom > 0 && bottom < window.innerHeight)) &&
+      ((left >= 0 && left < window.innerWidth) || (right >= 0 && right < window.innerWidth))
+    );
+  };
 
-    return val;
+  const isHiddenByOverflow = (element) => {
+    const container = scrollableContainers.find((_container) => _container.contains(element));
+
+    if (!container) return false;
+
+    const {
+      top: containerTop,
+      right: containerRight,
+      bottom: containerBottom,
+      left: containerLeft,
+    } = container.getBoundingClientRect();
+
+    const {
+      top: elementTop,
+      right: elementRight,
+      bottom: elementBottom,
+      left: elementLeft,
+    } = element.getBoundingClientRect();
+
+    return (
+      elementTop > containerBottom ||
+      elementBottom < containerTop ||
+      elementLeft > containerRight ||
+      elementRight < containerLeft
+    );
   };
 
   const createLabelText = (element) => {
@@ -35,25 +60,26 @@ export const highlightOnPage = () => {
   };
 
   const getClassName = (element) => {
-    return `jdn-highlight ${element.generate ? 'jdn-primary' : 'jdn-secondary'}`;
+    return `jdn-highlight ${element.generate ? "jdn-primary" : "jdn-secondary"}`;
   };
 
   const updateElement = (element) => {
+    if (!predictedElements) return null;
     const i = predictedElements.findIndex((e) => e.element_id === element.element_id);
-    predictedElements[i] = {...predictedElements[i], ...element};
+    predictedElements[i] = { ...predictedElements[i], ...element };
     const div = document.getElementById(predictedElements[i].jdnHash);
     return div;
   };
 
-  const toggleElement = ({element, skipScroll}) => {
+  const toggleElement = ({ element, skipScroll }) => {
     const div = updateElement(element);
     if (div) {
       div.className = getClassName(element);
-      if (!skipScroll) {
-        const originDiv = document.querySelector(`[jdn-hash='${element.jdnHash}']`);
-        if (!isInViewport(originDiv) && element.generate) {
-          originDiv.scrollIntoView({ behavior: "smooth" });
-        }
+    }
+    if (!skipScroll) {
+      const originDiv = document.querySelector(`[jdn-hash='${element.jdnHash}']`);
+      if ((!isInViewport(originDiv) || isHiddenByOverflow(originDiv)) && element.generate) {
+        originDiv.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
       }
     }
   };
@@ -62,25 +88,18 @@ export const highlightOnPage = () => {
     const div = updateElement(element);
 
     if (element.deleted) {
-      if (div) {
-        const i = highlightElements.findIndex((e) => e.getAttribute('jdn-hash') === element.jdnHash);
-        highlightElements.splice(i, 1);
-        div.remove();
-      }
+      if (div) div.remove();
     } else {
       findAndHighlight();
     }
   };
 
   const removeElement = (element) => {
-    const div = document.getElementById(element.jdnHash);
-    const i = highlightElements.findIndex((e) => e.getAttribute('jdn-hash') === element.jdnHash);
-    highlightElements.splice(i, 1);
-
-    const j = predictedElements.findIndex((e) => e.element_id === element.element_id);
+    const j = predictedElements.findIndex((e) => e.element_id === element?.element_id);
     predictedElements.splice(j, 1);
 
-    div.remove();
+    const div = document.getElementById(element?.jdnHash);
+    if (div) div.remove();
   };
 
   const addHighlightElement = (element) => {
@@ -99,10 +118,7 @@ export const highlightOnPage = () => {
     div.setAttribute("jdn-status", element.locator.taskStatus);
   };
 
-  const drawRectangle = (
-      element,
-      predictedElement
-  ) => {
+  const drawRectangle = (element, predictedElement) => {
     const { element_id, jdnHash } = predictedElement;
     const divDefaultStyle = (rect) => {
       const { top, left, height, width } = rect || {};
@@ -116,11 +132,13 @@ export const highlightOnPage = () => {
         {};
     };
     const tooltipDefaultStyle = (rect) => {
-      const {right, top, height, width} = rect;
-      return rect ? {
-        right: `calc(100% - ${right + window.pageXOffset - width/2}px)`,
-        top: `${top + window.pageYOffset + height}px`,
-      } : {};
+      const { right, top, height, width } = rect;
+      return rect ?
+        {
+          right: `calc(100% - ${right + window.pageXOffset - width / 2}px)`,
+          top: `${top + window.pageYOffset + height}px`,
+        } :
+        {};
     };
     const tooltipInnerHTML = () => {
       const el = predictedElements.find((e) => e.element_id === element_id);
@@ -156,49 +174,45 @@ export const highlightOnPage = () => {
     div.id = jdnHash;
     div.className = getClassName(predictedElement);
     div.setAttribute("jdn-highlight", true);
-    const tooltip = document.createElement('div');
-    tooltip.className = 'jdn-tooltip';
-    const labelContainer = document.createElement('div');
-    const label = document.createElement('span');
-    label.className = 'jdn-label';
+    div.setAttribute("jdn-status", predictedElement.locator.taskStatus);
+    const tooltip = document.createElement("div");
+    tooltip.className = "jdn-tooltip";
+    const labelContainer = document.createElement("div");
+    const label = document.createElement("span");
+    label.className = "jdn-label";
     label.innerHTML = `<span class="jdn-class">${createLabelText(predictedElement)}</span>`;
-    label.addEventListener('mouseover', () => {
+    label.addEventListener("mouseover", () => {
       Object.assign(tooltip.style, tooltipDefaultStyle(label.getBoundingClientRect()));
       tooltip.innerHTML = tooltipInnerHTML();
       document.body.appendChild(tooltip);
       checkTooltipVisibility(tooltip, label);
     });
-    label.addEventListener('mouseout', () => {
+    label.addEventListener("mouseout", () => {
       document.body.removeChild(tooltip);
     });
 
     Object.assign(div.style, divDefaultStyle(element.getBoundingClientRect()));
     labelContainer.appendChild(label);
-    div.insertAdjacentElement('afterBegin', labelContainer);
+    div.insertAdjacentElement("afterBegin", labelContainer);
     div.onclick = () => {
       chrome.runtime.sendMessage({
         message: "TOGGLE_ELEMENT",
         param: element_id,
+      }).catch((error) => {
+        if (error.message !== "The message port closed before a response was received.") throw new Error(error.message);
       });
     };
 
     document.body.appendChild(div);
-    highlightElements.push(element);
   };
 
-  const clearContainer = (parent) => {
+  const clearContainer = (container) => {
     nodes.forEach((node) => {
-      if (parent.contains(node)) {
-        const id = node.getAttribute('jdn-hash');
-        predictedElements.find((elem) => elem.jdnHash === id).deleted = true;
-        chrome.runtime.sendMessage({
-          message: "REMOVE_ELEMENT",
-          param: id,
-        });
-        chrome.runtime.sendMessage({
-          message: "PREDICTION_IS_UNACTUAL"
-        });
-      };
+      if (container.contains(node)) {
+        const jdnHash = node.getAttribute("jdn-hash");
+        const div = document.getElementById(jdnHash);
+        if (div) div.remove();
+      }
     });
   };
 
@@ -214,7 +228,7 @@ export const highlightOnPage = () => {
     });
     nodes = document.querySelectorAll(query);
     nodes.forEach((element) => {
-      if (isInViewport(element)) {
+      if (isInViewport(element) && !isHiddenByOverflow(element)) {
         const hash = element.getAttribute("jdn-hash");
         const highlightElement = document.getElementById(hash);
         const isAbovePerceptionTreshold = predictedElements.find((e) => {
@@ -223,9 +237,7 @@ export const highlightOnPage = () => {
         if (!!highlightElement && !isAbovePerceptionTreshold) {
           highlightElement.remove();
         } else if (!highlightElement && isAbovePerceptionTreshold) {
-          const predicted = predictedElements.find(
-              (e) => e.jdnHash === hash
-          );
+          const predicted = predictedElements.find((e) => e.jdnHash === hash);
           drawRectangle(element, predicted);
         }
       }
@@ -236,7 +248,9 @@ export const highlightOnPage = () => {
   const scrollListenerCallback = ({ target }) => {
     if (timer) clearTimeout(timer);
     timer = setTimeout(() => {
-      if (target !== document) clearContainer(target);
+      if (scrollableContainers.includes(target)) {
+        clearContainer(target);
+      }
       findAndHighlight();
     }, 300);
   };
@@ -274,11 +288,32 @@ export const highlightOnPage = () => {
     });
 
     document.addEventListener("click", clickListener);
+
+    listenersAreSet = true;
+  };
+
+  const detectScrollableContainers = () => {
+    const nodes = document.querySelectorAll("*");
+
+    const hasVerticalScroll = (node) =>
+      node.scrollHeight > node.clientHeight &&
+      (getComputedStyle(node).overflowY === "scroll" || getComputedStyle(node).overflowY == "auto");
+    const hasHorizontalScroll = (node) =>
+      node.scrollWidth > node.clientWidth &&
+      (getComputedStyle(node).overflowX === "scroll" || getComputedStyle(node).overflowX == "auto");
+    const isRootNode = (node) => node.parentElement === null;
+
+    nodes.forEach((node) => {
+      if ((hasVerticalScroll(node) || hasHorizontalScroll(node)) && !isRootNode(node)) {
+        scrollableContainers.push(node);
+      }
+    });
   };
 
   const messageHandler = ({ message, param }, sender, sendResponse) => {
     if (message === "SET_HIGHLIGHT") {
-      if (!highlightElements.length) setDocumentListeners();
+      if (!listenersAreSet) setDocumentListeners();
+      if (!scrollableContainers.length) detectScrollableContainers();
       findAndHighlight(param);
     }
 
@@ -294,10 +329,8 @@ export const highlightOnPage = () => {
       toggleDeletedElement(param);
     }
 
-    if (message === "REPLACE_ELEMENT") {
-      const {oldElement, newElement} = param;
-      removeElement(oldElement);
-      addHighlightElement(newElement);
+    if (message === "ADD_ELEMENT") {
+      addHighlightElement(param);
     }
 
     if (message === "REMOVE_ELEMENT") {
@@ -316,7 +349,7 @@ export const highlightOnPage = () => {
       changeGenerationStatus(param);
     }
 
-    if (message === "PING_SCRIPT" && (param.scriptName === "highlightOnPage")) {
+    if (message === "PING_SCRIPT" && param.scriptName === "highlightOnPage") {
       sendResponse({ message: true });
     }
   };

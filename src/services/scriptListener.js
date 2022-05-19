@@ -6,7 +6,7 @@ import {
   changeLocatorAttributes,
   removeAll as removeAllLocators,
 } from "../store/slices/locatorsSlice";
-import { connector, sendMessage } from "./connector";
+import { connector } from "./connector";
 import { getTypesMenuOptions } from "../utils/generationClassesMap";
 import { pageData, sendProblemReport, showOverlay } from "./pageDataHandlers";
 import { selectLocatorById, selectLocators } from "../store/selectors/locatorSelectors";
@@ -14,7 +14,7 @@ import { stopGeneration } from "../store/thunks/stopGeneration";
 import { rerunGeneration } from "../store/thunks/rerunGeneration";
 import { isNameUnique, isPONameUnique, isStringMatchesReservedWord } from "./pageObject";
 import { VALIDATION_ERROR_TYPE } from "../utils/constants";
-import { clearAll, setScriptMessage, setUnactualPrediction, toggleBackdrop } from "../store/slices/mainSlice";
+import { clearAll, setScriptMessage, toggleBackdrop } from "../store/slices/mainSlice";
 import { changeName as changePageObjectName, removeAll as removeAllPageObjects } from "../store/slices/pageObjectSlice";
 import { selectLocatorByJdnHash, selectPageObjects } from "../store/selectors/pageObjectSelectors";
 
@@ -49,8 +49,10 @@ export const createListeners = (dispatch, state) => {
       }
       if (isStringMatchesReservedWord(newName)) sendResponse(VALIDATION_ERROR_TYPE.INVALID_NAME);
     },
-    CHECK_LOCATOR_VALIDITY: ({ newElementId }, sender, sendResponse) => {
-      const validationMessage = selectLocatorById(state, newElementId) ? VALIDATION_ERROR_TYPE.DUPLICATED_LOCATOR : "";
+    CHECK_LOCATOR_VALIDITY: ({ foundHash }, sender, sendResponse) => {
+      const validationMessage = selectLocatorByJdnHash(state, foundHash) ?
+        VALIDATION_ERROR_TYPE.DUPLICATED_LOCATOR :
+        VALIDATION_ERROR_TYPE.NEW_ELEMENT;
       sendResponse(validationMessage);
     },
     CHECK_PO_NAME_VALIDITY: ({ id, newName }, sender, sendResponse) => {
@@ -79,9 +81,9 @@ export const createListeners = (dispatch, state) => {
       dispatch(removeAllLocators());
       dispatch(toggleBackdrop(false));
     },
-    GET_ELEMENT: (jdnHash) => {
+    GET_ELEMENT: (jdnHash, sender, sendResponse) => {
       const element = selectLocatorByJdnHash(state, jdnHash);
-      sendMessage.elementData({
+      sendResponse({
         element,
         types: getTypesMenuOptions(),
       });
@@ -91,7 +93,6 @@ export const createListeners = (dispatch, state) => {
       dispatch(clearAll());
     },
     IS_OPEN_MODAL: (payload) => dispatch(toggleBackdrop(payload)),
-    PREDICTION_IS_UNACTUAL: () => dispatch(setUnactualPrediction(true)),
     REMOVE_ELEMENT: (payload) => dispatch(toggleDeleted(payload)),
     SEND_PROBLEM_REPORT: (payload) => sendProblemReport(payload),
     RERUN_GENERATION: (payload) => dispatch(rerunGeneration([selectLocatorById(state, payload)])),

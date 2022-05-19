@@ -65,6 +65,14 @@
         & ~ .jdn-input-message {
           color: @warning-color;
         }
+
+        & ~ .jdn-warning-icon {
+          display: none;
+        }
+
+        & ~ .jdn-error-icon {
+          display: block;
+        }
       }
   
       &.jdn-input-warning {
@@ -73,10 +81,14 @@
         & ~ .jdn-input-message {
           color: @warning-yellow-color;
         }
-      }
-  
-      &:invalid ~ i {
-        display: block;
+
+        & ~ .jdn-error-icon {
+          display: none;
+        }
+
+        & ~ .jdn-warning-icon {
+          display: block;
+        }
       }
     }
 
