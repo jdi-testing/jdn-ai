@@ -67,17 +67,17 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
   let areChildrenChecked = false;
 
   const verifyChildrenAreChecked = (element) => {
-    for (let child of element.children) {
+    for (const child of element.children) {
       if (!child.checked) {
         areChildrenChecked = false;
         break;
-      } else { 
+      } else {
         if (size(child.children)) {
           verifyChildrenAreChecked(child);
         } else areChildrenChecked = true;
       }
     };
-  }
+  };
 
   const checkElement = () => {
     element.checked = true;
