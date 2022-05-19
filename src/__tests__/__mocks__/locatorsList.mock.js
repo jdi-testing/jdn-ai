@@ -167,7 +167,6 @@ export const locatorsListMock = [
     x: 0,
     y: 0
   },
-
   {
     element_id: "4899732051322359779677566873_0",
     parent_id: "7967190244322359771369749968_0",
