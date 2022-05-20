@@ -58,7 +58,7 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
   const updateChildren = (el, check) => {
     el.children.map((child) => {
       child.checked = check;
-      unmakeIndeterminateElement(child);
+      unmakeIndeterminateElement(child.element_id);
       dispatch(check ? checkLocator(child.element_id) : uncheckLocator(child.element_id));
       if (size(child.children)) {
         updateChildren(child, check);
@@ -83,7 +83,7 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
   const checkElement = (el) => {
     el.checked = true;
     dispatch(checkLocator(el.element_id));
-    unmakeIndeterminateElement(el);
+    unmakeIndeterminateElement(el.element_id);
   }
 
   const uncheckElement = (el) => {
@@ -91,16 +91,12 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
     dispatch(uncheckLocator(el.element_id));
   }
 
-  const unmakeIndeterminateElement = (el) => {
-    dispatch(unmakeIndeterminate(el.element_id));
+  const makeIndeterminateElement = (id) => {
+    dispatch(makeIndeterminate(id));
   }
 
-  const makeIndeterminateParent = (el) => {
-    dispatch(makeIndeterminate(el.parent_id));
-  }
-
-  const unmakeIndeterminateParent = (el) => {
-    dispatch(unmakeIndeterminate(el.parent_id));
+  const unmakeIndeterminateElement = (id) => {
+    dispatch(unmakeIndeterminate(id));
   }
 
   const transformElements = () => {
@@ -108,7 +104,7 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
     verifyNotCheckedChildren(element);
     if (notCheckedChildren === 0) {
       uncheckElement(element);
-      unmakeIndeterminateElement(element);
+      unmakeIndeterminateElement(element.element_id);
       updateChildren(element, false);
     } else {
       updateChildren(element, true);
@@ -118,8 +114,8 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
   const handleOnClick = () => {
     if (!isLocatorChecked) {
       checkElement(element);
-      unmakeIndeterminateElement(element);
-      makeIndeterminateParent(element);
+      unmakeIndeterminateElement(element.element_id);
+      makeIndeterminateElement(element.parent_id);
     } else {
       if (size(element.children)) {
         transformElements();
@@ -131,12 +127,12 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
 
   useEffect(() => {
     if (isLocatorIndeterminate)
-      makeIndeterminateParent(element);
+      makeIndeterminateElement(element.parent_id);
   }, [isLocatorIndeterminate]);
 
   useEffect(() => {
     if (!isLocatorIndeterminate && !isLocatorChecked)
-      unmakeIndeterminateParent(element);
+      unmakeIndeterminateElement(element.parent_id);
   }, [isLocatorIndeterminate, isLocatorChecked]);
 
   useEffect(() => {
