@@ -40,7 +40,7 @@ const isValidLocator = ({ locator, validity }) =>
   !validity?.locator.length || validity.locator === VALIDATION_ERROR_TYPE.NEW_ELEMENT;
 
 // eslint-disable-next-line react/display-name
-export const Locator = memo(({ element, currentPage, noScrolling }) => {
+export const Locator = memo(({ element, currentPage, noScrolling, index }) => {
   const [copyTooltipTitle, setTooltipTitle] = useState(copyTitle.Copy);
   const [menuVisible, setMenuVisible] = useState(false);
   const dispatch = useDispatch();
@@ -77,31 +77,50 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
 
     const successEditedIcon = (
       <Tooltip title={getTooltipText()}>
-        <Icon component={CheckedEdited} className="jdn__locatorsList-status-large" />
+        <Icon component={CheckedEdited} className="jdn__locatorsList-status" />
       </Tooltip>
     );
     const warningEditedIcon = (
       <Tooltip title={getTooltipText()}>
-        <Icon component={WarningEditedSvg} className="jdn__locatorsList-status-large" />
+        <Icon component={WarningEditedSvg} className="jdn__locatorsList-status" />
       </Tooltip>
     );
 
-    switch (element.locator.taskStatus) {
-      case locatorTaskStatus.SUCCESS: {
-        if (isEdited(element)) {
-          return isValidLocator(element) ? successEditedIcon : warningEditedIcon;
-        } else {
-          break;
-        }
-      }
-      case locatorTaskStatus.STARTED:
+    // switch (element.locator.taskStatus) {
+    //   case locatorTaskStatus.SUCCESS: {
+    //     if (isEdited(element)) {
+    //       return isValidLocator(element) ? successEditedIcon : warningEditedIcon;
+    //     } else {
+    //       break;
+    //     }
+    //   }
+    //   case locatorTaskStatus.STARTED:
+    //     return startedIcon;
+    //   case locatorTaskStatus.PENDING:
+    //     return pendingIcon;
+    //   case locatorTaskStatus.REVOKED:
+    //     return revokedIcon;
+    //   case locatorTaskStatus.FAILURE:
+    //     return failureIcon;
+    //   default:
+    //     break;
+    // }
+
+    switch (index) {
+      case 0:
+        return successEditedIcon;
+      case 1:
         return startedIcon;
-      case locatorTaskStatus.PENDING:
+      case 2:
+        return startedIcon;
+      case 3:
         return pendingIcon;
-      case locatorTaskStatus.REVOKED:
-        return revokedIcon;
-      case locatorTaskStatus.FAILURE:
+      case 4:
         return failureIcon;
+      case 5:
+        return warningEditedIcon;
+      case 6:
+        return revokedIcon;
       default:
         break;
     }
@@ -122,7 +141,7 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
       <span>
         @UI(
         <span className="jdn__xpath_item-locator">&quot;{getLocator(locator)}&quot;</span>)
-        <br/>
+        <br />
         <span className="jdn__xpath_item-type">public</span>
         <span>&nbsp;{type}&nbsp;</span>
         {name}
@@ -178,9 +197,7 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
         <div className="jdn__xpath_locators">
           <Checkbox checked={generate} onChange={handleOnChange}></Checkbox>
           <Text className="jdn__xpath_item">
-            <div>
-              {renderIcon()}
-            </div>
+            <div>{renderIcon()}</div>
             {renderColorizedString()}
           </Text>
           <Tooltip placement="bottom" title={copyTooltipTitle}>
@@ -192,12 +209,13 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
               icon={<Icon component={CopySvg} />}
             />
           </Tooltip>
-          { isLocatorInProgress && <Button
-            type="text"
-            className="jdn__buttons jdn__buttons--drag-handle"
-            icon={<Icon component={HandleSvg} />}
-          />
-          }
+          {isLocatorInProgress && (
+            <Button
+              type="text"
+              className="jdn__buttons jdn__buttons--drag-handle"
+              icon={<Icon component={HandleSvg} />}
+            />
+          )}
           <a onClick={() => setMenuVisible(true)} onMouseLeave={() => setMenuVisible(false)}>
             <Dropdown overlay={renderMenu()} visible={menuVisible}>
               <Icon component={EllipsisSvg} onClick={(e) => e.preventDefault()} />

@@ -7,12 +7,7 @@
     &-status {
       margin-right: 8px;
       font-size: 14px;
-
-      &-large {
-        font-size: 17px;
-        margin: 0 5px 0 8px;
-        vertical-align: middle;
-      }
+      color: #fff;
     }
 
     &-header {
@@ -107,15 +102,20 @@
       }
 
       .ant-spin {
-        margin-right: 8px;
+        margin-right: 10px;
       }
 
       .ant-spin-sm .ant-spin-dot {
-        font-size: 12px;
+        font-size: 10px;
+
+        i {
+          width: 5px;
+          height: 5px;
+        }
       }
 
       .ant-spin-dot-item {
-        background-color: #d8a115;
+        background-color: @warning-icon-color;
       }
 
       .ant-checkbox + span {
