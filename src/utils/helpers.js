@@ -1,3 +1,4 @@
+import { cloneDeep } from "lodash";
 import { getLocator } from "../services/pageObject";
 import { VALIDATION_ERROR_TYPE } from "./constants";
 
@@ -13,7 +14,8 @@ export const copyToClipboard = (text) => {
 
 export const getLocatorString = (loc) => `@UI("${getLocator(loc.locator)}")\npublic ${loc.type} ${loc.name};`;
 
-export const convertListToTree = (list) => {
+export const convertListToTree = (_list) => {
+  const list = cloneDeep(_list);
   const map = {};
   const tree = [];
 

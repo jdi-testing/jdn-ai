@@ -1,12 +1,13 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-import { requestGenerationData } from "../../services/pageDataHandlers";
+// import { requestGenerationData } from "../../services/pageDataHandlers";
 import { runXpathGeneration } from "./runXpathGeneration";
 import { selectLocators } from "../selectors/locatorSelectors";
 import { sendMessage } from "../../services/connector";
 import { addLocators } from "../slices/locatorsSlice";
 import { addLocatorsToPageObj } from "../slices/pageObjectSlice";
 import { locatorsGenerationStarted } from "../slices/mainSlice";
+import { locatorsListMock } from "../../__tests__/__mocks__/locatorsList.mock";
 
 const filterByProbability = (elements, perception) => {
   return elements.filter((e) => e.predicted_probability >= perception);
@@ -22,7 +23,8 @@ export const generateLocators = createAsyncThunk("locators/generateLocators", as
         (element) => locators.findIndex((loc) => loc.element_id === element.element_id) === -1
     );
     if (noLocator.length) {
-      const { generationData } = await requestGenerationData(noLocator);
+      // const { generationData } = await requestGenerationData(noLocator);
+      const generationData = locatorsListMock;
       sendMessage.setHighlight({ elements: generationData, perception });
       thunkAPI.dispatch(addLocators(generationData));
 

@@ -123,7 +123,7 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
 
   return (
     <React.Fragment>
-      <LocatorsTree />
+      <LocatorsTree pageObject={currentPageObject} />
       <PerceptionTreshold />
       <div className="jdn__navigation">
         {renderBackButton()}
