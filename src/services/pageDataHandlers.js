@@ -101,6 +101,17 @@ export const openConfirmInProgressPopup = () => {
   chrome.storage.sync.set({ POPUP_CONFIG: config }, connector.attachContentScript(confirmPopup));
 };
 
+export const openConfirmSelectionPopup = () => {
+  const config = {
+    header: "Сonfirm the selection",
+    content: `Not all selected locators will be generated.
+    You can cancel the generation and restore the required locators first`,
+    buttonConfirmText: "Сonfirm",
+    scriptMessage: "CONFIRM_SELECTED_POPUP",
+  };
+  chrome.storage.sync.set({ POPUP_CONFIG: config }, connector.attachContentScript(confirmPopup));
+};
+
 export const openDeleteAllPopup = () => {
   const config = {
     header: "Delete all",

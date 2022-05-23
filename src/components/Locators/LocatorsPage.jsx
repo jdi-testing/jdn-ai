@@ -10,8 +10,10 @@ import {
   openConfirmBackPopup,
   openConfirmInProgressPopup,
   removeOverlay,
+  openConfirmSelectionPopup,
 } from "../../services/pageDataHandlers";
 import {
+  selectDeletedSelectedByPageObj,
   selectGeneratedSelectedByPageObj,
   selectPageObjById,
   selectWaitingSelectedByPageObj,
@@ -35,6 +37,7 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
   const locatorIds = useSelector((_state) => selectPageObjById(_state, currentPageObject).locators);
   const waitingSelected = useSelector((_state) => selectWaitingSelectedByPageObj(_state, currentPageObject));
   const generatedSelected = useSelector((_state) => selectGeneratedSelectedByPageObj(_state, currentPageObject));
+  const deletedSelected = useSelector((_state) => selectDeletedSelectedByPageObj(_state, currentPageObject));
   const scriptMessage = useSelector((_state) => _state.main.scriptMessage);
 
   const [locatorsSnapshot] = useState(locators);
@@ -55,6 +58,7 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
 
   const handleConfirm = () => {
     if (size(waitingSelected)) openConfirmInProgressPopup();
+    if (size(deletedSelected)) openConfirmSelectionPopup();
     else pageBack();
   };
 
@@ -62,7 +66,10 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
     if (alreadyGenerated) {
       showOverlay();
     }
-    return () => removeOverlay();
+    return () => {
+      removeOverlay();
+      dispatch(resetNotifications());
+    };
   }, []);
 
   useEffect(() => {
@@ -76,7 +83,6 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
         } else {
           dispatch(restoreLocators(locatorsSnapshot));
         }
-        dispatch(resetNotifications());
         pageBack();
         break;
       case "CONFIRM_SAVE_CHANGES":
@@ -84,6 +90,9 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
         break;
       case "CONFIRM_IN_PROGRESS_POPUP":
         locatorGenerationController.revokeAll();
+        pageBack();
+        break;
+      case "CONFIRM_SELECTED_POPUP":
         pageBack();
         break;
     }
