@@ -36,5 +36,24 @@ export const convertListToTree = (_list) => {
   return tree;
 };
 
+export const convertToListWithChildren = (_list) => {
+  const list = cloneDeep(_list);
+  const map = {};
+
+  for (let i = 0; i < list.length; i++) {
+    map[list[i].element_id] = i;
+    list[i].children = [];
+  }
+
+  for (let i = 0; i < list.length; i++) {
+    const node = list[i];
+    if (node.parent_id !== "") {
+      list[map[node.parent_id]].children.push(node.element_id);
+    }
+  }
+
+  return list;
+};
+
 export const isErrorValidationType = (type) => VALIDATION_ERROR_TYPE.hasOwnProperty(type);
 

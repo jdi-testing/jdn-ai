@@ -33,3 +33,20 @@ export const selectMaxOrderedLocator = createSelector(
     simpleSelectLocators,
     (items) => maxBy(items, "order"),
 );
+
+export const isLocatorIndeterminate = createSelector(
+  selectLocators,
+  selectLocatorById,
+  (locators, locator) => locator.children.some((childId) => locators.some((loc) => {
+    return (loc.element_id === childId) && loc.generate
+  }))
+);
+
+export const areChildrenChecked = createSelector(
+  selectLocators,
+  selectLocatorById,
+  (locators, locator) => locator.children.every((childId) => locators.some((loc) => {
+    return (loc.element_id === childId) && loc.generate
+  }))
+);
+

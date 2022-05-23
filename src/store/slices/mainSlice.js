@@ -15,9 +15,7 @@ const initialState = {
     allow_indexes_at_the_beginning: false,
     allow_indexes_in_the_middle: false,
     allow_indexes_at_the_end: false,
-  },
-  locatorsCheckability: {},
-  locatorsIndeterminate: {}
+  }
 };
 
 const mainSlice = createSlice({
@@ -59,18 +57,6 @@ const mainSlice = createSlice({
     },
     locatorsGenerationStarted(state) {
       state.locatorsStatus = locatorsGenerationStatus.started;
-    },
-    checkLocator(state, { payload }) {
-      state.locatorsCheckability[payload] = true;
-    },
-    uncheckLocator(state, { payload }) {
-      state.locatorsCheckability[payload] = false;
-    },
-    makeIndeterminate(state, { payload }) {
-      state.locatorsIndeterminate[payload] = true;
-    },
-    unmakeIndeterminate(state, { payload }) {
-      state.locatorsIndeterminate[payload] = false;
     }
   },
 });
@@ -87,9 +73,5 @@ export const {
   setScriptMessage,
   toggleBackdrop,
   locatorsGenerationStarted,
-  resetNotifications,
-  checkLocator,
-  uncheckLocator,
-  makeIndeterminate,
-  unmakeIndeterminate
+  resetNotifications
 } = mainSlice.actions;

@@ -7,6 +7,7 @@ import { sendMessage } from "../../services/connector";
 import { addLocators } from "../slices/locatorsSlice";
 import { addLocatorsToPageObj } from "../slices/pageObjectSlice";
 import { locatorsGenerationStarted } from "../slices/mainSlice";
+import { convertToListWithChildren } from "../../utils/helpers";
 import { locatorsListMock } from "../../__tests__/__mocks__/locatorsList.mock";
 
 const filterByProbability = (elements, perception) => {
@@ -24,7 +25,7 @@ export const generateLocators = createAsyncThunk("locators/generateLocators", as
     );
     if (noLocator.length) {
       // const { generationData } = await requestGenerationData(noLocator);
-      const generationData = locatorsListMock;
+      const generationData = convertToListWithChildren(locatorsListMock);
       sendMessage.setHighlight({ elements: generationData, perception });
       thunkAPI.dispatch(addLocators(generationData));
 

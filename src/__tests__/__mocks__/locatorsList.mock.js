@@ -192,7 +192,7 @@ export const locatorsListMock = [
     element_id: "4829071593322359778594168522_0",
     parent_id: "4899732051322359779677566873_0",
     height: 0,
-    jdnHash: "4829071593322359778594168519",
+    jdnHash: "4829071593322359778594168522",
     locator: {
       fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[3]/ul/li[3]",
       taskStatus: "PENDING"
@@ -213,7 +213,7 @@ export const locatorsListMock = [
     element_id: "9636042053322359773245578777_0",
     parent_id: "4829071593322359778594168522_0",
     height: 0,
-    jdnHash: "9636042053322359773245578788",
+    jdnHash: "9636042053322359773245578777",
     locator: {
       fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[5]/ul/li[5]",
       taskStatus: "PENDING"
@@ -234,7 +234,7 @@ export const locatorsListMock = [
     element_id: "8381553594322359777170267550_0",
     parent_id: "4829071593322359778594168522_0",
     height: 0,
-    jdnHash: "8381553594322359777170267551",
+    jdnHash: "8381553594322359777170267550",
     locator: {
       fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[3]/ul",
       taskStatus: "PENDING"

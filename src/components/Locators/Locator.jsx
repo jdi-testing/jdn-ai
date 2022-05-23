@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import Icon from "@ant-design/icons";
 import React, { memo, useEffect, useRef, useState } from "react";
 import Text from "antd/lib/typography/Text";
-import { size } from "lodash";
 
 import { getLocator } from "../../services/pageObject";
 import { getTypesMenuOptions } from "../../utils/generationClassesMap";
@@ -12,8 +11,8 @@ import { isProgressStatus } from "../../services/locatorGenerationController";
 import { locatorTaskStatus, VALIDATION_ERROR_TYPE, pageType, copyTitle } from "../../utils/constants";
 import { rerunGeneration } from "../../store/thunks/rerunGeneration";
 import { stopGeneration } from "../../store/thunks/stopGeneration";
-import { toggleDeleted } from "../../store/slices/locatorsSlice";
-import { checkLocator, uncheckLocator, makeIndeterminate, unmakeIndeterminate } from "../../store/slices/mainSlice";
+import { toggleDeleted, toggleElementGeneration, toggleChildrenGeneration } from "../../store/slices/locatorsSlice";
+import { isLocatorIndeterminate, areChildrenChecked } from "../../store/selectors/locatorSelectors";
 
 import CheckedEdited from "../../assets/checked-edited.svg";
 import EllipsisSvg from "../../assets/ellipsis.svg";
@@ -47,93 +46,27 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
   const dispatch = useDispatch();
 
   const { element_id, type, name, locator, generate, isCmHighlighted, validity } = element;
+  console.log('generate', generate);
 
   const ref = useRef(null);
 
   const isLocatorInProgress = isProgressStatus(locator.taskStatus);
 
-  const isLocatorChecked = useSelector((state) => state.main.locatorsCheckability[element_id]);
-  const isLocatorIndeterminate = useSelector((state) => state.main.locatorsIndeterminate[element_id]);
+  const indeterminate = useSelector((state) => isLocatorIndeterminate(state, element.element_id));
+  const childrenChecked = useSelector((state) => areChildrenChecked(state, element.element_id));
 
-  const updateChildren = (el, check) => {
-    el.children.map((child) => {
-      child.checked = check;
-      unmakeIndeterminateElement(child.element_id);
-      dispatch(check ? checkLocator(child.element_id) : uncheckLocator(child.element_id));
-      if (size(child.children)) {
-        updateChildren(child, check);
-      }
-    });
-  };
-
-  let notCheckedChildren = 0;
-
-  const verifyNotCheckedChildren = (el) => {
-    for (const child of el.children) {
-      if (!child.checked) {
-        notCheckedChildren++;
-      } else {
-        if (size(child.children)) {
-          verifyNotCheckedChildren(child);
-        }
-      }
-    };
-  };
-
-  const checkElement = (el) => {
-    el.checked = true;
-    dispatch(checkLocator(el.element_id));
-    unmakeIndeterminateElement(el.element_id);
-  }
-
-  const uncheckElement = (el) => {
-    el.checked = false;
-    dispatch(uncheckLocator(el.element_id));
-  }
-
-  const makeIndeterminateElement = (id) => {
-    dispatch(makeIndeterminate(id));
-  }
-
-  const unmakeIndeterminateElement = (id) => {
-    dispatch(unmakeIndeterminate(id));
-  }
-
-  const transformElements = () => {
-    notCheckedChildren = 0;
-    verifyNotCheckedChildren(element);
-    if (notCheckedChildren === 0) {
-      uncheckElement(element);
-      unmakeIndeterminateElement(element.element_id);
-      updateChildren(element, false);
+  const handleOnChange = () => {
+    if (!generate) {
+      dispatch(toggleElementGeneration(element_id));
     } else {
-      updateChildren(element, true);
-    }
-  }
-
-  const handleOnClick = () => {
-    if (!isLocatorChecked) {
-      checkElement(element);
-      unmakeIndeterminateElement(element.element_id);
-      makeIndeterminateElement(element.parent_id);
-    } else {
-      if (size(element.children)) {
-        transformElements();
+      if (childrenChecked) {
+        dispatch(toggleElementGeneration(element_id));
+        dispatch(toggleChildrenGeneration(element_id));
       } else {
-        uncheckElement(element);
+        dispatch(toggleChildrenGeneration(element_id));
       }
     }
   };
-
-  useEffect(() => {
-    if (isLocatorIndeterminate)
-      makeIndeterminateElement(element.parent_id);
-  }, [isLocatorIndeterminate]);
-
-  useEffect(() => {
-    if (!isLocatorIndeterminate && !isLocatorChecked)
-      unmakeIndeterminateElement(element.parent_id);
-  }, [isLocatorIndeterminate, isLocatorChecked]);
 
   useEffect(() => {
     if (generate && !noScrolling) {
@@ -254,7 +187,7 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
     >
       {currentPage === pageType.locatorsList ? (
         <div className="jdn__xpath_locators">
-          <Checkbox checked={isLocatorChecked} indeterminate={!isLocatorChecked && isLocatorIndeterminate} onClick={handleOnClick}></Checkbox>
+          <Checkbox checked={generate} indeterminate={indeterminate} onClick={handleOnChange}></Checkbox>
           <Text className="jdn__xpath_item">
             <div>
               {renderIcon()}

@@ -78,6 +78,14 @@ const locatorsSlice = createSlice({
       const locator = typeof payload === "string" ? simpleSelectLocatorById(state, payload) : payload;
       locatorsAdapter.upsertOne(state, { ...locator, generate: !locator.generate });
     },
+    toggleChildrenGeneration(state, { payload }) {
+      const newValue = [];
+      const locator = typeof payload === "string" ? simpleSelectLocatorById(state, payload) : payload;
+      locator.children.forEach(({ element_id, generate }) => {
+        newValue.push({ element_id, generate: !generate });
+      });
+      locatorsAdapter.upsertMany(state, newValue);
+    },
     toggleElementGroupGeneration(state, { payload }) {
       const newValue = [];
       payload.forEach(({ element_id, generate }) => {
@@ -136,6 +144,7 @@ export const {
   removeAll,
   reorderLocators,
   toggleElementGeneration,
+  toggleChildrenGeneration,
   toggleElementGroupGeneration,
   toggleDeleted,
   toggleDeletedGroup,
