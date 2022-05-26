@@ -12,6 +12,7 @@ import {
   removeOverlay,
 } from "../../services/pageDataHandlers";
 import {
+  selectDeletedSelectedByPageObj,
   selectGeneratedSelectedByPageObj,
   selectPageObjById,
   selectWaitingSelectedByPageObj,
@@ -26,6 +27,7 @@ import { locatorGenerationController } from "../../services/locatorGenerationCon
 import { clearLocators } from "../../store/slices/pageObjectSlice";
 import { changePageBack, setScriptMessage, toggleBackdrop, resetNotifications } from "../../store/slices/mainSlice";
 import { removeLocators, restoreLocators } from "../../store/slices/locatorsSlice";
+import { LocatorListHeader } from "./LocatorListHeader";
 
 export const LocatorsPage = ({ alreadyGenerated }) => {
   const dispatch = useDispatch();
@@ -35,6 +37,7 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
   const locatorIds = useSelector((_state) => selectPageObjById(_state, currentPageObject).locators);
   const waitingSelected = useSelector((_state) => selectWaitingSelectedByPageObj(_state, currentPageObject));
   const generatedSelected = useSelector((_state) => selectGeneratedSelectedByPageObj(_state, currentPageObject));
+  const deletedSelected = useSelector((_state) => selectDeletedSelectedByPageObj(_state, currentPageObject));
   const scriptMessage = useSelector((_state) => _state.main.scriptMessage);
 
   const [locatorsSnapshot] = useState(locators);
@@ -123,7 +126,18 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
 
   return (
     <React.Fragment>
-      {size(locators) ? <LocatorsTree pageObject={currentPageObject} /> : null}
+      <div className="jdn__locatorsList">
+        <LocatorListHeader
+          {...{
+            generatedSelected,
+            waitingSelected,
+            deletedSelected,
+          }}
+        />
+        <div className="jdn__locatorsList-content">
+          {size(locators) ? <LocatorsTree pageObject={currentPageObject} /> : null}
+        </div>
+      </div>
       {/* <PerceptionTreshold /> */}
       <div className="jdn__navigation">
         {renderBackButton()}

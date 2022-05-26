@@ -2,13 +2,13 @@ import React, { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { size } from "lodash";
 import { Tree } from "antd";
-import { DownOutlined } from "@ant-design/icons";
 
 import { Locator } from "./Locator";
 import { Notifications } from "./Notifications";
 import { convertListToTree } from "../../utils/helpers";
 import { selectCurrentPage } from "../../store/selectors/mainSelectors";
 import { selectPageObjLocatorsByProbability } from "../../store/selectors/pageObjectSelectors";
+import CaretDownSvg from "../../assets/caret-down.svg";
 
 const { TreeNode } = Tree;
 
@@ -34,10 +34,7 @@ export const LocatorsTree = ({ pageObject: currentPageObject }) => {
       <TreeNode
         key={element_id}
         title={
-          <Locator
-            {...{ element: locatorsMap[element_id], currentPage }}
-            scroll={scrollToLocator === element_id}
-          />
+          <Locator {...{ element: locatorsMap[element_id], currentPage }} scroll={scrollToLocator === element_id} />
         }
       >
         {size(children) ? renderTreeNodes(children) : null}
@@ -46,13 +43,11 @@ export const LocatorsTree = ({ pageObject: currentPageObject }) => {
   };
 
   return (
-    <div className="jdn__locatorsList">
-      <div className="jdn__locatorsList-content">
-        <Tree switcherIcon={<DownOutlined />} defaultExpandAll>
-          {renderTreeNodes(locatorsTree)}
-        </Tree>
-      </div>
+    <React.Fragment>
+      <Tree switcherIcon={<CaretDownSvg />} defaultExpandAll>
+        {renderTreeNodes(locatorsTree)}
+      </Tree>
       <Notifications />
-    </div>
+    </React.Fragment>
   );
 };

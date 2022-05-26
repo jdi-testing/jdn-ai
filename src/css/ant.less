@@ -14,7 +14,7 @@
   font-size: 12px;
 
   &-treenode {
-    width: 100%;
+    width: calc(100vw - 48px);
   }
 
   &-node-content-wrapper {
@@ -23,6 +23,22 @@
 
   & &-node-content-wrapper {
     padding: 0;
+  }
+
+  &-switcher {
+    width: 28px;
+    
+    & svg.ant-tree-switcher-icon {
+      transform: rotate(180deg);
+      font-size: 12px;
+      color: #808080;
+    }
+
+    &_close {
+      & svg.ant-tree-switcher-icon {
+        transform: rotate(0deg);
+      }
+    }
   }
 }
 
@@ -244,6 +260,10 @@
       top: 0.05em;
     }
   }
+}
+
+.ant-tree-treenode {
+  display: none;
 }
 
 @media screen and (max-width: 600px) {

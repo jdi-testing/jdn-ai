@@ -39,7 +39,6 @@
 
       &--selected {
         background-color: #ecf7ff;
-        padding: 0 12px;
 
         &:hover {
           background-color: #d4eefa;
@@ -51,8 +50,6 @@
       }
 
       &--shift {
-        padding: 0 12px;
-
         &:hover {
           background-color: #f2f2f2;
         }
@@ -69,6 +66,7 @@
 
     &_locators {
       display: flex;
+      gap: 8px;
     }
 
     &_item {
@@ -77,6 +75,7 @@
       line-height: 26px;
       display: flex;
       width: calc(100% - 72px);
+      gap: 8px;
 
       &-locator {
         color: @xpath-item-color-locator;

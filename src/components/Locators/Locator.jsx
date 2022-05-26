@@ -193,7 +193,7 @@ export const Locator = memo(({ element, currentPage, scroll }) => {
         <div className="jdn__xpath_locators">
           <Checkbox checked={generate} indeterminate={indeterminate} onClick={handleOnChange}></Checkbox>
           <Text className="jdn__xpath_item">
-            <div>{renderIcon()}</div>
+            {renderIcon()}
             {renderColorizedString()}
           </Text>
           <Tooltip placement="bottom" title={copyTooltipTitle}>
