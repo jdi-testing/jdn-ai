@@ -86,7 +86,7 @@ export const LocatorsList = ({ pageObject: currentPageObject }) => {
       <Locator
         key={element.element_id}
         noScrolling={size(elements) && size(selectedElements) === size(elements)}
-        {...{ element, xpathConfig, currentPage, index }}
+        {...{ element, xpathConfig, currentPage }}
       />
     ));
 

@@ -40,7 +40,7 @@ const isValidLocator = ({ locator, validity }) =>
   !validity?.locator.length || validity.locator === VALIDATION_ERROR_TYPE.NEW_ELEMENT;
 
 // eslint-disable-next-line react/display-name
-export const Locator = memo(({ element, currentPage, noScrolling, index }) => {
+export const Locator = memo(({ element, currentPage, noScrolling }) => {
   const [copyTooltipTitle, setTooltipTitle] = useState(copyTitle.Copy);
   const [menuVisible, setMenuVisible] = useState(false);
   const dispatch = useDispatch();
@@ -86,41 +86,22 @@ export const Locator = memo(({ element, currentPage, noScrolling, index }) => {
       </Tooltip>
     );
 
-    // switch (element.locator.taskStatus) {
-    //   case locatorTaskStatus.SUCCESS: {
-    //     if (isEdited(element)) {
-    //       return isValidLocator(element) ? successEditedIcon : warningEditedIcon;
-    //     } else {
-    //       break;
-    //     }
-    //   }
-    //   case locatorTaskStatus.STARTED:
-    //     return startedIcon;
-    //   case locatorTaskStatus.PENDING:
-    //     return pendingIcon;
-    //   case locatorTaskStatus.REVOKED:
-    //     return revokedIcon;
-    //   case locatorTaskStatus.FAILURE:
-    //     return failureIcon;
-    //   default:
-    //     break;
-    // }
-
-    switch (index) {
-      case 0:
-        return successEditedIcon;
-      case 1:
+    switch (element.locator.taskStatus) {
+      case locatorTaskStatus.SUCCESS: {
+        if (isEdited(element)) {
+          return isValidLocator(element) ? successEditedIcon : warningEditedIcon;
+        } else {
+          break;
+        }
+      }
+      case locatorTaskStatus.STARTED:
         return startedIcon;
-      case 2:
-        return startedIcon;
-      case 3:
+      case locatorTaskStatus.PENDING:
         return pendingIcon;
-      case 4:
-        return failureIcon;
-      case 5:
-        return warningEditedIcon;
-      case 6:
+      case locatorTaskStatus.REVOKED:
         return revokedIcon;
+      case locatorTaskStatus.FAILURE:
+        return failureIcon;
       default:
         break;
     }
