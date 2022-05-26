@@ -93,12 +93,12 @@ export const Locator = memo(({ element, currentPage, scroll }) => {
 
     const successEditedIcon = (
       <Tooltip title={getTooltipText()}>
-        <Icon component={CheckedEdited} className="jdn__locatorsList-status-large" />
+        <Icon component={CheckedEdited} className="jdn__locatorsList-status" />
       </Tooltip>
     );
     const warningEditedIcon = (
       <Tooltip title={getTooltipText()}>
-        <Icon component={WarningEditedSvg} className="jdn__locatorsList-status-large" />
+        <Icon component={WarningEditedSvg} className="jdn__locatorsList-status" />
       </Tooltip>
     );
 
