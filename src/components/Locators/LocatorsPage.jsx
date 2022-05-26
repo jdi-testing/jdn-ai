@@ -4,7 +4,7 @@ import { Button, Tooltip } from "antd";
 import Icon from "@ant-design/icons";
 
 import { LocatorsTree } from "./LocatorsTree";
-import { PerceptionTreshold } from "../PerceptionTreshold/PerceptionTreshold";
+// import { PerceptionTreshold } from "../PerceptionTreshold/PerceptionTreshold";
 import {
   showOverlay,
   openConfirmBackPopup,
@@ -123,8 +123,8 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
 
   return (
     <React.Fragment>
-      <LocatorsTree pageObject={currentPageObject} />
-      <PerceptionTreshold />
+      {size(locators) ? <LocatorsTree pageObject={currentPageObject} /> : null}
+      {/* <PerceptionTreshold /> */}
       <div className="jdn__navigation">
         {renderBackButton()}
         {renderConfirmButton()}

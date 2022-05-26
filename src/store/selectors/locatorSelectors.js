@@ -24,29 +24,30 @@ export const selectGeneratedLocators = createSelector(selectLocatorsByProbabilit
   items.filter((el) => (el.locator.taskStatus === locatorTaskStatus.SUCCESS || el.isCustomLocator) && !el.deleted)
 );
 
-export const selectLocatorsToGenerate = createSelector(
-    selectLocatorsByProbability,
-    (items) => items.filter((el) => el.generate && !el.deleted)
+export const selectLocatorsToGenerate = createSelector(selectLocatorsByProbability, (items) =>
+  items.filter((el) => el.generate && !el.deleted)
 );
 
-export const selectMaxOrderedLocator = createSelector(
-    simpleSelectLocators,
-    (items) => maxBy(items, "order"),
-);
+export const selectMaxOrderedLocator = createSelector(simpleSelectLocators, (items) => maxBy(items, "order"));
 
 export const isLocatorIndeterminate = createSelector(
-  selectLocators,
-  selectLocatorById,
-  (locators, locator) => locator.children.some((childId) => locators.some((loc) => {
-    return (loc.element_id === childId) && loc.generate
-  }))
+    selectLocators,
+    selectLocatorById,
+    (state) => state,
+    (locators, locator, state) => {
+      if (locator.generate) return false;
+      const hasChildToGenerate = (_locator) => {
+        const hasSelectedChild = _locator.children.some((childId) =>
+          locators.some((loc) => loc.element_id === childId && loc.generate)
+        );
+        return hasSelectedChild ||
+        _locator.children.some((childId) => hasChildToGenerate(selectLocatorById(state, childId)));
+      };
+
+      return hasChildToGenerate(locator);
+    }
 );
 
-export const areChildrenChecked = createSelector(
-  selectLocators,
-  selectLocatorById,
-  (locators, locator) => locator.children.every((childId) => locators.some((loc) => {
-    return (loc.element_id === childId) && loc.generate
-  }))
+export const areChildrenChecked = createSelector(selectLocators, selectLocatorById, (locators, locator) =>
+  locator.children.every((childId) => locators.some((loc) => loc.element_id === childId && loc.generate))
 );
-

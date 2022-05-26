@@ -1,4 +1,4 @@
-import { last } from "lodash";
+import { last, size } from "lodash";
 
 import { pushNotification } from "./slices/mainSlice";
 import { selectLocatorById } from "./selectors/locatorSelectors";
@@ -64,6 +64,17 @@ const notify = (state, action, prevState, store) => {
       payload.forEach((element) => {
         sendMessage.toggle({ element: selectLocatorById(state, element.element_id), skipScroll: true });
       });
+      break;
+    case "locators/setChildrenGeneration":
+      const { locator } = payload;
+      const iterateChildren = (_locator) => {
+        _locator.children.forEach((childId) => {
+          const child = selectLocatorById(state, childId);
+          sendMessage.toggle({ element: child, skipScroll: true });
+          if (size(child.children)) iterateChildren(child);
+        });
+      };
+      iterateChildren(locator);
       break;
     case "locators/toggleDeleted":
       sendMessage.toggleDeleted(selectLocatorById(state, payload));

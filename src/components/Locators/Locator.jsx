@@ -1,7 +1,7 @@
 import { Button, Checkbox, Dropdown, Menu, Spin, Tooltip, Typography } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import Icon from "@ant-design/icons";
-import React, { memo, useEffect, useRef, useState } from "react";
+import React, { memo, useRef, useState } from "react";
 import Text from "antd/lib/typography/Text";
 
 import { getLocator } from "../../services/pageObject";
@@ -11,7 +11,12 @@ import { isProgressStatus } from "../../services/locatorGenerationController";
 import { locatorTaskStatus, VALIDATION_ERROR_TYPE, pageType, copyTitle } from "../../utils/constants";
 import { rerunGeneration } from "../../store/thunks/rerunGeneration";
 import { stopGeneration } from "../../store/thunks/stopGeneration";
-import { toggleDeleted, toggleElementGeneration, toggleChildrenGeneration } from "../../store/slices/locatorsSlice";
+import {
+  toggleDeleted,
+  toggleElementGeneration,
+  setChildrenGeneration,
+  setScrollToLocator,
+} from "../../store/slices/locatorsSlice";
 import { isLocatorIndeterminate, areChildrenChecked } from "../../store/selectors/locatorSelectors";
 
 import CheckedEdited from "../../assets/checked-edited.svg";
@@ -40,39 +45,38 @@ const isValidLocator = ({ locator, validity }) =>
   !validity?.locator.length || validity.locator === VALIDATION_ERROR_TYPE.NEW_ELEMENT;
 
 // eslint-disable-next-line react/display-name
-export const Locator = memo(({ element, currentPage, noScrolling }) => {
+export const Locator = memo(({ element, currentPage, scroll }) => {
   const [copyTooltipTitle, setTooltipTitle] = useState(copyTitle.Copy);
   const [menuVisible, setMenuVisible] = useState(false);
+
   const dispatch = useDispatch();
 
   const { element_id, type, name, locator, generate, isCmHighlighted, validity } = element;
-  console.log('generate', generate);
 
   const ref = useRef(null);
 
   const isLocatorInProgress = isProgressStatus(locator.taskStatus);
 
-  const indeterminate = useSelector((state) => isLocatorIndeterminate(state, element.element_id));
-  const childrenChecked = useSelector((state) => areChildrenChecked(state, element.element_id));
+  const indeterminate = useSelector((state) => isLocatorIndeterminate(state, element_id));
+  const allChildrenChecked = useSelector((state) => areChildrenChecked(state, element_id));
+
+  if (scroll && generate) {
+    ref.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    dispatch(setScrollToLocator(null));
+  }
 
   const handleOnChange = () => {
     if (!generate) {
       dispatch(toggleElementGeneration(element_id));
     } else {
-      if (childrenChecked) {
+      if (allChildrenChecked) {
         dispatch(toggleElementGeneration(element_id));
-        dispatch(toggleChildrenGeneration(element_id));
+        dispatch(setChildrenGeneration({ locator: element, generate: false }));
       } else {
-        dispatch(toggleChildrenGeneration(element_id));
+        dispatch(setChildrenGeneration({ locator: element, generate: true }));
       }
     }
   };
-
-  useEffect(() => {
-    if (generate && !noScrolling) {
-      ref.current.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
-  }, [generate]);
 
   const handleEditClick = () => {
     chrome.storage.sync.set({ OPEN_EDIT_LOCATOR: { isOpen: true, value: element, types: getTypesMenuOptions() } });
@@ -133,7 +137,7 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
       <span>
         @UI(
         <span className="jdn__xpath_item-locator">&quot;{getLocator(locator)}&quot;</span>)
-        <br/>
+        <br />
         <span className="jdn__xpath_item-type">public</span>
         <span>&nbsp;{type}&nbsp;</span>
         {name}
@@ -189,9 +193,7 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
         <div className="jdn__xpath_locators">
           <Checkbox checked={generate} indeterminate={indeterminate} onClick={handleOnChange}></Checkbox>
           <Text className="jdn__xpath_item">
-            <div>
-              {renderIcon()}
-            </div>
+            <div>{renderIcon()}</div>
             {renderColorizedString()}
           </Text>
           <Tooltip placement="bottom" title={copyTooltipTitle}>
@@ -203,12 +205,13 @@ export const Locator = memo(({ element, currentPage, noScrolling }) => {
               icon={<Icon component={CopySvg} />}
             />
           </Tooltip>
-          { isLocatorInProgress && <Button
-            type="text"
-            className="jdn__buttons jdn__buttons--drag-handle"
-            icon={<Icon component={HandleSvg} />}
-          />
-          }
+          {isLocatorInProgress && (
+            <Button
+              type="text"
+              className="jdn__buttons jdn__buttons--drag-handle"
+              icon={<Icon component={HandleSvg} />}
+            />
+          )}
           <a onClick={() => setMenuVisible(true)} onMouseLeave={() => setMenuVisible(false)}>
             <Dropdown overlay={renderMenu()} visible={menuVisible}>
               <Icon component={EllipsisSvg} onClick={(e) => e.preventDefault()} />

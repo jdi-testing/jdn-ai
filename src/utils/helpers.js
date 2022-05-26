@@ -20,7 +20,7 @@ export const convertListToTree = (_list) => {
   const tree = [];
 
   for (let i = 0; i < list.length; i++) {
-    map[list[i].element_id] = i;
+    map[list[i].jdnHash] = i;
     list[i].children = [];
   }
 
@@ -41,7 +41,7 @@ export const convertToListWithChildren = (_list) => {
   const map = {};
 
   for (let i = 0; i < list.length; i++) {
-    map[list[i].element_id] = i;
+    map[list[i].jdnHash] = i;
     list[i].children = [];
   }
 
@@ -56,4 +56,3 @@ export const convertToListWithChildren = (_list) => {
 };
 
 export const isErrorValidationType = (type) => VALIDATION_ERROR_TYPE.hasOwnProperty(type);
-

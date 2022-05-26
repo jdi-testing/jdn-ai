@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { isUndefined, lowerFirst } from "lodash";
+import { isUndefined, lowerFirst, size } from "lodash";
 import { identificationStatus, locatorTaskStatus } from "../../utils/constants";
 import { getJdiClassName, getJDILabel } from "../../utils/generationClassesMap";
 import { locatorsAdapter, simpleSelectLocatorById } from "../selectors/locatorSelectors";
@@ -11,6 +11,7 @@ import { stopGenerationGroupReducer } from "../thunks/stopGenerationGroup";
 
 const initialState = {
   status: identificationStatus.noStatus,
+  scrollToLocator: null,
 };
 
 const locatorsSlice = createSlice({
@@ -65,26 +66,37 @@ const locatorsSlice = createSlice({
       let locatorsToReorder = [];
       let reorderedLocators = [];
 
-      if (newOrder > oldOrder) { // move down
-        locatorsToReorder = locators.filter(({order}) => order > oldOrder && order <= newOrder);
-        reorderedLocators = locatorsToReorder.map(({element_id, order}) => ({element_id, order: order - 1}));
-      } else if (oldOrder > newOrder) { // move up
-        locatorsToReorder = locators.filter(({order}) => order < oldOrder && order >= newOrder);
-        reorderedLocators = locatorsToReorder.map(({element_id, order}) => ({element_id, order: order + 1}));
+      if (newOrder > oldOrder) {
+        // move down
+        locatorsToReorder = locators.filter(({ order }) => order > oldOrder && order <= newOrder);
+        reorderedLocators = locatorsToReorder.map(({ element_id, order }) => ({ element_id, order: order - 1 }));
+      } else if (oldOrder > newOrder) {
+        // move up
+        locatorsToReorder = locators.filter(({ order }) => order < oldOrder && order >= newOrder);
+        reorderedLocators = locatorsToReorder.map(({ element_id, order }) => ({ element_id, order: order + 1 }));
       }
       locatorsAdapter.upsertMany(state, [...reorderedLocators, { element_id: item.element_id, order: newOrder }]);
     },
     toggleElementGeneration(state, { payload }) {
       const locator = typeof payload === "string" ? simpleSelectLocatorById(state, payload) : payload;
-      locatorsAdapter.upsertOne(state, { ...locator, generate: !locator.generate });
+      const { generate, element_id } = locator;
+      locatorsAdapter.upsertOne(state, { element_id, generate: !generate });
     },
-    toggleChildrenGeneration(state, { payload }) {
+    setChildrenGeneration(state, { payload }) {
+      const { locator, generate } = payload;
       const newValue = [];
-      const locator = typeof payload === "string" ? simpleSelectLocatorById(state, payload) : payload;
-      locator.children.forEach(({ element_id, generate }) => {
-        newValue.push({ element_id, generate: !generate });
-      });
+      const toggleGenerate = (_locator) => {
+        _locator.children.forEach((childId) => {
+          newValue.push({ element_id: childId, generate });
+          const child = simpleSelectLocatorById(state, childId);
+          if (size(child.children)) toggleGenerate(child);
+        });
+      };
+      toggleGenerate(locator);
       locatorsAdapter.upsertMany(state, newValue);
+    },
+    setScrollToLocator(state, {payload: element_id}) {
+      state.scrollToLocator = element_id;
     },
     toggleElementGroupGeneration(state, { payload }) {
       const newValue = [];
@@ -145,6 +157,8 @@ export const {
   reorderLocators,
   toggleElementGeneration,
   toggleChildrenGeneration,
+  setChildrenGeneration,
+  setScrollToLocator,
   toggleElementGroupGeneration,
   toggleDeleted,
   toggleDeletedGroup,

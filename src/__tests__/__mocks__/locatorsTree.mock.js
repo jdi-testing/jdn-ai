@@ -22,7 +22,7 @@ export const locatorsTreeMock = [
     children: [
       {
         element_id: "3969471880322359761484771163_0",
-        parent_id: "7967190244322359771369749968_0",
+        parent_id: "7967190244322359771369749968",
         height: 60,
         jdnHash: "3969471880322359761484771163",
         locator: {
@@ -43,7 +43,7 @@ export const locatorsTreeMock = [
         children: [
           {
             element_id: "0045220328322359764482356698_0",
-            parent_id: "3969471880322359761484771163_0",
+            parent_id: "3969471880322359761484771163",
             height: 60,
             jdnHash: "0045220328322359764482356698",
             locator: {
@@ -65,7 +65,7 @@ export const locatorsTreeMock = [
           },
           {
             element_id: "6771529534322359778589411351_0",
-            parent_id: "3969471880322359761484771163_0",
+            parent_id: "3969471880322359761484771163",
             height: 15.5,
             jdnHash: "6771529534322359778589411351",
             locator: {
@@ -89,7 +89,7 @@ export const locatorsTreeMock = [
       },
       {
         element_id: "4899732051322359779677566872_0",
-        parent_id: "7967190244322359771369749968_0",
+        parent_id: "7967190244322359771369749968",
         height: 20.5,
         jdnHash: "4899732051322359779677566872",
         locator: {
@@ -110,7 +110,7 @@ export const locatorsTreeMock = [
         children: [
           {
             element_id: "4829071593322359778594168519_0",
-            parent_id: "4899732051322359779677566872_0",
+            parent_id: "4899732051322359779677566872",
             height: 0,
             jdnHash: "4829071593322359778594168519",
             locator: {
@@ -131,7 +131,7 @@ export const locatorsTreeMock = [
             children: [
               {
                 element_id: "9636042053322359773245578788_0",
-                parent_id: "4829071593322359778594168519_0",
+                parent_id: "4829071593322359778594168519",
                 height: 0,
                 jdnHash: "9636042053322359773245578788",
                 locator: {
@@ -153,7 +153,7 @@ export const locatorsTreeMock = [
               },
               {
                 element_id: "8381553594322359777170267551_0",
-                parent_id: "4829071593322359778594168519_0",
+                parent_id: "4829071593322359778594168519",
                 height: 0,
                 jdnHash: "8381553594322359777170267551",
                 locator: {
@@ -179,7 +179,7 @@ export const locatorsTreeMock = [
       },
       {
         element_id: "4899732051322359779677566873_0",
-        parent_id: "7967190244322359771369749968_0",
+        parent_id: "7967190244322359771369749968",
         height: 20.5,
         jdnHash: "4899732051322359779677566873",
         locator: {
@@ -200,14 +200,14 @@ export const locatorsTreeMock = [
         children: [
           {
             element_id: "4829071593322359778594168522_0",
-            parent_id: "4899732051322359779677566873_0",
+            parent_id: "4899732051322359779677566873",
             height: 0,
-            jdnHash: "4829071593322359778594168519",
+            jdnHash: "4829071593322359778594168522",
             locator: {
               fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[3]/ul/li[3]",
               taskStatus: "PENDING"
             },
-            name: "breadcrumbsLi",
+            name: "breadcrumbsLi2",
             order: 5,
             predictedAttrId: "",
             predicted_label: "breadcrumbs",
@@ -221,14 +221,14 @@ export const locatorsTreeMock = [
             children: [
               {
                 element_id: "9636042053322359773245578777_0",
-                parent_id: "4829071593322359778594168522_0",
+                parent_id: "4829071593322359778594168522",
                 height: 0,
-                jdnHash: "9636042053322359773245578788",
+                jdnHash: "9636042053322359773245578777",
                 locator: {
                   fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[5]/ul/li[5]",
                   taskStatus: "PENDING"
                 },
-                name: "breadcrumbsLi6",
+                name: "breadcrumbsLi7",
                 order: 6,
                 predictedAttrId: "",
                 predicted_label: "breadcrumbs",
@@ -243,9 +243,9 @@ export const locatorsTreeMock = [
               },
               {
                 element_id: "8381553594322359777170267550_0",
-                parent_id: "4829071593322359778594168522_0",
+                parent_id: "4829071593322359778594168522",
                 height: 0,
-                jdnHash: "8381553594322359777170267551",
+                jdnHash: "8381553594322359777170267550",
                 locator: {
                   fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[3]/ul",
                   taskStatus: "PENDING"

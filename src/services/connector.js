@@ -133,6 +133,7 @@ export const connector = new Connector();
 // messages, are sent from plugun to content scripts
 export const sendMessage = {
   addElement: (el) => connector.sendMessage("ADD_ELEMENT", el),
+  assignParents: (payload) => connector.sendMessage("ASSIGN_PARENTS", payload),
   changeElementName: (el) => connector.sendMessage("CHANGE_ELEMENT_NAME", el),
   changeElementType: (el) => connector.sendMessage("CHANGE_ELEMENT_TYPE", el),
   changeStatus: (el) => connector.sendMessage("CHANGE_STATUS", el),
