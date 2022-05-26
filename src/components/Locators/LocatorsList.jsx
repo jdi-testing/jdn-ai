@@ -82,7 +82,7 @@ export const LocatorsList = ({ pageObject: currentPageObject }) => {
   };
 
   const renderList = (elements, selectedElements) =>
-    elements.map((element, index) => (
+    elements.map((element) => (
       <Locator
         key={element.element_id}
         noScrolling={size(elements) && size(selectedElements) === size(elements)}
