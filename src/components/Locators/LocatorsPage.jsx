@@ -59,7 +59,7 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
 
   const handleConfirm = () => {
     if (size(waitingSelected)) openConfirmInProgressPopup();
-    if (size(deletedSelected)) openConfirmSelectionPopup();
+    else if (size(deletedSelected)) openConfirmSelectionPopup();
     else pageBack();
   };
 
