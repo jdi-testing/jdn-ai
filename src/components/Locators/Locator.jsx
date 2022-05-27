@@ -27,10 +27,9 @@ import PencilSvg from "../../assets/pencil.svg";
 import PlaySvg from "../../assets/play.svg";
 import RestoreSvg from "../../assets/restore.svg";
 import TrashBinSvg from "../../assets/trash-bin.svg";
-import WarningSvg from "../../assets/warning.svg";
 import WarningEditedSvg from "../../assets/warning-edited.svg";
 import CopySvg from "../../assets/copy.svg";
-import HandleSvg from "../../assets/handle.svg";
+import ErrorSvg from "../../assets/error-outlined.svg";
 
 export const VALIDATION_ERROR_MESSAGES = {
   [VALIDATION_ERROR_TYPE.DUPLICATED_LOCATOR]: "The locator for this element already exists.", // warn
@@ -41,7 +40,7 @@ export const VALIDATION_ERROR_MESSAGES = {
 };
 
 const isEdited = (element) => element.locator.customXpath;
-const isValidLocator = ({ locator, validity }) =>
+const isValidLocator = ({ validity }) =>
   !validity?.locator.length || validity.locator === VALIDATION_ERROR_TYPE.NEW_ELEMENT;
 
 // eslint-disable-next-line react/display-name
@@ -89,7 +88,7 @@ export const Locator = memo(({ element, currentPage, scroll }) => {
   const renderIcon = () => {
     const startedIcon = <Spin size="small" />;
     const revokedIcon = <Icon component={PauseOutlinedSvg} className="jdn__locatorsList-status" />;
-    const failureIcon = <Icon component={WarningSvg} className="jdn__locatorsList-status" />;
+    const failureIcon = <Icon component={ErrorSvg} className="jdn__locatorsList-status" />;
 
     const successEditedIcon = (
       <Tooltip title={getTooltipText()}>
@@ -157,20 +156,20 @@ export const Locator = memo(({ element, currentPage, scroll }) => {
     } else {
       return (
         <Menu disabled>
-          <Menu.Item key="1" icon={<PencilSvg />} onClick={handleEditClick}>
+          <Menu.Item key="0" icon={<PencilSvg />} onClick={handleEditClick}>
             Edit
           </Menu.Item>
           {isLocatorInProgress ? (
-            <Menu.Item key="3" icon={<PauseSvg />} onClick={() => dispatch(stopGeneration(element.element_id))}>
+            <Menu.Item key="1" icon={<PauseSvg />} onClick={() => dispatch(stopGeneration(element.element_id))}>
               Stop generation
             </Menu.Item>
           ) : null}
           {locator.taskStatus === locatorTaskStatus.REVOKED ? (
-            <Menu.Item key="4" icon={<PlaySvg />} onClick={() => dispatch(rerunGeneration([element]))}>
+            <Menu.Item key="2" icon={<PlaySvg />} onClick={() => dispatch(rerunGeneration([element]))}>
               Rerun
             </Menu.Item>
           ) : null}
-          <Menu.Item key="6" icon={<TrashBinSvg />} onClick={() => dispatch(toggleDeleted(element.element_id))}>
+          <Menu.Item key="3" icon={<TrashBinSvg />} onClick={() => dispatch(toggleDeleted(element.element_id))}>
             <Typography.Text type="danger">Delete</Typography.Text>
           </Menu.Item>
         </Menu>
@@ -195,6 +194,7 @@ export const Locator = memo(({ element, currentPage, scroll }) => {
           <Text className="jdn__xpath_item">
             {renderIcon()}
             {renderColorizedString()}
+            {index}
           </Text>
           <Tooltip placement="bottom" title={copyTooltipTitle}>
             <Button
@@ -205,15 +205,8 @@ export const Locator = memo(({ element, currentPage, scroll }) => {
               icon={<Icon component={CopySvg} />}
             />
           </Tooltip>
-          {isLocatorInProgress && (
-            <Button
-              type="text"
-              className="jdn__buttons jdn__buttons--drag-handle"
-              icon={<Icon component={HandleSvg} />}
-            />
-          )}
           <a onClick={() => setMenuVisible(true)} onMouseLeave={() => setMenuVisible(false)}>
-            <Dropdown overlay={renderMenu()} visible={menuVisible}>
+            <Dropdown overlay={renderMenu()} visible={menuVisible} disabled={true}>
               <Icon component={EllipsisSvg} onClick={(e) => e.preventDefault()} />
             </Dropdown>
           </a>
