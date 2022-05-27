@@ -27,48 +27,11 @@
           display: inline-block;
         }
       }
-
-      .jdn__buttons--drag-handle {
-        cursor: grab;
-        right: 52px;
-
-        & .sortable-chosen {
-          cursor: grabbing;
-        }
-      }
-
-      &--selected {
-        background-color: #ecf7ff;
-        padding: 0 12px;
-
-        &:hover {
-          background-color: #d4eefa;
-        }
-
-        &.jdn__xpath_container--cm-selected {
-          background-color: #d4eefa;
-        }
-      }
-
-      &--shift {
-        padding: 0 12px;
-
-        &:hover {
-          background-color: #f2f2f2;
-        }
-      }
-
-      &--cm-selected {
-        background-color: #f2f2f2;
-      }
-
-      &.sortable-ghost {
-        opacity: 0;
-      }
     }
 
     &_locators {
       display: flex;
+      gap: 8px;
     }
 
     &_item {
@@ -77,6 +40,7 @@
       line-height: 26px;
       display: flex;
       width: calc(100% - 72px);
+      gap: 8px;
 
       &-locator {
         color: @xpath-item-color-locator;

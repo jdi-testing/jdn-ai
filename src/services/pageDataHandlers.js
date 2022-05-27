@@ -6,6 +6,7 @@ import { reportPopup } from "../contentScripts/popups";
 import { REPORT_PROBLEM, request } from "../services/backend";
 import { confirmPopup } from "../contentScripts/popups/confirmPopup";
 import { createOverlay } from "../contentScripts/createOverlay";
+import { assignParents } from "../contentScripts/assignParents";
 /* global chrome*/
 
 let overlayID;
@@ -64,6 +65,12 @@ export const requestGenerationData = async (elements) => {
   const generationTags = await requestGenerationAttributes(elements);
   const generationData = createLocatorNames(generationTags);
   return { generationData };
+};
+
+export const setParents = async (elements) => {
+  return connector.attachContentScript(assignParents)
+      .then(() => sendMessage.assignParents(elements))
+      .then((response) => response);
 };
 
 export const sendProblemReport = (payload) => {

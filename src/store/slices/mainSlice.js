@@ -15,7 +15,7 @@ const initialState = {
     allow_indexes_at_the_beginning: false,
     allow_indexes_in_the_middle: false,
     allow_indexes_at_the_end: false,
-  },
+  }
 };
 
 const mainSlice = createSlice({
@@ -57,7 +57,7 @@ const mainSlice = createSlice({
     },
     locatorsGenerationStarted(state) {
       state.locatorsStatus = locatorsGenerationStatus.started;
-    },
+    }
   },
 });
 
@@ -73,5 +73,5 @@ export const {
   setScriptMessage,
   toggleBackdrop,
   locatorsGenerationStarted,
-  resetNotifications,
+  resetNotifications
 } = mainSlice.actions;

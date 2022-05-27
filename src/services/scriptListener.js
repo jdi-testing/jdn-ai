@@ -5,6 +5,7 @@ import {
   addCmElementHighlight,
   changeLocatorAttributes,
   removeAll as removeAllLocators,
+  setScrollToLocator,
 } from "../store/slices/locatorsSlice";
 import { connector } from "./connector";
 import { getTypesMenuOptions } from "../utils/generationClassesMap";
@@ -103,6 +104,7 @@ export const createListeners = (dispatch, state) => {
     STOP_GENERATION: (payload) => dispatch(stopGeneration(payload)),
     TOGGLE_ELEMENT: (payload) => {
       dispatch(toggleElementGeneration(payload));
+      dispatch(setScrollToLocator(payload));
     },
     UPDATE_LOCATOR: (payload) => {
       dispatch(changeLocatorAttributes(payload));

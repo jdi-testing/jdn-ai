@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { isUndefined, lowerFirst } from "lodash";
+import { isUndefined, lowerFirst, size } from "lodash";
 import { identificationStatus, locatorTaskStatus } from "../../utils/constants";
 import { getJdiClassName, getJDILabel } from "../../utils/generationClassesMap";
 import { locatorsAdapter, simpleSelectLocatorById } from "../selectors/locatorSelectors";
@@ -11,6 +11,7 @@ import { stopGenerationGroupReducer } from "../thunks/stopGenerationGroup";
 
 const initialState = {
   status: identificationStatus.noStatus,
+  scrollToLocator: null,
 };
 
 const locatorsSlice = createSlice({
@@ -18,11 +19,7 @@ const locatorsSlice = createSlice({
   initialState: locatorsAdapter.getInitialState(initialState),
   reducers: {
     addLocators(state, { payload }) {
-      // this reducer works fine for case of primary adding generated locators to page object.
-      // for other (future) cases additional "order" handling is needed.
-      // IMPORTANT! "order" can have same values for locators from different page objects
-      const orderedLocators = payload.map((locator, index) => ({ ...locator, order: index }));
-      locatorsAdapter.addMany(state, orderedLocators);
+      locatorsAdapter.addMany(state, payload.map((locator) => ({ ...locator })));
     },
     changeLocatorAttributes(state, { payload }) {
       const { type, name, locator, element_id, validity, isCustomName } = payload;
@@ -57,26 +54,26 @@ const locatorsSlice = createSlice({
     removeLocators(state, { payload: ids }) {
       if (ids) locatorsAdapter.removeMany(state, ids);
     },
-    reorderLocators(state, { payload }) {
-      // locators are taken by PageObject
-      const { locators, item, newOrder } = payload;
-      const oldOrder = item.order;
-
-      let locatorsToReorder = [];
-      let reorderedLocators = [];
-
-      if (newOrder > oldOrder) { // move down
-        locatorsToReorder = locators.filter(({order}) => order > oldOrder && order <= newOrder);
-        reorderedLocators = locatorsToReorder.map(({element_id, order}) => ({element_id, order: order - 1}));
-      } else if (oldOrder > newOrder) { // move up
-        locatorsToReorder = locators.filter(({order}) => order < oldOrder && order >= newOrder);
-        reorderedLocators = locatorsToReorder.map(({element_id, order}) => ({element_id, order: order + 1}));
-      }
-      locatorsAdapter.upsertMany(state, [...reorderedLocators, { element_id: item.element_id, order: newOrder }]);
-    },
     toggleElementGeneration(state, { payload }) {
       const locator = typeof payload === "string" ? simpleSelectLocatorById(state, payload) : payload;
-      locatorsAdapter.upsertOne(state, { ...locator, generate: !locator.generate });
+      const { generate, element_id } = locator;
+      locatorsAdapter.upsertOne(state, { element_id, generate: !generate });
+    },
+    setChildrenGeneration(state, { payload }) {
+      const { locator, generate } = payload;
+      const newValue = [];
+      const toggleGenerate = (_locator) => {
+        _locator.children.forEach((childId) => {
+          newValue.push({ element_id: childId, generate });
+          const child = simpleSelectLocatorById(state, childId);
+          if (size(child.children)) toggleGenerate(child);
+        });
+      };
+      toggleGenerate(locator);
+      locatorsAdapter.upsertMany(state, newValue);
+    },
+    setScrollToLocator(state, {payload: element_id}) {
+      state.scrollToLocator = element_id;
     },
     toggleElementGroupGeneration(state, { payload }) {
       const newValue = [];
@@ -134,8 +131,9 @@ export const {
   changeLocatorAttributes,
   removeLocators,
   removeAll,
-  reorderLocators,
   toggleElementGeneration,
+  setChildrenGeneration,
+  setScrollToLocator,
   toggleElementGroupGeneration,
   toggleDeleted,
   toggleDeletedGroup,

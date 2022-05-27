@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button, Tooltip } from "antd";
 import Icon from "@ant-design/icons";
 
-import { LocatorsList } from "./LocatorsList";
-import { PerceptionTreshold } from "../PerceptionTreshold/PerceptionTreshold";
+import { LocatorsTree } from "./LocatorsTree";
+// import { PerceptionTreshold } from "../PerceptionTreshold/PerceptionTreshold";
 import {
   showOverlay,
   openConfirmBackPopup,
@@ -28,6 +28,7 @@ import { locatorGenerationController } from "../../services/locatorGenerationCon
 import { clearLocators } from "../../store/slices/pageObjectSlice";
 import { changePageBack, setScriptMessage, toggleBackdrop, resetNotifications } from "../../store/slices/mainSlice";
 import { removeLocators, restoreLocators } from "../../store/slices/locatorsSlice";
+import { LocatorListHeader } from "./LocatorListHeader";
 
 export const LocatorsPage = ({ alreadyGenerated }) => {
   const dispatch = useDispatch();
@@ -132,8 +133,19 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
 
   return (
     <React.Fragment>
-      <LocatorsList pageObject={currentPageObject} />
-      <PerceptionTreshold />
+      <div className="jdn__locatorsList">
+        <LocatorListHeader
+          {...{
+            generatedSelected,
+            waitingSelected,
+            deletedSelected,
+          }}
+        />
+        <div className="jdn__locatorsList-content">
+          {size(locators) ? <LocatorsTree pageObject={currentPageObject} /> : null}
+        </div>
+      </div>
+      {/* <PerceptionTreshold /> */}
       <div className="jdn__navigation">
         {renderBackButton()}
         {renderConfirmButton()}
