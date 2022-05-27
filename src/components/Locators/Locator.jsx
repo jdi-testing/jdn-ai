@@ -50,7 +50,7 @@ export const Locator = memo(({ element, currentPage, scroll }) => {
 
   const dispatch = useDispatch();
 
-  const { element_id, type, name, locator, generate, isCmHighlighted, validity } = element;
+  const { element_id, type, name, locator, generate, validity } = element;
 
   const ref = useRef(null);
 
@@ -181,12 +181,7 @@ export const Locator = memo(({ element, currentPage, scroll }) => {
     <div
       ref={ref}
       data-id={element_id}
-      className={`jdn__xpath_container ${
-        generate && currentPage === pageType.locatorsList ?
-          "jdn__xpath_container--selected" :
-          "jdn__xpath_container--shift"
-      }
-     ${isCmHighlighted ? "jdn__xpath_container--cm-selected" : ""}`}
+      className="jdn__xpath_container"
     >
       {currentPage === pageType.locatorsList ? (
         <div className="jdn__xpath_locators">
@@ -194,7 +189,6 @@ export const Locator = memo(({ element, currentPage, scroll }) => {
           <Text className="jdn__xpath_item">
             {renderIcon()}
             {renderColorizedString()}
-            {index}
           </Text>
           <Tooltip placement="bottom" title={copyTooltipTitle}>
             <Button

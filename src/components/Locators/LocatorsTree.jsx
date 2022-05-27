@@ -9,6 +9,7 @@ import { convertListToTree } from "../../utils/helpers";
 import { selectCurrentPage } from "../../store/selectors/mainSelectors";
 import { selectPageObjLocatorsByProbability } from "../../store/selectors/pageObjectSelectors";
 import CaretDownSvg from "../../assets/caret-down.svg";
+import { pageType } from "../../utils/constants";
 
 const { TreeNode } = Tree;
 
@@ -33,6 +34,13 @@ export const LocatorsTree = ({ pageObject: currentPageObject }) => {
     return data.map(({ element_id, children }) => (
       <TreeNode
         key={element_id}
+        className={`
+        ${
+          locatorsMap[element_id].generate && currentPage === pageType.locatorsList ?
+            "jdn__tree-item--selected" :
+            ""
+      }
+        ${locatorsMap[element_id].isCmHighlighted ? "jdn__tree-item--cm-selected" : ""}`}
         title={
           <Locator {...{ element: locatorsMap[element_id], currentPage }} scroll={scrollToLocator === element_id} />
         }

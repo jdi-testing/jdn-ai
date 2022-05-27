@@ -15,6 +15,26 @@
 
   &-treenode {
     width: calc(100vw - 48px);
+
+    &.jdn__tree-item--selected {
+      background-color: #ecf7ff;
+
+      &:hover {
+        background-color: #d4eefa;
+      }
+
+      &.jdn__tree-item--cm-selected {
+        background-color: #d4eefa;
+      }
+    }
+
+    &:hover {
+      background-color: #f2f2f2;
+    }
+
+    &.jdn__tree-item--cm-selected {
+      background-color: #f2f2f2;
+    }
   }
 
   &-node-content-wrapper {
@@ -27,7 +47,7 @@
 
   &-switcher {
     width: 28px;
-    
+
     & svg.ant-tree-switcher-icon {
       transform: rotate(180deg);
       font-size: 12px;
@@ -260,10 +280,6 @@
       top: 0.05em;
     }
   }
-}
-
-.ant-tree-treenode {
-  display: none;
 }
 
 @media screen and (max-width: 600px) {
