@@ -77,6 +77,9 @@ export const createListeners = (dispatch, state) => {
     CONFIRM_SAVE_CHANGES: () => {
       // handled in LocatorsPage
     },
+    CONFIRM_SELECTED_POPUP: () => {
+      // handled in LocatorsPage
+    },
     DELETE_ALL_PAGE_OBJECTS: () => {
       dispatch(removeAllPageObjects());
       dispatch(removeAllLocators());
