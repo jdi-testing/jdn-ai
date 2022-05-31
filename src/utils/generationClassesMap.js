@@ -2,6 +2,31 @@ import { sortBy } from "lodash";
 
 export const defaultClass = "UIElement";
 
+const HTML5classes = {
+  button: "Button",
+  checkbox: "Checkbox",
+  checklist: "Checklist",
+  colorpicker: "ColorPicker",
+  datalist: "DataListOptions",
+  datetimeselector: "DateTimeSelector",
+  dropdown: "Dropdown",
+  fileinput: "FileInput",
+  label: "TextField",
+  link: "Link",
+  multidropdown: "MultiSelector",
+  multiselector: "MultiSelector",
+  numberselector: "NumberSelector",
+  progressbar: "ProgressBar",
+  radiobutton: "radiobutton",
+  radiobuttongroup: "radiobuttongroup",
+  range: "Range",
+  table: "Table",
+  text: "Text",
+  textarea: "TextArea",
+  textfield: "TextField",
+  title: "Title",
+};
+
 const MUIclasses = {
   accordion: "Accordion",
   // alert: "UIElement",
@@ -31,7 +56,7 @@ const MUIclasses = {
   ["text-field"]: "TextField",
 };
 
-export const JDIclasses = MUIclasses;
+export const JDIclasses = [...HTML5classes, ...MUIclasses];
 
 export const getJDILabel = (label) => JDIclasses[label] || defaultClass;
 
