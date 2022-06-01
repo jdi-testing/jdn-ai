@@ -49,6 +49,16 @@
       &-type {
         color: @xpath-item-color-type;
       }
+
+      &--deleted,
+      &--deleted &-locator,
+      &--deleted &-type {
+        color: @jdn-disabled-color;
+
+        & svg * {
+          stroke: @jdn-disabled-color;
+        }
+      }
     }
   }
 }

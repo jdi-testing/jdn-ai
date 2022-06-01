@@ -26,7 +26,7 @@ import PauseSvg from "../../assets/pause.svg";
 import PencilSvg from "../../assets/pencil.svg";
 import PlaySvg from "../../assets/play.svg";
 import RestoreSvg from "../../assets/restore.svg";
-import TrashBinSvg from "../../assets/trash-bin.svg";
+import TrashBinSvg from "../../assets/delete_14.svg";
 import WarningEditedSvg from "../../assets/warning-edited.svg";
 import CopySvg from "../../assets/copy.svg";
 import ErrorSvg from "../../assets/error-outlined.svg";
@@ -50,7 +50,7 @@ export const Locator = memo(({ element, currentPage, scroll }) => {
 
   const dispatch = useDispatch();
 
-  const { element_id, type, name, locator, generate, validity } = element;
+  const { element_id, type, name, locator, generate, validity, deleted } = element;
 
   const ref = useRef(null);
 
@@ -89,6 +89,9 @@ export const Locator = memo(({ element, currentPage, scroll }) => {
     const startedIcon = <Spin size="small" />;
     const revokedIcon = <Icon component={PauseOutlinedSvg} className="jdn__locatorsList-status" />;
     const failureIcon = <Icon component={ErrorSvg} className="jdn__locatorsList-status" />;
+    const deletedIcon = <Icon component={TrashBinSvg} className="jdn__locatorsList-status" />;
+
+    if (deleted) return deletedIcon;
 
     const successEditedIcon = (
       <Tooltip title={getTooltipText()}>
@@ -145,7 +148,7 @@ export const Locator = memo(({ element, currentPage, scroll }) => {
   };
 
   const renderMenu = () => {
-    if (element.deleted) {
+    if (deleted) {
       return (
         <Menu>
           <Menu.Item key="5" icon={<RestoreSvg />} onClick={() => dispatch(toggleDeleted(element.element_id))}>
@@ -155,7 +158,7 @@ export const Locator = memo(({ element, currentPage, scroll }) => {
       );
     } else {
       return (
-        <Menu disabled>
+        <Menu>
           <Menu.Item key="0" icon={<PencilSvg />} onClick={handleEditClick}>
             Edit
           </Menu.Item>
@@ -178,15 +181,11 @@ export const Locator = memo(({ element, currentPage, scroll }) => {
   };
 
   return (
-    <div
-      ref={ref}
-      data-id={element_id}
-      className="jdn__xpath_container"
-    >
+    <div ref={ref} data-id={element_id} className="jdn__xpath_container">
       {currentPage === pageType.locatorsList ? (
         <div className="jdn__xpath_locators">
           <Checkbox checked={generate} indeterminate={indeterminate} onClick={handleOnChange}></Checkbox>
-          <Text className="jdn__xpath_item">
+          <Text className={`jdn__xpath_item${deleted ? " jdn__xpath_item--deleted" : ""}`}>
             {renderIcon()}
             {renderColorizedString()}
           </Text>
@@ -199,14 +198,17 @@ export const Locator = memo(({ element, currentPage, scroll }) => {
               icon={<Icon component={CopySvg} />}
             />
           </Tooltip>
-          <a onClick={() => setMenuVisible(true)} onMouseLeave={() => setMenuVisible(false)}>
-            <Dropdown overlay={renderMenu()} visible={menuVisible} disabled={true}>
+          {/* <a onClick={() => setMenuVisible(true)} onMouseLeave={() => setMenuVisible(false)}> */}
+          <a>
+            <Dropdown overlay={renderMenu()} trigger={['click']}>
               <Icon component={EllipsisSvg} onClick={(e) => e.preventDefault()} />
             </Dropdown>
           </a>
         </div>
       ) : (
-        <Text className="jdn__xpath_item">{renderColorizedString()}</Text>
+        <Text className="jdn__xpath_item">
+          {renderColorizedString()}
+        </Text>
       )}
     </div>
   );
