@@ -61,9 +61,9 @@ const requestGenerationAttributes = (elements) =>
     })
   );
 
-export const requestGenerationData = async (elements) => {
+export const requestGenerationData = async (elements, library) => {
   const generationTags = await requestGenerationAttributes(elements);
-  const generationData = createLocatorNames(generationTags);
+  const generationData = createLocatorNames(generationTags, library);
   return { generationData };
 };
 

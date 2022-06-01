@@ -1,19 +1,21 @@
 import { Button, Space, Select } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { SearchOutlined } from "@ant-design/icons";
-import React, { useState } from "react";
+import React from "react";
 
 import { identificationStatus } from "../../utils/constants";
 import { identifyElements } from "../../store/thunks/identifyElements";
-import { MUI_PREDICT, HTML5_PREDICT } from "../../services/backend";
+import { libraryNames, predictEndpoints } from "../../utils/generationClassesMap";
+import { setElementLibrary } from "../../store/slices/locatorsSlice";
 
 export const GenerationButtons = ({ pageObj }) => {
   const status = useSelector((state) => state.locators.status);
   const allowIdentifyElements = useSelector((state) => state.main.allowIdentifyElements);
   const currentPageObject = useSelector((state) => state.pageObject.currentPageObject);
+  const elementLibrary = useSelector((state) => state.locators.elementLibrary);
 
   const dispatch = useDispatch();
-  const [endpoint, setEndpoint] = useState(MUI_PREDICT);
+  const endpoint = predictEndpoints[elementLibrary];
 
   return (
     <div className="jdn__generationButtons">
@@ -27,10 +29,10 @@ export const GenerationButtons = ({ pageObj }) => {
             defaultValue={endpoint}
             disabled={!allowIdentifyElements}
             className="jdn__select"
-            onChange={setEndpoint}
+            onChange={(value) => dispatch(setElementLibrary(value))}
           >
-            <Select.Option value={MUI_PREDICT}>Material UI</Select.Option>
-            <Select.Option value={HTML5_PREDICT}>HTML 5</Select.Option>
+            <Select.Option value={predictEndpoints.MUI}>{libraryNames.MUI}</Select.Option>
+            <Select.Option value={predictEndpoints.HTML5}>{libraryNames.HTML5}</Select.Option>
           </Select>
         </Space>
         <Space direction="horizontal" size={8}>

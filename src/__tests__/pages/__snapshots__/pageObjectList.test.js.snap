@@ -151,11 +151,8 @@ exports[`pageObjectList component renders empty page object 1`] = `
                                 />
                               </span>
                               <span
-                                class="ant-select-selection-item"
-                                title="Material UI"
-                              >
-                                Material UI
-                              </span>
+                                class="ant-select-selection-placeholder"
+                              />
                             </div>
                             <span
                               aria-hidden="true"

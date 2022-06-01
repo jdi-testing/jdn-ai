@@ -1,4 +1,4 @@
-import { getJdiClassName, getJDILabel, getTypesMenuOptions } from "../utils/generationClassesMap";
+import { elementLibrary, getJdiClassName, getJDILabel, getTypesMenuOptions } from "../utils/generationClassesMap";
 
 const options = [
   { label: "accordion", jdi: "Accordion" },
@@ -29,28 +29,28 @@ const options = [
 
 describe("Get JDI class by predicted label", () => {
   test("get 'Badge' for 'badge", () => {
-    const res = getJDILabel("badge");
+    const res = getJDILabel("badge", elementLibrary.MUI);
     expect(res).toBe("Badge");
   });
 
   test("get 'UIElement' for 'anyUnsupportedClass", () => {
-    const res = getJDILabel("anyUnsupportedClass");
+    const res = getJDILabel("anyUnsupportedClass", elementLibrary.MUI);
     expect(res).toBe("UIElement");
   });
 
   test("get 'Breadcrumbs' for 'breadcrumbs'", () => {
-    expect(getJdiClassName("breadcrumbs")).toBe("Breadcrumbs");
+    expect(getJdiClassName("breadcrumbs", elementLibrary.MUI)).toBe("Breadcrumbs");
   });
 
   test("get 'UIElement (anyType)' for 'anyType'", () => {
-    expect(getJdiClassName("anyType")).toBe("UIElement (anyType)");
+    expect(getJdiClassName("anyType", elementLibrary.MUI)).toBe("UIElement (anyType)");
   });
 
   test("get 'UIElement (undefined)' for 'undefined'", () => {
-    expect(getJdiClassName(undefined)).toBe("UIElement (undefined)");
+    expect(getJdiClassName(undefined, elementLibrary.MUI)).toBe("UIElement (undefined)");
   });
 
   test("get types", () => {
-    expect(getTypesMenuOptions()).toStrictEqual(options);
+    expect(getTypesMenuOptions(elementLibrary.MUI)).toStrictEqual(options);
   });
 });

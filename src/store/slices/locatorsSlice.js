@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { isUndefined, lowerFirst, size } from "lodash";
 import { identificationStatus, locatorTaskStatus } from "../../utils/constants";
-import { getJdiClassName, getJDILabel } from "../../utils/generationClassesMap";
+import { elementLibrary, getJdiClassName, getJDILabel } from "../../utils/generationClassesMap";
 import { locatorsAdapter, simpleSelectLocatorById } from "../selectors/locatorSelectors";
 import { cancelStopGenerationReducer } from "../thunks/cancelStopGeneration";
 import { generateLocatorsReducer } from "../thunks/generateLocators";
@@ -10,6 +10,7 @@ import { stopGenerationReducer } from "../thunks/stopGeneration";
 import { stopGenerationGroupReducer } from "../thunks/stopGenerationGroup";
 
 const initialState = {
+  elementLibrary: elementLibrary.MUI,
   status: identificationStatus.noStatus,
   scrollToLocator: null,
 };
@@ -32,9 +33,9 @@ const locatorsSlice = createSlice({
       }
       if (_locator.type !== type) {
         if (!newValue.isCustomName) {
-          newValue.name = lowerFirst(getJdiClassName(type));
+          newValue.name = lowerFirst(getJdiClassName(type, state.elementLibrary));
         }
-        newValue.type = getJDILabel(type);
+        newValue.type = getJDILabel(type, state.elementLibrary);
       }
       if (fullXpath !== locator && robulaXpath !== locator) {
         newValue.locator.customXpath = locator;
@@ -71,6 +72,9 @@ const locatorsSlice = createSlice({
       };
       toggleGenerate(locator);
       locatorsAdapter.upsertMany(state, newValue);
+    },
+    setElementLibrary(state, { payload }) {
+      state.elementLibrary = payload;
     },
     setScrollToLocator(state, {payload: element_id}) {
       state.scrollToLocator = element_id;
@@ -133,6 +137,7 @@ export const {
   removeAll,
   toggleElementGeneration,
   setChildrenGeneration,
+  setElementLibrary,
   setScrollToLocator,
   toggleElementGroupGeneration,
   toggleDeleted,

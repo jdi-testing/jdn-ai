@@ -69,9 +69,9 @@ export const {
   changePerception,
   clearAll,
   handleLastNotification,
+  locatorsGenerationStarted,
   pushNotification,
+  resetNotifications,
   setScriptMessage,
   toggleBackdrop,
-  locatorsGenerationStarted,
-  resetNotifications
 } = mainSlice.actions;
