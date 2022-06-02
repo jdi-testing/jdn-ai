@@ -1,19 +1,21 @@
 import { Button, Space, Select } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { SearchOutlined } from "@ant-design/icons";
-import React, { useState } from "react";
+import React from "react";
 
 import { identificationStatus } from "../../utils/constants";
 import { identifyElements } from "../../store/thunks/identifyElements";
-import { MUI_PREDICT, HTML5_PREDICT } from "../../services/backend";
+import { elementLibrary, libraryNames } from "../../utils/generationClassesMap";
+import { changeElementLibrary } from "../../store/slices/pageObjectSlice";
+import { selectPageObjById } from "../../store/selectors/pageObjectSelectors";
 
 export const GenerationButtons = ({ pageObj }) => {
   const status = useSelector((state) => state.locators.status);
   const allowIdentifyElements = useSelector((state) => state.main.allowIdentifyElements);
-  const currentPageObject = useSelector((state) => state.pageObject.currentPageObject);
+  const currentPageObject = useSelector((state) => selectPageObjById(state, pageObj));
+  const { id, library } = currentPageObject;
 
   const dispatch = useDispatch();
-  const [endpoint, setEndpoint] = useState(MUI_PREDICT);
 
   return (
     <div className="jdn__generationButtons">
@@ -24,13 +26,13 @@ export const GenerationButtons = ({ pageObj }) => {
           </label>
           <Select
             id="library"
-            defaultValue={endpoint}
+            defaultValue={library}
             disabled={!allowIdentifyElements}
             className="jdn__select"
-            onChange={setEndpoint}
+            onChange={(_library) => dispatch(changeElementLibrary({ id, library: _library }))}
           >
-            <Select.Option value={MUI_PREDICT}>Material UI</Select.Option>
-            <Select.Option value={HTML5_PREDICT}>HTML 5</Select.Option>
+            <Select.Option value={elementLibrary.MUI}>{libraryNames.MUI}</Select.Option>
+            <Select.Option value={elementLibrary.HTML5}>{libraryNames.HTML5}</Select.Option>
           </Select>
         </Space>
         <Space direction="horizontal" size={8}>
@@ -39,7 +41,7 @@ export const GenerationButtons = ({ pageObj }) => {
             type="primary"
             loading={status === identificationStatus.loading && currentPageObject === pageObj}
             disabled={!allowIdentifyElements}
-            onClick={() => dispatch(identifyElements({ endpoint, pageObj }))}
+            onClick={() => dispatch(identifyElements({ library, pageObj }))}
             className="jdn__buttons"
           >
             Generate

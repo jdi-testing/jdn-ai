@@ -4,12 +4,14 @@ import { identificationStatus } from "../../utils/constants";
 import { generateLocators } from "./generateLocators";
 import { getElements } from "../../services/pageDataHandlers";
 import { setCurrentPageObj } from "../slices/pageObjectSlice";
+import { predictEndpoints } from "../../utils/generationClassesMap";
 
 export const identifyElements = createAsyncThunk(
     "locators/identifyElements",
-    async ({ endpoint, pageObj }, thunkAPI) => {
+    async ({ library, pageObj }, thunkAPI) => {
       thunkAPI.dispatch(setCurrentPageObj(pageObj));
 
+      const endpoint = predictEndpoints[library];
       const res = await getElements(endpoint);
       const rounded = res.map((el) => ({
         ...el,
@@ -17,7 +19,7 @@ export const identifyElements = createAsyncThunk(
         jdnHash: el.element_id,
         predicted_probability: Math.round(el.predicted_probability * 100) / 100,
       }));
-      thunkAPI.dispatch(generateLocators(rounded));
+      thunkAPI.dispatch(generateLocators({ predictedElements: rounded, library }));
       return thunkAPI.fulfillWithValue(rounded);
     }
 );

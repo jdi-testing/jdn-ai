@@ -44,7 +44,7 @@ const isValidLocator = ({ validity }) =>
   !validity?.locator.length || validity.locator === VALIDATION_ERROR_TYPE.NEW_ELEMENT;
 
 // eslint-disable-next-line react/display-name
-export const Locator = memo(({ element, currentPage, scroll }) => {
+export const Locator = memo(({ element, currentPage, scroll, library }) => {
   const [copyTooltipTitle, setTooltipTitle] = useState(copyTitle.Copy);
   const [menuVisible, setMenuVisible] = useState(false);
 
@@ -78,7 +78,9 @@ export const Locator = memo(({ element, currentPage, scroll }) => {
   };
 
   const handleEditClick = () => {
-    chrome.storage.sync.set({ OPEN_EDIT_LOCATOR: { isOpen: true, value: element, types: getTypesMenuOptions() } });
+    chrome.storage.sync.set({
+      OPEN_EDIT_LOCATOR: { isOpen: true, value: element, types: getTypesMenuOptions(library) },
+    });
   };
 
   const getTooltipText = () => {

@@ -2,6 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { isNull, map, size, toLower } from "lodash";
 import { getPageAttributes, isPONameUnique } from "../../services/pageObject";
 import { getClassName } from "../../services/pageObjectTemplate";
+import { defaultLibrary } from "../../utils/generationClassesMap";
 import { pageObjAdapter, selectMaxId, simpleSelectPageObjects } from "../selectors/pageObjectSelectors";
 
 
@@ -35,6 +36,7 @@ export const addPageObjReducer = (builder) => {
               id,
               name,
               url,
+              library: defaultLibrary,
             }
         );
         state.currentPageObject = id;

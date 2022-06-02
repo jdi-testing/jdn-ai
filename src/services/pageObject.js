@@ -20,12 +20,12 @@ export const isNameUnique = (elements, element_id, newName) =>
 export const isPONameUnique = (elements, id, newName) =>
   !elements.find((elem) => toLower(elem.name) === toLower(newName) && elem.id !== id);
 
-export const createLocatorNames = (elements) => {
+export const createLocatorNames = (elements, library) => {
   const f = elements.filter((el) => el && !el.deleted);
   const uniqueNames = [];
 
   const getElementName = (element) => {
-    const jdiLabel = getJDILabel(element.predicted_label).toLowerCase();
+    const jdiLabel = getJDILabel(element.predicted_label, library).toLowerCase();
     return element.tagName === "a" || jdiLabel === element.tagName.toLowerCase() ?
       jdiLabel :
       jdiLabel + element.tagName[0].toUpperCase() + element.tagName.slice(1);
@@ -44,7 +44,7 @@ export const createLocatorNames = (elements) => {
 
     const name = e.isCustomName ? e.name : elementTagId || elementName;
 
-    const type = getJDILabel(e.predicted_label);
+    const type = getJDILabel(e.predicted_label, library);
 
     return {
       ...e,
