@@ -7,7 +7,7 @@ import { Locator } from "./Locator";
 import { Notifications } from "./Notifications";
 import { convertListToTree } from "../../utils/helpers";
 import { selectCurrentPage } from "../../store/selectors/mainSelectors";
-import { selectPageObjLocatorsByProbability } from "../../store/selectors/pageObjectSelectors";
+import { selectPageObjById, selectPageObjLocatorsByProbability } from "../../store/selectors/pageObjectSelectors";
 import CaretDownSvg from "../../assets/caret-down.svg";
 import { pageType } from "../../utils/constants";
 
@@ -17,7 +17,7 @@ export const LocatorsTree = ({ pageObject: currentPageObject }) => {
   const currentPage = useSelector(selectCurrentPage).page;
   const locators = useSelector((_state) => selectPageObjLocatorsByProbability(_state, currentPageObject));
   const scrollToLocator = useSelector((_state) => _state.locators.scrollToLocator);
-  const library = useSelector((_state) => _state.locators.elementLibrary);
+  const library = useSelector((_state) => selectPageObjById(_state, _state.pageObject.currentPageObject)).library;
 
   const createLocatorsMap = () => {
     const map = {};

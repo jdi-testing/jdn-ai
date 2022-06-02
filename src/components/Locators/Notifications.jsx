@@ -34,7 +34,7 @@ export const Notifications = () => {
   const dispatch = useDispatch();
   const lastNotification = useSelector((state) => last(state.main.notifications));
   const locators = useSelector(selectLocators);
-  const library = useSelector((state) => state.pageObject.currentPageObject.library);
+  const library = useSelector((_state) => selectPageObjById(_state, _state.pageObject.currentPageObject)).library;
   let notificationMessage = "";
   let cancelAction;
 
