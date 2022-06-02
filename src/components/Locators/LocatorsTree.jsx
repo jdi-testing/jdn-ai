@@ -17,6 +17,7 @@ export const LocatorsTree = ({ pageObject: currentPageObject }) => {
   const currentPage = useSelector(selectCurrentPage).page;
   const locators = useSelector((_state) => selectPageObjLocatorsByProbability(_state, currentPageObject));
   const scrollToLocator = useSelector((_state) => _state.locators.scrollToLocator);
+  const library = useSelector((_state) => _state.locators.elementLibrary);
 
   const createLocatorsMap = () => {
     const map = {};
@@ -35,14 +36,13 @@ export const LocatorsTree = ({ pageObject: currentPageObject }) => {
       <TreeNode
         key={element_id}
         className={`
-        ${
-          locatorsMap[element_id].generate && currentPage === pageType.locatorsList ?
-            "jdn__tree-item--selected" :
-            ""
-      }
+        ${locatorsMap[element_id].generate && currentPage === pageType.locatorsList ? "jdn__tree-item--selected" : ""}
         ${locatorsMap[element_id].isCmHighlighted ? "jdn__tree-item--cm-selected" : ""}`}
         title={
-          <Locator {...{ element: locatorsMap[element_id], currentPage }} scroll={scrollToLocator === element_id} />
+          <Locator
+            {...{ element: locatorsMap[element_id], currentPage, library }}
+            scroll={scrollToLocator === element_id}
+          />
         }
       >
         {size(children) ? renderTreeNodes(children) : null}

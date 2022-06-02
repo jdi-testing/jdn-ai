@@ -13,18 +13,18 @@ const filterByProbability = (elements, perception) => {
   return elements.filter((e) => e.predicted_probability >= perception);
 };
 
-export const generateLocators = createAsyncThunk("locators/generateLocators", async (predictedElements, thunkAPI) => {
+export const generateLocators = createAsyncThunk("locators/generateLocators", async (payload, thunkAPI) => {
+  const { predictedElements, library } = payload;
   const availableForGeneration = filterByProbability(predictedElements, 0.5);
   const state = thunkAPI.getState();
   const { perception } = state.main;
-  const { elementLibrary } = state.locators;
   const locators = selectLocators(state);
   if (availableForGeneration.length) {
     const noLocator = availableForGeneration.filter(
         (element) => locators.findIndex((loc) => loc.element_id === element.element_id) === -1
     );
     if (noLocator.length) {
-      const { generationData } = await requestGenerationData(noLocator, elementLibrary);
+      const { generationData } = await requestGenerationData(noLocator, library);
       const _locatorsWithParents = await setParents(generationData);
       const locatorsWithParents = convertToListWithChildren(_locatorsWithParents);
       sendMessage.setHighlight({ elements: locatorsWithParents, perception });

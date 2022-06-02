@@ -44,7 +44,7 @@ const isValidLocator = ({ validity }) =>
   !validity?.locator.length || validity.locator === VALIDATION_ERROR_TYPE.NEW_ELEMENT;
 
 // eslint-disable-next-line react/display-name
-export const Locator = memo(({ element, currentPage, scroll }) => {
+export const Locator = memo(({ element, currentPage, scroll, library }) => {
   const [copyTooltipTitle, setTooltipTitle] = useState(copyTitle.Copy);
   const [menuVisible, setMenuVisible] = useState(false);
 
@@ -78,7 +78,9 @@ export const Locator = memo(({ element, currentPage, scroll }) => {
   };
 
   const handleEditClick = () => {
-    chrome.storage.sync.set({ OPEN_EDIT_LOCATOR: { isOpen: true, value: element, types: getTypesMenuOptions() } });
+    chrome.storage.sync.set({
+      OPEN_EDIT_LOCATOR: { isOpen: true, value: element, types: getTypesMenuOptions(library) },
+    });
   };
 
   const getTooltipText = () => {
@@ -155,7 +157,7 @@ export const Locator = memo(({ element, currentPage, scroll }) => {
       );
     } else {
       return (
-        <Menu disabled>
+        <Menu>
           <Menu.Item key="0" icon={<PencilSvg />} onClick={handleEditClick}>
             Edit
           </Menu.Item>
@@ -178,11 +180,7 @@ export const Locator = memo(({ element, currentPage, scroll }) => {
   };
 
   return (
-    <div
-      ref={ref}
-      data-id={element_id}
-      className="jdn__xpath_container"
-    >
+    <div ref={ref} data-id={element_id} className="jdn__xpath_container">
       {currentPage === pageType.locatorsList ? (
         <div className="jdn__xpath_locators">
           <Checkbox checked={generate} indeterminate={indeterminate} onClick={handleOnChange}></Checkbox>
@@ -200,7 +198,7 @@ export const Locator = memo(({ element, currentPage, scroll }) => {
             />
           </Tooltip>
           <a onClick={() => setMenuVisible(true)} onMouseLeave={() => setMenuVisible(false)}>
-            <Dropdown overlay={renderMenu()} visible={menuVisible} disabled={true}>
+            <Dropdown overlay={renderMenu()} visible={menuVisible}>
               <Icon component={EllipsisSvg} onClick={(e) => e.preventDefault()} />
             </Dropdown>
           </a>

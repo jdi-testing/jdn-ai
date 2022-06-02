@@ -62,6 +62,8 @@ export const elementLibrary = {
   HTML5: "HTML5",
 };
 
+export const defaultLibrary = elementLibrary.MUI;
+
 export const libraryNames = {
   [elementLibrary.MUI]: "Material UI",
   [elementLibrary.HTML5]: "HTML 5",

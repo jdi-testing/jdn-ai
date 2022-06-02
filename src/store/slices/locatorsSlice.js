@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { isUndefined, lowerFirst, size } from "lodash";
 import { identificationStatus, locatorTaskStatus } from "../../utils/constants";
-import { elementLibrary, getJdiClassName, getJDILabel } from "../../utils/generationClassesMap";
+import { getJdiClassName, getJDILabel } from "../../utils/generationClassesMap";
 import { locatorsAdapter, simpleSelectLocatorById } from "../selectors/locatorSelectors";
 import { cancelStopGenerationReducer } from "../thunks/cancelStopGeneration";
 import { generateLocatorsReducer } from "../thunks/generateLocators";
@@ -10,7 +10,6 @@ import { stopGenerationReducer } from "../thunks/stopGeneration";
 import { stopGenerationGroupReducer } from "../thunks/stopGenerationGroup";
 
 const initialState = {
-  elementLibrary: elementLibrary.MUI,
   status: identificationStatus.noStatus,
   scrollToLocator: null,
 };
@@ -23,7 +22,7 @@ const locatorsSlice = createSlice({
       locatorsAdapter.addMany(state, payload.map((locator) => ({ ...locator })));
     },
     changeLocatorAttributes(state, { payload }) {
-      const { type, name, locator, element_id, validity, isCustomName } = payload;
+      const { type, name, locator, element_id, validity, isCustomName, library } = payload;
       const _locator = simpleSelectLocatorById(state, element_id);
       const { fullXpath, robulaXpath } = _locator.locator;
       const newValue = { ..._locator, locator: { ..._locator.locator }, validity };
@@ -33,9 +32,9 @@ const locatorsSlice = createSlice({
       }
       if (_locator.type !== type) {
         if (!newValue.isCustomName) {
-          newValue.name = lowerFirst(getJdiClassName(type, state.elementLibrary));
+          newValue.name = lowerFirst(getJdiClassName(type, library));
         }
-        newValue.type = getJDILabel(type, state.elementLibrary);
+        newValue.type = getJDILabel(type, library);
       }
       if (fullXpath !== locator && robulaXpath !== locator) {
         newValue.locator.customXpath = locator;
