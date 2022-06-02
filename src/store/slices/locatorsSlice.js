@@ -72,9 +72,6 @@ const locatorsSlice = createSlice({
       toggleGenerate(locator);
       locatorsAdapter.upsertMany(state, newValue);
     },
-    setElementLibrary(state, { payload }) {
-      state.elementLibrary = payload;
-    },
     setScrollToLocator(state, {payload: element_id}) {
       state.scrollToLocator = element_id;
     },
@@ -136,7 +133,6 @@ export const {
   removeAll,
   toggleElementGeneration,
   setChildrenGeneration,
-  setElementLibrary,
   setScrollToLocator,
   toggleElementGroupGeneration,
   toggleDeleted,
