@@ -1,5 +1,6 @@
 import { createLocatorNames } from "../../services/pageObject";
 import { pageObjectTemplate } from "../../services/pageObjectTemplate";
+import { elementLibrary } from "../../utils/generationClassesMap";
 import {
   elementsWithNames,
   elementsWithoutNames,
@@ -17,6 +18,6 @@ describe("page object code generation", () => {
 
 describe("create locators names", () => {
   test("create unique names, create name by Id,  if exists; transform ID to name correctly", () => {
-    expect(createLocatorNames(elementsWithoutNames)).toStrictEqual(elementsWithNames);
+    expect(createLocatorNames(elementsWithoutNames, elementLibrary.MUI)).toStrictEqual(elementsWithNames);
   });
 });

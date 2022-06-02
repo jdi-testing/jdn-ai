@@ -107,7 +107,8 @@ export const createListeners = (dispatch, state) => {
       dispatch(setScrollToLocator(payload));
     },
     UPDATE_LOCATOR: (payload) => {
-      dispatch(changeLocatorAttributes(payload));
+      const library = state.pageObject.currentPageObject.library;
+      dispatch(changeLocatorAttributes({ ...payload, library }));
     },
     UPDATE_PAGE_OBJECT_NAME: (payload) => {
       dispatch(changePageObjectName(payload));
