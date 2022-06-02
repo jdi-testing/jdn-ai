@@ -79,8 +79,6 @@ export const predictEndpoints = {
   [elementLibrary.HTML5]: HTML5_PREDICT,
 };
 
-export const JDIclasses = MUIclasses;
-
 export const getJDILabel = (label, library) => libraryClasses[library][label] || defaultClass;
 
 export const getJdiClassName = (label, library) => {
