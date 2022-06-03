@@ -17,7 +17,7 @@ import { isNameUnique, isPONameUnique, isStringMatchesReservedWord } from "./pag
 import { VALIDATION_ERROR_TYPE } from "../utils/constants";
 import { clearAll, setScriptMessage, toggleBackdrop } from "../store/slices/mainSlice";
 import { changeName as changePageObjectName, removeAll as removeAllPageObjects } from "../store/slices/pageObjectSlice";
-import { selectLocatorByJdnHash, selectPageObjects } from "../store/selectors/pageObjectSelectors";
+import { selectLocatorByJdnHash, selectPageObjById, selectPageObjects } from "../store/selectors/pageObjectSelectors";
 
 export const createListeners = (dispatch, state) => {
   const actions = {
@@ -87,9 +87,10 @@ export const createListeners = (dispatch, state) => {
     },
     GET_ELEMENT: (jdnHash, sender, sendResponse) => {
       const element = selectLocatorByJdnHash(state, jdnHash);
+      const library = selectPageObjById(state, state.pageObject.currentPageObject).library;
       sendResponse({
         element,
-        types: getTypesMenuOptions(),
+        types: getTypesMenuOptions(library),
       });
     },
     GET_PAGE_DATA_JSON: (payload, sender, sendResponse) => sendResponse(pageData),
