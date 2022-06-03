@@ -200,9 +200,8 @@ export const Locator = memo(({ element, currentPage, scroll, library }) => {
               icon={<Icon component={CopySvg} />}
             />
           </Tooltip>
-          {/* <a onClick={() => setMenuVisible(true)} onMouseLeave={() => setMenuVisible(false)}> */}
-          <a>
-            <Dropdown overlay={renderMenu()} trigger={['click']}>
+          <a onClick={() => setMenuVisible(true)} onMouseLeave={() => setMenuVisible(false)}>
+            <Dropdown overlay={renderMenu()} visible={menuVisible}>
               <Icon component={EllipsisSvg} onClick={(e) => e.preventDefault()} />
             </Dropdown>
           </a>
