@@ -321,14 +321,13 @@ export const runContextMenu = () => {
     const menuItems = [
       {
         text: `${!generate ? "Select" : "Unselect"} locator`,
-        /* make temporary unavailable
         events: {
           click: () =>
             sendMessage({
               message: "TOGGLE_ELEMENT",
               param: element_id,
             }),
-        }, */
+        },
       },
       {
         "type": ContextMenu.DIVIDER
@@ -340,10 +339,9 @@ export const runContextMenu = () => {
       <path fill-rule="evenodd" clip-rule="evenodd" d="M12.9726 3.86385C13.3631 3.47332 13.3631 2.84016 12.9726 2.44963L11.2299 0.706985C10.8394 0.316461 10.2062 0.31646 9.81572 0.706985L9.47052 1.05219L12.6273 4.20902L11.5751 5.2613L8.41823 2.10447L3.15682 7.36589L6.31368 10.5227L12.9726 3.86385Z" fill="white"/>
       </svg>
       </i>`,
-        /* make temporary unavailable
         events: {
           click: () => chrome.storage.sync.set({ OPEN_EDIT_LOCATOR: { isOpen: true, value: element, types} })
-        }, */
+        },
       },
       {
         text: `<span class="cm_container_warning-option">Delete</span>
@@ -359,14 +357,13 @@ export const runContextMenu = () => {
           <path fill-rule="evenodd" clip-rule="evenodd" d="M8.51144 5.03467C8.8036 5.03467 9.04045 5.27152 9.04045 5.56368V10.8538C9.04045 11.146 8.8036 11.3828 8.51144 11.3828C8.21927 11.3828 7.98242 11.146 7.98242 10.8538V5.56368C7.98242 5.27152 8.21927 5.03467 8.51144 5.03467Z" fill="#D82C15"/>
           <path fill-rule="evenodd" clip-rule="evenodd" d="M7.85938 5.56344C7.85938 5.20345 8.15121 4.91162 8.5112 4.91162C8.87119 4.91162 9.16302 5.20345 9.16302 5.56344V10.8536C9.16302 11.2136 8.87119 11.5054 8.5112 11.5054C8.15121 11.5054 7.85938 11.2136 7.85938 10.8536V5.56344ZM8.5112 5.15724C8.28685 5.15724 8.10499 5.3391 8.10499 5.56344V10.8536C8.10499 11.0779 8.28685 11.2598 8.5112 11.2598C8.73554 11.2598 8.91741 11.0779 8.91741 10.8536V5.56344C8.91741 5.3391 8.73554 5.15724 8.5112 5.15724Z" fill="#D82C15"/>
         </svg>`,
-        /* make temporary unavailable
         events: {
           click: () =>
             sendMessage({
               message: "REMOVE_ELEMENT",
               param: element_id,
             }),
-        }, */
+        },
       },
       {
         "type": ContextMenu.DIVIDER
