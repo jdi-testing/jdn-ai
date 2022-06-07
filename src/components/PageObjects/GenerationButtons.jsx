@@ -36,7 +36,6 @@ export const GenerationButtons = ({ pageObj }) => {
           </Select>
         </Space>
         <Space direction="horizontal" size={8}>
-          {status}
           <Button
             icon={<SearchOutlined />}
             type="primary"
