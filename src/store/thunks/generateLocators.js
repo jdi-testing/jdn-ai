@@ -5,9 +5,9 @@ import { selectLocators } from "../selectors/locatorSelectors";
 import { sendMessage } from "../../services/connector";
 import { addLocators } from "../slices/locatorsSlice";
 import { addLocatorsToPageObj } from "../slices/pageObjectSlice";
-import { locatorsGenerationStarted } from "../slices/mainSlice";
 import { convertToListWithChildren } from "../../utils/helpers";
 import { requestGenerationData, setParents } from "../../services/pageDataHandlers";
+import { locatorsGenerationStatus } from "../../utils/constants";
 
 const filterByProbability = (elements, perception) => {
   return elements.filter((e) => e.predicted_probability >= perception);
@@ -33,7 +33,6 @@ export const generateLocators = createAsyncThunk("locators/generateLocators", as
       const ids = locatorsWithParents.map(({element_id}) => element_id);
       thunkAPI.dispatch(addLocatorsToPageObj(ids));
 
-      thunkAPI.dispatch(locatorsGenerationStarted());
       thunkAPI.dispatch(runXpathGeneration(locatorsWithParents));
     }
   }
@@ -43,9 +42,11 @@ export const generateLocatorsReducer = (builder) => {
   return builder
       .addCase(generateLocators.pending, (state) => {
         state.schedulerStatus = "pending";
+        state.generationStatus = locatorsGenerationStatus.started;
       })
       .addCase(generateLocators.fulfilled, (state) => {
         state.schedulerStatus = "scheduled";
+        state.generationStatus = locatorsGenerationStatus.complete;
       })
       .addCase(generateLocators.rejected, (state, { error }) => {
         throw new Error(error.stack);

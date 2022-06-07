@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { size } from "lodash";
 import { Tree } from "antd";
@@ -10,10 +10,13 @@ import { selectCurrentPage } from "../../store/selectors/mainSelectors";
 import { selectPageObjById, selectPageObjLocatorsByProbability } from "../../store/selectors/pageObjectSelectors";
 import CaretDownSvg from "../../assets/caret-down.svg";
 import { pageType } from "../../utils/constants";
+import { LocatorsProgress } from "./LocatorsProgress";
 
 const { TreeNode } = Tree;
 
 export const LocatorsTree = ({ pageObject: currentPageObject }) => {
+  const [isProgressActive, setIsProgressActive] = useState(true);
+
   const currentPage = useSelector(selectCurrentPage).page;
   const locators = useSelector((_state) => selectPageObjLocatorsByProbability(_state, currentPageObject));
   const scrollToLocator = useSelector((_state) => _state.locators.scrollToLocator);
@@ -52,10 +55,16 @@ export const LocatorsTree = ({ pageObject: currentPageObject }) => {
 
   return (
     <React.Fragment>
-      <Tree switcherIcon={<CaretDownSvg />} defaultExpandAll>
-        {renderTreeNodes(locatorsTree)}
-      </Tree>
+      <div className="jdn__locatorsTree-container">
+        <Tree
+          switcherIcon={<CaretDownSvg />}
+          defaultExpandAll
+        >
+          {renderTreeNodes(locatorsTree)}
+        </Tree>
+      </div>
       <Notifications />
+      <LocatorsProgress {...{ currentPageObject, isProgressActive, setIsProgressActive }} />
     </React.Fragment>
   );
 };

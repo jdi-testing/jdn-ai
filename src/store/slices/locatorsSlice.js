@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { isUndefined, lowerFirst, size } from "lodash";
-import { identificationStatus, locatorTaskStatus } from "../../utils/constants";
+import { identificationStatus, locatorsGenerationStatus, locatorTaskStatus } from "../../utils/constants";
 import { getJdiClassName, getJDILabel } from "../../utils/generationClassesMap";
 import { locatorsAdapter, simpleSelectLocatorById } from "../selectors/locatorSelectors";
 import { cancelStopGenerationReducer } from "../thunks/cancelStopGeneration";
@@ -10,6 +10,7 @@ import { stopGenerationReducer } from "../thunks/stopGeneration";
 import { stopGenerationGroupReducer } from "../thunks/stopGenerationGroup";
 
 const initialState = {
+  generationStatus: locatorsGenerationStatus.noStatus,
   status: identificationStatus.noStatus,
   scrollToLocator: null,
 };
