@@ -36,10 +36,11 @@ export const GenerationButtons = ({ pageObj }) => {
           </Select>
         </Space>
         <Space direction="horizontal" size={8}>
+          {status}
           <Button
             icon={<SearchOutlined />}
             type="primary"
-            loading={status === identificationStatus.loading && currentPageObject === pageObj}
+            loading={status === identificationStatus.loading && currentPageObject.id === pageObj}
             disabled={!allowIdentifyElements}
             onClick={() => dispatch(identifyElements({ library, pageObj }))}
             className="jdn__buttons"
