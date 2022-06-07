@@ -3,6 +3,7 @@
 .jdn {
   &__locatorsList {
     padding-top: 28px;
+    position: relative;
 
     &-status {
       font-size: 14px;
@@ -152,8 +153,16 @@
       }
 
       .ant-progress {
-        height: 15px;
+        height: 6px;
+
+        &-inner {
+          margin-top: -17px;
+        }
       }
+    }
+
+    & .jdn__locatorsTree-container {
+      overflow-y: auto;
     }
   }
 }

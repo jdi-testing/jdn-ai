@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { size } from "lodash";
-import { identificationStatus, locatorsGenerationStatus } from "../../utils/constants";
+import { identificationStatus } from "../../utils/constants";
 
 const initialState = {
   allowIdentifyElements: true,
@@ -9,7 +9,6 @@ const initialState = {
   perception: 0.5,
   scriptMessage: null,
   showBackdrop: false,
-  locatorsStatus: locatorsGenerationStatus.noStatus,
   xpathConfig: {
     maximum_generation_time: 10,
     allow_indexes_at_the_beginning: false,
@@ -55,9 +54,6 @@ const mainSlice = createSlice({
     toggleBackdrop(state, { payload }) {
       state.showBackdrop = payload;
     },
-    locatorsGenerationStarted(state) {
-      state.locatorsStatus = locatorsGenerationStatus.started;
-    }
   },
 });
 
@@ -69,7 +65,6 @@ export const {
   changePerception,
   clearAll,
   handleLastNotification,
-  locatorsGenerationStarted,
   pushNotification,
   resetNotifications,
   setScriptMessage,
