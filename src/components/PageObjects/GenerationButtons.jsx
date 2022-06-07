@@ -39,7 +39,7 @@ export const GenerationButtons = ({ pageObj }) => {
           <Button
             icon={<SearchOutlined />}
             type="primary"
-            loading={status === identificationStatus.loading && currentPageObject === pageObj}
+            loading={status === identificationStatus.loading && currentPageObject.id === pageObj}
             disabled={!allowIdentifyElements}
             onClick={() => dispatch(identifyElements({ library, pageObj }))}
             className="jdn__buttons"
