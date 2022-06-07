@@ -42,7 +42,7 @@ export const LocatorsProgress = ({ currentPageObject, isProgressActive, setIsPro
   }, [byProbability, generated, deleted]);
 
   return (
-    <div className="jdn__locatorsList-progress">
+    <div className="jdn__locatorsList-progress" style={{ display: isProgressActive ? "flex" : "none" }}>
       <Progress
         percent={readinessPercentage}
         status="active"
@@ -51,9 +51,8 @@ export const LocatorsProgress = ({ currentPageObject, isProgressActive, setIsPro
         trailColor="black"
         strokeLinecap="square"
         strokeWidth={5}
-        style={{ display: isProgressActive ? "flex" : "none" }}
       />
-      <p className="jdn__locatorsList-progress-text" style={{ display: isProgressActive ? "flex" : "none" }}>
+      <p className="jdn__locatorsList-progress-text">
         {size(waiting) ? locatorsGenerationStatus.started : generationStatus}
       </p>
     </div>
