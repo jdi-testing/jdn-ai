@@ -6,6 +6,7 @@ import { sendMessage } from "../services/connector";
 import { pageType } from "../utils/constants";
 import { selectCurrentPage } from "./selectors/mainSelectors";
 import { isErrorValidationType } from "../utils/helpers";
+import { selectLocatorsByPageObject } from "./selectors/pageObjectSelectors";
 
 const notify = (state, action, prevState, store) => {
   const pushNotificationHandler = (prevValue) => {
@@ -19,6 +20,10 @@ const notify = (state, action, prevState, store) => {
 
   const { type, payload, meta } = action;
   switch (type) {
+    case "pageObject/addLocatorsToPageObj":
+      const locators = selectLocatorsByPageObject(state, state.pageObject.currentPageObject);
+      sendMessage.setHighlight({ elements: locators, perception: state.main.perception });
+      break;
     case "locators/changeLocatorAttributes":
       const {element_id, validity, type, name} = payload;
       const prevValue = selectLocatorById(prevState, element_id);

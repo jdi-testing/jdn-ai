@@ -94,7 +94,7 @@ class LocatorGenerationController {
     this.socket.close();
   }
 
-  async scheduleTask(element) {
+  scheduleTask(element) {
     const { element_id, jdnHash } = element;
     if (this.readyState === 0) {
       setTimeout(() => this.scheduleTask(element), 1000);
@@ -111,7 +111,6 @@ class LocatorGenerationController {
           })
       );
     }
-    return;
   }
 
   async scheduleTaskGroup(elements, settings, onStatusChange) {
@@ -119,16 +118,12 @@ class LocatorGenerationController {
     if (onStatusChange) this.onStatusChange = onStatusChange;
 
     if (isNull(this.readyState)) {
-      await this.init(onStatusChange);
+      await this.init();
     }
 
     await this.getDocument();
 
-    elements.forEach((element) => {
-      const { element_id } = element;
-      onStatusChange(element_id, { taskStatus: locatorTaskStatus.PENDING });
-      this.scheduleTask(element);
-    });
+    elements.map((element) => this.scheduleTask(element));
   }
 
   revokeTasks(ids) {
