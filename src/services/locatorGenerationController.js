@@ -34,8 +34,9 @@ class LocatorGenerationController {
   }
 
   async init() {
-    this.openWebSocket();
-    return;
+    return this.openWebSocket().then((socket) => {
+      return this.setMessageListener();
+    });
   }
 
   async getDocument() {
@@ -47,13 +48,27 @@ class LocatorGenerationController {
   }
 
   openWebSocket() {
-    this.socket = new WebSocket("ws://localhost:5050/ws");
-    this.readyState = this.socket.readyState;
-
-    this.socket.addEventListener("open", () => {
+    return new Promise((resolve, reject) => {
+      this.socket = new WebSocket("ws://localhost:5050/ws");
       this.readyState = this.socket.readyState;
-    });
 
+      this.socket.addEventListener("open", () => {
+        this.readyState = this.socket.readyState;
+        resolve(this.socket);
+      });
+
+      this.socket.addEventListener("error", (event) => {
+        this.readyState = event.target.readyState;
+        reject(new Error(event));
+      });
+
+      this.socket.addEventListener("close", (event) => {
+        this.readyState = event.target.readyState;
+      });
+    });
+  }
+
+  setMessageListener() {
     this.socket.addEventListener("message", (event) => {
       const { payload, action, result } = JSON.parse(event.data);
       switch (action || result) {
@@ -79,51 +94,33 @@ class LocatorGenerationController {
           break;
       }
     });
-
-    this.socket.addEventListener("error", (event) => {
-      this.readyState = event.target.readyState;
-      throw new Error(event);
-    });
-
-    this.socket.addEventListener("close", (event) => {
-      this.readyState = event.target.readyState;
-    });
-  }
-
-  closeWebSocket() {
-    this.socket.close();
   }
 
   scheduleTask(element) {
     const { element_id, jdnHash } = element;
-    if (this.readyState === 0) {
-      setTimeout(() => this.scheduleTask(element), 1000);
-    } else if (this.readyState === 1) {
-      this.scheduledTasks.set(element_id);
-      this.socket.send(
-          JSON.stringify({
-            action: SHEDULE_XPATH_GENERATION,
-            payload: {
-              document: this.document,
-              id: jdnHash,
-              config: this.queueSettings,
-            },
-          })
-      );
-    }
+    this.scheduledTasks.set(element_id);
+    this.socket.send(
+        JSON.stringify({
+          action: SHEDULE_XPATH_GENERATION,
+          payload: {
+            document: this.document,
+            id: jdnHash,
+            config: this.queueSettings,
+          },
+        })
+    );
   }
 
   async scheduleTaskGroup(elements, settings, onStatusChange) {
     if (settings) this.queueSettings = settings;
     if (onStatusChange) this.onStatusChange = onStatusChange;
-
-    if (isNull(this.readyState)) {
-      await this.init();
-    }
-
     await this.getDocument();
 
-    elements.map((element) => this.scheduleTask(element));
+    if (isNull(this.readyState)) {
+      this.init().then(() => {
+        elements.map((element) => this.scheduleTask(element));
+      });
+    } else elements.map((element) => this.scheduleTask(element));
   }
 
   revokeTasks(ids) {
