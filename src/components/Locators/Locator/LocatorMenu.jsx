@@ -4,9 +4,9 @@ import { Dropdown, Menu, Typography } from "antd";
 import Icon from "@ant-design/icons";
 import { ArrowFatUp, ArrowFatDown } from "phosphor-react";
 
-import { toggleDeleted } from "../../../store/slices/locatorsSlice";
+import { setCalculationPriority, toggleDeleted } from "../../../store/slices/locatorsSlice";
 
-import { locatorTaskStatus } from "../../../utils/constants";
+import { locatorTaskStatus, LOCATOR_CALCULATION_PRIORITY } from "../../../utils/constants";
 import { rerunGeneration } from "../../../store/thunks/rerunGeneration";
 import { stopGeneration } from "../../../store/thunks/stopGeneration";
 import { getTypesMenuOptions } from "../../../utils/generationClassesMap";
@@ -23,7 +23,7 @@ export const LocatorMenu = ({ element, library }) => {
   const [menuVisible, setMenuVisible] = useState(false);
   const dispatch = useDispatch();
 
-  const { element_id, locator, deleted } = element;
+  const { element_id, locator, deleted, priority } = element;
 
   const isLocatorInProgress = isProgressStatus(locator.taskStatus);
 
@@ -53,20 +53,28 @@ export const LocatorMenu = ({ element, library }) => {
               <Menu.Item key="1" icon={<PauseSvg />} onClick={() => dispatch(stopGeneration(element_id))}>
                 Stop generation
               </Menu.Item>
-              <Menu.Item
-                key="4"
-                icon={<ArrowFatUp color="#fff" size={14} />}
-                onClick={() => console.log("up priority")}
-              >
-                Up Priority
-              </Menu.Item>
-              <Menu.Item
-                key="5"
-                icon={<ArrowFatDown color="#fff" size={14} />}
-                onClick={() => console.log("down priority")}
-              >
-                Down Priority
-              </Menu.Item>
+              {priority !== LOCATOR_CALCULATION_PRIORITY.INCREASED ? (
+                <Menu.Item
+                  key="4"
+                  icon={<ArrowFatUp color="#fff" size={14} />}
+                  onClick={() =>
+                    dispatch(setCalculationPriority({ element_id, priority: LOCATOR_CALCULATION_PRIORITY.INCREASED }))
+                  }
+                >
+                  Up Priority
+                </Menu.Item>
+              ) : null}
+              {priority !== LOCATOR_CALCULATION_PRIORITY.DECREASED ? (
+                <Menu.Item
+                  key="5"
+                  icon={<ArrowFatDown color="#fff" size={14} />}
+                  onClick={() =>
+                    dispatch(setCalculationPriority({ element_id, priority: LOCATOR_CALCULATION_PRIORITY.DECREASED }))
+                  }
+                >
+                  Down Priority
+                </Menu.Item>
+              ) : null}
             </React.Fragment>
           ) : null}
           {locator.taskStatus === locatorTaskStatus.REVOKED ? (

@@ -52,3 +52,8 @@ export const SCRIPT_ERROR = {
   NO_RESPONSE: "The message port closed before a response was received.",
   NO_CONNECTION: "Could not establish connection. Receiving end does not exist.",
 };
+
+export const LOCATOR_CALCULATION_PRIORITY = {
+  INCREASED: "INCREASED",
+  DECREASED: "DECREASED",
+};

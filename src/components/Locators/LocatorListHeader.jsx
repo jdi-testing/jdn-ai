@@ -1,8 +1,8 @@
-import { Button } from "antd";
-import { filter, size } from "lodash";
+import React, { useMemo } from "react";
+import { filter, size, some } from "lodash";
 import { useDispatch } from "react-redux";
+import { Button } from "antd";
 import Icon from "@ant-design/icons";
-import React from "react";
 import { ArrowFatUp, ArrowFatDown, Trash } from "phosphor-react";
 
 import { Chip } from "./Chip";
@@ -14,7 +14,7 @@ import RestoreSvg from "../../assets/restore.svg";
 import { toggleDeleted, toggleDeletedGroup, toggleElementGroupGeneration } from "../../store/slices/locatorsSlice";
 import { stopGenerationGroup } from "../../store/thunks/stopGenerationGroup";
 import { rerunGeneration } from "../../store/thunks/rerunGeneration";
-import { locatorTaskStatus } from "../../utils/constants";
+import { locatorTaskStatus, LOCATOR_CALCULATION_PRIORITY } from "../../utils/constants";
 
 export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedSelected }) => {
   const dispatch = useDispatch();
@@ -23,6 +23,20 @@ export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedS
   const activeSelected = [...generatedSelected, ...waitingSelected];
   const stoppedSelected = filter(waitingSelected, (el) => el.locator.taskStatus === locatorTaskStatus.REVOKED);
   const inProgressSelected = filter(waitingSelected, (el) => el.locator.taskStatus !== locatorTaskStatus.REVOKED);
+
+  const noPrioritySelected = useMemo(() => some(inProgressSelected, (_locator) => !_locator.priority), [
+    inProgressSelected,
+  ]);
+
+  const increasedPrioritySelected = useMemo(
+      () => some(inProgressSelected, { priority: LOCATOR_CALCULATION_PRIORITY.INCREASED }),
+      [inProgressSelected]
+  );
+
+  const decreasedPrioritySelected = useMemo(
+      () => some(inProgressSelected, { priority: LOCATOR_CALCULATION_PRIORITY.DECREASED }),
+      [inProgressSelected]
+  );
 
   const handleDelete = () => {
     activeSelected.length > 1 ?
@@ -56,12 +70,24 @@ export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedS
             <Button danger onClick={() => dispatch(stopGenerationGroup(inProgressSelected))}>
               <Icon component={PauseSVG} />
             </Button>
-            <Button onClick={() => console.log("pririty up")}>
-              <ArrowFatUp color="#1582D8" size={18} />
-            </Button>
-            <Button onClick={() => console.log("pririty down")}>
-              <ArrowFatDown color="#1582D8" size={18} />
-            </Button>
+            {decreasedPrioritySelected || noPrioritySelected ? (
+              <Button
+                onClick={() =>
+                  dispatch(setCalculationPriority({ element_id, priority: LOCATOR_CALCULATION_PRIORITY.INCREASED }))
+                }
+              >
+                <ArrowFatUp color="#1582D8" size={18} />
+              </Button>
+            ) : null}
+            {increasedPrioritySelected || noPrioritySelected ? (
+              <Button
+                onClick={() =>
+                  dispatch(setCalculationPriority({ element_id, priority: LOCATOR_CALCULATION_PRIORITY.DECREASED }))
+                }
+              >
+                <ArrowFatDown color="#1582D8" size={18} />
+              </Button>
+            ) : null}
           </React.Fragment>
         ) : null}
         <Button hidden={!size(activeSelected)} danger onClick={handleDelete}>
