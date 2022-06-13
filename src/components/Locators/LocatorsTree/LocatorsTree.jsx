@@ -3,13 +3,13 @@ import { useSelector } from "react-redux";
 import { size } from "lodash";
 import { Tree } from "antd";
 
-import { Locator } from "./Locator";
+import { Locator } from "../Locator";
 import { Notifications } from "./Notifications";
-import { convertListToTree } from "../../utils/helpers";
-import { selectCurrentPage } from "../../store/selectors/mainSelectors";
-import { selectPageObjById, selectPageObjLocatorsByProbability } from "../../store/selectors/pageObjectSelectors";
-import CaretDownSvg from "../../assets/caret-down.svg";
-import { pageType } from "../../utils/constants";
+import { convertListToTree } from "../../../utils/helpers";
+import { selectCurrentPage } from "../../../store/selectors/mainSelectors";
+import { selectPageObjById, selectPageObjLocatorsByProbability } from "../../../store/selectors/pageObjectSelectors";
+import CaretDownSvg from "../../../assets/caret-down.svg";
+import { pageType } from "../../../utils/constants";
 import { LocatorsProgress } from "./LocatorsProgress";
 
 const { TreeNode } = Tree;

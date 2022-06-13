@@ -2,19 +2,19 @@ import React, { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Tooltip } from "antd";
 import Icon from "@ant-design/icons";
+import { Trash } from "phosphor-react";
 
-import { addPageObj } from "../../store/thunks/addPageObject";
-import { generateAndDownloadZip } from "../../services/pageObject";
+import { addPageObj } from "../../../store/thunks/addPageObject";
+import { generateAndDownloadZip } from "../../../services/pageObject";
 
-import PlusSvg from "../../assets/plus.svg";
-import DownloadSvg from "../../assets/download.svg";
-import { pushNotification } from "../../store/slices/mainSlice";
+import PlusSvg from "../../../assets/plus.svg";
+import DownloadSvg from "../../../assets/download.svg";
+import { pushNotification } from "../../../store/slices/mainSlice";
 import { size } from "lodash";
-import { selectPageObjects } from "../../store/selectors/pageObjectSelectors";
+import { selectPageObjects } from "../../../store/selectors/pageObjectSelectors";
 
-import TrashBinSVG from "../../assets/trash-bin.svg";
-import { openDeleteAllPopup } from "../../services/pageDataHandlers";
-import { selectLocatorsToGenerate } from "../../store/selectors/locatorSelectors";
+import { openDeleteAllPopup } from "../../../services/pageDataHandlers";
+import { selectLocatorsToGenerate } from "../../../store/selectors/locatorSelectors";
 
 export const PageObjListHeader = () => {
   const state = useSelector((state) => state);
@@ -45,7 +45,7 @@ export const PageObjListHeader = () => {
         {size(pageObjects) ? (
           <Tooltip placement="bottom" title="Delete all">
             <Button hidden={!size(pageObjects)} danger onClick={handleRemoveAll} data-testid="remove-button">
-              <Icon fill="#D82C15" component={TrashBinSVG} />
+              <Trash color="#D82C15" size={18} />
             </Button>
           </Tooltip>
         ) : null}

@@ -12,7 +12,7 @@ export const copyToClipboard = (text) => {
   chrome.devtools.inspectedWindow.eval(`copy('${transformedText}')`);
 };
 
-export const getLocatorString = (loc) => `@UI("${getLocator(loc.locator)}")\npublic ${loc.type} ${loc.name};`;
+export const getLocatorString = (locator, type, name) => `@UI("${getLocator(locator)}")\npublic ${type} ${name};`;
 
 export const convertListToTree = (_list) => {
   const list = cloneDeep(_list);

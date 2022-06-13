@@ -7,8 +7,8 @@ import {
   selectGeneratedByPageObj,
   selectPageObjLocatorsByProbability,
   selectWaitingByPageObj,
-} from "../../store/selectors/pageObjectSelectors";
-import { locatorsGenerationStatus } from "../../utils/constants";
+} from "../../../store/selectors/pageObjectSelectors";
+import { locatorsGenerationStatus } from "../../../utils/constants";
 
 let timer;
 
