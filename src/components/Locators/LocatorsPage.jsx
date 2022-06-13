@@ -136,6 +136,7 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
       <div className="jdn__locatorsList">
         <LocatorListHeader
           {...{
+            locatorIds,
             generatedSelected,
             waitingSelected,
             deletedSelected,
