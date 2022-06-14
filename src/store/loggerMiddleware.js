@@ -76,6 +76,11 @@ const notify = (state, action, prevState, store) => {
       };
       iterateChildren(locator);
       break;
+    case "locators/setElementGroupGeneration":
+      payload.ids.forEach((id) => {
+        sendMessage.toggle({ element: selectLocatorById(state, id), skipScroll: true });
+      });
+      break;
     case "locators/toggleDeleted":
       sendMessage.toggleDeleted(selectLocatorById(state, payload));
       pushNotificationHandler(selectLocatorById(prevState, payload));

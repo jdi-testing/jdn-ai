@@ -1,7 +1,7 @@
 import { Button, Checkbox, Dropdown, Menu, Spin, Tooltip, Typography } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import Icon from "@ant-design/icons";
-import React, { memo, useRef, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import Text from "antd/lib/typography/Text";
 
 import { getLocator } from "../../services/pageObject";
@@ -59,10 +59,17 @@ export const Locator = memo(({ element, currentPage, scroll, library }) => {
   const indeterminate = useSelector((state) => isLocatorIndeterminate(state, element_id));
   const allChildrenChecked = useSelector((state) => areChildrenChecked(state, element_id));
 
-  if (scroll && generate) {
+  if (scroll && generate && ref.current) {
     ref.current.scrollIntoView({ behavior: "smooth", block: "center" });
-    dispatch(setScrollToLocator(null));
+    setTimeout(() => dispatch(setScrollToLocator(null)), 0);
   }
+
+  useEffect(() => {
+    if (scroll && generate) {
+      ref.current.scrollIntoView({ behavior: "smooth", block: "center" });
+      dispatch(setScrollToLocator(null));
+    }
+  }, []);
 
   const handleOnChange = () => {
     if (!generate) {
@@ -207,9 +214,7 @@ export const Locator = memo(({ element, currentPage, scroll, library }) => {
           </a>
         </div>
       ) : (
-        <Text className="jdn__xpath_item">
-          {renderColorizedString()}
-        </Text>
+        <Text className="jdn__xpath_item">{renderColorizedString()}</Text>
       )}
     </div>
   );
