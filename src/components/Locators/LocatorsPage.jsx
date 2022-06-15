@@ -141,10 +141,10 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
             waitingSelected,
             deletedSelected,
           }}
+          render={(viewProps) =>
+            size(locators) ? <LocatorsTree pageObject={currentPageObject} {...{ viewProps, locatorIds }} /> : null
+          }
         />
-        <div className="jdn__locatorsList-content">
-          {size(locators) ? <LocatorsTree pageObject={currentPageObject} /> : null}
-        </div>
       </div>
       {/* <PerceptionTreshold /> */}
       <div className="jdn__navigation">

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import { size } from "lodash";
 import { Tree } from "antd";
@@ -8,19 +8,43 @@ import { Notifications } from "./Notifications";
 import { convertListToTree } from "../../utils/helpers";
 import { selectCurrentPage } from "../../store/selectors/mainSelectors";
 import { selectPageObjById, selectPageObjLocatorsByProbability } from "../../store/selectors/pageObjectSelectors";
-import CaretDownSvg from "../../assets/caret-down.svg";
+import { CaretDown } from "phosphor-react";
 import { pageType } from "../../utils/constants";
 import { LocatorsProgress } from "./LocatorsProgress";
+import { EXPAND_STATE } from "./LocatorListHeader";
 
 const { TreeNode } = Tree;
 
-export const LocatorsTree = ({ pageObject: currentPageObject }) => {
+export const LocatorsTree = ({ pageObject: currentPageObject, locatorIds, viewProps }) => {
   const [isProgressActive, setIsProgressActive] = useState(true);
+  const [expandedKeys, setExpandedKeys] = useState(locatorIds);
+  const [autoExpandParent, setAutoExpandParent] = useState(true);
+
+  const { expandAll, setExpandAll } = viewProps;
 
   const currentPage = useSelector(selectCurrentPage).page;
   const locators = useSelector((_state) => selectPageObjLocatorsByProbability(_state, currentPageObject));
   const scrollToLocator = useSelector((_state) => _state.locators.scrollToLocator);
   const library = useSelector((_state) => selectPageObjById(_state, _state.pageObject.currentPageObject)).library;
+
+  useEffect(() => {
+    if (expandAll === EXPAND_STATE.EXPANDED) setExpandedKeys(locatorIds);
+    else if (expandAll === EXPAND_STATE.COLLAPSED) setExpandedKeys([]);
+  }, [expandAll]);
+
+  useEffect(() => {
+    if (!scrollToLocator) return;
+    if (!expandedKeys.includes[scrollToLocator]) {
+      setExpandedKeys([...expandedKeys, scrollToLocator]);
+      setAutoExpandParent(true);
+    }
+  }, [scrollToLocator]);
+
+  const onExpand = (expandedKeysValue) => {
+    setExpandedKeys(expandedKeysValue);
+    setAutoExpandParent(false);
+    setExpandAll(EXPAND_STATE.CUSTOM);
+  };
 
   const createLocatorsMap = () => {
     const map = {};
@@ -54,17 +78,14 @@ export const LocatorsTree = ({ pageObject: currentPageObject }) => {
   };
 
   return (
-    <React.Fragment>
+    <div className="jdn__locatorsList-content">
       <div className="jdn__locatorsTree-container">
-        <Tree
-          switcherIcon={<CaretDownSvg />}
-          defaultExpandAll
-        >
+        <Tree {...{ expandedKeys, onExpand, autoExpandParent }} switcherIcon={<CaretDown color="#878A9C" size={14} />}>
           {renderTreeNodes(locatorsTree)}
         </Tree>
       </div>
       <Notifications />
       <LocatorsProgress {...{ currentPageObject, isProgressActive, setIsProgressActive }} />
-    </React.Fragment>
+    </div>
   );
 };
