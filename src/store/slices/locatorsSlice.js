@@ -83,6 +83,13 @@ const locatorsSlice = createSlice({
     setScrollToLocator(state, { payload: element_id }) {
       state.scrollToLocator = element_id;
     },
+    setElementGroupGeneration(state, { payload }) {
+      const { ids, generate } = payload;
+      locatorsAdapter.upsertMany(
+          state,
+          ids.map((id) => ({ element_id: id, generate }))
+      );
+    },
     toggleElementGroupGeneration(state, { payload }) {
       const newValue = [];
       payload.forEach(({ element_id, generate }) => {
@@ -143,6 +150,7 @@ export const {
   setChildrenGeneration,
   setCalculationPriority,
   setScrollToLocator,
+  setElementGroupGeneration,
   toggleElementGroupGeneration,
   toggleDeleted,
   toggleDeletedGroup,

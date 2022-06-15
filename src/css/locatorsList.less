@@ -17,18 +17,15 @@
       font-weight: 700;
       display: flex;
       flex-wrap: wrap;
-      padding: 8px 8px 8px 12px;
+      gap: 8px;
+      padding: 8px 0 8px 12px;
 
       &-title {
         flex-grow: 1;
         flex-shrink: 0;
         line-height: 30px;
       }
-
-      &:first-child {
-        padding-left: 4px;
-      }
-
+      
       button {
         padding: 4px 12px;
         font-weight: bold;
@@ -45,11 +42,14 @@
         }
       }
 
+      svg {
+        margin: auto;
+      }
+
       &-buttons {
         display: flex;
         flex-wrap: nowrap;
         gap: 8px;
-        margin-left: 8px;
       }
 
       .ant-btn {
@@ -91,6 +91,12 @@
 
       .anticon-close {
         color: #949494;
+      }
+
+      .ant-checkbox {
+        display: block;
+        margin: auto;
+        top: 0;
       }
     }
 

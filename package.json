@@ -1,6 +1,6 @@
 {
   "name": "jdn-ai-chrome-extension",
-  "version": "3.1.190",
+  "version": "3.1.193",
   "description": "jdn-ai chrome extension",
   "scripts": {
     "start": "webpack --watch",
@@ -46,7 +46,7 @@
     "jszip": "3.7.1",
     "lodash": "4.17.21",
     "mversion": "2.0.1",
-    "phosphor-react": "^1.4.1",
+    "phosphor-react": "1.4.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-redux": "7.2.6",

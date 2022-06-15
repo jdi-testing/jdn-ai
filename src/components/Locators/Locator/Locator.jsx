@@ -1,6 +1,6 @@
 import { Checkbox } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import React, { memo, useRef } from "react";
+import React, { memo, useRef, useEffect } from "react";
 import Text from "antd/lib/typography/Text";
 
 import { getLocator } from "../../../services/pageObject";
@@ -16,6 +16,8 @@ import { LocatorIcon } from "./LocatorIcon";
 import { LocatorCopyButton } from "./LocatorCopyButton";
 import { LocatorMenu } from "./LocatorMenu";
 
+let timer;
+
 // eslint-disable-next-line react/display-name
 export const Locator = memo(({ element, currentPage, scroll, library }) => {
   const dispatch = useDispatch();
@@ -27,10 +29,19 @@ export const Locator = memo(({ element, currentPage, scroll, library }) => {
   const indeterminate = useSelector((state) => isLocatorIndeterminate(state, element_id));
   const allChildrenChecked = useSelector((state) => areChildrenChecked(state, element_id));
 
-  if (scroll && generate) {
-    ref.current.scrollIntoView({ behavior: "smooth", block: "center" });
-    dispatch(setScrollToLocator(null));
-  }
+  const scrollToLocator = () => {
+    if (scroll && generate && ref.current) {
+      ref.current.scrollIntoView({ behavior: "smooth", block: "center" });
+      timer = setTimeout(() => dispatch(setScrollToLocator(null)), 0);
+    }
+  };
+
+  scrollToLocator();
+
+  useEffect(() => {
+    scrollToLocator();
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleOnChange = () => {
     if (!generate) {
