@@ -52,17 +52,12 @@ export const editNamePopup = () => {
       if (!isValidJavaVariable) return ERROR_TYPE.INVALID_NAME;
       if (value.length > 60) return ERROR_TYPE.LONG_NAME;
 
-      return new Promise((resolve) => {
-        sendMessage(
-            {
-              message: "CHECK_PO_NAME_VALIDITY",
-              param: {
-                id,
-                newName: value,
-              },
-            },
-            (response) => resolve(response)
-        );
+      return sendMessage({
+        message: "CHECK_PO_NAME_VALIDITY",
+        param: {
+          id,
+          newName: value,
+        },
       });
     };
 
