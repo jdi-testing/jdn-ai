@@ -59,16 +59,17 @@ export const Locator = memo(({ element, currentPage, scroll, library }) => {
   const indeterminate = useSelector((state) => isLocatorIndeterminate(state, element_id));
   const allChildrenChecked = useSelector((state) => areChildrenChecked(state, element_id));
 
-  if (scroll && generate && ref.current) {
-    ref.current.scrollIntoView({ behavior: "smooth", block: "center" });
-    setTimeout(() => dispatch(setScrollToLocator(null)), 0);
-  }
+  const scrollToLocator = () => {
+    if (scroll && generate && ref.current) {
+      ref.current.scrollIntoView({ behavior: "smooth", block: "center" });
+      setTimeout(() => dispatch(setScrollToLocator(null)), 0);
+    }
+  };
+
+  scrollToLocator();
 
   useEffect(() => {
-    if (scroll && generate) {
-      ref.current.scrollIntoView({ behavior: "smooth", block: "center" });
-      dispatch(setScrollToLocator(null));
-    }
+    scrollToLocator();
   }, []);
 
   const handleOnChange = () => {
