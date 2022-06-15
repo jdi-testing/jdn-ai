@@ -43,6 +43,8 @@ const isEdited = (element) => element.locator.customXpath;
 const isValidLocator = ({ validity }) =>
   !validity?.locator.length || validity.locator === VALIDATION_ERROR_TYPE.NEW_ELEMENT;
 
+let timer;
+
 // eslint-disable-next-line react/display-name
 export const Locator = memo(({ element, currentPage, scroll, library }) => {
   const [copyTooltipTitle, setTooltipTitle] = useState(copyTitle.Copy);
@@ -62,7 +64,7 @@ export const Locator = memo(({ element, currentPage, scroll, library }) => {
   const scrollToLocator = () => {
     if (scroll && generate && ref.current) {
       ref.current.scrollIntoView({ behavior: "smooth", block: "center" });
-      setTimeout(() => dispatch(setScrollToLocator(null)), 0);
+      timer = setTimeout(() => dispatch(setScrollToLocator(null)), 0);
     }
   };
 
@@ -70,6 +72,7 @@ export const Locator = memo(({ element, currentPage, scroll, library }) => {
 
   useEffect(() => {
     scrollToLocator();
+    return () => clearTimeout(timer);
   }, []);
 
   const handleOnChange = () => {
