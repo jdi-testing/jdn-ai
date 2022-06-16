@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { filter, size, some } from "lodash";
+import { filter, size } from "lodash";
 import { Button, Checkbox } from "antd";
 import { useDispatch } from "react-redux";
 import Icon from "@ant-design/icons";
@@ -13,6 +13,7 @@ import RestoreSvg from "../../assets/restore.svg";
 import { CaretDown } from "phosphor-react";
 
 import {
+  setCalculationPriority,
   setElementGroupGeneration,
   toggleDeleted,
   toggleDeletedGroup,
@@ -21,6 +22,7 @@ import {
 import { stopGenerationGroup } from "../../store/thunks/stopGenerationGroup";
 import { rerunGeneration } from "../../store/thunks/rerunGeneration";
 import { locatorTaskStatus, LOCATOR_CALCULATION_PRIORITY } from "../../utils/constants";
+import { locatorGenerationController } from "../../services/locatorGenerationController";
 
 export const EXPAND_STATE = {
   EXPANDED: "EXPANDED",
@@ -37,17 +39,17 @@ export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedS
   const stoppedSelected = filter(waitingSelected, (el) => el.locator.taskStatus === locatorTaskStatus.REVOKED);
   const inProgressSelected = filter(waitingSelected, (el) => el.locator.taskStatus !== locatorTaskStatus.REVOKED);
 
-  const noPrioritySelected = useMemo(() => some(inProgressSelected, (_locator) => !_locator.priority), [
+  const noPrioritySelected = useMemo(() => filter(inProgressSelected, (_locator) => !_locator.priority), [
     inProgressSelected,
   ]);
 
   const increasedPrioritySelected = useMemo(
-      () => some(inProgressSelected, { priority: LOCATOR_CALCULATION_PRIORITY.INCREASED }),
+      () => filter(inProgressSelected, { priority: LOCATOR_CALCULATION_PRIORITY.INCREASED }),
       [inProgressSelected]
   );
 
   const decreasedPrioritySelected = useMemo(
-      () => some(inProgressSelected, { priority: LOCATOR_CALCULATION_PRIORITY.DECREASED }),
+      () => filter(inProgressSelected, { priority: LOCATOR_CALCULATION_PRIORITY.DECREASED }),
       [inProgressSelected]
   );
   const fullySelected = size(selected) === size(locatorIds);
@@ -61,6 +63,20 @@ export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedS
     activeSelected.length > 1 ?
       dispatch(toggleDeletedGroup(activeSelected, true)) :
       dispatch(toggleDeleted(activeSelected[0].element_id, true));
+  };
+
+  const handleUpPriority = () => {
+    const hashes = [...decreasedPrioritySelected, ...noPrioritySelected].map((element) => element.jdnHash);
+    const ids = [...decreasedPrioritySelected, ...noPrioritySelected].map((element) => element.element_id);
+    dispatch(setCalculationPriority({ ids, priority: LOCATOR_CALCULATION_PRIORITY.INCREASED }));
+    locatorGenerationController.upPriority(hashes);
+  };
+
+  const handleDownPriority = () => {
+    const hashes = [...increasedPrioritySelected, ...noPrioritySelected].map((element) => element.jdnHash);
+    const ids = [...increasedPrioritySelected, ...noPrioritySelected].map((element) => element.element_id);
+    dispatch(setCalculationPriority({ ids, priority: LOCATOR_CALCULATION_PRIORITY.DECREASED }));
+    locatorGenerationController.downPriority(hashes);
   };
 
   return (
@@ -99,21 +115,13 @@ export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedS
               <Button danger onClick={() => dispatch(stopGenerationGroup(inProgressSelected))}>
                 <Icon component={PauseSVG} />
               </Button>
-              {decreasedPrioritySelected || noPrioritySelected ? (
-                <Button
-                  onClick={() =>
-                    dispatch(setCalculationPriority({ element_id, priority: LOCATOR_CALCULATION_PRIORITY.INCREASED }))
-                  }
-                >
+              {size(decreasedPrioritySelected) || size(noPrioritySelected) ? (
+                <Button onClick={handleUpPriority}>
                   <ArrowFatUp color="#1582D8" size={18} />
                 </Button>
               ) : null}
-              {increasedPrioritySelected || noPrioritySelected ? (
-                <Button
-                  onClick={() =>
-                    dispatch(setCalculationPriority({ element_id, priority: LOCATOR_CALCULATION_PRIORITY.DECREASED }))
-                  }
-                >
+              {size(increasedPrioritySelected) || size(noPrioritySelected) ? (
+                <Button onClick={handleDownPriority}>
                   <ArrowFatDown color="#1582D8" size={18} />
                 </Button>
               ) : null}

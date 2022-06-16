@@ -10,7 +10,7 @@ import { locatorTaskStatus, LOCATOR_CALCULATION_PRIORITY } from "../../../utils/
 import { rerunGeneration } from "../../../store/thunks/rerunGeneration";
 import { stopGeneration } from "../../../store/thunks/stopGeneration";
 import { getTypesMenuOptions } from "../../../utils/generationClassesMap";
-import { isProgressStatus } from "../../../services/locatorGenerationController";
+import { isProgressStatus, locatorGenerationController } from "../../../services/locatorGenerationController";
 
 import PauseSvg from "../../../assets/pause.svg";
 import PencilSvg from "../../../assets/pencil.svg";
@@ -23,7 +23,7 @@ export const LocatorMenu = ({ element, library }) => {
   const [menuVisible, setMenuVisible] = useState(false);
   const dispatch = useDispatch();
 
-  const { element_id, locator, deleted, priority } = element;
+  const { element_id, locator, deleted, priority, jdnHash } = element;
 
   const isLocatorInProgress = isProgressStatus(locator.taskStatus);
 
@@ -31,6 +31,16 @@ export const LocatorMenu = ({ element, library }) => {
     chrome.storage.sync.set({
       OPEN_EDIT_LOCATOR: { isOpen: true, value: element, types: getTypesMenuOptions(library) },
     });
+  };
+
+  const handleUpPriority = () => {
+    dispatch(setCalculationPriority({ element_id, priority: LOCATOR_CALCULATION_PRIORITY.INCREASED }));
+    locatorGenerationController.upPriority([jdnHash]);
+  };
+
+  const handleDownPriority = () => {
+    dispatch(setCalculationPriority({ element_id, priority: LOCATOR_CALCULATION_PRIORITY.DECREASED }));
+    locatorGenerationController.downPriority([jdnHash]);
   };
 
   const renderMenu = () => {
@@ -54,24 +64,12 @@ export const LocatorMenu = ({ element, library }) => {
                 Stop generation
               </Menu.Item>
               {priority !== LOCATOR_CALCULATION_PRIORITY.INCREASED ? (
-                <Menu.Item
-                  key="4"
-                  icon={<ArrowFatUp color="#fff" size={14} />}
-                  onClick={() =>
-                    dispatch(setCalculationPriority({ element_id, priority: LOCATOR_CALCULATION_PRIORITY.INCREASED }))
-                  }
-                >
+                <Menu.Item key="4" icon={<ArrowFatUp color="#fff" size={14} />} onClick={handleUpPriority}>
                   Up Priority
                 </Menu.Item>
               ) : null}
               {priority !== LOCATOR_CALCULATION_PRIORITY.DECREASED ? (
-                <Menu.Item
-                  key="5"
-                  icon={<ArrowFatDown color="#fff" size={14} />}
-                  onClick={() =>
-                    dispatch(setCalculationPriority({ element_id, priority: LOCATOR_CALCULATION_PRIORITY.DECREASED }))
-                  }
-                >
+                <Menu.Item key="5" icon={<ArrowFatDown color="#fff" size={14} />} onClick={handleDownPriority}>
                   Down Priority
                 </Menu.Item>
               ) : null}
