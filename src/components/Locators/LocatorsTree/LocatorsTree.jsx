@@ -16,7 +16,6 @@ import { EXPAND_STATE } from "../LocatorListHeader";
 const { TreeNode } = Tree;
 
 export const LocatorsTree = ({ pageObject: currentPageObject, locatorIds, viewProps }) => {
-  const [isProgressActive, setIsProgressActive] = useState(true);
   const [expandedKeys, setExpandedKeys] = useState(locatorIds);
   const [autoExpandParent, setAutoExpandParent] = useState(true);
 
@@ -78,14 +77,14 @@ export const LocatorsTree = ({ pageObject: currentPageObject, locatorIds, viewPr
   };
 
   return (
-    <div className="jdn__locatorsList-content">
+    <React.Fragment>
       <div className="jdn__locatorsTree-container">
         <Tree {...{ expandedKeys, onExpand, autoExpandParent }} switcherIcon={<CaretDown color="#878A9C" size={14} />}>
           {renderTreeNodes(locatorsTree)}
         </Tree>
       </div>
       <Notifications />
-      <LocatorsProgress {...{ currentPageObject, isProgressActive, setIsProgressActive }} />
-    </div>
+      <LocatorsProgress {...{ currentPageObject }} />
+    </React.Fragment>
   );
 };
