@@ -1,17 +1,15 @@
 import { isNull } from "lodash";
 
 import { connector } from "./connector";
-import { REVOKE_TASKS, SHEDULE_XPATH_GENERATION } from "../services/backend";
+import { DOWN_PRIORITY, REVOKE_TASKS, SHEDULE_XPATH_GENERATION, UP_PRIORITY } from "../services/backend";
 import { locatorProgressStatus, locatorTaskStatus } from "../utils/constants";
 
 export const isProgressStatus = (taskStatus) => locatorProgressStatus.hasOwnProperty(taskStatus);
 export const isGeneratedStatus = (taskStatus) => taskStatus === locatorTaskStatus.SUCCESS;
 
 export const runGenerationHandler = async (elements, settings, onStatusChange) => {
-  locatorGenerationController.scheduleTaskGroup(
-      elements,
-      settings,
-      (element_id, locator) => onStatusChange({ element_id, locator }),
+  locatorGenerationController.scheduleTaskGroup(elements, settings, (element_id, locator) =>
+    onStatusChange({ element_id, locator })
   );
 };
 
@@ -128,6 +126,28 @@ class LocatorGenerationController {
       const { element_id } = element;
       onStatusChange(element_id, { taskStatus: locatorTaskStatus.PENDING });
       this.scheduleTask(element);
+    });
+  }
+
+  upPriority(ids) {
+    ids.forEach((id) => {
+      this.socket.send(
+          JSON.stringify({
+            action: UP_PRIORITY,
+            payload: { element_id: id },
+          })
+      );
+    });
+  }
+
+  downPriority(ids) {
+    ids.forEach((id) => {
+      this.socket.send(
+          JSON.stringify({
+            action: DOWN_PRIORITY,
+            payload: { element_id: id },
+          })
+      );
     });
   }
 

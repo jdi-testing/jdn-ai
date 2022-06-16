@@ -76,6 +76,14 @@ const locatorsSlice = createSlice({
       toggleGenerate(locator);
       locatorsAdapter.upsertMany(state, newValue);
     },
+    setCalculationPriority(state, { payload }) {
+      const { element_id, ids, priority } = payload;
+      if (element_id) locatorsAdapter.upsertOne(state, { element_id, priority });
+      if (ids) {
+        const newValue = ids.map((element_id) => ({ element_id, priority }));
+        locatorsAdapter.upsertMany(state, newValue);
+      }
+    },
     setScrollToLocator(state, { payload: element_id }) {
       state.scrollToLocator = element_id;
     },
@@ -144,6 +152,7 @@ export const {
   removeAll,
   toggleElementGeneration,
   setChildrenGeneration,
+  setCalculationPriority,
   setScrollToLocator,
   setElementGroupGeneration,
   toggleElementGroupGeneration,

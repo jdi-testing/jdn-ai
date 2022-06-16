@@ -1,18 +1,19 @@
 import { Progress } from "antd";
 import { size } from "lodash";
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
 import {
   selectDeletedByPageObj,
   selectGeneratedByPageObj,
   selectPageObjLocatorsByProbability,
   selectWaitingByPageObj,
-} from "../../store/selectors/pageObjectSelectors";
-import { locatorsGenerationStatus } from "../../utils/constants";
+} from "../../../store/selectors/pageObjectSelectors";
+import { locatorsGenerationStatus } from "../../../utils/constants";
 
 let timer;
 
-export const LocatorsProgress = ({ currentPageObject, isProgressActive, setIsProgressActive }) => {
+export const LocatorsProgress = ({ currentPageObject }) => {
+  const [isProgressActive, setIsProgressActive] = useState(false);
   const generationStatus = useSelector((state) => state.locators.generationStatus);
 
   const byProbability = useSelector((_state) => selectPageObjLocatorsByProbability(_state, currentPageObject));
@@ -33,13 +34,14 @@ export const LocatorsProgress = ({ currentPageObject, isProgressActive, setIsPro
   }, [byProbability, generated]);
 
   useEffect(() => {
+    if (size(waiting) && size(generated) === 0) setIsProgressActive(true);
     const readyCount = size(generated);
     const total = size(byProbability) - size(deleted);
     if (readyCount > 0 && total > 0 && readyCount === total) {
       timer = setTimeout(hideProgressInformation, 10000);
     }
     return () => clearTimeout(timer);
-  }, [byProbability, generated, deleted]);
+  }, [byProbability, generated, waiting, deleted]);
 
   return (
     <div className="jdn__locatorsList-progress" style={{ display: isProgressActive ? "flex" : "none" }}>

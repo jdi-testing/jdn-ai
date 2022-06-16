@@ -3,20 +3,19 @@ import { useSelector } from "react-redux";
 import { size } from "lodash";
 import { Tree } from "antd";
 
-import { Locator } from "./Locator";
+import { Locator } from "../Locator";
 import { Notifications } from "./Notifications";
-import { convertListToTree } from "../../utils/helpers";
-import { selectCurrentPage } from "../../store/selectors/mainSelectors";
-import { selectPageObjById, selectPageObjLocatorsByProbability } from "../../store/selectors/pageObjectSelectors";
+import { convertListToTree } from "../../../utils/helpers";
+import { selectCurrentPage } from "../../../store/selectors/mainSelectors";
+import { selectPageObjById, selectPageObjLocatorsByProbability } from "../../../store/selectors/pageObjectSelectors";
+import { pageType } from "../../../utils/constants";
 import { CaretDown } from "phosphor-react";
-import { pageType } from "../../utils/constants";
 import { LocatorsProgress } from "./LocatorsProgress";
-import { EXPAND_STATE } from "./LocatorListHeader";
+import { EXPAND_STATE } from "../LocatorListHeader";
 
 const { TreeNode } = Tree;
 
 export const LocatorsTree = ({ pageObject: currentPageObject, locatorIds, viewProps }) => {
-  const [isProgressActive, setIsProgressActive] = useState(true);
   const [expandedKeys, setExpandedKeys] = useState(locatorIds);
   const [autoExpandParent, setAutoExpandParent] = useState(true);
 
@@ -78,14 +77,14 @@ export const LocatorsTree = ({ pageObject: currentPageObject, locatorIds, viewPr
   };
 
   return (
-    <div className="jdn__locatorsList-content">
+    <React.Fragment>
       <div className="jdn__locatorsTree-container">
         <Tree {...{ expandedKeys, onExpand, autoExpandParent }} switcherIcon={<CaretDown color="#878A9C" size={14} />}>
           {renderTreeNodes(locatorsTree)}
         </Tree>
       </div>
       <Notifications />
-      <LocatorsProgress {...{ currentPageObject, isProgressActive, setIsProgressActive }} />
-    </div>
+      <LocatorsProgress {...{ currentPageObject }} />
+    </React.Fragment>
   );
 };

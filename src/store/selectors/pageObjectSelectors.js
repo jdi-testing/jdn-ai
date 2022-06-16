@@ -53,7 +53,6 @@ export const selectGeneratedByPageObj = createSelector(
     (locators, locByPageObj) =>
       chain(locators)
           .filter((loc) => locByPageObj.includes(loc.element_id))
-          .sortBy("order")
           .value()
 );
 
@@ -64,7 +63,6 @@ export const selectGeneratedSelectedByPageObj = createSelector(selectGeneratedBy
 export const selectDeletedByPageObj = createSelector(selectPageObjLocatorsByProbability, (items) =>
   chain(items)
       .filter((el) => el.deleted)
-      .sortBy("order")
       .value()
 );
 
@@ -81,7 +79,6 @@ export const selectWaitingByPageObj = createSelector(selectPageObjLocatorsByProb
           el.locator.taskStatus === locatorTaskStatus.FAILURE) &&
         !el.deleted
       )
-      .sortBy("order")
       .value()
 );
 

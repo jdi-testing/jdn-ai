@@ -9,7 +9,6 @@ export const locatorsListMock = [
       taskStatus: "SUCCESS"
     },
     name: "radiobuttonsUl",
-    order: 0,
     predictedAttrId: "",
     predicted_label: "radiogroup",
     predicted_probability: 0.99,
@@ -30,7 +29,6 @@ export const locatorsListMock = [
       taskStatus: "SUCCESS"
     },
     name: "buttonDiv",
-    order: 1,
     predictedAttrId: "",
     predicted_label: "button",
     predicted_probability: 1,
@@ -51,7 +49,6 @@ export const locatorsListMock = [
       taskStatus: "FAILURE"
     },
     name: "textarea",
-    order: 2,
     predictedAttrId: "",
     predicted_label: "textarea-autosize",
     predicted_probability: 0.94,
@@ -72,7 +69,6 @@ export const locatorsListMock = [
       taskStatus: "STARTED"
     },
     name: "listsUl",
-    order: 3,
     predictedAttrId: "",
     predicted_label: "list",
     predicted_probability: 0.82,
@@ -93,7 +89,6 @@ export const locatorsListMock = [
       taskStatus: "PENDING"
     },
     name: "link",
-    order: 4,
     predictedAttrId: "",
     predicted_label: "link",
     predicted_probability: 0.51,
@@ -114,7 +109,6 @@ export const locatorsListMock = [
       taskStatus: "PENDING"
     },
     name: "breadcrumbsLi",
-    order: 5,
     predictedAttrId: "",
     predicted_label: "breadcrumbs",
     predicted_probability: 1,
@@ -135,7 +129,6 @@ export const locatorsListMock = [
       taskStatus: "PENDING"
     },
     name: "breadcrumbsLi6",
-    order: 6,
     predictedAttrId: "",
     predicted_label: "breadcrumbs",
     predicted_probability: 1,
@@ -156,7 +149,6 @@ export const locatorsListMock = [
       taskStatus: "PENDING"
     },
     name: "breadcrumbsUl",
-    order: 7,
     predictedAttrId: "",
     predicted_label: "breadcrumbs",
     predicted_probability: 0.99,
@@ -177,7 +169,6 @@ export const locatorsListMock = [
       taskStatus: "PENDING"
     },
     name: "link",
-    order: 4,
     predictedAttrId: "",
     predicted_label: "link",
     predicted_probability: 0.51,
@@ -198,7 +189,6 @@ export const locatorsListMock = [
       taskStatus: "PENDING"
     },
     name: "breadcrumbsLi2",
-    order: 5,
     predictedAttrId: "",
     predicted_label: "breadcrumbs",
     predicted_probability: 1,
@@ -219,7 +209,6 @@ export const locatorsListMock = [
       taskStatus: "PENDING"
     },
     name: "breadcrumbsLi7",
-    order: 6,
     predictedAttrId: "",
     predicted_label: "breadcrumbs",
     predicted_probability: 1,
@@ -240,7 +229,6 @@ export const locatorsListMock = [
       taskStatus: "PENDING"
     },
     name: "breadcrumbsUl",
-    order: 7,
     predictedAttrId: "",
     predicted_label: "breadcrumbs",
     predicted_probability: 0.99,

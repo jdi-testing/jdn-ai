@@ -9,13 +9,13 @@ import {
   toggleDeletedGroup,
   toggleElementGeneration,
   toggleElementGroupGeneration,
-} from "../../store/slices/locatorsSlice";
-import { selectLocators } from "../../store/selectors/locatorSelectors";
-import { stopGeneration } from "../../store/thunks/stopGeneration";
-import { stopGenerationGroup } from "../../store/thunks/stopGenerationGroup";
-import { cancelStopGeneration } from "../../store/thunks/cancelStopGeneration";
-import { cancelLastNotification, handleLastNotification } from "../../store/slices/mainSlice";
-import { selectPageObjById } from "../../store/selectors/pageObjectSelectors";
+} from "../../../store/slices/locatorsSlice";
+import { selectLocators } from "../../../store/selectors/locatorSelectors";
+import { stopGeneration } from "../../../store/thunks/stopGeneration";
+import { stopGenerationGroup } from "../../../store/thunks/stopGenerationGroup";
+import { cancelStopGeneration } from "../../../store/thunks/cancelStopGeneration";
+import { cancelLastNotification, handleLastNotification } from "../../../store/slices/mainSlice";
+import { selectPageObjById } from "../../../store/selectors/pageObjectSelectors";
 
 const messages = (value) => {
   return {

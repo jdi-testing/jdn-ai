@@ -8,6 +8,9 @@ export const REPORT_PROBLEM = 'report_problem';
 export const SHEDULE_XPATH_GENERATION = 'schedule_xpath_generation';
 export const REVOKE_TASKS = 'revoke_tasks';
 
+export const UP_PRIORITY = "prioritize_existing_task";
+export const DOWN_PRIORITY = "deprioritize_existing_task";
+
 export const BASE_URL = 'http:localhost:5050';
 
 const headers = {
