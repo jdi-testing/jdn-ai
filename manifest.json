@@ -3,7 +3,7 @@
   "name": "JDN",
   "description": "",
   "devtools_page": "index.html",
-  "version": "3.1.194",
+  "version": "3.1.195",
   "permissions": [
     "tabs",
     "scripting",

@@ -17,6 +17,8 @@ export const addPageObjReducer = (builder) => {
   return builder
       .addCase(addPageObj.fulfilled, (state, {payload}) => {
         const {className, url} = payload;
+
+        // create unique PO name
         let maxExistingId = selectMaxId(state);
         const id = !isNull(maxExistingId) ? ++maxExistingId : 0;
         const pageObjects = simpleSelectPageObjects(state);

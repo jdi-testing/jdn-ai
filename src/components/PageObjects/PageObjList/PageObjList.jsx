@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { Collapse } from "antd";
 import { size } from "lodash";
@@ -19,7 +19,7 @@ export const PageObjList = () => {
   const state = useSelector((state) => state);
   const currentPageObject = useSelector((state) => state.pageObject.currentPageObject);
   const pageObjects = useSelector(selectPageObjects);
-  const [activePanel, setActivePanel] = useState([]);
+  const [activePanel, setActivePanel] = useState([currentPageObject]);
 
   useEffect(() => {
     setActivePanel([currentPageObject]);
