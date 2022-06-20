@@ -24,7 +24,6 @@ export const PageObjMenu = ({ id, name, locators, elements }) => {
   const handleMenuClick = (e, id) => {
     e.stopPropagation();
     setMenuVisible(new Map(menuVisible.set(id, true)));
-    dispatch(setCurrentPageObj(id));
   };
 
   const handleRename = (id, name) => {
@@ -42,6 +41,7 @@ export const PageObjMenu = ({ id, name, locators, elements }) => {
     };
 
     const handleEdit = () => {
+      dispatch(setCurrentPageObj(id));
       dispatch(changePage({ page: pageType.locatorsList, pageObj: currentPageObject, alreadyGenerated: true }));
     };
 
