@@ -33,7 +33,7 @@ export const createListeners = (dispatch, state) => {
           });
           if (locator.locator.taskStatus !== locatorTaskStatus.REVOKED) {
             if (isProgressStatus(locator.locator.taskStatus)) {
-              stopGenerationHandler(locator.element_id);
+              stopGenerationHandler(locator.jdnHash);
             }
             const _locator = { ...locator, locator: { ...locator.locator, settings: {} } };
             _locator.locator.settings = newSettings;

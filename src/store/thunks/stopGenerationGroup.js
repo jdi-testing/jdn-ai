@@ -5,8 +5,8 @@ import { locatorTaskStatus } from "../../utils/constants";
 import { stopGenerationHandler } from "../../services/locatorGenerationController";
 
 export const stopGenerationGroup = createAsyncThunk("locators/stopGenerationGroup", async (elements) => {
-  const ids = elements.map(({element_id}) => element_id);
-  return stopGenerationHandler(ids);
+  const hashes = elements.map(({jdnHash}) => jdnHash);
+  return stopGenerationHandler(hashes);
 });
 
 export const stopGenerationGroupReducer = (builder) => {
