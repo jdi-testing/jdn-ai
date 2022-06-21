@@ -13,8 +13,8 @@ export const runGenerationHandler = async (elements, settings, onStatusChange) =
   );
 };
 
-export const stopGenerationHandler = (ids) => {
-  return locatorGenerationController.revokeTasks(ids);
+export const stopGenerationHandler = (hashes) => {
+  return locatorGenerationController.revokeTasks(hashes);
 };
 
 class LocatorGenerationController {
@@ -151,12 +151,11 @@ class LocatorGenerationController {
     });
   }
 
-  revokeTasks(ids) {
-    const taskIds = ids.map((id) => this.scheduledTasks.get(id));
+  revokeTasks(hashes) {
     this.socket.send(
         JSON.stringify({
           action: REVOKE_TASKS,
-          payload: { id: taskIds },
+          payload: { id: hashes },
         })
     );
   }
