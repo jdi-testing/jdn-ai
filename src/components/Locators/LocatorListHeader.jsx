@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { filter, size } from "lodash";
-import { Button, Checkbox } from "antd";
+import { Button, Checkbox, Row } from "antd";
 import { useDispatch } from "react-redux";
 import Icon from "@ant-design/icons";
 import { ArrowFatUp, ArrowFatDown, Trash } from "phosphor-react";
@@ -81,17 +81,19 @@ export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedS
 
   return (
     <React.Fragment>
-      <div className="jdn__locatorsList-header">
-        <CaretDown
-          style={{ transform: expandAll === EXPAND_STATE.EXPANDED ? "rotate(180deg)" : "rotate(0deg)" }}
-          color="#878A9C"
-          size={14}
-          onClick={() =>
-            setExpandAll(expandAll === EXPAND_STATE.COLLAPSED ? EXPAND_STATE.EXPANDED : EXPAND_STATE.COLLAPSED)
-          }
-        />
-        <Checkbox checked={fullySelected} indeterminate={partiallySelected} onClick={handleOnCheck}></Checkbox>
-        <span className="jdn__locatorsList-header-title">Locators list</span>
+      <Row className="jdn__locatorsList-header">
+        <span className="jdn__locatorsList-header-title">
+          <CaretDown
+            style={{ transform: expandAll === EXPAND_STATE.EXPANDED ? "rotate(180deg)" : "rotate(0deg)" }}
+            color="#878A9C"
+            size={14}
+            onClick={() =>
+              setExpandAll(expandAll === EXPAND_STATE.COLLAPSED ? EXPAND_STATE.EXPANDED : EXPAND_STATE.COLLAPSED)
+            }
+          />
+          <Checkbox checked={fullySelected} indeterminate={partiallySelected} onClick={handleOnCheck}></Checkbox>
+          Locators list
+        </span>
         <Chip
           hidden={!size(selected)}
           primaryLabel={size(selected)}
@@ -131,7 +133,7 @@ export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedS
             <Trash color="#D82C15" size={18} />
           </Button>
         </div>
-      </div>
+      </Row>
       {render({ expandAll, setExpandAll })}
     </React.Fragment>
   );
