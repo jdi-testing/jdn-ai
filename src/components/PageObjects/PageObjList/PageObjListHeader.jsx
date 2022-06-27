@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Button, Tooltip } from "antd";
+import { Button, Row, Tooltip } from "antd";
 import Icon from "@ant-design/icons";
 import { Trash } from "phosphor-react";
 
@@ -35,7 +35,7 @@ export const PageObjListHeader = () => {
   };
 
   return (
-    <div className="jdn__locatorsList-header">
+    <Row className="jdn__locatorsList-header">
       <span className="jdn__locatorsList-header-title">Page Objects</span>
       <div className="jdn__locatorsList-header-buttons">
         <Button className="jdn__buttons" onClick={handleAddPageObject}>
@@ -57,6 +57,6 @@ export const PageObjListHeader = () => {
           </Tooltip>
         ) : null}
       </div>
-    </div>
+    </Row>
   );
 };
