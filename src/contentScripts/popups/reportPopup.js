@@ -313,13 +313,8 @@ export const reportPopup = () => {
   }
 
   function requestPageData() {
-    return new Promise((resolve) => {
-      sendMessage(
-          {
-            message: "GET_PAGE_DATA_JSON",
-          },
-          (result) => resolve(result)
-      );
+    return sendMessage({
+      message: "GET_PAGE_DATA_JSON",
     });
   }
 
@@ -331,7 +326,7 @@ export const reportPopup = () => {
     sendMessage({
       message: "SEND_PROBLEM_REPORT",
       param: {
-        email: email.value,
+        from: email.value,
         subject: subject.value,
         body: description.value,
         screenshot: frame,

@@ -11,6 +11,7 @@ import { assignParents } from "../contentScripts/assignParents";
 
 let overlayID;
 export let pageData;
+export let predictedElements;
 
 export const showOverlay = () => {
   connector.attachContentScript(createOverlay).then((data) => {
@@ -31,11 +32,11 @@ export const removeOverlay = () => {
   }
 };
 
-const uploadElements = async (result, enpoint) => {
+const sendToModel = async (result, enpoint) => {
   const payload = result[0];
-  const r = await request.post(enpoint, payload);
-
-  return r;
+  const response = await request.post(enpoint, payload);
+  predictedElements = response;
+  return response;
 };
 
 export const getElements = (endpoint) =>
@@ -44,7 +45,7 @@ export const getElements = (endpoint) =>
       .then((data) => {
         const { result } = data[0];
         pageData = result[0];
-        return uploadElements(result, endpoint);
+        return sendToModel(result, endpoint);
       })
       .then((data) => {
         removeOverlay();
@@ -68,13 +69,14 @@ export const requestGenerationData = async (elements, library) => {
 };
 
 export const setParents = async (elements) => {
-  return connector.attachContentScript(assignParents)
+  return connector
+      .attachContentScript(assignParents)
       .then(() => sendMessage.assignParents(elements))
       .then((response) => response);
 };
 
 export const sendProblemReport = (payload) => {
-  request.post(REPORT_PROBLEM, JSON.stringify(payload));
+  request.post(REPORT_PROBLEM, JSON.stringify({ ...payload, json_from_model: predictedElements }));
 };
 
 export const reportProblem = () => {
