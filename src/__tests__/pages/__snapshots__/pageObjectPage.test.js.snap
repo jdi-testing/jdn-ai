@@ -6,7 +6,7 @@ exports[`application launch renders properly for empty PO list 1`] = `
     class="jdn__locatorsList"
   >
     <div
-      class="jdn__locatorsList-header"
+      class="ant-row jdn__locatorsList-header"
     >
       <span
         class="jdn__locatorsList-header-title"
