@@ -317,7 +317,7 @@ export const runContextMenu = () => {
       element,
       types
   ) => {
-    const { element_id, locator, generate } = element;
+    const { element_id, locator, generate, jdnHash } = element;
     const menuItems = [
       {
         text: `${!generate ? "Select" : "Unselect"} locator`,
@@ -371,13 +371,13 @@ export const runContextMenu = () => {
       {
         text: `Bring to front`,
         events: {
-          click: () => chrome.storage.local.set({ JDN_BRING_TO_FRONT: { hash: Date.now(), element_id } }),
+          click: () => chrome.storage.local.set({ JDN_BRING_TO_FRONT: { hash: Date.now(), jdnHash } }),
         },
       },
       {
         text: `Bring to background`,
         events: {
-          click: () => chrome.storage.local.set({ JDN_BRING_TO_BACKGROUND: { hash: Date.now(), element_id } }),
+          click: () => chrome.storage.local.set({ JDN_BRING_TO_BACKGROUND: { hash: Date.now(), jdnHash } }),
         },
       }
     ];
