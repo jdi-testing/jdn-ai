@@ -92,18 +92,44 @@ class LocatorGenerationController {
     this.socket.close();
   }
 
-  async scheduleTask(element) {
-    const { element_id, jdnHash } = element;
+  // async scheduleTask(element) {
+  //   const { element_id, jdnHash } = element;
+  //   if (this.readyState === 0) {
+  //     setTimeout(() => this.scheduleTask(element), 1000);
+  //   } else if (this.readyState === 1) {
+  //     this.scheduledTasks.set(element_id);
+  //     this.socket.send(
+  //         JSON.stringify({
+  //           action: SHEDULE_XPATH_GENERATION,
+  //           payload: {
+  //             document: this.document,
+  //             id: jdnHash,
+  //             config: this.queueSettings,
+  //           },
+  //         })
+  //     );
+  //   }
+  //   return;
+  // }
+
+  async scheduleTasks(elements) {
     if (this.readyState === 0) {
-      setTimeout(() => this.scheduleTask(element), 1000);
+      setTimeout(() => this.scheduleTasks(elements), 1000);
     } else if (this.readyState === 1) {
-      this.scheduledTasks.set(element_id);
+      const hashes = [];
+      elements.forEach((element) => {
+        const { element_id, jdnHash } = element;
+        this.scheduledTasks.set(element_id);
+        hashes.push(jdnHash);
+        this.onStatusChange(element_id, { taskStatus: locatorTaskStatus.PENDING });
+      });
+      debugger;
       this.socket.send(
           JSON.stringify({
-            action: SHEDULE_XPATH_GENERATION,
+            action: "schedule_multiple_xpath_generations",
             payload: {
               document: this.document,
-              id: jdnHash,
+              id: hashes,
               config: this.queueSettings,
             },
           })
@@ -122,11 +148,12 @@ class LocatorGenerationController {
 
     await this.getDocument();
 
-    elements.forEach((element) => {
-      const { element_id } = element;
-      onStatusChange(element_id, { taskStatus: locatorTaskStatus.PENDING });
-      this.scheduleTask(element);
-    });
+    this.scheduleTasks(elements);
+    // elements.forEach((element) => {
+    //   const { element_id } = element;
+    //   onStatusChange(element_id, { taskStatus: locatorTaskStatus.PENDING });
+    //   this.scheduleTasks(element);
+    // });
   }
 
   upPriority(ids) {
