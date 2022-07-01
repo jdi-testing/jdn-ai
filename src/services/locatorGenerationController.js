@@ -1,7 +1,7 @@
 import { isNull } from "lodash";
 
 import { connector } from "./connector";
-import { DOWN_PRIORITY, REVOKE_TASKS, SHEDULE_XPATH_GENERATION, UP_PRIORITY } from "../services/backend";
+import { DOWN_PRIORITY, REVOKE_TASKS, SCHEDULE_MULTIPLE_XPATH_GENERATIONS, UP_PRIORITY } from "../services/backend";
 import { locatorProgressStatus, locatorTaskStatus } from "../utils/constants";
 
 export const isProgressStatus = (taskStatus) => locatorProgressStatus.hasOwnProperty(taskStatus);
@@ -92,26 +92,6 @@ class LocatorGenerationController {
     this.socket.close();
   }
 
-  // async scheduleTask(element) {
-  //   const { element_id, jdnHash } = element;
-  //   if (this.readyState === 0) {
-  //     setTimeout(() => this.scheduleTask(element), 1000);
-  //   } else if (this.readyState === 1) {
-  //     this.scheduledTasks.set(element_id);
-  //     this.socket.send(
-  //         JSON.stringify({
-  //           action: SHEDULE_XPATH_GENERATION,
-  //           payload: {
-  //             document: this.document,
-  //             id: jdnHash,
-  //             config: this.queueSettings,
-  //           },
-  //         })
-  //     );
-  //   }
-  //   return;
-  // }
-
   async scheduleTasks(elements) {
     if (this.readyState === 0) {
       setTimeout(() => this.scheduleTasks(elements), 1000);
@@ -123,10 +103,9 @@ class LocatorGenerationController {
         hashes.push(jdnHash);
         this.onStatusChange(element_id, { taskStatus: locatorTaskStatus.PENDING });
       });
-      debugger;
       this.socket.send(
           JSON.stringify({
-            action: "schedule_multiple_xpath_generations",
+            action: SCHEDULE_MULTIPLE_XPATH_GENERATIONS,
             payload: {
               document: this.document,
               id: hashes,
@@ -149,11 +128,6 @@ class LocatorGenerationController {
     await this.getDocument();
 
     this.scheduleTasks(elements);
-    // elements.forEach((element) => {
-    //   const { element_id } = element;
-    //   onStatusChange(element_id, { taskStatus: locatorTaskStatus.PENDING });
-    //   this.scheduleTasks(element);
-    // });
   }
 
   upPriority(ids) {

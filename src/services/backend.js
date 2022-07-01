@@ -5,6 +5,7 @@ export const HTML5_PREDICT = 'html5-predict';
 export const REPORT_PROBLEM = 'report_problem';
 
 // endpoints also used as ws actions
+export const SCHEDULE_MULTIPLE_XPATH_GENERATIONS = "schedule_multiple_xpath_generations";
 export const SHEDULE_XPATH_GENERATION = 'schedule_xpath_generation';
 export const REVOKE_TASKS = 'revoke_tasks';
 
