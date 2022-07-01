@@ -47,7 +47,7 @@ export function highlightOrder() {
 
   chrome.runtime.onMessage.addListener(messageHandler);
   chrome.storage.onChanged.addListener((event) => {
-    if (event.hasOwnProperty('JDN_BRING_TO_FRONT')) bringToFront(event.JDN_BRING_TO_FRONT.newValue.element_id);
-    if (event.hasOwnProperty('JDN_BRING_TO_BACKGROUND')) bringToBack(event.JDN_BRING_TO_BACKGROUND.newValue.element_id);
+    if (event.hasOwnProperty('JDN_BRING_TO_FRONT')) bringToFront(event.JDN_BRING_TO_FRONT.newValue.jdnHash);
+    if (event.hasOwnProperty('JDN_BRING_TO_BACKGROUND')) bringToBack(event.JDN_BRING_TO_BACKGROUND.newValue.jdnHash);
   });
 }

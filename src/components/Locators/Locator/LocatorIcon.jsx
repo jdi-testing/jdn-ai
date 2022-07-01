@@ -2,11 +2,11 @@ import React from "react";
 import { Spin, Tooltip } from "antd";
 import Icon from "@ant-design/icons";
 import CheckedEdited from "../../../assets/checked-edited.svg";
-import PauseOutlinedSvg from "../../../assets/pause-outlined.svg";
 import WarningEditedSvg from "../../../assets/warning-edited.svg";
 import ErrorSvg from "../../../assets/error-outlined.svg";
 import TrashBinSvg from "../../../assets/delete_14.svg";
 import { locatorTaskStatus, VALIDATION_ERROR_TYPE } from "../../../utils/constants";
+import { PauseCircle } from "phosphor-react";
 
 export const VALIDATION_ERROR_MESSAGES = {
   [VALIDATION_ERROR_TYPE.DUPLICATED_LOCATOR]: "The locator for this element already exists.", // warn
@@ -24,7 +24,7 @@ export const LocatorIcon = ({ validity, locator, deleted }) => {
   const getTooltipText = () => VALIDATION_ERROR_MESSAGES[validity?.locator] || "Edited";
 
   const startedIcon = <Spin size="small" />;
-  const revokedIcon = <Icon component={PauseOutlinedSvg} className="jdn__locatorsList-status" />;
+  const revokedIcon = <PauseCircle size={14} color="#d81515" className="jdn__locatorsList-status" />;
   const failureIcon = <Icon component={ErrorSvg} className="jdn__locatorsList-status" />;
   const deletedIcon = <Icon component={TrashBinSvg} className="jdn__locatorsList-status" />;
 
