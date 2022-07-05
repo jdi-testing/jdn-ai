@@ -1,4 +1,5 @@
 import CyrillicToTranslit from "cyrillic-to-translit-js";
+import { elementLibrary } from "../utils/generationClassesMap";
 import { getLocator } from "./pageObject";
 
 export function camelCase(n) {
@@ -31,31 +32,36 @@ export const getClassName = (title) => {
   return className;
 };
 
-export const pageObjectTemplate = (locators, { host }, title) => {
-  const sitePackage = host ?
-    host
-        .split(".")
-        .reverse()
-        .map((e) => e.replace(/[^a-zA-Z0-9]+/g, ""))
-        .join(".") :
-    "";
-
+export const pageObjectTemplate = (locators, title, libraries) => {
   const className = title;
   const locatorsCode = locators.map(
       (loc) => `    @UI("${getLocator(loc.locator)}")\n    public ${loc.type} ${loc.name};`
   );
 
-  const pageCode = `package ${sitePackage}.pages;
-
-import com.epam.jdi.light.elements.pageobjects.annotations.locators.*;
+  const pageCode = `import com.epam.jdi.light.elements.pageobjects.annotations.locators.*;
 import com.epam.jdi.light.elements.composite.*;
+import com.epam.jdi.light.ui.html.elements.common.*;
+${
+  libraries.includes(elementLibrary.HTML5) ? `
 import com.epam.jdi.light.elements.complex.*;
 import com.epam.jdi.light.elements.common.*;
 import com.epam.jdi.light.elements.complex.dropdown.*;
 import com.epam.jdi.light.elements.complex.table.*;
-import com.epam.jdi.light.ui.html.elements.complex.*;
-import com.epam.jdi.light.ui.html.elements.common.*;
-import ${sitePackage}.sections.*;
+import com.epam.jdi.light.ui.html.elements.complex.*;` : ""
+}${
+  libraries.includes(elementLibrary.MUI) ? `
+import com.epam.jdi.light.material.elements.displaydata.*;
+import com.epam.jdi.light.material.elements.displaydata.table.*;
+import com.epam.jdi.light.material.elements.feedback.*;
+import com.epam.jdi.light.material.elements.feedback.progress.*;
+import com.epam.jdi.light.material.elements.inputs.*;
+import com.epam.jdi.light.material.elements.inputs.transferlist.*;
+import com.epam.jdi.light.material.elements.layout.*;
+import com.epam.jdi.light.material.elements.navigation.*;
+import com.epam.jdi.light.material.elements.navigation.steppers.*;
+import com.epam.jdi.light.material.elements.surfaces.*;
+import com.epam.jdi.light.material.elements.utils.*;` : ""
+}
 
 public class ${className} extends WebPage {
 ${locatorsCode.join("\n\n")}

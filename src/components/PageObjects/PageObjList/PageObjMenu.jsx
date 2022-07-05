@@ -15,7 +15,7 @@ import { pageType } from "../../../utils/constants";
 import { changePage } from "../../../store/slices/mainSlice";
 import { size } from "lodash";
 
-export const PageObjMenu = ({ id, name, locators, elements }) => {
+export const PageObjMenu = ({ id, name, locators, elements, library }) => {
   const dispatch = useDispatch();
   const [menuVisible, setMenuVisible] = useState(new Map());
 
@@ -37,7 +37,7 @@ export const PageObjMenu = ({ id, name, locators, elements }) => {
     };
 
     const handleDownload = () => {
-      generatePageObject(locatorObjects, name);
+      generatePageObject(locatorObjects, name, library);
     };
 
     const handleEdit = () => {

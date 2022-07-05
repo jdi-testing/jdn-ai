@@ -63,7 +63,7 @@ export const PageObjList = () => {
             activeKey={activePanel}
             onChange={setActivePanel}
           >
-            {pageObjects.map(({ id, name, url, locators }) => {
+            {pageObjects.map(({ id, name, url, locators, library }) => {
               const elements = selectConfirmedLocators(state, id);
               const isPageObjectNotEmpty = !!size(elements);
               return (
@@ -78,7 +78,7 @@ export const PageObjList = () => {
                   extra={
                     <>
                       {isPageObjectNotEmpty && <PageObjCopyButton {...{ elements }} />}
-                      <PageObjMenu {...{ id, name, locators, elements }} />
+                      <PageObjMenu {...{ id, name, locators, elements, library }} />
                     </>
                   }
                 >

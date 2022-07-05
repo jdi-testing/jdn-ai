@@ -60,17 +60,26 @@ export const locators = [
   },
 ];
 
-export const pageObject = `package io.github.jditesting.pages;
-
-import com.epam.jdi.light.elements.pageobjects.annotations.locators.*;
+export const pageObject = `import com.epam.jdi.light.elements.pageobjects.annotations.locators.*;
 import com.epam.jdi.light.elements.composite.*;
+import com.epam.jdi.light.ui.html.elements.common.*;
+
 import com.epam.jdi.light.elements.complex.*;
 import com.epam.jdi.light.elements.common.*;
 import com.epam.jdi.light.elements.complex.dropdown.*;
 import com.epam.jdi.light.elements.complex.table.*;
 import com.epam.jdi.light.ui.html.elements.complex.*;
-import com.epam.jdi.light.ui.html.elements.common.*;
-import io.github.jditesting.sections.*;
+import com.epam.jdi.light.material.elements.displaydata.*;
+import com.epam.jdi.light.material.elements.displaydata.table.*;
+import com.epam.jdi.light.material.elements.feedback.*;
+import com.epam.jdi.light.material.elements.feedback.progress.*;
+import com.epam.jdi.light.material.elements.inputs.*;
+import com.epam.jdi.light.material.elements.inputs.transferlist.*;
+import com.epam.jdi.light.material.elements.layout.*;
+import com.epam.jdi.light.material.elements.navigation.*;
+import com.epam.jdi.light.material.elements.navigation.steppers.*;
+import com.epam.jdi.light.material.elements.surfaces.*;
+import com.epam.jdi.light.material.elements.utils.*;
 
 public class HomePage extends WebPage {
     @UI("//*[@class='uui-navigation nav navbar-nav m-l8']")
