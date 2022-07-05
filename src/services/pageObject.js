@@ -82,7 +82,7 @@ export const generateAndDownloadZip = async (state) => {
   for (const po of pageObjects) {
     const locators = selectConfirmedLocators(state, po.id);
     if (!size(locators)) continue;
-    const page = await getPage(locators, po.name, po.library);
+    const page = await getPage(locators, po.name, [po.library]);
     zip.file(`${page.title}.java`, page.pageCode, {binary: true});
   }
 
