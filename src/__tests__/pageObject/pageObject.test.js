@@ -10,7 +10,7 @@ import {
 
 describe("page object code generation", () => {
   test("page object generated", () => {
-    const page = pageObjectTemplate(locators, { host: "jdi - testing.github.io" }, "HomePage");
+    const page = pageObjectTemplate(locators, "HomePage", [elementLibrary.HTML5, elementLibrary.MUI]);
     expect(page.pageCode).toBe(pageObject);
     expect(page.title).toBe("HomePage");
   });

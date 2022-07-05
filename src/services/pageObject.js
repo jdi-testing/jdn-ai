@@ -61,18 +61,13 @@ export const getPageAttributes = async () => {
   });
 };
 
-export const getPage = async (locators, title) => {
-  const location = await connector.attachContentScript(() => {
-    const { hostname, pathname, origin, host } = document.location;
-    return { hostname, pathname, origin, host };
-  });
-
-  const pageObject = pageObjectTemplate(locators, location[0].result, title);
+export const getPage = async (locators, title, libraries) => {
+  const pageObject = pageObjectTemplate(locators, title, libraries);
   return pageObject;
 };
 
-export const generatePageObject = async (elements, title) => {
-  const page = await getPage(elements, title);
+export const generatePageObject = async (elements, title, library) => {
+  const page = await getPage(elements, title, [library]);
   const blob = new Blob([page.pageCode], {
     type: "text/plain;charset=utf-8",
   });
@@ -87,7 +82,7 @@ export const generateAndDownloadZip = async (state) => {
   for (const po of pageObjects) {
     const locators = selectConfirmedLocators(state, po.id);
     if (!size(locators)) continue;
-    const page = await getPage(locators, po.name);
+    const page = await getPage(locators, po.name, [po.library]);
     zip.file(`${page.title}.java`, page.pageCode, {binary: true});
   }
 
