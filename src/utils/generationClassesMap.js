@@ -60,7 +60,6 @@ const MUIclasses = {
 export const elementLibrary = {
   MUI: "MUI",
   HTML5: "HTML5",
-  Bootstrap: "Bootstrap",
 };
 
 export const defaultLibrary = elementLibrary.MUI;
