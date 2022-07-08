@@ -74,16 +74,17 @@ export const generatePageObject = async (elements, title, library) => {
   saveAs(blob, `${page.title}.java`);
 };
 
-export const generateAndDownloadZip = async (state) => {
-  const zip = new JSZip();
-
+export const generateAndDownloadZip = async (state, template) => {
+  const folderName = "jdi-light-testng-template-master";
   const pageObjects = selectPageObjects(state);
+
+  const zip = await JSZip.loadAsync(template);
 
   for (const po of pageObjects) {
     const locators = selectConfirmedLocators(state, po.id);
     if (!size(locators)) continue;
     const page = await getPage(locators, po.name, [po.library]);
-    zip.file(`${page.title}.java`, page.pageCode, {binary: true});
+    zip.file(`${folderName}/${page.title}.java`, page.pageCode, {binary: true});
   }
 
   const blob = await zip.generateAsync({ type: "blob" });
