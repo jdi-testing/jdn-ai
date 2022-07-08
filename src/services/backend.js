@@ -2,7 +2,6 @@
 export const BUILD = 'build';
 export const MUI_PREDICT = 'mui-predict';
 export const HTML5_PREDICT = 'html5-predict';
-export const BOOTSTRAP_PREDICT = 'bootstrap-predict';
 
 export const REPORT_PROBLEM = 'report_problem';
 

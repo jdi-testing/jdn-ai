@@ -33,7 +33,6 @@ export const GenerationButtons = ({ pageObj }) => {
           >
             <Select.Option value={elementLibrary.MUI}>{libraryNames.MUI}</Select.Option>
             <Select.Option value={elementLibrary.HTML5}>{libraryNames.HTML5}</Select.Option>
-            <Select.Option value={elementLibrary.Bootstrap}>{libraryNames.Bootstrap}</Select.Option>
           </Select>
         </Space>
         <Space direction="horizontal" size={8}>

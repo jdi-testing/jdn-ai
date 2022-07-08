@@ -1,5 +1,5 @@
 import { sortBy } from "lodash";
-import { BOOTSTRAP_PREDICT, HTML5_PREDICT, MUI_PREDICT } from "../services/backend";
+import { HTML5_PREDICT, MUI_PREDICT } from "../services/backend";
 
 export const defaultClass = "UIElement";
 
@@ -57,31 +57,6 @@ const MUIclasses = {
   ["text-field"]: "TextField",
 };
 
-export const BootstrapClasses = {
-  button: "Button",
-  checkbox: "Checkbox",
-  // checklist: "",
-  colorpicker: "",
-  datalist: "",
-  datetimeselector: "",
-  dropdown: "DropdownMenu",
-  fileinput: "",
-  // label: "",
-  // link: "",
-  multidropdown: "SelectMenu",
-  multiselector: "SelectMenu",
-  numberselector: "",
-  progressbar: "Progress",
-  radiobutton: "RadioButtons",
-  radiobuttongroup: "RadioButtonGroup",
-  range: "RangeInput",
-  table: "",
-  // text: "",
-  textarea: "TextArea",
-  textfield: "TextField",
-  // title: "",
-};
-
 export const elementLibrary = {
   MUI: "MUI",
   HTML5: "HTML5",
@@ -93,19 +68,16 @@ export const defaultLibrary = elementLibrary.MUI;
 export const libraryNames = {
   [elementLibrary.MUI]: "Material UI",
   [elementLibrary.HTML5]: "HTML 5",
-  [elementLibrary.Bootstrap]: "Bootstrap",
 };
 
 export const libraryClasses = {
   [elementLibrary.MUI]: MUIclasses,
   [elementLibrary.HTML5]: HTML5classes,
-  [elementLibrary.Bootstrap]: HTML5classes,
 };
 
 export const predictEndpoints = {
   [elementLibrary.MUI]: MUI_PREDICT,
   [elementLibrary.HTML5]: HTML5_PREDICT,
-  [elementLibrary.Bootstrap]: BOOTSTRAP_PREDICT,
 };
 
 export const getJDILabel = (label, library) => libraryClasses[library][label] || defaultClass;
