@@ -32,8 +32,9 @@ class LocatorGenerationController {
   }
 
   async init() {
-    this.openWebSocket();
-    return;
+    return this.openWebSocket().then((socket) => {
+      return this.setMessageListener();
+    });
   }
 
   async getDocument() {
@@ -45,13 +46,27 @@ class LocatorGenerationController {
   }
 
   openWebSocket() {
-    this.socket = new WebSocket("ws://localhost:5050/ws");
-    this.readyState = this.socket.readyState;
-
-    this.socket.addEventListener("open", () => {
+    return new Promise((resolve, reject) => {
+      this.socket = new WebSocket("ws://localhost:5050/ws");
       this.readyState = this.socket.readyState;
-    });
 
+      this.socket.addEventListener("open", () => {
+        this.readyState = this.socket.readyState;
+        resolve(this.socket);
+      });
+
+      this.socket.addEventListener("error", (event) => {
+        this.readyState = event.target.readyState;
+        reject(new Error(event));
+      });
+
+      this.socket.addEventListener("close", (event) => {
+        this.readyState = event.target.readyState;
+      });
+    });
+  }
+
+  setMessageListener() {
     this.socket.addEventListener("message", (event) => {
       const { payload, action, result } = JSON.parse(event.data);
       switch (action || result) {
@@ -77,25 +92,29 @@ class LocatorGenerationController {
           break;
       }
     });
-
-    this.socket.addEventListener("error", (event) => {
-      this.readyState = event.target.readyState;
-      throw new Error(event);
-    });
-
-    this.socket.addEventListener("close", (event) => {
-      this.readyState = event.target.readyState;
-    });
   }
 
-  closeWebSocket() {
-    this.socket.close();
+  scheduleTask(element) {
+    const { element_id, jdnHash } = element;
+    this.scheduledTasks.set(element_id);
+    this.socket.send(
+        JSON.stringify({
+          action: SHEDULE_XPATH_GENERATION,
+          payload: {
+            document: this.document,
+            id: jdnHash,
+            config: this.queueSettings,
+          },
+        })
+    );
   }
 
-  async scheduleTasks(elements) {
-    if (this.readyState === 0) {
-      setTimeout(() => this.scheduleTasks(elements), 1000);
-    } else if (this.readyState === 1) {
+  async scheduleTaskGroup(elements, settings, onStatusChange) {
+    if (settings) this.queueSettings = settings;
+    if (onStatusChange) this.onStatusChange = onStatusChange;
+    await this.getDocument();
+
+    const schedule = () => {
       const hashes = [];
       elements.forEach((element) => {
         const { element_id, jdnHash } = element;
@@ -113,21 +132,13 @@ class LocatorGenerationController {
             },
           })
       );
-    }
-    return;
-  }
-
-  async scheduleTaskGroup(elements, settings, onStatusChange) {
-    if (settings) this.queueSettings = settings;
-    if (onStatusChange) this.onStatusChange = onStatusChange;
+    };
 
     if (isNull(this.readyState)) {
-      await this.init(onStatusChange);
-    }
-
-    await this.getDocument();
-
-    this.scheduleTasks(elements);
+      this.init().then(() => {
+        schedule();
+      });
+    } else schedule();
   }
 
   upPriority(ids) {

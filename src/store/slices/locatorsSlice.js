@@ -22,7 +22,10 @@ const locatorsSlice = createSlice({
     addLocators(state, { payload }) {
       locatorsAdapter.addMany(
           state,
-          payload.map((locator) => ({ ...locator }))
+          payload.map((locator) => ({
+            ...locator,
+            locator: { ...locator.locator, taskStatus: locatorTaskStatus.PENDING },
+          }))
       );
     },
     changeLocatorAttributes(state, { payload }) {
