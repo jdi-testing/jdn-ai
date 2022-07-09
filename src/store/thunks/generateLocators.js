@@ -6,7 +6,7 @@ import { addLocators } from "../slices/locatorsSlice";
 import { addLocatorsToPageObj } from "../slices/pageObjectSlice";
 import { convertToListWithChildren } from "../../utils/helpers";
 import { requestGenerationData, setParents } from "../../services/pageDataHandlers";
-import { locatorsGenerationStatus } from "../../utils/constants";
+import { locatorsGenerationStatus, locatorTaskStatus } from "../../utils/constants";
 
 const filterByProbability = (elements, perception) => {
   return elements.filter((e) => e.predicted_probability >= perception);
@@ -25,12 +25,16 @@ export const generateLocators = createAsyncThunk("locators/generateLocators", as
       const { generationData } = await requestGenerationData(noLocator, library);
       const _locatorsWithParents = await setParents(generationData);
       const locatorsWithParents = convertToListWithChildren(_locatorsWithParents);
-      thunkAPI.dispatch(addLocators(locatorsWithParents));
+      const pendingLocators = locatorsWithParents.map((locator) => ({
+        ...locator,
+        locator: { ...locator.locator, taskStatus: locatorTaskStatus.PENDING },
+      }));
+      thunkAPI.dispatch(addLocators(pendingLocators));
 
-      const ids = locatorsWithParents.map(({element_id}) => element_id);
+      const ids = locatorsWithParents.map(({ element_id }) => element_id);
       thunkAPI.dispatch(addLocatorsToPageObj(ids));
 
-      thunkAPI.dispatch(runXpathGeneration(locatorsWithParents));
+      thunkAPI.dispatch(runXpathGeneration(pendingLocators));
     }
   }
 });

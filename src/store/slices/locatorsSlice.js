@@ -20,13 +20,7 @@ const locatorsSlice = createSlice({
   initialState: locatorsAdapter.getInitialState(initialState),
   reducers: {
     addLocators(state, { payload }) {
-      locatorsAdapter.addMany(
-          state,
-          payload.map((locator) => ({
-            ...locator,
-            locator: { ...locator.locator, taskStatus: locatorTaskStatus.PENDING },
-          }))
-      );
+      locatorsAdapter.addMany(state, payload);
     },
     changeLocatorAttributes(state, { payload }) {
       const { type, name, locator, element_id, validity, isCustomName, library } = payload;
