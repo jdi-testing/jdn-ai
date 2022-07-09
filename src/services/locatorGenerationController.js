@@ -27,7 +27,7 @@ class LocatorGenerationController {
   }
 
   async init() {
-    return this.openWebSocket().then((socket) => {
+    return this.openWebSocket().then(() => {
       return this.setMessageListener();
     });
   }
