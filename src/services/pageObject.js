@@ -1,4 +1,4 @@
-import { replace, size, toLower } from "lodash";
+import { entries, replace, size, toLower } from "lodash";
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
 
@@ -75,18 +75,35 @@ export const generatePageObject = async (elements, title, library) => {
 };
 
 export const generateAndDownloadZip = async (state, template) => {
-  const folderName = "jdi-light-testng-template-master";
   const pageObjects = selectPageObjects(state);
 
-  const zip = await JSZip.loadAsync(template);
+  const zip = await JSZip.loadAsync(template, {createFolders: true});
+  const rootFolder = entries(zip.files)[0][0];
 
-  for (const po of pageObjects) {
-    const locators = selectConfirmedLocators(state, po.id);
-    if (!size(locators)) continue;
-    const page = await getPage(locators, po.name, [po.library]);
-    zip.file(`${folderName}/${page.title}.java`, page.pageCode, {binary: true});
-  }
+  const newZip = new JSZip();
 
-  const blob = await zip.generateAsync({ type: "blob" });
-  saveAs(blob, "pageObjects.zip");
+  // remove root folder by changing files path
+  const filePromises = [];
+  zip.folder(rootFolder).forEach(async (relativePath, file) => {
+    if (file.dir) return;
+
+    filePromises.push(file.async("string").then((content) => {
+      newZip.file(relativePath, content, {binary: true});
+    }));
+  });
+
+
+  Promise.all(filePromises)
+      .then(async () => {
+        for (const po of pageObjects) {
+          // create page object files
+          const locators = selectConfirmedLocators(state, po.id);
+          if (!size(locators)) continue;
+          const page = await getPage(locators, po.name, [po.library]);
+          newZip.file(`src/main/${page.title}.java`, page.pageCode, {binary: true});
+        }
+
+        const blob = await newZip.generateAsync({ type: "blob" });
+        saveAs(blob, `${rootFolder.replace("/", "")}.zip`);
+      });
 };
