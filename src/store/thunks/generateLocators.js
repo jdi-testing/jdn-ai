@@ -2,12 +2,11 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 
 import { runXpathGeneration } from "./runXpathGeneration";
 import { selectLocators } from "../selectors/locatorSelectors";
-import { sendMessage } from "../../services/connector";
 import { addLocators } from "../slices/locatorsSlice";
 import { addLocatorsToPageObj } from "../slices/pageObjectSlice";
 import { convertToListWithChildren } from "../../utils/helpers";
 import { requestGenerationData, setParents } from "../../services/pageDataHandlers";
-import { locatorsGenerationStatus } from "../../utils/constants";
+import { locatorsGenerationStatus, locatorTaskStatus } from "../../utils/constants";
 
 const filterByProbability = (elements, perception) => {
   return elements.filter((e) => e.predicted_probability >= perception);
@@ -17,7 +16,6 @@ export const generateLocators = createAsyncThunk("locators/generateLocators", as
   const { predictedElements, library } = payload;
   const availableForGeneration = filterByProbability(predictedElements, 0.5);
   const state = thunkAPI.getState();
-  const { perception } = state.main;
   const locators = selectLocators(state);
   if (availableForGeneration.length) {
     const noLocator = availableForGeneration.filter(
@@ -27,13 +25,16 @@ export const generateLocators = createAsyncThunk("locators/generateLocators", as
       const { generationData } = await requestGenerationData(noLocator, library);
       const _locatorsWithParents = await setParents(generationData);
       const locatorsWithParents = convertToListWithChildren(_locatorsWithParents);
-      sendMessage.setHighlight({ elements: locatorsWithParents, perception });
-      thunkAPI.dispatch(addLocators(locatorsWithParents));
+      const pendingLocators = locatorsWithParents.map((locator) => ({
+        ...locator,
+        locator: { ...locator.locator, taskStatus: locatorTaskStatus.PENDING },
+      }));
+      thunkAPI.dispatch(addLocators(pendingLocators));
 
-      const ids = locatorsWithParents.map(({element_id}) => element_id);
+      const ids = locatorsWithParents.map(({ element_id }) => element_id);
       thunkAPI.dispatch(addLocatorsToPageObj(ids));
 
-      thunkAPI.dispatch(runXpathGeneration(locatorsWithParents));
+      thunkAPI.dispatch(runXpathGeneration(pendingLocators));
     }
   }
 });

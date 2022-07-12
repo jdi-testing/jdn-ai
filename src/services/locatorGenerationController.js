@@ -26,14 +26,10 @@ class LocatorGenerationController {
     this.queueSettings = null;
   }
 
-  getElementId(taskId) {
-    const t = [...this.scheduledTasks].find(([elementId, scheduledTaskId]) => taskId === scheduledTaskId);
-    return t && t[0];
-  }
-
   async init() {
-    this.openWebSocket();
-    return;
+    return this.openWebSocket().then(() => {
+      return this.setMessageListener();
+    });
   }
 
   async getDocument() {
@@ -44,95 +40,87 @@ class LocatorGenerationController {
     return;
   }
 
+  sendSocket(json) {
+    if (isNull(this.readyState)) {
+      this.init().then(() => {
+        this.socket.send(json);
+      });
+    } else this.socket.send(json);
+  }
+
   openWebSocket() {
-    this.socket = new WebSocket("ws://localhost:5050/ws");
-    this.readyState = this.socket.readyState;
-
-    this.socket.addEventListener("open", () => {
+    return new Promise((resolve, reject) => {
+      this.socket = new WebSocket("ws://localhost:5050/ws");
       this.readyState = this.socket.readyState;
-    });
 
+      this.socket.addEventListener("open", () => {
+        this.readyState = this.socket.readyState;
+        resolve(this.socket);
+      });
+
+      this.socket.addEventListener("error", (event) => {
+        this.readyState = event.target.readyState;
+        reject(new Error(event));
+      });
+
+      this.socket.addEventListener("close", (event) => {
+        this.readyState = event.target.readyState;
+      });
+    });
+  }
+
+  setMessageListener() {
     this.socket.addEventListener("message", (event) => {
       const { payload, action, result } = JSON.parse(event.data);
       switch (action || result) {
-        case "tasks_scheduled":
-          const jdnHash = Object.keys(payload)[0];
-          const element_id = [...this.scheduledTasks].find(
-              ([elementId, scheduledTaskId]) =>
-                jdnHash === elementId.substr(0, elementId.indexOf("_")) && !scheduledTaskId
-          );
-          this.scheduledTasks.set(element_id[0], Object.values(payload)[0]);
-          break;
         case "status_changed":
-          this.onStatusChange(this.getElementId(payload.id), { taskStatus: payload.status });
-          if (payload.status === locatorTaskStatus.REVOKED) {
-            this.scheduledTasks.delete(this.getElementId(payload.id));
+          if (payload.status === locatorTaskStatus.REVOKED || payload.status === locatorTaskStatus.FAILURE) {
+            this.onStatusChange(this.scheduledTasks.get(payload.id), { taskStatus: payload.status });
+            this.scheduledTasks.delete(payload.id);
           }
           break;
         case "result_ready":
-          this.onStatusChange(this.getElementId(payload.id), { robulaXpath: payload.result });
-          this.scheduledTasks.delete(this.getElementId(payload.id));
+          this.onStatusChange(this.scheduledTasks.get(payload.id), {
+            robulaXpath: payload.result,
+            taskStatus: locatorTaskStatus.SUCCESS,
+          });
+          this.scheduledTasks.delete(payload.id);
           break;
         default:
           break;
       }
     });
-
-    this.socket.addEventListener("error", (event) => {
-      this.readyState = event.target.readyState;
-      throw new Error(event);
-    });
-
-    this.socket.addEventListener("close", (event) => {
-      this.readyState = event.target.readyState;
-    });
-  }
-
-  closeWebSocket() {
-    this.socket.close();
-  }
-
-  async scheduleTasks(elements) {
-    if (this.readyState === 0) {
-      setTimeout(() => this.scheduleTasks(elements), 1000);
-    } else if (this.readyState === 1) {
-      const hashes = [];
-      elements.forEach((element) => {
-        const { element_id, jdnHash } = element;
-        this.scheduledTasks.set(element_id);
-        hashes.push(jdnHash);
-        this.onStatusChange(element_id, { taskStatus: locatorTaskStatus.PENDING });
-      });
-      this.socket.send(
-          JSON.stringify({
-            action: SCHEDULE_MULTIPLE_XPATH_GENERATIONS,
-            payload: {
-              document: this.document,
-              id: hashes,
-              config: this.queueSettings,
-            },
-          })
-      );
-    }
-    return;
   }
 
   async scheduleTaskGroup(elements, settings, onStatusChange) {
     if (settings) this.queueSettings = settings;
     if (onStatusChange) this.onStatusChange = onStatusChange;
-
-    if (isNull(this.readyState)) {
-      await this.init(onStatusChange);
-    }
-
     await this.getDocument();
 
-    this.scheduleTasks(elements);
+    const hashes = [];
+    elements.forEach((element) => {
+      const { element_id, jdnHash } = element;
+      hashes.push(jdnHash);
+      this.scheduledTasks.set(jdnHash, element_id);
+      if (element.locator.taskStatus !== locatorTaskStatus.PENDING) {
+        this.onStatusChange(element_id, { taskStatus: locatorTaskStatus.PENDING });
+      }
+    });
+    this.sendSocket(
+        JSON.stringify({
+          action: SCHEDULE_MULTIPLE_XPATH_GENERATIONS,
+          payload: {
+            document: this.document,
+            id: hashes,
+            config: this.queueSettings,
+          },
+        })
+    );
   }
 
   upPriority(ids) {
     ids.forEach((id) => {
-      this.socket.send(
+      this.sendSocket(
           JSON.stringify({
             action: UP_PRIORITY,
             payload: { element_id: id },
@@ -143,7 +131,7 @@ class LocatorGenerationController {
 
   downPriority(ids) {
     ids.forEach((id) => {
-      this.socket.send(
+      this.sendSocket(
           JSON.stringify({
             action: DOWN_PRIORITY,
             payload: { element_id: id },
@@ -153,7 +141,7 @@ class LocatorGenerationController {
   }
 
   revokeTasks(hashes) {
-    this.socket.send(
+    this.sendSocket(
         JSON.stringify({
           action: REVOKE_TASKS,
           payload: { id: hashes },
@@ -162,7 +150,7 @@ class LocatorGenerationController {
   }
 
   revokeAll() {
-    if (this.scheduledTasks.size) this.revokeTasks([...this.scheduledTasks.keys()]);
+    if (this.scheduledTasks.size) this.revokeTasks([...this.scheduledTasks.values()]);
   }
 }
 
