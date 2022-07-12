@@ -16,7 +16,7 @@ import { selectPageObjects } from "../../../store/selectors/pageObjectSelectors"
 import { openDeleteAllPopup } from "../../../services/pageDataHandlers";
 import { selectLocatorsToGenerate } from "../../../store/selectors/locatorSelectors";
 
-export const PageObjListHeader = () => {
+export const PageObjListHeader = ({ template }) => {
   const state = useSelector((state) => state);
   const pageObjects = useSelector(selectPageObjects);
   const locatorsToGenerate = useSelector(selectLocatorsToGenerate);
@@ -27,7 +27,7 @@ export const PageObjListHeader = () => {
 
   const handleDownload = () => {
     dispatch(pushNotification("Download"));
-    generateAndDownloadZip(state);
+    generateAndDownloadZip(state, template);
   };
 
   const handleRemoveAll = () => {

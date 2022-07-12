@@ -15,7 +15,7 @@ import { GenerationButtons } from "../GenerationButtons";
 import { PageObjectPlaceholder } from "../PageObjectPlaceholder";
 import { PageObjCopyButton } from "./PageObjCopyButton";
 
-export const PageObjList = () => {
+export const PageObjList = (props) => {
   const state = useSelector((state) => state);
   const currentPageObject = useSelector((state) => state.pageObject.currentPageObject);
   const pageObjects = useSelector(selectPageObjects);
@@ -52,7 +52,7 @@ export const PageObjList = () => {
 
   return (
     <div className="jdn__locatorsList">
-      <PageObjListHeader />
+      <PageObjListHeader {...props} />
       <div className="jdn__locatorsList-content jdn__pageObj-content">
         {size(pageObjects) ? (
           <Collapse

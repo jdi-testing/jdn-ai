@@ -15,9 +15,11 @@ import { identificationStatus, pageType, SCRIPT_ERROR } from "../utils/constants
 import { selectCurrentPage } from "../store/selectors/mainSelectors";
 import { PageObjectPage } from "./PageObjects/PageObjectPage";
 import { removeEmptyPageObjects } from "../store/thunks/removeEmptyPageObjects";
+import { DOWNLOAD_TEMPLATE, request } from "../services/backend";
 
 const AutoFind = () => {
   const [isInvalidSession, setIsInvalidSession] = useState(false);
+  const [template, setTemplate] = useState();
   const status = useSelector((state) => state.locators.status);
   const currentPage = useSelector(selectCurrentPage);
   const currentPageObject = useSelector((state) => state.pageObject.currentPageObject);
@@ -41,6 +43,8 @@ const AutoFind = () => {
       removeOverlay();
       connector.attachStaticScripts();
     });
+
+    fetchTemplate();
   }, []);
 
   useEffect(() => {
@@ -60,9 +64,18 @@ const AutoFind = () => {
     });
   };
 
+  const fetchTemplate = async () => {
+    const result = await request.getBlob(DOWNLOAD_TEMPLATE);
+    setTemplate(result);
+  };
+
   const renderPage = () => {
     const { page, alreadyGenerated } = currentPage;
-    return page === pageType.pageObject ? <PageObjectPage /> : <LocatorsPage {...{ alreadyGenerated }} />;
+    return page === pageType.pageObject ? (
+      <PageObjectPage {...{ template }} />
+    ) : (
+      <LocatorsPage {...{ alreadyGenerated }} />
+    );
   };
 
   return (
