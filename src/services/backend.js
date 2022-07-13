@@ -15,7 +15,7 @@ export const REVOKE_TASKS = "revoke_tasks";
 export const UP_PRIORITY = "prioritize_existing_task";
 export const DOWN_PRIORITY = "deprioritize_existing_task";
 
-export const BASE_URL = "http:localhost:5050";
+export const BASE_URL = "http://10.253.219.156";
 
 const headers = {
   "Content-Type": "application/json",

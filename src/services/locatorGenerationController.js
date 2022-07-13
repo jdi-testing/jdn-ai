@@ -50,7 +50,7 @@ class LocatorGenerationController {
 
   openWebSocket() {
     return new Promise((resolve, reject) => {
-      this.socket = new WebSocket("ws://localhost:5050/ws");
+      this.socket = new WebSocket(`ws://10.253.219.156/ws`);
       this.readyState = this.socket.readyState;
 
       this.socket.addEventListener("open", () => {
