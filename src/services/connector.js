@@ -89,13 +89,6 @@ class Connector {
     });
   }
 
-  attachCSS(file) {
-    chrome.scripting.insertCSS({
-      target: { tabId: this.tabId },
-      files: [file],
-    });
-  }
-
   scriptExists(scriptName) {
     if (!scriptName) return Promise.resolve(false);
 
