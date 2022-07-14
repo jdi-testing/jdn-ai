@@ -5,7 +5,6 @@
   "devtools_page": "index.html",
   "version": "3.1.209",
   "permissions": [
-    "tabs",
     "scripting",
     "storage"
   ],
