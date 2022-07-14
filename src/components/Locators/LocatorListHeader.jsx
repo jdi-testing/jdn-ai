@@ -118,12 +118,12 @@ export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedS
                 <Icon component={PauseSVG} />
               </Button>
               {size(decreasedPrioritySelected) || size(noPrioritySelected) ? (
-                <Button onClick={handleUpPriority}>
+                <Button hidden={true} onClick={handleUpPriority}>
                   <ArrowFatUp color="#1582D8" size={18} />
                 </Button>
               ) : null}
               {size(increasedPrioritySelected) || size(noPrioritySelected) ? (
-                <Button onClick={handleDownPriority}>
+                <Button hidden={true} onClick={handleDownPriority}>
                   <ArrowFatDown color="#1582D8" size={18} />
                 </Button>
               ) : null}

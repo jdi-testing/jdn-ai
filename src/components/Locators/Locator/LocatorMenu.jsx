@@ -64,12 +64,22 @@ export const LocatorMenu = ({ element, library }) => {
                 Stop generation
               </Menu.Item>
               {priority !== LOCATOR_CALCULATION_PRIORITY.INCREASED ? (
-                <Menu.Item key="4" icon={<ArrowFatUp color="#fff" size={14} />} onClick={handleUpPriority}>
+                <Menu.Item
+                  hidden={true}
+                  key="4"
+                  icon={<ArrowFatUp color="#fff" size={14} />}
+                  onClick={handleUpPriority}
+                >
                   Up Priority
                 </Menu.Item>
               ) : null}
               {priority !== LOCATOR_CALCULATION_PRIORITY.DECREASED ? (
-                <Menu.Item key="5" icon={<ArrowFatDown color="#fff" size={14} />} onClick={handleDownPriority}>
+                <Menu.Item
+                  hidden={true}
+                  key="5"
+                  icon={<ArrowFatDown color="#fff" size={14} />}
+                  onClick={handleDownPriority}
+                >
                   Down Priority
                 </Menu.Item>
               ) : null}
