@@ -120,12 +120,12 @@ export const highlightOnPage = () => {
 
   const drawRectangle = (element, predictedElement) => {
     const { element_id, jdnHash } = predictedElement;
-    const divDefaultStyle = (rect) => {
+    const divPosition = (rect) => {
       const { top, left, height, width } = rect || {};
       return rect ?
         {
-          left: `${left + window.pageXOffset}px`,
-          top: `${top + window.pageYOffset}px`,
+          left: `${left + window.pageXOffset + document.body.scrollLeft}px`,
+          top: `${top + window.pageYOffset + document.body.scrollTop}px`,
           height: `${height}px`,
           width: `${width}px`,
         } :
@@ -191,7 +191,7 @@ export const highlightOnPage = () => {
       document.body.removeChild(tooltip);
     });
 
-    Object.assign(div.style, divDefaultStyle(element.getBoundingClientRect()));
+    Object.assign(div.style, divPosition(element.getBoundingClientRect()));
     labelContainer.appendChild(label);
     div.insertAdjacentElement("afterBegin", labelContainer);
     div.onclick = () => {
