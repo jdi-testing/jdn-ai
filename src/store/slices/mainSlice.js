@@ -10,7 +10,7 @@ const initialState = {
   scriptMessage: null,
   showBackdrop: false,
   xpathConfig: {
-    maximum_generation_time: 10,
+    maximum_generation_time: 1,
     allow_indexes_at_the_beginning: false,
     allow_indexes_in_the_middle: false,
     allow_indexes_at_the_end: false,
