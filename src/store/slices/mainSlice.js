@@ -1,10 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { size } from "lodash";
-import { identificationStatus } from "../../utils/constants";
+import { BACKEND_STATUS, identificationStatus } from "../../utils/constants";
 
 const initialState = {
   allowIdentifyElements: true,
-  isBackendAvailable: false,
+  backendAvailable: BACKEND_STATUS.TRY_TO_ACCESS,
   notifications: [],
   pageHistory: [],
   perception: 0.5,
@@ -50,7 +50,7 @@ const mainSlice = createSlice({
       state.notifications.length = 0;
     },
     setBackendAvailable(state, {payload}) {
-      state.isBackendAvailable = payload;
+      state.backendAvailable = payload;
     },
     setScriptMessage(state, { payload }) {
       state.scriptMessage = payload;
