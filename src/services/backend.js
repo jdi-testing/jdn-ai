@@ -15,7 +15,8 @@ export const REVOKE_TASKS = "revoke_tasks";
 export const UP_PRIORITY = "prioritize_existing_task";
 export const DOWN_PRIORITY = "deprioritize_existing_task";
 
-export const BASE_URL = "http://10.253.219.156";
+export const REMOTE_URL = "http://10.253.219.156";
+export const LOCAL_URL = "http://localhost:5050";
 
 const headers = {
   "Content-Type": "application/json",
@@ -24,17 +25,27 @@ const headers = {
 class Request {
   constructor() {
     this.request = axios.create({
-      baseURL: BASE_URL,
       headers,
     });
+
+    this.baseUrl = REMOTE_URL;
   }
 
   async get(url, config) {
     return this.request
-        .get(url, config)
+        .get(url, {...config, baseURL: this.baseUrl})
         .then((response) => response.data)
         .catch((error) => {
-          throw new Error(error);
+          return this.errorHandler(error, () => this.get(url, config));
+        });
+  }
+
+  async post(url, payload, config) {
+    return this.request
+        .post(url, payload, {...config, baseURL: this.baseUrl})
+        .then((response) => response.data)
+        .catch((error) => {
+          this.errorHandler(error, () => this.post(url, payload, config));
         });
   }
 
@@ -45,13 +56,11 @@ class Request {
     });
   }
 
-  async post(url, payload) {
-    return this.request
-        .post(url, payload)
-        .then((response) => response.data)
-        .catch((error) => {
-          throw new Error(error);
-        });
+  errorHandler(error, request) {
+    if (error.config.baseURL === REMOTE_URL) {
+      this.baseUrl = LOCAL_URL;
+      return request();
+    } else throw new Error(error);
   }
 }
 

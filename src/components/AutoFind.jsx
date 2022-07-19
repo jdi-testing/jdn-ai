@@ -16,11 +16,15 @@ import { selectCurrentPage } from "../store/selectors/mainSelectors";
 import { PageObjectPage } from "./PageObjects/PageObjectPage";
 import { removeEmptyPageObjects } from "../store/thunks/removeEmptyPageObjects";
 import { DOWNLOAD_TEMPLATE, request } from "../services/backend";
+import Title from "antd/lib/typography/Title";
+
+const ACCESS_MESSAGE = "Trying to access server...";
 
 const AutoFind = () => {
   const [isInvalidSession, setIsInvalidSession] = useState(false);
   const [template, setTemplate] = useState();
   const status = useSelector((state) => state.locators.status);
+  const isBackendAvailable = useSelector((state) => state.main.isBackendAvailable);
   const currentPage = useSelector(selectCurrentPage);
   const currentPageObject = useSelector((state) => state.pageObject.currentPageObject);
   const dispatch = useDispatch();
@@ -85,7 +89,15 @@ const AutoFind = () => {
           <ControlBar />
         </Header>
         <Content className="jdn__content">
-          {isInvalidSession ? <SeveralTabsWarning {...{ checkSession }} /> : renderPage()}
+          {isBackendAvailable ? (
+            isInvalidSession ? (
+              <SeveralTabsWarning {...{ checkSession }} />
+            ) : (
+              renderPage()
+            )
+          ) : (
+            <Title level={5}>{ACCESS_MESSAGE}</Title>
+          )}
         </Content>
       </Layout>
     </React.Fragment>

@@ -4,6 +4,7 @@ import { identificationStatus } from "../../utils/constants";
 
 const initialState = {
   allowIdentifyElements: true,
+  isBackendAvailable: false,
   notifications: [],
   pageHistory: [],
   perception: 0.5,
@@ -48,6 +49,9 @@ const mainSlice = createSlice({
     resetNotifications(state) {
       state.notifications.length = 0;
     },
+    setBackendAvailable(state, {payload}) {
+      state.isBackendAvailable = payload;
+    },
     setScriptMessage(state, { payload }) {
       state.scriptMessage = payload;
     },
@@ -67,6 +71,7 @@ export const {
   handleLastNotification,
   pushNotification,
   resetNotifications,
+  setBackendAvailable,
   setScriptMessage,
   toggleBackdrop,
 } = mainSlice.actions;
