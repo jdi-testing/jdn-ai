@@ -5,7 +5,7 @@ export const locator1 = {
   locator: {
     fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul",
     robulaXpath: "//*[@class='sidebar-menu left']",
-    taskStatus: "SUCCESS",
+    taskStatus: "PENDING",
   },
   name: "radiobuttonsUl",
   predictedAttrId: "",
