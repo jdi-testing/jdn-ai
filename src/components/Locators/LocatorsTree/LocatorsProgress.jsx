@@ -21,23 +21,24 @@ export const LocatorsProgress = ({ currentPageObject }) => {
   const waiting = useSelector((_state) => selectWaitingByPageObj(_state, currentPageObject));
   const deleted = useSelector((_state) => selectDeletedByPageObj(_state, currentPageObject));
 
+  const calculationReady = size(generated);
+  const toBeCalculated = size(byProbability) - size(deleted);
+
   const hideProgressInformation = () => setIsProgressActive(false);
 
   const readinessPercentage = useMemo(() => {
-    const readyCount = size(generated);
-    const total = size(byProbability) - size(deleted);
-    if (!total && !readyCount) {
+    const calculationReady = size(generated);
+    const toBeCalculated = size(byProbability) - size(deleted);
+    if (!toBeCalculated && !calculationReady) {
       return 0;
     }
-    const result = readyCount / total;
+    const result = calculationReady / toBeCalculated;
     return result.toFixed(2) * 100;
   }, [byProbability, generated]);
 
   useEffect(() => {
     if (size(waiting) && size(generated) === 0) setIsProgressActive(true);
-    const readyCount = size(generated);
-    const total = size(byProbability) - size(deleted);
-    if (readyCount > 0 && total > 0 && readyCount === total) {
+    if (calculationReady > 0 && toBeCalculated > 0 && calculationReady === toBeCalculated) {
       timer = setTimeout(hideProgressInformation, 10000);
     }
     return () => clearTimeout(timer);
@@ -55,7 +56,9 @@ export const LocatorsProgress = ({ currentPageObject }) => {
         strokeWidth={5}
       />
       <p className="jdn__locatorsList-progress-text">
-        {size(waiting) ? locatorsGenerationStatus.started : generationStatus}
+        {size(waiting) ?
+          `${locatorsGenerationStatus.started} (${calculationReady}/${toBeCalculated})` :
+          generationStatus}
       </p>
     </div>
   );
