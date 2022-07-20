@@ -1,7 +1,13 @@
 import { isNull } from "lodash";
 
 import { connector } from "./connector";
-import { DOWN_PRIORITY, request, REVOKE_TASKS, SCHEDULE_MULTIPLE_XPATH_GENERATIONS, UP_PRIORITY } from "../services/backend";
+import {
+  DOWN_PRIORITY,
+  request,
+  REVOKE_TASKS,
+  SCHEDULE_MULTIPLE_XPATH_GENERATIONS,
+  UP_PRIORITY,
+} from "../services/backend";
 import { locatorProgressStatus, locatorTaskStatus } from "../utils/constants";
 
 export const isProgressStatus = (taskStatus) => locatorProgressStatus.hasOwnProperty(taskStatus);
