@@ -1,7 +1,13 @@
 import { isNull } from "lodash";
 
 import { connector } from "./connector";
-import { DOWN_PRIORITY, REVOKE_TASKS, SCHEDULE_MULTIPLE_XPATH_GENERATIONS, UP_PRIORITY } from "../services/backend";
+import {
+  DOWN_PRIORITY,
+  request,
+  REVOKE_TASKS,
+  SCHEDULE_MULTIPLE_XPATH_GENERATIONS,
+  UP_PRIORITY,
+} from "../services/backend";
 import { locatorProgressStatus, locatorTaskStatus } from "../utils/constants";
 
 export const isProgressStatus = (taskStatus) => locatorProgressStatus.hasOwnProperty(taskStatus);
@@ -50,7 +56,7 @@ class LocatorGenerationController {
 
   openWebSocket() {
     return new Promise((resolve, reject) => {
-      this.socket = new WebSocket("ws://localhost:5050/ws");
+      this.socket = new WebSocket(`${request.baseUrl.replace("http", "ws")}/ws`);
       this.readyState = this.socket.readyState;
 
       this.socket.addEventListener("open", () => {

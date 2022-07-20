@@ -1,5 +1,5 @@
 import { Divider, Space, Menu, Dropdown } from "antd";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Icon from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
 
@@ -7,19 +7,26 @@ import { BUILD, request } from "../services/backend";
 import { reportProblem } from "../services/pageDataHandlers";
 
 import kebab_menu from "../assets/Kebab_menu.svg";
-import { pageType, readmeLinkAddress } from "../utils/constants";
+import { BACKEND_STATUS, pageType, readmeLinkAddress } from "../utils/constants";
 import { selectCurrentPage } from "../store/selectors/mainSelectors";
+import { setBackendAvailable } from "../store/slices/mainSlice";
 
 export const ControlBar = () => {
-  const [backendVer, setBackendVer] = useState("");
+  const [backendVer, setBackendVer] = useState(null);
   const [pluginVer, setPluginVer] = useState("");
 
+  const dispatch = useDispatch();
   const currentPage = useSelector(selectCurrentPage).page;
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await request.get(BUILD);
-      setBackendVer(result);
+      try {
+        const result = await request.get(BUILD);
+        setBackendVer(result);
+        dispatch(setBackendAvailable(BACKEND_STATUS.ACCESSED));
+      } catch (error) {
+        dispatch(setBackendAvailable(BACKEND_STATUS.ACCESS_FAILED));
+      }
     };
 
     fetchData();
