@@ -1,16 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { size } from "lodash";
-import { identificationStatus } from "../../utils/constants";
+import { BACKEND_STATUS, identificationStatus } from "../../utils/constants";
 
 const initialState = {
   allowIdentifyElements: true,
+  backendAvailable: BACKEND_STATUS.TRY_TO_ACCESS,
   notifications: [],
   pageHistory: [],
   perception: 0.5,
   scriptMessage: null,
   showBackdrop: false,
   xpathConfig: {
-    maximum_generation_time: 10,
+    maximum_generation_time: 1,
     allow_indexes_at_the_beginning: false,
     allow_indexes_in_the_middle: false,
     allow_indexes_at_the_end: false,
@@ -33,6 +34,7 @@ const mainSlice = createSlice({
     clearAll(state) {
       state.status = identificationStatus.removed;
       Object.keys(initialState).forEach((key) => {
+        if (key === "backendAvailable") return;
         state[key] = initialState[key];
       });
     },
@@ -47,6 +49,9 @@ const mainSlice = createSlice({
     },
     resetNotifications(state) {
       state.notifications.length = 0;
+    },
+    setBackendAvailable(state, {payload}) {
+      state.backendAvailable = payload;
     },
     setScriptMessage(state, { payload }) {
       state.scriptMessage = payload;
@@ -67,6 +72,7 @@ export const {
   handleLastNotification,
   pushNotification,
   resetNotifications,
+  setBackendAvailable,
   setScriptMessage,
   toggleBackdrop,
 } = mainSlice.actions;

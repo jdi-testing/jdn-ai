@@ -40,9 +40,7 @@ const locatorsSlice = createSlice({
       if (fullXpath !== locator && robulaXpath !== locator) {
         newValue.locator.customXpath = locator;
         newValue.isCustomLocator = true;
-        if (newValue.locator.taskStatus === locatorTaskStatus.REVOKED) {
-          newValue.locator.taskStatus = locatorTaskStatus.SUCCESS;
-        }
+        newValue.locator.taskStatus = locatorTaskStatus.SUCCESS;
       } else {
         delete newValue.locator.customXpath;
         newValue.isCustomLocator = false;
