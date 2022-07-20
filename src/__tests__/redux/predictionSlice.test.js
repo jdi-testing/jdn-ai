@@ -4,6 +4,7 @@ import { selectLocatorById } from "../../store/selectors/locatorSelectors";
 import { store } from "../../store/store";
 import { locator1 } from "../__mocks__/locator.mock";
 import { elementLibrary } from "../../utils/generationClassesMap";
+import { locatorTaskStatus } from "../../utils/constants";
 
 /* global jest*/
 
@@ -83,6 +84,7 @@ describe("changeLocatorAttributes reducer", () => {
     expect(locator.type).toBe("Dialog");
     expect(locator.name).toBe("myAwesomeLocator");
     expect(locator.locator.customXpath).toBe("//*[@class='any-class']");
+    expect(locator.locator.taskStatus).toBe(locatorTaskStatus.SUCCESS);
     expect(changeElementNameSpy).toHaveBeenCalledWith(locator);
   });
 

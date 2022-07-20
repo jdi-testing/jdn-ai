@@ -41,7 +41,7 @@ export const ControlBar = () => {
 
   const kebabMenu = (
     <Menu>
-      <Menu.Item key="0" hidden={currentPage === pageType.locatorsList} onClick={handleReportProblem}>
+      <Menu.Item key="0" hidden={currentPage === pageType.pageObject} onClick={handleReportProblem}>
         Report a problem
       </Menu.Item>
       <Menu.Item key="1">
