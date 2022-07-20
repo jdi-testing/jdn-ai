@@ -34,6 +34,7 @@ const mainSlice = createSlice({
     clearAll(state) {
       state.status = identificationStatus.removed;
       Object.keys(initialState).forEach((key) => {
+        if (key === "backendAvailable") return;
         state[key] = initialState[key];
       });
     },
