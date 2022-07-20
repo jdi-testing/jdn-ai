@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "JDN",
-  "description": "JDN – is the Chrome plugin for UI test automation. It helps Software Test Automation Engineer to create Page Objects in the test automation framework",
+  "description": "JDN – is the plugin for UI test automation. It helps Test Automation Engineers to create PO in the test automation framework",
   "devtools_page": "index.html",
   "version": "3.1.209",
   "permissions": [
