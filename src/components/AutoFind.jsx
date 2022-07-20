@@ -88,7 +88,7 @@ const AutoFind = () => {
     } else {
       return (
         <span>
-          Server doesn&apos;t respond. Please, try later or set up a local server (see{" "}
+          Server doesn&apos;t respond. Please, check network settings or set up a local server (see{" "}
           <a href={readmeLinkAddress} target="_blank" rel="noreferrer">
             Readme
           </a>{" "}
