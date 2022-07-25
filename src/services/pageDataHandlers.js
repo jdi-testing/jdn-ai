@@ -39,7 +39,7 @@ const sendToModel = async (result, enpoint) => {
   return response;
 };
 
-export const getElements = (endpoint) =>
+export const predictElements = (endpoint) =>
   connector
       .attachContentScript(getPageData)
       .then((data) => {
@@ -50,6 +50,9 @@ export const getElements = (endpoint) =>
       .then((data) => {
         removeOverlay();
         return data;
+      }, (error) => {
+        removeOverlay();
+        return error;
       });
 
 const requestGenerationAttributes = (elements) =>

@@ -69,8 +69,10 @@ const AutoFind = () => {
   };
 
   const fetchTemplate = async () => {
-    const result = await request.getBlob(DOWNLOAD_TEMPLATE);
-    setTemplate(result);
+    try {
+      const result = await request.getBlob(DOWNLOAD_TEMPLATE);
+      setTemplate(result);
+    } catch (error) {}
   };
 
   const renderPage = () => {
