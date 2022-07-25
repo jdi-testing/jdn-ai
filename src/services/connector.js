@@ -117,7 +117,15 @@ class Connector {
         sendMessage.defineTabId(this.tabId);
         sendMessage.setClosedSession({ tabId: this.tabId, isClosed: false });
       }),
+      this.attachCSS("contentScripts.css"),
     ]);
+  }
+
+  attachCSS(file) {
+    return chrome.scripting.insertCSS({
+      target: { tabId: this.tabId },
+      files: [file],
+    }).catch((error) => error);
   }
 }
 
