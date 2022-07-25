@@ -31,21 +31,21 @@ class Request {
     this.baseUrl = REMOTE_URL;
   }
 
-  async get(url, config) {
+  async get(url, config, baseChanged) {
     return this.request
         .get(url, {...config, baseURL: this.baseUrl})
         .then((response) => response.data)
         .catch((error) => {
-          return this.errorHandler(error, () => this.get(url, config));
+          return this.errorHandler(error, (_baseChanged) => this.get(url, config, _baseChanged), baseChanged);
         });
   }
 
-  async post(url, payload, config) {
+  async post(url, payload, config, baseChanged) {
     return this.request
         .post(url, payload, {...config, baseURL: this.baseUrl})
         .then((response) => response.data)
         .catch((error) => {
-          this.errorHandler(error, () => this.post(url, payload, config));
+          return this.errorHandler(error, (_baseChanged) => this.post(url, payload, config, _baseChanged), baseChanged);
         });
   }
 
@@ -56,11 +56,19 @@ class Request {
     });
   }
 
-  errorHandler(error, request) {
-    if (error.config.baseURL === REMOTE_URL) {
-      this.baseUrl = LOCAL_URL;
-      return request();
-    } else throw new Error(error);
+  errorHandler(error, callback, baseChanged) {
+    if (baseChanged) throw error;
+
+    switch (error.config.baseURL) {
+      case REMOTE_URL:
+        this.baseUrl = LOCAL_URL;
+        return callback(true);
+      case LOCAL_URL:
+        this.baseUrl = REMOTE_URL;
+        return callback(true);
+      default:
+        break;
+    }
   }
 }
 

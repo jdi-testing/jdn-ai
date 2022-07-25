@@ -1,10 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-import { identificationStatus } from "../../utils/constants";
+import { BACKEND_STATUS, identificationStatus } from "../../utils/constants";
 import { generateLocators } from "./generateLocators";
-import { getElements } from "../../services/pageDataHandlers";
+import { predictElements } from "../../services/pageDataHandlers";
 import { setCurrentPageObj } from "../slices/pageObjectSlice";
 import { predictEndpoints } from "../../utils/generationClassesMap";
+import { setBackendAvailable } from "../slices/mainSlice";
 
 export const identifyElements = createAsyncThunk(
     "locators/identifyElements",
@@ -12,15 +13,20 @@ export const identifyElements = createAsyncThunk(
       thunkAPI.dispatch(setCurrentPageObj(pageObj));
 
       const endpoint = predictEndpoints[library];
-      const res = await getElements(endpoint);
-      const rounded = res.map((el) => ({
-        ...el,
-        element_id: `${el.element_id}_${pageObj}`,
-        jdnHash: el.element_id,
-        predicted_probability: Math.round(el.predicted_probability * 100) / 100,
-      }));
-      thunkAPI.dispatch(generateLocators({ predictedElements: rounded, library }));
-      return thunkAPI.fulfillWithValue(rounded);
+      try {
+        const res = await predictElements(endpoint);
+        const rounded = res.map((el) => ({
+          ...el,
+          element_id: `${el.element_id}_${pageObj}`,
+          jdnHash: el.element_id,
+          predicted_probability: Math.round(el.predicted_probability * 100) / 100,
+        }));
+        thunkAPI.dispatch(generateLocators({ predictedElements: rounded, library }));
+        return thunkAPI.fulfillWithValue(rounded);
+      } catch (error) {
+        thunkAPI.dispatch(setBackendAvailable(BACKEND_STATUS.ACCESS_FAILED));
+        return thunkAPI.rejectWithValue();
+      }
     }
 );
 
@@ -34,6 +40,6 @@ export const identifyElementsReducer = (builder) => {
         state.status = identificationStatus.success;
       })
       .addCase(identifyElements.rejected, (state, { error }) => {
-        throw new Error(error.stack);
+        state.status = identificationStatus.error;
       });
 };
