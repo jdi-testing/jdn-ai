@@ -66,8 +66,6 @@ class Request {
       case LOCAL_URL:
         this.baseUrl = REMOTE_URL;
         return callback(true);
-      default:
-        break;
     }
   }
 }
