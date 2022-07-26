@@ -272,6 +272,7 @@ export const highlightOnPage = () => {
       document.removeEventListener(eventName, scrollListenerCallback, true);
     });
     document.removeEventListener("click", clickListener);
+    listenersAreSet = false;
   };
 
   const removeHighlight = (callback) => () => {
