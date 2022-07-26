@@ -1,7 +1,7 @@
 window.onload = () => {
   /* global chrome */
   /* eslint no-undef: "error" */
-  chrome.devtools.panels.create("JDN", "icon.png", "panel.html");
+  chrome.devtools.panels.create("JDN", "icon128.png", "panel.html");
 };
 
 window.onbeforeunload = clearTabSession;
