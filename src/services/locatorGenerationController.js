@@ -47,7 +47,7 @@ class LocatorGenerationController {
   }
 
   sendSocket(json) {
-    if (isNull(this.readyState) || this.readyState === "3") {
+    if (isNull(this.readyState) || this.readyState === 2 || this.readyState === 3) {
       this.init().then(() => {
         this.socket.send(json);
       });
