@@ -3,10 +3,8 @@ import { Spin, Tooltip } from "antd";
 import Icon from "@ant-design/icons";
 import CheckedEdited from "../../../assets/checked-edited.svg";
 import WarningEditedSvg from "../../../assets/warning-edited.svg";
-import ErrorSvg from "../../../assets/error-outlined.svg";
-import TrashBinSvg from "../../../assets/delete_14.svg";
 import { locatorTaskStatus, VALIDATION_ERROR_TYPE } from "../../../utils/constants";
-import { PauseCircle } from "phosphor-react";
+import { PauseCircle, Trash, WarningCircle } from "phosphor-react";
 import { useRef } from "react";
 import { useIsInViewport } from "./useIsInViewport";
 
@@ -31,8 +29,13 @@ export const LocatorIcon = ({ validity, locator, deleted }) => {
 
   const startedIcon = <Spin size="small" />;
   const revokedIcon = <PauseCircle size={14} color="#d81515" className="jdn__locatorsList-status" />;
-  const failureIcon = <Icon component={ErrorSvg} className="jdn__locatorsList-status" />;
-  const deletedIcon = <Icon component={TrashBinSvg} className="jdn__locatorsList-status" />;
+  const deletedIcon = <Trash size={14} color="#9a9da9" className="jdn__locatorsList-status" />;
+
+  const failureIcon = (
+    <Tooltip title={locator.errorMessage}>
+      <WarningCircle size={14} color="#d81515" className="jdn__locatorsList-status" />
+    </Tooltip>
+  );
 
   const successEditedIcon = (
     <Tooltip title={getTooltipText()}>
