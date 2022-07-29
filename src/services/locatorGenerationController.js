@@ -1,21 +1,23 @@
-import { isNull } from "lodash";
-
 import { connector } from "./connector";
 import {
   DOWN_PRIORITY,
-  request,
+  PING,
   REVOKE_TASKS,
   SCHEDULE_MULTIPLE_XPATH_GENERATIONS,
   UP_PRIORITY,
 } from "../services/backend";
 import { locatorProgressStatus, locatorTaskStatus } from "../utils/constants";
+import { webSocketController } from "./webSocketController";
 
 export const isProgressStatus = (taskStatus) => locatorProgressStatus.hasOwnProperty(taskStatus);
 export const isGeneratedStatus = (taskStatus) => taskStatus === locatorTaskStatus.SUCCESS;
 
-export const runGenerationHandler = async (elements, settings, onStatusChange) => {
-  locatorGenerationController.scheduleTaskGroup(elements, settings, (element_id, locator) =>
-    onStatusChange({ element_id, locator })
+export const runGenerationHandler = async (elements, settings, onStatusChange, onGenerationFailed) => {
+  locatorGenerationController.scheduleTaskGroup(
+      elements,
+      settings,
+      (element_id, locator) => onStatusChange({ element_id, locator }),
+      onGenerationFailed,
   );
 };
 
@@ -25,17 +27,14 @@ export const stopGenerationHandler = (hashes) => {
 
 class LocatorGenerationController {
   constructor() {
-    this.readyState = null;
     this.scheduledTasks = new Map();
     this.document = null;
     this.onStatusChange = null;
-    this.queueSettings = null;
-  }
+    this.onGenerationFailed = null;
+    this.pingInterval = null;
+    this.pingTimeout = null;
 
-  async init() {
-    return this.openWebSocket().then(() => {
-      return this.setMessageListener();
-    });
+    this.setMessageHandler();
   }
 
   async getDocument() {
@@ -46,38 +45,9 @@ class LocatorGenerationController {
     return;
   }
 
-  sendSocket(json) {
-    if (isNull(this.readyState) || this.readyState === 2 || this.readyState === 3) {
-      this.init().then(() => {
-        this.socket.send(json);
-      });
-    } else this.socket.send(json);
-  }
-
-  openWebSocket() {
-    return new Promise((resolve, reject) => {
-      this.socket = new WebSocket(`${request.baseUrl.replace("http", "ws")}/ws`);
-      this.readyState = this.socket.readyState;
-
-      this.socket.addEventListener("open", () => {
-        this.readyState = this.socket.readyState;
-        resolve(this.socket);
-      });
-
-      this.socket.addEventListener("error", (event) => {
-        this.readyState = event.target.readyState;
-        reject(new Error(event));
-      });
-
-      this.socket.addEventListener("close", (event) => {
-        this.readyState = event.target.readyState;
-      });
-    });
-  }
-
-  setMessageListener() {
-    this.socket.addEventListener("message", (event) => {
-      const { payload, action, result } = JSON.parse(event.data);
+  setMessageHandler() {
+    webSocketController.addSubscriber((event) => {
+      const { payload, action, result, pong } = JSON.parse(event.data);
       switch (action || result) {
         case "status_changed":
           if (payload.status === locatorTaskStatus.REVOKED || payload.status === locatorTaskStatus.FAILURE) {
@@ -91,16 +61,24 @@ class LocatorGenerationController {
             taskStatus: locatorTaskStatus.SUCCESS,
           });
           this.scheduledTasks.delete(payload.id);
+          if (this.scheduledTasks.size === 0) {
+            clearInterval(this.pingInterval);
+            clearTimeout(this.pingTimeout);
+            this.pingTimeout = null;
+          }
           break;
-        default:
-          break;
+      }
+      if (pong) {
+        clearTimeout(this.pingTimeout);
+        this.pingTimeout = null;
       }
     });
   }
 
-  async scheduleTaskGroup(elements, settings, onStatusChange) {
+  async scheduleTaskGroup(elements, settings, onStatusChange, onGenerationFailed) {
     if (settings) this.queueSettings = settings;
     if (onStatusChange) this.onStatusChange = onStatusChange;
+    if (onGenerationFailed) this.onGenerationFailed = onGenerationFailed;
     await this.getDocument();
 
     const hashes = [];
@@ -112,7 +90,8 @@ class LocatorGenerationController {
         this.onStatusChange(element_id, { taskStatus: locatorTaskStatus.PENDING });
       }
     });
-    this.sendSocket(
+
+    webSocketController.sendSocket(
         JSON.stringify({
           action: SCHEDULE_MULTIPLE_XPATH_GENERATIONS,
           payload: {
@@ -122,11 +101,32 @@ class LocatorGenerationController {
           },
         })
     );
+
+    this.pingInterval = setInterval(() => {
+      if (!this.pingTimeout) {
+        this.pingSocket();
+      }
+    }, 2000);
+  }
+
+  pingSocket() {
+    webSocketController.sendSocket(
+        JSON.stringify({
+          action: PING,
+          payload: Date.now(),
+        })
+    );
+    this.pingTimeout = setTimeout(() => this.noResponseHandler(), 5000);
+  }
+
+  noResponseHandler() {
+    this.onGenerationFailed([...this.scheduledTasks.values()]);
+    this.scheduledTasks.clear();
   }
 
   upPriority(ids) {
     ids.forEach((id) => {
-      this.sendSocket(
+      webSocketController.sendSocket(
           JSON.stringify({
             action: UP_PRIORITY,
             payload: { element_id: id },
@@ -137,7 +137,7 @@ class LocatorGenerationController {
 
   downPriority(ids) {
     ids.forEach((id) => {
-      this.sendSocket(
+      webSocketController.sendSocket(
           JSON.stringify({
             action: DOWN_PRIORITY,
             payload: { element_id: id },
@@ -147,7 +147,7 @@ class LocatorGenerationController {
   }
 
   revokeTasks(hashes) {
-    this.sendSocket(
+    webSocketController.sendSocket(
         JSON.stringify({
           action: REVOKE_TASKS,
           payload: { id: hashes },

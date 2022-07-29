@@ -12,6 +12,7 @@ export const locatorsGenerationStatus = {
   noStatus: "",
   started: "Locators generation is running in background...",
   complete: "Locators generation is successfully completed",
+  failed: "Network error, check network settings or run server locally.",
 };
 
 export const locatorProgressStatus = {

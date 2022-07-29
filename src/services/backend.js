@@ -11,9 +11,10 @@ export const DOWNLOAD_TEMPLATE = "download_template";
 export const SCHEDULE_MULTIPLE_XPATH_GENERATIONS = "schedule_multiple_xpath_generations";
 export const SHEDULE_XPATH_GENERATION = "schedule_xpath_generation";
 export const REVOKE_TASKS = "revoke_tasks";
-
 export const UP_PRIORITY = "prioritize_existing_task";
 export const DOWN_PRIORITY = "deprioritize_existing_task";
+export const PING = "ping";
+export const PONG = "pong";
 
 export const REMOTE_URL = "http://10.253.219.156";
 export const LOCAL_URL = "http://localhost:5050";
