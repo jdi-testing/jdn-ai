@@ -2,6 +2,7 @@ import axios from "axios";
 
 // http enpoints
 export const BUILD = "build";
+export const SESSION_ID = "get_session_id";
 export const MUI_PREDICT = "mui-predict";
 export const HTML5_PREDICT = "html5-predict";
 export const REPORT_PROBLEM = "report_problem";

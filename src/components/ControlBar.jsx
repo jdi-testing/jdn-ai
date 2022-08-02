@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Icon from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
 
-import { BUILD, request } from "../services/backend";
+import { BUILD, request, SESSION_ID } from "../services/backend";
 import { reportProblem } from "../services/pageDataHandlers";
 
 import kebab_menu from "../assets/Kebab_menu.svg";
@@ -24,6 +24,8 @@ export const ControlBar = () => {
         const result = await request.get(BUILD);
         setBackendVer(result);
         dispatch(setBackendAvailable(BACKEND_STATUS.ACCESSED));
+        const session_id = await request.get(SESSION_ID);
+        chrome.storage.sync.set({ JDN_SESSION_ID: session_id });
       } catch (error) {
         dispatch(setBackendAvailable(BACKEND_STATUS.ACCESS_FAILED));
       }
