@@ -140,6 +140,22 @@ const indexConfig = {
     filename: "loadPanel.js",
     publicPath: "./",
   },
+  module: {
+    rules:
+    [{
+      test: /\.(png|jpe?g|gif)$/i,
+      use: [
+        {
+          loader: "file-loader",
+          options: {
+            esModule: false,
+            name: "[name].[ext]",
+            outputPath: "./",
+          },
+        },
+      ],
+    }],
+  }
 };
 
 const contentScripts = {

@@ -1,3 +1,5 @@
+import "./icon128.png";
+
 window.onload = () => {
   /* global chrome */
   /* eslint no-undef: "error" */
