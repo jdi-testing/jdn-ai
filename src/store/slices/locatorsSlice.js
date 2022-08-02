@@ -47,6 +47,22 @@ const locatorsSlice = createSlice({
       }
       locatorsAdapter.upsertOne(state, newValue);
     },
+    failGeneration(state, { payload }) {
+      state.generationStatus = locatorsGenerationStatus.failed;
+      payload.forEach((element_id) => {
+        const existingLocator = simpleSelectLocatorById(state, element_id);
+        if (existingLocator) {
+          locatorsAdapter.upsertOne(state, {
+            element_id,
+            locator: {
+              ...existingLocator.locator,
+              taskStatus: locatorTaskStatus.FAILURE,
+              errorMessage: "Network Error has been encountered.",
+            },
+          });
+        }
+      });
+    },
     removeAll(state) {
       locatorsAdapter.removeAll(state);
     },
@@ -78,6 +94,9 @@ const locatorsSlice = createSlice({
         const newValue = ids.map((element_id) => ({ element_id, priority }));
         locatorsAdapter.upsertMany(state, newValue);
       }
+    },
+    setGenerationStatus(state, { payload }) {
+      state.generationStatus = payload;
     },
     setScrollToLocator(state, { payload: element_id }) {
       state.scrollToLocator = element_id;
@@ -143,6 +162,7 @@ export default locatorsSlice.reducer;
 export const {
   addLocators,
   changeLocatorAttributes,
+  failGeneration,
   removeLocators,
   removeAll,
   toggleElementGeneration,

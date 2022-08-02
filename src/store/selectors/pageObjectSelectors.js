@@ -2,11 +2,7 @@ import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
 import { chain, size } from "lodash";
 import { isProgressStatus } from "../../services/locatorGenerationController";
 import { locatorTaskStatus } from "../../utils/constants";
-import {
-  selectGeneratedLocators,
-  selectLocators,
-  selectLocatorsByProbability,
-} from "./locatorSelectors";
+import { selectGeneratedLocators, selectLocators, selectLocatorsByProbability } from "./locatorSelectors";
 
 export const pageObjAdapter = createEntityAdapter({
   selectId: (pageObj) => pageObj.id,
@@ -79,6 +75,12 @@ export const selectWaitingByPageObj = createSelector(selectPageObjLocatorsByProb
           el.locator.taskStatus === locatorTaskStatus.FAILURE) &&
         !el.deleted
       )
+      .value()
+);
+
+export const selectInProgressByPageObj = createSelector(selectPageObjLocatorsByProbability, (elements) =>
+  chain(elements)
+      .filter((el) => isProgressStatus(el.locator.taskStatus) && !el.deleted)
       .value()
 );
 
