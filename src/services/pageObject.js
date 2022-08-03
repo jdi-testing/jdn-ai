@@ -7,7 +7,7 @@ import { getJDILabel } from "../utils/generationClassesMap";
 import { pageObjectTemplate } from "./pageObjectTemplate";
 import javaReservedWords from "../utils/javaReservedWords.json";
 import { selectConfirmedLocators, selectPageObjects } from "../store/selectors/pageObjectSelectors";
-import { testFileTemplate } from "./testFileTemplate";
+import { testFileTemplate } from "./testTemplate";
 
 export const isStringMatchesReservedWord = (string) => javaReservedWords.includes(string);
 
