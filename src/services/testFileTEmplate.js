@@ -1,16 +1,16 @@
 export const testFileTemplate = (siteName, className) => {
   return `package tests;
 
-    import org.testng.annotations.Test;
+import org.testng.annotations.Test;
     
-    import site.MySite;
+import site.MySite;
     
-    public class ${className} implements TestsInit {
+public class ${className}Tests implements TestsInit {
     
-        @Test
-        public void openPageTest() {
-            MySite.${siteName}.open();
-            MySite.${siteName}.checkOpened();
-        }
-    }`;
+    @Test
+    public void openPageTest() {
+        MySite.${siteName}.open();
+        MySite.${siteName}.checkOpened();
+    }
+}`;
 };

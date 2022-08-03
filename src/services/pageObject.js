@@ -7,7 +7,7 @@ import { getJDILabel } from "../utils/generationClassesMap";
 import { pageObjectTemplate } from "./pageObjectTemplate";
 import javaReservedWords from "../utils/javaReservedWords.json";
 import { selectConfirmedLocators, selectPageObjects } from "../store/selectors/pageObjectSelectors";
-import { testFileTemplate } from "./testFileTEmplate";
+import { testFileTemplate } from "./testFileTemplate";
 
 export const isStringMatchesReservedWord = (string) => javaReservedWords.includes(string);
 
@@ -106,34 +106,39 @@ export const generateAndDownloadZip = async (state, template) => {
       const locators = selectConfirmedLocators(state, po.id);
       if (!size(locators)) continue;
       const page = await getPage(locators, po.name, [po.library]);
-      newZip.file(`src/main/java/site/pages/${page.title}.java`, page.pageCode, { binary: true });
 
-      const instanceName = lowerFirst(po.name);
+      let instanceName = lowerFirst(po.name);
 
-      newZip
+      const createPage = newZip.file(`src/main/java/site/pages/${page.title}.java`, page.pageCode, { binary: true });
+
+      const editTestProperties = newZip
           .file("src/test/resources/test.properties")
           .async("string")
-          .then(
-              function success(content) {
-                const newContent = content.replace("${domain}", `\${'${po.domain}'}`);
-                return newZip.file(`src/test/resources/test.properties`, newContent, { binary: true });
-              }
-          ).then(() => {
-            return newZip
-                .file("src/main/java/site/MySite.java")
-                .async("string");
-          }).then((content) => {
+          .then(function success(content) {
+            const newContent = content.replace("${domain}", `\${"${po.domain}"}`);
+            return newZip.file(`src/test/resources/test.properties`, newContent, { binary: true });
+          });
+
+      const editMySite = newZip
+          .file("src/main/java/site/MySite.java")
+          .async("string")
+          .then((content) => {
+            if (content.includes(instanceName)) instanceName = `${instanceName}1`;
             const newContent = content.replace(
                 "// ADD SITE PAGES WITH URLS",
-                `// ADD SITE PAGES WITH URLS\n    @Url('${po.pathname}')\n    public static ${po.name} ${instanceName};`
+                `// ADD SITE PAGES WITH URLS\n    @Url("${po.pathname}")\n    public static ${po.name} ${instanceName};`
             );
             return newZip.file(`src/main/java/site/MySite.java`, newContent, { binary: true });
-          }).then(() => {
-            return newZip.file(`src/test/java/tests/${po.name}Tests.java`, testFileTemplate(instanceName, po.name));
-          })
-          .then(() => {
-            saveZip();
           });
+
+      const createTestsFile = newZip.file(
+          `src/test/java/tests/${po.name}Tests.java`,
+          testFileTemplate(instanceName, po.name)
+      );
+
+      Promise.all([createPage, editTestProperties, editMySite, createTestsFile]).then(() => {
+        saveZip();
+      });
     }
   });
 };

@@ -60,7 +60,9 @@ export const locators = [
   },
 ];
 
-export const pageObject = `import com.epam.jdi.light.elements.pageobjects.annotations.locators.*;
+export const pageObject = `package site.pages;
+
+import com.epam.jdi.light.elements.pageobjects.annotations.locators.*;
 import com.epam.jdi.light.elements.composite.*;
 import com.epam.jdi.light.ui.html.elements.common.*;
 
