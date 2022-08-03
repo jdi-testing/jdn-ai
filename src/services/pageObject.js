@@ -1,4 +1,4 @@
-import { entries, replace, size, toLower } from "lodash";
+import { entries, lowerFirst, replace, size, toLower } from "lodash";
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
 
@@ -7,6 +7,7 @@ import { getJDILabel } from "../utils/generationClassesMap";
 import { pageObjectTemplate } from "./pageObjectTemplate";
 import javaReservedWords from "../utils/javaReservedWords.json";
 import { selectConfirmedLocators, selectPageObjects } from "../store/selectors/pageObjectSelectors";
+import { testFileTemplate } from "./testTemplate";
 
 export const isStringMatchesReservedWord = (string) => javaReservedWords.includes(string);
 
@@ -56,8 +57,8 @@ export const createLocatorNames = (elements, library) => {
 
 export const getPageAttributes = async () => {
   return await connector.attachContentScript(() => {
-    const {title, URL} = document;
-    return {title, url: URL};
+    const { title, URL, location, domain } = document;
+    return { title, url: URL, pathname: location.pathname, domain };
   });
 };
 
@@ -77,7 +78,7 @@ export const generatePageObject = async (elements, title, library) => {
 export const generateAndDownloadZip = async (state, template) => {
   const pageObjects = selectPageObjects(state);
 
-  const zip = await JSZip.loadAsync(template, {createFolders: true});
+  const zip = await JSZip.loadAsync(template, { createFolders: true });
   const rootFolder = entries(zip.files)[0][0];
 
   const newZip = new JSZip();
@@ -87,23 +88,57 @@ export const generateAndDownloadZip = async (state, template) => {
   zip.folder(rootFolder).forEach(async (relativePath, file) => {
     if (file.dir) return;
 
-    filePromises.push(file.async("string").then((content) => {
-      newZip.file(relativePath, content, {binary: true});
-    }));
+    filePromises.push(
+        file.async("string").then((content) => {
+          newZip.file(relativePath, content, { binary: true });
+        })
+    );
   });
 
+  Promise.all(filePromises).then(async () => {
+    const saveZip = async () => {
+      const blob = await newZip.generateAsync({ type: "blob" });
+      saveAs(blob, `${rootFolder.replace("/", "")}.zip`);
+    };
 
-  Promise.all(filePromises)
-      .then(async () => {
-        for (const po of pageObjects) {
-          // create page object files
-          const locators = selectConfirmedLocators(state, po.id);
-          if (!size(locators)) continue;
-          const page = await getPage(locators, po.name, [po.library]);
-          newZip.file(`src/main/${page.title}.java`, page.pageCode, {binary: true});
-        }
+    for (const po of pageObjects) {
+      // create page object files
+      const locators = selectConfirmedLocators(state, po.id);
+      if (!size(locators)) continue;
+      const page = await getPage(locators, po.name, [po.library]);
 
-        const blob = await newZip.generateAsync({ type: "blob" });
-        saveAs(blob, `${rootFolder.replace("/", "")}.zip`);
+      let instanceName = lowerFirst(po.name);
+
+      const createPage = newZip.file(`src/main/java/site/pages/${page.title}.java`, page.pageCode, { binary: true });
+
+      const editTestProperties = newZip
+          .file("src/test/resources/test.properties")
+          .async("string")
+          .then(function success(content) {
+            const newContent = content.replace("${domain}", `\${"${po.domain}"}`);
+            return newZip.file(`src/test/resources/test.properties`, newContent, { binary: true });
+          });
+
+      const editMySite = newZip
+          .file("src/main/java/site/MySite.java")
+          .async("string")
+          .then((content) => {
+            if (content.includes(instanceName)) instanceName = `${instanceName}1`;
+            const newContent = content.replace(
+                "// ADD SITE PAGES WITH URLS",
+                `// ADD SITE PAGES WITH URLS\n    @Url("${po.pathname}")\n    public static ${po.name} ${instanceName};`
+            );
+            return newZip.file(`src/main/java/site/MySite.java`, newContent, { binary: true });
+          });
+
+      const createTestsFile = newZip.file(
+          `src/test/java/tests/${po.name}Tests.java`,
+          testFileTemplate(instanceName, po.name)
+      );
+
+      Promise.all([createPage, editTestProperties, editMySite, createTestsFile]).then(() => {
+        saveZip();
       });
+    }
+  });
 };

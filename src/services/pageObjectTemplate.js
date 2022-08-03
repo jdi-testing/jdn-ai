@@ -38,7 +38,9 @@ export const pageObjectTemplate = (locators, title, libraries) => {
       (loc) => `    @UI("${getLocator(loc.locator)}")\n    public ${loc.type} ${loc.name};`
   );
 
-  const pageCode = `import com.epam.jdi.light.elements.pageobjects.annotations.locators.*;
+  const pageCode = `package site.pages;
+
+import com.epam.jdi.light.elements.pageobjects.annotations.locators.*;
 import com.epam.jdi.light.elements.composite.*;
 import com.epam.jdi.light.ui.html.elements.common.*;
 ${
