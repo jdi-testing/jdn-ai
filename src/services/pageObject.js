@@ -1,4 +1,4 @@
-import { entries, lowerFirst, replace, size, toLower } from "lodash";
+import { chain, entries, lowerFirst, replace, size, toLower } from "lodash";
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
 
@@ -57,8 +57,8 @@ export const createLocatorNames = (elements, library) => {
 
 export const getPageAttributes = async () => {
   return await connector.attachContentScript(() => {
-    const { title, URL, location, domain } = document;
-    return { title, url: URL, pathname: location.pathname, domain };
+    const { title, URL } = document;
+    return { title, url: URL };
   });
 };
 
@@ -115,7 +115,8 @@ export const generateAndDownloadZip = async (state, template) => {
           .file("src/test/resources/test.properties")
           .async("string")
           .then(function success(content) {
-            const newContent = content.replace("${domain}", `\${"${po.domain}"}`);
+            const testDomain = `${chain(po.url).split("/").dropRight().join("/").value()}/`;
+            const newContent = content.replace("${domain}", `"${testDomain}"`);
             return newZip.file(`src/test/resources/test.properties`, newContent, { binary: true });
           });
 
@@ -124,9 +125,10 @@ export const generateAndDownloadZip = async (state, template) => {
           .async("string")
           .then((content) => {
             if (content.includes(instanceName)) instanceName = `${instanceName}1`;
+            const testUrl = chain(po.url).split("/").last().value();
             const newContent = content.replace(
                 "// ADD SITE PAGES WITH URLS",
-                `// ADD SITE PAGES WITH URLS\n    @Url("${po.pathname}")\n    public static ${po.name} ${instanceName};`
+                `// ADD SITE PAGES WITH URLS\n    @Url("/${testUrl}")\n    public static ${po.name} ${instanceName};`
             );
             return newZip.file(`src/main/java/site/MySite.java`, newContent, { binary: true });
           });

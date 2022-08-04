@@ -8,15 +8,15 @@ import { pageObjAdapter, selectMaxId, simpleSelectPageObjects } from "../selecto
 
 export const addPageObj = createAsyncThunk("pageObject/addPageObj", async (payload, thunkAPI) => {
   const res = await getPageAttributes();
-  const {title, url, pathname, domain} = res[0].result;
+  const {title, url} = res[0].result;
   const className = getClassName(title);
-  return {className, url, pathname, domain};
+  return {className, url};
 });
 
 export const addPageObjReducer = (builder) => {
   return builder
       .addCase(addPageObj.fulfilled, (state, {payload}) => {
-        const {className, url, pathname, domain} = payload;
+        const {className, url} = payload;
 
         // create unique PO name
         let maxExistingId = selectMaxId(state);
@@ -38,8 +38,6 @@ export const addPageObjReducer = (builder) => {
               id,
               name,
               url,
-              pathname,
-              domain,
               library: defaultLibrary,
             }
         );
