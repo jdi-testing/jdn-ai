@@ -1,4 +1,5 @@
-import {TestEnvironment} from 'jest-environment-jsdom';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const {TestEnvironment} = require('jest-environment-jsdom');
 
 module.exports = {
   "testEnvironment": TestEnvironment,
