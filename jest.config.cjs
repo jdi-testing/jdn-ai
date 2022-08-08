@@ -1,5 +1,7 @@
+import {TestEnvironment} from 'jest-environment-jsdom';
+
 module.exports = {
-  "testEnvironment": "jest-environment-jsdom",
+  "testEnvironment": TestEnvironment,
   "setupFilesAfterEnv": ['./jest.setup.js'],
   "transform": {
     "^.+\\.svg$": "jest-transform-stub",
