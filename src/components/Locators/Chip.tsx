@@ -1,14 +1,21 @@
-import React from "react";
+import * as React from "react";
 
 import CloseSVG from "../../assets/close.svg";
 
-export const Chip = ({ hidden, primaryLabel, secondaryLabel, onDelete }) => {
+interface Props {
+  hidden: boolean;
+  primaryLabel: string;
+  secondaryLabel: string;
+  onDelete: React.MouseEventHandler<HTMLSpanElement>
+}
+
+export const Chip: React.FC<Props> = ({ hidden, primaryLabel, secondaryLabel, onDelete }) => {
   return (
     <div className="ant-select ant-select-multiple" style={{ display: `${hidden ? "none" : "inline-block"}` }}>
       <div className="ant-select-selection-overflow-item" style={{ opacity: 1 }}>
         <span className="ant-select-selection-item">
           <span className="ant-select-selection-item-content">
-            {primaryLabel} <span className="">{secondaryLabel}</span>
+            {primaryLabel} <span>{secondaryLabel}</span>
           </span>
           <span
             className="ant-select-selection-item-remove"

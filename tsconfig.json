@@ -1,25 +1,28 @@
 {
-    "compilerOptions": {
-      /* Visit https://aka.ms/tsconfig to read more about this file */
-  
-      /* Language and Environment */
-      "target": "es2016",                                  /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
-  
-      /* Modules */
-      "module": "commonjs",                                /* Specify what module code is generated. */
-  
-      /* JavaScript Support */
-      "allowJs": true,                                  /* Allow JavaScript files to be a part of your program. Use the 'checkJS' option to get errors from these files. */
-  
-      /* Interop Constraints */
-      "esModuleInterop": true,                             /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */
-      "forceConsistentCasingInFileNames": true,            /* Ensure that casing is correct in imports. */
-  
-      /* Type Checking */
-      "strict": true,                                      /* Enable all strict type-checking options. */
-  
-      /* Completeness */
-      "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
-    }
-  }
-  
+  "compilerOptions": {
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
+    "module": "esnext", // specify module code generation
+    "target": "es5", // specify ECMAScript target version
+    "skipLibCheck": true,
+    "moduleResolution": "node",
+
+    "allowJs": true, // allow a partial TypeScript and JavaScript codebase
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "react", // use typescript to transpile jsx to js
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "outDir": "./dist/", // path to output directory
+    "sourceMap": true, // allow sourcemap support
+    "strictFunctionTypes": true,
+    "strictNullChecks": true, // enable strict null checks as a best practice
+  },
+  "include": [
+    "./src/"
+  ]
+}

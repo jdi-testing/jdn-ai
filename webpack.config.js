@@ -1,19 +1,26 @@
-const path = require("path");
-const webpack = require("webpack");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { join, resolve as _resolve } from "path";
+import pkg from 'webpack';
+import HtmlWebpackPlugin from "html-webpack-plugin";
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const { HotModuleReplacementPlugin } = pkg;
+const { loader: _loader } = MiniCssExtractPlugin;
 
 const mainConfig = {
   devtool: "inline-cheap-module-source-map",
   mode: "development",
   entry: ["./src/components/App.jsx", "./manifest.json"],
   output: {
-    path: path.join(__dirname, "dist"),
+    path: join(__dirname, "dist"),
     filename: "[name].bundle.js",
     publicPath: "./",
   },
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
+    new HotModuleReplacementPlugin(),
     new HtmlWebpackPlugin({
       title: "JDN extension",
       template: "./src/index.html",
@@ -30,7 +37,7 @@ const mainConfig = {
     }),
   ],
   resolve: {
-    extensions: [".js", ".jsx"],
+    extensions: [".ts", ".tsx", ".js", ".jsx"],
   },
   module: {
     rules: [
@@ -47,18 +54,18 @@ const mainConfig = {
         ],
       },
       {
-        test: /\.js?x$/,
-        use: ["babel-loader"],
-        include: path.join(__dirname, "src"),
+        test: /\.(t|j)s?x$/,
+        use: ["ts-loader"],
+        include: join(__dirname, "src"),
       },
       {
         test: /\.css$/i,
-        use: [MiniCssExtractPlugin.loader, "css-loader"],
+        use: [_loader, "css-loader"],
       },
       {
         test: /\.less$/i,
         use: [
-          MiniCssExtractPlugin.loader,
+          _loader,
           "css-loader",
           {
             loader: "less-loader",
@@ -90,7 +97,7 @@ const mainConfig = {
             loader: 'style-resources-loader',
             options: {
               patterns: [
-                path.resolve(__dirname, 'src/contentScripts/css/variables.less')
+                _resolve(__dirname, 'src/contentScripts/css/variables.less')
               ],
             },
           },
@@ -128,6 +135,12 @@ const mainConfig = {
         test: /\.(woff|woff2|eot|ttf|otf)$/,
         use: ["file-loader", "url-loader"],
       },
+      {
+        test: /\.m?js/,
+        resolve: {
+          fullySpecified: false
+        }
+      },
     ],
   },
 };
@@ -136,7 +149,7 @@ const indexConfig = {
   entry: "./src/loadPanel.js",
   mode: "production",
   output: {
-    path: path.join(__dirname, "dist"),
+    path: join(__dirname, "dist"),
     filename: "loadPanel.js",
     publicPath: "./",
   },
@@ -169,7 +182,7 @@ const contentScripts = {
         test: /contentScripts.less$/i,
         use: [
           {
-            loader: MiniCssExtractPlugin.loader,
+            loader: _loader,
             options: {
               publicPath: "./",
             },
@@ -180,7 +193,7 @@ const contentScripts = {
             loader: 'style-resources-loader',
             options: {
               patterns: [
-                path.resolve(__dirname, 'src/contentScripts/css/variables.less'),
+                _resolve(__dirname, 'src/contentScripts/css/variables.less'),
               ],
             },
           },
@@ -190,4 +203,4 @@ const contentScripts = {
   },
 };
 
-module.exports = [mainConfig, indexConfig, contentScripts];
+export default [mainConfig, indexConfig, contentScripts];
