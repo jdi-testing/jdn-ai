@@ -54,7 +54,7 @@ const mainConfig = {
         ],
       },
       {
-        test: /\.(t|j)s?x$/,
+        test: /\.(js|mjs|jsx|ts|tsx)$/,
         use: ["ts-loader"],
         include: join(__dirname, "src"),
       },
