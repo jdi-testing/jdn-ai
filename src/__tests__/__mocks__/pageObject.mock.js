@@ -290,12 +290,12 @@ export const elementsWithNames = [
   {
     ...elementsWithoutNames[1],
     "name": "listsUl",
-    "type": "Lists",
+    "type": "List",
   },
   {
     ...elementsWithoutNames[2],
     "name": "listsUl2",
-    "type": "Lists",
+    "type": "List",
   },
   {
     ...elementsWithoutNames[3],
@@ -320,7 +320,7 @@ export const elementsWithNames = [
   {
     ...elementsWithoutNames[7],
     "name": "listsUl7",
-    "type": "Lists",
+    "type": "List",
   },
   {
     ...elementsWithoutNames[8],
