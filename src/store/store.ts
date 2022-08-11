@@ -1,8 +1,10 @@
 import {configureStore} from "@reduxjs/toolkit";
 import locatorsSlice from "./slices/locatorsSlice";
-import { logger } from "./loggerMiddleware";
+import { logger } from "./middlewares/logger";
 import mainSlice from "./slices/mainSlice";
 import pageObjectSlice from "./slices/pageObjectSlice";
+import { scriptNotifier } from "./middlewares/scriptNotifier";
+import { cancellableActions } from "./middlewares/cancellableActions";
 
 const rootReducer = {
   main: mainSlice,
@@ -12,7 +14,7 @@ const rootReducer = {
 
 export const store = configureStore({
   reducer: rootReducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat([logger, scriptNotifier, cancellableActions]),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

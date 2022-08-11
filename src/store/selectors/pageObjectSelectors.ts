@@ -31,7 +31,8 @@ export const selectMaxId = createSelector(simpleSelectPageObjects, (items) => {
 export const selectLocatorsByPageObject = createSelector(selectLocators, selectPageObjById, (elements, pageObj) => {
   if (!pageObj) return;
   const { locators: locatorIds } = pageObj;
-  return locatorIds ? locatorIds.map((id) => elements.find(({ element_id }) => element_id === id)) : [];
+  if (!locatorIds || !size(locatorIds)) return;
+  return locatorIds.map((id) => elements.find(({ element_id }) => element_id === id));
 });
 
 export const selectPageObjLocatorsByProbability = createSelector(

@@ -6,7 +6,7 @@
       "esnext"
     ],
     "module": "esnext", // specify module code generation
-    "target": "es5", // specify ECMAScript target version
+    "target": "es6", // specify ECMAScript target version
     "skipLibCheck": true,
     "moduleResolution": "node",
 

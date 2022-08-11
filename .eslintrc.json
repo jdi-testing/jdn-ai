@@ -19,6 +19,7 @@
   },
   "plugins": ["react"],
   "rules": {
+    "ban-ts-comment": 0,
     "quotes": 0,
     "require-jsdoc": 0,
     "camelcase": 0,
