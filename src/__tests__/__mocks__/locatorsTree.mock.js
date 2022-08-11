@@ -69,7 +69,7 @@ export const locatorsTreeMock = [
               fullXpath: "/html/body/footer/div/div/ul",
               taskStatus: "STARTED"
             },
-            name: "listsUl",
+            name: "listUl",
             predictedAttrId: "",
             predicted_label: "list",
             predicted_probability: 0.82,

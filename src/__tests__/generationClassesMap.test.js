@@ -12,7 +12,7 @@ const options = [
   { label: "dialog", jdi: "Dialog" },
   { label: "drawer", jdi: "Drawer" },
   { label: "link", jdi: "Link" },
-  { label: "list", jdi: "Lists" },
+  { label: "list", jdi: "List" },
   { label: "menu", jdi: "Menu" },
   { label: "progress", jdi: "ProgressBar" },
   { label: "radiogroup", jdi: "RadioButtons" },

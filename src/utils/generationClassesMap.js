@@ -41,7 +41,7 @@ const MUIclasses = {
   dialog: "Dialog",
   drawer: "Drawer",
   link: "Link",
-  list: "Lists",
+  list: "List",
   menu: "Menu",
   progress: "ProgressBar",
   // radio: "RadioButtons",
