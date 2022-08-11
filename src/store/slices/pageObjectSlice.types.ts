@@ -8,7 +8,7 @@ export enum ElementLibrary {
 }
 
 export interface PageObjectState {
-    currentPageObject: PageObjectId | null,
+    currentPageObject?: PageObjectId,
 }
 
 export interface PageObject {

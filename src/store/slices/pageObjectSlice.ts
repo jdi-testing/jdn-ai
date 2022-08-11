@@ -3,9 +3,7 @@ import { pageObjAdapter, simpleSelectPageObjById } from "../selectors/pageObject
 import { addPageObjReducer } from "../thunks/addPageObject";
 import { ElementLibrary, PageObject, PageObjectId, PageObjectState } from "./pageObjectSlice.types";
 
-const initialState: PageObjectState = {
-  currentPageObject: null,
-};
+const initialState: PageObjectState = {};
 
 const pageObjSlice = createSlice({
   name: "pageObject",

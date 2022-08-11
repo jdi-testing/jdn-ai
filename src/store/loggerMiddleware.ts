@@ -1,4 +1,4 @@
-import { last, size } from "lodash";
+import { compact, last, size } from "lodash";
 
 import { pushNotification } from "./slices/mainSlice";
 import { selectLocatorById } from "./selectors/locatorSelectors";
@@ -7,11 +7,15 @@ import { pageType } from "../utils/constants";
 import { selectCurrentPage } from "./selectors/mainSelectors";
 import { isErrorValidationType } from "../utils/helpers";
 import { selectLocatorsByPageObject } from "./selectors/pageObjectSelectors";
+import { RootState } from "./store";
+import { Middleware, MiddlewareAPI } from "@reduxjs/toolkit";
+import { ElementId, Locator } from "./slices/locatorSlice.types";
 
-const notify = (state, action, prevState, store) => {
-  const pushNotificationHandler = (prevValue) => {
-    const prevNotification = last(prevState.main.notifications) || {};
+const notify = (state: RootState, action: any, prevState: RootState, store: MiddlewareAPI) => {
+  const pushNotificationHandler = (prevValue: any) => {
+    const prevNotification = last(prevState.main.notifications);
 
+    if (!prevNotification) return;
     const { isCanceled, isHandled } = prevNotification;
     if (isCanceled && !isHandled) return;
 
@@ -20,13 +24,16 @@ const notify = (state, action, prevState, store) => {
 
   const { type, payload, meta } = action;
   switch (type) {
-    case "pageObject/addLocatorsToPageObj":
-      const locators = selectLocatorsByPageObject(state, state.pageObject.currentPageObject);
+    case "pageObject/addLocatorsToPageObj": {
+      const locators = state.pageObject.currentPageObject &&
+        selectLocatorsByPageObject(state, state.pageObject.currentPageObject);
       sendMessage.setHighlight({ elements: locators, perception: state.main.perception });
       break;
-    case "locators/changeLocatorAttributes":
-      const {element_id, validity, type, name} = payload;
+    }
+    case "locators/changeLocatorAttributes": {
+      const { element_id, validity, type, name } = payload;
       const prevValue = selectLocatorById(prevState, element_id);
+      if (!prevValue) return;
       pushNotificationHandler(prevValue);
       if (prevValue.type !== type || prevValue.name !== name) {
         sendMessage.changeElementName(selectLocatorById(state, element_id));
@@ -39,6 +46,7 @@ const notify = (state, action, prevState, store) => {
         sendMessage.removeElement(prevValue);
       }
       break;
+    }
     case "main/changePage":
       if (selectCurrentPage(state).page === pageType.pageObject) sendMessage.killHighlight();
       break;
@@ -55,34 +63,38 @@ const notify = (state, action, prevState, store) => {
       pushNotificationHandler(meta.arg);
       sendMessage.changeStatus(selectLocatorById(state, meta.arg));
       break;
-    case "locators/stopGenerationGroup/fulfilled":
-      const _arr = _.compact(payload);
+    case "locators/stopGenerationGroup/fulfilled": {
+      const _arr: Locator[] = compact(payload);
       pushNotificationHandler(_arr);
       _arr.forEach((element) => {
         const { element_id } = element;
         sendMessage.changeStatus(selectLocatorById(state, element_id));
       });
+      break;
+    }
     case "locators/toggleElementGeneration":
       sendMessage.toggle({ element: selectLocatorById(state, payload) });
       break;
     case "locators/toggleElementGroupGeneration":
-      payload.forEach((element) => {
+      payload.forEach((element: Locator) => {
         sendMessage.toggle({ element: selectLocatorById(state, element.element_id), skipScroll: true });
       });
       break;
-    case "locators/setChildrenGeneration":
+    case "locators/setChildrenGeneration": {
       const { locator } = payload;
-      const iterateChildren = (_locator) => {
-        _locator.children.forEach((childId) => {
-          const child = selectLocatorById(state, childId);
-          sendMessage.toggle({ element: child, skipScroll: true });
-          if (size(child.children)) iterateChildren(child);
-        });
+      const iterateChildren = (_locator: Locator | undefined) => {
+        _locator?.children &&
+          _locator.children.forEach((childId) => {
+            const child = selectLocatorById(state, childId);
+            sendMessage.toggle({ element: child, skipScroll: true });
+            if (size(child?.children)) iterateChildren(child);
+          });
       };
       iterateChildren(locator);
       break;
+    }
     case "locators/setElementGroupGeneration":
-      payload.ids.forEach((id) => {
+      payload.ids.forEach((id: ElementId) => {
         sendMessage.toggle({ element: selectLocatorById(state, id), skipScroll: true });
       });
       break;
@@ -91,7 +103,7 @@ const notify = (state, action, prevState, store) => {
       pushNotificationHandler(selectLocatorById(prevState, payload));
       break;
     case "locators/toggleDeletedGroup":
-      payload.forEach((element) => {
+      payload.forEach((element: Locator) => {
         sendMessage.toggleDeleted(selectLocatorById(state, element.element_id));
       });
       pushNotificationHandler(payload);
@@ -102,7 +114,7 @@ const notify = (state, action, prevState, store) => {
   }
 };
 
-export const logger = (store) => (next) => (action) => {
+export const logger: Middleware = (store) => (next) => (action) => {
   const prevState = store.getState();
   console.group(action.type);
   console.info("dispatching", action);

@@ -29,25 +29,26 @@ export const selectMaxId = createSelector(simpleSelectPageObjects, (items) => {
 });
 
 export const selectLocatorsByPageObject = createSelector(selectLocators, selectPageObjById, (elements, pageObj) => {
+  if (!pageObj) return;
   const { locators: locatorIds } = pageObj;
   return locatorIds ? locatorIds.map((id) => elements.find(({ element_id }) => element_id === id)) : [];
 });
 
 export const selectPageObjLocatorsByProbability = createSelector(
   selectLocatorsByProbability,
-  (state, pageObjId) => selectPageObjById(state, pageObjId).locators || [],
+  (state: RootState, pageObjId: PageObjectId) => selectPageObjById(state, pageObjId)?.locators || [],
   (locByProbability, locByPageObj) => locByProbability.filter((loc) => locByPageObj.includes(loc.element_id))
 );
 
-export const selectLocatorsToConfirm = createSelector(selectLocatorsByPageObject, (elements) =>
-  elements.filter((elem) => elem.generate && !elem.deleted)
+export const selectLocatorsToConfirm = createSelector(selectLocatorsByPageObject, (elements = []) =>
+  elements.filter((elem) => elem?.generate && !elem.deleted)
 );
 
 export const selectConfirmedLocators = selectLocatorsToConfirm;
 
 export const selectGeneratedByPageObj = createSelector(
   selectGeneratedLocators,
-  (state, pageObjId) => selectPageObjById(state, pageObjId).locators || [],
+  (state: RootState, pageObjId: PageObjectId) => selectPageObjById(state, pageObjId)?.locators || [],
   (locators, locByPageObj) =>
     chain(locators)
       .filter((loc) => locByPageObj.includes(loc.element_id))
@@ -60,7 +61,7 @@ export const selectGeneratedSelectedByPageObj = createSelector(selectGeneratedBy
 
 export const selectDeletedByPageObj = createSelector(selectPageObjLocatorsByProbability, (items) =>
   chain(items)
-    .filter((el) => el.deleted)
+    .filter((el) => el.deleted || false)
     .value()
 );
 
@@ -93,10 +94,10 @@ export const selectWaitingSelectedByPageObj = createSelector(selectWaitingByPage
 export const selectLocatorByJdnHash = createSelector(
   (state: RootState, jdnHash: string) => selectLocators(state).filter((loc) => loc.jdnHash === jdnHash),
   (state: RootState) => {
-    const pageObject = selectPageObjById(state, state.pageObject.currentPageObject);
+    const pageObject = state.pageObject.currentPageObject && selectPageObjById(state, state.pageObject.currentPageObject);
     return pageObject ? pageObject.locators : [];
   },
-  (locators, pageObjLocators) => locators.find(({ element_id }) => pageObjLocators.includes(element_id))
+  (locators, pageObjLocators) => locators.find(({ element_id }) => pageObjLocators?.includes(element_id))
 );
 
 export const selectEmptyPageObjects = createSelector(

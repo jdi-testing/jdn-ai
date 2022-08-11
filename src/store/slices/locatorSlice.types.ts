@@ -56,6 +56,7 @@ export interface Locator extends PredictedEntity {
     isCustomLocator?: boolean,
     priority?: LocatorCalculationPriority,
     type: string,
+    validity?: { locator: string },
 }
 
 export interface PredictedEntity {
