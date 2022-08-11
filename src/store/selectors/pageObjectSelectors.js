@@ -84,6 +84,10 @@ export const selectInProgressByPageObj = createSelector(selectPageObjLocatorsByP
       .value()
 );
 
+export const selectInProgressSelectedByPageObject = createSelector(selectInProgressByPageObj, (items) =>
+  items.filter((item) => item.generate)
+);
+
 export const selectWaitingSelectedByPageObj = createSelector(selectWaitingByPageObj, (items) =>
   items.filter((item) => item.generate)
 );
