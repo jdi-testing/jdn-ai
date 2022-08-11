@@ -109,9 +109,9 @@ export const generateAndDownloadZip = async (state, template) => {
 
       let instanceName = lowerFirst(po.name);
 
-      const createPage = newZip.file(`src/main/java/site/pages/${page.title}.java`, page.pageCode, { binary: true });
+      await newZip.file(`src/main/java/site/pages/${page.title}.java`, page.pageCode, { binary: true });
 
-      const editTestProperties = newZip
+      await newZip
           .file("src/test/resources/test.properties")
           .async("string")
           .then(function success(content) {
@@ -120,7 +120,7 @@ export const generateAndDownloadZip = async (state, template) => {
             return newZip.file(`src/test/resources/test.properties`, newContent, { binary: true });
           });
 
-      const editMySite = newZip
+      await newZip
           .file("src/main/java/site/MySite.java")
           .async("string")
           .then((content) => {
@@ -133,14 +133,12 @@ export const generateAndDownloadZip = async (state, template) => {
             return newZip.file(`src/main/java/site/MySite.java`, newContent, { binary: true });
           });
 
-      const createTestsFile = newZip.file(
+      await newZip.file(
           `src/test/java/tests/${po.name}Tests.java`,
           testFileTemplate(instanceName, po.name)
       );
-
-      Promise.all([createPage, editTestProperties, editMySite, createTestsFile]).then(() => {
-        saveZip();
-      });
     }
+
+    saveZip();
   });
 };
