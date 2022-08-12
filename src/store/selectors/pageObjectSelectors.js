@@ -92,6 +92,10 @@ export const selectWaitingSelectedByPageObj = createSelector(selectWaitingByPage
   items.filter((item) => item.generate)
 );
 
+export const selectFailedByPageObject = createSelector(selectPageObjLocatorsByProbability, (elements) =>
+  elements.filter((element) => element.locator.taskStatus === locatorTaskStatus.FAILURE)
+);
+
 export const selectLocatorByJdnHash = createSelector(
     (state, jdnHash) => selectLocators(state).filter((loc) => loc.jdnHash === jdnHash),
     (state) => selectPageObjById(state, state.pageObject.currentPageObject).locators,
