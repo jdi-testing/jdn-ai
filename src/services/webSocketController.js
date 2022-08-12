@@ -23,10 +23,18 @@ class WebSocketController {
 
   sendSocket(json) {
     if (isNull(this.readyState) || this.readyState === 2 || this.readyState === 3) {
-      this.init().then(() => {
-        this.socket.send(json);
+      return this.init().then(() => {
+        return this.socket.send(json);
       });
-    } else this.socket.send(json);
+    } else {
+      const send = () => {
+        if (this.readyState === 0) {
+          setTimeout(() => send(), 10);
+        } else return new Promise((resolve) => resolve(this.socket.send(json)));
+      };
+
+      return send();
+    }
   }
 
   openWebSocket() {
