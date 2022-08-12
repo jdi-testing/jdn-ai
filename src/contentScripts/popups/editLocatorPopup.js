@@ -86,6 +86,7 @@ export const editLocatorPopup = () => {
     const onFormSubmit = ({ target }) => {
       const { type: typeInput, name: nameInput, locator: locatorInput } = target;
 
+      debugger;
       // if we do have any changes
       if (name !== nameInput.value || type !== typeInput.value || getLocatorValue(locator) !== locatorInput.value) {
         sendMessage({
@@ -239,7 +240,7 @@ export const editLocatorPopup = () => {
     selectType.setAttribute("name", "type");
     labelType.appendChild(selectType);
 
-    const isJdiType = types.find((_type) => _type.label === type);
+    const isJdiType = types.find((_type) => _type.jdi === type);
     if (!isJdiType) {
       const option = document.createElement("option");
       option.setAttribute("selected", true);
@@ -248,11 +249,12 @@ export const editLocatorPopup = () => {
       selectType.appendChild(option);
     }
 
+    console.log(types);
     types.forEach(({ label, jdi }) => {
       const option = document.createElement("option");
       option.setAttribute("value", label);
       option.innerHTML = jdi;
-      if (isJdiType && label === type) option.setAttribute("selected", true);
+      if (isJdiType && jdi === type) option.setAttribute("selected", true);
       selectType.appendChild(option);
     });
 
