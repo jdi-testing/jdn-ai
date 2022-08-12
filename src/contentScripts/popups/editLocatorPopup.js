@@ -86,7 +86,6 @@ export const editLocatorPopup = () => {
     const onFormSubmit = ({ target }) => {
       const { type: typeInput, name: nameInput, locator: locatorInput } = target;
 
-      debugger;
       // if we do have any changes
       if (name !== nameInput.value || type !== typeInput.value || getLocatorValue(locator) !== locatorInput.value) {
         sendMessage({
@@ -249,7 +248,6 @@ export const editLocatorPopup = () => {
       selectType.appendChild(option);
     }
 
-    console.log(types);
     types.forEach(({ label, jdi }) => {
       const option = document.createElement("option");
       option.setAttribute("value", label);
