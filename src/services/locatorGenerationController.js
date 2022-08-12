@@ -103,7 +103,7 @@ class LocatorGenerationController {
             config: this.queueSettings,
           },
         })
-    ).catch((err) => {
+    ).catch(() => {
       this.noResponseHandler();
     });
 
