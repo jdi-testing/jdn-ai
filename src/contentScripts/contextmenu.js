@@ -465,7 +465,7 @@ export const runContextMenu = () => {
 
   const runDocumentListeners = () => {
     document.oncontextmenu = contextMenuListener;
-    // document.addEventListener("mouseleave", mouseLeaveListener);
+    document.addEventListener("mouseleave", mouseLeaveListener);
   };
 
   const messageHandler = ({ message, param }, sender, sendResponse) => {
