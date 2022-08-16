@@ -116,7 +116,7 @@ export const generateAndDownloadZip = async (state, template) => {
           .async("string")
           .then(function success(content) {
             const testDomain = `${chain(po.url).split("/").dropRight().join("/").value()}/`;
-            const newContent = content.replace("${domain}", `"${testDomain}"`);
+            const newContent = content.replace("${domain}", `${testDomain}`);
             return newZip.file(`src/test/resources/test.properties`, newContent, { binary: true });
           });
 
@@ -128,7 +128,8 @@ export const generateAndDownloadZip = async (state, template) => {
             const testUrl = chain(po.url).split("/").last().value();
             const newContent = content.replace(
                 "// ADD SITE PAGES WITH URLS",
-                `// ADD SITE PAGES WITH URLS\n    @Url("/${testUrl}")\n    public static ${po.name} ${instanceName};`
+                `// ADD SITE PAGES WITH URLS\n    @Url("/${testUrl}")\n    public static ${po.name} ${instanceName};
+                `
             );
             return newZip.file(`src/main/java/site/MySite.java`, newContent, { binary: true });
           });
