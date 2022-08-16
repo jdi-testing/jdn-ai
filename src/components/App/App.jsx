@@ -9,22 +9,22 @@ import ReactDOM from "react-dom";
 import "antd/dist/antd.less";
 import "antd/lib/style/themes/default.less";
 
-import { store } from "../store/store";
+import { store } from "../../store/store";
 import Layout, { Content, Header } from "antd/lib/layout/layout";
-import { changePage } from "../store/slices/mainSlice";
+import { changePage } from "../../store/slices/mainSlice";
 import { ControlBar } from "./ControlBar";
 import { SeveralTabsWarning } from "./SeveralTabsWarning";
 import { Backdrop } from "./Backdrop/Backdrop";
-import { LocatorsPage } from "./Locators/LocatorsPage";
+import { LocatorsPage } from "../Locators/LocatorsPage";
 import {
   BACKEND_STATUS,
   identificationStatus,
   pageType,
   readmeLinkAddress,
-} from "../utils/constants";
-import { selectCurrentPage } from "../store/selectors/mainSelectors";
-import { PageObjectPage } from "./PageObjects/PageObjectPage";
-import { DOWNLOAD_TEMPLATE, request } from "../services/backend";
+} from "../../utils/constants";
+import { selectCurrentPage } from "../../store/selectors/mainSelectors";
+import { PageObjectPage } from "../PageObjects/PageObjectPage";
+import { DOWNLOAD_TEMPLATE, request } from "../../services/backend";
 import Title from "antd/lib/typography/Title";
 import { useOnTabUpdate } from "./useOnTabUpdate";
 import { checkSession } from "./appUtils";

@@ -1,5 +1,5 @@
-import { connector, sendMessage } from "../services/connector";
-import { SCRIPT_ERROR } from "../utils/constants";
+import { connector, sendMessage } from "../../services/connector";
+import { SCRIPT_ERROR } from "../../utils/constants";
 
 export const checkSession = async (setStateCallback: (val: boolean) => void) => {
     setStateCallback(false);

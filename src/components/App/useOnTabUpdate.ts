@@ -1,10 +1,10 @@
 import { useEffect } from "react";
-import { connector } from "../services/connector";
+import { connector } from "../../services/connector";
 import { useDispatch } from "react-redux";
-import { clearAll } from "../store/slices/mainSlice";
-import { locatorGenerationController } from "../services/locatorGenerationController";
-import { removeEmptyPageObjects } from "../store/thunks/removeEmptyPageObjects";
-import { removeOverlay } from "../services/pageDataHandlers";
+import { clearAll } from "../../store/slices/mainSlice";
+import { locatorGenerationController } from "../../services/locatorGenerationController";
+import { removeEmptyPageObjects } from "../../store/thunks/removeEmptyPageObjects";
+import { removeOverlay } from "../../services/pageDataHandlers";
 
 export const useOnTabUpdate = () => {
 
