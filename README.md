@@ -12,14 +12,14 @@ Current version of JDN plugin is client-server application with two independent 
 ### **Setup server part**
 * Setup Docker https://www.docker.com/products/docker-desktop
 * Download the latest Docker Compose file from the `develop` branch and run `docker compose`:
-#### Stable version
+#### RC-1 version
 **macOS/Linux**
 ```shell
-curl --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/master/docker-compose-stable.yaml && docker compose up
+curl --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/rc-1/docker-compose-rc-1.yaml && docker compose up
 ```
 **Windows**
 ```shell
-curl.exe --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/master/docker-compose-stable.yaml && docker compose up
+curl.exe --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/rc-1/docker-compose-rc-1.yaml && docker compose up
 ```
 
 #### Development version
