@@ -3,7 +3,7 @@ import { last, size } from "lodash";
 import { pushNotification } from "./slices/mainSlice";
 import { selectLocatorById } from "./selectors/locatorSelectors";
 import { sendMessage } from "../services/connector";
-import { pageType } from "../utils/constants";
+import { locatorTaskStatus, pageType } from "../utils/constants";
 import { selectCurrentPage } from "./selectors/mainSelectors";
 import { isErrorValidationType } from "../utils/helpers";
 import { selectLocatorsByPageObject } from "./selectors/pageObjectSelectors";
@@ -98,6 +98,14 @@ const notify = (state, action, prevState, store) => {
       break;
     case "locators/updateLocator":
       sendMessage.changeStatus(payload);
+      break;
+    case "locators/failGeneration":
+      const _payload = payload.map((element_id) => {
+        const jdnHash = selectLocatorById(state, element_id).jdnHash;
+        return {element_id, jdnHash, locator: {taskStatus: locatorTaskStatus.FAILURE}};
+      });
+      _payload.forEach((element) => sendMessage.changeStatus(element));
+      sendMessage.changeStatus(_payload);
       break;
   }
 };
