@@ -2,7 +2,7 @@
 Current version of JDN plugin is client-server application with two independent parts and both parts should be installed separately.
 
 ### **Setup plugin to Chrome**
-* Download the version 3.1.106 of the plugin: https://github.com/jdi-testing/jdn-ai/releases/download/3.1.106/3.1.106.zip
+* Download the version 3.2.230 of the plugin: https://github.com/jdi-testing/jdn-ai/releases/download/3.2.230/3.2.230.zip
   * For developers only: Download the last version of the plugin: https://github.com/jdi-testing/jdn-ai/releases (you need an archive named like the JDN version) as archive (.zip file)
 * Unpack the content to any convenient place (the result folder name is 'dist')
 * Open Chrome Settings -> choose option 'More tools' -> choose option Extensions ->Turn on the Developer mode -> Click 'Load unpacked'
@@ -12,7 +12,7 @@ Current version of JDN plugin is client-server application with two independent 
 ### **Setup server part**
 * Setup Docker https://www.docker.com/products/docker-desktop
 * Download the latest Docker Compose file from the `develop` branch and run `docker compose`:
-#### RC-1 version
+### *Release Candidate-1 version*
 **macOS/Linux**
 ```shell
 curl --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/rc-1/docker-compose-rc-1.yaml && docker compose up
@@ -22,7 +22,7 @@ curl --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-te
 curl.exe --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/rc-1/docker-compose-rc-1.yaml && docker compose up
 ```
 
-#### Development version
+### *Development version*
 **macOS/Linux**
 ```shell
 curl --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/develop/docker-compose.yaml && docker compose up
