@@ -3,13 +3,13 @@ import { useDispatch, useSelector } from "react-redux";
 import Icon from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
 
-import { BUILD, request } from "../services/backend";
-import { reportProblem } from "../services/pageDataHandlers";
+import { BUILD, request } from "../../services/backend";
+import { reportProblem } from "../../services/pageDataHandlers";
 
-import kebab_menu from "../assets/Kebab_menu.svg";
-import { BACKEND_STATUS, pageType, readmeLinkAddress } from "../utils/constants";
-import { selectCurrentPage } from "../store/selectors/mainSelectors";
-import { setBackendAvailable } from "../store/slices/mainSlice";
+import kebab_menu from "../../assets/Kebab_menu.svg";
+import { BACKEND_STATUS, pageType, readmeLinkAddress } from "../../utils/constants";
+import { selectCurrentPage } from "../../store/selectors/mainSelectors";
+import { setBackendAvailable } from "../../store/slices/mainSlice";
 
 export const ControlBar = () => {
   const [backendVer, setBackendVer] = useState(null);

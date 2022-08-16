@@ -29,7 +29,7 @@ import Title from "antd/lib/typography/Title";
 import { useOnTabUpdate } from "./useOnTabUpdate";
 import { checkSession } from "./appUtils";
 
-import "../css/index.less";
+import "../../css/index.less";
 
 const ACCESS_MESSAGE = "Trying to access server...";
 
