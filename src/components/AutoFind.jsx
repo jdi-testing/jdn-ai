@@ -10,13 +10,19 @@ import { SeveralTabsWarning } from "./SeveralTabsWarning";
 import { locatorGenerationController } from "../services/locatorGenerationController";
 import { removeOverlay } from "../services/pageDataHandlers";
 import { LocatorsPage } from "./Locators/LocatorsPage";
-import { BACKEND_STATUS, identificationStatus, pageType, readmeLinkAddress, SCRIPT_ERROR } from "../utils/constants";
+import {
+  BACKEND_STATUS,
+  identificationStatus,
+  pageType,
+  readmeLinkAddress,
+  SCRIPT_ERROR,
+} from "../utils/constants";
 
 import { selectCurrentPage } from "../store/selectors/mainSelectors";
 import { PageObjectPage } from "./PageObjects/PageObjectPage";
-import { removeEmptyPageObjects } from "../store/thunks/removeEmptyPageObjects";
 import { DOWNLOAD_TEMPLATE, request } from "../services/backend";
 import Title from "antd/lib/typography/Title";
+import { useOnTabUpdate } from "./useOnTabUpdate";
 
 const ACCESS_MESSAGE = "Trying to access server...";
 
@@ -26,53 +32,46 @@ const AutoFind = () => {
   const status = useSelector((state) => state.locators.status);
   const backendAvailable = useSelector((state) => state.main.backendAvailable);
   const currentPage = useSelector(selectCurrentPage);
-  const currentPageObject = useSelector((state) => state.pageObject.currentPageObject);
+  const currentPageObject = useSelector(
+    (state) => state.pageObject.currentPageObject
+  );
   const dispatch = useDispatch();
 
-  createListeners(
-      // in a beautiful future, move it to connector
-      dispatch,
-      useSelector((state) => state)
-  );
+  useOnTabUpdate();
 
-  // add document listeners
   useEffect(() => {
-    connector.attachStaticScripts().then(() => {
-      checkSession();
-    });
-    connector.onTabUpdate(() => {
-      dispatch(clearAll());
-      locatorGenerationController.revokeAll();
-      dispatch(removeEmptyPageObjects());
-      removeOverlay();
-      connector.attachStaticScripts();
-    });
-
+    checkSession();
     fetchTemplate();
   }, []);
 
   useEffect(() => {
     if (status === identificationStatus.success) {
-      dispatch(changePage({ page: pageType.locatorsList, pageObj: currentPageObject }));
+      dispatch(
+        changePage({ page: pageType.locatorsList, pageObj: currentPageObject })
+      );
     }
   }, [status]);
-
-  const checkSession = () => {
-    setIsInvalidSession(false);
-    sendMessage.checkSession(null).then((payloads) => {
-      payloads.forEach((payload) => {
-        if (payload && payload.message !== SCRIPT_ERROR.NO_CONNECTION && payload.tabId !== connector.tabId) {
-          setIsInvalidSession(true);
-        }
-      });
-    });
-  };
 
   const fetchTemplate = async () => {
     try {
       const result = await request.getBlob(DOWNLOAD_TEMPLATE);
       setTemplate(result);
     } catch (error) {}
+  };
+
+  const checkSession = () => {
+    setIsInvalidSession(false);
+    sendMessage.checkSession(null).then((payloads) => {
+      payloads.forEach((payload) => {
+        if (
+          payload &&
+          payload.message !== SCRIPT_ERROR.NO_CONNECTION &&
+          payload.tabId !== connector.tabId
+        ) {
+          setIsInvalidSession(true);
+        }
+      });
+    });
   };
 
   const renderPage = () => {
@@ -90,7 +89,8 @@ const AutoFind = () => {
     } else {
       return (
         <span>
-          Server doesn&apos;t respond. Please, check network settings or set up a local server (see{" "}
+          Server doesn&apos;t respond. Please, check network settings or set up
+          a local server (see{" "}
           <a href={readmeLinkAddress} target="_blank" rel="noreferrer">
             Readme
           </a>{" "}

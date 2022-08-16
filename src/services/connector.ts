@@ -155,7 +155,7 @@ export const sendMessage = {
   changeElementName: (el: Locator) => connector.sendMessage("CHANGE_ELEMENT_NAME", el),
   changeElementType: (el: Locator) => connector.sendMessage("CHANGE_ELEMENT_TYPE", el),
   changeStatus: (el: Locator) => connector.sendMessage("CHANGE_STATUS", el),
-  checkSession: (payload: null, onResponse: () => void) => connector.sendMessageToAllTabs("CHECK_SESSION", payload, onResponse),
+  checkSession: (payload: null, onResponse?: () => void) => connector.sendMessageToAllTabs("CHECK_SESSION", payload, onResponse),
   defineTabId: (payload: number) => connector.sendMessage("DEFINE_TAB_ID", payload),
   setClosedSession: (payload: { tabId: number, isClosed: boolean }) => connector.sendMessage("SET_CLOSED_SESSION", payload),
   setHighlight: (payload: { elements?: Locator[], perception?: number }) => connector.sendMessage("SET_HIGHLIGHT", payload),

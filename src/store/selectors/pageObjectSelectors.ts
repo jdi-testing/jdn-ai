@@ -1,5 +1,5 @@
 import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
-import { chain, size } from "lodash";
+import { chain, isNil, size } from "lodash";
 import { isProgressStatus } from "../../services/locatorGenerationController";
 import { locatorTaskStatus } from "../../utils/constants";
 import { PageObject, PageObjectId } from "../slices/pageObjectSlice.types";
@@ -95,10 +95,13 @@ export const selectWaitingSelectedByPageObj = createSelector(selectWaitingByPage
 export const selectLocatorByJdnHash = createSelector(
   (state: RootState, jdnHash: string) => selectLocators(state).filter((loc) => loc.jdnHash === jdnHash),
   (state: RootState) => {
-    const pageObject = state.pageObject.currentPageObject && selectPageObjById(state, state.pageObject.currentPageObject);
+    if (isNil(state.pageObject.currentPageObject)) return [];
+    const pageObject = selectPageObjById(state, state.pageObject.currentPageObject);
     return pageObject ? pageObject.locators : [];
   },
-  (locators, pageObjLocators) => locators.find(({ element_id }) => pageObjLocators?.includes(element_id))
+  (locators, pageObjLocators) => {
+    return locators.find(({ element_id }) => pageObjLocators?.includes(element_id))
+  }
 );
 
 export const selectEmptyPageObjects = createSelector(
