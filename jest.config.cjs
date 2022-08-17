@@ -2,6 +2,9 @@
 const {TestEnvironment} = require('jest-environment-jsdom');
 
 module.exports = {
+  "globals": {
+    "__REDUX_LOG_ENABLE__": false,
+  },
   "testEnvironment": TestEnvironment,
   "setupFilesAfterEnv": ['./jest.setup.js'],
   "transform": {
