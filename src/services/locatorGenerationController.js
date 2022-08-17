@@ -111,7 +111,7 @@ class LocatorGenerationController {
       if (!this.pingTimeout) {
         this.pingSocket();
       }
-    }, 2000);
+    }, 15000);
   }
 
   pingSocket() {
@@ -121,7 +121,7 @@ class LocatorGenerationController {
           payload: Date.now(),
         })
     );
-    this.pingTimeout = setTimeout(() => this.noResponseHandler(), 5000);
+    this.pingTimeout = setTimeout(() => this.noResponseHandler(), 15000);
   }
 
   noResponseHandler() {
