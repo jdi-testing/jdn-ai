@@ -90,6 +90,11 @@ export const LocatorMenu = ({ element, library }) => {
               Rerun
             </Menu.Item>
           ) : null}
+          {locator.taskStatus === locatorTaskStatus.FAILURE ? (
+            <Menu.Item key="6" icon={<RestoreSvg />} onClick={() => dispatch(rerunGeneration([element]))}>
+              Retry
+            </Menu.Item>
+          ) : null}
           <Menu.Item key="3" icon={<TrashBinSvg />} onClick={() => dispatch(toggleDeleted(element_id))}>
             <Typography.Text type="danger">Delete</Typography.Text>
           </Menu.Item>

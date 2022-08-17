@@ -125,14 +125,14 @@ export const Notifications = () => {
       );
       notification.open({
         message: notificationMessage,
-        duration: 100,
+        duration: 10,
         getContainer: () => document.body.querySelector(".jdn__notification"),
         btn,
       });
     } else {
       notification.open({
         message: notificationMessage,
-        duration: 100,
+        duration: 10,
         getContainer: () => document.body.querySelector(".jdn__notification"),
       });
     }
