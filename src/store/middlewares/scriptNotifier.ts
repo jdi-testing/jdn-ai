@@ -6,7 +6,7 @@ import { isErrorValidationType } from "../../utils/helpers";
 import { selectLocatorById } from "../selectors/locatorSelectors";
 import { selectCurrentPage } from "../selectors/mainSelectors";
 import { selectLocatorsByPageObject } from "../selectors/pageObjectSelectors";
-import { ElementId, Locator } from "../slices/locatorSlice.types";
+import { ElementId, Locator, LocatorTaskStatus } from "../slices/locatorSlice.types";
 import { RootState } from "../store";
 
 const notify = (state: RootState, action: any, prevState: RootState) => {
@@ -103,6 +103,15 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
         case "locators/updateLocator":
             sendMessage.changeStatus(payload);
             break;
+        case "locators/failGeneration": {
+            const _payload = payload.map((element_id: string) => {
+                const jdnHash = selectLocatorById(state, element_id)?.jdnHash;
+                return { element_id, jdnHash, locator: { taskStatus: LocatorTaskStatus.FAILURE } };
+            });
+            _payload.forEach((element: Locator) => sendMessage.changeStatus(element));
+            sendMessage.changeStatus(_payload);
+            break;
+        }
     }
 };
 

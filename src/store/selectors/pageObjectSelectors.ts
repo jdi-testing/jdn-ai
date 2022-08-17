@@ -88,8 +88,16 @@ export const selectInProgressByPageObj = createSelector(selectPageObjLocatorsByP
     .value()
 );
 
+export const selectInProgressSelectedByPageObject = createSelector(selectInProgressByPageObj, (items) =>
+  items.filter((item) => item.generate)
+);
+
 export const selectWaitingSelectedByPageObj = createSelector(selectWaitingByPageObj, (items) =>
   items.filter((item) => item.generate)
+);
+
+export const selectFailedByPageObject = createSelector(selectPageObjLocatorsByProbability, (elements) =>
+  elements.filter((element) => element.locator.taskStatus === locatorTaskStatus.FAILURE)
 );
 
 export const selectLocatorByJdnHash = createSelector(

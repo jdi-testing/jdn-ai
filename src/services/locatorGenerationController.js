@@ -16,7 +16,7 @@ export const runGenerationHandler = async (elements, settings, onStatusChange, o
   locatorGenerationController.scheduleTaskGroup(
       elements,
       settings,
-      (element_id, locator) => onStatusChange({ element_id, locator }),
+      (element_id, locator, jdnHash) => onStatusChange({ element_id, locator, jdnHash }),
       onGenerationFailed,
   );
 };
@@ -59,7 +59,8 @@ class LocatorGenerationController {
           this.onStatusChange(this.scheduledTasks.get(payload.id), {
             robulaXpath: payload.result,
             taskStatus: locatorTaskStatus.SUCCESS,
-          });
+          },
+          payload.id);
           this.scheduledTasks.delete(payload.id);
           if (this.scheduledTasks.size === 0) {
             clearInterval(this.pingInterval);
@@ -87,7 +88,9 @@ class LocatorGenerationController {
       hashes.push(jdnHash);
       this.scheduledTasks.set(jdnHash, element_id);
       if (element.locator.taskStatus !== locatorTaskStatus.PENDING) {
-        this.onStatusChange(element_id, { taskStatus: locatorTaskStatus.PENDING });
+        setTimeout(() => {
+          this.onStatusChange(element_id, { taskStatus: locatorTaskStatus.PENDING });
+        }, 0);
       }
     });
 
@@ -100,13 +103,15 @@ class LocatorGenerationController {
             config: this.queueSettings,
           },
         })
-    );
+    ).catch(() => {
+      this.noResponseHandler();
+    });
 
     this.pingInterval = setInterval(() => {
       if (!this.pingTimeout) {
         this.pingSocket();
       }
-    }, 2000);
+    }, 15000);
   }
 
   pingSocket() {
@@ -116,7 +121,7 @@ class LocatorGenerationController {
           payload: Date.now(),
         })
     );
-    this.pingTimeout = setTimeout(() => this.noResponseHandler(), 5000);
+    this.pingTimeout = setTimeout(() => this.noResponseHandler(), 15000);
   }
 
   noResponseHandler() {

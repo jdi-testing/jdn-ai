@@ -1,30 +1,52 @@
 import { elementLibrary, getJdiClassName, getJDILabel, getTypesMenuOptions } from "../utils/generationClassesMap";
 
-const options = [
-  { label: "accordion", jdi: "Accordion" },
-  { label: "badge", jdi: "Badge" },
-  { label: "bottom-navigation", jdi: "BottomNavigation" },
-  { label: "breadcrumbs", jdi: "Breadcrumbs" },
-  { label: "button", jdi: "Button" },
-  { label: "button-group", jdi: "ButtonGroup" },
-  { label: "checkbox", jdi: "Checkbox" },
-  { label: "chip", jdi: "Chip" },
-  { label: "dialog", jdi: "Dialog" },
-  { label: "drawer", jdi: "Drawer" },
-  { label: "link", jdi: "Link" },
-  { label: "list", jdi: "Lists" },
-  { label: "menu", jdi: "Menu" },
-  { label: "progress", jdi: "ProgressBar" },
-  { label: "radiogroup", jdi: "RadioButtons" },
-  { label: "select", jdi: "Select" },
-  { label: "slider", jdi: "Slider" },
-  { label: "snackbar", jdi: "Snackbar" },
-  { label: "stepper", jdi: "Stepper" },
-  { label: "switch", jdi: "Switch" },
-  { label: "table", jdi: "Table" },
-  { label: "tabs", jdi: "Tabs" },
-  { label: "textarea-autosize", jdi: "TextArea" },
-  { label: "text-field", jdi: "TextField" },
+const optionsMUI = [
+  "Accordion",
+  "Badge",
+  "BottomNavigation",
+  "Breadcrumbs",
+  "Button",
+  "ButtonGroup",
+  "Checkbox",
+  "Chip",
+  "Dialog",
+  "Drawer",
+  "Link",
+  "List",
+  "Menu",
+  "ProgressBar",
+  "RadioButtons",
+  "Select",
+  "Slider",
+  "Snackbar",
+  "Stepper",
+  "Switch",
+  "Table",
+  "Tabs",
+  "TextArea",
+  "TextField",
+];
+
+const optionsHTML5 = [
+  "Button",
+  "Checkbox",
+  "Checklist",
+  "ColorPicker",
+  "Combobox",
+  "DateTimeSelector",
+  "Dropdown",
+  "FileInput",
+  "Link",
+  "MultiSelector",
+  "NumberSelector",
+  "ProgressBar",
+  "RadioButtons",
+  "Range",
+  "Table",
+  "Text",
+  "TextArea",
+  "TextField",
+  "Title",
 ];
 
 describe("Get JDI class by predicted label", () => {
@@ -51,6 +73,10 @@ describe("Get JDI class by predicted label", () => {
   });
 
   test("get types", () => {
-    expect(getTypesMenuOptions(elementLibrary.MUI)).toStrictEqual(options);
+    expect(getTypesMenuOptions(elementLibrary.MUI)).toStrictEqual(optionsMUI);
+  });
+
+  test("get types", () => {
+    expect(getTypesMenuOptions(elementLibrary.HTML5)).toStrictEqual(optionsHTML5);
   });
 });

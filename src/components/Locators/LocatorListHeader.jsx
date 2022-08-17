@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from "react";
 import { filter, size } from "lodash";
 import { Button, Checkbox, Row } from "antd";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Icon from "@ant-design/icons";
 import { ArrowFatUp, ArrowFatDown, Trash } from "phosphor-react";
 
@@ -23,6 +23,7 @@ import { stopGenerationGroup } from "../../store/thunks/stopGenerationGroup";
 import { rerunGeneration } from "../../store/thunks/rerunGeneration";
 import { locatorTaskStatus, LOCATOR_CALCULATION_PRIORITY } from "../../utils/constants";
 import { locatorGenerationController } from "../../services/locatorGenerationController";
+import { selectInProgressSelectedByPageObject } from "../../store/selectors/pageObjectSelectors";
 
 export const EXPAND_STATE = {
   EXPANDED: "EXPANDED",
@@ -34,10 +35,11 @@ export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedS
   const dispatch = useDispatch();
   const [expandAll, setExpandAll] = useState(EXPAND_STATE.EXPANDED);
 
+  const currentPageObject = useSelector((_state) => _state.pageObject.currentPageObject);
   const selected = [...generatedSelected, ...waitingSelected, ...deletedSelected];
   const activeSelected = [...generatedSelected, ...waitingSelected];
   const stoppedSelected = filter(waitingSelected, (el) => el.locator.taskStatus === locatorTaskStatus.REVOKED);
-  const inProgressSelected = filter(waitingSelected, (el) => el.locator.taskStatus !== locatorTaskStatus.REVOKED);
+  const inProgressSelected = useSelector((_state) => selectInProgressSelectedByPageObject(_state, currentPageObject));
 
   const noPrioritySelected = useMemo(() => filter(inProgressSelected, (_locator) => !_locator.priority), [
     inProgressSelected,

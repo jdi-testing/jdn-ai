@@ -5,6 +5,7 @@ import { locatorsAdapter, simpleSelectLocatorById } from "../selectors/locatorSe
 import { cancelStopGenerationReducer } from "../thunks/cancelStopGeneration";
 import { generateLocatorsReducer } from "../thunks/generateLocators";
 import { identifyElementsReducer } from "../thunks/identifyElements";
+import { rerunGenerationReducer } from "../thunks/rerunGeneration";
 import { stopGenerationReducer } from "../thunks/stopGeneration";
 import { stopGenerationGroupReducer } from "../thunks/stopGenerationGroup";
 import { ElementId, IdentificationStatus, Locator, LocatorCalculationPriority, LocatorsState, LocatorsGenerationStatus, LocatorTaskStatus } from "./locatorSlice.types";
@@ -153,10 +154,11 @@ const locatorsSlice = createSlice({
   },
   extraReducers: (builder) => {
     identifyElementsReducer(builder),
-      generateLocatorsReducer(builder),
-      stopGenerationReducer(builder),
-      stopGenerationGroupReducer(builder),
-      cancelStopGenerationReducer(builder);
+    generateLocatorsReducer(builder),
+    rerunGenerationReducer(builder),
+    stopGenerationReducer(builder),
+    stopGenerationGroupReducer(builder),
+    cancelStopGenerationReducer(builder);
   },
 });
 
