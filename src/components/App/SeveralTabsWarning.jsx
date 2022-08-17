@@ -2,8 +2,8 @@ import { Button } from "antd";
 import React from "react";
 import Icon from "@ant-design/icons";
 
-import ErrorIcon from "../assets/error.svg";
-import RestoreIcon from "../assets/restore.svg";
+import ErrorIcon from "../../assets/error.svg";
+import RestoreIcon from "../../assets/restore.svg";
 
 export const SeveralTabsWarning = ({ checkSession }) => {
   return (
