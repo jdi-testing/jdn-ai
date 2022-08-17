@@ -4,6 +4,7 @@
   "description": "jdn-ai chrome extension",
   "scripts": {
     "start": "webpack --watch",
+    "start:reduxlog": "webpack --watch --env reduxlogenable",
     "build": "webpack --mode production",
     "patch": "npx mversion patch",
     "test": "jest",

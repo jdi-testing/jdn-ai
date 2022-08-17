@@ -4,7 +4,9 @@ import { join, resolve as _resolve } from "path";
 import pkg from 'webpack';
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import process from "process";
 
+const reduxLogEnable = process.argv.includes("reduxlogenable");
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const { HotModuleReplacementPlugin } = pkg;
@@ -35,6 +37,9 @@ const mainConfig = {
     new MiniCssExtractPlugin({
       filename: "./css/[name].css",
     }),
+    new pkg.DefinePlugin({
+      __REDUX_LOG_ENABLE__: reduxLogEnable,
+    })
   ],
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".jsx"],
