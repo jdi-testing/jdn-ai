@@ -239,7 +239,7 @@ export const editLocatorPopup = () => {
     selectType.setAttribute("name", "type");
     labelType.appendChild(selectType);
 
-    const isJdiType = types.find((_type) => _type.label === type);
+    const isJdiType = types.find((_type) => _type === type);
     if (!isJdiType) {
       const option = document.createElement("option");
       option.setAttribute("selected", true);
@@ -248,11 +248,11 @@ export const editLocatorPopup = () => {
       selectType.appendChild(option);
     }
 
-    types.forEach(({ label, jdi }) => {
+    types.forEach((value) => {
       const option = document.createElement("option");
-      option.setAttribute("value", label);
-      option.innerHTML = jdi;
-      if (isJdiType && label === type) option.setAttribute("selected", true);
+      option.setAttribute("value", value);
+      option.innerHTML = value;
+      if (isJdiType && value === type) option.setAttribute("selected", true);
       selectType.appendChild(option);
     });
 

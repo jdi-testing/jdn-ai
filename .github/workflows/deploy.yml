@@ -6,9 +6,13 @@ name: CI
 # events but only for the master branch
 on:
   push:
-    branches: [master]
+    branches:
+      - master
+      - "release_**"
   pull_request:
-    branches: [master]
+    branches: 
+      - master
+      - "release_**"
 
 jobs:
   build_and_test:
@@ -25,4 +29,3 @@ jobs:
         with:
           name: dist
           path: dist
-
