@@ -1,4 +1,4 @@
-import { sortBy } from "lodash";
+import { uniq, compact } from "lodash";
 import { HTML5_PREDICT, MUI_PREDICT } from "../services/backend";
 
 export const defaultClass = "UIElement";
@@ -87,9 +87,8 @@ export const getJdiClassName = (label, library) => {
   return jdiClass ? jdiClass : label;
 };
 
-export const getTypesMenuOptions = (library) => sortBy(
-    Object.keys(libraryClasses[library]).map((label) => {
-      return { label, jdi: getJdiClassName(label, library) };
-    }),
-    ["jdi"]
-);
+export const getTypesMenuOptions = (library) => compact(uniq(
+    Object.values(libraryClasses[library]).map((value) => {
+      if (value !== defaultClass) return value;
+    }).sort()
+));
