@@ -66,10 +66,8 @@ export const Notifications = () => {
           const length = size(arg);
           if (length === 1) {
             notificationMessage = messages().RERUN;
-            // cancelAction = stopGeneration(arg[0].element_id);
           } else {
             notificationMessage = messages(length).RERUN_GROUP;
-            // cancelAction = stopGenerationGroup(arg);
           }
           break;
         case "locators/stopGeneration/fulfilled":

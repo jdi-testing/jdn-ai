@@ -59,7 +59,6 @@ export const Locator = memo(({ element, currentPage, scroll, library }) => {
 
   const renderColorizedString = () => {
     const handleClick = (event) => {
-      console.log(event.detail);
       if (event.detail === 2) {
         chrome.storage.sync.set({
           OPEN_EDIT_LOCATOR: { isOpen: true, value: element, types: getTypesMenuOptions(library) },
