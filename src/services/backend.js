@@ -29,7 +29,7 @@ class Request {
       headers,
     });
 
-    this.baseUrl = LOCAL_URL;
+    this.baseUrl = REMOTE_URL;
   }
 
   async get(url, config, baseChanged) {
