@@ -15,6 +15,7 @@ import { isLocatorIndeterminate, areChildrenChecked } from "../../../store/selec
 import { LocatorIcon } from "./LocatorIcon";
 import { LocatorCopyButton } from "./LocatorCopyButton";
 import { LocatorMenu } from "./LocatorMenu";
+import { getTypesMenuOptions } from "../../../utils/generationClassesMap";
 
 let timer;
 
@@ -57,8 +58,17 @@ export const Locator = memo(({ element, currentPage, scroll, library }) => {
   };
 
   const renderColorizedString = () => {
+    const handleClick = (event) => {
+      console.log(event.detail);
+      if (event.detail === 2) {
+        chrome.storage.sync.set({
+          OPEN_EDIT_LOCATOR: { isOpen: true, value: element, types: getTypesMenuOptions(library) },
+        });
+      }
+    };
+
     return (
-      <span>
+      <span onClick={handleClick}>
         @UI(
         <span className="jdn__xpath_item-locator">&quot;{getLocator(locator)}&quot;</span>)
         <br />

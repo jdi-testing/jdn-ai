@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useDispatch } from "react-redux";
 import { Dropdown, Menu, Typography } from "antd";
 import Icon from "@ant-design/icons";
@@ -20,7 +20,6 @@ import TrashBinSvg from "../../../assets/delete_14.svg";
 import EllipsisSvg from "../../../assets/ellipsis.svg";
 
 export const LocatorMenu = ({ element, library }) => {
-  const [menuVisible, setMenuVisible] = useState(false);
   const dispatch = useDispatch();
 
   const { element_id, locator, deleted, priority, jdnHash } = element;
@@ -104,8 +103,8 @@ export const LocatorMenu = ({ element, library }) => {
   };
 
   return (
-    <a onClick={() => setMenuVisible(true)} onMouseLeave={() => setMenuVisible(false)}>
-      <Dropdown overlay={renderMenu()} visible={menuVisible}>
+    <a>
+      <Dropdown overlay={renderMenu()} align={{ offset: [14, 0] }} trigger={["click"]}>
         <Icon component={EllipsisSvg} onClick={(e) => e.preventDefault()} />
       </Dropdown>
     </a>

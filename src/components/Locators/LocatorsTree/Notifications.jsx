@@ -11,8 +11,6 @@ import {
   toggleElementGroupGeneration,
 } from "../../../store/slices/locatorsSlice";
 import { selectLocators } from "../../../store/selectors/locatorSelectors";
-import { stopGeneration } from "../../../store/thunks/stopGeneration";
-import { stopGenerationGroup } from "../../../store/thunks/stopGenerationGroup";
 import { cancelStopGeneration } from "../../../store/thunks/cancelStopGeneration";
 import { cancelLastNotification, handleLastNotification } from "../../../store/slices/mainSlice";
 import { selectPageObjById } from "../../../store/selectors/pageObjectSelectors";
@@ -20,8 +18,8 @@ import { selectPageObjById } from "../../../store/selectors/pageObjectSelectors"
 const messages = (value) => {
   return {
     EDITED: "Locator edited successfully!",
-    RERUN: "The locator generation rerunned successfully",
-    RERUN_GROUP: `Generation of ${value} rerunned successfully`,
+    RERUN: "The locator generation re-runned successfully",
+    RERUN_GROUP: `Generation of ${value} locators re-runned successfully`,
     STOP_GENERATION: "The locator generation stopped successfully!",
     STOP_GENERATION_GROUP: `Generation of ${value} locators stopped successfully!`,
     DELETE: "The locator deleted successfully!",
@@ -68,10 +66,10 @@ export const Notifications = () => {
           const length = size(arg);
           if (length === 1) {
             notificationMessage = messages().RERUN;
-            cancelAction = stopGeneration(arg[0].element_id);
+            // cancelAction = stopGeneration(arg[0].element_id);
           } else {
             notificationMessage = messages(length).RERUN_GROUP;
-            cancelAction = stopGenerationGroup(arg);
+            // cancelAction = stopGenerationGroup(arg);
           }
           break;
         case "locators/stopGeneration/fulfilled":
@@ -117,7 +115,7 @@ export const Notifications = () => {
   const openNotification = () => {
     notification.destroy();
 
-    if (notificationMessage !== "Action canceled.") {
+    if (notificationMessage !== "Action canceled." && cancelAction) {
       const btn = (
         <Button type="primary" size="small" className="jdn__notification-close-btn" onClick={cancelNotification}>
           Cancel
