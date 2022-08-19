@@ -104,7 +104,13 @@ export const LocatorMenu = ({ element, library }) => {
 
   return (
     <a>
-      <Dropdown overlay={renderMenu()} align={{ offset: [14, 0] }} trigger={["click"]}>
+      <Dropdown
+        overlay={renderMenu()}
+        align={{ offset: [14, 0] }}
+        trigger={["click"]}
+        getPopupContainer={(triggerNode) => triggerNode}
+        destroyPopupOnHide
+      >
         <Icon component={EllipsisSvg} onClick={(e) => e.preventDefault()} />
       </Dropdown>
     </a>
