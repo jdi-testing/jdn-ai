@@ -47,9 +47,13 @@ const AutoFind = () => {
       removeOverlay();
       connector.attachStaticScripts();
     });
-
-    fetchTemplate();
   }, []);
+
+  useEffect(() => {
+    if (backendAvailable === BACKEND_STATUS.ACCESSED) {
+      fetchTemplate();
+    }
+  }, [backendAvailable]);
 
   useEffect(() => {
     if (status === identificationStatus.success) {
