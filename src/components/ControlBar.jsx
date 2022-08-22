@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Icon from "@ant-design/icons";
 import React, { useState, useEffect } from "react";
 
-import { BUILD, request } from "../services/backend";
+import { request } from "../services/backend";
 import { reportProblem } from "../services/pageDataHandlers";
 
 import kebab_menu from "../assets/Kebab_menu.svg";
@@ -19,17 +19,15 @@ export const ControlBar = () => {
   const currentPage = useSelector(selectCurrentPage).page;
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const result = await request.get(BUILD);
-        setBackendVer(result);
-        dispatch(setBackendAvailable(BACKEND_STATUS.ACCESSED));
-      } catch (error) {
-        dispatch(setBackendAvailable(BACKEND_STATUS.ACCESS_FAILED));
-      }
-    };
-
-    fetchData();
+    request
+        .setBaseUrl()
+        .then((response) => {
+          setBackendVer(response);
+          dispatch(setBackendAvailable(BACKEND_STATUS.ACCESSED));
+        })
+        .catch(() => {
+          dispatch(setBackendAvailable(BACKEND_STATUS.ACCESS_FAILED));
+        });
 
     const manifest = chrome.runtime.getManifest();
     setPluginVer(manifest.version);
