@@ -24,20 +24,19 @@ const locatorsSlice = createSlice({
       locatorsAdapter.addMany(state, payload);
     },
     changeLocatorAttributes(state, { payload }) {
-      const { type, name, locator, element_id, validity, isCustomName, library } = payload;
+      const { type, name, locator, element_id, validity, isCustomName } = payload;
       const _locator = simpleSelectLocatorById(state, element_id);
       if (!_locator) return;
       const { fullXpath, robulaXpath } = _locator.locator;
-      const newValue = { ..._locator, locator: { ..._locator.locator }, validity };
+      const newValue = { ..._locator, locator: { ..._locator.locator }, validity, type };
       if (_locator.name !== name) {
         newValue.name = name;
         newValue.isCustomName = isUndefined(isCustomName) ? true : isCustomName;
       }
       if (_locator.type !== type) {
         if (!newValue.isCustomName) {
-          newValue.name = lowerFirst(getJdiClassName(type, library));
+          newValue.name = lowerFirst(type);
         }
-        newValue.type = getJDILabel(type, library);
       }
       if (fullXpath !== locator && robulaXpath !== locator) {
         newValue.locator.customXpath = locator;

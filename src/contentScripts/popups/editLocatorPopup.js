@@ -337,4 +337,12 @@ export const editLocatorPopup = () => {
       removePopup();
     }
   });
+
+  const messageHandler = ({ message, param }, sender, sendResponse) => {
+    if (message === "PING_SCRIPT" && param.scriptName === "editLocatorPopup") {
+      sendResponse({ message: true });
+    }
+  };
+
+  chrome.runtime.onMessage.addListener(messageHandler);
 };
