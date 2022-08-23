@@ -76,8 +76,8 @@ class Connector {
     return { then: (cb) => cb(this.port) };
   }
 
-  attachContentScript(script) {
-    return this.scriptExists(script.name).then((result) => {
+  attachContentScript(script, scriptName) {
+    return this.scriptExists(scriptName).then((result) => {
       if (result) return true;
       return chrome.scripting
           .executeScript({
@@ -105,15 +105,15 @@ class Connector {
 
   attachStaticScripts() {
     return Promise.all([
-      this.attachContentScript(highlightOnPage).then(() => {
+      this.attachContentScript(highlightOnPage, "highlightOnPage").then(() => {
         this.createPort();
         chrome.storage.sync.set({ IS_DISCONNECTED: false });
       }),
-      this.attachContentScript(runContextMenu),
-      this.attachContentScript(editLocatorPopup),
-      this.attachContentScript(editNamePopup),
-      this.attachContentScript(highlightOrder),
-      this.attachContentScript(urlListener).then(() => {
+      this.attachContentScript(runContextMenu, "runContextMenu"),
+      this.attachContentScript(editLocatorPopup, "editLocatorPopup"),
+      this.attachContentScript(editNamePopup, "editNamePopup"),
+      this.attachContentScript(highlightOrder, "highlightOrder"),
+      this.attachContentScript(urlListener, "urlListener").then(() => {
         sendMessage.defineTabId(this.tabId);
         sendMessage.setClosedSession({ tabId: this.tabId, isClosed: false });
       }),
@@ -146,6 +146,7 @@ export const sendMessage = {
   killHighlight: (payload, onResponse) => connector.sendMessage("KILL_HIGHLIGHT", null, onResponse),
   generateAttributes: (payload, onResponse) => connector.sendMessage("GENERATE_ATTRIBUTES", payload, onResponse),
   pingScript: (payload, onResponse) => connector.sendMessage("PING_SCRIPT", payload, onResponse),
+  openEditLocator: (payload, onResponse) => connector.sendMessage("OPEN_EDIT_LOCATOR", payload, onResponse),
   removeElement: (payload) => connector.sendMessage("REMOVE_ELEMENT", payload),
   toggle: (payload) => connector.sendMessage("HIGHLIGHT_TOGGLED", payload),
   toggleDeleted: (el) => connector.sendMessage("TOGGLE_DLETED", el),
