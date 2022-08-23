@@ -18,6 +18,8 @@ import PlaySvg from "../../../assets/play.svg";
 import RestoreSvg from "../../../assets/restore.svg";
 import TrashBinSvg from "../../../assets/delete_14.svg";
 import EllipsisSvg from "../../../assets/ellipsis.svg";
+import { sendMessage } from "../../../services/connector";
+import { toggleBackdrop } from "../../../store/slices/mainSlice";
 
 export const LocatorMenu = ({ element, library }) => {
   const dispatch = useDispatch();
@@ -27,9 +29,8 @@ export const LocatorMenu = ({ element, library }) => {
   const isLocatorInProgress = isProgressStatus(locator.taskStatus);
 
   const handleEditClick = () => {
-    chrome.storage.sync.set({
-      OPEN_EDIT_LOCATOR: { isOpen: true, value: element, types: getTypesMenuOptions(library) },
-    });
+    dispatch(toggleBackdrop(true));
+    sendMessage.openEditLocator({ value: element, types: getTypesMenuOptions(library) });
   };
 
   const handleUpPriority = () => {
