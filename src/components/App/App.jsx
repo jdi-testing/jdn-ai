@@ -48,12 +48,17 @@ const App = () => {
 
   useEffect(() => {
     checkSession(setIsInvalidSession);
+  }, []);
 
+  useEffect(() => {
     const fetchTemplate = async () => {
       setTemplate(await request.getBlob(DOWNLOAD_TEMPLATE));
     };
-    fetchTemplate();
-  }, []);
+    
+    if (backendAvailable === BACKEND_STATUS.ACCESSED) {
+      fetchTemplate();
+    }
+  }, [backendAvailable]);
 
   useEffect(() => {
     if (status === identificationStatus.success) {
