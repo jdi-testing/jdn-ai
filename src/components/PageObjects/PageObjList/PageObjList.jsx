@@ -59,7 +59,7 @@ export const PageObjList = (props) => {
             expandIcon={({ isActive }) => (
               <Icon component={CaretDownSvg} rotate={isActive ? 180 : 270} fill="#808080" />
             )}
-            expandIconPosition="left"
+            expandIconPosition="start"
             activeKey={activePanel}
             onChange={setActivePanel}
           >

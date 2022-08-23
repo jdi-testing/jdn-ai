@@ -30,6 +30,7 @@ import { useOnTabUpdate } from "./useOnTabUpdate";
 import { checkSession } from "./appUtils";
 
 import "../../css/index.less";
+import { connector } from "../../services/connector";
 
 const ACCESS_MESSAGE = "Trying to access server...";
 
@@ -47,7 +48,9 @@ const App = () => {
   useOnTabUpdate();
 
   useEffect(() => {
-    checkSession(setIsInvalidSession);
+    connector.attachStaticScripts().then(() => {
+      checkSession(setIsInvalidSession);
+    });
 
     const fetchTemplate = async () => {
       setTemplate(await request.getBlob(DOWNLOAD_TEMPLATE));
