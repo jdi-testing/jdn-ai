@@ -199,4 +199,12 @@ export const editNamePopup = () => {
       removePopup();
     }
   });
+
+  const messageHandler = ({ message, param }, sender, sendResponse) => {
+    if (message === "PING_SCRIPT" && param.scriptName === "editNamePopup") {
+      sendResponse({ message: true });
+    }
+  };
+
+  chrome.runtime.onMessage.addListener(messageHandler);
 };

@@ -28,22 +28,36 @@ class Request {
     this.request = axios.create({
       headers,
     });
-
-    this.baseUrl = REMOTE_URL;
   }
 
-  async get(url, config, baseChanged) {
+  async setBaseUrl() {
+    return await Promise.any([
+      this.get(BUILD, null, true, REMOTE_URL),
+      this.get(BUILD, null, true, LOCAL_URL)]).then((response) => {
+      this.baseUrl = response.baseUrl;
+      return response.data;
+    }, (reject) => {
+      throw new Error(reject);
+    });
+  }
+
+  async get(url, config, baseChanged, baseURL) {
+    if (!this.baseUrl && !baseURL) await this.setBaseUrl();
     return this.request
-        .get(url, {...config, baseURL: this.baseUrl})
-        .then((response) => response.data)
+        .get(url, {...config, baseURL: this.baseUrl || baseURL})
+        .then((response) => {
+          if (url === BUILD) return { data: response.data, baseUrl: response.config.baseURL };
+          return response.data;
+        })
         .catch((error) => {
           return this.errorHandler(error, (_baseChanged) => this.get(url, config, _baseChanged), baseChanged);
         });
   }
 
-  async post(url, payload, config, baseChanged) {
+  async post(url, payload, config, baseChanged, baseURL) {
+    if (!this.baseUrl && !baseURL) await this.setBaseUrl();
     return this.request
-        .post(url, payload, {...config, baseURL: this.baseUrl})
+        .post(url, payload, {...config, baseURL: this.baseUrl || baseURL})
         .then((response) => response.data)
         .catch((error) => {
           return this.errorHandler(error, (_baseChanged) => this.post(url, payload, config, _baseChanged), baseChanged);
