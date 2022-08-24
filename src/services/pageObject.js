@@ -108,7 +108,6 @@ export const generateAndDownloadZip = async (state, template) => {
       const page = await getPage(locators, po.name, [po.library]);
 
       let instanceName = lowerFirst(po.name);
-      debugger;
 
       await newZip.file(`src/main/java/site/pages/${page.title}.java`, page.pageCode, { binary: false });
 
