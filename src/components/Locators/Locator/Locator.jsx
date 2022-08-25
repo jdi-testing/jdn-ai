@@ -16,6 +16,8 @@ import { LocatorIcon } from "./LocatorIcon";
 import { LocatorCopyButton } from "./LocatorCopyButton";
 import { LocatorMenu } from "./LocatorMenu";
 import { getTypesMenuOptions } from "../../../utils/generationClassesMap";
+import { sendMessage } from "../../../services/connector";
+import { toggleBackdrop } from "../../../store/slices/mainSlice";
 
 let timer;
 
@@ -60,9 +62,8 @@ export const Locator = memo(({ element, currentPage, scroll, library }) => {
   const renderColorizedString = () => {
     const handleClick = (event) => {
       if (event.detail === 2) {
-        chrome.storage.sync.set({
-          OPEN_EDIT_LOCATOR: { isOpen: true, value: element, types: getTypesMenuOptions(library) },
-        });
+        dispatch(toggleBackdrop(true));
+        sendMessage.openEditLocator({value: element, types: getTypesMenuOptions(library)});
       }
     };
 
