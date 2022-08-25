@@ -323,7 +323,10 @@ export const runContextMenu = () => {
       </svg>
       </i>`,
         events: {
-          click: () => chrome.storage.sync.set({ OPEN_EDIT_LOCATOR: { isOpen: true, value: element, types } }),
+          click: () => sendMessage({
+            message: "OPEN_EDIT_LOCATOR_REQUEST",
+            param: { value: element, types }
+          }),
         },
       },
       {

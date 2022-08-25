@@ -7,7 +7,7 @@ import {
   removeAll as removeAllLocators,
   setScrollToLocator,
 } from "../store/slices/locatorsSlice";
-import { connector } from "./connector";
+import { connector, sendMessage } from "./connector";
 import { getTypesMenuOptions } from "../utils/generationClassesMap";
 import { pageData, sendProblemReport, showOverlay } from "./pageDataHandlers";
 import { selectLocatorById, selectLocators } from "../store/selectors/locatorSelectors";
@@ -100,6 +100,10 @@ export const createListeners = (dispatch, state) => {
     IS_OPEN_MODAL: (payload) => dispatch(toggleBackdrop(payload)),
     REMOVE_ELEMENT: (payload) => dispatch(toggleDeleted(payload)),
     SEND_PROBLEM_REPORT: (payload) => sendProblemReport(payload),
+    OPEN_EDIT_LOCATOR_REQUEST: (payload) => {
+      dispatch(toggleBackdrop(true));
+      sendMessage.openEditLocator(payload);
+    },
     RERUN_GENERATION: (payload) => dispatch(rerunGeneration([selectLocatorById(state, payload)])),
     START_COLLECT_DATA: showOverlay,
     STOP_GENERATION: (payload) => dispatch(stopGeneration(payload)),

@@ -109,7 +109,7 @@ export const generateAndDownloadZip = async (state, template) => {
 
       let instanceName = lowerFirst(po.name);
 
-      await newZip.file(`src/main/java/site/pages/${page.title}.java`, page.pageCode, { binary: true });
+      await newZip.file(`src/main/java/site/pages/${page.title}.java`, page.pageCode, { binary: false });
 
       await newZip
           .file("src/test/resources/test.properties")

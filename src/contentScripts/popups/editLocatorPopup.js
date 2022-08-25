@@ -74,7 +74,10 @@ export const editLocatorPopup = () => {
       param: false,
     });
     wrapper && wrapper.remove();
-    chrome.storage.sync.set({ OPEN_EDIT_LOCATOR: { isOpen: false } });
+    sendMessage({
+      message: "IS_OPEN_MODAL",
+      param: false,
+    });
   };
 
   const getLocatorValue = ({ customXpath, robulaXpath, fullXpath }) => customXpath || robulaXpath || fullXpath;
@@ -325,14 +328,6 @@ export const editLocatorPopup = () => {
   };
 
   chrome.storage.onChanged.addListener((event) => {
-    const newValue = event?.OPEN_EDIT_LOCATOR?.newValue;
-    if (newValue?.isOpen === true) {
-      sendMessage({
-        message: "IS_OPEN_MODAL",
-        param: true,
-      });
-      showDialog(newValue.value, newValue.types);
-    }
     if (event?.IS_DISCONNECTED?.newValue === true) {
       removePopup();
     }
@@ -341,6 +336,10 @@ export const editLocatorPopup = () => {
   const messageHandler = ({ message, param }, sender, sendResponse) => {
     if (message === "PING_SCRIPT" && param.scriptName === "editLocatorPopup") {
       sendResponse({ message: true });
+    }
+    if (message === "OPEN_EDIT_LOCATOR") {
+      const { value, types } = param;
+      showDialog(value, types);
     }
   };
 
