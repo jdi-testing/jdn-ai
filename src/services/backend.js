@@ -30,15 +30,8 @@ class Request {
     });
   }
 
-  async setBaseUrl() {
-    return await Promise.any([
-      this.get(BUILD, null, true, REMOTE_URL),
-      this.get(BUILD, null, true, LOCAL_URL)]).then((response) => {
-      this.baseUrl = response.baseUrl;
-      return response.data;
-    }, (reject) => {
-      throw new Error(reject);
-    });
+  setBaseUrl(url) {
+    this.baseUrl = url;
   }
 
   async get(url, config, baseChanged, baseURL) {
@@ -46,7 +39,7 @@ class Request {
     return this.request
         .get(url, {...config, baseURL: this.baseUrl || baseURL})
         .then((response) => {
-          if (url === BUILD) return { data: response.data, baseUrl: response.config.baseURL };
+          if (url === BUILD) return response;
           return response.data;
         })
         .catch((error) => {

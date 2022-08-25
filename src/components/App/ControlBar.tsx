@@ -1,37 +1,21 @@
 import { Divider, Space, Menu, Dropdown } from "antd";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Icon from "@ant-design/icons";
-import React, { useState, useEffect } from "react";
+import React from "react";
 
-import { request } from "../../services/backend";
 import { reportProblem } from "../../services/pageDataHandlers";
 
 import kebab_menu from "../../assets/Kebab_menu.svg";
-import { BACKEND_STATUS, pageType, readmeLinkAddress } from "../../utils/constants";
+import { pageType, readmeLinkAddress } from "../../utils/constants";
 import { selectCurrentPage } from "../../store/selectors/mainSelectors";
-import { setBackendAvailable } from "../../store/slices/mainSlice";
+import { RootState } from "../../store/store";
 
 export const ControlBar = () => {
-  const [backendVer, setBackendVer] = useState(null);
-  const [pluginVer, setPluginVer] = useState("");
-
-  const dispatch = useDispatch();
+  const backendVer = useSelector<RootState>((_state) => _state.main.serverVersion);
   const currentPage = useSelector(selectCurrentPage).page;
 
-  useEffect(() => {
-    request
-        .setBaseUrl()
-        .then((response) => {
-          setBackendVer(response);
-          dispatch(setBackendAvailable(BACKEND_STATUS.ACCESSED));
-        })
-        .catch(() => {
-          dispatch(setBackendAvailable(BACKEND_STATUS.ACCESS_FAILED));
-        });
-
-    const manifest = chrome.runtime.getManifest();
-    setPluginVer(manifest.version);
-  }, []);
+  const manifest = chrome.runtime.getManifest();
+  const pluginVer = manifest.version;
 
   const handleReportProblem = () => {
     reportProblem();
@@ -47,7 +31,6 @@ export const ControlBar = () => {
           Readme
         </a>
       </Menu.Item>
-      {/* <Menu.Item key="3">Upgrade</Menu.Item> */}
     </Menu>
   );
 
@@ -58,7 +41,7 @@ export const ControlBar = () => {
           <span className="jdn__header-text">
             <span className="jdn__header-title">JDN</span> v {pluginVer}
           </span>
-          <span className="jdn__header-text">Back-end v {backendVer}</span>
+          <span className="jdn__header-text">{`Back-end v ${backendVer}`}</span>
         </Space>
       </div>
       <Space size={[30, 0]} className="header__space">

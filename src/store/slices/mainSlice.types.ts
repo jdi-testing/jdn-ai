@@ -1,6 +1,8 @@
 export interface MainState {
     allowIdentifyElements: boolean;
     backendAvailable: BackendStatus;
+    baseUrl?: BaseUrl;
+    serverVersion?: string;
     notifications: Notification[];
     pageHistory: Page[];
     perception: number;
@@ -33,3 +35,7 @@ export enum PageType {
     PageObject = "pageObject",
     LocatorsList = "locatorsList",
 }
+
+export type LocalUrl = "http://localhost:5050";
+export type RemoteUrl = "http://10.253.219.156";
+export type BaseUrl = LocalUrl | RemoteUrl;

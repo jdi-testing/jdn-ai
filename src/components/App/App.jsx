@@ -31,6 +31,7 @@ import { checkSession } from "./appUtils";
 
 import "../../css/index.less";
 import { connector } from "../../services/connector";
+import { defineServer } from "../../store/thunks/defineServer";
 
 const ACCESS_MESSAGE = "Trying to access server...";
 
@@ -51,6 +52,7 @@ const App = () => {
     connector.attachStaticScripts().then(() => {
       checkSession(setIsInvalidSession);
     });
+    dispatch(defineServer());
   }, []);
 
   useEffect(() => {
