@@ -17,7 +17,6 @@ import { SeveralTabsWarning } from "./SeveralTabsWarning";
 import { Backdrop } from "./Backdrop/Backdrop";
 import { LocatorsPage } from "../Locators/LocatorsPage";
 import {
-  BACKEND_STATUS,
   identificationStatus,
   pageType,
   readmeLinkAddress,
@@ -32,8 +31,7 @@ import { checkSession } from "./appUtils";
 import "../../css/index.less";
 import { connector } from "../../services/connector";
 import { defineServer } from "../../store/thunks/defineServer";
-
-const ACCESS_MESSAGE = "Trying to access server...";
+import { BackendStatus } from "../../store/slices/mainSlice.types";
 
 const App = () => {
   const [isInvalidSession, setIsInvalidSession] = useState(false);
@@ -60,7 +58,7 @@ const App = () => {
       setTemplate(await request.getBlob(DOWNLOAD_TEMPLATE));
     };
     
-    if (backendAvailable === BACKEND_STATUS.ACCESSED) {
+    if (backendAvailable === BackendStatus.Accessed) {
       fetchTemplate();
     }
   }, [backendAvailable]);
@@ -83,8 +81,8 @@ const App = () => {
   };
 
   const renderMessage = () => {
-    if (backendAvailable === BACKEND_STATUS.TRY_TO_ACCESS) {
-      return ACCESS_MESSAGE;
+    if (backendAvailable !== BackendStatus.AccessFailed) {
+      return backendAvailable;
     } else {
       return (
         <span>
@@ -108,7 +106,7 @@ const App = () => {
             <ControlBar />
           </Header>
           <Content className="jdn__content">
-            {backendAvailable === BACKEND_STATUS.ACCESSED ? (
+            {backendAvailable === BackendStatus.Accessed ? (
               isInvalidSession ? (
                 <SeveralTabsWarning
                   {...{ checkSession: () => checkSession(setIsInvalidSession) }}

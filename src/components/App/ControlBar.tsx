@@ -9,6 +9,7 @@ import kebab_menu from "../../assets/Kebab_menu.svg";
 import { pageType, readmeLinkAddress } from "../../utils/constants";
 import { selectCurrentPage } from "../../store/selectors/mainSelectors";
 import { RootState } from "../../store/store";
+import { isNil } from "lodash";
 
 export const ControlBar = () => {
   const backendVer = useSelector<RootState>((_state) => _state.main.serverVersion);
@@ -41,7 +42,7 @@ export const ControlBar = () => {
           <span className="jdn__header-text">
             <span className="jdn__header-title">JDN</span> v {pluginVer}
           </span>
-          <span className="jdn__header-text">{`Back-end v ${backendVer}`}</span>
+          {isNil(backendVer) ? <span className="jdn__header-text">{`Back-end v ${backendVer}`}</span> : null}
         </Space>
       </div>
       <Space size={[30, 0]} className="header__space">

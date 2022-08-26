@@ -5,7 +5,7 @@ import { BackendStatus, MainState } from "./mainSlice.types";
 
 const initialState: MainState = {
   allowIdentifyElements: true,
-  backendAvailable: BackendStatus.TRY_TO_ACCESS,
+  backendAvailable: BackendStatus.TryToAccess,
   notifications: [],
   pageHistory: [],
   perception: 0.5,
