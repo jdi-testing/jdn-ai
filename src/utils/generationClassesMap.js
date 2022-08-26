@@ -1,5 +1,5 @@
 import { uniq, compact } from "lodash";
-import { HTML5_PREDICT, MUI_PREDICT } from "../services/backend";
+import { HttpEndpoint } from "../services/backend";
 
 export const defaultClass = "UIElement";
 
@@ -75,8 +75,8 @@ export const libraryClasses = {
 };
 
 export const predictEndpoints = {
-  [elementLibrary.MUI]: MUI_PREDICT,
-  [elementLibrary.HTML5]: HTML5_PREDICT,
+  [elementLibrary.MUI]: HttpEndpoint.MUI_PREDICT,
+  [elementLibrary.HTML5]: HttpEndpoint.HTML5_PREDICT,
 };
 
 export const getJDILabel = (label, library) => libraryClasses[library][label] || defaultClass;

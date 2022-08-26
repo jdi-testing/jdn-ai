@@ -23,7 +23,7 @@ import {
 } from "../../utils/constants";
 import { selectCurrentPage } from "../../store/selectors/mainSelectors";
 import { PageObjectPage } from "../PageObjects/PageObjectPage";
-import { DOWNLOAD_TEMPLATE, request } from "../../services/backend";
+import { HttpEndpoint, request } from "../../services/backend";
 import Title from "antd/lib/typography/Title";
 import { useOnTabUpdate } from "./useOnTabUpdate";
 import { checkSession } from "./appUtils";
@@ -55,7 +55,7 @@ const App = () => {
 
   useEffect(() => {
     const fetchTemplate = async () => {
-      setTemplate(await request.getBlob(DOWNLOAD_TEMPLATE));
+      setTemplate(await request.getBlob(HttpEndpoint.DOWNLOAD_TEMPLATE));
     };
     
     if (backendAvailable === BackendStatus.Accessed) {

@@ -1,11 +1,5 @@
 import { connector } from "./connector";
-import {
-  DOWN_PRIORITY,
-  PING,
-  REVOKE_TASKS,
-  SCHEDULE_MULTIPLE_XPATH_GENERATIONS,
-  UP_PRIORITY,
-} from "../services/backend";
+import { WebSocketMessage } from "../services/backend";
 import { locatorProgressStatus, locatorTaskStatus } from "../utils/constants";
 import { webSocketController } from "./webSocketController";
 
@@ -96,7 +90,7 @@ class LocatorGenerationController {
 
     webSocketController.sendSocket(
         JSON.stringify({
-          action: SCHEDULE_MULTIPLE_XPATH_GENERATIONS,
+          action: WebSocketMessage.SCHEDULE_MULTIPLE_XPATH_GENERATIONS,
           payload: {
             document: this.document,
             id: hashes,
@@ -117,7 +111,7 @@ class LocatorGenerationController {
   pingSocket() {
     webSocketController.sendSocket(
         JSON.stringify({
-          action: PING,
+          action: WebSocketMessage.PING,
           payload: Date.now(),
         })
     );
@@ -133,7 +127,7 @@ class LocatorGenerationController {
     ids.forEach((id) => {
       webSocketController.sendSocket(
           JSON.stringify({
-            action: UP_PRIORITY,
+            action: WebSocketMessage.UP_PRIORITY,
             payload: { element_id: id },
           })
       );
@@ -144,7 +138,7 @@ class LocatorGenerationController {
     ids.forEach((id) => {
       webSocketController.sendSocket(
           JSON.stringify({
-            action: DOWN_PRIORITY,
+            action: WebSocketMessage.DOWN_PRIORITY,
             payload: { element_id: id },
           })
       );
@@ -154,7 +148,7 @@ class LocatorGenerationController {
   revokeTasks(hashes) {
     webSocketController.sendSocket(
         JSON.stringify({
-          action: REVOKE_TASKS,
+          action: WebSocketMessage.REVOKE_TASKS,
           payload: { id: hashes },
         })
     );

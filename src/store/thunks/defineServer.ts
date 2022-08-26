@@ -1,23 +1,23 @@
 import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosResponse } from "axios";
 import { compatibleVersions } from "../../compatibleVersions";
-import { BUILD, LOCAL_URL, REMOTE_URL, request } from "../../services/backend";
+import { HttpEndpoint, LOCAL_URL, REMOTE_URL, request } from "../../services/backend";
 import { BackendStatus, BaseUrl, MainState } from "../slices/mainSlice.types";
 
 
 export const defineServer = createAsyncThunk("main/defineServer", async () => {
-    const checkVersion = (request: Promise<AxiosResponse<string>>, errorMessage: BackendStatus) =>
+    const checkVersion = (request: Promise<AxiosResponse<BaseUrl>>, errorMessage: BackendStatus) =>
         request
             .then((response) => {
                 if (compatibleVersions.includes(response.data[0])) return JSON.parse(JSON.stringify(response));
                 else throw new Error(errorMessage);
             })
 
-    return Promise.any<AxiosResponse<string>>([
-        checkVersion(request.get(BUILD, null, true, REMOTE_URL), BackendStatus.ImcompatibleVersionRemote),
-        checkVersion(request.get(BUILD, null, true, LOCAL_URL), BackendStatus.ImcompatibleVersionLocal)
+    return Promise.any<AxiosResponse<BaseUrl>>([
+        checkVersion(request.get(HttpEndpoint.BUILD, undefined, REMOTE_URL), BackendStatus.ImcompatibleVersionRemote),
+        checkVersion(request.get(HttpEndpoint.BUILD, undefined, LOCAL_URL), BackendStatus.ImcompatibleVersionLocal)
     ]).then((response) => {
-        request.setBaseUrl(response.config.baseURL);
+        request.setBaseUrl(response.config.baseURL as BaseUrl);
         return response;
     }, ({ errors }) => {
         const errorMessages = [errors[0].message, errors[1].message];

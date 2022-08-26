@@ -3,7 +3,7 @@ import { getGenerationAttributes } from "./../contentScripts/generationData";
 import { getPageData } from "./../contentScripts/pageData";
 import { createLocatorNames } from "./pageObject";
 import { reportPopup } from "../contentScripts/popups";
-import { REPORT_PROBLEM, request } from "../services/backend";
+import { HttpEndpoint, request } from "../services/backend";
 import { confirmPopup } from "../contentScripts/popups/confirmPopup";
 import { createOverlay } from "../contentScripts/createOverlay";
 import { assignParents } from "../contentScripts/assignParents";
@@ -79,7 +79,7 @@ export const setParents = async (elements) => {
 };
 
 export const sendProblemReport = (payload) => {
-  request.post(REPORT_PROBLEM, JSON.stringify({ ...payload, json_from_model: predictedElements }));
+  request.post(HttpEndpoint.REPORT_PROBLEM, JSON.stringify({ ...payload, json_from_model: predictedElements }));
 };
 
 export const reportProblem = () => {
