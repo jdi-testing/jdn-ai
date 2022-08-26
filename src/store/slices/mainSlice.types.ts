@@ -1,6 +1,8 @@
 export interface MainState {
     allowIdentifyElements: boolean;
     backendAvailable: BackendStatus;
+    baseUrl?: BaseUrl;
+    serverVersion?: string;
     notifications: Notification[];
     pageHistory: Page[];
     perception: number;
@@ -24,12 +26,18 @@ export interface Notification {
 }
 
 export enum BackendStatus {
-    TRY_TO_ACCESS = "TRY_TO_ACCESS",
-    ACCESSED = "ACCESSED",
-    ACCESS_FAILED = "ACCESS_FAILED",
+    TryToAccess = "Trying to access server...",
+    Accessed = "Accessed",
+    AccessFailed = "AccessFailed",
+    ImcompatibleVersionLocal = "Local server version is incompatible. Please, use '0.1.2' for your version of plugin.",
+    ImcompatibleVersionRemote = "Remote server version is incompatible. Please, update plugin",
+    ImcompatibleVersions = "Remote and local server versions are incompatible. Please, update plugin or local server, or try to connect the remote server.",
+    
 }
 
 export enum PageType {
     PageObject = "pageObject",
     LocatorsList = "locatorsList",
 }
+
+export type BaseUrl = "http://localhost:5050" | "http://10.253.219.156";

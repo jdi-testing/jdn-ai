@@ -1,10 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { size } from "lodash";
+import { defineServerReducer } from "../thunks/defineServer";
 import { BackendStatus, MainState } from "./mainSlice.types";
 
 const initialState: MainState = {
   allowIdentifyElements: true,
-  backendAvailable: BackendStatus.TRY_TO_ACCESS,
+  backendAvailable: BackendStatus.TryToAccess,
   notifications: [],
   pageHistory: [],
   perception: 0.5,
@@ -54,6 +55,9 @@ const mainSlice = createSlice({
       state.showBackdrop = payload;
     },
   },
+  extraReducers: (builder) => {
+    defineServerReducer(builder);
+  }
 });
 
 export default mainSlice.reducer;

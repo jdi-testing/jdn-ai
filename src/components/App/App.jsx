@@ -17,22 +17,21 @@ import { SeveralTabsWarning } from "./SeveralTabsWarning";
 import { Backdrop } from "./Backdrop/Backdrop";
 import { LocatorsPage } from "../Locators/LocatorsPage";
 import {
-  BACKEND_STATUS,
   identificationStatus,
   pageType,
   readmeLinkAddress,
 } from "../../utils/constants";
 import { selectCurrentPage } from "../../store/selectors/mainSelectors";
 import { PageObjectPage } from "../PageObjects/PageObjectPage";
-import { DOWNLOAD_TEMPLATE, request } from "../../services/backend";
+import { HttpEndpoint, request } from "../../services/backend";
 import Title from "antd/lib/typography/Title";
 import { useOnTabUpdate } from "./useOnTabUpdate";
 import { checkSession } from "./appUtils";
 
 import "../../css/index.less";
 import { connector } from "../../services/connector";
-
-const ACCESS_MESSAGE = "Trying to access server...";
+import { defineServer } from "../../store/thunks/defineServer";
+import { BackendStatus } from "../../store/slices/mainSlice.types";
 
 const App = () => {
   const [isInvalidSession, setIsInvalidSession] = useState(false);
@@ -51,14 +50,15 @@ const App = () => {
     connector.attachStaticScripts().then(() => {
       checkSession(setIsInvalidSession);
     });
+    dispatch(defineServer());
   }, []);
 
   useEffect(() => {
     const fetchTemplate = async () => {
-      setTemplate(await request.getBlob(DOWNLOAD_TEMPLATE));
+      setTemplate(await request.getBlob(HttpEndpoint.DOWNLOAD_TEMPLATE));
     };
     
-    if (backendAvailable === BACKEND_STATUS.ACCESSED) {
+    if (backendAvailable === BackendStatus.Accessed) {
       fetchTemplate();
     }
   }, [backendAvailable]);
@@ -81,8 +81,8 @@ const App = () => {
   };
 
   const renderMessage = () => {
-    if (backendAvailable === BACKEND_STATUS.TRY_TO_ACCESS) {
-      return ACCESS_MESSAGE;
+    if (backendAvailable !== BackendStatus.AccessFailed) {
+      return backendAvailable;
     } else {
       return (
         <span>
@@ -106,7 +106,7 @@ const App = () => {
             <ControlBar />
           </Header>
           <Content className="jdn__content">
-            {backendAvailable === BACKEND_STATUS.ACCESSED ? (
+            {backendAvailable === BackendStatus.Accessed ? (
               isInvalidSession ? (
                 <SeveralTabsWarning
                   {...{ checkSession: () => checkSession(setIsInvalidSession) }}
