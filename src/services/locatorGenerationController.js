@@ -6,12 +6,13 @@ import { webSocketController } from "./webSocketController";
 export const isProgressStatus = (taskStatus) => locatorProgressStatus.hasOwnProperty(taskStatus);
 export const isGeneratedStatus = (taskStatus) => taskStatus === locatorTaskStatus.SUCCESS;
 
-export const runGenerationHandler = async (elements, settings, onStatusChange, onGenerationFailed) => {
+export const runGenerationHandler = async (elements, settings, onStatusChange, onGenerationFailed, pageObject) => {
   locatorGenerationController.scheduleTaskGroup(
       elements,
       settings,
       (element_id, locator, jdnHash) => onStatusChange({ element_id, locator, jdnHash }),
       onGenerationFailed,
+      pageObject,
   );
 };
 
@@ -29,6 +30,10 @@ class LocatorGenerationController {
     this.pingTimeout = null;
 
     this.setMessageHandler();
+
+    chrome.storage.sync.get("JDN_SESSION_ID").then((res) => {
+      this.sessionId = res.JDN_SESSION_ID;
+    });
   }
 
   async getDocument() {
@@ -70,7 +75,7 @@ class LocatorGenerationController {
     });
   }
 
-  async scheduleTaskGroup(elements, settings, onStatusChange, onGenerationFailed) {
+  async scheduleTaskGroup(elements, settings, onStatusChange, onGenerationFailed, pageObject) {
     if (settings) this.queueSettings = settings;
     if (onStatusChange) this.onStatusChange = onStatusChange;
     if (onGenerationFailed) this.onGenerationFailed = onGenerationFailed;
@@ -95,6 +100,12 @@ class LocatorGenerationController {
             document: this.document,
             id: hashes,
             config: this.queueSettings,
+          },
+          logging_info: {
+            session_id: this.sessionId,
+            page_object_creation: pageObject.name,
+            element_library: pageObject.library,
+            website_url: pageObject.url,
           },
         })
     ).catch(() => {

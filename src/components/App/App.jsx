@@ -26,12 +26,13 @@ import { PageObjectPage } from "../PageObjects/PageObjectPage";
 import { HttpEndpoint, request } from "../../services/backend";
 import Title from "antd/lib/typography/Title";
 import { useOnTabUpdate } from "./useOnTabUpdate";
-import { checkSession } from "./appUtils";
+import { checkSession, getSessionId } from "./appUtils";
 
 import "../../css/index.less";
 import { connector } from "../../services/connector";
 import { defineServer } from "../../store/thunks/defineServer";
 import { BackendStatus } from "../../store/slices/mainSlice.types";
+import { compatibleVersions } from "../../compatibleVersions";
 
 const App = () => {
   const [isInvalidSession, setIsInvalidSession] = useState(false);
@@ -57,9 +58,10 @@ const App = () => {
     const fetchTemplate = async () => {
       setTemplate(await request.getBlob(HttpEndpoint.DOWNLOAD_TEMPLATE));
     };
-    
+
     if (backendAvailable === BackendStatus.Accessed) {
       fetchTemplate();
+      getSessionId();
     }
   }, [backendAvailable]);
 
@@ -82,7 +84,9 @@ const App = () => {
 
   const renderMessage = () => {
     if (backendAvailable !== BackendStatus.AccessFailed) {
-      return backendAvailable;
+      return backendAvailable === BackendStatus.ImcompatibleVersionLocal
+        ? backendAvailable.replace("%", compatibleVersions[0])
+        : backendAvailable;
     } else {
       return (
         <span>
