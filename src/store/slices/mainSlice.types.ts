@@ -29,7 +29,7 @@ export enum BackendStatus {
     TryToAccess = "Trying to access server...",
     Accessed = "Accessed",
     AccessFailed = "AccessFailed",
-    ImcompatibleVersionLocal = "Local server version is incompatible. Please, use '0.1.2' for your version of plugin.",
+    ImcompatibleVersionLocal = "Local server version is incompatible. Please, use % with your version of plugin.",
     ImcompatibleVersionRemote = "Remote server version is incompatible. Please, update plugin",
     ImcompatibleVersions = "Remote and local server versions are incompatible. Please, update plugin or local server, or try to connect the remote server.",
     

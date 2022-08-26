@@ -42,7 +42,7 @@ export const ControlBar = () => {
           <span className="jdn__header-text">
             <span className="jdn__header-title">JDN</span> v {pluginVer}
           </span>
-          {isNil(backendVer) ? <span className="jdn__header-text">{`Back-end v ${backendVer}`}</span> : null}
+          {!isNil(backendVer) ? <span className="jdn__header-text">{`Back-end v ${backendVer}`}</span> : null}
         </Space>
       </div>
       <Space size={[30, 0]} className="header__space">

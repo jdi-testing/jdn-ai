@@ -7,6 +7,7 @@ export enum HttpEndpoint {
   HTML5_PREDICT = "html5-predict",
   REPORT_PROBLEM = "report_problem",
   DOWNLOAD_TEMPLATE = "download_template",
+  SESSION_ID = "get_session_id",
 }
 
 export enum WebSocketMessage {

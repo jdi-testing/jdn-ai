@@ -6,12 +6,13 @@ import { webSocketController } from "./webSocketController";
 export const isProgressStatus = (taskStatus) => locatorProgressStatus.hasOwnProperty(taskStatus);
 export const isGeneratedStatus = (taskStatus) => taskStatus === locatorTaskStatus.SUCCESS;
 
-export const runGenerationHandler = async (elements, settings, onStatusChange, onGenerationFailed) => {
+export const runGenerationHandler = async (elements, settings, onStatusChange, onGenerationFailed, pageObject) => {
   locatorGenerationController.scheduleTaskGroup(
       elements,
       settings,
       (element_id, locator, jdnHash) => onStatusChange({ element_id, locator, jdnHash }),
       onGenerationFailed,
+      pageObject,
   );
 };
 
@@ -37,6 +38,12 @@ class LocatorGenerationController {
     );
     this.document = await documentResult[0].result;
     return;
+  }
+
+  getSessionId() {
+    return chrome.storage.sync.get("JDN_SESSION_ID").then((res) => {
+      return res.JDN_SESSION_ID;
+    });
   }
 
   setMessageHandler() {
@@ -70,7 +77,7 @@ class LocatorGenerationController {
     });
   }
 
-  async scheduleTaskGroup(elements, settings, onStatusChange, onGenerationFailed) {
+  async scheduleTaskGroup(elements, settings, onStatusChange, onGenerationFailed, pageObject) {
     if (settings) this.queueSettings = settings;
     if (onStatusChange) this.onStatusChange = onStatusChange;
     if (onGenerationFailed) this.onGenerationFailed = onGenerationFailed;
@@ -88,6 +95,8 @@ class LocatorGenerationController {
       }
     });
 
+    const sessionId = await this.getSessionId();
+
     webSocketController.sendSocket(
         JSON.stringify({
           action: WebSocketMessage.SCHEDULE_MULTIPLE_XPATH_GENERATIONS,
@@ -95,6 +104,12 @@ class LocatorGenerationController {
             document: this.document,
             id: hashes,
             config: this.queueSettings,
+          },
+          logging_info: {
+            session_id: sessionId,
+            page_object_creation: pageObject.name,
+            element_library: pageObject.library,
+            website_url: pageObject.url,
           },
         })
     ).catch(() => {
