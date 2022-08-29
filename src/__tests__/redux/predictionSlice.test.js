@@ -3,7 +3,7 @@ import { addLocators, changeLocatorAttributes } from "../../store/slices/locator
 import { selectLocatorById } from "../../store/selectors/locatorSelectors";
 import { store } from "../../store/store";
 import { locator1 } from "../__mocks__/locator.mock";
-import { elementLibrary } from "../../components/PageObjects/utils/generationClassesMap";
+import { ElementLibrary } from "../../components/PageObjects/utils/generationClassesMap";
 import { locatorTaskStatus } from "../../utils/constants";
 
 /* global jest*/
@@ -26,7 +26,7 @@ describe("changeLocatorAttributes reducer", () => {
           locator: "//*[@class='sidebar-menu left']",
           name: "radiobuttonsUl",
           type: "Checkbox",
-          library: elementLibrary.MUI,
+          library: ElementLibrary.MUI,
         })
     );
     const locator = selectLocatorById(store.getState(), "8736312404689610766421832473");
@@ -43,7 +43,7 @@ describe("changeLocatorAttributes reducer", () => {
           locator: "//*[@class='sidebar-menu left']",
           name: "myAwesomeLocator",
           type: "ProgressBar",
-          library: elementLibrary.MUI,
+          library: ElementLibrary.MUI,
         })
     );
     const locator = selectLocatorById(store.getState(), "8736312404689610766421832473");
@@ -60,7 +60,7 @@ describe("changeLocatorAttributes reducer", () => {
           locator: "//*[@class='sidebar-menu left']",
           name: "myAwesomeLocator",
           type: "ProgressBar",
-          library: elementLibrary.MUI,
+          library: ElementLibrary.MUI,
         })
     );
     const locator = selectLocatorById(store.getState(), "8736312404689610766421832473");
@@ -77,7 +77,7 @@ describe("changeLocatorAttributes reducer", () => {
           locator: "//*[@class='sidebar-menu left']",
           name: "myAwesomeLocator",
           type: "Dialog",
-          library: elementLibrary.MUI,
+          library: ElementLibrary.MUI,
         })
     );
     const locator = selectLocatorById(store.getState(), "8736312404689610766421832473");
@@ -95,7 +95,7 @@ describe("changeLocatorAttributes reducer", () => {
           locator: "//*[@class='any-class']",
           name: "myAwesomeLocator",
           type: "Dialog",
-          library: elementLibrary.MUI,
+          library: ElementLibrary.MUI,
         })
     );
     const locator = selectLocatorById(store.getState(), "8736312404689610766421832473");
@@ -119,7 +119,7 @@ describe("changeLocatorAttributes reducer", () => {
           validity: {
             locator: "NOT_FOUND"
           },
-          library: elementLibrary.MUI,
+          library: ElementLibrary.MUI,
         })
     );
     const locator = selectLocatorById(store.getState(), "8736312404689610766421832473");
