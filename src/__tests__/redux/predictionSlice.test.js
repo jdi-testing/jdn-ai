@@ -3,7 +3,7 @@ import { addLocators, changeLocatorAttributes } from "../../store/slices/locator
 import { selectLocatorById } from "../../store/selectors/locatorSelectors";
 import { store } from "../../store/store";
 import { locator1 } from "../__mocks__/locator.mock";
-import { elementLibrary } from "../../utils/generationClassesMap";
+import { elementLibrary } from "../../components/PageObjects/utils/generationClassesMap";
 import { locatorTaskStatus } from "../../utils/constants";
 
 /* global jest*/

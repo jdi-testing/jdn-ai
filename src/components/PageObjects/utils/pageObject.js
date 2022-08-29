@@ -3,7 +3,7 @@ import { saveAs } from "file-saver";
 import JSZip from "jszip";
 
 import { connector } from "../../../services/connector";
-import { getJDILabel } from "../../../utils/generationClassesMap";
+import { getJDILabel } from "./generationClassesMap";
 import { pageObjectTemplate } from "./pageObjectTemplate";
 import javaReservedWords from "./javaReservedWords.json";
 import { selectConfirmedLocators, selectPageObjects } from "../../../store/selectors/pageObjectSelectors";

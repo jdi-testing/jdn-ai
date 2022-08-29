@@ -4,7 +4,7 @@ import { BACKEND_STATUS, identificationStatus } from "../../utils/constants";
 import { generateLocators } from "./generateLocators";
 import { predictElements } from "../../services/pageDataHandlers";
 import { setCurrentPageObj } from "../slices/pageObjectSlice";
-import { predictEndpoints } from "../../utils/generationClassesMap";
+import { predictEndpoints } from "../../components/PageObjects/utils/generationClassesMap";
 import { setBackendAvailable } from "../slices/mainSlice";
 
 export const identifyElements = createAsyncThunk(

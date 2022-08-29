@@ -15,7 +15,7 @@ import { isLocatorIndeterminate, areChildrenChecked } from "../../../store/selec
 import { LocatorIcon } from "./LocatorIcon";
 import { LocatorCopyButton } from "./LocatorCopyButton";
 import { LocatorMenu } from "./LocatorMenu";
-import { getTypesMenuOptions } from "../../../utils/generationClassesMap";
+import { getTypesMenuOptions } from "../../PageObjects/utils/generationClassesMap";
 import { sendMessage } from "../../../services/connector";
 import { toggleBackdrop } from "../../../store/slices/mainSlice";
 

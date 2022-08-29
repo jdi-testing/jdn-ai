@@ -8,7 +8,7 @@ import {
   setScrollToLocator,
 } from "../store/slices/locatorsSlice";
 import { connector, sendMessage } from "./connector";
-import { getTypesMenuOptions } from "../utils/generationClassesMap";
+import { getTypesMenuOptions } from "../components/PageObjects/utils/generationClassesMap";
 import { pageData, sendProblemReport, showOverlay } from "./pageDataHandlers";
 import { selectLocatorById, selectLocators } from "../store/selectors/locatorSelectors";
 import { stopGeneration } from "../store/thunks/stopGeneration";

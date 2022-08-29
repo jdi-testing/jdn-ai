@@ -5,7 +5,7 @@ import React from "react";
 
 import { identificationStatus } from "../../utils/constants";
 import { identifyElements } from "../../store/thunks/identifyElements";
-import { elementLibrary, libraryNames } from "../../utils/generationClassesMap";
+import { elementLibrary, libraryNames } from "./utils/generationClassesMap";
 import { changeElementLibrary } from "../../store/slices/pageObjectSlice";
 import { selectPageObjById } from "../../store/selectors/pageObjectSelectors";
 
