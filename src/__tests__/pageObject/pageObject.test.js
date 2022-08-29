@@ -1,5 +1,5 @@
-import { createLocatorNames } from "../../services/pageObject";
-import { pageObjectTemplate } from "../../services/pageObjectTemplate";
+import { createLocatorNames } from "../../components/PageObjects/utils/pageObject";
+import { pageObjectTemplate } from "../../components/PageObjects/utils/pageObjectTemplate";
 import { elementLibrary } from "../../utils/generationClassesMap";
 import {
   elementsWithNames,

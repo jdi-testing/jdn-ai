@@ -1,7 +1,7 @@
 import { connector, sendMessage } from "./connector";
 import { getGenerationAttributes } from "./../contentScripts/generationData";
 import { getPageData } from "./../contentScripts/pageData";
-import { createLocatorNames } from "./pageObject";
+import { createLocatorNames } from "../components/PageObjects/utils/pageObject";
 import { reportPopup } from "../contentScripts/popups";
 import { HttpEndpoint, request } from "../services/backend";
 import { confirmPopup } from "../contentScripts/popups/confirmPopup";

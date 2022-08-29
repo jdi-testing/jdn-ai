@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import React, { memo, useRef, useEffect } from "react";
 import Text from "antd/lib/typography/Text";
 
-import { getLocator } from "../../../services/pageObject";
+import { getLocator } from "../../PageObjects/utils/pageObject";
 import { pageType } from "../../../utils/constants";
 import {
   toggleElementGeneration,

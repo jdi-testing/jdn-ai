@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { isNull, map, size, toLower } from "lodash";
-import { getPageAttributes, isPONameUnique } from "../../services/pageObject";
-import { getClassName } from "../../services/pageObjectTemplate";
+import { getPageAttributes, isPONameUnique } from "../../components/PageObjects/utils/pageObject";
+import { getClassName } from "../../components/PageObjects/utils/pageObjectTemplate";
 import { defaultLibrary } from "../../utils/generationClassesMap";
 import { pageObjAdapter, selectMaxId, simpleSelectPageObjects } from "../selectors/pageObjectSelectors";
 

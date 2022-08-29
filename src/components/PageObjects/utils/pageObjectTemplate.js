@@ -1,5 +1,5 @@
 import CyrillicToTranslit from "cyrillic-to-translit-js";
-import { elementLibrary } from "../utils/generationClassesMap";
+import { elementLibrary } from "../../../utils/generationClassesMap";
 import { getLocator } from "./pageObject";
 
 export function camelCase(n) {

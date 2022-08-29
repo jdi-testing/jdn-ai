@@ -2,7 +2,7 @@ import { addLocatorsToPageObj, addLocatorToPageObj } from "../../../store/slices
 import { selectPageObjById, selectPageObjects } from "../../../store/selectors/pageObjectSelectors";
 import { store } from "../../../store/store";
 import { addPageObj } from "../../../store/thunks/addPageObject";
-import * as pageObject from "../../../services/pageObject";
+import * as pageObject from "../../../components/PageObjects/utils/pageObject";
 import { clearAll } from "../../../store/slices/mainSlice";
 
 describe("pageObject reducers", () => {
