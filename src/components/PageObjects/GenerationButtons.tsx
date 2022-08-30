@@ -39,7 +39,7 @@ export const GenerationButtons: React.FC<Props> = ({ pageObj }) => {
           >
             <Select.Option value={ElementLibrary.MUI}>{libraryNames.MUI}</Select.Option>
             <Select.Option value={ElementLibrary.HTML5}>{libraryNames.HTML5}</Select.Option>
-            <Select.Option value={ElementLibrary.NgMat}>{libraryNames.NgMat}</Select.Option>
+            {/* <Select.Option value={ElementLibrary.NgMat}>{libraryNames.NgMat}</Select.Option> */}
           </Select>
         </Space>
         <Space direction="horizontal" size={8}>
