@@ -12,7 +12,7 @@ enum HTML5classes {
   datetimeselector = "DateTimeSelector",
   dropdown = "Dropdown",
   fileinput = "FileInput",
-  label = "TextField",
+  label = "Label",
   link = "Link",
   multidropdown = "MultiSelector",
   multiselector = "MultiSelector",

@@ -36,6 +36,7 @@ const optionsHTML5 = [
   "DateTimeSelector",
   "Dropdown",
   "FileInput",
+  "Label",
   "Link",
   "MultiSelector",
   "NumberSelector",
