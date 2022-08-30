@@ -6,7 +6,7 @@ import { defaultLibrary } from "../../components/PageObjects/utils/generationCla
 import { pageObjAdapter, selectMaxId, simpleSelectPageObjects } from "../selectors/pageObjectSelectors";
 
 
-export const addPageObj = createAsyncThunk("pageObject/addPageObj", async (payload, thunkAPI) => {
+export const addPageObj = createAsyncThunk("pageObject/addPageObj", async () => {
   const res = await getPageAttributes();
   const {title, url} = res[0].result;
   const className = getClassName(title);

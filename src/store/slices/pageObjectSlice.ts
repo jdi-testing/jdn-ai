@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { isNil } from "lodash";
+import { ElementLibrary } from "../../components/PageObjects/utils/generationClassesMap";
 import { pageObjAdapter, simpleSelectPageObjById } from "../selectors/pageObjectSelectors";
 import { addPageObjReducer } from "../thunks/addPageObject";
-import { ElementLibrary, PageObject, PageObjectId, PageObjectState } from "./pageObjectSlice.types";
+import { PageObject, PageObjectId, PageObjectState } from "./pageObjectSlice.types";
 
 const initialState: PageObjectState = {};
 

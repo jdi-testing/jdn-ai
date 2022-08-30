@@ -1,6 +1,6 @@
 import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
 
-import { BACKEND_STATUS, identificationStatus } from "../../utils/constants";
+import { BACKEND_STATUS } from "../../utils/constants";
 import { generateLocators } from "./generateLocators";
 import { predictElements } from "../../services/pageDataHandlers";
 import { setCurrentPageObj } from "../slices/pageObjectSlice";
@@ -43,10 +43,10 @@ export const identifyElementsReducer = (builder: ActionReducerMapBuilder<Locator
       .addCase(identifyElements.pending, (state) => {
         state.status = IdentificationStatus.loading;
       })
-      .addCase(identifyElements.fulfilled, (state, { payload }) => {
+      .addCase(identifyElements.fulfilled, (state) => {
         state.status = IdentificationStatus.success;
       })
-      .addCase(identifyElements.rejected, (state, { error }) => {
+      .addCase(identifyElements.rejected, (state) => {
         state.status = IdentificationStatus.error;
       });
 };

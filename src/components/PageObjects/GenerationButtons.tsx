@@ -3,13 +3,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { SearchOutlined } from "@ant-design/icons";
 import React from "react";
 
-import { identificationStatus } from "../../utils/constants";
 import { identifyElements } from "../../store/thunks/identifyElements";
 import { ElementLibrary, libraryNames } from "./utils/generationClassesMap";
 import { changeElementLibrary } from "../../store/slices/pageObjectSlice";
 import { selectPageObjById } from "../../store/selectors/pageObjectSelectors";
 import { RootState } from "../../store/store";
 import { PageObjectId } from "../../store/slices/pageObjectSlice.types";
+import { IdentificationStatus } from "../../store/slices/locatorSlice.types";
 
 interface Props {
   pageObj: PageObjectId,
@@ -46,7 +46,7 @@ export const GenerationButtons: React.FC<Props> = ({ pageObj }) => {
           <Button
             icon={<SearchOutlined />}
             type="primary"
-            loading={status === identificationStatus.loading && currentPageObject?.id === pageObj}
+            loading={status === IdentificationStatus.loading && currentPageObject?.id === pageObj}
             disabled={!allowIdentifyElements}
             onClick={() => dispatch(identifyElements({ library, pageObj }))}
             className="jdn__buttons"
