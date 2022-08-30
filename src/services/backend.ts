@@ -5,6 +5,7 @@ export enum HttpEndpoint {
   BUILD = "build",
   MUI_PREDICT = "mui-predict",
   HTML5_PREDICT = "html5-predict",
+  NGMAT_PREDICT = "angular-predict", // TODO: check when implemented at BE
   REPORT_PROBLEM = "report_problem",
   DOWNLOAD_TEMPLATE = "download_template",
   SESSION_ID = "get_session_id",

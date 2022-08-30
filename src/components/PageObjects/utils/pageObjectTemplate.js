@@ -1,5 +1,5 @@
 import CyrillicToTranslit from "cyrillic-to-translit-js";
-import { elementLibrary } from "../utils/generationClassesMap";
+import { ElementLibrary } from "./generationClassesMap";
 import { getLocator } from "./pageObject";
 
 export function camelCase(n) {
@@ -44,14 +44,14 @@ import com.epam.jdi.light.elements.pageobjects.annotations.locators.*;
 import com.epam.jdi.light.elements.composite.*;
 import com.epam.jdi.light.ui.html.elements.common.*;
 ${
-  libraries.includes(elementLibrary.HTML5) ? `
+  libraries.includes(ElementLibrary.HTML5) ? `
 import com.epam.jdi.light.elements.complex.*;
 import com.epam.jdi.light.elements.common.*;
 import com.epam.jdi.light.elements.complex.dropdown.*;
 import com.epam.jdi.light.elements.complex.table.*;
 import com.epam.jdi.light.ui.html.elements.complex.*;` : ""
 }${
-  libraries.includes(elementLibrary.MUI) ? `
+  libraries.includes(ElementLibrary.MUI) ? `
 import com.epam.jdi.light.material.elements.displaydata.*;
 import com.epam.jdi.light.material.elements.displaydata.table.*;
 import com.epam.jdi.light.material.elements.feedback.*;

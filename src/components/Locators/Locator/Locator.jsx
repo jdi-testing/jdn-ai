@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import React, { memo, useRef, useEffect } from "react";
 import Text from "antd/lib/typography/Text";
 
-import { getLocator } from "../../../services/pageObject";
+import { getLocator } from "../../PageObjects/utils/pageObject";
 import { pageType } from "../../../utils/constants";
 import {
   toggleElementGeneration,
@@ -15,7 +15,7 @@ import { isLocatorIndeterminate, areChildrenChecked } from "../../../store/selec
 import { LocatorIcon } from "./LocatorIcon";
 import { LocatorCopyButton } from "./LocatorCopyButton";
 import { LocatorMenu } from "./LocatorMenu";
-import { getTypesMenuOptions } from "../../../utils/generationClassesMap";
+import { getTypesMenuOptions } from "../../PageObjects/utils/generationClassesMap";
 import { sendMessage } from "../../../services/connector";
 import { toggleBackdrop } from "../../../store/slices/mainSlice";
 

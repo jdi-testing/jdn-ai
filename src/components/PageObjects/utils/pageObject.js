@@ -2,12 +2,12 @@ import { chain, entries, lowerFirst, replace, size, toLower } from "lodash";
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
 
-import { connector } from "./connector";
-import { getJDILabel } from "../utils/generationClassesMap";
+import { connector } from "../../../services/connector";
+import { getJDILabel } from "./generationClassesMap";
 import { pageObjectTemplate } from "./pageObjectTemplate";
-import javaReservedWords from "../utils/javaReservedWords.json";
-import { selectConfirmedLocators, selectPageObjects } from "../store/selectors/pageObjectSelectors";
-import { testFileTemplate } from "./testTemplate";
+import javaReservedWords from "./javaReservedWords.json";
+import { selectConfirmedLocators, selectPageObjects } from "../../../store/selectors/pageObjectSelectors";
+import { testFileTemplate } from "../../../services/testTemplate";
 
 export const isStringMatchesReservedWord = (string) => javaReservedWords.includes(string);
 

@@ -8,12 +8,12 @@ import {
   setScrollToLocator,
 } from "../store/slices/locatorsSlice";
 import { connector, sendMessage } from "./connector";
-import { getTypesMenuOptions } from "../utils/generationClassesMap";
+import { getTypesMenuOptions } from "../components/PageObjects/utils/generationClassesMap";
 import { pageData, sendProblemReport, showOverlay } from "./pageDataHandlers";
 import { selectLocatorById, selectLocators } from "../store/selectors/locatorSelectors";
 import { stopGeneration } from "../store/thunks/stopGeneration";
 import { rerunGeneration } from "../store/thunks/rerunGeneration";
-import { isNameUnique, isPONameUnique, isStringMatchesReservedWord } from "./pageObject";
+import { isNameUnique, isPONameUnique, isStringMatchesReservedWord } from "../components/PageObjects/utils/pageObject";
 import { VALIDATION_ERROR_TYPE } from "../utils/constants";
 import { clearAll, setScriptMessage, toggleBackdrop } from "../store/slices/mainSlice";
 import { changeName as changePageObjectName, removeAll as removeAllPageObjects } from "../store/slices/pageObjectSlice";

@@ -10,7 +10,7 @@ import PencilSvg from "../../../assets/pencil.svg";
 import EditTextSvg from "../../../assets/edit-text.svg";
 import { removePageObject, setCurrentPageObj } from "../../../store/slices/pageObjectSlice";
 import { removeLocators } from "../../../store/slices/locatorsSlice";
-import { generatePageObject } from "../../../services/pageObject";
+import { generatePageObject } from "../utils/pageObject";
 import { pageType } from "../../../utils/constants";
 import { changePage } from "../../../store/slices/mainSlice";
 import { size } from "lodash";

@@ -1,5 +1,5 @@
 import { cloneDeep } from "lodash";
-import { getLocator } from "../services/pageObject";
+import { getLocator } from "../components/PageObjects/utils/pageObject";
 import { VALIDATION_ERROR_TYPE } from "./constants";
 
 export const floatToPercent = (value) => {

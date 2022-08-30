@@ -5,7 +5,7 @@ import Icon from "@ant-design/icons";
 import { Trash } from "phosphor-react";
 
 import { addPageObj } from "../../../store/thunks/addPageObject";
-import { generateAndDownloadZip } from "../../../services/pageObject";
+import { generateAndDownloadZip } from "../utils/pageObject";
 
 import PlusSvg from "../../../assets/plus.svg";
 import DownloadSvg from "../../../assets/download.svg";

@@ -9,7 +9,7 @@ import { setCalculationPriority, toggleDeleted } from "../../../store/slices/loc
 import { locatorTaskStatus, LOCATOR_CALCULATION_PRIORITY } from "../../../utils/constants";
 import { rerunGeneration } from "../../../store/thunks/rerunGeneration";
 import { stopGeneration } from "../../../store/thunks/stopGeneration";
-import { getTypesMenuOptions } from "../../../utils/generationClassesMap";
+import { getTypesMenuOptions } from "../../PageObjects/utils/generationClassesMap";
 import { isProgressStatus, locatorGenerationController } from "../../../services/locatorGenerationController";
 
 import PauseSvg from "../../../assets/pause.svg";

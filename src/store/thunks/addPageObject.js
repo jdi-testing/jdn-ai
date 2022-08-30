@@ -1,12 +1,12 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { isNull, map, size, toLower } from "lodash";
-import { getPageAttributes, isPONameUnique } from "../../services/pageObject";
-import { getClassName } from "../../services/pageObjectTemplate";
-import { defaultLibrary } from "../../utils/generationClassesMap";
+import { getPageAttributes, isPONameUnique } from "../../components/PageObjects/utils/pageObject";
+import { getClassName } from "../../components/PageObjects/utils/pageObjectTemplate";
+import { defaultLibrary } from "../../components/PageObjects/utils/generationClassesMap";
 import { pageObjAdapter, selectMaxId, simpleSelectPageObjects } from "../selectors/pageObjectSelectors";
 
 
-export const addPageObj = createAsyncThunk("pageObject/addPageObj", async (payload, thunkAPI) => {
+export const addPageObj = createAsyncThunk("pageObject/addPageObj", async () => {
   const res = await getPageAttributes();
   const {title, url} = res[0].result;
   const className = getClassName(title);
