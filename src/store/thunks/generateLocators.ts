@@ -1,4 +1,4 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
+import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
 
 import { runXpathGeneration } from "./runXpathGeneration";
 import { selectLocators } from "../selectors/locatorSelectors";
@@ -6,17 +6,24 @@ import { addLocators } from "../slices/locatorsSlice";
 import { addLocatorsToPageObj } from "../slices/pageObjectSlice";
 import { convertToListWithChildren } from "../../utils/helpers";
 import { requestGenerationData, setParents } from "../../services/pageDataHandlers";
-import { locatorsGenerationStatus, locatorTaskStatus } from "../../utils/constants";
+import { Locator, LocatorsGenerationStatus, LocatorsState, LocatorTaskStatus, PredictedEntity } from "../slices/locatorSlice.types";
+import { ElementLibrary } from "../../components/PageObjects/utils/generationClassesMap";
+import { RootState } from "../store";
 
-const filterByProbability = (elements, perception) => {
+interface Meta {
+  predictedElements: PredictedEntity[],
+  library: ElementLibrary,
+}
+
+const filterByProbability = (elements: PredictedEntity[], perception: number) => {
   return elements.filter((e) => e.predicted_probability >= perception);
 };
 
-export const generateLocators = createAsyncThunk("locators/generateLocators", async (payload, thunkAPI) => {
+export const generateLocators = createAsyncThunk("locators/generateLocators", async (payload: Meta, thunkAPI) => {
   const { predictedElements, library } = payload;
   const availableForGeneration = filterByProbability(predictedElements, 0.5);
   const state = thunkAPI.getState();
-  const locators = selectLocators(state);
+  const locators = selectLocators(state as RootState);
   if (availableForGeneration.length) {
     const noLocator = availableForGeneration.filter(
         (element) => locators.findIndex((loc) => loc.element_id === element.element_id) === -1
@@ -24,10 +31,10 @@ export const generateLocators = createAsyncThunk("locators/generateLocators", as
     if (noLocator.length) {
       const { generationData } = await requestGenerationData(noLocator, library);
       const _locatorsWithParents = await setParents(generationData);
-      const locatorsWithParents = convertToListWithChildren(_locatorsWithParents);
+      const locatorsWithParents: Locator[] = convertToListWithChildren(_locatorsWithParents);
       const pendingLocators = locatorsWithParents.map((locator) => ({
         ...locator,
-        locator: { ...locator.locator, taskStatus: locatorTaskStatus.PENDING },
+        locator: { ...locator.locator, taskStatus: LocatorTaskStatus.PENDING },
       }));
       thunkAPI.dispatch(addLocators(pendingLocators));
 
@@ -39,15 +46,13 @@ export const generateLocators = createAsyncThunk("locators/generateLocators", as
   }
 });
 
-export const generateLocatorsReducer = (builder) => {
+export const generateLocatorsReducer = (builder: ActionReducerMapBuilder<LocatorsState>) => {
   return builder
       .addCase(generateLocators.pending, (state) => {
-        state.schedulerStatus = "pending";
-        state.generationStatus = locatorsGenerationStatus.started;
+        state.generationStatus = LocatorsGenerationStatus.started;
       })
       .addCase(generateLocators.fulfilled, (state) => {
-        state.schedulerStatus = "scheduled";
-        state.generationStatus = locatorsGenerationStatus.complete;
+        state.generationStatus = LocatorsGenerationStatus.complete;
       })
       .addCase(generateLocators.rejected, (state, { error }) => {
         throw new Error(error.stack);

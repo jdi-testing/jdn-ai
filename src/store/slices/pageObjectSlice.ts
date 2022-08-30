@@ -15,14 +15,14 @@ const pageObjSlice = createSlice({
       const pageObj = simpleSelectPageObjById(state, pageObjId);
       if (!pageObj) return;
       const locators = [...(pageObj.locators || []), locatorId];
-      pageObjAdapter.upsertOne(state, { id: pageObjId, locators });
+      pageObjAdapter.upsertOne(state, { id: pageObjId, locators } as PageObject);
     },
     addLocatorsToPageObj(state, { payload }) {
       if (isNil(state.currentPageObject)) return;
       const pageObj = simpleSelectPageObjById(state, state.currentPageObject);
       if (!pageObj) return;
       const locators = [...(pageObj.locators || []), ...payload];
-      pageObjAdapter.upsertOne(state, { id: pageObj.id, locators });
+      pageObjAdapter.upsertOne(state, { id: pageObj.id, locators } as PageObject);
     },
     changeName(state, { payload }) {
       const { id, name } = payload;
@@ -34,7 +34,7 @@ const pageObjSlice = createSlice({
     },
     clearLocators(state, { payload }) {
       const id = payload || state.currentPageObject;
-      pageObjAdapter.upsertOne(state, { id, locators: [] } as PageObject);
+      pageObjAdapter.upsertOne(state, { id, locators: undefined } as PageObject);
     },
     removeAll(state) {
       pageObjAdapter.removeAll(state);

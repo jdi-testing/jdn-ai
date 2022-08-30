@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { isUndefined, lowerFirst, size } from "lodash";
-import { getJdiClassName, getJDILabel } from "../../components/PageObjects/utils/generationClassesMap";
 import { locatorsAdapter, simpleSelectLocatorById } from "../selectors/locatorSelectors";
 import { cancelStopGenerationReducer } from "../thunks/cancelStopGeneration";
 import { generateLocatorsReducer } from "../thunks/generateLocators";

@@ -13,7 +13,8 @@ export interface PageObjectState {
 
 export interface PageObject {
     id: PageObjectId,
-    library?: ElementLibrary,
+    library: ElementLibrary,
     locators?: ElementId[],
-    name?: string,
+    name: string,
+    url: string,
 }
