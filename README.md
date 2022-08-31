@@ -10,8 +10,10 @@ Current version of JDN plugin is client-server application with two independent 
 * Open Chrome developer tools via F12 hotkey -> JDN tab should be added as the last tab at the Devtools
 
 ### **Setup server part**
-* Setup Docker https://www.docker.com/products/docker-desktop
-* Download the latest Docker Compose file from the `develop` branch and run `docker compose`:
+1. Setup Docker https://www.docker.com/products/docker-desktop
+2. Download the latest Docker Compose file from the `develop` branch and run `docker compose`
+3. In _Windows 10_ can be used both, PowerShell and regular command-line, for _macOS_ native terminal can be used
+
 ### *Release version*
 **macOS/Linux**
 ```shell
@@ -31,7 +33,6 @@ curl --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-te
 ```shell
 curl.exe --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/develop/docker-compose.yaml && docker compose up
 ```
-* In _Windows 10_ can be used both, PowerShell and regular command-line, for _macOS_ native terminal can be used.
 * <span style="color:orange">Attention! The first time, when you build the docker image, it can take significant time<span>
 * After finishing of downloading check that container is created. The number of back-end version should be displayed in JDN plugin tab near the front-end version.
 * The plugin doesn't work properly in "Dock to bottom" view. Please use another dock side view. 
