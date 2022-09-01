@@ -88,7 +88,7 @@ const locatorsSlice = createSlice({
       toggleGenerate(locator);
       locatorsAdapter.upsertMany(state, newValue as Locator[]);
     },
-    setCalculationPriority(state, { payload }: PayloadAction<{ element_id: ElementId, ids: ElementId[], priority: LocatorCalculationPriority }>) {
+    setCalculationPriority(state, { payload }: PayloadAction<{ element_id: ElementId, priority: LocatorCalculationPriority, ids?: ElementId[] }>) {
       const { element_id, ids, priority } = payload;
       if (element_id) locatorsAdapter.upsertOne(state, { element_id, priority } as Locator);
       if (ids) {
