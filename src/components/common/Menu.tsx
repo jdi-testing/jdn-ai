@@ -14,11 +14,6 @@ interface Props {
 
 export const Menu: React.FC<Props> = ({ items }) => {
   return (
-    <AntMenu>
-      {items.map((item) => {
-        const { label, ...rest } = item;
-        return <AntMenu.Item {...rest}>{label}</AntMenu.Item>;
-      })}
-    </AntMenu>
+    <AntMenu {...{items}} />
   );
 };

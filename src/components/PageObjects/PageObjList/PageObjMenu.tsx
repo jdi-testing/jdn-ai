@@ -1,4 +1,4 @@
-import React, { MouseEvent, useState } from "react";
+import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Icon from "@ant-design/icons";
 import { Dropdown, Typography } from "antd";
@@ -39,19 +39,10 @@ export const PageObjMenu: React.FC<Props> = ({
   library,
 }) => {
   const dispatch = useDispatch();
-  const [menuVisible, setMenuVisible] = useState(new Map());
 
   const currentPageObject = useSelector(
     (_state: RootState) => _state.pageObject.currentPageObject
   );
-
-  const handleMenuClick = (
-    e: MouseEvent,
-    id: PageObjectId
-  ) => {
-    e.stopPropagation();
-    setMenuVisible(new Map(menuVisible.set(id, true)));
-  };
 
   const renderMenu = (
     id: PageObjectId,
@@ -60,7 +51,9 @@ export const PageObjMenu: React.FC<Props> = ({
     name: string
   ) => {
     const handleRename = () => {
-      chrome.storage.sync.set({ OPEN_EDIT_NAME: { isOpen: true, value: { id, name } } });
+      chrome.storage.sync.set({
+        OPEN_EDIT_NAME: { isOpen: true, value: { id, name } },
+      });
     };
 
     const handleRemove = () => {
@@ -119,14 +112,14 @@ export const PageObjMenu: React.FC<Props> = ({
   };
 
   return (
-    <a
-      onClick={(e) => handleMenuClick(e, id)}
-      onMouseLeave={() => setMenuVisible(new Map(menuVisible.set(id, false)))}
-      data-testid="dropdown-button"
-    >
+    <a onClick={(e) => e.stopPropagation()} data-testid="dropdown-button">
       <Dropdown
-        visible={menuVisible.get(id)}
+        arrow={{ pointAtCenter: true }}
+        align={{ offset: [14, 0] }}
+        trigger={["click"]}
         overlay={renderMenu(id, locators, elements, name)}
+        getPopupContainer={(triggerNode) => triggerNode}
+        destroyPopupOnHide
       >
         <Icon component={EllipsisSvg} />
       </Dropdown>
