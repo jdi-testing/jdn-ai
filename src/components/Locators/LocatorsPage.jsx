@@ -4,7 +4,6 @@ import { Button, Tooltip } from "antd";
 import Icon from "@ant-design/icons";
 
 import { LocatorsTree } from "./LocatorsTree";
-// import { PerceptionTreshold } from "../PerceptionTreshold/PerceptionTreshold";
 import {
   showOverlay,
   openConfirmBackPopup,
@@ -148,7 +147,6 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
           )}
         />
       </div>
-      {/* <PerceptionTreshold /> */}
       <div className="jdn__navigation">
         {renderBackButton()}
         {renderConfirmButton()}

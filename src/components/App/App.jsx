@@ -12,7 +12,7 @@ import "antd/lib/style/themes/default.less";
 import { store } from "../../store/store";
 import Layout, { Content, Header } from "antd/lib/layout/layout";
 import { changePage } from "../../store/slices/mainSlice";
-import { ControlBar } from "./ControlBar";
+import { StatusBar } from "./StatusBar";
 import { SeveralTabsWarning } from "./SeveralTabsWarning";
 import { Backdrop } from "./Backdrop/Backdrop";
 import { LocatorsPage } from "../Locators/LocatorsPage";
@@ -107,7 +107,7 @@ const App = () => {
         <Backdrop />
         <Layout className="jdn__autofind">
           <Header className="jdn__header">
-            <ControlBar />
+            <StatusBar />
           </Header>
           <Content className="jdn__content">
             {backendAvailable === BackendStatus.Accessed ? (

@@ -1,4 +1,4 @@
-import { Divider, Space, Dropdown } from "antd";
+import { Space, Dropdown } from "antd";
 import { useSelector } from "react-redux";
 import Icon from "@ant-design/icons";
 import React from "react";
@@ -12,7 +12,7 @@ import { RootState } from "../../store/store";
 import { isNil } from "lodash";
 import { Menu, MenuItem } from "../common/Menu";
 
-export const ControlBar = () => {
+export const StatusBar = () => {
   const backendVer = useSelector<RootState>(
     (_state) => _state.main.serverVersion
   );
@@ -43,7 +43,7 @@ export const ControlBar = () => {
         key: "1",
         onClick: handleReportProblem,
         label: "Report a problem",
-      })
+      });
     }
 
     return <Menu {...{ items }} />;
@@ -52,20 +52,9 @@ export const ControlBar = () => {
   return (
     <React.Fragment>
       <div className="jdn__header-version">
-        <Space
-          size={0}
-          direction="horizontal"
-          split={
-            <Divider type="vertical" style={{ backgroundColor: "#fff" }} />
-          }
-        >
-          <span className="jdn__header-text">
-            <span className="jdn__header-title">JDN</span> v {pluginVer}
-          </span>
-          {!isNil(backendVer) ? (
-            <span className="jdn__header-text">{`Back-end v ${backendVer}`}</span>
-          ) : null}
-        </Space>
+        <span>{`JDN v ${pluginVer} ${
+          !isNil(backendVer) ? `Back-end v ${backendVer}` : null
+        }`}</span>
       </div>
       <Space size={[30, 0]} className="header__space">
         <a
@@ -87,11 +76,15 @@ export const ControlBar = () => {
         {/* <a className="jdn__header-link" href="#">
           Upgrade
         </a> */}
-        <a className="jdn__header-kebab">
-          <Dropdown overlay={kebabMenu} trigger={["click"]} arrow={{ pointAtCenter: true }}>
+        <span className="jdn__header-kebab">
+          <Dropdown
+            overlay={kebabMenu}
+            trigger={["click"]}
+            arrow={{ pointAtCenter: true }}
+          >
             <Icon component={kebab_menu} onClick={(e) => e.preventDefault()} />
           </Dropdown>
-        </a>
+        </span>
       </Space>
     </React.Fragment>
   );
