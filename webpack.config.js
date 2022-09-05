@@ -87,11 +87,10 @@ const mainConfig = {
                   // "normal-color": "#b2b5C2",
                   "success-color": "#1582d8", // success state color
                   "warning-color": "#d8a115", // warning state color
-                  "error-color": "#d82c15",
+                  "error-color": "#ff4d4f",
                   "btn-default-color": "#1582d8",
                   "btn-default-border": "#1582d8",
-                  "menu-horizontal-line-height": "36px",
-                  "menu-bg": "#000000",
+                  "menu-horizontal-line-height": "32px",
                   "border-radius-base": "0px",
                   "checkbox-size": "14px",
                 },

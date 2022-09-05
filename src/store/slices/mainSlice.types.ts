@@ -9,12 +9,14 @@ export interface MainState {
     scriptMessage: string | null;
     showBackdrop: boolean;
     xpathConfig: {
-        maximum_generation_time: number;
+        maximum_generation_time: MaxGenerationTime;
         allow_indexes_at_the_beginning: boolean;
         allow_indexes_in_the_middle: boolean;
         allow_indexes_at_the_end: boolean;
     }
 }
+
+export type MaxGenerationTime = 1 | 3 | 5 | 10 | 60 | 3600;
 
 export interface Page { page:  PageType}
 
