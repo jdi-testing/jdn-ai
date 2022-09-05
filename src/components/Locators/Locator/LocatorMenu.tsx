@@ -96,7 +96,7 @@ export const LocatorMenu: React.FC<Props> = ({ element, library }) => {
       items = [restore(() => dispatch(toggleDeleted(element_id)))];
     } else {
       items = [
-        ...[edit(handleEditClick)],
+        edit(handleEditClick),
         ...(isLocatorInProgress
           ? [pause(() => dispatch(stopGeneration(element_id)))]
           : []),
@@ -134,7 +134,7 @@ export const LocatorMenu: React.FC<Props> = ({ element, library }) => {
               ]),
             ]
           : []),
-        ...[deleteOption(() => dispatch(toggleDeleted(element_id)))],
+        deleteOption(() => dispatch(toggleDeleted(element_id))),
       ];
     }
 

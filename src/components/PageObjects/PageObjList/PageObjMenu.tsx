@@ -1,13 +1,9 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Icon from "@ant-design/icons";
-import { Dropdown, Typography } from "antd";
+import { Dropdown } from "antd";
 
 import EllipsisSvg from "../../../assets/ellipsis.svg";
-import TrashBinSvg from "../../../assets/trash-bin.svg";
-import DownloadSvg from "../../../assets/download.svg";
-import PencilSvg from "../../../assets/pencil.svg";
-import EditTextSvg from "../../../assets/edit-text.svg";
 import {
   removePageObject,
   setCurrentPageObj,
@@ -17,11 +13,12 @@ import { generatePageObject } from "../utils/pageObject";
 import { pageType } from "../../../utils/constants";
 import { changePage } from "../../../store/slices/mainSlice";
 import { size } from "lodash";
-import { Menu, MenuItem } from "../../common/Menu";
+import { Menu } from "../../common/Menu";
 import { ElementId, Locator } from "../../../store/slices/locatorSlice.types";
 import { ElementLibrary } from "../utils/generationClassesMap";
 import { RootState } from "../../../store/store";
 import { PageObjectId } from "../../../store/slices/pageObjectSlice.types";
+import { deleteOption, download, edit, renameOption } from "../../Locators/menuOptions";
 
 interface Props {
   id: ElementId;
@@ -76,37 +73,12 @@ export const PageObjMenu: React.FC<Props> = ({
       );
     };
 
-    const items: MenuItem[] = [
-      {
-        key: "0",
-        icon: <EditTextSvg />,
-        onClick: handleRename,
-        label: "Rename",
-      },
+    const items = [
+      renameOption(handleRename),
+      ...(size(locatorIds) ? [edit(handleEdit, "Edit list")] : []),
+      ...(size(locatorIds) ? [download(handleDownload)] : []),
+      deleteOption(handleRemove),
     ];
-
-    if (size(locatorIds)) {
-      items.push({
-        key: "1",
-        icon: <PencilSvg />,
-        onClick: handleEdit,
-        label: "Edit list",
-      });
-
-      items.push({
-        key: "2",
-        icon: <DownloadSvg />,
-        onClick: handleDownload,
-        label: "Download",
-      });
-    }
-
-    items.push({
-      key: "3",
-      icon: <TrashBinSvg />,
-      onClick: handleRemove,
-      label: <Typography.Text type="danger">Delete</Typography.Text>,
-    });
 
     return <Menu {...{ items }} />;
   };

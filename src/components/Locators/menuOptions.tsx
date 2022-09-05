@@ -13,6 +13,9 @@ import {
 import React from "react";
 import { MenuItem } from "../common/Menu";
 
+import EditTextSvg from "../../assets/edit-text.svg";
+import DownloadSvg from "../../assets/download.svg";
+
 export const restore = (onClick: () => void): MenuItem => ({
   key: "0",
   icon: <ArrowsCounterClockwise size={14} />,
@@ -48,11 +51,11 @@ export const downPriority = (onClick: () => void) => ({
   label: "Down Priority",
 });
 
-export const edit = (onClick: () => void) => ({
+export const edit = (onClick: () => void, label?: string) => ({
   key: "5",
   icon: <PencilSimple size={14} />,
   onClick: onClick,
-  label: "Edit",
+  label: label || "Edit",
 });
 
 export const advanced = (onClick: Array<() => void>) => ({
@@ -94,6 +97,27 @@ export const advanced = (onClick: Array<() => void>) => ({
   ],
 });
 
+export const renameOption = (onClick: () => void): MenuItem => ({
+    key: "8",
+    icon: <EditTextSvg />,
+    onClick: onClick,
+    label: "Rename",
+})
+
+export const retry = (onClick: () => void) => ({
+    key: "9",
+    icon: <ArrowClockwise size={14} />,
+    onClick,
+    label: "Retry",
+});
+
+export const download = (onClick: () => void) => ({
+    key: "10",
+    icon: <DownloadSvg />,
+    onClick,
+    label: "Download",
+})
+
 export const deleteOption = (onClick: () => void) => ({
   key: "15",
   icon: <Trash size={14} color="#FF4D4F" />,
@@ -101,9 +125,4 @@ export const deleteOption = (onClick: () => void) => ({
   label: <Typography.Text type="danger">Delete</Typography.Text>,
 });
 
-export const retry = (onClick: () => void) => ({
-    key: "8",
-    icon: <ArrowClockwise size={14} />,
-    onClick,
-    label: "Retry",
-});
+
