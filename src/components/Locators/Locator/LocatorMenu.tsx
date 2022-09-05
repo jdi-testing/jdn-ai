@@ -1,38 +1,49 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { Dropdown, Typography } from "antd";
+import { Dropdown } from "antd";
 import Icon from "@ant-design/icons";
-import { ArrowFatUp, ArrowFatDown, PencilSimple, Trash } from "phosphor-react";
 
 import {
   setCalculationPriority,
   toggleDeleted,
 } from "../../../store/slices/locatorsSlice";
 
-import {
-  locatorTaskStatus,
-  LOCATOR_CALCULATION_PRIORITY,
-} from "../../../utils/constants";
 import { rerunGeneration } from "../../../store/thunks/rerunGeneration";
 import { stopGeneration } from "../../../store/thunks/stopGeneration";
-import { ElementLibrary, getTypesMenuOptions } from "../../PageObjects/utils/generationClassesMap";
+import {
+  ElementLibrary,
+  getTypesMenuOptions,
+} from "../../PageObjects/utils/generationClassesMap";
 import {
   isProgressStatus,
   locatorGenerationController,
 } from "../../../services/locatorGenerationController";
 
-import PauseSvg from "../../../assets/pause.svg";
-import PlaySvg from "../../../assets/play.svg";
-import RestoreSvg from "../../../assets/restore.svg";
 import EllipsisSvg from "../../../assets/ellipsis.svg";
 import { sendMessage } from "../../../services/connector";
 import { toggleBackdrop } from "../../../store/slices/mainSlice";
-import { Menu } from "../../common/Menu";
-import { Locator, LocatorCalculationPriority } from "../../../store/slices/locatorSlice.types";
+import { Menu, MenuItem } from "../../common/Menu";
+import {
+  Locator,
+  LocatorCalculationPriority,
+  LocatorTaskStatus,
+} from "../../../store/slices/locatorSlice.types";
+import {
+  advanced,
+  deleteOption,
+  downPriority,
+  edit,
+  pause,
+  rerun,
+  restore,
+  retry,
+  upPriority,
+} from "../menuOptions";
+import { MaxGenerationTime } from "../../../store/slices/mainSlice.types";
 
 interface Props {
-  element: Locator,
-  library: ElementLibrary,
+  element: Locator;
+  library: ElementLibrary;
 }
 
 export const LocatorMenu: React.FC<Props> = ({ element, library }) => {
@@ -71,67 +82,60 @@ export const LocatorMenu: React.FC<Props> = ({ element, library }) => {
   };
 
   const renderMenu = () => {
-    const items = [];
+    const getRerunGeneration = (time: MaxGenerationTime) => () =>
+      dispatch(
+        rerunGeneration({
+          generationData: [element],
+          maxGenerationTime: time,
+        })
+      );
+
+    let items: MenuItem[] = [];
+
     if (deleted) {
-      items.push({
-        key: "0",
-        icon: <RestoreSvg />,
-        onClick: () => dispatch(toggleDeleted(element_id)),
-        label: "Restore",
-      });
+      items = [restore(() => dispatch(toggleDeleted(element_id)))];
     } else {
-      items.push({
-        key: "1",
-        icon: <PencilSimple size={14} />,
-        onClick: handleEditClick,
-        label: "Edit",
-      });
-      if (isLocatorInProgress) {
-        items.push({
-          key: "2",
-          icon: <PauseSvg />,
-          onClick: () => dispatch(stopGeneration(element_id)),
-          label: "Stop generation",
-        });
-        if (priority !== LOCATOR_CALCULATION_PRIORITY.INCREASED) {
-          items.push({
-            key: "3",
-            icon: <ArrowFatUp size={14} />,
-            onClick: () => handleUpPriority,
-            label: "Up Priority",
-          });
-        }
-        if (priority !== LOCATOR_CALCULATION_PRIORITY.DECREASED) {
-          items.push({
-            key: "4",
-            icon: <ArrowFatDown size={14} />,
-            onClick: () => handleDownPriority,
-            label: "Down Priority",
-          });
-        }
-      }
-      if (locator.taskStatus === locatorTaskStatus.REVOKED) {
-        items.push({
-          key: "5",
-          icon: <PlaySvg />,
-          onClick: () => dispatch(rerunGeneration([element])),
-          label: "Rerun,",
-        });
-      }
-      if (locator.taskStatus === locatorTaskStatus.FAILURE) {
-        items.push({
-          key: "6",
-          icon: <RestoreSvg />,
-          onClick: () => dispatch(rerunGeneration([element])),
-          label: "Retry",
-        });
-      }
-      items.push({
-        key: "7",
-        icon: <Trash size={14} color="#FF4D4F" />,
-        onClick: () => dispatch(toggleDeleted(element_id)),
-        label: <Typography.Text type="danger">Delete</Typography.Text>,
-      });
+      items = [
+        ...[edit(handleEditClick)],
+        ...(isLocatorInProgress
+          ? [pause(() => dispatch(stopGeneration(element_id)))]
+          : []),
+        ...(isLocatorInProgress &&
+        priority !== LocatorCalculationPriority.Increased
+          ? [upPriority(handleUpPriority)]
+          : []),
+        ...(isLocatorInProgress &&
+        priority !== LocatorCalculationPriority.Decreased
+          ? [downPriority(handleDownPriority)]
+          : []),
+        ...(locator.taskStatus === LocatorTaskStatus.REVOKED
+          ? [
+              rerun(() =>
+                dispatch(rerunGeneration({ generationData: [element] }))
+              ),
+            ]
+          : []),
+        ...(locator.taskStatus === LocatorTaskStatus.FAILURE
+          ? [
+              retry(() =>
+                dispatch(rerunGeneration({ generationData: [element] }))
+              ),
+            ]
+          : []),
+        ...(locator.taskStatus === LocatorTaskStatus.SUCCESS
+          ? [
+              advanced([
+                getRerunGeneration(1),
+                getRerunGeneration(3),
+                getRerunGeneration(5),
+                getRerunGeneration(10),
+                getRerunGeneration(60),
+                getRerunGeneration(3600),
+              ]),
+            ]
+          : []),
+        ...[deleteOption(() => dispatch(toggleDeleted(element_id)))],
+      ];
     }
 
     return <Menu {...{ items }} />;
