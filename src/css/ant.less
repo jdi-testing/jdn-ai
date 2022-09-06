@@ -1,20 +1,12 @@
 @import "./variables.less";
 
-.ant-tooltip-inner {
-  font-family: "Noto Sans", sans-serif;
-  font-size: 12px;
-  line-height: 18px;
-  letter-spacing: 0;
-  padding: 12px;
-}
-
 /* Tree */
 
 .ant-tree {
   font-size: 12px;
 
   &-treenode {
-    width: calc(100vw - 53px);
+    width: 100%;
 
     &.jdn__tree-item--selected {
       background-color: #ecf7ff;
@@ -196,6 +188,15 @@
   padding: 0 16px;
 }
 
+.ant-layout-header {
+  padding: 2px 16px;
+  background-color: transparent;
+  line-height: 20px;
+  height: unset;
+  color: rgba(0, 0, 0, 0.25);
+  font-size: 10px;
+}
+
 /* Typography */
 
 .ant-typography {
@@ -245,7 +246,6 @@
   padding: 6px 12px;
   font-weight: bold;
   font-size: 12px;
-  line-height: 16px;
 
   & .ant-collapse-arrow {
     right: 12px;
@@ -257,11 +257,5 @@
     & .ant-checkbox {
       top: 0.05em;
     }
-  }
-}
-
-@media screen and (max-width: 600px) {
-  .header__space {
-    gap: 0 !important;
   }
 }

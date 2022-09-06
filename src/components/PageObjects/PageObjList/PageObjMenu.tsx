@@ -4,10 +4,7 @@ import Icon from "@ant-design/icons";
 import { Dropdown } from "antd";
 
 import EllipsisSvg from "../../../assets/ellipsis.svg";
-import {
-  removePageObject,
-  setCurrentPageObj,
-} from "../../../store/slices/pageObjectSlice";
+import { removePageObject, setCurrentPageObj } from "../../../store/slices/pageObjectSlice";
 import { removeLocators } from "../../../store/slices/locatorsSlice";
 import { generatePageObject } from "../utils/pageObject";
 import { pageType } from "../../../utils/constants";
@@ -28,25 +25,12 @@ interface Props {
   library: ElementLibrary;
 }
 
-export const PageObjMenu: React.FC<Props> = ({
-  id,
-  name,
-  locators,
-  elements,
-  library,
-}) => {
+export const PageObjMenu: React.FC<Props> = ({ id, name, locators, elements, library }) => {
   const dispatch = useDispatch();
 
-  const currentPageObject = useSelector(
-    (_state: RootState) => _state.pageObject.currentPageObject
-  );
+  const currentPageObject = useSelector((_state: RootState) => _state.pageObject.currentPageObject);
 
-  const renderMenu = (
-    id: PageObjectId,
-    locatorIds: ElementId[],
-    locatorObjects: Locator[],
-    name: string
-  ) => {
+  const renderMenu = (id: PageObjectId, locatorIds: ElementId[], locatorObjects: Locator[], name: string) => {
     const handleRename = () => {
       chrome.storage.sync.set({
         OPEN_EDIT_NAME: { isOpen: true, value: { id, name } },
@@ -65,11 +49,11 @@ export const PageObjMenu: React.FC<Props> = ({
     const handleEdit = () => {
       dispatch(setCurrentPageObj(id));
       dispatch(
-        changePage({
-          page: pageType.locatorsList,
-          pageObj: currentPageObject,
-          alreadyGenerated: true,
-        })
+          changePage({
+            page: pageType.locatorsList,
+            pageObj: currentPageObject,
+            alreadyGenerated: true,
+          })
       );
     };
 

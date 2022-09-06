@@ -18,7 +18,7 @@ export interface MainState {
 
 export type MaxGenerationTime = 1 | 3 | 5 | 10 | 60 | 3600;
 
-export interface Page { page:  PageType}
+export interface Page { page: PageType}
 
 export interface Notification {
     isCanceled: boolean;
@@ -34,12 +34,15 @@ export enum BackendStatus {
     ImcompatibleVersionLocal = "Local server version is incompatible. Please, use % with your version of plugin.",
     ImcompatibleVersionRemote = "Remote server version is incompatible. Please, update plugin",
     ImcompatibleVersions = "Remote and local server versions are incompatible. Please, update plugin or local server, or try to connect the remote server.",
-    
+
 }
 
 export enum PageType {
     PageObject = "pageObject",
     LocatorsList = "locatorsList",
 }
+
+export const LocalUrl = "http://localhost:5050";
+export const RemoteUrl = "http://10.253.219.156";
 
 export type BaseUrl = "http://localhost:5050" | "http://10.253.219.156";

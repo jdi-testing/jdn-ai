@@ -7,7 +7,15 @@ import { identifyElementsReducer } from "../thunks/identifyElements";
 import { rerunGenerationReducer } from "../thunks/rerunGeneration";
 import { stopGenerationReducer } from "../thunks/stopGeneration";
 import { stopGenerationGroupReducer } from "../thunks/stopGenerationGroup";
-import { ElementId, IdentificationStatus, Locator, LocatorCalculationPriority, LocatorsState, LocatorsGenerationStatus, LocatorTaskStatus } from "./locatorSlice.types";
+import {
+  ElementId,
+  IdentificationStatus,
+  Locator,
+  LocatorCalculationPriority,
+  LocatorsState,
+  LocatorsGenerationStatus,
+  LocatorTaskStatus,
+} from "./locatorSlice.types";
 
 const initialState: LocatorsState = {
   generationStatus: LocatorsGenerationStatus.noStatus,
@@ -75,20 +83,24 @@ const locatorsSlice = createSlice({
       const { generate, element_id } = locator;
       locatorsAdapter.upsertOne(state, { element_id, generate: !generate } as Locator);
     },
-    setChildrenGeneration(state, { payload }: PayloadAction<{locator: Locator, generate: boolean}>) {
+    setChildrenGeneration(state, { payload }: PayloadAction<{ locator: Locator; generate: boolean }>) {
       const { locator, generate } = payload;
       const newValue: Partial<Locator>[] = [];
       const toggleGenerate = (_locator: Locator) => {
-        _locator.children && _locator.children.forEach((childId) => {
-          newValue.push({ element_id: childId, generate });
-          const child = simpleSelectLocatorById(state, childId);
-          if (child && size(child.children)) toggleGenerate(child);
-        });
+        _locator.children &&
+          _locator.children.forEach((childId) => {
+            newValue.push({ element_id: childId, generate });
+            const child = simpleSelectLocatorById(state, childId);
+            if (child && size(child.children)) toggleGenerate(child);
+          });
       };
       toggleGenerate(locator);
       locatorsAdapter.upsertMany(state, newValue as Locator[]);
     },
-    setCalculationPriority(state, { payload }: PayloadAction<{ element_id: ElementId, priority: LocatorCalculationPriority, ids?: ElementId[] }>) {
+    setCalculationPriority(
+        state,
+        { payload }: PayloadAction<{ element_id: ElementId; priority: LocatorCalculationPriority; ids?: ElementId[] }>
+    ) {
       const { element_id, ids, priority } = payload;
       if (element_id) locatorsAdapter.upsertOne(state, { element_id, priority } as Locator);
       if (ids) {
@@ -102,13 +114,10 @@ const locatorsSlice = createSlice({
     setScrollToLocator(state, { payload: element_id }) {
       state.scrollToLocator = element_id;
     },
-    setElementGroupGeneration(state, { payload }: PayloadAction<{ids: string[], generate: boolean}>) {
+    setElementGroupGeneration(state, { payload }: PayloadAction<{ ids: string[]; generate: boolean }>) {
       const { ids, generate } = payload;
       // const newValue: Partial<Locator> = ;
-      locatorsAdapter.upsertMany(
-        state,
-        ids.map((id) => ({ element_id: id, generate })) as Locator[],
-      );
+      locatorsAdapter.upsertMany(state, ids.map((id) => ({ element_id: id, generate })) as Locator[]);
     },
     toggleElementGroupGeneration(state, { payload }: PayloadAction<Locator[]>) {
       const newValue: Partial<Locator>[] = [];
@@ -138,7 +147,11 @@ const locatorsSlice = createSlice({
     updateLocator(state, { payload }) {
       const { element_id, locator } = payload;
       const existingLocator = simpleSelectLocatorById(state, element_id);
-      existingLocator && locatorsAdapter.upsertOne(state, { element_id, locator: { ...existingLocator.locator, ...locator } } as Locator);
+      existingLocator &&
+        locatorsAdapter.upsertOne(state, {
+          element_id,
+          locator: { ...existingLocator.locator, ...locator },
+        } as Locator);
     },
     restoreLocators(state, { payload: locators }) {
       locatorsAdapter.setMany(state, locators);

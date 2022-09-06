@@ -93,6 +93,7 @@ const mainConfig = {
                   "menu-horizontal-line-height": "32px",
                   "border-radius-base": "0px",
                   "checkbox-size": "14px",
+                  "layout-header-background": "transparent",
                 },
               },
             },
