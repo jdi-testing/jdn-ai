@@ -1,20 +1,12 @@
 @import "./variables.less";
 
-.ant-tooltip-inner {
-  font-family: "Noto Sans", sans-serif;
-  font-size: 12px;
-  line-height: 18px;
-  letter-spacing: 0;
-  padding: 12px;
-}
-
 /* Tree */
 
 .ant-tree {
   font-size: 12px;
 
   &-treenode {
-    width: calc(100vw - 53px);
+    width: 100%;
 
     &.jdn__tree-item--selected {
       background-color: #ecf7ff;
@@ -265,11 +257,5 @@
     & .ant-checkbox {
       top: 0.05em;
     }
-  }
-}
-
-@media screen and (max-width: 600px) {
-  .header__space {
-    gap: 0 !important;
   }
 }

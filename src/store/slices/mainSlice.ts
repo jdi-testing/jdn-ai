@@ -32,7 +32,10 @@ const mainSlice = createSlice({
     changePerception(state, { payload }) {
       state.perception = payload;
     },
-    clearAll: (state) => ({...initialState, backendAvailable: state.backendAvailable}),
+    clearAll: (state) => {
+      const { backendAvailable, baseUrl, serverVersion } = state;
+      return { ...initialState, backendAvailable, baseUrl, serverVersion };
+    },
     pushNotification(state, { payload }) {
       state.notifications.push(payload);
     },
@@ -45,7 +48,7 @@ const mainSlice = createSlice({
     resetNotifications(state) {
       state.notifications.length = 0;
     },
-    setBackendAvailable(state, {payload}) {
+    setBackendAvailable(state, { payload }) {
       state.backendAvailable = payload;
     },
     setScriptMessage(state, { payload }) {
