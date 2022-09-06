@@ -1,7 +1,7 @@
 import { Space, Dropdown, Typography, Tooltip } from "antd";
 import { useSelector } from "react-redux";
 import Icon from "@ant-design/icons";
-import React, { Children, ReactNode } from "react";
+import React from "react";
 
 import { reportProblem } from "../../services/pageDataHandlers";
 
@@ -11,12 +11,13 @@ import { selectCurrentPage } from "../../store/selectors/mainSelectors";
 import { RootState } from "../../store/store";
 import { isNil } from "lodash";
 import { Menu, MenuItem } from "../common/Menu";
-import { LocalUrl } from "../../store/slices/mainSlice.types";
+import { BackendStatus, LocalUrl } from "../../store/slices/mainSlice.types";
 import { CloudCheck, DesktopTower } from "phosphor-react";
 import { LocatorsGenerationStatus } from "../../store/slices/locatorSlice.types";
 
 export const StatusBar = () => {
   const backendVer = useSelector<RootState>((_state) => _state.main.serverVersion);
+  const backendAvailable = useSelector<RootState>((_state) => _state.main.backendAvailable);
   const serverLocation = useSelector<RootState>((_state) => _state.main.baseUrl);
   const currentPage = useSelector(selectCurrentPage).page;
   const generationStatus = useSelector<RootState>((_state) => _state.locators.generationStatus);
@@ -62,7 +63,7 @@ export const StatusBar = () => {
         "Local server" :
         "Remote server";
 
-    return (
+    return backendAvailable === BackendStatus.Accessed ? (
       <Tooltip placement="bottomRight" align={{ offset: [12, 0] }} title={title}>
         {generationStatus === LocatorsGenerationStatus.failed ? (
           <Typography.Text type="danger">{locationIcon}</Typography.Text>
@@ -70,13 +71,13 @@ export const StatusBar = () => {
           locationIcon
         )}
       </Tooltip>
-    );
+    ) : null;
   };
 
   return (
     <React.Fragment>
       <div className="jdn__header-version">
-        <span>{`JDN v ${pluginVer} ${!isNil(backendVer) ? `Back-end v ${backendVer}` : null}`}</span>
+        <span>{`JDN v ${pluginVer} ${!isNil(backendVer) ? `Back-end v ${backendVer}` : ""}`}</span>
       </div>
       <Space size={[30, 0]} className="header__space">
         <a
