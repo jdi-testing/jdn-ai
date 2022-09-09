@@ -2,7 +2,7 @@
 Current version of JDN plugin is client-server application with two independent parts and both parts should be installed separately.
 
 ## **Setup plugin to Chrome**
-1. Download the version 3.2.240 of the plugin: https://github.com/jdi-testing/jdn-ai/releases/download/3.2.240/3.2.240.zip
+1. Download the version 3.2.252 of the plugin: https://github.com/jdi-testing/jdn-ai/releases/download/3.2.240/3.2.252.zip
    *  For developers only: Download the last version of the plugin: https://github.com/jdi-testing/jdn-ai/releases (you need an archive named like the JDN version) as archive (.zip file)
 2. Unpack the content to any convenient place (the result folder name is “dist”)
 3. Open Chrome Settings → choose option “More tools” → choose option Extensions → turn on the Developer mode → click “Load unpacked”
