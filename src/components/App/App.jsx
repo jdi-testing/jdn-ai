@@ -1,8 +1,4 @@
-import {
-  Provider as ReduxProvider,
-  useDispatch,
-  useSelector,
-} from "react-redux";
+import { Provider as ReduxProvider, useDispatch, useSelector } from "react-redux";
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
 
@@ -16,15 +12,10 @@ import { StatusBar } from "./StatusBar";
 import { SeveralTabsWarning } from "./SeveralTabsWarning";
 import { Backdrop } from "./Backdrop/Backdrop";
 import { LocatorsPage } from "../Locators/LocatorsPage";
-import {
-  identificationStatus,
-  pageType,
-  readmeLinkAddress,
-} from "../../utils/constants";
+import { identificationStatus, pageType, readmeLinkAddress } from "../../utils/constants";
 import { selectCurrentPage } from "../../store/selectors/mainSelectors";
 import { PageObjectPage } from "../PageObjects/PageObjectPage";
 import { HttpEndpoint, request } from "../../services/backend";
-import Title from "antd/lib/typography/Title";
 import { useOnTabUpdate } from "./useOnTabUpdate";
 import { checkSession, getSessionId } from "./appUtils";
 
@@ -33,6 +24,7 @@ import { connector } from "../../services/connector";
 import { defineServer } from "../../store/thunks/defineServer";
 import { BackendStatus } from "../../store/slices/mainSlice.types";
 import { compatibleVersions } from "../../compatibleVersions";
+import { Guide } from "./Guide/Guide";
 
 const App = () => {
   const [isInvalidSession, setIsInvalidSession] = useState(false);
@@ -40,9 +32,7 @@ const App = () => {
   const status = useSelector((state) => state.locators.status);
   const backendAvailable = useSelector((state) => state.main.backendAvailable);
   const currentPage = useSelector(selectCurrentPage);
-  const currentPageObject = useSelector(
-    (state) => state.pageObject.currentPageObject
-  );
+  const currentPageObject = useSelector((state) => state.pageObject.currentPageObject);
   const dispatch = useDispatch();
 
   useOnTabUpdate();
@@ -67,9 +57,7 @@ const App = () => {
 
   useEffect(() => {
     if (status === identificationStatus.success) {
-      dispatch(
-        changePage({ page: pageType.locatorsList, pageObj: currentPageObject })
-      );
+      dispatch(changePage({ page: pageType.locatorsList, pageObj: currentPageObject }));
     }
   }, [status]);
 
@@ -80,25 +68,6 @@ const App = () => {
     ) : (
       <LocatorsPage {...{ alreadyGenerated }} />
     );
-  };
-
-  const renderMessage = () => {
-    if (backendAvailable !== BackendStatus.AccessFailed) {
-      return backendAvailable === BackendStatus.ImcompatibleVersionLocal
-        ? backendAvailable.replace("%", compatibleVersions[0])
-        : backendAvailable;
-    } else {
-      return (
-        <span>
-          Server doesn&apos;t respond. Please, check network settings or set up
-          a local server (see{" "}
-          <a href={readmeLinkAddress} target="_blank" rel="noreferrer">
-            Readme
-          </a>{" "}
-          for details).
-        </span>
-      );
-    }
   };
 
   return (
@@ -112,14 +81,14 @@ const App = () => {
           <Content className="jdn__content">
             {backendAvailable === BackendStatus.Accessed ? (
               isInvalidSession ? (
-                <SeveralTabsWarning
-                  {...{ checkSession: () => checkSession(setIsInvalidSession) }}
-                />
+                <SeveralTabsWarning {...{ checkSession: () => checkSession(setIsInvalidSession) }} />
               ) : (
                 renderPage()
               )
+            ) : backendAvailable === BackendStatus.TryToAccess ? (
+              BackendStatus.TryToAccess
             ) : (
-              <Title level={5}>{renderMessage()}</Title>
+              <Guide />
             )}
           </Content>
         </Layout>

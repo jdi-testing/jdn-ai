@@ -2,15 +2,15 @@
 Current version of JDN plugin is client-server application with two independent parts and both parts should be installed separately.
 
 ## **Setup plugin to Chrome**
-1. Download the version 3.2.240 of the plugin: https://github.com/jdi-testing/jdn-ai/releases/download/3.2.240/3.2.240.zip
-   *  For developers only: Download the last version of the plugin: https://github.com/jdi-testing/jdn-ai/releases (you need an archive named like the JDN version) as archive (.zip file)
+1. [Download](https://github.com/jdi-testing/jdn-ai/releases/tag/3.2.252) the latest version of plugin.
+   *  For developers only: [Download](https://github.com/jdi-testing/jdn-ai/releases) the latest version (you need an archive named like the JDN version) as an archive (.zip file)
 2. Unpack the content to any convenient place (the result folder name is “dist”)
 3. Open Chrome Settings → choose option “More tools” → choose option Extensions → turn on the Developer mode → click “Load unpacked”
 4. Select unpacked folder with the plugin on subfolders level (in the way that the contend as “CSS” and “Images”, don’t do it just for “dist” folder)
 5. Open Chrome developer tools via F12 hotkey → JDN tab should be added as the last tab at the Devtools
 
 ## **Setup server part**
-1. Setup Docker https://www.docker.com/products/docker-desktop
+1. Setup [Docker](https://www.docker.com/products/docker-desktop)
 2. Download the latest Docker Compose file from the `develop` branch and run `docker compose`
 3. In _Windows 10_ can be used both, PowerShell and regular command-line, for _macOS_ native terminal can be used
 

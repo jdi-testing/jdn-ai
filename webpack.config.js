@@ -146,6 +146,10 @@ const mainConfig = {
           fullySpecified: false
         }
       },
+      {
+        test: /\.md$/,
+        use: "raw-loader",
+      },
     ],
   },
 };

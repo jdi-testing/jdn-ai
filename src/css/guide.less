@@ -1,0 +1,84 @@
+.jdn__guide {
+  h2 {
+    display: none;
+  }
+
+  h5 {
+    font-weight: 400;
+  }
+
+  a {
+    color: #0050b3;
+  }
+
+  ul {
+    list-style-type: disc;
+  }
+
+  pre {
+    position: relative;
+    background-color: #F0F0F0;
+  }
+
+  &_content {
+    height: calc(100vh - 102px);
+    overflow: auto;
+  }
+
+  code {
+    background-color: #F0F0F0;
+    padding: 4px;
+    border-radius: 4px;
+  }
+
+  &_code {
+    position: relative;
+    
+    code {
+      line-height: 26px;
+    }
+
+    &:hover {
+      .ant-btn.ant-btn-default.jdn__guide_copy {
+        display: block;
+      }
+    }
+  }
+
+  .ant-btn.ant-btn-default.jdn__guide_copy {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    background-color: #fff;
+    display: none;
+  }
+
+  &_action {
+    margin-top: 16px;
+  }
+
+  .ant-steps-item-title {
+    font-size: 14px;
+    line-height: 22px;
+  }
+
+  .steps-content {
+    font-size: 12px;
+    margin-top: 16px;
+    margin-bottom: 16px;
+  }
+
+  // ant's bug
+  .ant-steps-item-wait .ant-steps-item-icon {
+    background-color: rgb(255, 255, 255);
+    border-color: rgba(0, 0, 0, 0.25);
+
+    & > .ant-steps-icon {
+      color: rgba(0, 0, 0, 0.25);
+    }
+  }
+
+  .ant-steps-item-icon .ant-steps-icon {
+    top: -2px;
+  }
+}
