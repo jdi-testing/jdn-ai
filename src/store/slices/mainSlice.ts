@@ -1,7 +1,8 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { size } from "lodash";
 import { defineServerReducer } from "../thunks/defineServer";
-import { BackendStatus, MainState } from "./mainSlice.types";
+import { BackendStatus, MainState, PageType } from "./mainSlice.types";
+import { PageObjectId } from "./pageObjectSlice.types";
 
 const initialState: MainState = {
   allowIdentifyElements: true,
@@ -16,14 +17,17 @@ const initialState: MainState = {
     allow_indexes_at_the_beginning: false,
     allow_indexes_in_the_middle: false,
     allow_indexes_at_the_end: false,
-  }
+  },
 };
 
 const mainSlice = createSlice({
   name: "main",
   initialState,
   reducers: {
-    changePage(state, { payload }) {
+    changePage(
+        state,
+        { payload }: PayloadAction<{ page: PageType; pageObj?: PageObjectId; alreadyGenerated?: boolean }>
+    ) {
       state.pageHistory.push(payload);
     },
     changePageBack(state) {
@@ -60,7 +64,7 @@ const mainSlice = createSlice({
   },
   extraReducers: (builder) => {
     defineServerReducer(builder);
-  }
+  },
 });
 
 export default mainSlice.reducer;

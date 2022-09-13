@@ -36,7 +36,7 @@ export const PageObjListHeader = ({ template }) => {
 
   return (
     <Row className="jdn__locatorsList-header">
-      <span className="jdn__locatorsList-header-title">Page Objects</span>
+      <span className="jdn__locatorsList-header-title"></span>
       <div className="jdn__locatorsList-header-buttons">
         <Button className="jdn__buttons" onClick={handleAddPageObject}>
           <Icon component={PlusSvg} />

@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { filter, size } from "lodash";
+import { filter, isNil, size } from "lodash";
 import { Checkbox, Dropdown, Row } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import Icon from "@ant-design/icons";
@@ -19,20 +19,10 @@ import {
 } from "../../store/slices/locatorsSlice";
 import { stopGenerationGroup } from "../../store/thunks/stopGenerationGroup";
 import { rerunGeneration } from "../../store/thunks/rerunGeneration";
-import {
-  locatorTaskStatus,
-  LOCATOR_CALCULATION_PRIORITY,
-} from "../../utils/constants";
+import { locatorTaskStatus, LOCATOR_CALCULATION_PRIORITY } from "../../utils/constants";
 import { locatorGenerationController } from "../../services/locatorGenerationController";
 import { selectInProgressSelectedByPageObject } from "../../store/selectors/pageObjectSelectors";
-import {
-  advanced,
-  deleteOption,
-  downPriority,
-  pause,
-  restore,
-  upPriority,
-} from "./menuOptions";
+import { advanced, deleteOption, downPriority, pause, restore, upPriority } from "./menuOptions";
 
 export const EXPAND_STATE = {
   EXPANDED: "EXPANDED",
@@ -43,37 +33,32 @@ export const EXPAND_STATE = {
 /* eslint-disable */
 // remove when current file all dependencies will migrate to TS
 
-export const LocatorListHeader = ({
-  generatedSelected,
-  waitingSelected,
-  deletedSelected,
-  locatorIds,
-  render,
-}) => {
+export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedSelected, locatorIds, render }) => {
   const dispatch = useDispatch();
   const [expandAll, setExpandAll] = useState(EXPAND_STATE.EXPANDED);
 
-  const currentPageObject = useSelector(
-    (_state) => _state.pageObject.currentPageObject
-  );
-  const selected = [
-    ...generatedSelected,
-    ...waitingSelected,
-    ...deletedSelected,
-  ];
-  const activeSelected = [...generatedSelected, ...waitingSelected];
-  const stoppedSelected = filter(
+  const currentPageObject = useSelector((_state) => _state.pageObject.currentPageObject);
+  const selected = useMemo(() => [...generatedSelected, ...waitingSelected, ...deletedSelected], [
+    generatedSelected,
     waitingSelected,
-    (el) => el.locator.taskStatus === locatorTaskStatus.REVOKED
-  );
-  const inProgressSelected = useSelector((_state) =>
-    selectInProgressSelectedByPageObject(_state, currentPageObject)
+    deletedSelected,
+  ]);
+
+  const activeSelected = useMemo(() => [...generatedSelected, ...waitingSelected], [
+    generatedSelected,
+    waitingSelected,
+  ]);
+
+  const stoppedSelected = useMemo(
+    () => filter(waitingSelected, (el) => el.locator.taskStatus === locatorTaskStatus.REVOKED),
+    [waitingSelected]
   );
 
-  const noPrioritySelected = useMemo(
-    () => filter(inProgressSelected, (_locator) => !_locator.priority),
-    [inProgressSelected]
-  );
+  const inProgressSelected = useSelector((_state) => selectInProgressSelectedByPageObject(_state, currentPageObject));
+
+  const noPrioritySelected = useMemo(() => filter(inProgressSelected, (_locator) => !_locator.priority), [
+    inProgressSelected,
+  ]);
 
   const increasedPrioritySelected = useMemo(
     () =>
@@ -91,13 +76,10 @@ export const LocatorListHeader = ({
     [inProgressSelected]
   );
   const fullySelected = size(selected) === size(locatorIds);
-  const partiallySelected =
-    !!size(selected) && size(selected) < size(locatorIds);
+  const partiallySelected = !!size(selected) && size(selected) < size(locatorIds);
 
   const handleOnCheck = () => {
-    dispatch(
-      setElementGroupGeneration({ ids: locatorIds, generate: !fullySelected })
-    );
+    dispatch(setElementGroupGeneration({ ids: locatorIds, generate: !fullySelected }));
   };
 
   const handleDelete = () => {
@@ -107,12 +89,8 @@ export const LocatorListHeader = ({
   };
 
   const handleUpPriority = () => {
-    const hashes = [...decreasedPrioritySelected, ...noPrioritySelected].map(
-      (element) => element.jdnHash
-    );
-    const ids = [...decreasedPrioritySelected, ...noPrioritySelected].map(
-      (element) => element.element_id
-    );
+    const hashes = [...decreasedPrioritySelected, ...noPrioritySelected].map((element) => element.jdnHash);
+    const ids = [...decreasedPrioritySelected, ...noPrioritySelected].map((element) => element.element_id);
     dispatch(
       setCalculationPriority({
         ids,
@@ -123,12 +101,8 @@ export const LocatorListHeader = ({
   };
 
   const handleDownPriority = () => {
-    const hashes = [...increasedPrioritySelected, ...noPrioritySelected].map(
-      (element) => element.jdnHash
-    );
-    const ids = [...increasedPrioritySelected, ...noPrioritySelected].map(
-      (element) => element.element_id
-    );
+    const hashes = [...increasedPrioritySelected, ...noPrioritySelected].map((element) => element.jdnHash);
+    const ids = [...increasedPrioritySelected, ...noPrioritySelected].map((element) => element.element_id);
     dispatch(
       setCalculationPriority({
         ids,
@@ -148,23 +122,13 @@ export const LocatorListHeader = ({
       );
 
     const items = [
-      ...(size(deletedSelected)
-        ? [restore(() => dispatch(toggleDeletedGroup(deletedSelected)))]
-        : []),
-      ...(size(stoppedSelected)
-        ? rerun(() => [
-            dispatch(rerunGeneration({ generationData: stoppedSelected })),
-          ])
-        : []),
-      ...(size(inProgressSelected)
-        ? [pause(() => dispatch(stopGenerationGroup(inProgressSelected)))]
-        : []),
-      ...(size(inProgressSelected) &&
-      (size(decreasedPrioritySelected) || size(noPrioritySelected))
+      ...(size(deletedSelected) ? [restore(() => dispatch(toggleDeletedGroup(deletedSelected)))] : []),
+      ...(size(stoppedSelected) ? rerun(() => [dispatch(rerunGeneration({ generationData: stoppedSelected }))]) : []),
+      ...(size(inProgressSelected) ? [pause(() => dispatch(stopGenerationGroup(inProgressSelected)))] : []),
+      ...(size(inProgressSelected) && (size(decreasedPrioritySelected) || size(noPrioritySelected))
         ? [upPriority(handleUpPriority)]
         : []),
-      ...(size(inProgressSelected) &&
-      (size(increasedPrioritySelected) || size(noPrioritySelected))
+      ...(size(inProgressSelected) && (size(increasedPrioritySelected) || size(noPrioritySelected))
         ? [downPriority(handleDownPriority)]
         : []),
       ...(size(generatedSelected)
@@ -179,11 +143,13 @@ export const LocatorListHeader = ({
             ]),
           ]
         : []),
-      ...[deleteOption(handleDelete)],
+      ...(size(activeSelected) ? [deleteOption(handleDelete)] : []),
     ];
 
-    return <Menu {...{ items }} />;
+    return size(items) ? <Menu {...{ items }} /> : null;
   };
+
+  const menu = useMemo(() => renderMenu(), [selected]);
 
   return (
     <React.Fragment>
@@ -191,27 +157,15 @@ export const LocatorListHeader = ({
         <span className="jdn__locatorsList-header-title">
           <CaretDown
             style={{
-              transform:
-                expandAll === EXPAND_STATE.EXPANDED
-                  ? "rotate(180deg)"
-                  : "rotate(0deg)",
+              transform: expandAll === EXPAND_STATE.EXPANDED ? "rotate(180deg)" : "rotate(0deg)",
             }}
             color="#878A9C"
             size={14}
             onClick={() =>
-              setExpandAll(
-                expandAll === EXPAND_STATE.COLLAPSED
-                  ? EXPAND_STATE.EXPANDED
-                  : EXPAND_STATE.COLLAPSED
-              )
+              setExpandAll(expandAll === EXPAND_STATE.COLLAPSED ? EXPAND_STATE.EXPANDED : EXPAND_STATE.COLLAPSED)
             }
           />
-          <Checkbox
-            checked={fullySelected}
-            indeterminate={partiallySelected}
-            onClick={handleOnCheck}
-          ></Checkbox>
-          Locators list
+          <Checkbox checked={fullySelected} indeterminate={partiallySelected} onClick={handleOnCheck}></Checkbox>
         </span>
         <Chip
           hidden={!size(selected)}
@@ -220,14 +174,11 @@ export const LocatorListHeader = ({
           onDelete={() => dispatch(toggleElementGroupGeneration(selected))}
         />
         <div className="jdn__locatorsList-header-buttons">
-          <Dropdown
-            arrow={{ pointAtCenter: true }}
-            overlay={renderMenu()}
-            trigger={["click"]}
-            destroyPopupOnHide
-          >
-            <Icon component={EllipsisSvg} onClick={(e) => e.preventDefault()} />
-          </Dropdown>
+          {!isNil(menu) ? (
+            <Dropdown arrow={{ pointAtCenter: true }} overlay={renderMenu()} trigger={["click"]} destroyPopupOnHide>
+              <Icon component={EllipsisSvg} onClick={(e) => e.preventDefault()} />
+            </Dropdown>
+          ) : null}
         </div>
       </Row>
       {render({ expandAll, setExpandAll })}
