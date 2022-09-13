@@ -11,7 +11,7 @@ export const pageObjAdapter = createEntityAdapter<PageObject>({
 });
 
 export const { selectAll: selectPageObjects, selectById: selectPageObjById } = pageObjAdapter.getSelectors(
-  (state: RootState) => state.pageObject
+    (state: RootState) => state.pageObject
 );
 
 export const {
@@ -19,11 +19,17 @@ export const {
   selectById: simpleSelectPageObjById,
 } = pageObjAdapter.getSelectors();
 
+export const selectCurrentPageObject = (state: RootState) => {
+  const currentPageObj = state.pageObject.currentPageObject;
+  if (!isNil(currentPageObj)) return selectPageObjById(state, currentPageObj);
+  return undefined;
+};
+
 export const selectMaxId = createSelector(simpleSelectPageObjects, (items) => {
   // eslint-disable-next-line
   const res = Math.max.apply(
-    Math,
-    items.map((po) => po.id)
+      Math,
+      items.map((po) => po.id)
   );
   return res !== -Infinity ? res : null;
 });
@@ -36,9 +42,9 @@ export const selectLocatorsByPageObject = createSelector(selectLocators, selectP
 });
 
 export const selectPageObjLocatorsByProbability = createSelector(
-  selectLocatorsByProbability,
-  (state: RootState, pageObjId: PageObjectId) => selectPageObjById(state, pageObjId)?.locators || [],
-  (locByProbability, locByPageObj) => locByProbability.filter((loc) => locByPageObj.includes(loc.element_id))
+    selectLocatorsByProbability,
+    (state: RootState, pageObjId: PageObjectId) => selectPageObjById(state, pageObjId)?.locators || [],
+    (locByProbability, locByPageObj) => locByProbability.filter((loc) => locByPageObj.includes(loc.element_id))
 );
 
 export const selectLocatorsToConfirm = createSelector(selectLocatorsByPageObject, (elements = []) =>
@@ -48,12 +54,12 @@ export const selectLocatorsToConfirm = createSelector(selectLocatorsByPageObject
 export const selectConfirmedLocators = selectLocatorsToConfirm;
 
 export const selectGeneratedByPageObj = createSelector(
-  selectGeneratedLocators,
-  (state: RootState, pageObjId: PageObjectId) => selectPageObjById(state, pageObjId)?.locators || [],
-  (locators, locByPageObj) =>
-    chain(locators)
-      .filter((loc) => locByPageObj.includes(loc.element_id))
-      .value()
+    selectGeneratedLocators,
+    (state: RootState, pageObjId: PageObjectId) => selectPageObjById(state, pageObjId)?.locators || [],
+    (locators, locByPageObj) =>
+      chain(locators)
+          .filter((loc) => locByPageObj.includes(loc.element_id))
+          .value()
 );
 
 export const selectGeneratedSelectedByPageObj = createSelector(selectGeneratedByPageObj, (items) =>
@@ -62,8 +68,8 @@ export const selectGeneratedSelectedByPageObj = createSelector(selectGeneratedBy
 
 export const selectDeletedByPageObj = createSelector(selectPageObjLocatorsByProbability, (items) =>
   chain(items)
-    .filter((el) => el.deleted || false)
-    .value()
+      .filter((el) => el.deleted || false)
+      .value()
 );
 
 export const selectDeletedSelectedByPageObj = createSelector(selectDeletedByPageObj, (items) =>
@@ -72,20 +78,20 @@ export const selectDeletedSelectedByPageObj = createSelector(selectDeletedByPage
 
 export const selectWaitingByPageObj = createSelector(selectPageObjLocatorsByProbability, (elements) =>
   chain(elements)
-    .filter(
-      (el) =>
-        (isProgressStatus(el.locator.taskStatus) ||
+      .filter(
+          (el) =>
+            (isProgressStatus(el.locator.taskStatus) ||
           el.locator.taskStatus === locatorTaskStatus.REVOKED ||
           el.locator.taskStatus === locatorTaskStatus.FAILURE) &&
         !el.deleted
-    )
-    .value()
+      )
+      .value()
 );
 
 export const selectInProgressByPageObj = createSelector(selectPageObjLocatorsByProbability, (elements) =>
   chain(elements)
-    .filter((el) => isProgressStatus(el.locator.taskStatus) && !el.deleted)
-    .value()
+      .filter((el) => isProgressStatus(el.locator.taskStatus) && !el.deleted)
+      .value()
 );
 
 export const selectInProgressSelectedByPageObject = createSelector(selectInProgressByPageObj, (items) =>
@@ -101,28 +107,28 @@ export const selectFailedByPageObject = createSelector(selectPageObjLocatorsByPr
 );
 
 export const selectLocatorByJdnHash = createSelector(
-  (state: RootState, jdnHash: string) => selectLocators(state).filter((loc) => loc.jdnHash === jdnHash),
-  (state: RootState) => {
-    if (isNil(state.pageObject.currentPageObject)) return [];
-    const pageObject = selectPageObjById(state, state.pageObject.currentPageObject);
-    return pageObject ? pageObject.locators : [];
-  },
-  (locators, pageObjLocators) => {
-    return locators.find(({ element_id }) => pageObjLocators?.includes(element_id))
-  }
+    (state: RootState, jdnHash: string) => selectLocators(state).filter((loc) => loc.jdnHash === jdnHash),
+    (state: RootState) => {
+      if (isNil(state.pageObject.currentPageObject)) return [];
+      const pageObject = selectPageObjById(state, state.pageObject.currentPageObject);
+      return pageObject ? pageObject.locators : [];
+    },
+    (locators, pageObjLocators) => {
+      return locators.find(({ element_id }) => pageObjLocators?.includes(element_id));
+    }
 );
 
 export const selectEmptyPageObjects = createSelector(
-  selectPageObjects,
-  (state: RootState) => state,
-  (pageObjects, state) => {
-    const emptyPOs: PageObjectId[] = [];
-    if (pageObjects) {
-      pageObjects.forEach((po) => {
-        const loc = selectConfirmedLocators(state, po.id);
-        if (!size(loc)) emptyPOs.push(po.id);
-      });
+    selectPageObjects,
+    (state: RootState) => state,
+    (pageObjects, state) => {
+      const emptyPOs: PageObjectId[] = [];
+      if (pageObjects) {
+        pageObjects.forEach((po) => {
+          const loc = selectConfirmedLocators(state, po.id);
+          if (!size(loc)) emptyPOs.push(po.id);
+        });
+      }
+      return emptyPOs;
     }
-    return emptyPOs;
-  }
 );

@@ -1,3 +1,5 @@
+import { PageObjectId } from "./pageObjectSlice.types";
+
 export interface MainState {
   allowIdentifyElements: boolean;
   backendAvailable: BackendStatus;
@@ -20,13 +22,15 @@ export type MaxGenerationTime = 1 | 3 | 5 | 10 | 60 | 3600;
 
 export interface Page {
   page: PageType;
+  pageObj?: PageObjectId;
+  alreadyGenerated?: boolean;
 }
 
 export interface Notification {
   isCanceled: boolean;
   isHandled: boolean;
   action: string;
-  prevValue: any;
+  prevValue: Record<string, unknown>;
 }
 
 export enum BackendStatus {

@@ -7,7 +7,6 @@ import EllipsisSvg from "../../../assets/ellipsis.svg";
 import { removePageObject, setCurrentPageObj } from "../../../store/slices/pageObjectSlice";
 import { removeLocators } from "../../../store/slices/locatorsSlice";
 import { generatePageObject } from "../utils/pageObject";
-import { pageType } from "../../../utils/constants";
 import { changePage } from "../../../store/slices/mainSlice";
 import { size } from "lodash";
 import { Menu } from "../../common/Menu";
@@ -16,6 +15,7 @@ import { ElementLibrary } from "../utils/generationClassesMap";
 import { RootState } from "../../../store/store";
 import { PageObjectId } from "../../../store/slices/pageObjectSlice.types";
 import { deleteOption, download, edit, renameOption } from "../../Locators/menuOptions";
+import { PageType } from "../../../store/slices/mainSlice.types";
 
 interface Props {
   id: ElementId;
@@ -50,7 +50,7 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, locators, elements, lib
       dispatch(setCurrentPageObj(id));
       dispatch(
           changePage({
-            page: pageType.locatorsList,
+            page: PageType.LocatorsList,
             pageObj: currentPageObject,
             alreadyGenerated: true,
           })

@@ -28,6 +28,7 @@ import { clearLocators } from "../../store/slices/pageObjectSlice";
 import { changePageBack, setScriptMessage, toggleBackdrop, resetNotifications } from "../../store/slices/mainSlice";
 import { removeLocators, restoreLocators } from "../../store/slices/locatorsSlice";
 import { LocatorListHeader } from "./LocatorListHeader";
+import { Breadcrumbs } from "../common/Breadcrumbs";
 
 export const LocatorsPage = ({ alreadyGenerated }) => {
   const dispatch = useDispatch();
@@ -133,6 +134,7 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
   return (
     <React.Fragment>
       <div className="jdn__locatorsList">
+        <Breadcrumbs />
         <LocatorListHeader
           {...{
             locatorIds,
