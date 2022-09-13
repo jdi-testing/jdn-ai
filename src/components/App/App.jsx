@@ -12,7 +12,7 @@ import { StatusBar } from "./StatusBar";
 import { SeveralTabsWarning } from "./SeveralTabsWarning";
 import { Backdrop } from "./Backdrop/Backdrop";
 import { LocatorsPage } from "../Locators/LocatorsPage";
-import { identificationStatus, pageType, readmeLinkAddress } from "../../utils/constants";
+import { identificationStatus, pageType } from "../../utils/constants";
 import { selectCurrentPage } from "../../store/selectors/mainSelectors";
 import { PageObjectPage } from "../PageObjects/PageObjectPage";
 import { HttpEndpoint, request } from "../../services/backend";
@@ -23,7 +23,6 @@ import "../../css/index.less";
 import { connector } from "../../services/connector";
 import { defineServer } from "../../store/thunks/defineServer";
 import { BackendStatus } from "../../store/slices/mainSlice.types";
-import { compatibleVersions } from "../../compatibleVersions";
 import { Guide } from "./Guide/Guide";
 
 const App = () => {
