@@ -7,6 +7,7 @@ import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import process from "process";
 
 const reduxLogEnable = process.argv.includes("reduxlogenable");
+const devEnvironment = process.argv.includes("devenv");
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const { HotModuleReplacementPlugin } = pkg;
@@ -39,6 +40,7 @@ const mainConfig = {
     }),
     new pkg.DefinePlugin({
       __REDUX_LOG_ENABLE__: reduxLogEnable,
+      __DEV_ENVIRONMENT__: devEnvironment,
     })
   ],
   resolve: {
