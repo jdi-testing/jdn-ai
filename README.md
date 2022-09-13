@@ -148,3 +148,9 @@ docker-compose up -d
 # **CI/CD**
 
 Delivery pack is builded autimatically on commit in master.
+
+# **Version compatibility list**
+| Plugin version | Backend version |
+|-----|-----|
+|3.2.253 and greater|0.1.3|
+|Release 3.2.252|0.1.2|
