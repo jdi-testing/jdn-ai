@@ -1,14 +1,11 @@
 import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
 
-import { BACKEND_STATUS } from "../../utils/constants";
 import { generateLocators } from "./generateLocators";
 import { predictElements } from "../../services/pageDataHandlers";
 import { setCurrentPageObj } from "../slices/pageObjectSlice";
 import { ElementLibrary, predictEndpoints } from "../../components/PageObjects/utils/generationClassesMap";
-import { setBackendAvailable } from "../slices/mainSlice";
 import { PageObjectId } from "../slices/pageObjectSlice.types";
 import { IdentificationStatus, LocatorsState, PredictedEntity } from "../slices/locatorSlice.types";
-// import { ElementLibrary } from "../slices/pageObjectSlice.types";
 
 interface Meta {
   library: ElementLibrary,
@@ -32,7 +29,6 @@ export const identifyElements = createAsyncThunk(
         thunkAPI.dispatch(generateLocators({ predictedElements: rounded, library }));
         return thunkAPI.fulfillWithValue(rounded);
       } catch (error) {
-        thunkAPI.dispatch(setBackendAvailable(BACKEND_STATUS.ACCESS_FAILED));
         return thunkAPI.rejectWithValue(null);
       }
     }

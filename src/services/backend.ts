@@ -9,6 +9,7 @@ export enum HttpEndpoint {
   REPORT_PROBLEM = "report_problem",
   DOWNLOAD_TEMPLATE = "download_template",
   SESSION_ID = "get_session_id",
+  GUIDE = "guide",
 }
 
 export enum WebSocketMessage {
@@ -31,8 +32,11 @@ const headers = {
 class Request {
   request: AxiosInstance;
   baseUrl: BaseUrl;
+  // mock: MockAdapter;
 
   constructor() {
+    // this.mock = new MockAdapter(axios);
+
     this.request = axios.create({
       headers,
     });
@@ -44,19 +48,17 @@ class Request {
 
   async get(url: HttpEndpoint, config?: AxiosRequestConfig, baseURL?: BaseUrl) {
     if (!this.baseUrl && !baseURL) throw new Error("base URL is required");
-    return this.request
-      .get(url, { ...config, baseURL: this.baseUrl || baseURL })
-      .then((response) => {
-        if (url === HttpEndpoint.BUILD) return response;
-        return response.data;
-      });
+    return this.request.get(url, { ...config, baseURL: this.baseUrl || baseURL }).then((response) => {
+      if (url === HttpEndpoint.BUILD) return response;
+      return response.data;
+    });
   }
 
   async post<D>(url: HttpEndpoint, payload: D, config?: AxiosRequestConfig, baseURL?: BaseUrl) {
     if (!this.baseUrl && !baseURL) throw new Error("base URL is required");
     return this.request
-      .post(url, payload, { ...config, baseURL: this.baseUrl || baseURL })
-      .then((response) => response.data);
+        .post(url, payload, { ...config, baseURL: this.baseUrl || baseURL })
+        .then((response) => response.data);
   }
 
   async getBlob(url: HttpEndpoint, config?: AxiosRequestConfig) {
