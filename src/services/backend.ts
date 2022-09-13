@@ -22,9 +22,6 @@ export enum WebSocketMessage {
   PONG = "pong",
 }
 
-export const REMOTE_URL = "http://10.253.219.156";
-export const LOCAL_URL = "http://localhost:5050";
-
 const headers = {
   "Content-Type": "application/json",
 };
