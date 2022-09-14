@@ -14,35 +14,18 @@
     }
 
     &-header {
-      padding: 8px 0 8px 12px;
+      padding: 0 12px;
+      margin-top: 16px;
+      line-height: 28px;
 
       &-title {
-        font-size: 16px;
-        font-weight: 700;
         flex-grow: 1;
         flex-shrink: 0;
-        line-height: 30px;
         display: flex;
         gap: 8px;
       }
 
-      button {
-        padding: 4px 12px;
-        font-weight: bold;
-        font-size: 12px;
-      }
-
-      button:not(.ant-btn-primary, .ant-btn-dangerous) {
-        border: none;
-        color: #1582d8;
-        background: #deeffd;
-
-        &:hover {
-          background: #cde6f6;
-        }
-      }
-
-      svg {
+      &-collapse {
         margin-top: auto;
         margin-bottom: auto;
       }
@@ -51,52 +34,21 @@
         display: flex;
         flex-wrap: nowrap;
         gap: 8px;
-
-        .ant-dropdown-trigger {
-          margin: auto 30px auto 12px;
-          height: 14px;
-
-          svg {
-            color: #b2b5c2;
-          }
-        }
       }
 
-      .ant-btn {
-        height: 30px;
-
-        .anticon {
-          vertical-align: middle;
-        }
-
-        svg {
-          vertical-align: middle;
-        }
-      }
-
-      .ant-btn-dangerous {
-        border: none;
-        background: #fddede;
-
-        &:hover {
-          background: #f6d1d1;
-        }
+      .jdn__locatorsList_button {
+        margin-right: 16px;
+        height: 28px;
       }
 
       .ant-select-multiple .ant-select-selection-item {
         background-color: #ffffff;
         border: 1px solid #ebebeb;
-        margin-inline-end: 6px;
       }
 
       .ant-select-multiple .ant-select-selection-item-content {
         font-size: 12px;
-        color: @primary-color;
-
-        span {
-          font-weight: 400;
-          color: #000000;
-        }
+        color: #000000A6;
       }
 
       .anticon-close {
@@ -145,17 +97,28 @@
         padding-left: 20px;
       }
 
-      .ant-dropdown-trigger {
-        color: #b2b5c2;
-
-        &:hover {
-          color: @primary-color;
+      .jdn__locatorsList_button {
+        &-copy {
+          position: absolute;
+          right: 26px;
+          top: 2px;
         }
 
-        &:active {
-          color: @primary-active-color;
+        &-menu {
+          position: absolute;
+          right: 12px;
+          top: 2px;
         }
       }
+    }
+
+    &_button {
+      border: none;
+      box-shadow: none;
+      background: transparent !important;
+      padding-left: 0;
+      padding-right: 0;
+      color: #b2b5c2;
     }
 
     &-progress {

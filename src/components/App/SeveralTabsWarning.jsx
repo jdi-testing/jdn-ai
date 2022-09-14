@@ -16,7 +16,7 @@ export const SeveralTabsWarning = ({ checkSession }) => {
           <h1>You can use the plugin only within 1 tab!</h1>
           <p>The plugin is open in several tabs now. Please leave 1 plugin tab open and continue working in it.</p>
         </span>
-        <Button danger onClick={checkSession}>
+        <Button danger ghost onClick={checkSession}>
           <Icon component={RestoreIcon} />
           Retry
         </Button>

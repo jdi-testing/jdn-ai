@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Icon from "@ant-design/icons";
-import { Dropdown } from "antd";
+import { Button, Dropdown } from "antd";
 
 import EllipsisSvg from "../../../assets/ellipsis.svg";
 import { removePageObject, setCurrentPageObj } from "../../../store/slices/pageObjectSlice";
@@ -68,7 +68,11 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, locators, elements, lib
   };
 
   return (
-    <a onClick={(e) => e.stopPropagation()} data-testid="dropdown-button">
+    <Button
+      className="jdn__locatorsList_button jdn__locatorsList_button-menu"
+      onClick={(e) => e.stopPropagation()}
+      data-testid="dropdown-button"
+    >
       <Dropdown
         arrow={{ pointAtCenter: true }}
         align={{ offset: [14, 0] }}
@@ -79,6 +83,6 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, locators, elements, lib
       >
         <Icon component={EllipsisSvg} />
       </Dropdown>
-    </a>
+    </Button>
   );
 };

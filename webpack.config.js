@@ -81,19 +81,7 @@ const mainConfig = {
                 // important extra layer for less-loader^6.0.0
                 javascriptEnabled: true,
                 modifyVars: {
-                  "primary-color": "#1582d8",
-                  "primary-color-hover": "#0f73c1",
-                  "primary-color-active": "#0f73c1",
-                  "disabled-color": "#ffffff",
-                  "disabled-bg": "#b2b5c2",
-                  // "normal-color": "#b2b5C2",
-                  "success-color": "#1582d8", // success state color
-                  "warning-color": "#d8a115", // warning state color
-                  "error-color": "#ff4d4f",
-                  "btn-default-color": "#1582d8",
-                  "btn-default-border": "#1582d8",
                   "menu-horizontal-line-height": "32px",
-                  "border-radius-base": "0px",
                   "checkbox-size": "14px",
                   "layout-header-background": "transparent",
                 },
