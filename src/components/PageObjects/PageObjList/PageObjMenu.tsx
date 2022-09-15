@@ -1,9 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Icon from "@ant-design/icons";
 import { Button, Dropdown } from "antd";
 
-import EllipsisSvg from "../../../assets/ellipsis.svg";
 import { removePageObject, setCurrentPageObj } from "../../../store/slices/pageObjectSlice";
 import { removeLocators } from "../../../store/slices/locatorsSlice";
 import { generatePageObject } from "../utils/pageObject";
@@ -16,6 +14,7 @@ import { RootState } from "../../../store/store";
 import { PageObjectId } from "../../../store/slices/pageObjectSlice.types";
 import { deleteOption, download, edit, renameOption } from "../../Locators/menuOptions";
 import { PageType } from "../../../store/slices/mainSlice.types";
+import { DotsThree } from "phosphor-react";
 
 interface Props {
   id: ElementId;
@@ -68,21 +67,23 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, locators, elements, lib
   };
 
   return (
-    <Button
-      className="jdn__locatorsList_button jdn__locatorsList_button-menu"
-      onClick={(e) => e.stopPropagation()}
-      data-testid="dropdown-button"
+
+    <Dropdown
+      arrow={{ pointAtCenter: true }}
+      align={{ offset: [10, 0] }}
+      trigger={["click"]}
+      overlay={renderMenu(id, locators, elements, name)}
+      getPopupContainer={(triggerNode) => triggerNode}
+      destroyPopupOnHide
     >
-      <Dropdown
-        arrow={{ pointAtCenter: true }}
-        align={{ offset: [14, 0] }}
-        trigger={["click"]}
-        overlay={renderMenu(id, locators, elements, name)}
-        getPopupContainer={(triggerNode) => triggerNode}
-        destroyPopupOnHide
+      <Button
+        className="jdn__locatorsList_button jdn__locatorsList_button-menu"
+        onClick={(e) => e.stopPropagation()}
+        data-testid="dropdown-button"
+        icon={<DotsThree size={18} />}
       >
-        <Icon component={EllipsisSvg} />
-      </Dropdown>
-    </Button>
+      </Button>
+    </Dropdown>
+
   );
 };

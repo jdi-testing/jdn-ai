@@ -14,11 +14,11 @@ interface Props {
 }
 
 export const getItem = (
-  key: string,
-  label: ReactNode,
-  onClick?: () => void,
-  icon?: ReactNode,
-  children?: MenuItem[]
+    key: string,
+    label: ReactNode,
+    onClick?: () => void,
+    icon?: ReactNode,
+    children?: MenuItem[]
 ): MenuItem => ({
   key,
   label,
@@ -28,5 +28,5 @@ export const getItem = (
 });
 
 export const Menu: React.FC<Props> = ({ items }) => {
-  return <AntMenu {...{ items }} />;
+  return <AntMenu onClick={({ domEvent }) => domEvent.stopPropagation()} {...{ items }} />;
 };
