@@ -1,14 +1,12 @@
 import React, { useMemo, useState } from "react";
 import { filter, isNil, size } from "lodash";
-import { Checkbox, Dropdown, Row } from "antd";
+import { Button, Checkbox, Dropdown, Row } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import Icon from "@ant-design/icons";
 
 import { Chip } from "./Chip";
 import { Menu } from "../common/Menu";
 
-import EllipsisSvg from "../../assets/ellipsis.svg";
-import { CaretDown } from "phosphor-react";
+import { CaretDown, DotsThree } from "phosphor-react";
 
 import {
   setCalculationPriority,
@@ -159,6 +157,7 @@ export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedS
             style={{
               transform: expandAll === EXPAND_STATE.EXPANDED ? "rotate(180deg)" : "rotate(0deg)",
             }}
+            className="jdn__locatorsList-header-collapse"
             color="#878A9C"
             size={14}
             onClick={() =>
@@ -166,20 +165,21 @@ export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedS
             }
           />
           <Checkbox checked={fullySelected} indeterminate={partiallySelected} onClick={handleOnCheck}></Checkbox>
+          <Chip
+            hidden={!size(selected)}
+            primaryLabel={size(selected)}
+            secondaryLabel={"selected"}
+            onDelete={() => dispatch(toggleElementGroupGeneration(selected))}
+          />
         </span>
-        <Chip
-          hidden={!size(selected)}
-          primaryLabel={size(selected)}
-          secondaryLabel={"selected"}
-          onDelete={() => dispatch(toggleElementGroupGeneration(selected))}
-        />
-        <div className="jdn__locatorsList-header-buttons">
-          {!isNil(menu) ? (
-            <Dropdown arrow={{ pointAtCenter: true }} overlay={renderMenu()} trigger={["click"]} destroyPopupOnHide>
-              <Icon component={EllipsisSvg} onClick={(e) => e.preventDefault()} />
-            </Dropdown>
-          ) : null}
-        </div>
+        {!isNil(menu) ? (
+          <Dropdown arrow={{ pointAtCenter: true }} overlay={renderMenu()} trigger={["click"]} destroyPopupOnHide>
+            <Button
+              className="jdn__locatorsList_button jdn__locatorsList_button-menu"
+              icon={<DotsThree size={18} onClick={(e) => e.preventDefault()} />}
+            />
+          </Dropdown>
+        ) : null}
       </Row>
       {render({ expandAll, setExpandAll })}
     </React.Fragment>

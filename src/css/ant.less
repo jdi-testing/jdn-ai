@@ -118,68 +118,6 @@
 
 /* Buttons */
 
-.ant-btn,
-.ant-btn:focus,
-.ant-btn:active {
-  border-radius: 4px;
-  border: 1px solid @primary-color;
-  color: @primary-color;
-  background: transparent;
-  height: 30px;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 12px;
-  line-height: 16px;
-
-  .anticon {
-    svg {
-      min-width: 14px;
-      min-height: 14px;
-    }
-  }
-
-  &.ant-btn-text {
-    border-color: transparent;
-    color: #777777;
-    height: auto;
-  }
-
-  &.ant-btn-icon-only > * {
-    font-size: 14px;
-  }
-}
-
-.ant-btn:hover {
-  color: @primary-active-color;
-  border: 1px solid @primary-active-color;
-  background: transparent;
-
-  &.ant-btn-text {
-    border-color: transparent;
-    color: @primary-active-color;
-  }
-}
-
-.ant-btn-primary {
-  color: #fff;
-  background: @primary-color;
-
-  &:hover {
-    color: #fff;
-    background-color: @primary-active-color;
-  }
-}
-
-.ant-btn-dangerous {
-  color: @danger-color;
-  border-color: @danger-color;
-
-  &:hover {
-    color: @danger-color;
-    border-color: @danger-color;
-  }
-}
-
 .ant-btn.ant-btn-loading::before {
   display: none;
 }

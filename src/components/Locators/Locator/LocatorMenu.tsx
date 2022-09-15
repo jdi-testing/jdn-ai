@@ -1,45 +1,21 @@
 import React from "react";
 import { useDispatch } from "react-redux";
-import { Dropdown } from "antd";
-import Icon from "@ant-design/icons";
+import { Button, Dropdown } from "antd";
 
-import {
-  setCalculationPriority,
-  toggleDeleted,
-} from "../../../store/slices/locatorsSlice";
+import { setCalculationPriority, toggleDeleted } from "../../../store/slices/locatorsSlice";
 
 import { rerunGeneration } from "../../../store/thunks/rerunGeneration";
 import { stopGeneration } from "../../../store/thunks/stopGeneration";
-import {
-  ElementLibrary,
-  getTypesMenuOptions,
-} from "../../PageObjects/utils/generationClassesMap";
-import {
-  isProgressStatus,
-  locatorGenerationController,
-} from "../../../services/locatorGenerationController";
+import { ElementLibrary, getTypesMenuOptions } from "../../PageObjects/utils/generationClassesMap";
+import { isProgressStatus, locatorGenerationController } from "../../../services/locatorGenerationController";
 
-import EllipsisSvg from "../../../assets/ellipsis.svg";
 import { sendMessage } from "../../../services/connector";
 import { toggleBackdrop } from "../../../store/slices/mainSlice";
 import { Menu, MenuItem } from "../../common/Menu";
-import {
-  Locator,
-  LocatorCalculationPriority,
-  LocatorTaskStatus,
-} from "../../../store/slices/locatorSlice.types";
-import {
-  advanced,
-  deleteOption,
-  downPriority,
-  edit,
-  pause,
-  rerun,
-  restore,
-  retry,
-  upPriority,
-} from "../menuOptions";
+import { Locator, LocatorCalculationPriority, LocatorTaskStatus } from "../../../store/slices/locatorSlice.types";
+import { advanced, deleteOption, downPriority, edit, pause, rerun, restore, retry, upPriority } from "../menuOptions";
 import { MaxGenerationTime } from "../../../store/slices/mainSlice.types";
+import { DotsThree } from "phosphor-react";
 
 interface Props {
   element: Locator;
@@ -63,20 +39,20 @@ export const LocatorMenu: React.FC<Props> = ({ element, library }) => {
 
   const handleUpPriority = () => {
     dispatch(
-      setCalculationPriority({
-        element_id,
-        priority: LocatorCalculationPriority.Increased,
-      })
+        setCalculationPriority({
+          element_id,
+          priority: LocatorCalculationPriority.Increased,
+        })
     );
     locatorGenerationController.upPriority([jdnHash]);
   };
 
   const handleDownPriority = () => {
     dispatch(
-      setCalculationPriority({
-        element_id,
-        priority: LocatorCalculationPriority.Decreased,
-      })
+        setCalculationPriority({
+          element_id,
+          priority: LocatorCalculationPriority.Decreased,
+        })
     );
     locatorGenerationController.downPriority([jdnHash]);
   };
@@ -84,10 +60,10 @@ export const LocatorMenu: React.FC<Props> = ({ element, library }) => {
   const renderMenu = () => {
     const getRerunGeneration = (time: MaxGenerationTime) => () =>
       dispatch(
-        rerunGeneration({
-          generationData: [element],
-          maxGenerationTime: time,
-        })
+          rerunGeneration({
+            generationData: [element],
+            maxGenerationTime: time,
+          })
       );
 
     let items: MenuItem[] = [];
@@ -97,43 +73,31 @@ export const LocatorMenu: React.FC<Props> = ({ element, library }) => {
     } else {
       items = [
         edit(handleEditClick),
-        ...(isLocatorInProgress
-          ? [pause(() => dispatch(stopGeneration(element_id)))]
-          : []),
-        ...(isLocatorInProgress &&
-        priority !== LocatorCalculationPriority.Increased
-          ? [upPriority(handleUpPriority)]
-          : []),
-        ...(isLocatorInProgress &&
-        priority !== LocatorCalculationPriority.Decreased
-          ? [downPriority(handleDownPriority)]
-          : []),
-        ...(locator.taskStatus === LocatorTaskStatus.REVOKED
-          ? [
-              rerun(() =>
-                dispatch(rerunGeneration({ generationData: [element] }))
-              ),
-            ]
-          : []),
-        ...(locator.taskStatus === LocatorTaskStatus.FAILURE
-          ? [
-              retry(() =>
-                dispatch(rerunGeneration({ generationData: [element] }))
-              ),
-            ]
-          : []),
-        ...(locator.taskStatus === LocatorTaskStatus.SUCCESS
-          ? [
-              advanced([
-                getRerunGeneration(1),
-                getRerunGeneration(3),
-                getRerunGeneration(5),
-                getRerunGeneration(10),
-                getRerunGeneration(60),
-                getRerunGeneration(3600),
-              ]),
-            ]
-          : []),
+        ...(isLocatorInProgress ? [pause(() => dispatch(stopGeneration(element_id)))] : []),
+        ...(isLocatorInProgress && priority !== LocatorCalculationPriority.Increased ?
+          [upPriority(handleUpPriority)] :
+          []),
+        ...(isLocatorInProgress && priority !== LocatorCalculationPriority.Decreased ?
+          [downPriority(handleDownPriority)] :
+          []),
+        ...(locator.taskStatus === LocatorTaskStatus.REVOKED ?
+          [rerun(() => dispatch(rerunGeneration({ generationData: [element] })))] :
+          []),
+        ...(locator.taskStatus === LocatorTaskStatus.FAILURE ?
+          [retry(() => dispatch(rerunGeneration({ generationData: [element] })))] :
+          []),
+        ...(locator.taskStatus === LocatorTaskStatus.SUCCESS ?
+          [
+            advanced([
+              getRerunGeneration(1),
+              getRerunGeneration(3),
+              getRerunGeneration(5),
+              getRerunGeneration(10),
+              getRerunGeneration(60),
+              getRerunGeneration(3600),
+            ]),
+          ] :
+          []),
         deleteOption(() => dispatch(toggleDeleted(element_id))),
       ];
     }
@@ -142,17 +106,18 @@ export const LocatorMenu: React.FC<Props> = ({ element, library }) => {
   };
 
   return (
-    <a>
-      <Dropdown
-        arrow={{ pointAtCenter: true }}
-        overlay={renderMenu()}
-        align={{ offset: [14, 0] }}
-        trigger={["click"]}
-        getPopupContainer={(triggerNode) => triggerNode}
-        destroyPopupOnHide
-      >
-        <Icon component={EllipsisSvg} onClick={(e) => e.preventDefault()} />
-      </Dropdown>
-    </a>
+    <Dropdown
+      arrow={{ pointAtCenter: true }}
+      overlay={renderMenu()}
+      align={{ offset: [10, 0] }}
+      trigger={["click"]}
+      getPopupContainer={(triggerNode) => triggerNode}
+      destroyPopupOnHide
+    >
+      <Button
+        className="jdn__locatorsList_button jdn__locatorsList_button-menu"
+        icon={<DotsThree size={18} onClick={(e) => e.preventDefault()} />}
+      />
+    </Dropdown>
   );
 };

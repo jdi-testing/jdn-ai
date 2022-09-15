@@ -23,10 +23,9 @@ export const LocatorCopyButton = ({ element }) => {
     <React.Fragment>
       <Tooltip placement="bottom" title={copyTooltipTitle}>
         <Button
-          type="text"
           onClick={handleCopy}
           onMouseEnter={handleMouseEnter}
-          className="jdn__buttons"
+          className="jdn__locatorsList_button jdn__locatorsList_button-copy"
           icon={<Icon component={CopySvg} />}
         />
       </Tooltip>

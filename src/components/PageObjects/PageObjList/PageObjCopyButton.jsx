@@ -29,7 +29,7 @@ export const PageObjCopyButton = ({ elements }) => {
   return (
     <Tooltip placement="bottom" title={copyTooltipTitle}>
       <Button
-        type="text"
+        className="jdn__locatorsList_button jdn__locatorsList_button-copy"
         icon={<Icon component={CopySvg} />}
         onMouseEnter={handleMouseEnter}
         onClick={(e) => handleCopy(e, elements)}

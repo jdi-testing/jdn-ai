@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Tooltip } from "antd";
-import Icon from "@ant-design/icons";
 
 import { LocatorsTree } from "./LocatorsTree";
 import {
@@ -19,7 +18,6 @@ import {
 } from "../../store/selectors/pageObjectSelectors";
 import { isEqual, size } from "lodash";
 
-import CaretDownSvg from "../../assets/caret-down.svg";
 import { selectLocatorsByPageObject } from "../../store/selectors/pageObjectSelectors";
 import { selectCurrentPage } from "../../store/selectors/mainSelectors";
 import { pageType } from "../../utils/constants";
@@ -104,7 +102,6 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
       <React.Fragment>
         {currentPage === pageType.locatorsList ? (
           <Button onClick={handleBack} className="jdn__buttons">
-            <Icon component={CaretDownSvg} rotate={90} fill="#1582D8" />
             Back
           </Button>
         ) : null}
@@ -122,8 +119,7 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
             title={isDisabled ? "Please select locators for your current page object." : ""}
           >
             <Button type="primary" onClick={handleConfirm} className="jdn__buttons" disabled={isDisabled}>
-              Save changes
-              <Icon component={CaretDownSvg} rotate={270} fill="#ffffff" />
+              Save
             </Button>
           </Tooltip>
         </React.Fragment>
