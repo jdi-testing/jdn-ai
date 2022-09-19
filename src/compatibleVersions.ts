@@ -1,3 +1,2 @@
-export const compatibleVersions = ["0.1.3"];
-
-export const oldVersions = ["0.1.2"];
+export const compatibleMajorVer = 0;
+export const compatibleMinorVer = 2;

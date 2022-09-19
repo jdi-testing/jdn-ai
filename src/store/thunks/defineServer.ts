@@ -1,16 +1,19 @@
 import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
 import { AxiosResponse } from "axios";
-import { compatibleVersions, oldVersions } from "../../compatibleVersions";
+import { toInteger } from "lodash";
+import { compatibleMajorVer, compatibleMinorVer } from "../../compatibleVersions";
 import { HttpEndpoint, request } from "../../services/backend";
 import { BackendStatus, BaseUrl, LocalUrl, MainState, RemoteUrl } from "../slices/mainSlice.types";
 
 export const defineServer = createAsyncThunk("main/defineServer", async () => {
   const checkVersion = (request: Promise<AxiosResponse<BaseUrl>>, isRemote: boolean) =>
     request.then((response) => {
-      if (compatibleVersions.includes(response.data[0])) return JSON.parse(JSON.stringify(response));
-      else if (isRemote) {
+      const [major, minor] = response.data[0].split(".").map(toInteger);
+      if (compatibleMajorVer === major && compatibleMinorVer === minor) {
+        return JSON.parse(JSON.stringify(response));
+      } else if (isRemote) {
         throw new Error(BackendStatus.IncompatibleVersionRemote);
-      } else if (oldVersions.includes(response.data[0])) {
+      } else if (major < compatibleMajorVer || minor < compatibleMinorVer) {
         throw new Error(BackendStatus.OutdatedServerLocal);
       } else throw new Error(BackendStatus.OutdatedPluginLocal);
     });
