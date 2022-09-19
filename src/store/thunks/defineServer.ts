@@ -8,7 +8,7 @@ import { BackendStatus, BaseUrl, LocalUrl, MainState, RemoteUrl } from "../slice
 export const defineServer = createAsyncThunk("main/defineServer", async () => {
   const checkVersion = (request: Promise<AxiosResponse<BaseUrl>>, isRemote: boolean) =>
     request.then((response) => {
-      const [major, minor] = response.data[0].split(".").map(toInteger);
+      const [major, minor] = response.data.split(".").map(toInteger);
       if (compatibleMajorVer === major && compatibleMinorVer === minor) {
         return JSON.parse(JSON.stringify(response));
       } else if (isRemote) {
@@ -42,7 +42,7 @@ export const defineServer = createAsyncThunk("main/defineServer", async () => {
 export const defineServerReducer = (builder: ActionReducerMapBuilder<MainState>) => {
   return builder
       .addCase(defineServer.fulfilled, (state, { payload }) => {
-        state.serverVersion = payload.data[0];
+        state.serverVersion = payload.data;
         state.backendAvailable = BackendStatus.Accessed;
         state.baseUrl = payload.config.baseURL as BaseUrl;
       })
