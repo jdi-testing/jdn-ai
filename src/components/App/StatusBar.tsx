@@ -14,6 +14,7 @@ import { Menu, MenuItem } from "../common/Menu";
 import { BackendStatus, LocalUrl } from "../../store/slices/mainSlice.types";
 import { CloudCheck, DesktopTower } from "phosphor-react";
 import { LocatorsGenerationStatus } from "../../store/slices/locatorSlice.types";
+import { ReportProblem } from "../ReportProblem/ReportProblem";
 
 export const StatusBar = () => {
   const backendVer = useSelector<RootState>((_state) => _state.main.serverVersion);
@@ -86,8 +87,9 @@ export const StatusBar = () => {
           hidden={currentPage === pageType.pageObject}
           onClick={handleReportProblem}
         >
-          Report a problem
+          Report a problem old
         </a>
+        <ReportProblem />
         <a className="jdn__header-link" href={readmeLinkAddress} target="_blank" rel="noreferrer">
           Readme
         </a>
