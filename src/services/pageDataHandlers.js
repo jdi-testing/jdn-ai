@@ -2,16 +2,13 @@ import { connector, sendMessage } from "./connector";
 import { getGenerationAttributes } from "./../contentScripts/generationData";
 import { getPageData } from "./../contentScripts/pageData";
 import { createLocatorNames } from "../components/PageObjects/utils/pageObject";
-import { reportPopup } from "../contentScripts/popups";
-import { HttpEndpoint, request } from "../services/backend";
+import { request } from "../services/backend";
 import { confirmPopup } from "../contentScripts/popups/confirmPopup";
 import { createOverlay } from "../contentScripts/createOverlay";
 import { assignParents } from "../contentScripts/assignParents";
 /* global chrome*/
 
 let overlayID;
-export let pageData;
-export let predictedElements;
 
 export const showOverlay = () => {
   connector.attachContentScript(createOverlay).then((data) => {
@@ -35,26 +32,29 @@ export const removeOverlay = () => {
 const sendToModel = async (result, enpoint) => {
   const payload = result[0];
   const response = await request.post(enpoint, payload);
-  predictedElements = response;
   return response;
 };
 
-export const predictElements = (endpoint) =>
-  connector
+export const predictElements = (endpoint) => {
+  let pageData;
+  return connector
       .attachContentScript(getPageData)
       .then((data) => {
         const { result } = data[0];
         pageData = result[0];
         return sendToModel(result, endpoint);
       })
-      .then((data) => {
-        removeOverlay();
-        return data;
-      }, (error) => {
-        removeOverlay();
-        return error;
-      });
-
+      .then(
+          (response) => {
+            removeOverlay();
+            return { data: response, pageData };
+          },
+          (error) => {
+            removeOverlay();
+            return error;
+          }
+      );
+};
 const requestGenerationAttributes = (elements) =>
   connector.attachContentScript(getGenerationAttributes).then(() =>
     sendMessage.generateAttributes(elements).then((response) => {
@@ -76,14 +76,6 @@ export const setParents = async (elements) => {
       .attachContentScript(assignParents)
       .then(() => sendMessage.assignParents(elements))
       .then((response) => response);
-};
-
-export const sendProblemReport = (payload) => {
-  request.post(HttpEndpoint.REPORT_PROBLEM, JSON.stringify({ ...payload, json_from_model: predictedElements }));
-};
-
-export const reportProblem = () => {
-  connector.attachContentScript(reportPopup);
 };
 
 export const openConfirmBackPopup = (enableSave) => {
