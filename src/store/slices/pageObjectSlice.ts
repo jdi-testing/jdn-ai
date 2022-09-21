@@ -49,6 +49,9 @@ const pageObjSlice = createSlice({
     setCurrentPageObj(state, { payload }) {
       state.currentPageObject = payload;
     },
+    setPageData(state, {payload}: PayloadAction<{id: PageObjectId, pageData: string}>) {
+      pageObjAdapter.upsertOne(state, payload as PageObject);
+    }
   },
   extraReducers: (builder) => {
     addPageObjReducer(builder);
@@ -66,4 +69,5 @@ export const {
   removePageObjects,
   removePageObject,
   setCurrentPageObj,
+  setPageData,
 } = pageObjSlice.actions;

@@ -10,7 +10,6 @@ import { assignParents } from "../contentScripts/assignParents";
 /* global chrome*/
 
 let overlayID;
-export let pageData;
 export let predictedElements;
 
 export const showOverlay = () => {
@@ -39,22 +38,26 @@ const sendToModel = async (result, enpoint) => {
   return response;
 };
 
-export const predictElements = (endpoint) =>
-  connector
+export const predictElements = (endpoint) => {
+  let pageData;
+  return connector
       .attachContentScript(getPageData)
       .then((data) => {
         const { result } = data[0];
         pageData = result[0];
         return sendToModel(result, endpoint);
       })
-      .then((data) => {
-        removeOverlay();
-        return data;
-      }, (error) => {
-        removeOverlay();
-        return error;
-      });
-
+      .then(
+          (response) => {
+            removeOverlay();
+            return { data: response, pageData };
+          },
+          (error) => {
+            removeOverlay();
+            return error;
+          }
+      );
+};
 const requestGenerationAttributes = (elements) =>
   connector.attachContentScript(getGenerationAttributes).then(() =>
     sendMessage.generateAttributes(elements).then((response) => {

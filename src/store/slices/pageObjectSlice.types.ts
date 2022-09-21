@@ -4,13 +4,14 @@ import { ElementId } from "./locatorSlice.types";
 export type PageObjectId = string;
 
 export interface PageObjectState {
-    currentPageObject?: PageObjectId,
+  currentPageObject?: PageObjectId;
 }
 
 export interface PageObject {
-    id: PageObjectId,
-    library: ElementLibrary,
-    locators?: ElementId[],
-    name: string,
-    url: string,
+  id: PageObjectId;
+  library: ElementLibrary;
+  locators?: ElementId[];
+  name: string;
+  pageData: string;
+  url: string;
 }
