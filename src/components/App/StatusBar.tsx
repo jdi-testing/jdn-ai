@@ -3,11 +3,8 @@ import { useSelector } from "react-redux";
 import Icon from "@ant-design/icons";
 import React from "react";
 
-import { reportProblem } from "../../services/pageDataHandlers";
-
 import kebab_menu from "../../assets/Kebab_menu.svg";
-import { pageType, readmeLinkAddress } from "../../utils/constants";
-import { selectCurrentPage } from "../../store/selectors/mainSelectors";
+import { readmeLinkAddress } from "../../utils/constants";
 import { RootState } from "../../store/store";
 import { isNil } from "lodash";
 import { Menu, MenuItem } from "../common/Menu";
@@ -20,15 +17,10 @@ export const StatusBar = () => {
   const backendVer = useSelector<RootState>((_state) => _state.main.serverVersion);
   const backendAvailable = useSelector<RootState>((_state) => _state.main.backendAvailable);
   const serverLocation = useSelector<RootState>((_state) => _state.main.baseUrl);
-  const currentPage = useSelector(selectCurrentPage).page;
   const generationStatus = useSelector<RootState>((_state) => _state.locators.generationStatus);
 
   const manifest = chrome.runtime.getManifest();
   const pluginVer = manifest.version;
-
-  const handleReportProblem = () => {
-    reportProblem();
-  };
 
   const kebabMenu = () => {
     const items: MenuItem[] = [
@@ -42,14 +34,6 @@ export const StatusBar = () => {
         ),
       },
     ];
-
-    if (currentPage !== pageType.pageObject) {
-      items.push({
-        key: "1",
-        onClick: handleReportProblem,
-        label: "Report a problem",
-      });
-    }
 
     return <Menu {...{ items }} />;
   };
@@ -81,14 +65,6 @@ export const StatusBar = () => {
         <span>{`JDN v ${pluginVer} ${!isNil(backendVer) ? `Back-end v ${backendVer}` : ""}`}</span>
       </div>
       <Space size={[30, 0]} className="header__space">
-        <a
-          className="jdn__header-link"
-          href="#"
-          hidden={currentPage === pageType.pageObject}
-          onClick={handleReportProblem}
-        >
-          Report a problem old
-        </a>
         <ReportProblem />
         <a className="jdn__header-link" href={readmeLinkAddress} target="_blank" rel="noreferrer">
           Readme

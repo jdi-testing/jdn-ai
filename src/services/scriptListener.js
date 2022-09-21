@@ -9,7 +9,7 @@ import {
 } from "../store/slices/locatorsSlice";
 import { connector, sendMessage } from "./connector";
 import { getTypesMenuOptions } from "../components/PageObjects/utils/generationClassesMap";
-import { sendProblemReport, showOverlay } from "./pageDataHandlers";
+import { showOverlay } from "./pageDataHandlers";
 import { selectLocatorById, selectLocators } from "../store/selectors/locatorSelectors";
 import { stopGeneration } from "../store/thunks/stopGeneration";
 import { rerunGeneration } from "../store/thunks/rerunGeneration";
@@ -93,13 +93,11 @@ export const createListeners = (dispatch, state) => {
         types: getTypesMenuOptions(library),
       });
     },
-    GET_PAGE_DATA_JSON: (payload, sender, sendResponse) => sendResponse(pageData),
     HIGHLIGHT_OFF: () => {
       dispatch(clearAll());
     },
     IS_OPEN_MODAL: (payload) => dispatch(toggleBackdrop(payload)),
     REMOVE_ELEMENT: (payload) => dispatch(toggleDeleted(payload)),
-    SEND_PROBLEM_REPORT: (payload) => sendProblemReport(payload),
     OPEN_EDIT_LOCATOR_REQUEST: (payload) => {
       dispatch(toggleBackdrop(true));
       sendMessage.openEditLocator(payload);

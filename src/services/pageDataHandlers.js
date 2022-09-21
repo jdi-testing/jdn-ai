@@ -2,15 +2,13 @@ import { connector, sendMessage } from "./connector";
 import { getGenerationAttributes } from "./../contentScripts/generationData";
 import { getPageData } from "./../contentScripts/pageData";
 import { createLocatorNames } from "../components/PageObjects/utils/pageObject";
-import { reportPopup } from "../contentScripts/popups";
-import { HttpEndpoint, request } from "../services/backend";
+import { request } from "../services/backend";
 import { confirmPopup } from "../contentScripts/popups/confirmPopup";
 import { createOverlay } from "../contentScripts/createOverlay";
 import { assignParents } from "../contentScripts/assignParents";
 /* global chrome*/
 
 let overlayID;
-export let predictedElements;
 
 export const showOverlay = () => {
   connector.attachContentScript(createOverlay).then((data) => {
@@ -34,7 +32,6 @@ export const removeOverlay = () => {
 const sendToModel = async (result, enpoint) => {
   const payload = result[0];
   const response = await request.post(enpoint, payload);
-  predictedElements = response;
   return response;
 };
 
@@ -79,14 +76,6 @@ export const setParents = async (elements) => {
       .attachContentScript(assignParents)
       .then(() => sendMessage.assignParents(elements))
       .then((response) => response);
-};
-
-export const sendProblemReport = (payload) => {
-  request.post(HttpEndpoint.REPORT_PROBLEM, JSON.stringify({ ...payload, json_from_model: predictedElements }));
-};
-
-export const reportProblem = () => {
-  connector.attachContentScript(reportPopup);
 };
 
 export const openConfirmBackPopup = (enableSave) => {
