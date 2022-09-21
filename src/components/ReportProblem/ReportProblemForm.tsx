@@ -5,7 +5,9 @@ import { UploadChangeParam, UploadFileStatus } from "antd/lib/upload/interface";
 import { UploadSimple } from "phosphor-react";
 import React, { useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
+import { selectCurrentPage } from "../../store/selectors/mainSelectors";
 import { selectCurrentPageObject } from "../../store/selectors/pageObjectSelectors";
+import { PageType } from "../../store/slices/mainSlice.types";
 import { FormProps } from "./ReportProblem";
 import { dataToBlob, isAllowedExtension, isImage, toBase64 } from "./utils";
 
@@ -15,10 +17,11 @@ interface Props {
 
 export const ReportProblemForm: React.FC<Props> = ({ form }) => {
   const pageData = useSelector(selectCurrentPageObject)?.pageData;
+  const currentPage = useSelector(selectCurrentPage).page;
 
   const defaultFileList = useMemo(
       () =>
-      pageData ?
+      pageData && currentPage === PageType.LocatorsList ?
         [
           {
             uid: "0",
@@ -33,10 +36,6 @@ export const ReportProblemForm: React.FC<Props> = ({ form }) => {
   );
 
   const [fileList, setFileList] = useState<UploadFile[]>(defaultFileList);
-
-  useEffect(() => {
-    setFileList(defaultFileList);
-  }, [pageData]);
 
   useEffect(() => {
     const files = document.querySelector(".ant-upload-list");
@@ -93,7 +92,7 @@ export const ReportProblemForm: React.FC<Props> = ({ form }) => {
           },
           {
             // eslint-disable-next-line max-len
-            pattern: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/,
+            pattern: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z](?:[a-z]*[a-z])?/,
             message: "Please input a valid email",
           },
         ]}
@@ -107,9 +106,9 @@ export const ReportProblemForm: React.FC<Props> = ({ form }) => {
       >
         <TextArea rows={5} placeholder="Describe your problem" maxLength={2000} showCount />
       </Form.Item>
-      <Form.Item name="upload" label="Upload" valuePropName="fileList" getValueFromEvent={normFile}>
+      <Form.Item name="upload" label="Upload" valuePropName="upload" getValueFromEvent={normFile}>
         {/* <Upload name="logo" action="/upload.do" listType="picture"> */}
-        <Upload name="attachments" onChange={handleUploadChange} {...{ fileList }}>
+        <Upload name="attachments" onChange={handleUploadChange} {...{ fileList, defaultFileList }}>
           <Button icon={<UploadSimple />}>Upload</Button>
         </Upload>
       </Form.Item>
