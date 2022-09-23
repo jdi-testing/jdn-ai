@@ -4,12 +4,13 @@ import Icon from "@ant-design/icons";
 import React from "react";
 
 import kebab_menu from "../../assets/Kebab_menu.svg";
+import DesktopSlash from "../../assets/desktopTowerSlash.svg";
 import { readmeLinkAddress } from "../../utils/constants";
 import { RootState } from "../../store/store";
 import { isNil } from "lodash";
 import { Menu, MenuItem } from "../common/Menu";
 import { BackendStatus, LocalUrl } from "../../store/slices/mainSlice.types";
-import { CloudCheck, DesktopTower } from "phosphor-react";
+import { CloudCheck, CloudSlash, DesktopTower } from "phosphor-react";
 import { LocatorsGenerationStatus } from "../../store/slices/locatorSlice.types";
 import { ReportProblem } from "../ReportProblem/ReportProblem";
 
@@ -40,6 +41,7 @@ export const StatusBar = () => {
 
   const renderServerIndicator = () => {
     const locationIcon = serverLocation === LocalUrl ? <DesktopTower size={16} /> : <CloudCheck size={16} />;
+    const errorLocationIcon = serverLocation === LocalUrl ? <DesktopSlash /> : <CloudSlash size={16} />;
 
     const title =
       generationStatus === LocatorsGenerationStatus.failed ?
@@ -51,7 +53,7 @@ export const StatusBar = () => {
     return backendAvailable === BackendStatus.Accessed ? (
       <Tooltip placement="bottomRight" align={{ offset: [12, 0] }} title={title}>
         {generationStatus === LocatorsGenerationStatus.failed ? (
-          <Typography.Text type="danger">{locationIcon}</Typography.Text>
+          <Typography.Text type="danger">{errorLocationIcon}</Typography.Text>
         ) : (
           locationIcon
         )}
