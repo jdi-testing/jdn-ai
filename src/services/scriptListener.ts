@@ -116,7 +116,7 @@ export const createListeners = (
   };
 
   const messageHandler = (
-      { message, param }: { message: keyof Actions; param: Record<string, never> },
+      { message, param }: ScriptMessagePayload,
       sender: chrome.runtime.MessageSender,
       sendResponse: (response: Record<string, never>) => void,
       _actions: Actions
