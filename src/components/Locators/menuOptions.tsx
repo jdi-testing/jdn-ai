@@ -1,20 +1,19 @@
 import { Typography } from "antd";
 import {
-    ArrowClockwise,
+  ArrowClockwise,
   ArrowFatDown,
   ArrowFatLinesDown,
   ArrowFatUp,
   ArrowsCounterClockwise,
+  DownloadSimple,
   Pause,
   PencilSimple,
   Play,
+  TextT,
   Trash,
 } from "phosphor-react";
 import React from "react";
 import { MenuItem } from "../common/Menu";
-
-import EditTextSvg from "../../assets/edit-text.svg";
-import DownloadSvg from "../../assets/download.svg";
 
 export const restore = (onClick: () => void): MenuItem => ({
   key: "0",
@@ -98,25 +97,25 @@ export const advanced = (onClick: Array<() => void>) => ({
 });
 
 export const renameOption = (onClick: () => void): MenuItem => ({
-    key: "8",
-    icon: <EditTextSvg />,
-    onClick: onClick,
-    label: "Rename",
-})
+  key: "8",
+  icon: <TextT size={14} />,
+  onClick: onClick,
+  label: "Rename",
+});
 
 export const retry = (onClick: () => void) => ({
-    key: "9",
-    icon: <ArrowClockwise size={14} />,
-    onClick,
-    label: "Retry",
+  key: "9",
+  icon: <ArrowClockwise size={14} />,
+  onClick,
+  label: "Retry",
 });
 
 export const download = (onClick: () => void) => ({
-    key: "10",
-    icon: <DownloadSvg />,
-    onClick,
-    label: "Download",
-})
+  key: "10",
+  icon: <DownloadSimple size={14} />,
+  onClick,
+  label: "Download",
+});
 
 export const deleteOption = (onClick: () => void) => ({
   key: "15",
@@ -124,5 +123,3 @@ export const deleteOption = (onClick: () => void) => ({
   onClick,
   label: <Typography.Text type="danger">Delete</Typography.Text>,
 });
-
-
