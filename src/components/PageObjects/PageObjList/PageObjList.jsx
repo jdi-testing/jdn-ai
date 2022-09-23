@@ -11,7 +11,7 @@ import CaretDownSvg from "../../../assets/caret-down.svg";
 import PageSvg from "../../../assets/page.svg";
 import { selectConfirmedLocators, selectPageObjects } from "../../../store/selectors/pageObjectSelectors";
 import { Locator } from "../../Locators/Locator";
-import { GenerationButtons } from "../GenerationButtons";
+import { GenerationButtons } from "./GenerationButtons";
 import { PageObjectPlaceholder } from "../PageObjectPlaceholder";
 import { PageObjCopyButton } from "./PageObjCopyButton";
 
