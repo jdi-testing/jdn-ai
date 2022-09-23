@@ -9,8 +9,8 @@ import { SCRIPT_ERROR } from "../utils/constants";
 import { Locator, PredictedEntity } from "../store/slices/locatorSlice.types";
 
 export interface ScriptMessage {
-  message: string,
-  param: any,
+  message: string;
+  param: any;
 }
 
 /* global chrome */
@@ -22,7 +22,11 @@ class Connector {
   tabId: number;
   port?: chrome.runtime.Port;
   onerror: (err: Error) => void;
-  onmessage: (message: any) => void;
+  onmessage: (
+    payload: { message: string; param: Record<string, never> },
+    sender: chrome.runtime.MessageSender,
+    sendResponse: (response: any) => void
+  ) => void;
 
   constructor() {
     this.getTab();
@@ -39,17 +43,19 @@ class Connector {
 
   // @ts-ignore
   sendMessage(action, payload, onResponse?, tabId?): Promise<any> {
-    return chrome.tabs
-      .sendMessage(tabId || this.tabId, {
-        message: action,
-        param: payload,
-      })
-      // @ts-ignore
-      .then((response) => response)
-      .catch((error: Error) => {
-        if (error.message === SCRIPT_ERROR.NO_RESPONSE && isUndefined(onResponse)) return null;
-        return error;
-      });
+    return (
+      chrome.tabs
+        .sendMessage(tabId || this.tabId, {
+          message: action,
+          param: payload,
+        })
+        // @ts-ignore
+        .then((response) => response)
+        .catch((error: Error) => {
+          if (error.message === SCRIPT_ERROR.NO_RESPONSE && isUndefined(onResponse)) return null;
+          return error;
+        })
+    );
   }
 
   // @ts-ignore
@@ -59,7 +65,13 @@ class Connector {
       .then((tabs) => Promise.all(tabs.map((tab) => connector.sendMessage(action, payload, onResponse, tab.id))));
   }
 
-  updateMessageListener(callback: () => void) {
+  updateMessageListener(
+    callback: (
+      payload: { message: string; param: Record<string, never> },
+      sender: chrome.runtime.MessageSender,
+      sendResponse: (response: any) => void
+    ) => void
+  ) {
     if (this.onmessage) chrome.runtime.onMessage.removeListener(this.onmessage);
     this.onmessage = callback;
     chrome.runtime.onMessage.addListener(this.onmessage);
@@ -139,10 +151,12 @@ class Connector {
   }
 
   attachCSS(file: string) {
-    return chrome.scripting.insertCSS({
-      target: { tabId: this.tabId },
-      files: [file],
-    }).catch((error) => error);
+    return chrome.scripting
+      .insertCSS({
+        target: { tabId: this.tabId },
+        files: [file],
+      })
+      .catch((error) => error);
   }
 }
 
@@ -155,16 +169,22 @@ export const sendMessage = {
   changeElementName: (el: Locator) => connector.sendMessage("CHANGE_ELEMENT_NAME", el),
   changeElementType: (el: Locator) => connector.sendMessage("CHANGE_ELEMENT_TYPE", el),
   changeStatus: (el: Locator) => connector.sendMessage("CHANGE_STATUS", el),
-  checkSession: (payload: null, onResponse?: () => void): Promise<{message: string, tabId: number}[]> => connector.sendMessageToAllTabs("CHECK_SESSION", payload, onResponse),
+  checkSession: (payload: null, onResponse?: () => void): Promise<{ message: string; tabId: number }[]> =>
+    connector.sendMessageToAllTabs("CHECK_SESSION", payload, onResponse),
   defineTabId: (payload: number) => connector.sendMessage("DEFINE_TAB_ID", payload),
-  setClosedSession: (payload: { tabId: number, isClosed: boolean }) => connector.sendMessage("SET_CLOSED_SESSION", payload),
-  setHighlight: (payload: { elements?: Locator[], perception?: number }) => connector.sendMessage("SET_HIGHLIGHT", payload),
+  setClosedSession: (payload: { tabId: number; isClosed: boolean }) =>
+    connector.sendMessage("SET_CLOSED_SESSION", payload),
+  setHighlight: (payload: { elements?: Locator[]; perception?: number }) =>
+    connector.sendMessage("SET_HIGHLIGHT", payload),
   killHighlight: (payload?: {}, onResponse?: () => void) => connector.sendMessage("KILL_HIGHLIGHT", null, onResponse),
-  generateAttributes: (payload: PredictedEntity, onResponse: () => void) => connector.sendMessage("GENERATE_ATTRIBUTES", payload, onResponse),
-  pingScript: (payload: { scriptName: string }, onResponse?: () => void) => connector.sendMessage("PING_SCRIPT", payload, onResponse),
-  openEditLocator: (payload: {value: Locator, types: string[]}, onResponse?: () => void) => connector.sendMessage("OPEN_EDIT_LOCATOR", payload, onResponse),
+  generateAttributes: (payload: PredictedEntity, onResponse: () => void) =>
+    connector.sendMessage("GENERATE_ATTRIBUTES", payload, onResponse),
+  pingScript: (payload: { scriptName: string }, onResponse?: () => void) =>
+    connector.sendMessage("PING_SCRIPT", payload, onResponse),
+  openEditLocator: (payload: { value: Locator; types: string[] }, onResponse?: () => void) =>
+    connector.sendMessage("OPEN_EDIT_LOCATOR", payload, onResponse),
   removeElement: (payload: Locator) => connector.sendMessage("REMOVE_ELEMENT", payload),
-  toggle: (payload: { element: Locator, skipScroll?: boolean }) => connector.sendMessage("HIGHLIGHT_TOGGLED", payload),
+  toggle: (payload: { element: Locator; skipScroll?: boolean }) => connector.sendMessage("HIGHLIGHT_TOGGLED", payload),
   toggleDeleted: (el: Locator) => connector.sendMessage("TOGGLE_DLETED", el),
 };
 

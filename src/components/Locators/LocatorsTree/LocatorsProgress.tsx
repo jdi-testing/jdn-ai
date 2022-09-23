@@ -9,20 +9,28 @@ import {
   selectInProgressByPageObj,
   selectPageObjLocatorsByProbability,
 } from "../../../store/selectors/pageObjectSelectors";
+import { PageObjectId } from "../../../store/slices/pageObjectSlice.types";
+import { RootState } from "../../../store/store";
 import { rerunGeneration } from "../../../store/thunks/rerunGeneration";
 import { locatorsGenerationStatus } from "../../../utils/constants";
 
-let timer;
+interface Props {
+  currentPageObject: PageObjectId;
+}
 
-export const LocatorsProgress = ({ currentPageObject }) => {
+let timer: NodeJS.Timeout;
+
+export const LocatorsProgress: React.FC<Props> = ({ currentPageObject }) => {
   const [isProgressActive, setIsProgressActive] = useState(false);
-  const generationStatus = useSelector((state) => state.locators.generationStatus);
+  const generationStatus = useSelector((state: RootState) => state.locators.generationStatus);
 
-  const byProbability = useSelector((_state) => selectPageObjLocatorsByProbability(_state, currentPageObject));
-  const generated = useSelector((_state) => selectGeneratedByPageObj(_state, currentPageObject));
-  const inProgress = useSelector((_state) => selectInProgressByPageObj(_state, currentPageObject));
-  const deleted = useSelector((_state) => selectDeletedByPageObj(_state, currentPageObject));
-  const failed = useSelector((_state) => selectFailedByPageObject(_state, currentPageObject));
+  const byProbability = useSelector((_state: RootState) =>
+    selectPageObjLocatorsByProbability(_state, currentPageObject)
+  );
+  const generated = useSelector((_state: RootState) => selectGeneratedByPageObj(_state, currentPageObject));
+  const inProgress = useSelector((_state: RootState) => selectInProgressByPageObj(_state, currentPageObject));
+  const deleted = useSelector((_state: RootState) => selectDeletedByPageObj(_state, currentPageObject));
+  const failed = useSelector((_state: RootState) => selectFailedByPageObject(_state, currentPageObject));
 
   const calculationReady = size(generated);
   const toBeCalculated = size(inProgress) + size(failed);
@@ -33,7 +41,7 @@ export const LocatorsProgress = ({ currentPageObject }) => {
   const dispatch = useDispatch();
 
   const handleRetry = () => {
-    dispatch(rerunGeneration(failed));
+    dispatch(rerunGeneration({ generationData: failed }));
   };
 
   const readinessPercentage = useMemo(() => {
@@ -41,7 +49,7 @@ export const LocatorsProgress = ({ currentPageObject }) => {
       return 0;
     }
     const result = calculationReady / total;
-    return result.toFixed(2) * 100;
+    return result * 100;
   }, [byProbability, generated, failed]);
 
   useEffect(() => {
