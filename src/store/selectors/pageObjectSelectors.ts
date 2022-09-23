@@ -1,5 +1,5 @@
 import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
-import { chain, isNil, size } from "lodash";
+import { chain, isNil, last, size } from "lodash";
 import { isProgressStatus } from "../../services/locatorGenerationController";
 import { locatorTaskStatus } from "../../utils/constants";
 import { PageObject, PageObjectId } from "../slices/pageObjectSlice.types";
@@ -132,3 +132,5 @@ export const selectEmptyPageObjects = createSelector(
       return emptyPOs;
     }
 );
+
+export const selectLastElementLibrary = createSelector(selectPageObjects, (pageObjects) => last(pageObjects)?.library);
