@@ -156,10 +156,10 @@ const locatorsSlice = createSlice({
     restoreLocators(state, { payload: locators }) {
       locatorsAdapter.setMany(state, locators);
     },
-    addCmElementHighlight(state, { payload }) {
+    addCmElementHighlight(state, { payload }: PayloadAction<ElementId>) {
       locatorsAdapter.upsertOne(state, { element_id: payload, isCmHighlighted: true } as Locator);
     },
-    clearCmElementHighlight(state, { payload }) {
+    clearCmElementHighlight(state, { payload }: PayloadAction<ElementId>) {
       locatorsAdapter.upsertOne(state, { element_id: payload, isCmHighlighted: false } as Locator);
     },
   },
