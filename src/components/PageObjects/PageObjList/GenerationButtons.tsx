@@ -3,13 +3,13 @@ import { useSelector, useDispatch } from "react-redux";
 import { SearchOutlined } from "@ant-design/icons";
 import React from "react";
 
-import { identifyElements } from "../../store/thunks/identifyElements";
-import { ElementLibrary, libraryNames } from "./utils/generationClassesMap";
-import { changeElementLibrary } from "../../store/slices/pageObjectSlice";
-import { selectPageObjById } from "../../store/selectors/pageObjectSelectors";
-import { RootState } from "../../store/store";
-import { PageObjectId } from "../../store/slices/pageObjectSlice.types";
-import { IdentificationStatus } from "../../store/slices/locatorSlice.types";
+import { identifyElements } from "../../../store/thunks/identifyElements";
+import { ElementLibrary, libraryNames } from "../utils/generationClassesMap";
+import { changeElementLibrary } from "../../../store/slices/pageObjectSlice";
+import { selectPageObjById } from "../../../store/selectors/pageObjectSelectors";
+import { RootState } from "../../../store/store";
+import { PageObjectId } from "../../../store/slices/pageObjectSlice.types";
+import { IdentificationStatus } from "../../../store/slices/locatorSlice.types";
 
 interface Props {
   pageObj: PageObjectId,
@@ -39,7 +39,7 @@ export const GenerationButtons: React.FC<Props> = ({ pageObj }) => {
           >
             <Select.Option value={ElementLibrary.MUI}>{libraryNames.MUI}</Select.Option>
             <Select.Option value={ElementLibrary.HTML5}>{libraryNames.HTML5}</Select.Option>
-            {/* <Select.Option value={ElementLibrary.NgMat}>{libraryNames.NgMat}</Select.Option> */}
+            <Select.Option value={ElementLibrary.NgMat}>{libraryNames.NgMat}</Select.Option>
           </Select>
         </Space>
         <Space direction="horizontal" size={8}>
