@@ -7,6 +7,7 @@ import { editNamePopup } from "../contentScripts/popups/editNamePopup";
 import { isUndefined } from "lodash";
 import { SCRIPT_ERROR } from "../utils/constants";
 import { Locator, PredictedEntity } from "../store/slices/locatorSlice.types";
+import { ScriptMessagePayload } from "./scriptListener";
 
 export interface ScriptMessage {
   message: string;
@@ -67,7 +68,7 @@ class Connector {
 
   updateMessageListener(
     callback: (
-      payload: { message: string; param: Record<string, never> },
+      payload: ScriptMessagePayload,
       sender: chrome.runtime.MessageSender,
       sendResponse: (response: any) => void
     ) => void

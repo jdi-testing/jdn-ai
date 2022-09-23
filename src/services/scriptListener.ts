@@ -23,6 +23,8 @@ import { RootState } from "../store/store";
 import { isNil } from "lodash";
 import { AsyncThunkAction } from "@reduxjs/toolkit";
 
+export type ScriptMessagePayload = { message: keyof Actions; param: Record<string, never> };
+
 type Response<T> = (payload: T, sender: chrome.runtime.MessageSender, sendResponse: (response: any) => void) => void;
 
 type Actions<P = any> = Record<string, Response<P>>;
@@ -127,7 +129,7 @@ export const createListeners = (
 
   connector.updateMessageListener(
       (
-          payload: { message: string; param: Record<string, never> },
+          payload: ScriptMessagePayload,
           sender: chrome.runtime.MessageSender,
           sendResponse: (response: any) => void
       ) => messageHandler(payload, sender, sendResponse, actions)
