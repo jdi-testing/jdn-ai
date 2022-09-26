@@ -1,20 +1,29 @@
 # Setup plugin
-Current version of JDN plugin is client-server application with two independent parts and both parts should be installed separately.
+The current JDN version is available both in Chrome Web Store and can be installed as a client-server application.
+## Download via Chrome Web Store (preferable option)
+1.	Download JDN plugin: https://chrome.google.com/webstore/detail/jdn/dldagjdnndapekahhbpeemjifghccldg
+2.	Turn on EPAM VPN to enable connection to a server.
+3.  Use the extensions panel to open JDN
 
-## **Setup plugin to Chrome**
+## Manual setup
+It isn’t necessary if the plugin is already working. 
+There are 2 independent parts, which must be installed separately
+
+**Plugin part**
 1. [Download](https://github.com/jdi-testing/jdn-ai/releases/tag/3.2.252) the latest version of plugin.
-   *  For developers only: [Download](https://github.com/jdi-testing/jdn-ai/releases) the latest version (you need an archive named like the JDN version) as an archive (.zip file)
+   *  For the developers team only: [Download](https://github.com/jdi-testing/jdn-ai/releases) the latest version (you need an archive named like the JDN version) as an archive (.zip file)
 2. Unpack the content to any convenient place (the result folder name is “dist”)
 3. Open Chrome Settings → choose option “More tools” → choose option Extensions → turn on the Developer mode → click “Load unpacked”
 4. Select unpacked folder with the plugin on subfolders level (in the way that the contend as “CSS” and “Images”, don’t do it just for “dist” folder)
-5. Open Chrome developer tools via F12 hotkey → JDN tab should be added as the last tab at the Devtools
+5. Open Chrome developer tools via F12 (fn+f12) hotkey → JDN tab should be added as the last tab at the Devtools 
+![alt text]((https://user-images.githubusercontent.com/53625116/192277657-0d041d1b-a26b-495d-8ff6-9585c49e7dbf.png)
 
-## **Setup server part**
-1. Setup [Docker](https://www.docker.com/products/docker-desktop)
-2. Download the latest Docker Compose file from the `develop` branch and run `docker compose`
-3. In _Windows 10_ can be used both, PowerShell and regular command-line, for _macOS_ native terminal can be used
+**Setup server part**
+6. Setup [Docker](https://www.docker.com/products/docker-desktop)
+7. Download the latest Docker Compose file from the `develop` branch and run `docker compose`
+8. In _Windows 10_ can be used both, PowerShell and regular command-line, for _macOS_ native terminal can be used
 
-### *Release version*
+*Release version*  
 **macOS/Linux**
 ```shell
 curl --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/rc-1/docker-compose-rc-1.yaml && docker compose up
@@ -23,8 +32,7 @@ curl --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-te
 ```shell
 curl.exe --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/rc-1/docker-compose-rc-1.yaml && docker compose up
 ```
-
-### *Development version*
+*Development version*  
 **macOS/Linux**
 ```shell
 curl --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/develop/docker-compose.yaml && docker compose up
@@ -33,124 +41,63 @@ curl --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-te
 ```shell
 curl.exe --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/develop/docker-compose.yaml && docker compose up
 ```
-* <span style="color:orange">Attention! The first time, when you build the docker image, it can take significant time<span>
-* After finishing of downloading check that container is created. The number of back-end version should be displayed in JDN plugin tab near the front-end version.
-* The plugin doesn't work properly in "Dock to bottom" view. Please use another dock side view. 
+![alt text](https://img.icons8.com/emoji/16/000000/warning-emoji.png) Attention! It can take time to build the docker image, please, wait untill the end of the installation.
+
+- [ ] Check that back-end part is running. *The current version of back-end should be displayed in the JDN plugin tab near the front-end version: it’s the simplest way to check that back-end is installed properly and connected.*
 
 
-# **How to work with the plugin**
+# Working with JDN plugin
 
-The plugin allows generating Page Objects:
-- for the JDI framework;
-- locators type - xPath;
-- only for Material UI and HTML5 sites.
+The plugin allows generating of Page Objects with the following restrictions:
+-	is applicable to the JDI framework;
+-	creates xPath locators’ type;
+-	works with Material UI and HTML5 websites.
+
+![alt text](https://img.icons8.com/ios/16/000000/info--v1.png) The plugin doesn't work properly in the "dock to bottom" view. Please, use the “dockside” view.
+
+## Page Objects
+![alt text](https://user-images.githubusercontent.com/53625116/192288508-5a9c5760-04eb-4048-82ff-5118b007f6dc.png)
+
+### Start page object generation
+1. Click on the 'New page object' button.
+2. Click on the "Generate" button in the new section. 
+*The locators will be generated for the website page, which is opened in the active tab.*
+3. The process of locators generating should be started.
+
+### Download Page Objects
+If you want to download a Page object, you should choose the download option from the Page Object Actions Menu. Page Object will be downloaded to your computer in Java format.
+You can also download all generated page objects using the Quick Actions Menu at the top of the list. Page objects will be downloaded as an archive.
+
+### Deleting Page Objects
+If you want to delete a Page object with locators in it, you should choose it and click on the 'Confirm' button.  Page Object, including all locators, will be deleted from the Page Objects list.
+You can also delete all Page objects using Quick Actions menu.
+
+# Locators List
+![alt text](https://user-images.githubusercontent.com/53625116/192290963-aab9c701-522e-4161-a7d2-68884dd389ed.png)
 
 
-### Page object generation
-Attention! Before start the locators recognizing, you need to check that the back-end is running.
-The current version of back-end should be displayed in JDN plugin tab near the front-end version, it is the simplest way to check that back-end is installed properly and connected.
- 
-* open the plugin (Open Chrome Developer Tools with F12 -> open the last tab on JDN Devtools);
-* open the target page, which you want to generate a page object for, click 'New page object' button, click "Generate" button;
-* the process of recognizing locators on the page and their generation will begin.
+## Managing locators
 
 
-
-### Tabs in the Locators list:
-
-* **Generated** - this tab displays all the locators that have already been generated by plugin;
-
-* **Waiting for generating** - this tab displays locators that are currently being generated or waiting in the generation queue. Locators are displayed with full xpaths on this tab, they will be changed to the new xpaths at the end of the generation process.
- 
-* **Deleted** - optional - this tab displays all the locators that have been deleted from other groups;
-
-
-### Ways to interact with locators:
-
-* **on the cover of the locator on the web page:**
+* **Locator Contex menu**
   * Left Button Mouse Click - selects an object; 
   * Right Button Mouse Click - opens the context menu;
 
-* **in the locators list in the plugin:**
+* **Locator Actions menu:**
   * actions with a specific locator - click on the menu button next to the desired locator OR hover locator and click Copy icon;
   * actions with a group of locators - select the required locators using checkboxes and use the control buttons that appeared at the top of the table.
+
+•	Locator List Quick Actions menu.
 
 
 ### Actions that can be performed with locators:
 
-* **Edit** -  you can change the block type, variable name or xpath of the locator;
-* **Delete** - for any locators;
-* **Stop generation** - for locators that are in section “Waiting for generation“;
-* **Rerun** - if locator in section “Waiting for generation“ has been stopped;
-* **Restore** - for section “Deleted locators“;
-* **Bring to front/background** - for locator editing through the context menu.
+- **Edit** -  you can change the block type, variable name or xPath of the locator;
+- **Delete** / **Restore** - you can delete a locator or a bunch of locators;
+- **Stop**/ **Rerun** generating - if a locator is generating, you can stop the process;
+-	**Change the priority** – you can change the priority of a locator generating.
 
+*Actions that are available only from the context menu:*
+-	**Bring to front/back** – if you want to manage overlapped elements.
 
-### Prediction Accuracy
-The Prediction Accuracy is displayed at the top next to each locator on the page.
-
-The indicator of Prediction Accuracy shows the confidence of the plugin that it correctly recognized the element (e.g. link, button, table, etc.). For example, if you see that the button was recognized with a Prediction Accuracy of 50%, then it may be worth checking this element. If the Prediction Accuracy is 90%, this recognition should be trusted more.
-
-You can filter all locators by Prediction Accuracy using the slider in the plugin. Only objects that are **above** this slider are displayed in the locator list and highlighted on a web page. 
-
-
-### Downloading single Page Object
-
-To place some locators in your Page object result file, you need to highlight them with checkboxes (or in blue area on the target page) and then click 'Confirm' button under the Locators list table. Locators will be added to Page Object. To download it click Page Object meatball menu and click Download button. Page Object in Java format will be downloaded to your computer. 
- 
-### Downloading all Page Objects
-
-To place some locators in your Page object result file, you need to highlight them with checkboxes (or in blue area on the target page) and then click 'Confirm' button under the Locators list table. Locators will be added to Page Object. To download all Page Objects click Download button. All Page Objects in zip folder will be downloaded to your computer. 
- 
- ### Deleting single Page Object
-
-To place some locators in your Page object result file, you need to highlight them with checkboxes (or in blue area on the target page) and then click 'Confirm' button under the Locators list table. Locators will be added to Page Object. To delete it click Page Object meatball menu and click Delete button. Page Object will be deleted from the Page Objects list.
- 
-### Deleting all Page Objects
-
-To place some locators in your Page object result file, you need to highlight them with checkboxes (or in blue area on the target page) and then click 'Confirm' button under the Locators list table. Locators will be added to Page Object. To delete all Page Objects click Delete button. All Page Objects will be deleted from the Page Objects list.
-
-
-
-# **Branching**
-
-```master``` - base branch
-```issue_<YOUR_ISSUE_NUMBER>``` - feature or bugfix branch, started from master and merged into master when feature is ready
-```release_<RELEASE_NUMBER>``` - release branch, start from master
-```hotfix_<ISSUE_NUMBER>```  - fix for release, start from release branch and merged into it
-
-
-
-# **How to update version**
-
-For updating version in package.json and manifest.json you can run 
-```
-  npm run patch
-```
-or manualy change version in this files.
-
-Commit and push changes.
-
-When your request has been merged, github actions will create draft of release with current package.json version tag.
- 
- # **How to update backend version**
- 
- Abort the currently running process is terminal (Ctrl + C)
- 
- ```
-docker-compose stop
-docker-compose rm -f
-docker-compose pull   
-docker-compose up -d
-```
- Run curl again
-
-# **CI/CD**
-
-Delivery pack is builded autimatically on commit in master.
-
-# **Version compatibility list**
-| Plugin version | Backend version |
-|-----|-----|
-|3.2.253 and greater|0.1.3|
-|Release 3.2.252|0.1.2|
+# [FAQ](https://jdi-family.atlassian.net/l/cp/cV133esQ)
