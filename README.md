@@ -3,18 +3,18 @@
 Use video instruction or the guide that is below
 
 # Setup plugin
-The current JDN version is available both in Chrome Web Store and can be down downloaded as a client-server application.
+The current JDN version is available both in Chrome Web Store and can be downloaded as a client-server application.
 ## Download via Chrome Web Store (preferable option)
-1.	Download [JDN plugin](https://chrome.google.com/webstore/detail/jdn/dldagjdnndapekahhbpeemjifghccldg);
-2.	Turn on EPAM VPN to enable connection to a server;
+1.	Install from the Store [JDN plugin](https://chrome.google.com/webstore/detail/jdn/dldagjdnndapekahhbpeemjifghccldg);
+2.	If you are an EPAM employee, then turn on EPAM VPN to enable connection to a server. In other cases, please move to the section **Manual Setup / Setup server part** (below)
 3.  Open Chrome developer tools via *F12 (fn + F12)* hotkey → JDN tab should be added as the last tab at the Devtools   
-![alt text](https://user-images.githubusercontent.com/53625116/192277657-0d041d1b-a26b-495d-8ff6-9585c49e7dbf.png)
+![alt text](https://user-images.githubusercontent.com/53625116/192780907-6fdd41f4-cbbf-4335-b1fe-9db2da2f10af.png)
 
 ## Manual setup
 It isn’t necessary if the plugin is working after downloading from Chrome Web Store. 
 There are 2 independent parts, which must be installed separately
 
-**Plugin part**
+### **Plugin part**
 1. [Download](https://github.com/jdi-testing/jdn-ai/releases/tag/3.2.252) the latest version of plugin.
    *  For the developers team only: [Download](https://github.com/jdi-testing/jdn-ai/releases) the latest version (you need an archive named like the JDN version) as an archive (.zip file)
 2. Unpack the content to any convenient place (the result folder name is “dist”)
@@ -22,7 +22,7 @@ There are 2 independent parts, which must be installed separately
 4. Select unpacked folder with the plugin on subfolders level (in the way that the contend as “CSS” and “Images”, don’t do it just for “dist” folder)
 5. Open Chrome developer tools via F12 (fn+f12) hotkey → JDN tab should be added as the last tab at the Devtools 
 
-**Setup server part**  
+### **Setup server part**  
 
 6. Setup [Docker](https://www.docker.com/products/docker-desktop)  
 7. Download the latest Docker Compose file from the `develop` branch and run `docker compose`  
@@ -107,3 +107,5 @@ You can also delete all Page objects using Quick Actions menu.
 
 # [FAQ](https://jdi-family.atlassian.net/l/cp/cV133esQ)
 Frequently asked questions
+## Support chat in [Skype](https://join.skype.com/clvyVvnZvWqc)
+
