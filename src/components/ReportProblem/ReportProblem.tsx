@@ -2,12 +2,14 @@ import { Button, Form, Input, Upload, UploadFile } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import { UploadChangeParam } from "antd/lib/upload";
 import { UploadFileStatus } from "antd/lib/upload/interface";
+import { size } from "lodash";
 import { UploadSimple } from "phosphor-react";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { HttpEndpoint, request } from "../../services/backend";
 import { selectCurrentPage } from "../../store/selectors/mainSelectors";
 import { selectCurrentPageObject } from "../../store/selectors/pageObjectSelectors";
+import { ValidationErrorType } from "../../store/slices/locatorSlice.types";
 import { PageType } from "../../store/slices/mainSlice.types";
 import { DialogWithForm } from "../common/DialogWithForm";
 import { dataToBlob, isImage, toBase64, isAllowedExtension } from "./utils";
@@ -24,8 +26,7 @@ export const ReportProblem = () => {
   const pageData = useSelector(selectCurrentPageObject)?.pageData;
   const currentPage = useSelector(selectCurrentPage).page;
 
-  const defaultFileList = useMemo(
-      () =>
+  const defaultFileList =
       pageData && currentPage === PageType.LocatorsList ?
         [
           {
@@ -36,11 +37,13 @@ export const ReportProblem = () => {
             linkProps: { download: "pageData.json" },
           },
         ] :
-        [],
-      [pageData]
-  );
+        [];
 
   const [fileList, setFileList] = useState<UploadFile[]>(defaultFileList);
+
+  useEffect(() => {
+    setFileList(defaultFileList);
+  }, [currentPage, pageData]);
 
   useEffect(() => {
     const files = document.querySelector(".ant-upload-list");
@@ -120,7 +123,6 @@ export const ReportProblem = () => {
         Report a problem
       </a>
       <DialogWithForm
-        open={isModalOpen}
         modalProps={{
           title: "Report a problem",
           open: isModalOpen,
@@ -129,7 +131,7 @@ export const ReportProblem = () => {
         }}
         formProps={{
           form,
-          initialValues: { upload: fileList },
+          initialValues: { upload: size(fileList) ? fileList : defaultFileList },
         }}
       >
         <Form.Item
@@ -138,7 +140,7 @@ export const ReportProblem = () => {
           rules={[
             {
               required: true,
-              message: "Please input your e-mail",
+              message: ValidationErrorType.EmptyValue,
             },
             {
               // eslint-disable-next-line max-len

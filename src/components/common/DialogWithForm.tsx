@@ -4,6 +4,8 @@ import React, { ReactNode } from "react";
 
 interface JDNModalProps extends ModalProps {
   setIsModalOpen: (value: boolean) => void;
+  open: boolean,
+  onOk: () => void,
 }
 
 interface JDNFormProps extends FormProps {
@@ -14,7 +16,6 @@ interface DialogFormProps {
   modalProps: JDNModalProps;
   children?: ReactNode;
   formProps: JDNFormProps;
-  open: boolean;
 }
 
 export const DialogWithForm: React.FC<DialogFormProps> = ({ modalProps, formProps, children }) => {

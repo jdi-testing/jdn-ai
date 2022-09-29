@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Dropdown } from "antd";
 
@@ -15,6 +15,7 @@ import { PageObjectId } from "../../../store/slices/pageObjectSlice.types";
 import { deleteOption, download, edit, renameOption } from "../../Locators/menuOptions";
 import { PageType } from "../../../store/slices/mainSlice.types";
 import { DotsThree } from "phosphor-react";
+import { RenamePageObjectDialog } from "./RenamePageObjDialog";
 
 interface Props {
   id: ElementId;
@@ -27,14 +28,11 @@ interface Props {
 export const PageObjMenu: React.FC<Props> = ({ id, name, locators, elements, library }) => {
   const dispatch = useDispatch();
 
+  const [isRenameModalOpen, setIsRenameModalOpen] = useState(false);
   const currentPageObject = useSelector((_state: RootState) => _state.pageObject.currentPageObject);
 
   const renderMenu = (id: PageObjectId, locatorIds: ElementId[], locatorObjects: Locator[], name: string) => {
-    const handleRename = () => {
-      chrome.storage.sync.set({
-        OPEN_EDIT_NAME: { isOpen: true, value: { id, name } },
-      });
-    };
+    const handleRename = () => setIsRenameModalOpen(true);
 
     const handleRemove = () => {
       dispatch(removePageObject(id));
@@ -67,23 +65,30 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, locators, elements, lib
   };
 
   return (
-
-    <Dropdown
-      arrow={{ pointAtCenter: true }}
-      align={{ offset: [10, 0] }}
-      trigger={["click"]}
-      overlay={renderMenu(id, locators, elements, name)}
-      getPopupContainer={(triggerNode) => triggerNode}
-      destroyPopupOnHide
-    >
-      <Button
-        className="jdn__locatorsList_button jdn__locatorsList_button-menu"
-        onClick={(e) => e.stopPropagation()}
-        data-testid="dropdown-button"
-        icon={<DotsThree size={18} />}
+    <React.Fragment>
+      <Dropdown
+        arrow={{ pointAtCenter: true }}
+        align={{ offset: [10, 0] }}
+        trigger={["click"]}
+        overlay={renderMenu(id, locators, elements, name)}
+        getPopupContainer={(triggerNode) => triggerNode}
+        destroyPopupOnHide
       >
-      </Button>
-    </Dropdown>
+        <Button
+          className="jdn__locatorsList_button jdn__locatorsList_button-menu"
+          onClick={(e) => e.stopPropagation()}
+          data-testid="dropdown-button"
+          icon={<DotsThree size={18} />}
+        >
+        </Button>
+      </Dropdown>
+      <RenamePageObjectDialog
+        isModalOpen={isRenameModalOpen}
+        setIsModalOpen={setIsRenameModalOpen}
+        pageObjId={id}
+        {...{ name }}
+      />
+    </React.Fragment>
 
   );
 };

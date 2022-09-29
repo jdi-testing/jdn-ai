@@ -90,9 +90,8 @@ export const createListeners = (
     },
     IS_OPEN_MODAL: (payload) => dispatch(toggleBackdrop(payload)),
     REMOVE_ELEMENT: (payload) => dispatch(toggleDeleted(payload)),
-    OPEN_EDIT_LOCATOR_REQUEST: (payload) => {
-      dispatch(toggleBackdrop(true));
-      sendMessage.openEditLocator(payload);
+    OPEN_EDIT_LOCATOR_REQUEST: () => {
+      // handled in Locator
     },
     RERUN_GENERATION: (payload) => {
       const locator = selectLocatorById(state, payload);

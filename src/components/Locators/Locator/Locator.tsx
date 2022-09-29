@@ -1,9 +1,8 @@
 import { Checkbox } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import React, { memo, useRef, useEffect } from "react";
+import React, { memo, useRef, useEffect, useState } from "react";
 import Text from "antd/lib/typography/Text";
 
-import { getLocator } from "../../PageObjects/utils/pageObject";
 import { pageType } from "../../../utils/constants";
 import {
   toggleElementGeneration,
@@ -15,22 +14,35 @@ import { isLocatorIndeterminate, areChildrenChecked } from "../../../store/selec
 import { LocatorIcon } from "./LocatorIcon";
 import { LocatorCopyButton } from "./LocatorCopyButton";
 import { LocatorMenu } from "./LocatorMenu";
-import { getTypesMenuOptions } from "../../PageObjects/utils/generationClassesMap";
-import { sendMessage } from "../../../services/connector";
-import { toggleBackdrop } from "../../../store/slices/mainSlice";
+import { ElementLibrary } from "../../PageObjects/utils/generationClassesMap";
+import { LocatorEditDialog } from "./LocatoEditDialog";
+import { PageType } from "../../../store/slices/mainSlice.types";
+import { Locator as LocatorInterface } from "../../../store/slices/locatorSlice.types";
+import { RootState } from "../../../store/store";
+import { getLocator } from "./utils";
 
-let timer;
+let timer: NodeJS.Timeout;
+
+interface Props {
+  element: LocatorInterface;
+  currentPage: PageType;
+  scroll: any;
+  library: ElementLibrary;
+}
 
 // eslint-disable-next-line react/display-name
-export const Locator = memo(({ element, currentPage, scroll, library }) => {
+export const Locator: React.FC<Props> = memo(({ element, currentPage, scroll, library }) => {
   const dispatch = useDispatch();
 
-  const { element_id, type, name, locator, generate, validity, deleted } = element;
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const ref = useRef(null);
+  const { element_id, type, name, locator, generate, validity, deleted, jdnHash } = element;
 
-  const indeterminate = useSelector((state) => isLocatorIndeterminate(state, element_id));
-  const allChildrenChecked = useSelector((state) => areChildrenChecked(state, element_id));
+  const ref = useRef<HTMLDivElement>(null);
+
+  const indeterminate = useSelector((state: RootState) => isLocatorIndeterminate(state, element_id));
+  const allChildrenChecked = useSelector((state: RootState) => areChildrenChecked(state, element_id));
+  const scriptMessage = useSelector((_state: RootState) => _state.main.scriptMessage);
 
   const scrollToLocator = () => {
     if (scroll && generate && ref.current) {
@@ -46,6 +58,18 @@ export const Locator = memo(({ element, currentPage, scroll, library }) => {
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    const message = scriptMessage?.message;
+    const param = scriptMessage?.param;
+
+    switch (message) {
+      case "OPEN_EDIT_LOCATOR_REQUEST":
+        if (param?.value.element_id !== element_id) return;
+        setIsEditModalOpen(true);
+        break;
+    }
+  }, [scriptMessage]);
+
   const handleOnChange = () => {
     if (!generate) {
       dispatch(toggleElementGeneration(element_id));
@@ -60,20 +84,22 @@ export const Locator = memo(({ element, currentPage, scroll, library }) => {
   };
 
   const renderColorizedString = () => {
-    const handleClick = (event) => {
+    const handleClick: React.MouseEventHandler<HTMLSpanElement> = (event) => {
       if (event.detail === 2) {
-        dispatch(toggleBackdrop(true));
-        sendMessage.openEditLocator({value: element, types: getTypesMenuOptions(library)});
+        setIsEditModalOpen(true);
       }
     };
 
     return (
       <span onClick={handleClick}>
         @UI(
+        {/* remove when getLocator() migrate to TS */}
+        {/* eslint-disable-next-line */}
+        {/* @ts-ignore */}
         <span className="jdn__xpath_item-locator">&quot;{getLocator(locator)}&quot;</span>)
         <br />
         <span className="jdn__xpath_item-type">public</span>
-        <span>&nbsp;{type}&nbsp;</span>
+        <span>&nbsp;{type as string}&nbsp;</span>
         {name}
       </span>
     );
@@ -89,11 +115,18 @@ export const Locator = memo(({ element, currentPage, scroll, library }) => {
             {renderColorizedString()}
           </Text>
           <LocatorCopyButton {...{ element }} />
-          <LocatorMenu {...{ element, library }} />
+          <LocatorMenu {...{ element, setIsEditModalOpen }} />
         </div>
       ) : (
         <Text className="jdn__xpath_item">{renderColorizedString()}</Text>
       )}
+      {isEditModalOpen ? (
+        <LocatorEditDialog
+          {...{ element_id, type, name, locator, library, jdnHash, validity }}
+          isModalOpen={isEditModalOpen}
+          setIsModalOpen={setIsEditModalOpen}
+        />
+      ) : null}
     </div>
   );
 });
