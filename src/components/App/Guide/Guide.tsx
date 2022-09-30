@@ -28,7 +28,6 @@ export const Guide = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log(readme);
     const splittedMD = splitMD(readme);
     if (!splittedMD) return;
     setPluginGuide(pluginGuide(splittedMD));
