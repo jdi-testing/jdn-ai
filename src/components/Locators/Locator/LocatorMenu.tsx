@@ -6,11 +6,8 @@ import { setCalculationPriority, toggleDeleted } from "../../../store/slices/loc
 
 import { rerunGeneration } from "../../../store/thunks/rerunGeneration";
 import { stopGeneration } from "../../../store/thunks/stopGeneration";
-import { ElementLibrary, getTypesMenuOptions } from "../../PageObjects/utils/generationClassesMap";
 import { isProgressStatus, locatorGenerationController } from "../../../services/locatorGenerationController";
 
-import { sendMessage } from "../../../services/connector";
-import { toggleBackdrop } from "../../../store/slices/mainSlice";
 import { Menu, MenuItem } from "../../common/Menu";
 import { Locator, LocatorCalculationPriority, LocatorTaskStatus } from "../../../store/slices/locatorSlice.types";
 import { advanced, deleteOption, downPriority, edit, pause, rerun, restore, retry, upPriority } from "../menuOptions";
@@ -19,10 +16,10 @@ import { DotsThree } from "phosphor-react";
 
 interface Props {
   element: Locator;
-  library: ElementLibrary;
+  setIsEditModalOpen: (val: boolean) => void;
 }
 
-export const LocatorMenu: React.FC<Props> = ({ element, library }) => {
+export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen }) => {
   const dispatch = useDispatch();
 
   const { element_id, locator, deleted, priority, jdnHash } = element;
@@ -30,11 +27,7 @@ export const LocatorMenu: React.FC<Props> = ({ element, library }) => {
   const isLocatorInProgress = isProgressStatus(locator.taskStatus);
 
   const handleEditClick = () => {
-    dispatch(toggleBackdrop(true));
-    sendMessage.openEditLocator({
-      value: element,
-      types: getTypesMenuOptions(library),
-    });
+    setIsEditModalOpen(true);
   };
 
   const handleUpPriority = () => {

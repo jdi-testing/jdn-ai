@@ -2,7 +2,7 @@
   position: absolute;
   z-index: 5000;
   color: rgba(255, 255, 255, 1);
-  font-family: "Noto Sans", sans-serif;
+  font-family: @font-family;
   font-size: 9px;
   box-sizing: border-box;
 
@@ -33,11 +33,11 @@
   position: absolute;
   display: inline-block;
   background-color: rgba(0, 0, 0, 0.8);
-  border-radius: 4px;
-  color: #fff;
+  border-radius: @default-radius;
+  color: @color-white;
   z-index: 5500;
   font-size: 12px;
-  font-family: "Noto Sans", sans-serif;
+  font-family: @font-family;
   line-height: 18px;
   letter-spacing: 0;
   padding: 12px;
@@ -47,7 +47,7 @@
     content: "";
     position: absolute;
     right: 10px;
-    top: -18px;
+    top: -19px;
     border: 9px solid transparent;
     border-bottom: 10px solid rgba(0, 0, 0, 0.8);
   }

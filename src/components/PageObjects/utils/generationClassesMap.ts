@@ -28,36 +28,36 @@ enum HTML5classes {
 }
 
 enum MUIclasses {
-  accordion ="Accordion",
-  badge ="Badge",
-  ["bottom-navigation"] ="BottomNavigation",
-  button ="Button",
-  ["button-group"] ="ButtonGroup",
-  breadcrumbs ="Breadcrumbs",
-  checkbox ="Checkbox",
-  chip ="Chip",
-  dialog ="Dialog",
-  drawer ="Drawer",
-  link ="Link",
-  list ="List",
-  menu ="Menu",
-  progress ="ProgressBar",
-  radiogroup ="RadioButtons",
-  select ="Select",
-  slider ="Slider",
-  snackbar ="Snackbar",
-  stepper ="Stepper",
-  switch ="Switch",
-  tabs ="Tabs",
-  table ="Table",
-  ["textarea-autosize"] ="TextArea",
-  ["text-field"] ="TextField",
+  accordion = "Accordion",
+  badge = "Badge",
+  "bottom-navigation" = "BottomNavigation",
+  button = "Button",
+  "button-group" = "ButtonGroup",
+  breadcrumbs = "Breadcrumbs",
+  checkbox = "Checkbox",
+  chip = "Chip",
+  dialog = "Dialog",
+  drawer = "Drawer",
+  link = "Link",
+  list = "List",
+  menu = "Menu",
+  progress = "ProgressBar",
+  radiogroup = "RadioButtons",
+  select = "Select",
+  slider = "Slider",
+  snackbar = "Snackbar",
+  stepper = "Stepper",
+  switch = "Switch",
+  tabs = "Tabs",
+  table = "Table",
+  "textarea-autosize" = "TextArea",
+  "text-field" = "TextField",
 }
 
 export enum NgMatClasses {
   autocomplete = "AutoComplete",
   badge = "Badge",
-  ["bottom-sheet"] = "BottomSheet",
+  "bottom-sheet" = "BottomSheet",
   button = "Button",
   buttontoggle = "ButtonToggle",
   card = "Card",
@@ -65,28 +65,28 @@ export enum NgMatClasses {
   chips = "Chips",
   datepicker = "Datepicker",
   dialog = "Dialog",
-  ["expansion-panel"] = "ExpansionPanel",
-  ["form-field"] = "FormField",
-  ["input-text-area"] = "TextArea",
-  ["input-text-field"] = "TextField",
+  "expansion-panel" = "ExpansionPanel",
+  "form-field" = "FormField",
+  "input-text-area" = "TextArea",
+  "input-text-field" = "TextField",
   list = "JList<?>",
   menu = "NestedDropdownMenu",
   paginator = "Paginator",
-  ["progress-bar"] = "ProgressBar",
-  ["radio-buttons"] = "RadioButtons",
-  ["select-material-selector"] = "MaterialSelector",
-  ["select-native-selector"] = "NativeSelector",
-  ["side-nav"] = "SideNav",
+  "progress-bar" = "ProgressBar",
+  "radio-buttons" = "RadioButtons",
+  "select-material-selector" = "MaterialSelector",
+  "select-native-selector" = "NativeSelector",
+  "side-nav" = "SideNav",
   slider = "Slider",
-  ["slide-toggle"] = "SlideToggle",
+  "slide-toggle" = "SlideToggle",
   snackbar = "Snackbar",
   tabs = "Tabs",
   table = "Table",
   tree = "MaterialTree",
 }
 
-type ElementLabel = typeof MUIclasses | typeof HTML5classes | typeof NgMatClasses | typeof defaultClass;
-type ElementClass = MUIclasses | HTML5classes | typeof defaultClass;
+export type ElementLabel = typeof MUIclasses | typeof HTML5classes | typeof NgMatClasses | typeof defaultClass;
+export type ElementClass = MUIclasses | HTML5classes | typeof defaultClass;
 
 export enum ElementLibrary {
   MUI = "MUI",
@@ -114,7 +114,8 @@ export const predictEndpoints: Record<ElementLibrary, HttpEndpoint> = {
   [ElementLibrary.NgMat]: HttpEndpoint.NGMAT_PREDICT,
 };
 
-export const getJDILabel = (label: keyof ElementLabel, library: ElementLibrary): ElementClass => libraryClasses[library][label] || defaultClass;
+export const getJDILabel = (label: keyof ElementLabel, library: ElementLibrary): ElementClass =>
+  libraryClasses[library][label] || defaultClass;
 
 export const getJdiClassName = (label: keyof ElementLabel, library: ElementLibrary) => {
   let jdiClass = getJDILabel(label, library);
@@ -122,9 +123,14 @@ export const getJdiClassName = (label: keyof ElementLabel, library: ElementLibra
   return jdiClass ? jdiClass : label;
 };
 
-export const getTypesMenuOptions = (library: ElementLibrary) => compact(uniq(
-    Object.values(libraryClasses[library]).map((value) => {
-      if (value !== defaultClass) return value;
-      else return undefined;
-    }).sort()
-));
+export const getTypesMenuOptions = (library: ElementLibrary) =>
+  compact(
+      uniq(
+          Object.values(libraryClasses[library])
+              .map((value) => {
+                if (value !== defaultClass) return value;
+                else return undefined;
+              })
+              .sort()
+      )
+  );

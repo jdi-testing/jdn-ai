@@ -1,6 +1,6 @@
 import CyrillicToTranslit from "cyrillic-to-translit-js";
+import { getLocator } from "../../Locators/Locator/utils";
 import { ElementLibrary } from "./generationClassesMap";
-import { getLocator } from "./pageObject";
 
 export function camelCase(n) {
   let name = "";

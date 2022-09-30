@@ -11,10 +11,6 @@ import { testFileTemplate } from "../../../services/testTemplate";
 
 export const isStringMatchesReservedWord = (string) => javaReservedWords.includes(string);
 
-export const getLocator = ({ fullXpath, robulaXpath, customXpath }) => {
-  return customXpath || robulaXpath || fullXpath || "";
-};
-
 export const isNameUnique = (elements, element_id, newName) =>
   !elements.find((elem) => elem.name === newName && elem.element_id !== element_id);
 

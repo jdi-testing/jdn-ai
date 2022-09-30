@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { isUndefined, lowerFirst, size } from "lodash";
+import { ElementLabel, ElementLibrary } from "../../components/PageObjects/utils/generationClassesMap";
 import { locatorsAdapter, simpleSelectLocatorById } from "../selectors/locatorSelectors";
 import { cancelStopGenerationReducer } from "../thunks/cancelStopGeneration";
 import { generateLocatorsReducer } from "../thunks/generateLocators";
@@ -15,6 +16,7 @@ import {
   LocatorsState,
   LocatorsGenerationStatus,
   LocatorTaskStatus,
+  Validity,
 } from "./locatorSlice.types";
 
 const initialState: LocatorsState = {
@@ -30,7 +32,13 @@ const locatorsSlice = createSlice({
     addLocators(state, { payload }) {
       locatorsAdapter.addMany(state, payload);
     },
-    changeLocatorAttributes(state, { payload }) {
+    changeLocatorAttributes(
+        state,
+        {
+          payload,
+        // eslint-disable-next-line max-len
+        }: PayloadAction<{ element_id: ElementId; type: ElementLabel; name: string; locator: string; validity: Validity; library: ElementLibrary, isCustomName?: boolean }>
+    ) {
       const { type, name, locator, element_id, validity, isCustomName } = payload;
       const _locator = simpleSelectLocatorById(state, element_id);
       if (!_locator) return;
@@ -42,7 +50,7 @@ const locatorsSlice = createSlice({
       }
       if (_locator.type !== type) {
         if (!newValue.isCustomName) {
-          newValue.name = lowerFirst(type);
+          newValue.name = lowerFirst(type as string);
         }
       }
       if (fullXpath !== locator && robulaXpath !== locator) {
