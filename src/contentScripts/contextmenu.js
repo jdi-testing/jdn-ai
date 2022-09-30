@@ -10,6 +10,7 @@ export const runContextMenu = () => {
     });
 
   function ContextMenu(menu, options) {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this;
     const num = ContextMenu.count++;
 

@@ -1,9 +1,7 @@
 import { runContextMenu } from "../contentScripts/contextmenu";
-import { editLocatorPopup } from "../contentScripts/popups/editLocatorPopup";
 import { highlightOnPage } from "../contentScripts/highlight";
 import { highlightOrder } from "../contentScripts/highlightOrder";
 import { urlListener } from "../contentScripts/urlListener";
-import { editNamePopup } from "../contentScripts/popups/editNamePopup";
 import { isUndefined } from "lodash";
 import { SCRIPT_ERROR } from "../utils/constants";
 import { Locator, PredictedEntity } from "../store/slices/locatorSlice.types";
@@ -140,8 +138,6 @@ class Connector {
         chrome.storage.sync.set({ IS_DISCONNECTED: false });
       }),
       this.attachContentScript(runContextMenu, "runContextMenu"),
-      this.attachContentScript(editLocatorPopup, "editLocatorPopup"),
-      this.attachContentScript(editNamePopup, "editNamePopup"),
       this.attachContentScript(highlightOrder, "highlightOrder"),
       this.attachContentScript(urlListener, "urlListener").then(() => {
         sendMessage.defineTabId(this.tabId);

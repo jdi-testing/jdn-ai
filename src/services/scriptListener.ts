@@ -3,21 +3,16 @@ import {
   toggleElementGeneration,
   clearCmElementHighlight,
   addCmElementHighlight,
-  changeLocatorAttributes,
-  removeAll as removeAllLocators,
   setScrollToLocator,
 } from "../store/slices/locatorsSlice";
-import { connector, sendMessage } from "./connector";
+import { connector } from "./connector";
 import { ElementLibrary, getTypesMenuOptions } from "../components/PageObjects/utils/generationClassesMap";
 import { showOverlay } from "./pageDataHandlers";
-import { selectLocatorById, selectLocators } from "../store/selectors/locatorSelectors";
+import { selectLocatorById } from "../store/selectors/locatorSelectors";
 import { stopGeneration } from "../store/thunks/stopGeneration";
 import { rerunGeneration } from "../store/thunks/rerunGeneration";
-import { isNameUnique, isPONameUnique, isStringMatchesReservedWord } from "../components/PageObjects/utils/pageObject";
-import { VALIDATION_ERROR_TYPE } from "../utils/constants";
-import { clearAll, setScriptMessage, toggleBackdrop } from "../store/slices/mainSlice";
-import { changeName as changePageObjectName, removeAll as removeAllPageObjects } from "../store/slices/pageObjectSlice";
-import { selectLocatorByJdnHash, selectPageObjById, selectPageObjects } from "../store/selectors/pageObjectSelectors";
+import { setScriptMessage } from "../store/slices/mainSlice";
+import { selectLocatorByJdnHash, selectPageObjById } from "../store/selectors/pageObjectSelectors";
 import { Dispatch } from "react";
 import { RootState } from "../store/store";
 import { isNil } from "lodash";
@@ -34,46 +29,11 @@ export const createListeners = (
     state: RootState
 ) => {
   const actions: Actions = {
-    CHECK_NAME_VALIDITY: ({ element_id, newName }, sender, sendResponse) => {
-      if (!isNameUnique(selectLocators(state), element_id, newName)) {
-        sendResponse(VALIDATION_ERROR_TYPE.DUPLICATED_NAME);
-      }
-      if (isStringMatchesReservedWord(newName)) sendResponse(VALIDATION_ERROR_TYPE.INVALID_NAME);
-    },
-    CHECK_LOCATOR_VALIDITY: ({ foundHash }, sender, sendResponse) => {
-      const validationMessage = selectLocatorByJdnHash(state, foundHash) ?
-        VALIDATION_ERROR_TYPE.DUPLICATED_LOCATOR :
-        VALIDATION_ERROR_TYPE.NEW_ELEMENT;
-      sendResponse(validationMessage);
-    },
-    CHECK_PO_NAME_VALIDITY: ({ id, newName }, sender, sendResponse) => {
-      if (!isPONameUnique(selectPageObjects(state), id, newName)) {
-        sendResponse(VALIDATION_ERROR_TYPE.DUPLICATED_NAME);
-      }
-      if (isStringMatchesReservedWord(newName)) sendResponse(VALIDATION_ERROR_TYPE.INVALID_NAME);
-    },
     CM_ELEMENT_HIGHLIGHT_ON: (payload) => {
       dispatch(addCmElementHighlight(payload));
     },
     CM_ELEMENT_HIGHLIGHT_OFF: (payload) => {
       dispatch(clearCmElementHighlight(selectLocatorByJdnHash(state, payload)!.element_id));
-    },
-    CONFIRM_BACK_POPUP: () => {
-      // handled in LocatorsPage
-    },
-    CONFIRM_IN_PROGRESS_POPUP: () => {
-      // handled in LocatorsPage
-    },
-    CONFIRM_SAVE_CHANGES: () => {
-      // handled in LocatorsPage
-    },
-    CONFIRM_SELECTED_POPUP: () => {
-      // handled in LocatorsPage
-    },
-    DELETE_ALL_PAGE_OBJECTS: () => {
-      dispatch(removeAllPageObjects());
-      dispatch(removeAllLocators());
-      dispatch(toggleBackdrop(false));
     },
     GET_ELEMENT: (jdnHash, sender, sendResponse) => {
       const element = selectLocatorByJdnHash(state, jdnHash);
@@ -85,10 +45,6 @@ export const createListeners = (
         types: getTypesMenuOptions(library || ElementLibrary.MUI),
       });
     },
-    HIGHLIGHT_OFF: () => {
-      dispatch(clearAll());
-    },
-    IS_OPEN_MODAL: (payload) => dispatch(toggleBackdrop(payload)),
     REMOVE_ELEMENT: (payload) => dispatch(toggleDeleted(payload)),
     OPEN_EDIT_LOCATOR_REQUEST: () => {
       // handled in Locator
@@ -102,15 +58,6 @@ export const createListeners = (
     TOGGLE_ELEMENT: (payload) => {
       dispatch(toggleElementGeneration(payload));
       dispatch(setScrollToLocator(payload));
-    },
-    UPDATE_LOCATOR: (payload) => {
-      const library =
-        !isNil(state.pageObject.currentPageObject) &&
-        selectPageObjById(state, state.pageObject.currentPageObject)!.library;
-      dispatch(changeLocatorAttributes({ ...payload, library }));
-    },
-    UPDATE_PAGE_OBJECT_NAME: (payload) => {
-      dispatch(changePageObjectName(payload));
     },
   };
 
