@@ -16,6 +16,6 @@ export const dataToBlob = (file: RcFile | string) => {
   return window.URL.createObjectURL(blob);
 };
 
-export const allowedExtensions = ["zip", "rar", "json", "txt", "image/"];
+export const allowedExtensions = ["zip", "rar", "json", "txt", "image/", "text/plain"];
 
 export const isAllowedExtension = (type: string) => !!allowedExtensions.find((extension) => type.includes(extension));
