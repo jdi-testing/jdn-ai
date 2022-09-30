@@ -6,7 +6,7 @@ Use video instruction or the guide that is below
 The current JDN version is available both in Chrome Web Store and can be downloaded as a client-server application.
 ## Download via Chrome Web Store (preferable option)
 1.	Install from the Store [JDN plugin](https://chrome.google.com/webstore/detail/jdn/dldagjdnndapekahhbpeemjifghccldg);
-2.	If you are an EPAM employee, then turn on EPAM VPN to enable connection to a server. In other cases, please move to the section **Manual Setup / Setup server part** (below)
+2.	If you are an EPAM employee, turn on EPAM VPN to enable connection to a server. In other cases, or If it doesn't work, please, move to the section **Manual Setup / Server part** (below)
 3.  Open Chrome developer tools via *F12 (fn + F12)* hotkey → JDN tab should be added as the last tab at the Devtools   
 ![alt text](https://user-images.githubusercontent.com/53625116/192780907-6fdd41f4-cbbf-4335-b1fe-9db2da2f10af.png)
 
@@ -15,6 +15,7 @@ It isn’t necessary if the plugin is working after downloading from Chrome Web 
 There are 2 independent parts, which must be installed separately
 
 ### **Plugin part**
+*It is recommended to use the version from [Chrome Web store](https://chrome.google.com/webstore/detail/jdn/dldagjdnndapekahhbpeemjifghccldg).*  
 1. [Download](https://github.com/jdi-testing/jdn-ai/releases/tag/3.2.252) the latest version of plugin.
    *  For the developers team only: [Download](https://github.com/jdi-testing/jdn-ai/releases) the latest version (you need an archive named like the JDN version) as an archive (.zip file)
 2. Unpack the content to any convenient place (the result folder name is “dist”)
@@ -22,8 +23,8 @@ There are 2 independent parts, which must be installed separately
 4. Select unpacked folder with the plugin on subfolders level (in the way that the contend as “CSS” and “Images”, don’t do it just for “dist” folder)
 5. Open Chrome developer tools via F12 (fn+f12) hotkey → JDN tab should be added as the last tab at the Devtools 
 
-### **Setup server part**  
-
+### **Server part**  
+*If you are an EPAM employee, turn on EPAM VPN to enable connection to a server. In other cases, or If it doesn't work, please, use the instruction below.*  
 6. Setup [Docker](https://www.docker.com/products/docker-desktop)  
 7. Download the latest Docker Compose file from the `develop` branch and run `docker compose`  
 8. In _Windows 10_ can be used both, PowerShell and regular command-line, for _macOS_ native terminal can be used  
