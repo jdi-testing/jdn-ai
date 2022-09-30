@@ -50,10 +50,12 @@ curl.exe --output docker-compose.yaml --url https://raw.githubusercontent.com/jd
 ```
 ![alt text](https://img.icons8.com/emoji/16/000000/warning-emoji.png) Attention! It can take time to build the docker image, please, wait till the end of the installation.
 
-- [ ] Check that back-end part is running. *The current version of backend should be displayed in the JDN plugin tab near the front-end version: it’s the simplest way to check that back-end is installed properly and connected.*
+
 
 
 # Working with JDN plugin
+
+- [ ] Check that back-end part is running. *The current version of backend should be displayed in the JDN plugin tab near the front-end version: it’s the simplest way to check that back-end is installed properly and connected.*
 
 The plugin allows generating of Page Objects with the following restrictions:
 -	is applicable to the JDI framework;
