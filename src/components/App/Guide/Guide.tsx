@@ -10,14 +10,12 @@ import { RootState } from "../../../store/store";
 import { defineServer } from "../../../store/thunks/defineServer";
 import { useGuideRehype } from "./useGuideRehype";
 
-const splitMD = (source: string) => source.match(/^#+ [^#]*(?:#(?!#)[^#]*)*/gm);
+const splitMD = (source: string) => source.match(/^#+ [^#]*/gm);
 
 const pluginGuide = (splittedMD: Array<string>): string =>
-  splittedMD.find((markdown: string) => markdown.includes("**Setup plugin to Chrome**")) || "";
+  splittedMD.find((markdown: string) => markdown.includes("**Plugin part**")) || "";
 const serverGuide = (splittedMD: Array<string>) =>
-  splittedMD.find((markdown: string) => markdown.includes("**Setup server part**")) || "";
-const releaseLinks = (splittedMD: Array<string>) =>
-  splittedMD.find((markdown: string) => markdown.includes("*Release version*")) || "";
+  splittedMD.find((markdown: string) => markdown.includes("**Server part**")) || "";
 
 export const Guide = () => {
   const backendAvailable = useSelector((_state: RootState) => _state.main.backendAvailable);
@@ -27,7 +25,6 @@ export const Guide = () => {
   const [currentStep, setcurrentStep] = useState(step);
   const [pluginGuideComponent, setPluginGuide] = useGuideRehype();
   const [serverGuideComponent, setServerGuide] = useGuideRehype();
-  const [linksComponent, setLinks] = useGuideRehype();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -35,7 +32,6 @@ export const Guide = () => {
     if (!splittedMD) return;
     setPluginGuide(pluginGuide(splittedMD));
     setServerGuide(serverGuide(splittedMD));
-    setLinks(releaseLinks(splittedMD));
   }, []);
 
   const steps = [
@@ -47,7 +43,7 @@ export const Guide = () => {
     {
       title: "Step 2",
       description: "Setup server",
-      content: [serverGuideComponent, linksComponent],
+      content: [serverGuideComponent],
     },
     {
       title: "Step 3",

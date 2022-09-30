@@ -1,27 +1,34 @@
+
+# Video instruction on [Youtube](https://www.youtube.com/watch?v=FJWJjxmJUMw)
+Use video instruction or the guide that is below
+
 # Setup plugin
-The current JDN version is available both in Chrome Web Store and can be installed as a client-server application.
+The current JDN version is available both in Chrome Web Store and can be downloaded as a client-server application.
 ## Download via Chrome Web Store (preferable option)
-1.	Download JDN plugin: https://chrome.google.com/webstore/detail/jdn/dldagjdnndapekahhbpeemjifghccldg
-2.	Turn on EPAM VPN to enable connection to a server.
-3.  Use the extensions panel to open JDN
+1.	Install from the Store [JDN plugin](https://chrome.google.com/webstore/detail/jdn/dldagjdnndapekahhbpeemjifghccldg);
+2.	If you are an EPAM employee, turn on EPAM VPN to enable connection to a server. In other cases, or If it doesn't work, please, move to the section **Manual Setup / Server part** (below)
+3.  Open Chrome developer tools via *F12 (fn + F12)* hotkey → JDN tab should be added as the last tab at the Devtools   
+![alt text](https://user-images.githubusercontent.com/53625116/192780907-6fdd41f4-cbbf-4335-b1fe-9db2da2f10af.png)
 
 ## Manual setup
-It isn’t necessary if the plugin is already working. 
+It isn’t necessary if the plugin is working after downloading from Chrome Web Store. 
 There are 2 independent parts, which must be installed separately
 
-**Plugin part**
+### **Plugin part**
+*It is recommended to use the version from [Chrome Web store](https://chrome.google.com/webstore/detail/jdn/dldagjdnndapekahhbpeemjifghccldg).*  
 1. [Download](https://github.com/jdi-testing/jdn-ai/releases/tag/3.2.252) the latest version of plugin.
    *  For the developers team only: [Download](https://github.com/jdi-testing/jdn-ai/releases) the latest version (you need an archive named like the JDN version) as an archive (.zip file)
 2. Unpack the content to any convenient place (the result folder name is “dist”)
 3. Open Chrome Settings → choose option “More tools” → choose option Extensions → turn on the Developer mode → click “Load unpacked”
 4. Select unpacked folder with the plugin on subfolders level (in the way that the contend as “CSS” and “Images”, don’t do it just for “dist” folder)
 5. Open Chrome developer tools via F12 (fn+f12) hotkey → JDN tab should be added as the last tab at the Devtools 
-![alt text]((https://user-images.githubusercontent.com/53625116/192277657-0d041d1b-a26b-495d-8ff6-9585c49e7dbf.png)
 
-**Setup server part**
-6. Setup [Docker](https://www.docker.com/products/docker-desktop)
-7. Download the latest Docker Compose file from the `develop` branch and run `docker compose`
-8. In _Windows 10_ can be used both, PowerShell and regular command-line, for _macOS_ native terminal can be used
+### **Server part**  
+*If you are an EPAM employee, turn on EPAM VPN to enable connection to a server. In other cases, or If it doesn't work, please, use the instruction below.*  
+
+6. Setup [Docker](https://www.docker.com/products/docker-desktop)  
+7. Download the latest Docker Compose file from the `develop` branch and run `docker compose`  
+8. In _Windows 10_ can be used both, PowerShell and regular command-line, for _macOS_ native terminal can be used  
 
 *Release version*  
 **macOS/Linux**
@@ -41,12 +48,14 @@ curl --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-te
 ```shell
 curl.exe --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/develop/docker-compose.yaml && docker compose up
 ```
-![alt text](https://img.icons8.com/emoji/16/000000/warning-emoji.png) Attention! It can take time to build the docker image, please, wait untill the end of the installation.
+![alt text](https://img.icons8.com/emoji/16/000000/warning-emoji.png) Attention! It can take time to build the docker image, please, wait till the end of the installation.
 
-- [ ] Check that back-end part is running. *The current version of back-end should be displayed in the JDN plugin tab near the front-end version: it’s the simplest way to check that back-end is installed properly and connected.*
+
 
 
 # Working with JDN plugin
+
+- [ ] Check that back-end part is running. *The current version of backend should be displayed in the JDN plugin tab near the front-end version: it’s the simplest way to check that back-end is installed properly and connected.*
 
 The plugin allows generating of Page Objects with the following restrictions:
 -	is applicable to the JDI framework;
@@ -72,25 +81,25 @@ You can also download all generated page objects using the Quick Actions Menu at
 If you want to delete a Page object with locators in it, you should choose it and click on the 'Confirm' button.  Page Object, including all locators, will be deleted from the Page Objects list.
 You can also delete all Page objects using Quick Actions menu.
 
-# Locators List
+## Locators List
 ![alt text](https://user-images.githubusercontent.com/53625116/192290963-aab9c701-522e-4161-a7d2-68884dd389ed.png)
 
 
-## Managing locators
+### Managing locators
 
 
-* **Locator Contex menu**
+* **Locator Context menu**
   * Left Button Mouse Click - selects an object; 
   * Right Button Mouse Click - opens the context menu;
 
-* **Locator Actions menu:**
+* **Locator Actions menu**
   * actions with a specific locator - click on the menu button next to the desired locator OR hover locator and click Copy icon;
   * actions with a group of locators - select the required locators using checkboxes and use the control buttons that appeared at the top of the table.
 
-•	Locator List Quick Actions menu.
+*	**Locator List Quick Actions menu.**
 
 
-### Actions that can be performed with locators:
+#### Available actions with locators:
 
 - **Edit** -  you can change the block type, variable name or xPath of the locator;
 - **Delete** / **Restore** - you can delete a locator or a bunch of locators;
@@ -101,3 +110,6 @@ You can also delete all Page objects using Quick Actions menu.
 -	**Bring to front/back** – if you want to manage overlapped elements.
 
 # [FAQ](https://jdi-family.atlassian.net/l/cp/cV133esQ)
+Frequently asked questions
+## Support chat in [Skype](https://join.skype.com/clvyVvnZvWqc)
+
