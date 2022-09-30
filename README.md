@@ -25,6 +25,7 @@ There are 2 independent parts, which must be installed separately
 
 ### **Server part**  
 *If you are an EPAM employee, turn on EPAM VPN to enable connection to a server. In other cases, or If it doesn't work, please, use the instruction below.*  
+
 6. Setup [Docker](https://www.docker.com/products/docker-desktop)  
 7. Download the latest Docker Compose file from the `develop` branch and run `docker compose`  
 8. In _Windows 10_ can be used both, PowerShell and regular command-line, for _macOS_ native terminal can be used  
