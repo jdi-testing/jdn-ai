@@ -25,7 +25,7 @@ export const LocatorIcon = ({ validity, locator, deleted }) => {
 
   const isInViewport = useIsInViewport(ref);
 
-  const getTooltipText = () => VALIDATION_ERROR_MESSAGES[validity?.locator] || "Edited";
+  const getTooltipText = () => validity?.locator || "Edited";
 
   const startedIcon = <Spin size="small" />;
   const revokedIcon = <PauseCircle size={14} color="#d81515" className="jdn__locatorsList-status" />;

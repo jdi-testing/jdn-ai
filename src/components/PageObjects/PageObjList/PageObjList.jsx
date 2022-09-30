@@ -55,38 +55,40 @@ export const PageObjList = (props) => {
       <PageObjListHeader {...props} />
       <div className="jdn__locatorsList-content jdn__pageObj-content">
         {size(pageObjects) ? (
-          <Collapse
-            expandIcon={({ isActive }) => (
-              <Icon component={CaretDownSvg} rotate={isActive ? 180 : 270} fill="#808080" />
-            )}
-            expandIconPosition="start"
-            activeKey={activePanel}
-            onChange={setActivePanel}
-          >
-            {pageObjects.map(({ id, name, url, locators, library }) => {
-              const elements = selectConfirmedLocators(state, id);
-              const isPageObjectNotEmpty = !!size(elements);
-              return (
-                <Collapse.Panel
-                  key={id}
-                  header={
-                    <React.Fragment>
-                      <Icon component={PageSvg} className="jdn__locatorsList-status" />
-                      <span className="jdn__pageObject-content-text">{name}</span>
-                    </React.Fragment>
-                  }
-                  extra={
-                    <>
-                      {isPageObjectNotEmpty && <PageObjCopyButton {...{ elements }} />}
-                      <PageObjMenu {...{ id, name, locators, elements, library }} />
-                    </>
-                  }
-                >
-                  {renderContent(id, url, elements)}
-                </Collapse.Panel>
-              );
-            })}
-          </Collapse>
+          <React.Fragment>
+            <Collapse
+              expandIcon={({ isActive }) => (
+                <Icon component={CaretDownSvg} rotate={isActive ? 180 : 270} fill="#808080" />
+              )}
+              expandIconPosition="start"
+              activeKey={activePanel}
+              onChange={setActivePanel}
+            >
+              {pageObjects.map(({ id, name, url, locators, library }) => {
+                const elements = selectConfirmedLocators(state, id);
+                const isPageObjectNotEmpty = !!size(elements);
+                return (
+                  <Collapse.Panel
+                    key={id}
+                    header={
+                      <React.Fragment>
+                        <Icon component={PageSvg} className="jdn__locatorsList-status" />
+                        <span className="jdn__pageObject-content-text">{name}</span>
+                      </React.Fragment>
+                    }
+                    extra={
+                      <>
+                        {isPageObjectNotEmpty && <PageObjCopyButton {...{ elements }} />}
+                        <PageObjMenu {...{ id, name, locators, elements, library }} />
+                      </>
+                    }
+                  >
+                    {renderContent(id, url, elements)}
+                  </Collapse.Panel>
+                );
+              })}
+            </Collapse>
+          </React.Fragment>
         ) : (
           <PageObjectPlaceholder />
         )}
