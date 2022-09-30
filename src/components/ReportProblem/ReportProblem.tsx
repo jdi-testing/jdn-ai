@@ -27,17 +27,17 @@ export const ReportProblem = () => {
   const currentPage = useSelector(selectCurrentPage).page;
 
   const defaultFileList =
-      pageData && currentPage === PageType.LocatorsList ?
-        [
-          {
-            uid: "0",
-            name: "pageData.json",
-            status: "done" as UploadFileStatus,
-            url: dataToBlob(pageData),
-            linkProps: { download: "pageData.json" },
-          },
-        ] :
-        [];
+    pageData && currentPage === PageType.LocatorsList ?
+      [
+        {
+          uid: "0",
+          name: "pageData.json",
+          status: "done" as UploadFileStatus,
+          url: dataToBlob(pageData),
+          linkProps: { download: "pageData.json" },
+        },
+      ] :
+      [];
 
   const [fileList, setFileList] = useState<UploadFile[]>(defaultFileList);
 
@@ -58,12 +58,17 @@ export const ReportProblem = () => {
           if (values.upload?.find((file) => file.status === "error")) throw new Error("invalid uploads");
           sendReport(values);
           form.resetFields();
+          resetFileList();
           setIsModalOpen(false);
         })
         .catch(() => {
           const failedUploadFile = document.querySelector(".ant-upload-list-item-error");
           failedUploadFile?.scrollIntoView({ behavior: "smooth" });
         });
+  };
+
+  const resetFileList = () => {
+    setFileList(defaultFileList);
   };
 
   const showModal = () => {
@@ -87,7 +92,7 @@ export const ReportProblem = () => {
   const handleUploadChange = async (info: UploadChangeParam<UploadFile>) => {
     const newFileList = info.fileList.map(async (_file) => {
       if (info.file.uid === _file.uid && _file.originFileObj) {
-        if ((_file.size || Infinity) / 1024 / 1024 > 2) {
+        if (_file.size !== 0 && (_file.size || Infinity) / 1024 / 1024 > 2) {
           _file.status = "error";
           _file.response = "Max file size is 2 Mb";
           _file.error = true;
@@ -122,49 +127,52 @@ export const ReportProblem = () => {
       <a className="jdn__header-link" href="#" onClick={showModal}>
         Report a problem
       </a>
-      <DialogWithForm
-        modalProps={{
-          title: "Report a problem",
-          open: isModalOpen,
-          onOk: handleOk,
-          setIsModalOpen,
-        }}
-        formProps={{
-          form,
-          initialValues: { upload: size(fileList) ? fileList : defaultFileList },
-        }}
-      >
-        <Form.Item
-          label="E-mail"
-          name="from"
-          rules={[
-            {
-              required: true,
-              message: ValidationErrorType.EmptyValue,
-            },
-            {
-              // eslint-disable-next-line max-len
-              pattern: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z](?:[a-z]*[a-z])?/,
-              message: "Please input a valid email",
-            },
-          ]}
+      {isModalOpen ? (
+        <DialogWithForm
+          modalProps={{
+            title: "Report a problem",
+            open: isModalOpen,
+            onOk: handleOk,
+            setIsModalOpen,
+            cancelCallback: resetFileList,
+          }}
+          formProps={{
+            form,
+            initialValues: { upload: size(fileList) ? fileList : defaultFileList },
+          }}
         >
-          <Input placeholder="Your feedback e-mail" maxLength={28} />
-        </Form.Item>
-        <Form.Item
-          label="Text"
-          name="body"
-          rules={[{ required: true, message: "Please input your problem description" }]}
-        >
-          <TextArea rows={5} placeholder="Describe your problem" maxLength={2000} showCount />
-        </Form.Item>
-        <Form.Item name="upload" label="Upload" valuePropName="upload" getValueFromEvent={normFile}>
-          {/* <Upload name="logo" action="/upload.do" listType="picture"> */}
-          <Upload name="attachments" onChange={handleUploadChange} {...{ fileList, defaultFileList }}>
-            <Button icon={<UploadSimple />}>Upload</Button>
-          </Upload>
-        </Form.Item>
-      </DialogWithForm>
+          <Form.Item
+            label="E-mail"
+            name="from"
+            rules={[
+              {
+                required: true,
+                message: ValidationErrorType.EmptyValue,
+              },
+              {
+                // eslint-disable-next-line max-len
+                pattern: /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z](?:[a-z]*[a-z])?/,
+                message: "Please input a valid email",
+              },
+            ]}
+          >
+            <Input placeholder="Your feedback e-mail" maxLength={28} />
+          </Form.Item>
+          <Form.Item
+            label="Text"
+            name="body"
+            rules={[{ required: true, message: "Please input your problem description" }]}
+          >
+            <TextArea rows={5} placeholder="Describe your problem" maxLength={2000} showCount />
+          </Form.Item>
+          <Form.Item name="upload" label="Upload" valuePropName="upload" getValueFromEvent={normFile}>
+            {/* <Upload name="logo" action="/upload.do" listType="picture"> */}
+            <Upload name="attachments" onChange={handleUploadChange} {...{ fileList, defaultFileList }}>
+              <Button icon={<span role="img" className="anticon anticon-upload"><UploadSimple /></span>}>Upload</Button>
+            </Upload>
+          </Form.Item>
+        </DialogWithForm>
+      ) : null}
     </div>
   );
 };

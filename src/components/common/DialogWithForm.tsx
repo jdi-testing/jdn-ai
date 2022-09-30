@@ -6,6 +6,7 @@ interface JDNModalProps extends ModalProps {
   setIsModalOpen: (value: boolean) => void;
   open: boolean,
   onOk: () => void,
+  cancelCallback?: () => void,
 }
 
 interface JDNFormProps extends FormProps {
@@ -20,11 +21,12 @@ interface DialogFormProps {
 
 export const DialogWithForm: React.FC<DialogFormProps> = ({ modalProps, formProps, children }) => {
   const { form, ...restForm } = formProps;
-  const { open, setIsModalOpen, ...restModal } = modalProps;
+  const { open, setIsModalOpen, cancelCallback, ...restModal } = modalProps;
 
   const handleCancel = () => {
     form.resetFields();
     setIsModalOpen(false);
+    cancelCallback && cancelCallback();
   };
 
   return (
