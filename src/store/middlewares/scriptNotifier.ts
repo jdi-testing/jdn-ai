@@ -1,7 +1,9 @@
 import { Middleware } from "@reduxjs/toolkit";
 import { compact, isNil, size } from "lodash";
+import { ElementLibrary, libraryClasses } from "../../components/PageObjects/utils/generationClassesMap";
 import { sendMessage } from "../../services/connector";
 import { pageType } from "../../utils/constants";
+import { getEnumKeyByValue } from "../../utils/helpersTS";
 import { selectLocatorById } from "../selectors/locatorSelectors";
 import { selectCurrentPage } from "../selectors/mainSelectors";
 import { selectLocatorsByPageObject } from "../selectors/pageObjectSelectors";
@@ -18,12 +20,18 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       break;
     }
     case "locators/changeLocatorAttributes": {
-      const { element_id, validity, type, name } = payload;
+      const { element_id, validity, type: elementType, name, library } = payload;
       const prevValue = selectLocatorById(prevState, element_id);
       if (!prevValue) return;
-      if (prevValue.type !== type || prevValue.name !== name) {
+      if (prevValue.type !== elementType || prevValue.name !== name) {
         const locator = selectLocatorById(state, element_id);
         locator && sendMessage.changeElementName(locator);
+        const classes = libraryClasses[library as ElementLibrary];
+        // if only I could know TS a little better
+        /* eslint-disable-next-line */
+        // @ts-ignore
+        const label = getEnumKeyByValue(classes, elementType);
+        sendMessage.assignDataLabels([{ jdnHash: locator?.jdnHash, predicted_label: label } as Locator]);
       } else if (prevValue?.validity?.locator.length) {
         // restore previously invalid locator
         const newValue = selectLocatorById(state, element_id);
@@ -32,6 +40,11 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
         // delete invalid locator
         sendMessage.removeElement(prevValue);
       }
+      break;
+    }
+    case "locators/generateLocators/pending": {
+      const { predictedElements } = meta.arg;
+      sendMessage.assignDataLabels(predictedElements);
       break;
     }
     case "main/changePage":
