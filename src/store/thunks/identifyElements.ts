@@ -20,7 +20,6 @@ export const identifyElements = createAsyncThunk(
       const endpoint = predictEndpoints[library];
       try {
         const { data: res, pageData } = await predictElements(endpoint);
-        // const res: PredictedEntity[] = await predictElements(endpoint);
         const rounded = res.map((el: PredictedEntity) => ({
           ...el,
           element_id: `${el.element_id}_${pageObj}`,

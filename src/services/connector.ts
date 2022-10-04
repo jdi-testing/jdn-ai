@@ -6,6 +6,7 @@ import { isUndefined } from "lodash";
 import { SCRIPT_ERROR } from "../utils/constants";
 import { Locator, PredictedEntity } from "../store/slices/locatorSlice.types";
 import { ScriptMessagePayload } from "./scriptListener";
+import { assignDataLabels } from "../contentScripts/assignDataLabels";
 
 export interface ScriptMessage {
   message: string;
@@ -138,6 +139,7 @@ class Connector {
         chrome.storage.sync.set({ IS_DISCONNECTED: false });
       }),
       this.attachContentScript(runContextMenu, "runContextMenu"),
+      this.attachContentScript(assignDataLabels, "assignDataLabels"),
       this.attachContentScript(highlightOrder, "highlightOrder"),
       this.attachContentScript(urlListener, "urlListener").then(() => {
         sendMessage.defineTabId(this.tabId);
@@ -162,6 +164,7 @@ export const connector = new Connector();
 // messages, are sent from plugun to content scripts
 export const sendMessage = {
   addElement: (el: Locator) => connector.sendMessage("ADD_ELEMENT", el),
+  assignDataLabels: (payload: PredictedEntity[]) => connector.sendMessage("ASSIGN_DATA_LABEL", payload),
   assignParents: (payload: Locator[]) => connector.sendMessage("ASSIGN_PARENTS", payload),
   changeElementName: (el: Locator) => connector.sendMessage("CHANGE_ELEMENT_NAME", el),
   changeElementType: (el: Locator) => connector.sendMessage("CHANGE_ELEMENT_TYPE", el),

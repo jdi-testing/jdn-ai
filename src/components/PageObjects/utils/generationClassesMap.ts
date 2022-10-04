@@ -3,7 +3,7 @@ import { HttpEndpoint } from "../../../services/backend";
 
 export const defaultClass = "UIElement";
 
-enum HTML5classes {
+export enum HTML5classes {
   button = "Button",
   checkbox = "Checkbox",
   checklist = "Checklist",
@@ -27,7 +27,7 @@ enum HTML5classes {
   title = "Title",
 }
 
-enum MUIclasses {
+export enum MUIclasses {
   accordion = "Accordion",
   badge = "Badge",
   "bottom-navigation" = "BottomNavigation",
