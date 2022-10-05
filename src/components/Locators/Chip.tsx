@@ -1,6 +1,6 @@
+import { X } from "phosphor-react";
 import * as React from "react";
-
-import CloseSVG from "../../assets/close.svg";
+import { Footnote } from "../common/Footnote";
 
 interface Props {
   hidden: boolean;
@@ -15,7 +15,7 @@ export const Chip: React.FC<Props> = ({ hidden, primaryLabel, secondaryLabel, on
       <div className="ant-select-selection-overflow-item" style={{ opacity: 1 }}>
         <span className="ant-select-selection-item">
           <span className="ant-select-selection-item-content">
-            {primaryLabel} <span>{secondaryLabel}</span>
+            <Footnote>{`${primaryLabel} ${secondaryLabel}`}</Footnote>
           </span>
           <span
             className="ant-select-selection-item-remove"
@@ -24,17 +24,7 @@ export const Chip: React.FC<Props> = ({ hidden, primaryLabel, secondaryLabel, on
             style={{ userSelect: "none" }}
           >
             <span role="img" aria-label="close" className="anticon anticon-close" onClick={onDelete}>
-              <svg
-                viewBox="64 64 896 896"
-                focusable="false"
-                data-icon="close"
-                width="1em"
-                height="1em"
-                fill="currentColor"
-                aria-hidden="true"
-              >
-                <CloseSVG />
-              </svg>
+              <X size={12} color="#00000073" />
             </span>
           </span>
         </span>

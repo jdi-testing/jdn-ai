@@ -5,7 +5,6 @@ import { BackendStatus, MainState, PageType } from "./mainSlice.types";
 import { PageObjectId } from "./pageObjectSlice.types";
 
 const initialState: MainState = {
-  allowIdentifyElements: true,
   backendAvailable: BackendStatus.TryToAccess,
   notifications: [],
   pageHistory: [],

@@ -1,9 +1,8 @@
-import React, { useState } from "react";
 import { Button, Tooltip } from "antd";
-import Icon from "@ant-design/icons";
+import { CopySimple } from "phosphor-react";
+import React, { useState } from "react";
 import { copyTitle } from "../../../utils/constants";
 import { copyToClipboard, getLocatorString } from "../../../utils/helpers";
-import CopySvg from "../../../assets/copy.svg";
 
 export const LocatorCopyButton = ({ element }) => {
   const [copyTooltipTitle, setTooltipTitle] = useState(copyTitle.Copy);
@@ -26,7 +25,7 @@ export const LocatorCopyButton = ({ element }) => {
           onClick={handleCopy}
           onMouseEnter={handleMouseEnter}
           className="jdn__locatorsList_button jdn__locatorsList_button-copy"
-          icon={<Icon component={CopySvg} />}
+          icon={<CopySimple size={18} color="currentColor" />}
         />
       </Tooltip>
     </React.Fragment>

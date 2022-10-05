@@ -1,4 +1,4 @@
-import { Button, Space, Select } from "antd";
+import { Button, Space, Select, Typography } from "antd";
 import { useSelector, useDispatch } from "react-redux";
 import { SearchOutlined } from "@ant-design/icons";
 import React from "react";
@@ -17,7 +17,6 @@ interface Props {
 
 export const GenerationButtons: React.FC<Props> = ({ pageObj }) => {
   const status = useSelector((state: RootState) => state.locators.status);
-  const allowIdentifyElements = useSelector((state: RootState) => state.main.allowIdentifyElements);
   const currentPageObject = useSelector((state: RootState) => selectPageObjById(state, pageObj));
   const { id, library } = currentPageObject!;
 
@@ -27,13 +26,10 @@ export const GenerationButtons: React.FC<Props> = ({ pageObj }) => {
     <div className="jdn__generationButtons">
       <Space direction="vertical" size={16}>
         <Space direction="horizontal" size={8} align="center">
-          <label htmlFor="library" className={`${!allowIdentifyElements ? "jdn__label--disabled" : ""}`}>
-            Library:
-          </label>
+          <Typography.Text>Library:</Typography.Text>
           <Select
             id="library"
             defaultValue={library}
-            disabled={!allowIdentifyElements}
             className="jdn__select"
             onChange={(_library) => dispatch(changeElementLibrary({ id, library: _library }))}
           >
@@ -47,7 +43,6 @@ export const GenerationButtons: React.FC<Props> = ({ pageObj }) => {
             icon={<SearchOutlined />}
             type="primary"
             loading={status === IdentificationStatus.loading && currentPageObject?.id === pageObj}
-            disabled={!allowIdentifyElements}
             onClick={() => dispatch(identifyElements({ library, pageObj }))}
             className="jdn__buttons"
           >

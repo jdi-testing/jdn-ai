@@ -14,6 +14,7 @@ import { Locator } from "../../Locators/Locator";
 import { GenerationButtons } from "./GenerationButtons";
 import { PageObjectPlaceholder } from "../PageObjectPlaceholder";
 import { PageObjCopyButton } from "./PageObjCopyButton";
+import { Footnote } from "../../common/Footnote";
 
 export const PageObjList = (props) => {
   const state = useSelector((state) => state);
@@ -36,7 +37,7 @@ export const PageObjList = (props) => {
   const renderPageObjSettings = (pageObjId, url) => {
     return (
       <div className="jdn__pageObject__settings">
-        <div className="jdn__pageObject__settings-url">{url}</div>
+        <Footnote className="jdn__pageObject__settings-url">{url}</Footnote>
         <GenerationButtons pageObj={pageObjId} />
       </div>
     );
