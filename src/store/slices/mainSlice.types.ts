@@ -1,7 +1,6 @@
 import { PageObjectId } from "./pageObjectSlice.types";
 
 export interface MainState {
-  allowIdentifyElements: boolean;
   backendAvailable: BackendStatus;
   baseUrl?: BaseUrl;
   serverVersion?: string;
