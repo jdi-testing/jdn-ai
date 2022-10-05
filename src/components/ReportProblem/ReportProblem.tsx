@@ -1,9 +1,9 @@
-import { Button, Form, Input, Upload, UploadFile } from "antd";
+import { Button, Form, Input, Modal, Upload, UploadFile } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import { UploadChangeParam } from "antd/lib/upload";
 import { UploadFileStatus } from "antd/lib/upload/interface";
 import { size } from "lodash";
-import { UploadSimple } from "phosphor-react";
+import { UploadSimple, Warning } from "phosphor-react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { HttpEndpoint, request } from "../../services/backend";
@@ -14,6 +14,8 @@ import { PageType } from "../../store/slices/mainSlice.types";
 import { DialogWithForm } from "../common/DialogWithForm";
 import { dataToBlob, isImage, toBase64, isAllowedExtension } from "./utils";
 
+const { error } = Modal;
+
 export interface ReportFormProps {
   body: string;
   from: string;
@@ -22,6 +24,7 @@ export interface ReportFormProps {
 
 export const ReportProblem = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [serverPingInProcess, setServerPingInProcess] = useState(false);
   const [form] = Form.useForm<ReportFormProps>();
   const pageData = useSelector(selectCurrentPageObject)?.pageData;
   const currentPage = useSelector(selectCurrentPage).page;
@@ -50,6 +53,13 @@ export const ReportProblem = () => {
     if (files) files.scrollTop = files.scrollHeight;
   }, [fileList]);
 
+  const showExceprionConfirm = () =>
+    error({
+      title: "Report is not available",
+      content: `Mail server is not accessible from your location and problem report can't be created automatically. 
+    Please create an email by yourself.`,
+    });
+
   const handleOk = () => {
     form
         .validateFields()
@@ -72,7 +82,17 @@ export const ReportProblem = () => {
   };
 
   const showModal = () => {
-    setIsModalOpen(true);
+    setServerPingInProcess(true);
+    request
+        .get(HttpEndpoint.PING_SMTP)
+        .then((response) => {
+          if (response === 1) {
+            setServerPingInProcess(false);
+            setIsModalOpen(true);
+          } else showExceprionConfirm();
+        })
+        .catch(() => showExceprionConfirm())
+        .finally(() => setServerPingInProcess(false));
   };
 
   const sendReport = (values: ReportFormProps) => {
@@ -124,9 +144,13 @@ export const ReportProblem = () => {
 
   return (
     <div>
-      <a className="jdn__header-link" href="#" onClick={showModal}>
-        Report a problem
-      </a>
+      <Button
+        onClick={showModal}
+        type="link"
+        loading={serverPingInProcess}
+        className="ant-btn ant-btn-link ant-btn-icon-only"
+        icon={<Warning size={14} color="#8C8C8C" />}
+      ></Button>
       {isModalOpen ? (
         <DialogWithForm
           modalProps={{
@@ -168,7 +192,15 @@ export const ReportProblem = () => {
           <Form.Item name="upload" label="Upload" valuePropName="upload" getValueFromEvent={normFile}>
             {/* <Upload name="logo" action="/upload.do" listType="picture"> */}
             <Upload name="attachments" onChange={handleUploadChange} {...{ fileList, defaultFileList }}>
-              <Button icon={<span role="img" className="anticon anticon-upload"><UploadSimple /></span>}>Upload</Button>
+              <Button
+                icon={
+                  <span role="img" className="anticon anticon-upload">
+                    <UploadSimple />
+                  </span>
+                }
+              >
+                Upload
+              </Button>
             </Upload>
           </Form.Item>
         </DialogWithForm>
