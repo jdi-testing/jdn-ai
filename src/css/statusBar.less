@@ -8,23 +8,23 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-  }
 
-  &__header-kebab {
-    display: none;
-  }
-}
-
-@media screen and (max-width: 600px) {
-  .jdn {
-    &__header-kebab {
-      display: flex;
-      width: 16px;
-      height: 16px;
+    &-connection {
+      padding-left: 8px;
     }
 
-    &__header-link {
-      display: none;
+    .ant-btn-icon-only {
+      height: 20px;
+    }
+
+    button.ant-btn-icon-only {
+      svg {
+        vertical-align: 4px;
+      }
+    }
+
+    a.ant-btn {
+      line-height: 20px;
     }
   }
 }

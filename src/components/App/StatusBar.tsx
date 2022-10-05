@@ -1,17 +1,14 @@
-import { Space, Dropdown, Typography, Tooltip } from "antd";
-import { useSelector } from "react-redux";
-import Icon from "@ant-design/icons";
+import { Button, Space, Tooltip, Typography } from "antd";
 import React from "react";
+import { useSelector } from "react-redux";
 
-import kebab_menu from "../../assets/Kebab_menu.svg";
-import DesktopSlash from "../../assets/desktopTowerSlash.svg";
-import { readmeLinkAddress } from "../../utils/constants";
-import { RootState } from "../../store/store";
 import { isNil } from "lodash";
-import { Menu, MenuItem } from "../common/Menu";
-import { BackendStatus, LocalUrl } from "../../store/slices/mainSlice.types";
-import { CloudCheck, CloudSlash, DesktopTower } from "phosphor-react";
+import { CloudCheck, CloudSlash, DesktopTower, Info } from "phosphor-react";
+import DesktopSlash from "../../assets/desktopTowerSlash.svg";
 import { LocatorsGenerationStatus } from "../../store/slices/locatorSlice.types";
+import { BackendStatus, LocalUrl } from "../../store/slices/mainSlice.types";
+import { RootState } from "../../store/store";
+import { readmeLinkAddress } from "../../utils/constants";
 import { ReportProblem } from "../ReportProblem/ReportProblem";
 
 export const StatusBar = () => {
@@ -22,22 +19,6 @@ export const StatusBar = () => {
 
   const manifest = chrome.runtime.getManifest();
   const pluginVer = manifest.version;
-
-  const kebabMenu = () => {
-    const items: MenuItem[] = [
-      {
-        key: "0",
-        onClick: undefined,
-        label: (
-          <a href={readmeLinkAddress} target="_blank" rel="noreferrer">
-            Readme
-          </a>
-        ),
-      },
-    ];
-
-    return <Menu {...{ items }} />;
-  };
 
   const renderServerIndicator = () => {
     const locationIcon = serverLocation === LocalUrl ? <DesktopTower size={16} /> : <CloudCheck size={16} />;
@@ -66,17 +47,10 @@ export const StatusBar = () => {
       <div className="jdn__header-version">
         <span>{`JDN v ${pluginVer} ${!isNil(backendVer) ? `Back-end v ${backendVer}` : ""}`}</span>
       </div>
-      <Space size={[30, 0]} className="header__space">
+      <Space size={[0, 0]} className="header__space">
+        <Button type="link" href={readmeLinkAddress} target="_blank" icon={<Info size={14} color="#8C8C8C" />} />
         <ReportProblem />
-        <a className="jdn__header-link" href={readmeLinkAddress} target="_blank" rel="noreferrer">
-          Readme
-        </a>
-        <span className="jdn__header-kebab">
-          <Dropdown overlay={kebabMenu} trigger={["click"]} arrow={{ pointAtCenter: true }}>
-            <Icon component={kebab_menu} onClick={(e) => e.preventDefault()} />
-          </Dropdown>
-        </span>
-        <span>{renderServerIndicator()}</span>
+        <span className="jdn_header-connection">{renderServerIndicator()}</span>
       </Space>
     </React.Fragment>
   );

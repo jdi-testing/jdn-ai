@@ -10,6 +10,7 @@ export enum HttpEndpoint {
   DOWNLOAD_TEMPLATE = "download_template",
   SESSION_ID = "get_session_id",
   GUIDE = "guide",
+  PING_SMTP = "ping_smtp",
 }
 
 export enum WebSocketMessage {
@@ -29,11 +30,8 @@ const headers = {
 class Request {
   request: AxiosInstance;
   baseUrl: BaseUrl;
-  // mock: MockAdapter;
 
   constructor() {
-    // this.mock = new MockAdapter(axios);
-
     this.request = axios.create({
       headers,
     });
