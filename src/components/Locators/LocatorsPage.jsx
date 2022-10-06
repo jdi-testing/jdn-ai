@@ -3,10 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button, Modal, Tooltip } from "antd";
 
 import { LocatorsTree } from "./LocatorsTree";
-import {
-  showOverlay,
-  removeOverlay,
-} from "../../services/pageDataHandlers";
+import { showOverlay, removeOverlay } from "../../services/pageDataHandlers";
 import {
   selectDeletedSelectedByPageObj,
   selectGeneratedSelectedByPageObj,
@@ -24,6 +21,7 @@ import { changePageBack, setScriptMessage, toggleBackdrop, resetNotifications } 
 import { removeLocators, restoreLocators } from "../../store/slices/locatorsSlice";
 import { LocatorListHeader } from "./LocatorListHeader";
 import { Breadcrumbs } from "../common/Breadcrumbs";
+import { customConfirm } from "../common/CustomConfirm";
 
 const { confirm } = Modal;
 
@@ -43,36 +41,6 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
     dispatch(setScriptMessage({}));
     dispatch(changePageBack());
     dispatch(toggleBackdrop(false));
-  };
-
-  const handleBack = () => {
-    if (isEqual(locators, locatorsSnapshot)) pageBack();
-    else {
-      const enableSave = size(waitingSelected) || size(generatedSelected);
-      confirm({
-        title: "You have unsaved changes",
-        content: "The list has been edited and the changes have not been accepted, do you want to save them?",
-        cancelText: "Discard",
-        cancelButtonProps: {
-          danger: true,
-        },
-        onCancel: () => {
-          locatorGenerationController.revokeAll();
-          if (!size(locatorsSnapshot)) {
-            dispatch(removeLocators(locatorIds));
-            dispatch(clearLocators());
-          } else {
-            dispatch(restoreLocators(locatorsSnapshot));
-          }
-          pageBack();
-        },
-        okText: "Save",
-        okButtonProps: {
-          disabled: !enableSave,
-        },
-        onOk: () => pageBack(),
-      });
-    }
   };
 
   const handleConfirm = () => {
@@ -110,6 +78,36 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
   }, []);
 
   const renderBackButton = () => {
+    const handleBack = () => {
+      if (isEqual(locators, locatorsSnapshot)) pageBack();
+      else {
+        const enableOk = size(waitingSelected) || size(generatedSelected);
+        customConfirm({
+          onAlt: handleDiscard,
+          altText: "Discard",
+          onOk: handleOk,
+          enableOk,
+          confirmTitle: "You have unsaved changes",
+          confirmContent: "The list has been edited and the changes have not been accepted, do you want to save them?",
+        });
+      }
+    };
+
+    const handleOk = () => {
+      pageBack();
+    };
+
+    const handleDiscard = () => {
+      locatorGenerationController.revokeAll();
+      if (!size(locatorsSnapshot)) {
+        dispatch(removeLocators(locatorIds));
+        dispatch(clearLocators());
+      } else {
+        dispatch(restoreLocators(locatorsSnapshot));
+      }
+      pageBack();
+    };
+
     return (
       <React.Fragment>
         {currentPage === pageType.locatorsList ? (
