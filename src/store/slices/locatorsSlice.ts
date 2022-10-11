@@ -25,6 +25,16 @@ const initialState: LocatorsState = {
   scrollToLocator: null,
 };
 
+export interface ChangeLocatorAttributesPayload {
+  element_id: ElementId;
+  type: ElementLabel;
+  name: string;
+  locator: string;
+  validity: Validity;
+  library: ElementLibrary;
+  isCustomName?: boolean;
+}
+
 const locatorsSlice = createSlice({
   name: "locators",
   initialState: locatorsAdapter.getInitialState(initialState),
@@ -36,8 +46,8 @@ const locatorsSlice = createSlice({
         state,
         {
           payload,
-        // eslint-disable-next-line max-len
-        }: PayloadAction<{ element_id: ElementId; type: ElementLabel; name: string; locator: string; validity: Validity; library: ElementLibrary, isCustomName?: boolean }>
+        }: // eslint-disable-next-line max-len
+      PayloadAction<ChangeLocatorAttributesPayload>
     ) {
       const { type, name, locator, element_id, validity, isCustomName } = payload;
       const _locator = simpleSelectLocatorById(state, element_id);

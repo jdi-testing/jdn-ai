@@ -5,7 +5,7 @@
   "scripts": {
     "start": "webpack --watch --env devenv",
     "start:prodenv": "webpack --watch",
-    "start:reduxlog": "webpack --watch --env reduxlogenable",
+    "start:reduxlog": "webpack --watch --env reduxlogenable devenv",
     "build": "webpack --mode production",
     "build:devenv": "webpack --mode production --env devenv",
     "patch": "npx mversion patch",

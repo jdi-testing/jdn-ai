@@ -1,21 +1,26 @@
+import { AnyAction, AsyncThunkAction } from "@reduxjs/toolkit";
 import { Button, notification } from "antd";
-import { isUndefined, last, size } from "lodash";
-import { useDispatch, useSelector } from "react-redux";
+import { compact, isUndefined, last, size } from "lodash";
 import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
+import { selectLocators } from "../../../store/selectors/locatorSelectors";
+import { selectCurrentPageObject } from "../../../store/selectors/pageObjectSelectors";
+import { Locator } from "../../../store/slices/locatorSlice.types";
 import {
   changeLocatorAttributes,
+  ChangeLocatorAttributesPayload,
   toggleDeleted,
   toggleDeletedGroup,
   toggleElementGeneration,
   toggleElementGroupGeneration,
 } from "../../../store/slices/locatorsSlice";
-import { selectLocators } from "../../../store/selectors/locatorSelectors";
-import { cancelStopGeneration } from "../../../store/thunks/cancelStopGeneration";
 import { cancelLastNotification, handleLastNotification } from "../../../store/slices/mainSlice";
-import { selectPageObjById } from "../../../store/selectors/pageObjectSelectors";
+import { RootState } from "../../../store/store";
+import { cancelStopGeneration } from "../../../store/thunks/cancelStopGeneration";
+import { defaultLibrary } from "../../PageObjects/utils/generationClassesMap";
 
-const messages = (value) => {
+const messages = (value?: string) => {
   return {
     EDITED: "Locator edited successfully!",
     RERUN: "The locator generation re-runned successfully",
@@ -31,11 +36,15 @@ const messages = (value) => {
 
 export const Notifications = () => {
   const dispatch = useDispatch();
-  const lastNotification = useSelector((state) => last(state.main.notifications));
+  const lastNotification = useSelector((state: RootState) => last(state.main.notifications));
   const locators = useSelector(selectLocators);
-  const library = useSelector((_state) => selectPageObjById(_state, _state.pageObject.currentPageObject)).library;
+  const library = useSelector(selectCurrentPageObject)?.library;
   let notificationMessage = "";
-  let cancelAction;
+  let cancelAction:
+    | AsyncThunkAction<any, any, any>
+    | AnyAction
+    | Array<AsyncThunkAction<any, any, any> | AnyAction>
+    | undefined;
 
   useEffect(() => {
     if (!lastNotification) return;
@@ -49,16 +58,23 @@ export const Notifications = () => {
     } else {
       switch (action?.type) {
         case "locators/changeLocatorAttributes":
-          const { element_id, type, name, locator, validity, isCustomName } = prevValue;
+          const {
+            element_id,
+            type,
+            name,
+            locator,
+            validity,
+            isCustomName,
+          } = (prevValue as unknown) as ChangeLocatorAttributesPayload;
           notificationMessage = messages().EDITED;
           cancelAction = changeLocatorAttributes({
             type,
             name,
             isCustomName: isUndefined(isCustomName) ? false : true,
             element_id,
-            locator: locator.customXpath,
+            locator: locator,
             validity,
-            library,
+            library: library || defaultLibrary,
           });
           break;
         case "locators/rerunGeneration/pending":
@@ -67,31 +83,34 @@ export const Notifications = () => {
           if (length === 1) {
             notificationMessage = messages().RERUN;
           } else {
-            notificationMessage = messages(length).RERUN_GROUP;
+            notificationMessage = messages(length.toString()).RERUN_GROUP;
           }
           break;
         case "locators/stopGeneration/fulfilled":
           notificationMessage = messages().STOP_GENERATION;
-          cancelAction = cancelStopGeneration([locators.find((_loc) => _loc.element_id === action.meta.arg)]);
+          const _locator = locators.find((_loc) => _loc.element_id === action.meta.arg);
+          cancelAction = _locator && cancelStopGeneration([_locator]);
           break;
         case "locators/stopGenerationGroup/fulfilled":
-          notificationMessage = messages(size(action.meta.arg)).STOP_GENERATION_GROUP;
+          notificationMessage = messages(size(action.meta.arg).toString()).STOP_GENERATION_GROUP;
           cancelAction = cancelStopGeneration(action.meta.arg);
           break;
         case "locators/toggleDeleted":
-          notificationMessage = prevValue.deleted ? messages().RESTORE : messages().DELETE;
+          const _prevValueLocator = prevValue as Locator;
+          notificationMessage = (_prevValueLocator).deleted ? messages().RESTORE : messages().DELETE;
           cancelAction = [
             toggleDeleted(action.payload),
-            toggleElementGeneration({ ...prevValue, generate: !prevValue.generate }),
+            toggleElementGeneration({ ..._prevValueLocator, generate: !_prevValueLocator.generate } as Locator),
           ];
           break;
         case "locators/toggleDeletedGroup":
-          notificationMessage = prevValue[0].deleted ?
-            messages(size(prevValue)).RESTORE_GROUP :
-            messages(size(prevValue)).DELETE_GROUP;
-          const elements = prevValue.map((loc) => locators.find((_loc) => _loc.element_id === loc.element_id));
-          const prevGenerateValues = prevValue.map((_loc) => ({ ..._loc, generate: !_loc.generate }));
-          cancelAction = [toggleDeletedGroup(elements), toggleElementGroupGeneration(prevGenerateValues)];
+          const _prevValueGroup = prevValue as Array<Locator>;
+          notificationMessage = _prevValueGroup[0].deleted ?
+            messages(size(_prevValueGroup).toString()).RESTORE_GROUP :
+            messages(size(_prevValueGroup).toString()).DELETE_GROUP;
+          const elements = _prevValueGroup.map((loc) => locators.find((_loc) => _loc.element_id === loc.element_id));
+          const prevGenerateValues = _prevValueGroup.map((_loc) => ({ ..._loc, generate: !_loc.generate }));
+          cancelAction = [toggleDeletedGroup(compact(elements)), toggleElementGroupGeneration(prevGenerateValues)];
           break;
         default:
           break;
@@ -113,25 +132,20 @@ export const Notifications = () => {
   const openNotification = () => {
     notification.destroy();
 
-    if (notificationMessage !== "Action canceled." && cancelAction) {
-      const btn = (
-        <Button type="primary" size="small" className="jdn__notification-close-btn" onClick={cancelNotification}>
-          Cancel
-        </Button>
-      );
+    // if (notificationMessage !== "Action canceled." && cancelAction) {
+    const cancelButton = (
+      <Button type="primary" size="small" className="jdn__notification-close-btn" onClick={cancelNotification}>
+        Cancel
+      </Button>
+    );
+    const container = document.body.querySelector(".jdn__notification") as HTMLElement;
+    container &&
       notification.open({
         message: notificationMessage,
         duration: 10,
-        getContainer: () => document.body.querySelector(".jdn__notification"),
-        btn,
+        getContainer: () => container,
+        btn: notificationMessage !== "Action canceled." && cancelAction ? cancelButton : null,
       });
-    } else {
-      notification.open({
-        message: notificationMessage,
-        duration: 10,
-        getContainer: () => document.body.querySelector(".jdn__notification"),
-      });
-    }
   };
 
   return <div className="jdn__notification" />;

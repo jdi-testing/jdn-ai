@@ -1,3 +1,4 @@
+import { AnyAction } from "@reduxjs/toolkit";
 import { PageObjectId } from "./pageObjectSlice.types";
 
 export interface MainState {
@@ -28,8 +29,8 @@ export interface Page {
 export interface Notification {
   isCanceled: boolean;
   isHandled: boolean;
-  action: string;
-  prevValue: Record<string, unknown>;
+  action: AnyAction;
+  prevValue: unknown;
 }
 
 export enum BackendStatus {
