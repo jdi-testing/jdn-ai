@@ -1,5 +1,5 @@
 import { AnyAction, AsyncThunkAction } from "@reduxjs/toolkit";
-import { Button, notification } from "antd";
+import { Alert, AlertProps, Button, notification } from "antd";
 import { compact, isUndefined, last, size } from "lodash";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,15 +22,15 @@ import { defaultLibrary } from "../../PageObjects/utils/generationClassesMap";
 
 const messages = (value?: string) => {
   return {
-    EDITED: "Locator edited successfully!",
-    RERUN: "The locator generation re-runned successfully",
-    RERUN_GROUP: `Generation of ${value} locators re-runned successfully`,
-    STOP_GENERATION: "The locator generation stopped successfully!",
-    STOP_GENERATION_GROUP: `Generation of ${value} locators stopped successfully!`,
-    DELETE: "The locator deleted successfully!",
-    DELETE_GROUP: `${value} locators deleted successfully!`,
-    RESTORE: "The locator restored successfully!",
-    RESTORE_GROUP: `${value} locators restored successfully!`,
+    EDITED: "The locator was edited",
+    RERUN: "The locator generation rerun",
+    RERUN_GROUP: `The generation of ${value} locators was rerun`,
+    STOP_GENERATION: "The locator generation was stopped",
+    STOP_GENERATION_GROUP: `The generation of ${value} locators was stopped`,
+    DELETE: "The locator was deleted",
+    DELETE_GROUP: `${value} locators were deleted`,
+    RESTORE: "The locator was restored",
+    RESTORE_GROUP: `${value} locators were restored`,
   };
 };
 
@@ -40,6 +40,7 @@ export const Notifications = () => {
   const locators = useSelector(selectLocators);
   const library = useSelector(selectCurrentPageObject)?.library;
   let notificationMessage = "";
+  let notificationType: AlertProps["type"] = "success";
   let cancelAction:
     | AsyncThunkAction<any, any, any>
     | AnyAction
@@ -58,22 +59,12 @@ export const Notifications = () => {
     } else {
       switch (action?.type) {
         case "locators/changeLocatorAttributes":
-          const {
-            element_id,
-            type,
-            name,
-            locator,
-            validity,
-            isCustomName,
-          } = (prevValue as unknown) as ChangeLocatorAttributesPayload;
+          const { isCustomName, ...rest } = prevValue as ChangeLocatorAttributesPayload;
           notificationMessage = messages().EDITED;
+          notificationType = "success";
           cancelAction = changeLocatorAttributes({
-            type,
-            name,
+            ...rest,
             isCustomName: isUndefined(isCustomName) ? false : true,
-            element_id,
-            locator: locator,
-            validity,
             library: library || defaultLibrary,
           });
           break;
@@ -85,19 +76,23 @@ export const Notifications = () => {
           } else {
             notificationMessage = messages(length.toString()).RERUN_GROUP;
           }
+          notificationType = "success";
           break;
         case "locators/stopGeneration/fulfilled":
           notificationMessage = messages().STOP_GENERATION;
+          notificationType = "warning";
           const _locator = locators.find((_loc) => _loc.element_id === action.meta.arg);
           cancelAction = _locator && cancelStopGeneration([_locator]);
           break;
         case "locators/stopGenerationGroup/fulfilled":
           notificationMessage = messages(size(action.meta.arg).toString()).STOP_GENERATION_GROUP;
+          notificationType = "warning";
           cancelAction = cancelStopGeneration(action.meta.arg);
           break;
         case "locators/toggleDeleted":
           const _prevValueLocator = prevValue as Locator;
-          notificationMessage = (_prevValueLocator).deleted ? messages().RESTORE : messages().DELETE;
+          notificationMessage = _prevValueLocator.deleted ? messages().RESTORE : messages().DELETE;
+          notificationType = _prevValueLocator.deleted ? "success" : "warning";
           cancelAction = [
             toggleDeleted(action.payload),
             toggleElementGeneration({ ..._prevValueLocator, generate: !_prevValueLocator.generate } as Locator),
@@ -108,6 +103,7 @@ export const Notifications = () => {
           notificationMessage = _prevValueGroup[0].deleted ?
             messages(size(_prevValueGroup).toString()).RESTORE_GROUP :
             messages(size(_prevValueGroup).toString()).DELETE_GROUP;
+          notificationType = _prevValueGroup[0].deleted ? "success" : "warning";
           const elements = _prevValueGroup.map((loc) => locators.find((_loc) => _loc.element_id === loc.element_id));
           const prevGenerateValues = _prevValueGroup.map((_loc) => ({ ..._loc, generate: !_loc.generate }));
           cancelAction = [toggleDeletedGroup(compact(elements)), toggleElementGroupGeneration(prevGenerateValues)];
@@ -117,7 +113,7 @@ export const Notifications = () => {
       }
     }
 
-    if (notificationMessage) openNotification();
+    if (notificationMessage.length) openNotification();
   }, [lastNotification]);
 
   const cancelNotification = () => {
@@ -132,19 +128,21 @@ export const Notifications = () => {
   const openNotification = () => {
     notification.destroy();
 
-    // if (notificationMessage !== "Action canceled." && cancelAction) {
-    const cancelButton = (
-      <Button type="primary" size="small" className="jdn__notification-close-btn" onClick={cancelNotification}>
-        Cancel
-      </Button>
-    );
+    const cancelButton =
+      notificationMessage !== "Action canceled." && cancelAction ? (
+        <Button size="small" type="text" onClick={cancelNotification}>
+          Cancel
+        </Button>
+      ) : null;
     const container = document.body.querySelector(".jdn__notification") as HTMLElement;
     container &&
       notification.open({
-        message: notificationMessage,
-        duration: 10,
+        message: (
+          <Alert showIcon message={notificationMessage} type={notificationType} action={cancelButton} />
+        ),
+        duration: 10000,
         getContainer: () => container,
-        btn: notificationMessage !== "Action canceled." && cancelAction ? cancelButton : null,
+        placement: "bottomRight",
       });
   };
 
