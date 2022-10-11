@@ -9,28 +9,29 @@ import { MaxGenerationTime } from "../slices/mainSlice.types";
 import { RootState } from "../store";
 
 interface Meta {
-  generationData: Locator[],
-  maxGenerationTime?: MaxGenerationTime,
+  generationData: Locator[];
+  maxGenerationTime?: MaxGenerationTime;
 }
 
 export const runXpathGeneration = createAsyncThunk("locators/scheduleGeneration", async (meta: Meta, thunkAPI) => {
   const { generationData, maxGenerationTime } = meta;
   const state = thunkAPI.getState() as RootState;
   const { xpathConfig } = state.main;
-  const pageObject = !isNil(state.pageObject.currentPageObject) && selectPageObjById(state, state.pageObject.currentPageObject);
+  const pageObject =
+    !isNil(state.pageObject.currentPageObject) && selectPageObjById(state, state.pageObject.currentPageObject);
   await runGenerationHandler(
-    generationData,
-    { ...xpathConfig, maximum_generation_time: maxGenerationTime || xpathConfig.maximum_generation_time },
-    (el: Locator) => {
-      const { element_id, jdnHash } = el;
-      let foundId;
-      if (!element_id) {
-        foundId = selectLocatorByJdnHash(state, jdnHash)?.element_id;
-      }
-      thunkAPI.dispatch(updateLocator({ ...el, element_id: element_id || foundId }));
-    },
-    (ids: string[]) => thunkAPI.dispatch(failGeneration(ids)),
-    pageObject,
+      generationData,
+      { ...xpathConfig, maximum_generation_time: maxGenerationTime || xpathConfig.maximum_generation_time },
+      (el: Locator) => {
+        const { element_id, jdnHash } = el;
+        let foundId;
+        if (!element_id) {
+          foundId = selectLocatorByJdnHash(state, jdnHash)?.element_id;
+        }
+        thunkAPI.dispatch(updateLocator({ ...el, element_id: element_id || foundId }));
+      },
+      (ids: string[]) => thunkAPI.dispatch(failGeneration(ids)),
+      pageObject
   );
   return generationData;
 });

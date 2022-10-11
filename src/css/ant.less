@@ -68,6 +68,12 @@
   z-index: 11000;
 }
 
+/* Alert */
+
+.ant-alert-action {
+  margin-right: 28px;
+}
+
 /* Notification */
 
 .ant-notification {
@@ -78,39 +84,21 @@
     width: 100%;
     margin: 0;
     max-width: 100%;
-    border-radius: 0;
-    padding: 3px 13px;
-    height: 28px;
-    background: @notification-background;
+    padding: 0;
+
+    &-closable .ant-notification-notice-message {
+      padding-right: 0;
+    }
 
     &-close {
       top: 0;
       height: 100%;
-      color: #ffffff;
       display: flex;
       align-items: center;
-
-      &:hover {
-        color: rgb(255, 255, 255, 0.7);
-      }
     }
 
     &-message {
-      color: #ffffff;
-      font-style: normal;
-      font-weight: normal;
-      font-size: 12px;
-      line-height: 22px;
       margin-bottom: 0;
-    }
-
-    &-btn {
-      position: absolute;
-      margin-top: 0;
-      top: 0;
-      right: 40px;
-      height: 100%;
-      background: transparent;
     }
   }
 }
