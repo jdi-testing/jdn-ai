@@ -140,7 +140,7 @@ export const Notifications = () => {
         message: (
           <Alert showIcon message={notificationMessage} type={notificationType} action={cancelButton} />
         ),
-        duration: 10000,
+        duration: 10,
         getContainer: () => container,
         placement: "bottomRight",
       });
