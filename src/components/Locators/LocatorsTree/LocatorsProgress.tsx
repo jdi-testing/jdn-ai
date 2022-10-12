@@ -13,6 +13,7 @@ import { PageObjectId } from "../../../store/slices/pageObjectSlice.types";
 import { RootState } from "../../../store/store";
 import { rerunGeneration } from "../../../store/thunks/rerunGeneration";
 import { locatorsGenerationStatus } from "../../../utils/constants";
+import { Footnote } from "../../common/Footnote";
 
 interface Props {
   currentPageObject: PageObjectId;
@@ -55,32 +56,40 @@ export const LocatorsProgress: React.FC<Props> = ({ currentPageObject }) => {
   useEffect(() => {
     if (toBeCalculated && calculationReady === 0) setIsProgressActive(true);
     if (calculationReady > 0 && toBeCalculated === 0) {
-      timer = setTimeout(hideProgressInformation, 10000);
+      timer = setTimeout(hideProgressInformation, 2000);
     }
     return () => clearTimeout(timer);
   }, [generated, inProgress, deleted]);
 
   return (
-    <div className="jdn__locatorsList-progress" style={{ display: isProgressActive ? "flex" : "none" }}>
-      <Progress
-        percent={readinessPercentage}
-        status="active"
-        showInfo={false}
-        strokeColor="#1582D8"
-        trailColor="black"
-        strokeLinecap="square"
-        strokeWidth={5}
-      />
-      <p className="jdn__locatorsList-progress-text">
-        {size(inProgress) ? `${locatorsGenerationStatus.started} (${calculationReady}/${total})` : generationStatus}
-        {generationStatus === locatorsGenerationStatus.failed ? (
-          <span className="ant-notification-notice-btn">
-            <Button type="primary" size="small" className="jdn__notification-close-btn" onClick={handleRetry}>
-              Retry
-            </Button>
-          </span>
-        ) : null}
-      </p>
-    </div>
+    <React.Fragment>
+      {isProgressActive ? (
+        <div className="jdn__locatorsList-progress">
+          <div className="jdn__locatorsList-progress-text">
+            <Footnote>
+              {size(inProgress) ?
+                `${locatorsGenerationStatus.started} (${calculationReady}/${total})` :
+                generationStatus}
+            </Footnote>
+            {generationStatus === locatorsGenerationStatus.failed ? (
+              <span className="ant-notification-notice-btn">
+                <Button type="text" size="small" onClick={handleRetry}>
+                  Retry
+                </Button>
+              </span>
+            ) : null}
+          </div>
+          <Progress
+            status={generationStatus === locatorsGenerationStatus.failed ? "exception" : undefined}
+            percent={readinessPercentage}
+            className={
+              readinessPercentage !== 100 && generationStatus !== locatorsGenerationStatus.failed ?
+                "jdn__progress_hide-info" :
+                ""
+            }
+          />
+        </div>
+      ) : null}
+    </React.Fragment>
   );
 };

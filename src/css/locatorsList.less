@@ -121,30 +121,31 @@
       flex-direction: column;
 
       &-text {
-        background: #000;
-        color: #fff;
-        margin: 0;
-        height: 28px;
-        padding: 6px 16px;
-        font-size: 12px;
-        line-height: 16px;
+        margin: 8px 16px 0;
         position: relative;
 
-        .ant-notification-notice-btn {
-          right: 16px;
+        .jdn__footnote {
+          color: #000;
+        }
 
-          .ant-btn {
-            background-color: #000000;
+        .ant-notification-notice {
+          box-shadow: none;
+
+          &-btn {
+            right: 16px;
+            margin-top: 0;
           }
         }
       }
 
-      .ant-progress {
-        height: 6px;
-
-        &-inner {
-          margin-top: -17px;
+      .jdn__progress_hide-info {
+        .ant-progress-text {
+          display: none;
         }
+      }
+
+      .ant-progress {
+        padding: 0 2px 0 16px;
       }
     }
 
