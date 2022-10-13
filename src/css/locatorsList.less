@@ -19,13 +19,13 @@
       background: transparent !important;
       padding-left: 0;
       padding-right: 0;
-      color: #b2b5c2;
+      color: #000000A6;
     }
 
     &-header {
-      padding: 0 12px;
+      padding: 0 12px 0 8px;
       margin-top: 16px;
-      line-height: 28px;
+      margin-bottom: 8px;
 
       &-title {
         flex-grow: 1;
@@ -37,12 +37,6 @@
       &-collapse {
         margin-top: auto;
         margin-bottom: auto;
-      }
-
-      &-buttons {
-        display: flex;
-        flex-wrap: nowrap;
-        gap: 8px;
       }
 
       .jdn__locatorsList_button {
@@ -65,19 +59,37 @@
         margin-bottom: auto;
         top: 0;
       }
+
+      .ant-btn.ant-btn-primary.ant-btn-sm {
+        display: flex;
+        flex-direction: row;
+
+        svg {
+          display: block;
+          margin: auto 6px auto 0;
+        }
+      }
+
+      .ant-btn-sm.ant-btn-icon-only {
+        svg {
+          display: block;
+          margin: auto;
+        }
+      }
     }
 
     &-content {
       background-color: #fff;
-      border: 1px solid #d1d1d1;
+      border: 1px solid #d9d9d9;
+      border-radius: 2px;
       overflow-y: auto;
-      height: calc(100vh - 139px);
+      height: calc(100vh - 154px);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
 
       &.jdn__pageObj-content {
-        height: calc(100vh - 88px);
+        height: calc(100vh - 94px);
       }
 
       .ant-spin {
