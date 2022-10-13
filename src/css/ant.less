@@ -46,7 +46,7 @@
 
   &-switcher {
     width: unset;
-    margin-left: 12px;
+    margin-left: 8px;
     margin-right: 8px;
     padding-top: 4px;
 
@@ -122,18 +122,6 @@
   font-size: 10px;
 }
 
-/* Typography */
-
-.ant-typography {
-  &-success {
-    color: @primary-color !important;
-  }
-
-  &-warning {
-    color: #d8a115;
-  }
-}
-
 /* Checkbox */
 
 .ant-checkbox-wrapper + .ant-checkbox-wrapper {
@@ -157,8 +145,12 @@
   border-radius: 0;
 }
 
+.ant-collapse > .ant-collapse-item {
+  border: none;
+}
+
 .ant-collapse-item:last-child > .ant-collapse-content {
-  border-radius: 0;
+  border: none;
 }
 
 .ant-collapse-content > .ant-collapse-content-box {
@@ -172,20 +164,11 @@
 
 .ant-collapse > .ant-collapse-item > .ant-collapse-header {
   background: #fff;
-  padding: 6px 12px;
-  font-weight: bold;
+  padding: 5px 8px;
   font-size: 12px;
 
   & .ant-collapse-arrow {
     right: 12px;
-  }
-
-  & .ant-checkbox-wrapper {
-    margin-right: 8px;
-
-    & .ant-checkbox {
-      top: 0.05em;
-    }
   }
 }
 

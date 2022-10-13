@@ -56,8 +56,10 @@ export const ReportProblem = () => {
   const showExceprionConfirm = () =>
     error({
       title: "Report is not available",
-      content: `Mail server is not accessible from your location and problem report can't be created automatically. 
-    Please create an email by yourself.`,
+      content: <React.Fragment>
+        Mail server is not accessible from your location and problem report can&apos;t be created automatically.
+    Please send an email <a href="mailto:SupportJDI@epam.com" data-turbo-frame="">SupportJDI@epam.com</a> by yourself.
+      </React.Fragment>,
     });
 
   const handleOk = () => {

@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { Collapse } from "antd";
+import { Collapse, Typography } from "antd";
 import { size } from "lodash";
 import Icon from "@ant-design/icons";
 
 import { PageObjListHeader } from "./PageObjListHeader";
 import { PageObjMenu } from "./PageObjMenu";
 
-import CaretDownSvg from "../../../assets/caret-down.svg";
 import PageSvg from "../../../assets/page.svg";
 import { selectConfirmedLocators, selectPageObjects } from "../../../store/selectors/pageObjectSelectors";
 import { Locator } from "../../Locators/Locator";
@@ -15,12 +14,15 @@ import { GenerationButtons } from "./GenerationButtons";
 import { PageObjectPlaceholder } from "../PageObjectPlaceholder";
 import { PageObjCopyButton } from "./PageObjCopyButton";
 import { Footnote } from "../../common/Footnote";
+import { CaretDown } from "phosphor-react";
 
 export const PageObjList = (props) => {
   const state = useSelector((state) => state);
   const currentPageObject = useSelector((state) => state.pageObject.currentPageObject);
   const pageObjects = useSelector(selectPageObjects);
   const [activePanel, setActivePanel] = useState([currentPageObject]);
+
+  const isExpanded = !!size(activePanel);
 
   useEffect(() => {
     setActivePanel([currentPageObject]);
@@ -51,15 +53,30 @@ export const PageObjList = (props) => {
     }
   };
 
+  const toggleExpand = () => {
+    if (size(activePanel)) {
+      setActivePanel([]);
+    } else {
+      const keys = pageObjects.map((po) => po.id);
+      setActivePanel(keys);
+    }
+  };
+
   return (
     <div className="jdn__locatorsList">
-      <PageObjListHeader {...props} />
+      <PageObjListHeader {...{ ...props, toggleExpand, isExpanded }} />
       <div className="jdn__locatorsList-content jdn__pageObj-content">
         {size(pageObjects) ? (
           <React.Fragment>
             <Collapse
               expandIcon={({ isActive }) => (
-                <Icon component={CaretDownSvg} rotate={isActive ? 180 : 270} fill="#808080" />
+                <CaretDown
+                  style={{
+                    transform: isActive ? "rotate(180deg)" : "rotate(0deg)",
+                  }}
+                  size={14}
+                  color="#878A9C"
+                />
               )}
               expandIconPosition="start"
               activeKey={activePanel}
@@ -74,7 +91,7 @@ export const PageObjList = (props) => {
                     header={
                       <React.Fragment>
                         <Icon component={PageSvg} className="jdn__locatorsList-status" />
-                        <span className="jdn__pageObject-content-text">{name}</span>
+                        <Typography.Text className="jdn__pageObject-content-text">{name}</Typography.Text>
                       </React.Fragment>
                     }
                     extra={
