@@ -1,4 +1,4 @@
-import { Button, Form, Input, Modal, Upload, UploadFile } from "antd";
+import { Button, Form, Input, Modal, Tooltip, Upload, UploadFile } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import { UploadChangeParam } from "antd/lib/upload";
 import { UploadFileStatus } from "antd/lib/upload/interface";
@@ -146,13 +146,15 @@ export const ReportProblem = () => {
 
   return (
     <div>
-      <Button
-        onClick={showModal}
-        type="link"
-        loading={serverPingInProcess}
-        className="ant-btn ant-btn-link ant-btn-icon-only"
-        icon={<Warning size={14} color="#8C8C8C" />}
-      ></Button>
+      <Tooltip title="Report a problem" placement="bottomRight" align={{ offset: [12, 0] }} trigger="click">
+        <Button
+          onClick={showModal}
+          type="link"
+          loading={serverPingInProcess}
+          className="ant-btn ant-btn-link ant-btn-icon-only"
+          icon={<Warning size={14} color="#8C8C8C" />}
+        ></Button>
+      </Tooltip>
       {isModalOpen ? (
         <DialogWithForm
           modalProps={{
