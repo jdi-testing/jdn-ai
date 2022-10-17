@@ -38,11 +38,15 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
 
   const handleRemoveAll = () => {
     confirm({
-      title: "Delete all",
+      title: size(pageObjects) === 1 ? "Delete this page object?" : "Delete these page objects?",
       content: `All page objects and packages will be cleared and you can lose all your data. 
       You cannot undo this action.`,
       okText: "Delete all",
-      okType: "danger",
+      // okType: "danger",
+      okButtonProps: {
+        type: "primary",
+        danger: true,
+      },
       onOk: () => {
         dispatch(removeAllPageObjects());
         dispatch(removeAllLocators());
@@ -60,9 +64,7 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
         className="jdn__locatorsList-header-collapse"
         color="#00000073"
         size={14}
-        onClick={() => {
-          console.log('clicked'); toggleExpand();
-        }}
+        onClick={toggleExpand}
       />
       <Space direction="horizontal" size={8}>
         {size(pageObjects) ? (
