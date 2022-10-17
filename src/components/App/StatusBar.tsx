@@ -56,7 +56,7 @@ export const StatusBar = () => {
         <span>{`JDN v ${pluginVer} ${!isNil(backendVer) ? `Back-end v ${backendVer}` : ""}`}</span>
       </div>
       <Space size={[10, 0]} className="header__space">
-        <Tooltip title="Readme" trigger="click">
+        <Tooltip title="Readme">
           <Button type="link" href={readmeLinkAddress} target="_blank" icon={<Info size={14} color="#8C8C8C" />} />
         </Tooltip>
         <ReportProblem />

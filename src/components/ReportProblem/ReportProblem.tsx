@@ -101,7 +101,10 @@ export const ReportProblem = () => {
     const { upload, ...rest } = values;
 
     const attachments = upload ?
-      upload.map((file: UploadFile) => ({ file_content: file.url, filename: file.name })) :
+      upload.map((file: UploadFile) => ({
+        file_content: file.url?.replace("data:image/png;base64,", ""),
+        filename: file.name,
+      })) :
       [];
 
     request.post(HttpEndpoint.REPORT_PROBLEM, {
@@ -146,7 +149,7 @@ export const ReportProblem = () => {
 
   return (
     <div>
-      <Tooltip title="Report a problem" placement="bottomRight" align={{ offset: [12, 0] }} trigger="click">
+      <Tooltip title="Report a problem" placement="bottomRight" align={{ offset: [12, 0] }}>
         <Button
           onClick={showModal}
           type="link"
