@@ -20,7 +20,7 @@ import { rerunGeneration } from "../../store/thunks/rerunGeneration";
 import { locatorTaskStatus, LOCATOR_CALCULATION_PRIORITY } from "../../utils/constants";
 import { locatorGenerationController } from "../../services/locatorGenerationController";
 import { selectInProgressSelectedByPageObject } from "../../store/selectors/pageObjectSelectors";
-import { advanced, deleteOption, downPriority, pause, restore, upPriority } from "./menuOptions";
+import { advanced, deleteOption, downPriority, pause, rerun, restore, upPriority } from "./menuOptions";
 
 export const EXPAND_STATE = {
   EXPANDED: "EXPANDED",
@@ -121,7 +121,7 @@ export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedS
 
     const items = [
       ...(size(deletedSelected) ? [restore(() => dispatch(toggleDeletedGroup(deletedSelected)))] : []),
-      ...(size(stoppedSelected) ? rerun(() => [dispatch(rerunGeneration({ generationData: stoppedSelected }))]) : []),
+      ...(size(stoppedSelected) ? [rerun(() => dispatch(rerunGeneration({ generationData: stoppedSelected })))] : []),
       ...(size(inProgressSelected) ? [pause(() => dispatch(stopGenerationGroup(inProgressSelected)))] : []),
       ...(size(inProgressSelected) && (size(decreasedPrioritySelected) || size(noPrioritySelected))
         ? [upPriority(handleUpPriority)]
