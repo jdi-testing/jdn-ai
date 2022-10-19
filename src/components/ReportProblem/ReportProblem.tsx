@@ -102,7 +102,7 @@ export const ReportProblem = () => {
 
     const attachments = upload ?
       upload.map((file: UploadFile) => ({
-        file_content: file.url?.replace("data:image/png;base64,", ""),
+        file_content: file.url?.replace(/data:image\/.+;base64,/, ""),
         filename: file.name,
       })) :
       [];
