@@ -27,10 +27,10 @@ export interface Page {
 }
 
 export interface Notification {
-  isCanceled: boolean;
-  isHandled: boolean;
+  isCanceled?: boolean;
+  isHandled?: boolean;
   action: AnyAction;
-  prevValue: unknown;
+  prevValue?: unknown;
 }
 
 export enum BackendStatus {

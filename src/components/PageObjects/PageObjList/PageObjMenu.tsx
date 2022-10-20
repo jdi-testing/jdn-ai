@@ -5,7 +5,7 @@ import { Button, Dropdown } from "antd";
 import { removePageObject, setCurrentPageObj } from "../../../store/slices/pageObjectSlice";
 import { removeLocators } from "../../../store/slices/locatorsSlice";
 import { generatePageObject } from "../utils/pageObject";
-import { changePage } from "../../../store/slices/mainSlice";
+import { changePage, pushNotification } from "../../../store/slices/mainSlice";
 import { size } from "lodash";
 import { Menu } from "../../common/Menu";
 import { ElementId, Locator } from "../../../store/slices/locatorSlice.types";
@@ -40,7 +40,9 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, locators, elements, lib
     };
 
     const handleDownload = () => {
-      generatePageObject(locatorObjects, name, library);
+      generatePageObject(locatorObjects, name, library).then(() =>
+        dispatch(pushNotification({ action: { type: "downloadFile" } }))
+      );
     };
 
     const handleEdit = () => {
@@ -79,8 +81,7 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, locators, elements, lib
           onClick={(e) => e.stopPropagation()}
           data-testid="dropdown-button"
           icon={<DotsThree size={18} />}
-        >
-        </Button>
+        ></Button>
       </Dropdown>
       <RenamePageObjectDialog
         isModalOpen={isRenameModalOpen}
@@ -89,6 +90,5 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, locators, elements, lib
         {...{ name }}
       />
     </React.Fragment>
-
   );
 };

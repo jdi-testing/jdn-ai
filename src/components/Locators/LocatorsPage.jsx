@@ -73,7 +73,6 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
     }
     return () => {
       removeOverlay();
-      dispatch(resetNotifications());
     };
   }, []);
 

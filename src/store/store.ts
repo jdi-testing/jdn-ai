@@ -10,7 +10,7 @@ import pageObjectSlice from "./slices/pageObjectSlice";
 
 const rootReducer = {
   main: mainSlice,
-  locators: undoable(locatorsSlice, {undoType: "LOCATOR_UNDO"}),
+  locators: undoable(locatorsSlice, {undoType: "LOCATOR_UNDO", jumpType: "LOCATOR_JUMP"}),
   pageObject: undoable(pageObjectSlice, {undoType: "PAGEOBJECT_UNDO"}),
 };
 
