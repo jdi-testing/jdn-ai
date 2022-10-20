@@ -3,6 +3,7 @@ import { Alert, AlertProps, Button, notification } from "antd";
 import { compact, isUndefined, last, size } from "lodash";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { ActionCreators } from "redux-undo";
 
 import { selectLocators } from "../../../store/selectors/locatorSelectors";
 import { selectCurrentPageObject } from "../../../store/selectors/pageObjectSelectors";
@@ -31,6 +32,12 @@ const messages = (value?: string) => {
     DELETE_GROUP: `${value} locators were deleted`,
     RESTORE: "The locator was restored",
     RESTORE_GROUP: `${value} locators were restored`,
+    REMOVE_PO: "The page object was deleted",
+    REMOVE_EMPTY: "Empty page objects were deleted",
+    REMOVE_ALL: "Page objects were deleted",
+    EDIT_PO_NAME: "The page object name was edited",
+    DOWNLOAD_FILE: "The Java file was downloaded",
+    DOWNLOAD_TEMPLATE: "The archive with template was downloaded",
   };
 };
 
@@ -52,77 +59,78 @@ export const Notifications = () => {
 
     const { isCanceled, isHandled, action, prevValue } = lastNotification;
 
-    if (isCanceled && isHandled) return;
-    if (isCanceled && !isHandled) {
-      notificationMessage = "Action canceled.";
-      dispatch(handleLastNotification());
-    } else {
-      switch (action?.type) {
-        case "locators/changeLocatorAttributes":
-          const { isCustomName, ...rest } = prevValue as ChangeLocatorAttributesPayload;
-          notificationMessage = messages().EDITED;
-          notificationType = "success";
-          cancelAction = changeLocatorAttributes({
-            ...rest,
-            isCustomName: isUndefined(isCustomName) ? false : true,
-            library: library || defaultLibrary,
-          });
-          break;
-        case "locators/rerunGeneration/pending":
-          const { arg } = action.meta;
-          const length = size(arg);
-          if (length === 1) {
-            notificationMessage = messages().RERUN;
-          } else {
-            notificationMessage = messages(length.toString()).RERUN_GROUP;
-          }
-          notificationType = "success";
-          break;
-        case "locators/stopGeneration/fulfilled":
-          notificationMessage = messages().STOP_GENERATION;
-          notificationType = "warning";
-          const _locator = locators.find((_loc) => _loc.element_id === action.meta.arg);
-          cancelAction = _locator && cancelStopGeneration([_locator]);
-          break;
-        case "locators/stopGenerationGroup/fulfilled":
-          notificationMessage = messages(size(action.meta.arg).toString()).STOP_GENERATION_GROUP;
-          notificationType = "warning";
-          cancelAction = cancelStopGeneration(action.meta.arg);
-          break;
-        case "locators/toggleDeleted":
-          const _prevValueLocator = prevValue as Locator;
-          notificationMessage = _prevValueLocator.deleted ? messages().RESTORE : messages().DELETE;
-          notificationType = _prevValueLocator.deleted ? "success" : "warning";
-          cancelAction = [
-            toggleDeleted(action.payload),
-            toggleElementGeneration({ ..._prevValueLocator, generate: !_prevValueLocator.generate } as Locator),
-          ];
-          break;
-        case "locators/toggleDeletedGroup":
-          const _prevValueGroup = prevValue as Array<Locator>;
-          notificationMessage = _prevValueGroup[0].deleted ?
+    switch (action?.type) {
+      case "locators/changeLocatorAttributes":
+        const { isCustomName, ...rest } = prevValue as ChangeLocatorAttributesPayload;
+        notificationMessage = messages().EDITED;
+        notificationType = "success";
+        cancelAction = changeLocatorAttributes({
+          ...rest,
+          isCustomName: isUndefined(isCustomName) ? false : true,
+          library: library || defaultLibrary,
+        });
+        break;
+      case "locators/rerunGeneration/pending":
+        const { arg } = action.meta;
+        const length = size(arg);
+        if (length === 1) {
+          notificationMessage = messages().RERUN;
+        } else {
+          notificationMessage = messages(length.toString()).RERUN_GROUP;
+        }
+        notificationType = "success";
+        break;
+      case "locators/stopGeneration/fulfilled":
+        notificationMessage = messages().STOP_GENERATION;
+        notificationType = "warning";
+        const _locator = locators.find((_loc) => _loc.element_id === action.meta.arg);
+        cancelAction = _locator && cancelStopGeneration([_locator]);
+        break;
+      case "locators/stopGenerationGroup/fulfilled":
+        notificationMessage = messages(size(action.meta.arg).toString()).STOP_GENERATION_GROUP;
+        notificationType = "warning";
+        cancelAction = cancelStopGeneration(action.meta.arg);
+        break;
+      case "locators/toggleDeleted":
+        const _prevValueLocator = prevValue as Locator;
+        notificationMessage = _prevValueLocator.deleted ? messages().RESTORE : messages().DELETE;
+        notificationType = _prevValueLocator.deleted ? "success" : "warning";
+        cancelAction = [
+          toggleDeleted(action.payload),
+          toggleElementGeneration({ ..._prevValueLocator, generate: !_prevValueLocator.generate } as Locator),
+        ];
+        break;
+      case "locators/toggleDeletedGroup":
+        const _prevValueGroup = prevValue as Array<Locator>;
+        notificationMessage = _prevValueGroup[0].deleted ?
             messages(size(_prevValueGroup).toString()).RESTORE_GROUP :
             messages(size(_prevValueGroup).toString()).DELETE_GROUP;
-          notificationType = _prevValueGroup[0].deleted ? "success" : "warning";
-          const elements = _prevValueGroup.map((loc) => locators.find((_loc) => _loc.element_id === loc.element_id));
-          const prevGenerateValues = _prevValueGroup.map((_loc) => ({ ..._loc, generate: !_loc.generate }));
-          cancelAction = [toggleDeletedGroup(compact(elements)), toggleElementGroupGeneration(prevGenerateValues)];
-          break;
-        default:
-          break;
+        notificationType = _prevValueGroup[0].deleted ? "success" : "warning";
+        const elements = _prevValueGroup.map((loc) => locators.find((_loc) => _loc.element_id === loc.element_id));
+        const prevGenerateValues = _prevValueGroup.map((_loc) => ({ ..._loc, generate: !_loc.generate }));
+        cancelAction = [toggleDeletedGroup(compact(elements)), toggleElementGroupGeneration(prevGenerateValues)];
+        break;
+      case "pageObject/removeAll": {
+        notificationMessage = "Removed";
+        notificationType = "warning";
+        cancelAction = [{ type: "PAGEOBJECT_UNDO" }, {type: "LOCATOR_UNDO"}];
+        break;
       }
+      default:
+        break;
     }
 
     if (notificationMessage.length) openNotification();
   }, [lastNotification]);
 
   const cancelNotification = () => {
-    dispatch(cancelLastNotification());
     if (Array.isArray(cancelAction)) {
       cancelAction.forEach((action) => {
         dispatch(action);
       });
     } else dispatch(cancelAction);
+    notificationMessage = "Action canceled.";
+    openNotification();
   };
 
   const openNotification = () => {
@@ -140,7 +148,7 @@ export const Notifications = () => {
         message: (
           <Alert showIcon message={notificationMessage} type={notificationType} action={cancelButton} />
         ),
-        duration: 5,
+        duration: 50000,
         getContainer: () => container,
         placement: "bottomRight",
       });

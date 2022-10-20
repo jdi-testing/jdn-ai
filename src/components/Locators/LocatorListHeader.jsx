@@ -35,7 +35,7 @@ export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedS
   const dispatch = useDispatch();
   const [expandAll, setExpandAll] = useState(EXPAND_STATE.EXPANDED);
 
-  const currentPageObject = useSelector((_state) => _state.pageObject.currentPageObject);
+  const currentPageObject = useSelector((_state) => _state.pageObject.present.currentPageObject);
   const selected = useMemo(() => [...generatedSelected, ...waitingSelected, ...deletedSelected], [
     generatedSelected,
     waitingSelected,

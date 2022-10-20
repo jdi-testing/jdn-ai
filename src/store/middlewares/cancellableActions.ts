@@ -44,6 +44,9 @@ export const cancellableActions: Middleware = (store) => (next) => (action) => {
     case "locators/toggleDeletedGroup":
       pushNotificationHandler(payload);
       break;
+    case "pageObject/removeAll":
+      pushNotificationHandler(payload);
+      break;
   }
   return result;
 };

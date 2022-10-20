@@ -23,7 +23,7 @@ let timer: NodeJS.Timeout;
 
 export const LocatorsProgress: React.FC<Props> = ({ currentPageObject }) => {
   const [isProgressActive, setIsProgressActive] = useState(false);
-  const generationStatus = useSelector((state: RootState) => state.locators.generationStatus);
+  const generationStatus = useSelector((state: RootState) => state.locators.present.generationStatus);
 
   const byProbability = useSelector((_state: RootState) =>
     selectPageObjLocatorsByProbability(_state, currentPageObject)

@@ -48,9 +48,8 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
         danger: true,
       },
       onOk: () => {
-        dispatch(removeAllPageObjects());
         dispatch(removeAllLocators());
-        dispatch(toggleBackdrop(false));
+        dispatch(removeAllPageObjects());
       },
     });
   };

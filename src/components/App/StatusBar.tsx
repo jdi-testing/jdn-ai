@@ -15,7 +15,7 @@ export const StatusBar = () => {
   const backendVer = useSelector<RootState>((_state) => _state.main.serverVersion);
   const backendAvailable = useSelector<RootState>((_state) => _state.main.backendAvailable);
   const serverLocation = useSelector<RootState>((_state) => _state.main.baseUrl);
-  const generationStatus = useSelector<RootState>((_state) => _state.locators.generationStatus);
+  const generationStatus = useSelector<RootState>((_state) => _state.locators.present.generationStatus);
 
   const manifest = chrome.runtime.getManifest();
   const pluginVer = manifest.version;

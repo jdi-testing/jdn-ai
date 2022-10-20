@@ -16,7 +16,7 @@ interface Props {
 }
 
 export const GenerationButtons: React.FC<Props> = ({ pageObj }) => {
-  const status = useSelector((state: RootState) => state.locators.status);
+  const status = useSelector((state: RootState) => state.locators.present.status);
   const currentPageObject = useSelector((state: RootState) => selectPageObjById(state, pageObj));
   const { id, library } = currentPageObject!;
 

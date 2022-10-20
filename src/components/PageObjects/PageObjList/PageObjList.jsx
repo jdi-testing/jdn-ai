@@ -15,10 +15,11 @@ import { PageObjectPlaceholder } from "../PageObjectPlaceholder";
 import { PageObjCopyButton } from "./PageObjCopyButton";
 import { Footnote } from "../../common/Footnote";
 import { CaretDown } from "phosphor-react";
+import { Notifications } from "../../Locators/LocatorsTree/Notifications";
 
 export const PageObjList = (props) => {
   const state = useSelector((state) => state);
-  const currentPageObject = useSelector((state) => state.pageObject.currentPageObject);
+  const currentPageObject = useSelector((state) => state.pageObject.present.currentPageObject);
   const pageObjects = useSelector(selectPageObjects);
   const [activePanel, setActivePanel] = useState([currentPageObject]);
 
@@ -110,6 +111,7 @@ export const PageObjList = (props) => {
         ) : (
           <PageObjectPlaceholder />
         )}
+        <Notifications />
       </div>
     </div>
   );

@@ -18,7 +18,8 @@ export const runXpathGeneration = createAsyncThunk("locators/scheduleGeneration"
   const state = thunkAPI.getState() as RootState;
   const { xpathConfig } = state.main;
   const pageObject =
-    !isNil(state.pageObject.currentPageObject) && selectPageObjById(state, state.pageObject.currentPageObject);
+    !isNil(state.pageObject.present.currentPageObject) &&
+    selectPageObjById(state, state.pageObject.present.currentPageObject);
   await runGenerationHandler(
       generationData,
       { ...xpathConfig, maximum_generation_time: maxGenerationTime || xpathConfig.maximum_generation_time },

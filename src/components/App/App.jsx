@@ -28,10 +28,10 @@ import { Guide } from "./Guide/Guide";
 const App = () => {
   const [isInvalidSession, setIsInvalidSession] = useState(false);
   const [template, setTemplate] = useState();
-  const status = useSelector((state) => state.locators.status);
+  const status = useSelector((state) => state.locators.present.status);
   const backendAvailable = useSelector((state) => state.main.backendAvailable);
   const currentPage = useSelector(selectCurrentPage);
-  const currentPageObject = useSelector((state) => state.pageObject.currentPageObject);
+  const currentPageObject = useSelector((state) => state.pageObject.present.currentPageObject);
   const dispatch = useDispatch();
 
   useOnTabUpdate();

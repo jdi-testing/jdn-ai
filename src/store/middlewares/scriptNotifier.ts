@@ -14,8 +14,8 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
   const { type, payload, meta } = action;
   switch (type) {
     case "pageObject/addLocatorsToPageObj": {
-      if (isNil(state.pageObject.currentPageObject)) return;
-      const locators = selectLocatorsByPageObject(state, state.pageObject.currentPageObject);
+      if (isNil(state.pageObject.present.currentPageObject)) return;
+      const locators = selectLocatorsByPageObject(state, state.pageObject.present.currentPageObject);
       locators && sendMessage.setHighlight({ elements: locators as Locator[], perception: state.main.perception });
       break;
     }

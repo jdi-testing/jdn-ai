@@ -1,16 +1,17 @@
-import {configureStore} from "@reduxjs/toolkit";
-import locatorsSlice from "./slices/locatorsSlice";
+import { configureStore } from "@reduxjs/toolkit";
+import undoable from "redux-undo";
+import { createListeners } from "../services/scriptListener";
+import { cancellableActions } from "./middlewares/cancellableActions";
 import { logger } from "./middlewares/logger";
+import { scriptNotifier } from "./middlewares/scriptNotifier";
+import locatorsSlice from "./slices/locatorsSlice";
 import mainSlice from "./slices/mainSlice";
 import pageObjectSlice from "./slices/pageObjectSlice";
-import { scriptNotifier } from "./middlewares/scriptNotifier";
-import { cancellableActions } from "./middlewares/cancellableActions";
-import { createListeners } from "../services/scriptListener";
 
 const rootReducer = {
   main: mainSlice,
-  locators: locatorsSlice,
-  pageObject: pageObjectSlice,
+  locators: undoable(locatorsSlice, {undoType: "LOCATOR_UNDO"}),
+  pageObject: undoable(pageObjectSlice, {undoType: "PAGEOBJECT_UNDO"}),
 };
 
 export const store = configureStore({

@@ -11,7 +11,7 @@ export const pageObjAdapter = createEntityAdapter<PageObject>({
 });
 
 export const { selectAll: selectPageObjects, selectById: selectPageObjById } = pageObjAdapter.getSelectors(
-    (state: RootState) => state.pageObject
+    (state: RootState) => state.pageObject.present
 );
 
 export const {
@@ -20,7 +20,7 @@ export const {
 } = pageObjAdapter.getSelectors();
 
 export const selectCurrentPageObject = (state: RootState) => {
-  const currentPageObj = state.pageObject.currentPageObject;
+  const currentPageObj = state.pageObject.present.currentPageObject;
   if (!isNil(currentPageObj)) return selectPageObjById(state, currentPageObj);
   return undefined;
 };
@@ -109,8 +109,8 @@ export const selectFailedByPageObject = createSelector(selectPageObjLocatorsByPr
 export const selectLocatorByJdnHash = createSelector(
     (state: RootState, jdnHash: string) => selectLocators(state).filter((loc) => loc.jdnHash === jdnHash),
     (state: RootState) => {
-      if (isNil(state.pageObject.currentPageObject)) return [];
-      const pageObject = selectPageObjById(state, state.pageObject.currentPageObject);
+      if (isNil(state.pageObject.present.currentPageObject)) return [];
+      const pageObject = selectPageObjById(state, state.pageObject.present.currentPageObject);
       return pageObject ? pageObject.locators : [];
     },
     (locators, pageObjLocators) => {

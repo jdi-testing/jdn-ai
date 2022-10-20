@@ -23,8 +23,9 @@ export const LocatorsTree = ({ pageObject: currentPageObject, locatorIds, viewPr
 
   const currentPage = useSelector(selectCurrentPage).page;
   const locators = useSelector((_state) => selectPageObjLocatorsByProbability(_state, currentPageObject));
-  const scrollToLocator = useSelector((_state) => _state.locators.scrollToLocator);
-  const library = useSelector((_state) => selectPageObjById(_state, _state.pageObject.currentPageObject)).library;
+  const scrollToLocator = useSelector((_state) => _state.locators.present.scrollToLocator);
+  const library = useSelector((_state) => selectPageObjById(_state, _state.pageObject.present.currentPageObject))
+      .library;
 
   useEffect(() => {
     if (expandAll === EXPAND_STATE.EXPANDED) setExpandedKeys(locatorIds);

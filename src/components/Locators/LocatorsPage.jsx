@@ -27,7 +27,7 @@ const { confirm } = Modal;
 
 export const LocatorsPage = ({ alreadyGenerated }) => {
   const dispatch = useDispatch();
-  const currentPageObject = useSelector((_state) => _state.pageObject.currentPageObject);
+  const currentPageObject = useSelector((_state) => _state.pageObject.present.currentPageObject);
   const currentPage = useSelector(selectCurrentPage).page;
   const locators = useSelector((_state) => selectLocatorsByPageObject(_state, currentPageObject));
   const locatorIds = useSelector((_state) => selectPageObjById(_state, currentPageObject).locators);
