@@ -11,11 +11,6 @@ export const toBase64 = (file: RcFile): Promise<string | ArrayBuffer | null> =>
 
 export const isImage = (file: UploadFile) => file["type"]?.includes("image");
 
-export const dataToBlob = (file: RcFile | string) => {
-  const blob = new Blob([file]);
-  return window.URL.createObjectURL(blob);
-};
-
-export const allowedExtensions = ["zip", "rar", "json", "txt", "image/", "text/plain"];
+export const allowedExtensions = ["zip", "json", "txt", "image/", "text/plain"];
 
 export const isAllowedExtension = (type: string) => !!allowedExtensions.find((extension) => type.includes(extension));
