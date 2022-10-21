@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { size } from "lodash";
 import { defineServerReducer } from "../thunks/defineServer";
-import { BackendStatus, MainState, PageType } from "./mainSlice.types";
+import { BackendStatus, MainState, Notification, PageType } from "./mainSlice.types";
 import { PageObjectId } from "./pageObjectSlice.types";
 
 const initialState: MainState = {
@@ -28,9 +28,11 @@ const mainSlice = createSlice({
         { payload }: PayloadAction<{ page: PageType; pageObj?: PageObjectId; alreadyGenerated?: boolean }>
     ) {
       state.pageHistory.push(payload);
+      state.notifications = [];
     },
     changePageBack(state) {
       state.pageHistory.pop();
+      state.notifications = [];
     },
     changePerception(state, { payload }) {
       state.perception = payload;
@@ -39,14 +41,8 @@ const mainSlice = createSlice({
       const { backendAvailable, baseUrl, serverVersion } = state;
       return { ...initialState, backendAvailable, baseUrl, serverVersion };
     },
-    pushNotification(state, { payload }) {
+    pushNotification(state, { payload }: PayloadAction<Notification>) {
       state.notifications.push(payload);
-    },
-    cancelLastNotification(state) {
-      state.notifications[size(state.notifications) - 1].isCanceled = true;
-    },
-    handleLastNotification(state) {
-      state.notifications[size(state.notifications) - 1].isHandled = true;
     },
     resetNotifications(state) {
       state.notifications.length = 0;
@@ -70,10 +66,8 @@ export default mainSlice.reducer;
 export const {
   changePage,
   changePageBack,
-  cancelLastNotification,
   changePerception,
   clearAll,
-  handleLastNotification,
   pushNotification,
   resetNotifications,
   setBackendAvailable,

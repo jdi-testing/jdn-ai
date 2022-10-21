@@ -6,7 +6,7 @@ import { CaretDown, DownloadSimple, Plus, Trash } from "phosphor-react";
 import { addPageObj } from "../../../store/thunks/addPageObject";
 import { generateAndDownloadZip } from "../utils/pageObject";
 
-import { pushNotification, toggleBackdrop } from "../../../store/slices/mainSlice";
+import { pushNotification } from "../../../store/slices/mainSlice";
 import { size } from "lodash";
 import { selectPageObjects } from "../../../store/selectors/pageObjectSelectors";
 
@@ -32,7 +32,7 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
   const handleAddPageObject = () => dispatch(addPageObj());
 
   const handleDownload = () => {
-    dispatch(pushNotification("Download"));
+    dispatch(pushNotification({ action: { type: "downloadTemplate" } }));
     generateAndDownloadZip(state, template);
   };
 
@@ -48,9 +48,8 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
         danger: true,
       },
       onOk: () => {
-        dispatch(removeAllPageObjects());
         dispatch(removeAllLocators());
-        dispatch(toggleBackdrop(false));
+        dispatch(removeAllPageObjects());
       },
     });
   };
@@ -68,20 +67,20 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
       />
       <Space direction="horizontal" size={8}>
         {size(pageObjects) ? (
-        <Tooltip placement="bottom" title="Delete all">
-          <Button
-            danger
-            size="small"
-            onClick={handleRemoveAll}
-            data-testid="remove-button"
-            icon={<Trash color="#D82C15" size={16} />}
-          />
-        </Tooltip>
+          <Tooltip placement="bottom" title="Delete all">
+            <Button
+              danger
+              size="small"
+              onClick={handleRemoveAll}
+              data-testid="remove-button"
+              icon={<Trash color="#D82C15" size={16} />}
+            />
+          </Tooltip>
         ) : null}
         {enableDownload ? (
-        <Tooltip placement="bottom" title="Download all">
-          <Button size="small" onClick={handleDownload} icon={<DownloadSimple size={16} color="#595959" />} />
-        </Tooltip>
+          <Tooltip placement="bottom" title="Download all">
+            <Button size="small" onClick={handleDownload} icon={<DownloadSimple size={16} color="#595959" />} />
+          </Tooltip>
         ) : null}
         <Button type="primary" size="small" onClick={handleAddPageObject} icon={<Plus size={16} color="#fff" />}>
           Page object

@@ -17,7 +17,7 @@ import { selectCurrentPage } from "../../store/selectors/mainSelectors";
 import { pageType } from "../../utils/constants";
 import { locatorGenerationController } from "../../services/locatorGenerationController";
 import { clearLocators } from "../../store/slices/pageObjectSlice";
-import { changePageBack, setScriptMessage, toggleBackdrop, resetNotifications } from "../../store/slices/mainSlice";
+import { changePageBack, setScriptMessage } from "../../store/slices/mainSlice";
 import { removeLocators, restoreLocators } from "../../store/slices/locatorsSlice";
 import { LocatorListHeader } from "./LocatorListHeader";
 import { Breadcrumbs } from "../common/Breadcrumbs";
@@ -27,7 +27,7 @@ const { confirm } = Modal;
 
 export const LocatorsPage = ({ alreadyGenerated }) => {
   const dispatch = useDispatch();
-  const currentPageObject = useSelector((_state) => _state.pageObject.currentPageObject);
+  const currentPageObject = useSelector((_state) => _state.pageObject.present.currentPageObject);
   const currentPage = useSelector(selectCurrentPage).page;
   const locators = useSelector((_state) => selectLocatorsByPageObject(_state, currentPageObject));
   const locatorIds = useSelector((_state) => selectPageObjById(_state, currentPageObject).locators);
@@ -40,7 +40,6 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
   const pageBack = () => {
     dispatch(setScriptMessage({}));
     dispatch(changePageBack());
-    dispatch(toggleBackdrop(false));
   };
 
   const handleConfirm = () => {
@@ -73,7 +72,6 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
     }
     return () => {
       removeOverlay();
-      dispatch(resetNotifications());
     };
   }, []);
 

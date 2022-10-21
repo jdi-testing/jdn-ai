@@ -9,22 +9,14 @@ export const cancellableActions: Middleware = (store) => (next) => (action) => {
   const prevState: RootState = store.getState();
   const result = next(action);
 
-  const pushNotificationHandler = (prevValue: any) => {
-    const prevNotification = last(prevState.main.notifications);
-    const isCanceled = prevNotification?.isCanceled;
-    const isHandled = prevNotification?.isHandled;
-    if (isCanceled && !isHandled) return;
-
+  const pushNotificationHandler = (prevValue?: any) => {
     store.dispatch(pushNotification({ action, prevValue }));
   };
 
   const { type, payload, meta } = action;
   switch (type) {
     case "locators/changeLocatorAttributes": {
-      const { element_id } = payload;
-      const prevValue = selectLocatorById(prevState, element_id);
-      if (!prevValue) return;
-      pushNotificationHandler(prevValue);
+      pushNotificationHandler();
       break;
     }
     case "locators/rerunGeneration/pending":
@@ -43,6 +35,15 @@ export const cancellableActions: Middleware = (store) => (next) => (action) => {
       break;
     case "locators/toggleDeletedGroup":
       pushNotificationHandler(payload);
+      break;
+    case "pageObject/removeAll":
+      pushNotificationHandler();
+      break;
+    case "pageObject/removePageObject":
+      pushNotificationHandler();
+      break;
+    case "pageObject/changeName":
+      pushNotificationHandler();
       break;
   }
   return result;

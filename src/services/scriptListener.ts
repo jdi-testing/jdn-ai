@@ -38,8 +38,8 @@ export const createListeners = (
     GET_ELEMENT: (jdnHash, sender, sendResponse) => {
       const element = selectLocatorByJdnHash(state, jdnHash);
       const library =
-        !isNil(state.pageObject.currentPageObject) &&
-        selectPageObjById(state, state.pageObject.currentPageObject)!.library;
+        !isNil(state.pageObject.present.currentPageObject) &&
+        selectPageObjById(state, state.pageObject.present.currentPageObject)!.library;
       sendResponse({
         element,
         types: getTypesMenuOptions(library || ElementLibrary.MUI),
@@ -74,10 +74,7 @@ export const createListeners = (
   };
 
   connector.updateMessageListener(
-      (
-          payload: ScriptMessagePayload,
-          sender: chrome.runtime.MessageSender,
-          sendResponse: (response: any) => void
-      ) => messageHandler(payload, sender, sendResponse, actions)
+      (payload: ScriptMessagePayload, sender: chrome.runtime.MessageSender, sendResponse: (response: any) => void) =>
+        messageHandler(payload, sender, sendResponse, actions)
   );
 };
