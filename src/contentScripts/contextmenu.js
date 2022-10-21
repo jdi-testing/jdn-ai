@@ -316,36 +316,59 @@ export const runContextMenu = () => {
       {
         type: ContextMenu.DIVIDER,
       },
-      {
-        text: `<span>Edit</span>`,
-        icon: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+      ...(!element.deleted ?
+        [
+          {
+            text: `<span>Edit</span>`,
+            icon: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M4.34531 10.125H2.25C2.15055 10.125 2.05516 10.0855 1.98484 10.0152C1.91451 9.94484 1.875 9.84945 1.875 9.75V7.65469C1.87483 7.60599 1.88427 7.55774 1.90277 7.5127C1.92127 7.46765 1.94847 7.4267 1.98281 7.39218L7.60782 1.76718C7.64271 1.73175 7.6843 1.70361 7.73017 1.68441C7.77604 1.6652 7.82527 1.65531 7.875 1.65531C7.92473 1.65531 7.97396 1.6652 8.01983 1.68441C8.0657 1.70361 8.1073 1.73175 8.14219 1.76718L10.2328 3.85781C10.2682 3.8927 10.2964 3.9343 10.3156 3.98017C10.3348 4.02604 10.3447 4.07527 10.3447 4.125C10.3447 4.17473 10.3348 4.22396 10.3156 4.26983C10.2964 4.3157 10.2682 4.35729 10.2328 4.39218L4.60782 10.0172C4.5733 10.0515 4.53235 10.0787 4.4873 10.0972C4.44226 10.1157 4.39401 10.1252 4.34531 10.125V10.125Z" stroke="#5A5A5A" stroke-linecap="round" stroke-linejoin="round"/>
         <path d="M6.375 3L9 5.625" stroke="#5A5A5A" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>`,
-        events: {
-          click: () => sendMessage({
-            message: "OPEN_EDIT_LOCATOR_REQUEST",
-            param: { value: element, types }
-          }),
-        },
-      },
-      {
-        text: `<span class="cm_container_warning-option">Delete</span>`,
-        icon: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            events: {
+              click: () =>
+                sendMessage({
+                  message: "OPEN_EDIT_LOCATOR_REQUEST",
+                  param: { value: element, types },
+                }),
+            },
+          },
+          {
+            text: `<span class="cm_container_warning-option">Delete</span>`,
+            icon: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M10.125 2.625H1.875" stroke="#FF4D4F" stroke-linecap="round" stroke-linejoin="round"/>
         <path d="M4.875 4.875V7.875" stroke="#FF4D4F" stroke-linecap="round" stroke-linejoin="round"/>
         <path d="M7.125 4.875V7.875" stroke="#FF4D4F" stroke-linecap="round" stroke-linejoin="round"/>
         <path d="M9.375 2.625V9.75C9.375 9.84946 9.33549 9.94484 9.26517 10.0152C9.19484 10.0855 9.09946 10.125 9 10.125H3C2.90054 10.125 2.80516 10.0855 2.73484 10.0152C2.66451 9.94484 2.625 9.84946 2.625 9.75V2.625" stroke="#FF4D4F" stroke-linecap="round" stroke-linejoin="round"/>
         <path d="M7.875 2.625V1.875C7.875 1.67609 7.79598 1.48532 7.65533 1.34467C7.51468 1.20402 7.32391 1.125 7.125 1.125H4.875C4.67609 1.125 4.48532 1.20402 4.34467 1.34467C4.20402 1.48532 4.125 1.67609 4.125 1.875V2.625" stroke="#FF4D4F" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>`,
-        events: {
-          click: () =>
-            sendMessage({
-              message: "REMOVE_ELEMENT",
-              param: element_id,
-            }),
-        },
-      },
+            events: {
+              click: () =>
+                sendMessage({
+                  message: "REMOVE_ELEMENT",
+                  param: element_id,
+                }),
+            },
+          },
+        ] :
+        [
+          {
+            text: `Restore`,
+            icon: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M3.74072 4.67343H1.49072V2.42343" stroke="#5A5A5A" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M8.91572 3.08436C8.53304 2.70112 8.07855 2.39708 7.57826 2.18964C7.07797 1.9822 6.54169 1.87543 6.0001 1.87543C5.4585 1.87543 4.92223 1.9822 4.42193 2.18964C3.92164 2.39708 3.46716 2.70112 3.08447 3.08436L1.49072 4.67343" stroke="#5A5A5A" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M8.25928 7.32657H10.5093V9.57657" stroke="#5A5A5A" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M3.08447 8.91563C3.46716 9.29887 3.92164 9.60291 4.42193 9.81035C4.92222 10.0178 5.4585 10.1246 6.0001 10.1246C6.54169 10.1246 7.07797 10.0178 7.57826 9.81035C8.07855 9.60291 8.53304 9.29887 8.91572 8.91563L10.5095 7.32657" stroke="#5A5A5A" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            `,
+            events: {
+              click: () =>
+                sendMessage({
+                  message: "RESTORE_ELEMENT",
+                  param: element_id,
+                }),
+            },
+          },
+        ]),
       {
         type: ContextMenu.DIVIDER,
       },

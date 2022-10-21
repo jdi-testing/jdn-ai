@@ -20,6 +20,7 @@ import { PageType } from "../../../store/slices/mainSlice.types";
 import { Locator as LocatorInterface } from "../../../store/slices/locatorSlice.types";
 import { RootState } from "../../../store/store";
 import { getLocator } from "./utils";
+import { size } from "lodash";
 
 let timer: NodeJS.Timeout;
 
@@ -76,7 +77,7 @@ export const Locator: React.FC<Props> = memo(({ element, currentPage, scroll, li
     } else {
       if (allChildrenChecked) {
         dispatch(toggleElementGeneration(element_id));
-        dispatch(setChildrenGeneration({ locator: element, generate: false }));
+        size(element.children) && dispatch(setChildrenGeneration({ locator: element, generate: false }));
       } else {
         dispatch(setChildrenGeneration({ locator: element, generate: true }));
       }

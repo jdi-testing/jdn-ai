@@ -88,8 +88,13 @@ export const highlightOnPage = () => {
     const div = updateElement(element);
 
     if (element.deleted) {
-      if (div) div.remove();
+      if (div) {
+        div.setAttribute("jdn-status", "DELETED");
+        toggleElement({ element, skipScroll: true });
+        // div.remove();
+      }
     } else {
+      div.setAttribute("jdn-status", element.locator.taskStatus);
       findAndHighlight();
     }
   };
@@ -222,7 +227,7 @@ export const highlightOnPage = () => {
       perception = param.perception;
     }
     let query = "";
-    predictedElements.forEach(({ element_id, deleted, jdnHash }) => {
+    predictedElements.forEach(({ deleted, jdnHash }) => {
       if (deleted) return;
       query += `${!!query.length ? ", " : ""}[jdn-hash='${jdnHash}']`;
     });
@@ -326,7 +331,7 @@ export const highlightOnPage = () => {
       toggleElement(param);
     }
 
-    if (message === "TOGGLE_DLETED") {
+    if (message === "TOGGLE_DELETED") {
       toggleDeletedElement(param);
     }
 

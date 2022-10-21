@@ -141,3 +141,27 @@
     }
   }
 }
+
+[jdn-status="DELETED"] {
+  &.jdn-secondary {
+    display: none;
+  }
+
+  &.jdn-primary {
+    border: 1px solid rgba(140, 140, 140, 1);
+    background-color: rgba(140, 140, 140, 0.2);
+
+    .jdn-label {
+      background-color: rgba(140, 140, 140, 1);
+    }
+
+    &.cm--selected {
+      border: 2px solid rgba(89, 89, 89, 1);
+      background-color: rgba(89, 89, 89, 0.2);
+
+      .jdn-label {
+        background-color: rgba(89, 89, 89, 1);
+      }
+    }
+  }
+}
