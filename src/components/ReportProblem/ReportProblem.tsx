@@ -1,8 +1,7 @@
 import { Button, Form, Input, Modal, Tooltip, Upload, UploadFile } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import { UploadChangeParam } from "antd/lib/upload";
-import { UploadFileStatus } from "antd/lib/upload/interface";
-import { size } from "lodash";
+import { RcFile, UploadFileStatus } from "antd/lib/upload/interface";
 import { UploadSimple, Warning } from "phosphor-react";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -12,7 +11,7 @@ import { selectCurrentPageObject } from "../../store/selectors/pageObjectSelecto
 import { ValidationErrorType } from "../../store/slices/locatorSlice.types";
 import { PageType } from "../../store/slices/mainSlice.types";
 import { DialogWithForm } from "../common/DialogWithForm";
-import { dataToBlob, isImage, toBase64, isAllowedExtension } from "./utils";
+import { isImage, toBase64, isAllowedExtension } from "./utils";
 
 const { error } = Modal;
 
@@ -29,23 +28,22 @@ export const ReportProblem = () => {
   const pageData = useSelector(selectCurrentPageObject)?.pageData;
   const currentPage = useSelector(selectCurrentPage).page;
 
-  const defaultFileList =
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+
+  useEffect(() => {
+    const defaultFileList = async () =>
     pageData && currentPage === PageType.LocatorsList ?
       [
         {
           uid: "0",
           name: "pageData.json",
           status: "done" as UploadFileStatus,
-          url: dataToBlob(pageData),
+          url: (await toBase64(new Blob([pageData]) as RcFile)) as string | undefined,
           linkProps: { download: "pageData.json" },
         },
       ] :
       [];
-
-  const [fileList, setFileList] = useState<UploadFile[]>(defaultFileList);
-
-  useEffect(() => {
-    setFileList(defaultFileList);
+    defaultFileList().then(setFileList);
   }, [currentPage, pageData]);
 
   useEffect(() => {
@@ -56,10 +54,16 @@ export const ReportProblem = () => {
   const showExceprionConfirm = () =>
     error({
       title: "Report is not available",
-      content: <React.Fragment>
-        Mail server is not accessible from your location and problem report can&apos;t be created automatically.
-    Please send an email <a href="mailto:SupportJDI@epam.com" data-turbo-frame="">SupportJDI@epam.com</a> by yourself.
-      </React.Fragment>,
+      content: (
+        <React.Fragment>
+          Mail server is not accessible from your location and problem report can&apos;t be created automatically.
+          Please send an email{" "}
+          <a href="mailto:SupportJDI@epam.com" data-turbo-frame="">
+            SupportJDI@epam.com
+          </a>{" "}
+          by yourself.
+        </React.Fragment>
+      ),
     });
 
   const handleOk = () => {
@@ -70,17 +74,13 @@ export const ReportProblem = () => {
           if (values.upload?.find((file) => file.status === "error")) throw new Error("invalid uploads");
           sendReport(values);
           form.resetFields();
-          resetFileList();
+          setFileList([]);
           setIsModalOpen(false);
         })
         .catch(() => {
           const failedUploadFile = document.querySelector(".ant-upload-list-item-error");
           failedUploadFile?.scrollIntoView({ behavior: "smooth" });
         });
-  };
-
-  const resetFileList = () => {
-    setFileList(defaultFileList);
   };
 
   const showModal = () => {
@@ -102,7 +102,7 @@ export const ReportProblem = () => {
 
     const attachments = upload ?
       upload.map((file: UploadFile) => ({
-        file_content: file.url?.replace("data:image/png;base64,", ""),
+        file_content: file.url?.replace(/data:(image|text|application)\/.+;base64,/, ""),
         filename: file.name,
       })) :
       [];
@@ -124,10 +124,8 @@ export const ReportProblem = () => {
           return _file;
         }
 
-        if (isImage(_file)) {
+        if (isImage(_file) || (_file.type && isAllowedExtension(_file.type))) {
           _file.url = (await toBase64(_file.originFileObj)) as string;
-        } else if (_file.type && isAllowedExtension(_file.type)) {
-          _file.url = dataToBlob(_file.originFileObj);
         } else {
           _file.status = "error";
           _file.response = "This file type isn't allowed";
@@ -165,11 +163,10 @@ export const ReportProblem = () => {
             open: isModalOpen,
             onOk: handleOk,
             setIsModalOpen,
-            cancelCallback: resetFileList,
+            cancelCallback: () => setFileList([]),
           }}
           formProps={{
             form,
-            initialValues: { upload: size(fileList) ? fileList : defaultFileList },
           }}
         >
           <Form.Item
@@ -198,7 +195,7 @@ export const ReportProblem = () => {
           </Form.Item>
           <Form.Item name="upload" label="Upload" valuePropName="upload" getValueFromEvent={normFile}>
             {/* <Upload name="logo" action="/upload.do" listType="picture"> */}
-            <Upload name="attachments" onChange={handleUploadChange} {...{ fileList, defaultFileList }}>
+            <Upload name="attachments" onChange={handleUploadChange} {...{ fileList }}>
               <Button
                 icon={
                   <span role="img" className="anticon anticon-upload">
