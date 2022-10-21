@@ -17,7 +17,7 @@ import { selectCurrentPage } from "../../store/selectors/mainSelectors";
 import { pageType } from "../../utils/constants";
 import { locatorGenerationController } from "../../services/locatorGenerationController";
 import { clearLocators } from "../../store/slices/pageObjectSlice";
-import { changePageBack, setScriptMessage, toggleBackdrop, resetNotifications } from "../../store/slices/mainSlice";
+import { changePageBack, setScriptMessage } from "../../store/slices/mainSlice";
 import { removeLocators, restoreLocators } from "../../store/slices/locatorsSlice";
 import { LocatorListHeader } from "./LocatorListHeader";
 import { Breadcrumbs } from "../common/Breadcrumbs";
@@ -40,7 +40,6 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
   const pageBack = () => {
     dispatch(setScriptMessage({}));
     dispatch(changePageBack());
-    dispatch(toggleBackdrop(false));
   };
 
   const handleConfirm = () => {

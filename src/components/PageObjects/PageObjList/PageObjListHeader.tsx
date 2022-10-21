@@ -6,7 +6,7 @@ import { CaretDown, DownloadSimple, Plus, Trash } from "phosphor-react";
 import { addPageObj } from "../../../store/thunks/addPageObject";
 import { generateAndDownloadZip } from "../utils/pageObject";
 
-import { pushNotification, toggleBackdrop } from "../../../store/slices/mainSlice";
+import { pushNotification } from "../../../store/slices/mainSlice";
 import { size } from "lodash";
 import { selectPageObjects } from "../../../store/selectors/pageObjectSelectors";
 
