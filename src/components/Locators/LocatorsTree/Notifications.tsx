@@ -133,7 +133,7 @@ export const Notifications = () => {
     container &&
       notification.open({
         message: <Alert showIcon message={message} type={type} action={cancelButton} />,
-        duration: 50000,
+        duration: 5,
         getContainer: () => container,
         placement: "bottomRight",
       });
