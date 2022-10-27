@@ -23,9 +23,9 @@ import { selectInProgressSelectedByPageObject } from "../../store/selectors/page
 import { advanced, deleteOption, downPriority, pause, rerun, restore, upPriority } from "./menuOptions";
 
 export const EXPAND_STATE = {
-  EXPANDED: "EXPANDED",
-  COLLAPSED: "COLLAPSED",
-  CUSTOM: "CUSTOM",
+  EXPANDED: "Expanded",
+  COLLAPSED: "Collapsed",
+  CUSTOM: "Custom",
 };
 
 /* eslint-disable */

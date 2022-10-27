@@ -22,6 +22,7 @@ import { removeLocators, restoreLocators } from "../../store/slices/locatorsSlic
 import { LocatorListHeader } from "./LocatorListHeader";
 import { Breadcrumbs } from "../common/Breadcrumbs";
 import { customConfirm } from "../common/CustomConfirm";
+import { LocatorsSearch } from "./LocatorsSearch";
 
 const { confirm } = Modal;
 
@@ -36,6 +37,7 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
   const deletedSelected = useSelector((_state) => selectDeletedSelectedByPageObj(_state, currentPageObject));
 
   const [locatorsSnapshot] = useState(locators);
+  const [searchString, setSearchString] = useState("");
 
   const pageBack = () => {
     dispatch(setScriptMessage({}));
@@ -139,6 +141,7 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
     <React.Fragment>
       <div className="jdn__locatorsList">
         <Breadcrumbs />
+        <LocatorsSearch value={searchString} onChange={setSearchString} />
         <LocatorListHeader
           {...{
             locatorIds,
@@ -148,7 +151,9 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
           }}
           render={(viewProps) => (
             <div className="jdn__locatorsList-content">
-              {size(locators) ? <LocatorsTree pageObject={currentPageObject} {...{ viewProps, locatorIds }} /> : null}
+              {size(locators) ? (
+                <LocatorsTree pageObject={currentPageObject} {...{ viewProps, locatorIds, searchString }} />
+              ) : null}
             </div>
           )}
         />

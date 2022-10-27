@@ -19,12 +19,12 @@
       background: transparent !important;
       padding-left: 0;
       padding-right: 0;
-      color: #000000A6;
+      color: #000000a6;
     }
 
     &-header {
       padding: 0 12px 0 8px;
-      margin-top: 16px;
+      margin-top: 13px;
       margin-bottom: 8px;
 
       &-title {
@@ -84,7 +84,7 @@
       border: 1px solid #d9d9d9;
       border-radius: 2px;
       overflow-y: auto;
-      height: calc(100vh - 154px);
+      height: calc(100vh - 194px);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -164,6 +164,41 @@
 
     & .jdn__locatorsTree-container {
       overflow-y: auto;
+    }
+
+    .ant-tree {
+      &-treenode {
+        width: 100%;
+
+        &.jdn__tree-item--selected {
+          background-color: #ecf7ff;
+
+          &:hover {
+            background-color: #d4eefa;
+          }
+
+          &.jdn__tree-item--cm-selected {
+            background-color: #d4eefa;
+          }
+        }
+
+        &.jdn__tree-item--hidden {
+          display: none;
+        }
+
+        &:hover {
+          background-color: #f2f2f2;
+        }
+
+        &.jdn__tree-item--cm-selected {
+          background-color: #f2f2f2;
+        }
+      }
+    }
+
+    &_search {
+      width: 264px;
+      margin-top: 8px;
     }
   }
 
