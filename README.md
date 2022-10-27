@@ -1,5 +1,5 @@
 
-# Video instruction on Youtube here in [English](https://www.youtube.com/watch?v=b2o6R98icRU) or in [Russian] (https://www.youtube.com/watch?v=FJWJjxmJUMw)
+# Video instruction on Youtube here in [English](https://www.youtube.com/watch?v=b2o6R98icRU) or in [Russian](https://www.youtube.com/watch?v=FJWJjxmJUMw)
 Use video instruction or the guide that is below
 
 # Setup plugin
