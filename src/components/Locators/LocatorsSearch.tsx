@@ -11,7 +11,7 @@ export const LocatorsSearch: React.FC<Props> = ({ value, onChange }) => {
   return (
     <Input
       className="jdn__locatorsList_search"
-      placeholder="Search by type, name or xpath"
+      placeholder="Search by type, name or locator"
       value={value}
       onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
       suffix={<MagnifyingGlass size={14} />}
