@@ -20,6 +20,7 @@ import { PageType } from "../../../store/slices/mainSlice.types";
 import { Locator as LocatorInterface } from "../../../store/slices/locatorSlice.types";
 import { RootState } from "../../../store/store";
 import { getLocator } from "./utils";
+import { SearchState } from "../LocatorsTree/LocatorsTree";
 
 let timer: NodeJS.Timeout;
 
@@ -28,10 +29,12 @@ interface Props {
   currentPage: PageType;
   scroll: any;
   library: ElementLibrary;
+  disabled?: boolean;
+  searchState?: SearchState;
 }
 
 // eslint-disable-next-line react/display-name
-export const Locator: React.FC<Props> = memo(({ element, currentPage, scroll, library }) => {
+export const Locator: React.FC<Props> = memo(({ element, currentPage, scroll, library, searchState }) => {
   const dispatch = useDispatch();
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -109,13 +112,26 @@ export const Locator: React.FC<Props> = memo(({ element, currentPage, scroll, li
     <div ref={ref} data-id={element_id} className="jdn__xpath_container">
       {currentPage === pageType.locatorsList ? (
         <div className="jdn__xpath_locators">
-          <Checkbox checked={generate} indeterminate={indeterminate} onClick={handleOnChange}></Checkbox>
-          <Text className={`jdn__xpath_item${deleted ? " jdn__xpath_item--deleted" : ""}`}>
+          <Checkbox
+            checked={generate}
+            indeterminate={indeterminate}
+            onClick={handleOnChange}
+            disabled={searchState === SearchState.Disabled}
+          ></Checkbox>
+          <Text
+            className={`jdn__xpath_item${deleted ? " jdn__xpath_item--deleted" : ""}${
+              searchState === SearchState.Disabled ? " jdn__xpath_item--disabled" : ""
+            }`}
+          >
             <LocatorIcon {...{ validity, locator, deleted }} />
             {renderColorizedString()}
           </Text>
-          <LocatorCopyButton {...{ element }} />
-          <LocatorMenu {...{ element, setIsEditModalOpen }} />
+          {searchState !== SearchState.Disabled ? (
+            <React.Fragment>
+              <LocatorCopyButton {...{ element }} />
+              <LocatorMenu {...{ element, setIsEditModalOpen }} />
+            </React.Fragment>
+          ) : null}
         </div>
       ) : (
         <Text className="jdn__xpath_item">{renderColorizedString()}</Text>

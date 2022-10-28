@@ -13,7 +13,7 @@
         display: none;
       }
 
-      &:hover {
+      :not(.ant-tree-treenode-disabled) &:hover {
         & .jdn__locatorsList_button-copy {
           display: inline-block;
         }
@@ -51,6 +51,16 @@
 
         & svg * {
           stroke: @jdn-disabled-color;
+        }
+      }
+
+      &--disabled,
+      &--disabled &-locator,
+      &--disabled &-type {
+        color: #d9d9d9;
+
+        & svg * {
+          stroke: #d9d9d9;
         }
       }
     }

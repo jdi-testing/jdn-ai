@@ -88,7 +88,6 @@ describe("changeLocatorAttributes reducer", () => {
   });
 
   test("edit locator", () => {
-    console.log(selectLocatorById(store.getState(), "8736312404689610766421832473"));
     store.dispatch(
         changeLocatorAttributes({
           element_id: "8736312404689610766421832473",
@@ -99,7 +98,6 @@ describe("changeLocatorAttributes reducer", () => {
         })
     );
     const locator = selectLocatorById(store.getState(), "8736312404689610766421832473");
-    console.log(locator);
     expect(locator.type).toBe("Dialog");
     expect(locator.name).toBe("myAwesomeLocator");
     expect(locator.isCustomLocator).toBeTruthy();
