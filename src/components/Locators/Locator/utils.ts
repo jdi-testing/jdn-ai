@@ -1,6 +1,8 @@
-import { filter } from "lodash";
+import { filter, map } from "lodash";
 import { connector } from "../../../services/connector";
 import { Locator, LocatorValue } from "../../../store/slices/locatorSlice.types";
+import { ElementLibrary } from "../../PageObjects/utils/generationClassesMap";
+import { createElementName } from "../../PageObjects/utils/pageObject";
 
 export const getLocator = ({ fullXpath, robulaXpath, customXpath }: LocatorValue) => {
   return customXpath || robulaXpath || fullXpath || "";
@@ -27,3 +29,15 @@ export const evaluateXpath = (xPath: string) => {
 };
 
 export const equalHashes = (jdnHash: string, locators: Locator[]) => filter(locators, { jdnHash });
+
+export const createNewName = (
+    element: Locator,
+    newType: string,
+    library: ElementLibrary,
+    elements: Locator[]
+): string => {
+  const names = map(elements, "name");
+  const newName = createElementName({...element}, library, names, newType);
+
+  return newName;
+};

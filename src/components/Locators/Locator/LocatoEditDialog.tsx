@@ -4,23 +4,20 @@ import TextArea from "antd/lib/input/TextArea";
 import React, { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectLocators } from "../../../store/selectors/locatorSelectors";
-import { ElementId, LocatorValue, ValidationErrorType, Validity } from "../../../store/slices/locatorSlice.types";
+import {
+  Locator,
+  ValidationErrorType,
+} from "../../../store/slices/locatorSlice.types";
 import { changeLocatorAttributes } from "../../../store/slices/locatorsSlice";
 import { DialogWithForm } from "../../common/DialogWithForm";
 import { ElementLabel, ElementLibrary, getTypesMenuOptions } from "../../PageObjects/utils/generationClassesMap";
 import { isNameUnique, isStringMatchesReservedWord } from "../../PageObjects/utils/pageObject";
-import { equalHashes, evaluateXpath, getLocator, isValidJavaVariable } from "./utils";
+import { createNewName, equalHashes, evaluateXpath, getLocator, isValidJavaVariable } from "./utils";
 
-interface Props {
+interface Props extends Locator {
   isModalOpen: boolean;
   setIsModalOpen: (value: boolean) => void;
-  element_id: ElementId;
-  type: ElementLabel;
-  name: string;
-  locator: LocatorValue;
   library: ElementLibrary;
-  jdnHash: string;
-  validity?: Validity;
 }
 
 interface EditFormProps {
@@ -33,20 +30,42 @@ export const LocatorEditDialog: React.FC<Props> = ({
   isModalOpen,
   setIsModalOpen,
   element_id,
+  isCustomName,
   name,
   type,
   locator,
   library,
   jdnHash,
   validity,
+  tagName,
+  predictedAttrId,
 }) => {
   const [locatorValidity, setLocatorValidity] = useState<string>(validity?.locator || "");
+  const [isEditedName, setIsEditedName] = useState<boolean>(Boolean(isCustomName));
 
   const locators = useSelector(selectLocators);
   const types = useMemo(() => getTypesMenuOptions(library), [library]);
 
   const [form] = Form.useForm<EditFormProps>();
   const dispatch = useDispatch();
+
+  const _isNameUnique = (value: string) => !isNameUnique(locators, element_id, value);
+
+  const handleTypeChange = (value: string) => {
+    if (isEditedName || predictedAttrId) return;
+
+    const newName = createNewName(
+      { element_id, isCustomName, type, name, predictedAttrId, tagName } as Locator,
+      value,
+      library,
+      locators
+    );
+    form.setFieldValue("name", newName);
+  };
+
+  const handleNameChange = () => {
+    setIsEditedName(true);
+  };
 
   const nameValidationRules: Rule[] = [
     {
@@ -58,7 +77,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
         if (!value.length) return Promise.resolve();
         if (!isValidJavaVariable(value) || isStringMatchesReservedWord(value)) {
           return Promise.reject(new Error(ValidationErrorType.InvalidName));
-        } else if (!isNameUnique(locators, element_id, value)) {
+        } else if (_isNameUnique(value)) {
           return Promise.reject(new Error(ValidationErrorType.DuplicatedName));
         } else return Promise.resolve();
       },
@@ -103,7 +122,15 @@ export const LocatorEditDialog: React.FC<Props> = ({
     form
         .validateFields()
         .then((values) => {
-          dispatch(changeLocatorAttributes({ ...values, element_id, library, validity: { locator: locatorValidity } }));
+          dispatch(
+              changeLocatorAttributes({
+                ...values,
+                element_id,
+                library,
+                validity: { locator: locatorValidity },
+                isCustomName: isEditedName,
+              })
+          );
           form.resetFields();
           setIsModalOpen(false);
         })
@@ -124,10 +151,10 @@ export const LocatorEditDialog: React.FC<Props> = ({
       }}
     >
       <Form.Item name="name" label="Name:" rules={nameValidationRules}>
-        <Input />
+        <Input onChange={handleNameChange} />
       </Form.Item>
       <Form.Item name="type" label="Block type:">
-        <Select>
+        <Select onChange={handleTypeChange}>
           {types.map((_type) => (
             <Select.Option key={_type} value={_type}>
               {_type}

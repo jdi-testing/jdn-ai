@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { isUndefined, lowerFirst, size } from "lodash";
+import { size } from "lodash";
 import { ElementLabel, ElementLibrary } from "../../components/PageObjects/utils/generationClassesMap";
 import { locatorsAdapter, simpleSelectLocatorById } from "../selectors/locatorSelectors";
 import { cancelStopGenerationReducer } from "../thunks/cancelStopGeneration";
@@ -33,6 +33,7 @@ export interface ChangeLocatorAttributesPayload {
   validity: Validity;
   library: ElementLibrary;
   isCustomName?: boolean;
+  isGeneratedName?: boolean;
 }
 
 const locatorsSlice = createSlice({
@@ -53,16 +54,7 @@ const locatorsSlice = createSlice({
       const _locator = simpleSelectLocatorById(state, element_id);
       if (!_locator) return;
       const { fullXpath, robulaXpath } = _locator.locator;
-      const newValue = { ..._locator, locator: { ..._locator.locator }, validity, type };
-      if (_locator.name !== name) {
-        newValue.name = name;
-        newValue.isCustomName = isUndefined(isCustomName) ? true : isCustomName;
-      }
-      if (_locator.type !== type) {
-        if (!newValue.isCustomName) {
-          newValue.name = lowerFirst(type as string);
-        }
-      }
+      const newValue = { ..._locator, locator: { ..._locator.locator }, validity, type, name, isCustomName };
       if (fullXpath !== locator && robulaXpath !== locator) {
         newValue.locator.customXpath = locator;
         newValue.isCustomLocator = true;
