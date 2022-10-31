@@ -19,23 +19,6 @@ describe("changeLocatorAttributes reducer", () => {
     removeElementSpy = jest.spyOn(sendMessage, "removeElement");
   });
 
-  test("edit type, name changed automatically", () => {
-    store.dispatch(
-        changeLocatorAttributes({
-          element_id: "8736312404689610766421832473",
-          locator: "//*[@class='sidebar-menu left']",
-          name: "radiobuttonsUl",
-          type: "Checkbox",
-          library: ElementLibrary.MUI,
-        })
-    );
-    const locator = selectLocatorById(store.getState(), "8736312404689610766421832473");
-    expect(locator.type).toBe("Checkbox");
-    expect(locator.name).toBe("checkbox");
-    expect(locator.locator).toStrictEqual(locator1.locator);
-    expect(changeElementNameSpy).toHaveBeenCalledWith(locator);
-  });
-
   test("edit type and name", () => {
     store.dispatch(
         changeLocatorAttributes({
@@ -93,6 +76,7 @@ describe("changeLocatorAttributes reducer", () => {
           element_id: "8736312404689610766421832473",
           locator: "//*[@class='any-class']",
           name: "myAwesomeLocator",
+          isCustomName: true,
           type: "Dialog",
           library: ElementLibrary.MUI,
         })

@@ -27,7 +27,7 @@ let timer: NodeJS.Timeout;
 interface Props {
   element: LocatorInterface;
   currentPage: PageType;
-  scroll: any;
+  scroll: boolean;
   library: ElementLibrary;
   disabled?: boolean;
   searchState?: SearchState;
@@ -39,7 +39,7 @@ export const Locator: React.FC<Props> = memo(({ element, currentPage, scroll, li
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const { element_id, type, name, locator, generate, validity, deleted, jdnHash } = element;
+  const { element_id, type, name, locator, generate, validity, deleted } = element;
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -138,7 +138,8 @@ export const Locator: React.FC<Props> = memo(({ element, currentPage, scroll, li
       )}
       {isEditModalOpen ? (
         <LocatorEditDialog
-          {...{ element_id, type, name, locator, library, jdnHash, validity }}
+          {...{ library }}
+          {...element}
           isModalOpen={isEditModalOpen}
           setIsModalOpen={setIsEditModalOpen}
         />
