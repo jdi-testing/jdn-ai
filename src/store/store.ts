@@ -16,7 +16,9 @@ const rootReducer = {
 
 export const store = configureStore({
   reducer: rootReducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat([logger, scriptNotifier, cancellableActions]),
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware({
+    serializableCheck: { ignoredActions: ["locators/setElementGroupGeneration", "locators/updateLocator"] }
+  }).concat([logger, scriptNotifier, cancellableActions]),
 });
 
 store.subscribe(() => createListeners(store.dispatch, store.getState()));

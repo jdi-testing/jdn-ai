@@ -11,13 +11,13 @@ import {
 } from "../../../store/slices/locatorsSlice";
 import { isLocatorIndeterminate, areChildrenChecked } from "../../../store/selectors/locatorSelectors";
 
-import { LocatorIcon } from "./LocatorIcon";
+import { isEdited, LocatorIcon } from "./LocatorIcon";
 import { LocatorCopyButton } from "./LocatorCopyButton";
 import { LocatorMenu } from "./LocatorMenu";
 import { ElementLibrary } from "../../PageObjects/utils/generationClassesMap";
 import { LocatorEditDialog } from "./LocatoEditDialog";
 import { PageType } from "../../../store/slices/mainSlice.types";
-import { Locator as LocatorInterface } from "../../../store/slices/locatorSlice.types";
+import { Locator as LocatorInterface, LocatorTaskStatus } from "../../../store/slices/locatorSlice.types";
 import { RootState } from "../../../store/store";
 import { getLocator } from "./utils";
 import { SearchState } from "../LocatorsTree/LocatorsTree";
@@ -123,7 +123,10 @@ export const Locator: React.FC<Props> = memo(({ element, currentPage, scroll, li
               searchState === SearchState.Disabled ? " jdn__xpath_item--disabled" : ""
             }`}
           >
-            <LocatorIcon {...{ validity, locator, deleted }} />
+            {
+              element.locator.taskStatus !== LocatorTaskStatus.SUCCESS && !isEdited(element.locator) ?
+              <LocatorIcon {...{ validity, locator, deleted }} /> : null
+            }
             {renderColorizedString()}
           </Text>
           {searchState !== SearchState.Disabled ? (

@@ -187,6 +187,8 @@ export const LocatorsTree: React.FC<Props> = ({
           {...{ expandedKeys, onExpand, autoExpandParent }}
           switcherIcon={<CaretDown color="#878A9C" size={14} />}
           treeData={renderTreeNodes(locatorsTree)}
+          virtual={true}
+          height={700}
         />
       </div>
       <Notifications />

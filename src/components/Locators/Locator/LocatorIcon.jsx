@@ -16,7 +16,7 @@ export const VALIDATION_ERROR_MESSAGES = {
   [VALIDATION_ERROR_TYPE.NOT_FOUND]: "The locator was not found on the page.", // warn
 };
 
-const isEdited = (locator) => locator.customXpath;
+export const isEdited = (locator) => locator.customXpath;
 const isValidLocator = (validity) =>
   !validity?.locator.length || validity.locator === VALIDATION_ERROR_TYPE.NEW_ELEMENT;
 
