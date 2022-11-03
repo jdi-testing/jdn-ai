@@ -1,6 +1,6 @@
-import React, { ReactNode, useEffect, useMemo, useState } from "react";
+import React, { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { size } from "lodash";
+import { isNil, size } from "lodash";
 import { Tree } from "antd";
 
 import { Locator } from "../Locator";
@@ -35,7 +35,11 @@ enum ExpandState {
 interface Props {
   pageObject: PageObjectId;
   locatorIds: Array<ElementId>;
-  viewProps: { expandAll: ExpandState; setExpandAll: (val: ExpandState) => void };
+  viewProps: {
+    expandAll: ExpandState;
+    setExpandAll: (val: ExpandState) => void;
+    searchString: string;
+  };
   searchString: string;
 }
 
@@ -55,17 +59,28 @@ export const LocatorsTree: React.FC<Props> = ({
   pageObject: currentPageObject,
   locatorIds,
   viewProps,
-  searchString,
 }) => {
   const [expandedKeys, setExpandedKeys] = useState(locatorIds);
   const [autoExpandParent, setAutoExpandParent] = useState(true);
+  const [containerHeight, setContainerHeight] = useState<number | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const { expandAll, setExpandAll } = viewProps;
+  const { expandAll, setExpandAll, searchString } = viewProps;
 
   const currentPage = useSelector(selectCurrentPage).page;
   const locators = useSelector((_state: RootState) => selectPageObjLocatorsByProbability(_state, currentPageObject));
   const scrollToLocator = useSelector((_state: RootState) => _state.locators.present.scrollToLocator);
   const library = useSelector(selectCurrentPageObject)?.library || defaultLibrary;
+
+  useEffect(() => {
+    calcContainerHeight();
+    window.addEventListener("resize", calcContainerHeight);
+    return () => window.removeEventListener("resize", calcContainerHeight);
+  }, []);
+
+  const calcContainerHeight = () => {
+    !isNil(containerRef?.current) && setContainerHeight(containerRef.current.getBoundingClientRect().height);
+  };
 
   useEffect(() => {
     if (expandAll === EXPAND_STATE.EXPANDED) setExpandedKeys(locatorIds);
@@ -179,7 +194,7 @@ export const LocatorsTree: React.FC<Props> = ({
 
   return (
     <React.Fragment>
-      <div className="jdn__locatorsTree-container">
+      <div ref={containerRef} className="jdn__locatorsTree-container">
         {/* incompatible type of Key */}
         {/* eslint-disable-next-line */}
         {/* @ts-ignore */}
@@ -187,8 +202,7 @@ export const LocatorsTree: React.FC<Props> = ({
           {...{ expandedKeys, onExpand, autoExpandParent }}
           switcherIcon={<CaretDown color="#878A9C" size={14} />}
           treeData={renderTreeNodes(locatorsTree)}
-          virtual={true}
-          height={700}
+          height={containerHeight || 0}
         />
       </div>
       <Notifications />
