@@ -5,9 +5,9 @@ import { Button, Modal, Tooltip } from "antd";
 import { LocatorsTree } from "./LocatorsTree";
 import { showOverlay, removeOverlay } from "../../services/pageDataHandlers";
 import {
+  selectCurrentPageObject,
   selectDeletedSelectedByPageObj,
   selectGeneratedSelectedByPageObj,
-  selectPageObjById,
   selectWaitingSelectedByPageObj,
 } from "../../store/selectors/pageObjectSelectors";
 import { isEqual, size } from "lodash";
@@ -22,7 +22,6 @@ import { removeLocators, restoreLocators } from "../../store/slices/locatorsSlic
 import { LocatorListHeader } from "./LocatorListHeader";
 import { Breadcrumbs } from "../common/Breadcrumbs";
 import { customConfirm } from "../common/CustomConfirm";
-import { LocatorsSearch } from "./LocatorsSearch";
 
 const { confirm } = Modal;
 
@@ -31,13 +30,12 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
   const currentPageObject = useSelector((_state) => _state.pageObject.present.currentPageObject);
   const currentPage = useSelector(selectCurrentPage).page;
   const locators = useSelector((_state) => selectLocatorsByPageObject(_state, currentPageObject));
-  const locatorIds = useSelector((_state) => selectPageObjById(_state, currentPageObject).locators);
+  const locatorIds = useSelector(selectCurrentPageObject).locators;
   const waitingSelected = useSelector((_state) => selectWaitingSelectedByPageObj(_state, currentPageObject));
   const generatedSelected = useSelector((_state) => selectGeneratedSelectedByPageObj(_state, currentPageObject));
   const deletedSelected = useSelector((_state) => selectDeletedSelectedByPageObj(_state, currentPageObject));
 
   const [locatorsSnapshot] = useState(locators);
-  const [searchString, setSearchString] = useState("");
 
   const pageBack = () => {
     dispatch(setScriptMessage({}));
@@ -141,7 +139,6 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
     <React.Fragment>
       <div className="jdn__locatorsList">
         <Breadcrumbs />
-        <LocatorsSearch value={searchString} onChange={setSearchString} />
         <LocatorListHeader
           {...{
             locatorIds,
@@ -151,9 +148,7 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
           }}
           render={(viewProps) => (
             <div className="jdn__locatorsList-content">
-              {size(locators) ? (
-                <LocatorsTree pageObject={currentPageObject} {...{ viewProps, locatorIds, searchString }} />
-              ) : null}
+              {size(locators) ? <LocatorsTree pageObject={currentPageObject} {...{ viewProps, locatorIds }} /> : null}
             </div>
           )}
         />

@@ -1,13 +1,12 @@
 import { Checkbox } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import React, { memo, useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import Text from "antd/lib/typography/Text";
 
 import { pageType } from "../../../utils/constants";
 import {
   toggleElementGeneration,
   setChildrenGeneration,
-  setScrollToLocator,
 } from "../../../store/slices/locatorsSlice";
 import { isLocatorIndeterminate, areChildrenChecked } from "../../../store/selectors/locatorSelectors";
 
@@ -19,22 +18,28 @@ import { LocatorEditDialog } from "./LocatoEditDialog";
 import { PageType } from "../../../store/slices/mainSlice.types";
 import { Locator as LocatorInterface } from "../../../store/slices/locatorSlice.types";
 import { RootState } from "../../../store/store";
-import { getLocator } from "./utils";
+import { getLocator, setIndents } from "./utils";
 import { SearchState } from "../LocatorsTree/LocatorsTree";
-
-let timer: NodeJS.Timeout;
 
 interface Props {
   element: LocatorInterface;
   currentPage: PageType;
-  scroll: boolean;
   library: ElementLibrary;
   disabled?: boolean;
   searchState?: SearchState;
+  depth?: number;
+  searchString: string;
 }
 
 // eslint-disable-next-line react/display-name
-export const Locator: React.FC<Props> = memo(({ element, currentPage, scroll, library, searchState }) => {
+export const Locator: React.FC<Props> = ({
+  element,
+  currentPage,
+  library,
+  searchState,
+  depth,
+  searchString,
+}) => {
   const dispatch = useDispatch();
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -47,19 +52,9 @@ export const Locator: React.FC<Props> = memo(({ element, currentPage, scroll, li
   const allChildrenChecked = useSelector((state: RootState) => areChildrenChecked(state, element_id));
   const scriptMessage = useSelector((_state: RootState) => _state.main.scriptMessage);
 
-  const scrollToLocator = () => {
-    if (scroll && generate && ref.current) {
-      ref.current.scrollIntoView({ behavior: "smooth", block: "center" });
-      timer = setTimeout(() => dispatch(setScrollToLocator(null)), 0);
-    }
-  };
-
-  scrollToLocator();
-
   useEffect(() => {
-    scrollToLocator();
-    return () => clearTimeout(timer);
-  }, []);
+    ref && depth && setIndents(ref, depth);
+  }, [searchString]);
 
   useEffect(() => {
     const message = scriptMessage?.message;
@@ -109,24 +104,24 @@ export const Locator: React.FC<Props> = memo(({ element, currentPage, scroll, li
   };
 
   return (
-    <div ref={ref} data-id={element_id} className="jdn__xpath_container">
+    <div ref={ref} className="jdn__xpath_container">
       {currentPage === pageType.locatorsList ? (
         <div className="jdn__xpath_locators">
           <Checkbox
             checked={generate}
             indeterminate={indeterminate}
             onClick={handleOnChange}
-            disabled={searchState === SearchState.Disabled}
+            disabled={searchState === SearchState.Hidden}
           ></Checkbox>
           <Text
             className={`jdn__xpath_item${deleted ? " jdn__xpath_item--deleted" : ""}${
-              searchState === SearchState.Disabled ? " jdn__xpath_item--disabled" : ""
+              searchState === SearchState.Hidden ? " jdn__xpath_item--disabled" : ""
             }`}
           >
             <LocatorIcon {...{ validity, locator, deleted }} />
             {renderColorizedString()}
           </Text>
-          {searchState !== SearchState.Disabled ? (
+          {searchState !== SearchState.Hidden ? (
             <React.Fragment>
               <LocatorCopyButton {...{ element }} />
               <LocatorMenu {...{ element, setIsEditModalOpen }} />
@@ -146,4 +141,4 @@ export const Locator: React.FC<Props> = memo(({ element, currentPage, scroll, li
       ) : null}
     </div>
   );
-});
+};

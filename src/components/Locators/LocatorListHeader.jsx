@@ -21,6 +21,7 @@ import { locatorTaskStatus, LOCATOR_CALCULATION_PRIORITY } from "../../utils/con
 import { locatorGenerationController } from "../../services/locatorGenerationController";
 import { selectInProgressSelectedByPageObject } from "../../store/selectors/pageObjectSelectors";
 import { advanced, deleteOption, downPriority, pause, rerun, restore, upPriority } from "./menuOptions";
+import { LocatorsSearch } from "./LocatorsSearch";
 
 export const EXPAND_STATE = {
   EXPANDED: "Expanded",
@@ -34,6 +35,7 @@ export const EXPAND_STATE = {
 export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedSelected, locatorIds, render }) => {
   const dispatch = useDispatch();
   const [expandAll, setExpandAll] = useState(EXPAND_STATE.EXPANDED);
+  const [searchString, setSearchString] = useState("");
 
   const currentPageObject = useSelector((_state) => _state.pageObject.present.currentPageObject);
   const selected = useMemo(() => [...generatedSelected, ...waitingSelected, ...deletedSelected], [
@@ -151,6 +153,7 @@ export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedS
 
   return (
     <React.Fragment>
+      <LocatorsSearch value={searchString} onChange={setSearchString} />
       <Row className="jdn__locatorsList-header">
         <span className="jdn__locatorsList-header-title">
           <CaretDown
@@ -181,7 +184,7 @@ export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedS
           </Dropdown>
         ) : null}
       </Row>
-      {render({ expandAll, setExpandAll })}
+      {render({ expandAll, setExpandAll, searchString })}
     </React.Fragment>
   );
 };
