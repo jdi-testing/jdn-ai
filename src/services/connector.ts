@@ -185,7 +185,7 @@ export const sendMessage = {
     connector.sendMessage("OPEN_EDIT_LOCATOR", payload, onResponse),
   removeElement: (payload: Locator) => connector.sendMessage("REMOVE_ELEMENT", payload),
   toggle: (payload: { element: Locator; skipScroll?: boolean }) => connector.sendMessage("HIGHLIGHT_TOGGLED", payload),
-  toggleDeleted: (el: Locator) => connector.sendMessage("TOGGLE_DLETED", el),
+  toggleDeleted: (el: Locator) => connector.sendMessage("TOGGLE_DELETED", el),
 };
 
 export default Connector;

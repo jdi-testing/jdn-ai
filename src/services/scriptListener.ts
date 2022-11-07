@@ -46,6 +46,7 @@ export const createListeners = (
       });
     },
     REMOVE_ELEMENT: (payload) => dispatch(toggleDeleted(payload)),
+    RESTORE_ELEMENT: (payload) => dispatch(toggleDeleted(payload)),
     OPEN_EDIT_LOCATOR_REQUEST: () => {
       // handled in Locator
     },

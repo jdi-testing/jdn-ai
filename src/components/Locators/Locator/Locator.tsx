@@ -19,6 +19,7 @@ import { PageType } from "../../../store/slices/mainSlice.types";
 import { Locator as LocatorInterface } from "../../../store/slices/locatorSlice.types";
 import { RootState } from "../../../store/store";
 import { getLocator, setIndents } from "./utils";
+import { size } from "lodash";
 import { SearchState } from "../LocatorsTree/LocatorsTree";
 
 interface Props {
@@ -74,7 +75,7 @@ export const Locator: React.FC<Props> = ({
     } else {
       if (allChildrenChecked) {
         dispatch(toggleElementGeneration(element_id));
-        dispatch(setChildrenGeneration({ locator: element, generate: false }));
+        size(element.children) && dispatch(setChildrenGeneration({ locator: element, generate: false }));
       } else {
         dispatch(setChildrenGeneration({ locator: element, generate: true }));
       }
