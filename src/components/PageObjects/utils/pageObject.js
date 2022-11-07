@@ -17,29 +17,37 @@ export const isNameUnique = (elements, element_id, newName) =>
 export const isPONameUnique = (elements, id, newName) =>
   !elements.find((elem) => toLower(elem.name) === toLower(newName) && elem.id !== id);
 
+export const createElementName = (element, library, uniqueNames, newType) => {
+  const uniqueId = () => element.name ? uniqueNames.indexOf(element.name) : uniqueNames.length;
+
+  if (element.predictedAttrId.length) {
+    let elementTagId = replace(element.predictedAttrId, new RegExp(" ", "g"), "");
+
+    const startsWithNumber = new RegExp("^[0-9].+$");
+    elementTagId = elementTagId.match(startsWithNumber) ? `name${elementTagId}` : elementTagId;
+    if (elementTagId && uniqueNames.indexOf(elementTagId) >= 0) elementTagId += uniqueId();
+
+    return elementTagId;
+  } else {
+    const jdiLabel = (newType || getJDILabel(element.predicted_label, library)).toLowerCase();
+    let elementName =
+      element.tagName === "a" || jdiLabel === element.tagName.toLowerCase() ?
+        jdiLabel :
+        jdiLabel + element.tagName[0].toUpperCase() + element.tagName.slice(1);
+
+    if (uniqueNames.indexOf(elementName) >= 0) elementName += uniqueId();
+
+    return elementName;
+  }
+};
+
 export const createLocatorNames = (elements, library) => {
   const f = elements.filter((el) => el && !el.deleted);
   const uniqueNames = [];
 
-  const getElementName = (element) => {
-    const jdiLabel = getJDILabel(element.predicted_label, library).toLowerCase();
-    return element.tagName === "a" || jdiLabel === element.tagName.toLowerCase() ?
-      jdiLabel :
-      jdiLabel + element.tagName[0].toUpperCase() + element.tagName.slice(1);
-  };
-
-  return f.map((e, i) => {
-    let elementName = getElementName(e);
-    let elementTagId = replace(e.predictedAttrId, new RegExp(" ", "g"), "");
-
-    const startsWithNumber = new RegExp("^[0-9].+$");
-    elementTagId = elementTagId.match(startsWithNumber) ? `name${elementTagId}` : elementTagId;
-
-    if (uniqueNames.indexOf(elementName) >= 0) elementName += i;
-    if (elementTagId && uniqueNames.indexOf(elementTagId) >= 0) elementTagId += i;
-    uniqueNames.push(elementTagId, elementName);
-
-    const name = e.isCustomName ? e.name : elementTagId || elementName;
+  return f.map((e) => {
+    const name = createElementName(e, library, uniqueNames);
+    uniqueNames.push(name);
 
     const type = getJDILabel(e.predicted_label, library);
 
@@ -130,10 +138,7 @@ export const generateAndDownloadZip = async (state, template) => {
             return newZip.file(`src/main/java/site/MySite.java`, newContent, { binary: true });
           });
 
-      await newZip.file(
-          `src/test/java/tests/${po.name}Tests.java`,
-          testFileTemplate(instanceName, po.name)
-      );
+      await newZip.file(`src/test/java/tests/${po.name}Tests.java`, testFileTemplate(instanceName, po.name));
     }
 
     saveZip();

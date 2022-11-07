@@ -1,6 +1,6 @@
 {
   "name": "jdn-ai-chrome-extension",
-  "version": "3.3.283",
+  "version": "3.3.288",
   "description": "jdn-ai chrome extension",
   "scripts": {
     "start": "webpack --watch --env devenv",
@@ -43,6 +43,7 @@
   "type": "module",
   "dependencies": {
     "@ant-design/icons": "4.7.0",
+    "@react-hook/resize-observer": "^1.2.6",
     "@reduxjs/toolkit": "1.7.2",
     "antd": "4.23.1",
     "axios": "0.27.2",

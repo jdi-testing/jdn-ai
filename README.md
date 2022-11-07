@@ -1,5 +1,5 @@
 
-# Video instruction on [Youtube](https://www.youtube.com/watch?v=FJWJjxmJUMw)
+# Video instruction on Youtube here in [English](https://www.youtube.com/watch?v=b2o6R98icRU) or in [Russian](https://www.youtube.com/watch?v=FJWJjxmJUMw)
 Use video instruction or the guide that is below
 
 # Setup plugin
@@ -33,11 +33,11 @@ There are 2 independent parts, which must be installed separately
 *Release version*  
 **macOS/Linux**
 ```shell
-curl --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/rc-1/docker-compose-rc-1.yaml && docker compose up
+curl --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/rc-2/docker-compose-rc.yaml && docker compose up
 ```
 **Windows**
 ```shell
-curl.exe --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/rc-1/docker-compose-rc-1.yaml && docker compose up
+curl.exe --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/rc-2/docker-compose-rc.yaml && docker compose up
 ```
 *Development version*  
 **macOS/Linux**

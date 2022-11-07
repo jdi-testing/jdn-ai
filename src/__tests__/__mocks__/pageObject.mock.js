@@ -235,6 +235,21 @@ export const elementsWithoutNames = [
     }
   },
   {
+    "element_id": "1195797979872788259469412444",
+    "x": 1037.7396240234,
+    "y": 1972.7916870117,
+    "width": 142.2604217529,
+    "height": 15.3333339691,
+    "predicted_label": "list",
+    "predicted_probability": 1,
+    "sort_key": 2181.326557325,
+    "predictedAttrId": "",
+    "tagName": "ul",
+    "locator": {
+      "fullXpath": "/html/body/footer/div/div/ul"
+    }
+  },
+  {
     "element_id": "3265985627872788257228708643",
     "x": 0,
     "y": 709.3333129883,
@@ -324,16 +339,21 @@ export const elementsWithNames = [
   },
   {
     ...elementsWithoutNames[8],
+    "name": "listUl8",
+    "type": "List",
+  },
+  {
+    ...elementsWithoutNames[9],
     "name": "name1001button",
     "type": "Button",
   },
   {
-    ...elementsWithoutNames[9],
+    ...elementsWithoutNames[10],
     "name": "loginButton",
     "type": "Button",
   },
   {
-    ...elementsWithoutNames[10],
+    ...elementsWithoutNames[11],
     "name": "menuFoo",
     "type": "Menu",
   }

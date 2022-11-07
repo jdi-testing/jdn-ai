@@ -5,9 +5,9 @@ import { Button, Modal, Tooltip } from "antd";
 import { LocatorsTree } from "./LocatorsTree";
 import { showOverlay, removeOverlay } from "../../services/pageDataHandlers";
 import {
+  selectCurrentPageObject,
   selectDeletedSelectedByPageObj,
   selectGeneratedSelectedByPageObj,
-  selectPageObjById,
   selectWaitingSelectedByPageObj,
 } from "../../store/selectors/pageObjectSelectors";
 import { isEqual, size } from "lodash";
@@ -30,7 +30,7 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
   const currentPageObject = useSelector((_state) => _state.pageObject.present.currentPageObject);
   const currentPage = useSelector(selectCurrentPage).page;
   const locators = useSelector((_state) => selectLocatorsByPageObject(_state, currentPageObject));
-  const locatorIds = useSelector((_state) => selectPageObjById(_state, currentPageObject).locators);
+  const locatorIds = useSelector(selectCurrentPageObject).locators;
   const waitingSelected = useSelector((_state) => selectWaitingSelectedByPageObj(_state, currentPageObject));
   const generatedSelected = useSelector((_state) => selectGeneratedSelectedByPageObj(_state, currentPageObject));
   const deletedSelected = useSelector((_state) => selectDeletedSelectedByPageObj(_state, currentPageObject));
