@@ -1,5 +1,7 @@
 export const locatorsTreeMock = [
   {
+    depth: 0,
+    searchState: undefined,
     element_id: "7967190244322359771369749968_0",
     parent_id: "",
     height: 0,
@@ -20,6 +22,8 @@ export const locatorsTreeMock = [
     y: 0,
     children: [
       {
+        depth: 1,
+        searchState: undefined,
         element_id: "3969471880322359761484771163_0",
         parent_id: "7967190244322359771369749968",
         height: 60,
@@ -40,6 +44,8 @@ export const locatorsTreeMock = [
         y: 0,
         children: [
           {
+            depth: 3,
+            searchState: undefined,
             element_id: "0045220328322359764482356698_0",
             parent_id: "3969471880322359761484771163",
             height: 60,
@@ -52,13 +58,15 @@ export const locatorsTreeMock = [
             predictedAttrId: "",
             predicted_label: "textarea-autosize",
             predicted_probability: 0.94,
+            searchState: undefined,
             sort_key: 5612.8125,
             tagName: "a",
             type: "TextArea",
             width: 93.546875,
             x: 409.296875,
             y: 0,
-            children: []
+            children: [],
+            depth: 2,
           },
           {
             element_id: "6771529534322359778589411351_0",
@@ -79,11 +87,15 @@ export const locatorsTreeMock = [
             width: 142.265625,
             x: 1262.734375,
             y: 1279.796875,
-            children: []
+            children: [],
+            depth: 2,
+            searchState: undefined,
           },
         ],
       },
       {
+        depth: 1,
+        searchState: undefined,
         element_id: "4899732051322359779677566872_0",
         parent_id: "7967190244322359771369749968",
         height: 20.5,
@@ -104,6 +116,8 @@ export const locatorsTreeMock = [
         y: 19.5,
         children: [
           {
+            depth: 2,
+            searchState: undefined,
             element_id: "4829071593322359778594168519_0",
             parent_id: "4899732051322359779677566872",
             height: 0,
@@ -124,6 +138,8 @@ export const locatorsTreeMock = [
             y: 0,
             children: [
               {
+                depth: 3,
+                searchState: undefined,
                 element_id: "9636042053322359773245578788_0",
                 parent_id: "4829071593322359778594168519",
                 height: 0,
@@ -145,6 +161,8 @@ export const locatorsTreeMock = [
                 children: []
               },
               {
+                depth: 3,
+                searchState: undefined,
                 element_id: "8381553594322359777170267551_0",
                 parent_id: "4829071593322359778594168519",
                 height: 0,
@@ -170,6 +188,8 @@ export const locatorsTreeMock = [
         ]
       },
       {
+        depth: 1,
+        searchState: undefined,
         element_id: "4899732051322359779677566873_0",
         parent_id: "7967190244322359771369749968",
         height: 20.5,
@@ -190,6 +210,8 @@ export const locatorsTreeMock = [
         y: 19.5,
         children: [
           {
+            depth: 2,
+            searchState: undefined,
             element_id: "4829071593322359778594168522_0",
             parent_id: "4899732051322359779677566873",
             height: 0,
@@ -210,6 +232,8 @@ export const locatorsTreeMock = [
             y: 0,
             children: [
               {
+                depth: 3,
+                searchState: undefined,
                 element_id: "9636042053322359773245578777_0",
                 parent_id: "4829071593322359778594168522",
                 height: 0,
@@ -231,6 +255,8 @@ export const locatorsTreeMock = [
                 children: []
               },
               {
+                depth: 3,
+                searchState: undefined,
                 element_id: "8381553594322359777170267550_0",
                 parent_id: "4829071593322359778594168522",
                 height: 0,
