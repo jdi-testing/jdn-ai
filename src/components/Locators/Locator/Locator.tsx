@@ -10,13 +10,13 @@ import {
 } from "../../../store/slices/locatorsSlice";
 import { isLocatorIndeterminate, areChildrenChecked } from "../../../store/selectors/locatorSelectors";
 
-import { isEdited, LocatorIcon } from "./LocatorIcon";
+import { LocatorIcon } from "./LocatorIcon";
 import { LocatorCopyButton } from "./LocatorCopyButton";
 import { LocatorMenu } from "./LocatorMenu";
 import { ElementLibrary } from "../../PageObjects/utils/generationClassesMap";
 import { LocatorEditDialog } from "./LocatoEditDialog";
 import { PageType } from "../../../store/slices/mainSlice.types";
-import { Locator as LocatorInterface, LocatorTaskStatus } from "../../../store/slices/locatorSlice.types";
+import { Locator as LocatorInterface } from "../../../store/slices/locatorSlice.types";
 import { RootState } from "../../../store/store";
 import { getLocator, setIndents } from "./utils";
 import { SearchState } from "../LocatorsTree/LocatorsTree";
@@ -118,9 +118,7 @@ export const Locator: React.FC<Props> = ({
               searchState === SearchState.Hidden ? " jdn__xpath_item--disabled" : ""
             }`}
           >
-            {element.locator.taskStatus !== LocatorTaskStatus.SUCCESS && !isEdited(element.locator) ? (
-              <LocatorIcon {...{ validity, locator, deleted }} />
-            ) : null}
+            <LocatorIcon {...{ validity, locator, deleted }} />
             {renderColorizedString()}
           </Text>
           {searchState !== SearchState.Hidden ? (
