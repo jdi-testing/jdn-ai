@@ -37,7 +37,27 @@ export const createNewName = (
     elements: Locator[]
 ): string => {
   const names = map(elements, "name");
-  const newName = createElementName({...element}, library, names, newType);
+  const newName = createElementName({ ...element }, library, names, newType);
 
   return newName;
+};
+
+export const setIndents = (ref: React.RefObject<HTMLDivElement>, depth: number) => {
+  const jdnIndentClass = "jdn__tree-indent";
+
+  const container = ref.current?.closest(".ant-tree-treenode");
+  const indentContainer = container?.querySelector(".ant-tree-indent");
+  if (!indentContainer) return;
+  while ((indentContainer?.childElementCount || 0) < depth) {
+    const indentElement = indentContainer?.querySelector(":first-child");
+    if (!indentElement) break;
+    const jdnIndentDiv = document.createElement("span");
+    jdnIndentDiv.className = jdnIndentClass;
+    indentContainer?.appendChild(jdnIndentDiv);
+  }
+  while ((indentContainer?.childElementCount || 0) > depth) {
+    const indentElement = indentContainer?.querySelector(`.${jdnIndentClass}`);
+    if (indentElement) indentContainer?.removeChild(indentElement);
+    else break;
+  }
 };

@@ -162,9 +162,16 @@
       }
     }
 
-    & .jdn__locatorsTree-container {
-      overflow-y: auto;
-      height: 100%;
+    & .jdn__locatorsTree {
+      &-container {
+        overflow-y: auto;
+        height: 100%;
+      }
+
+      &-indent {
+        width: 24px;
+        display: inline-block;
+      }
     }
 
     .ant-tree {

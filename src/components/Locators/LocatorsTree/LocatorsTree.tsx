@@ -1,24 +1,25 @@
+import { Tree } from "antd";
+import { size } from "lodash";
 import React, { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-import { isNil, size } from "lodash";
-import { Tree } from "antd";
 
-import { Locator } from "../Locator";
-import { Notifications } from "./Notifications";
+import { CaretDown } from "phosphor-react";
 import { selectCurrentPage } from "../../../store/selectors/mainSelectors";
 import {
   selectCurrentPageObject,
-  selectPageObjLocatorsByProbability,
+  selectPageObjLocatorsByProbability
 } from "../../../store/selectors/pageObjectSelectors";
-import { pageType } from "../../../utils/constants";
-import { CaretDown } from "phosphor-react";
-import { LocatorsProgress } from "./LocatorsProgress";
-import { EXPAND_STATE } from "../LocatorListHeader";
-import { applySearch, convertListToTree, LocatorTree } from "./utils";
-import { PageObjectId } from "../../../store/slices/pageObjectSlice.types";
 import { ElementId, Locator as LocatorType } from "../../../store/slices/locatorSlice.types";
+import { PageObjectId } from "../../../store/slices/pageObjectSlice.types";
 import { RootState } from "../../../store/store";
+import { pageType } from "../../../utils/constants";
 import { defaultLibrary } from "../../PageObjects/utils/generationClassesMap";
+import { Locator } from "../Locator";
+import { EXPAND_STATE } from "../LocatorListHeader";
+import { LocatorsProgress } from "./LocatorsProgress";
+import { Notifications } from "./Notifications";
+import { convertListToTree, LocatorTree } from "./utils";
+import { useSize } from "./useSize";
 
 export enum SearchState {
   None = "none",
@@ -47,12 +48,9 @@ type TreeNode = {
   key: string;
   title: ReactNode;
   children: Array<TreeNode>;
-  searchState: SearchState | undefined;
   disabled?: boolean;
-  disableCheckbox: boolean;
   selectable?: boolean;
   className: string;
-  style: Record<string, string>;
 };
 
 export const LocatorsTree: React.FC<Props> = ({
@@ -62,8 +60,10 @@ export const LocatorsTree: React.FC<Props> = ({
 }) => {
   const [expandedKeys, setExpandedKeys] = useState(locatorIds);
   const [autoExpandParent, setAutoExpandParent] = useState(true);
-  const [containerHeight, setContainerHeight] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const treeRef = useRef(null);
+
+  const containerHeight = useSize(containerRef)?.height;
 
   const { expandAll, setExpandAll, searchString } = viewProps;
 
@@ -71,16 +71,6 @@ export const LocatorsTree: React.FC<Props> = ({
   const locators = useSelector((_state: RootState) => selectPageObjLocatorsByProbability(_state, currentPageObject));
   const scrollToLocator = useSelector((_state: RootState) => _state.locators.present.scrollToLocator);
   const library = useSelector(selectCurrentPageObject)?.library || defaultLibrary;
-
-  useEffect(() => {
-    calcContainerHeight();
-    window.addEventListener("resize", calcContainerHeight);
-    return () => window.removeEventListener("resize", calcContainerHeight);
-  }, []);
-
-  const calcContainerHeight = () => {
-    !isNil(containerRef?.current) && setContainerHeight(containerRef.current.getBoundingClientRect().height);
-  };
 
   useEffect(() => {
     if (expandAll === EXPAND_STATE.EXPANDED) setExpandedKeys(locatorIds);
@@ -92,8 +82,8 @@ export const LocatorsTree: React.FC<Props> = ({
     // eslint-disable-next-line
     // @ts-ignore
     if (!expandedKeys.includes[scrollToLocator]) {
-      setExpandedKeys([...expandedKeys, scrollToLocator]);
       setAutoExpandParent(true);
+      setExpandedKeys([...expandedKeys, scrollToLocator]);
     }
   }, [scrollToLocator]);
 
@@ -113,84 +103,56 @@ export const LocatorsTree: React.FC<Props> = ({
 
   const locatorsMap = createLocatorsMap();
 
-  const locatorsTree = useMemo(() => convertListToTree(locators), [currentPage]);
+  const locatorsTree = useMemo(() => convertListToTree(locators, searchString), [currentPage, searchString]);
 
   const renderTreeNodes = (data: Array<LocatorTree>): Array<TreeNode> => {
     const treeNodes: Array<TreeNode> = [];
-    const rootMap: Record<string, number> = {};
     const map: Record<string, number> = {};
-    const searchedChilds: Array<LocatorTree> = [];
 
     // create tree
     const createTree = (_data: Array<LocatorTree>): Array<TreeNode> => {
       const childNodes: Array<TreeNode> = [];
       _data.forEach((element, i) => {
-        const { element_id, children, parent_id, jdnHash } = element;
-        const searchState = searchString ? applySearch(locatorsMap[element_id], searchString) : undefined;
-        const disabled = searchState === SearchState.Disabled;
-        const hidden = searchState === SearchState.Hidden;
+        const { element_id, children, parent_id, jdnHash, searchState, depth } = element;
 
         const node: TreeNode = {
           key: element_id,
           className: `${
             locatorsMap[element_id].generate && currentPage === pageType.locatorsList ? "jdn__tree-item--selected" : ""
           }${locatorsMap[element_id].isCmHighlighted ? " jdn__tree-item--cm-selected" : ""}`,
-          style: { display: hidden ? "none" : "flex" },
           title: (
             <Locator
-              {...{ element: locatorsMap[element_id], currentPage, library, searchState }}
-              scroll={scrollToLocator === element_id}
+              {...{ element: locatorsMap[element_id], currentPage, library, depth, searchState, searchString }}
             />
           ),
           children: size(children) && children ? createTree(children) : [],
-          searchState,
-          disableCheckbox: disabled,
         };
 
         childNodes.push(node);
         if (!parent_id.length) treeNodes.push(node);
 
         map[jdnHash] = i;
-        if (searchState === SearchState.None && parent_id.length) searchedChilds.push(element);
-        if (!parent_id.length) rootMap[element_id] = i;
       });
       return childNodes;
     };
 
     createTree(data);
 
-    // to show disabled root parents
-    const findParent = (element: LocatorTree) => {
-      const { parent_id } = element;
-      const parentElementIndex = map[parent_id];
-      const parentElement = data[parentElementIndex];
-      const treeIndex = rootMap[parentElement.element_id];
-      if (parentElement.parent_id.length) {
-        findParent(parentElement);
-      } else if (treeNodes[treeIndex].searchState === SearchState.Hidden) {
-        treeNodes[treeIndex].searchState = SearchState.Disabled;
-        treeNodes[treeIndex].style = { display: "flex" };
-        treeNodes[treeIndex].title = (
-          <Locator
-            {...{
-              element: locatorsMap[parentElement.element_id],
-              currentPage,
-              library,
-              searchState: SearchState.Disabled,
-            }}
-            scroll={scrollToLocator === parentElement.element_id}
-          />
-        );
-      }
-    };
-
-    // show root parents
-    searchedChilds.forEach((element) => {
-      findParent(element);
-    });
-
     return treeNodes;
   };
+
+  const treeNodes = renderTreeNodes(locatorsTree);
+
+  useEffect(() => {
+    if (scrollToLocator) {
+      setTimeout(() => {
+        // bug in ant's typings, impossible to create correct ref type
+        // eslint-disable-next-line
+        // @ts-ignore
+        treeRef.current && treeRef.current.scrollTo({ key: scrollToLocator, aligh: "top"});
+      }, 500);
+    }
+  }, [expandedKeys]);
 
   return (
     <React.Fragment>
@@ -199,9 +161,10 @@ export const LocatorsTree: React.FC<Props> = ({
         {/* eslint-disable-next-line */}
         {/* @ts-ignore */}
         <Tree
+          ref={treeRef}
           {...{ expandedKeys, onExpand, autoExpandParent }}
           switcherIcon={<CaretDown color="#878A9C" size={14} />}
-          treeData={renderTreeNodes(locatorsTree)}
+          treeData={treeNodes}
           height={containerHeight || 0}
         />
       </div>

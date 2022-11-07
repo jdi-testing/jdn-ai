@@ -6,7 +6,6 @@ import WarningEditedSvg from "../../../assets/warning-edited.svg";
 import { locatorTaskStatus, VALIDATION_ERROR_TYPE } from "../../../utils/constants";
 import { PauseCircle, Trash, WarningCircle } from "phosphor-react";
 import { useRef } from "react";
-import { useIsInViewport } from "./useIsInViewport";
 
 export const VALIDATION_ERROR_MESSAGES = {
   [VALIDATION_ERROR_TYPE.DUPLICATED_LOCATOR]: "The locator for this element already exists.", // warn
@@ -22,8 +21,6 @@ const isValidLocator = (validity) =>
 
 export const LocatorIcon = ({ validity, locator, deleted }) => {
   const ref = useRef(null);
-
-  const isInViewport = useIsInViewport(ref);
 
   const getTooltipText = () => validity?.locator || "Edited";
 
@@ -62,7 +59,7 @@ export const LocatorIcon = ({ validity, locator, deleted }) => {
       }
       case locatorTaskStatus.STARTED:
       case locatorTaskStatus.PENDING:
-        return isInViewport ? startedIcon : <div style={{ width: "10px" }}></div>; // show <div> to prevent CLS
+        return startedIcon;
       case locatorTaskStatus.REVOKED:
         return revokedIcon;
       case locatorTaskStatus.FAILURE:
