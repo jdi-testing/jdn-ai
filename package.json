@@ -1,6 +1,6 @@
 {
   "name": "jdn-ai-chrome-extension",
-  "version": "3.3.289",
+  "version": "3.4.289",
   "description": "jdn-ai chrome extension",
   "scripts": {
     "start": "webpack --watch --env devenv",
