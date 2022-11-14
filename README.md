@@ -16,7 +16,7 @@ There are 2 independent parts, which must be installed separately
 
 ### **Plugin part**
 *It is recommended to use the version from [Chrome Web store](https://chrome.google.com/webstore/detail/jdn/dldagjdnndapekahhbpeemjifghccldg).*  
-1. [Download](https://github.com/jdi-testing/jdn-ai/releases/tag/3.2.252) the latest version of plugin.
+1. [Download](https://github.com/jdi-testing/jdn-ai/releases/tag/3.4.290) the latest version of plugin.
    *  For the developers team only: [Download](https://github.com/jdi-testing/jdn-ai/releases) the latest version (you need an archive named like the JDN version) as an archive (.zip file)
 2. Unpack the content to any convenient place (the result folder name is “dist”)
 3. Open Chrome Settings → choose option “More tools” → choose option Extensions → turn on the Developer mode → click “Load unpacked”
