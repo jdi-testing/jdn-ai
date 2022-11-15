@@ -49,11 +49,9 @@ export const createElementName = (
     }
 
     return index;
-  }; // rework with do while loop by applying indexes in counter
+  };
 
   const normalizeString = (string: string) => chain(string).trim().camelCase().value();
-
-  // upperFirst
 
   const isUnique = (_name: string) => uniqueNames.indexOf(_name) === -1;
 
