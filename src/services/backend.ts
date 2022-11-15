@@ -9,7 +9,6 @@ export enum HttpEndpoint {
   REPORT_PROBLEM = "report_problem",
   DOWNLOAD_TEMPLATE = "download_template",
   SESSION_ID = "get_session_id",
-  GUIDE = "guide",
   PING_SMTP = "ping_smtp",
 }
 

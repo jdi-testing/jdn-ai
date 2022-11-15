@@ -37,8 +37,9 @@ export const LocatorEditDialog: React.FC<Props> = ({
   library,
   jdnHash,
   validity,
-  tagName,
-  predictedAttrId,
+  elemId,
+  elemName,
+  elemText,
 }) => {
   const [locatorValidity, setLocatorValidity] = useState<string>(validity?.locator || "");
   const [isEditedName, setIsEditedName] = useState<boolean>(Boolean(isCustomName));
@@ -52,10 +53,10 @@ export const LocatorEditDialog: React.FC<Props> = ({
   const _isNameUnique = (value: string) => !isNameUnique(locators, element_id, value);
 
   const handleTypeChange = (value: string) => {
-    if (isEditedName || predictedAttrId) return;
+    if (isEditedName) return;
 
     const newName = createNewName(
-      { element_id, isCustomName, type, name, predictedAttrId, tagName } as Locator,
+      { element_id, isCustomName, type, name, elemId, elemName, elemText } as Locator,
       value,
       library,
       locators

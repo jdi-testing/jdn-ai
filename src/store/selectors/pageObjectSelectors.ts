@@ -38,7 +38,10 @@ export const selectLocatorsByPageObject = createSelector(selectLocators, selectP
   if (!pageObj) return;
   const { locators: locatorIds } = pageObj;
   if (!locatorIds || !size(locatorIds)) return;
-  return locatorIds.map((id) => elements.find(({ element_id }) => element_id === id));
+  return chain(locatorIds)
+      .map((id) => elements.find(({ element_id }) => element_id === id))
+      .compact()
+      .value();
 });
 
 export const selectPageObjLocatorsByProbability = createSelector(

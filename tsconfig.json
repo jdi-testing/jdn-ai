@@ -18,6 +18,7 @@
     "noImplicitAny": true,
     "noImplicitReturns": true,
     "outDir": "./dist/", // path to output directory
+    "resolveJsonModule": true,
     "sourceMap": true, // allow sourcemap support
     "strictFunctionTypes": true,
     "strictNullChecks": true, // enable strict null checks as a best practice

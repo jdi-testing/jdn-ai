@@ -2,11 +2,11 @@ import { createLocatorNames } from "../../components/PageObjects/utils/pageObjec
 import { pageObjectTemplate } from "../../components/PageObjects/utils/pageObjectTemplate";
 import { ElementLibrary } from "../../components/PageObjects/utils/generationClassesMap";
 import {
-  elementsWithNames,
-  elementsWithoutNames,
   locators,
   pageObject,
-} from "../__mocks__/pageObject.mock";
+} from "../__mocks__/pageObjectMocks/pageObject.mock";
+import { elementsWithoutNames } from "../__mocks__/pageObjectMocks/elementsWithoutNames";
+import { elementsWithNames } from "../__mocks__/pageObjectMocks/elementsWithNames";
 
 describe("page object code generation", () => {
   test("page object generated", () => {

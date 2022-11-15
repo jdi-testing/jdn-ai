@@ -55,6 +55,9 @@ export interface Validity {
 export interface Locator extends PredictedEntity {
   children?: string[];
   deleted?: boolean;
+  elemId?: string;
+  elemName?: string;
+  elemText?: string;
   generate: boolean;
   jdnHash: string;
   locator: LocatorValue;
@@ -63,9 +66,7 @@ export interface Locator extends PredictedEntity {
   isCustomName?: boolean;
   isCustomLocator?: boolean;
   parent_id: string;
-  predictedAttrId: string;
   priority?: LocatorCalculationPriority;
-  tagName: string;
   type: ElementLabel;
   validity?: Validity;
 }
