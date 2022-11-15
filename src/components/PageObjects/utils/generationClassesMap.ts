@@ -86,7 +86,7 @@ export enum NgMatClasses {
 }
 
 export type ElementLabel = typeof MUIclasses | typeof HTML5classes | typeof NgMatClasses | typeof defaultClass;
-export type ElementClass = MUIclasses | HTML5classes | typeof defaultClass;
+export type ElementClass = MUIclasses | HTML5classes | NgMatClasses | typeof defaultClass;
 
 export enum ElementLibrary {
   MUI = "MUI",

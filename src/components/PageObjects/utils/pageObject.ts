@@ -1,55 +1,94 @@
-import { chain, entries, lowerFirst, replace, size, toLower } from "lodash";
+import {
+  chain,
+  entries,
+  isEmpty,
+  isNumber,
+  join,
+  lowerFirst,
+  size,
+  subtract,
+  take,
+  toLower,
+  toString,
+  upperFirst,
+} from "lodash";
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
 
 import { connector } from "../../../services/connector";
-import { getJDILabel } from "./generationClassesMap";
+import { ElementLabel, ElementLibrary, getJDILabel } from "./generationClassesMap";
 import { pageObjectTemplate } from "./pageObjectTemplate";
 import javaReservedWords from "./javaReservedWords.json";
 import { selectConfirmedLocators, selectPageObjects } from "../../../store/selectors/pageObjectSelectors";
 import { testFileTemplate } from "../../../services/testTemplate";
+import { ElementId, Locator } from "../../../store/slices/locatorSlice.types";
+import { PageObject } from "../../../store/slices/pageObjectSlice.types";
+import { RootState } from "../../../store/store";
 
-export const isStringMatchesReservedWord = (string) => javaReservedWords.includes(string);
+export const isStringMatchesReservedWord = (string: string) => javaReservedWords.includes(string);
 
-export const isNameUnique = (elements, element_id, newName) =>
+export const isNameUnique = (elements: Array<Locator>, element_id: ElementId, newName: string) =>
   !elements.find((elem) => elem.name === newName && elem.element_id !== element_id);
 
-export const isPONameUnique = (elements, id, newName) =>
+export const isPONameUnique = (elements: Array<PageObject>, id: ElementId, newName: string) =>
   !elements.find((elem) => toLower(elem.name) === toLower(newName) && elem.id !== id);
 
-export const createElementName = (element, library, uniqueNames, newType) => {
-  const uniqueId = () => element.name ? uniqueNames.indexOf(element.name) : uniqueNames.length;
+export const createElementName = (
+    element: Locator,
+    library: ElementLibrary,
+    uniqueNames: Array<string>,
+    newType?: string
+) => {
+  const { elemName, elemId, elemText, predicted_label } = element;
 
-  if (element.predictedAttrId.length) {
-    let elementTagId = replace(element.predictedAttrId, new RegExp(" ", "g"), "");
+  const uniqueIndex = (name: string) => {
+    let index = 1;
 
-    const startsWithNumber = new RegExp("^[0-9].+$");
-    elementTagId = elementTagId.match(startsWithNumber) ? `name${elementTagId}` : elementTagId;
-    if (elementTagId && uniqueNames.indexOf(elementTagId) >= 0) elementTagId += uniqueId();
+    while (!isUnique(name.concat(toString(index)))) {
+      index++;
+    }
 
-    return elementTagId;
-  } else {
-    const jdiLabel = (newType || getJDILabel(element.predicted_label, library)).toLowerCase();
-    let elementName =
-      element.tagName === "a" || jdiLabel === element.tagName.toLowerCase() ?
-        jdiLabel :
-        jdiLabel + element.tagName[0].toUpperCase() + element.tagName.slice(1);
+    return index;
+  }; // rework with do while loop by applying indexes in counter
 
-    if (uniqueNames.indexOf(elementName) >= 0) elementName += uniqueId();
+  const normalizeString = (string: string) => chain(string).trim().camelCase().value();
 
-    return elementName;
-  }
+  // upperFirst
+
+  const isUnique = (_name: string) => uniqueNames.indexOf(_name) === -1;
+
+  const getName = () => (elemName ? normalizeString(elemName) : "");
+  const getId = () => (elemId ? normalizeString(elemId) : "");
+  const getText = (string: string) =>
+    elemText ? join(take(normalizeString(elemText), subtract(60, size(string))), "") : "";
+  const getClass = () => (newType || getJDILabel(predicted_label as keyof ElementLabel, library)).toLowerCase();
+  const getIndex = (string: string) => toString(uniqueIndex(string));
+  const startsWithNumber = new RegExp("^[0-9].+$");
+  const checkNumberFirst = (string: string) => (string.match(startsWithNumber) ? `name${string}` : string);
+
+  let _resultName = "";
+  let index = 0;
+
+  const terms = [getName, getId, getText, getClass, getIndex];
+
+  do {
+    const newTerm = terms[index](_resultName);
+    _resultName = checkNumberFirst(_resultName.concat(size(_resultName) ? upperFirst(newTerm) : newTerm));
+    index++;
+  } while (!isUnique(_resultName) || isEmpty(_resultName));
+
+  return _resultName;
 };
 
-export const createLocatorNames = (elements, library) => {
+export const createLocatorNames = (elements: Array<Locator>, library: ElementLibrary) => {
   const f = elements.filter((el) => el && !el.deleted);
-  const uniqueNames = [];
+  const uniqueNames: Array<string> = [];
 
   return f.map((e) => {
     const name = createElementName(e, library, uniqueNames);
     uniqueNames.push(name);
 
-    const type = getJDILabel(e.predicted_label, library);
+    const type = getJDILabel(e.predicted_label as keyof ElementLabel, library);
 
     return {
       ...e,
@@ -66,12 +105,12 @@ export const getPageAttributes = async () => {
   });
 };
 
-export const getPage = async (locators, title, libraries) => {
+export const getPage = async (locators: Array<Locator>, title: string, libraries: Array<ElementLibrary>) => {
   const pageObject = pageObjectTemplate(locators, title, libraries);
   return pageObject;
 };
 
-export const generatePageObject = async (elements, title, library) => {
+export const generatePageObject = async (elements: Array<Locator>, title: string, library: ElementLibrary) => {
   const page = await getPage(elements, title, [library]);
   const blob = new Blob([page.pageCode], {
     type: "text/plain;charset=utf-8",
@@ -79,7 +118,7 @@ export const generatePageObject = async (elements, title, library) => {
   saveAs(blob, `${page.title}.java`);
 };
 
-export const generateAndDownloadZip = async (state, template) => {
+export const generateAndDownloadZip = async (state: RootState, template: Blob) => {
   const pageObjects = selectPageObjects(state);
 
   const zip = await JSZip.loadAsync(template, { createFolders: true });
@@ -88,9 +127,9 @@ export const generateAndDownloadZip = async (state, template) => {
   const newZip = new JSZip();
 
   // remove root folder by changing files path
-  const filePromises = [];
-  zip.folder(rootFolder).forEach(async (relativePath, file) => {
-    if (file.dir) return;
+  const filePromises: Array<Promise<JSZip.JSZipObject | void>> = [];
+  (zip.folder(rootFolder) || []).forEach(async (relativePath, file) => {
+    if (isNumber(file) || file.dir) return;
 
     filePromises.push(
         file.async("string").then((content) => {
@@ -116,7 +155,7 @@ export const generateAndDownloadZip = async (state, template) => {
       await newZip.file(`src/main/java/site/pages/${page.title}.java`, page.pageCode, { binary: false });
 
       await newZip
-          .file("src/test/resources/test.properties")
+          .file("src/test/resources/test.properties")!
           .async("string")
           .then(function success(content) {
             const testDomain = `${chain(po.url).split("/").dropRight().join("/").value()}/`;
@@ -125,7 +164,7 @@ export const generateAndDownloadZip = async (state, template) => {
           });
 
       await newZip
-          .file("src/main/java/site/MySite.java")
+          .file("src/main/java/site/MySite.java")!
           .async("string")
           .then((content) => {
             if (content.includes(instanceName)) instanceName = `${instanceName}1`;

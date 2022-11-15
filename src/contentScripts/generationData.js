@@ -103,10 +103,10 @@ export const getGenerationAttributes = () => {
       if (!element) {
         return;
       }
-      predictedElement.predictedAttrId = element.id ?
-        camelCase(element.id) :
-        "";
-      predictedElement.tagName = element.tagName.toLowerCase();
+      const attrName = element.getAttribute("name");
+      predictedElement.elemName = attrName ? camelCase(attrName) : "";
+      predictedElement.elemId = element.id ? camelCase(element.id) : "";
+      predictedElement.elemText = element.text;
       predictedElement.locator = {
         fullXpath: getElementTreeXPath(element),
       };

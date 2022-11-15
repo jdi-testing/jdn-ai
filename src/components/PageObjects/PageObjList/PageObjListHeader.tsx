@@ -13,6 +13,7 @@ import { selectPageObjects } from "../../../store/selectors/pageObjectSelectors"
 import { selectLocatorsToGenerate } from "../../../store/selectors/locatorSelectors";
 import { removeAll as removeAllLocators } from "../../../store/slices/locatorsSlice";
 import { removeAll as removeAllPageObjects } from "../../../store/slices/pageObjectSlice";
+import { RootState } from "../../../store/store";
 
 const { confirm } = Modal;
 
@@ -23,7 +24,7 @@ interface Props {
 }
 
 export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isExpanded }) => {
-  const state = useSelector((state) => state);
+  const state = useSelector((state) => state) as RootState;
   const pageObjects = useSelector(selectPageObjects);
   const locatorsToGenerate = useSelector(selectLocatorsToGenerate);
   const enableDownload = useMemo(() => !!size(locatorsToGenerate), [locatorsToGenerate]);
