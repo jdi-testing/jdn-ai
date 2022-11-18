@@ -1,0 +1,153 @@
+/* Tree */
+
+.ant-tree {
+  &-node-content-wrapper {
+    width: 100%;
+
+    &:hover {
+      background-color: transparent !important;
+    }
+
+    &.ant-tree-node-selected {
+      background-color: transparent !important;
+    }
+  }
+
+  & &-node-content-wrapper {
+    padding: 0;
+  }
+
+  &-switcher {
+    width: unset;
+    margin-left: 8px;
+    margin-right: 8px;
+    padding-top: 4px;
+
+    & svg.ant-tree-switcher-icon {
+      transform: rotate(180deg);
+    }
+
+    &_close {
+      & svg.ant-tree-switcher-icon {
+        transform: rotate(0deg);
+      }
+    }
+  }
+}
+
+/* Dropdown */
+
+.ant-dropdown {
+  z-index: 11000;
+}
+
+/* Alert */
+
+.ant-alert-action {
+  margin-right: 28px;
+}
+
+/* Notification */
+
+.ant-notification {
+  position: inherit;
+  margin-right: 0;
+
+  &-notice {
+    width: 100%;
+    margin: 0;
+    max-width: 100%;
+    padding: 0;
+
+    &-closable .ant-notification-notice-message {
+      padding-right: 0;
+    }
+
+    &-close {
+      top: 0;
+      height: 100%;
+      display: flex;
+      align-items: center;
+    }
+
+    &-message {
+      margin-bottom: 0;
+    }
+  }
+}
+
+/* Buttons */
+
+.ant-btn.ant-btn-loading::before {
+  display: none;
+}
+
+.ant-layout-content {
+  padding: 0 16px;
+}
+
+.ant-layout-header {
+  padding: 2px 16px;
+  background-color: transparent;
+  line-height: 20px;
+  height: unset;
+  color: rgba(0, 0, 0, 0.25);
+  font-size: 10px;
+}
+
+/* Checkbox */
+
+.ant-checkbox-wrapper + .ant-checkbox-wrapper {
+  margin-left: 0px;
+}
+
+.ant-checkbox {
+  &-inner {
+    border-radius: 0px;
+  }
+}
+
+.ant-notification-notice {
+  box-shadow: none;
+}
+
+/* Collapse */
+
+.ant-collapse {
+  border: none;
+  border-radius: 0;
+}
+
+.ant-collapse > .ant-collapse-item {
+  border: none;
+}
+
+.ant-collapse-item:last-child > .ant-collapse-content {
+  border: none;
+}
+
+.ant-collapse-content > .ant-collapse-content-box {
+  padding: 0 0;
+
+  .ant-checkbox-wrapper {
+    width: 32px;
+    vertical-align: top;
+  }
+}
+
+.ant-collapse > .ant-collapse-item > .ant-collapse-header {
+  background: #fff;
+  padding: 5px 8px;
+  font-size: 12px;
+
+  & .ant-collapse-arrow {
+    right: 12px;
+  }
+}
+
+/* Upload */
+
+.ant-upload-list {
+  max-height: 104px;
+  overflow-y: auto;
+}

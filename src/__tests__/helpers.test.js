@@ -1,5 +1,5 @@
-import { convertListToTree } from "../components/Locators/LocatorsTree/utils";
-import { floatToPercent } from "../utils/helpers";
+import { convertListToTree } from "../features/locators/locatorsTree/utils";
+import { floatToPercent } from "../common/utils/helpers";
 import { locatorsListMock } from "./__mocks__/locatorsList.mock";
 import { locatorsTreeMock } from "./__mocks__/locatorsTree.mock";
 

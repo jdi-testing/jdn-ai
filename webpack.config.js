@@ -16,7 +16,7 @@ const { loader: _loader } = MiniCssExtractPlugin;
 const mainConfig = {
   devtool: "inline-cheap-module-source-map",
   mode: "development",
-  entry: ["./src/components/App/App.jsx", "./manifest.json"],
+  entry: ["./src/app/App.jsx", "./manifest.json"],
   output: {
     path: join(__dirname, "dist"),
     filename: "[name].bundle.js",
@@ -36,7 +36,7 @@ const mainConfig = {
       filename: "panel.html",
     }),
     new MiniCssExtractPlugin({
-      filename: "./css/[name].css",
+      filename: "[name].css",
     }),
     new pkg.DefinePlugin({
       __REDUX_LOG_ENABLE__: reduxLogEnable,
@@ -92,7 +92,7 @@ const mainConfig = {
             loader: 'style-resources-loader',
             options: {
               patterns: [
-                _resolve(__dirname, 'src/contentScripts/css/variables.less')
+                _resolve(__dirname, 'src/common/styles/variables.less')
               ],
             },
           },
@@ -172,7 +172,7 @@ const indexConfig = {
 
 const contentScripts = {
   entry:
-    "./src/contentScripts/css/contentScripts.less",
+    "./src/pageServices/contentScripts/css/contentScripts.less",
   mode: "production",
   plugins: [new MiniCssExtractPlugin({ filename: "contentScripts.css" })],
   module: {
@@ -192,7 +192,7 @@ const contentScripts = {
             loader: 'style-resources-loader',
             options: {
               patterns: [
-                _resolve(__dirname, 'src/contentScripts/css/variables.less'),
+                _resolve(__dirname, 'src/pageServices/contentScripts/css/variables.less'),
               ],
             },
           },
