@@ -1,0 +1,68 @@
+@import "../../../common/styles/variables.less";
+
+.jdn {
+  /*
+      XPATHES
+      */
+
+  &__xpath {
+    &_container {
+      position: relative;
+
+      & .jdn__locatorsList_button-copy {
+        display: none;
+      }
+
+      :not(.ant-tree-treenode-disabled) &:hover {
+        & .jdn__locatorsList_button-copy {
+          display: inline-block;
+        }
+      }
+    }
+
+    &_locators {
+      display: flex;
+      gap: 8px;
+    }
+
+    &_item {
+      font-family: "Noto Sans Display", sans-serif;
+      font-size: 12px;
+      word-break: break-word;
+      line-height: 16px;
+      padding-top: 6px;
+      padding-bottom: 6px;
+      display: flex;
+      width: calc(100% - 72px);
+      gap: 8px;
+
+      &-locator {
+        color: @xpath-item-color-locator;
+      }
+
+      &-type {
+        color: @xpath-item-color-type;
+      }
+
+      &--deleted,
+      &--deleted &-locator,
+      &--deleted &-type {
+        color: @jdn-disabled-color;
+
+        & svg * {
+          stroke: @jdn-disabled-color;
+        }
+      }
+
+      &--disabled,
+      &--disabled &-locator,
+      &--disabled &-type {
+        color: #d9d9d9;
+
+        & svg * {
+          stroke: #d9d9d9;
+        }
+      }
+    }
+  }
+}

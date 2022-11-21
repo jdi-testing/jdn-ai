@@ -1,0 +1,224 @@
+@import "../../../common/styles/variables.less";
+
+.jdn {
+  &__locatorsList {
+    position: relative;
+
+    &-status {
+      font-size: 14px;
+      min-width: 14px;
+      min-height: 14px;
+      color: #fff;
+      position: relative;
+      top: 2px;
+    }
+
+    &_button {
+      border: none;
+      box-shadow: none;
+      background: transparent !important;
+      padding-left: 0;
+      padding-right: 0;
+      color: #000000a6;
+    }
+
+    &-header {
+      padding: 0 12px 0 8px;
+      margin-top: 13px;
+      margin-bottom: 8px;
+
+      &-title {
+        flex-grow: 1;
+        flex-shrink: 0;
+        display: flex;
+        gap: 8px;
+      }
+
+      &-collapse {
+        margin-top: auto;
+        margin-bottom: auto;
+        cursor: pointer;
+      }
+
+      .jdn__locatorsList_button {
+        margin-right: 3px;
+        height: 28px;
+      }
+
+      .ant-select-multiple .ant-select-selection-item {
+        background-color: #ffffff;
+        border: 1px solid #d9d9d9;
+      }
+
+      .anticon-close {
+        color: #949494;
+      }
+
+      .ant-checkbox {
+        display: block;
+        margin-top: auto;
+        margin-bottom: auto;
+        top: 0;
+      }
+
+      .ant-btn.ant-btn-primary.ant-btn-sm {
+        display: flex;
+        flex-direction: row;
+
+        svg {
+          display: block;
+          margin: auto 6px auto 0;
+        }
+      }
+
+      .ant-btn-sm.ant-btn-icon-only {
+        svg {
+          display: block;
+          margin: auto;
+        }
+      }
+    }
+
+    &-content {
+      background-color: #fff;
+      border: 1px solid #d9d9d9;
+      border-radius: 2px;
+      overflow-y: auto;
+      height: calc(100vh - 194px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      &.jdn__pageObj-content {
+        height: calc(100vh - 94px);
+      }
+
+      .ant-spin {
+        position: relative;
+      }
+
+      .ant-spin-sm .ant-spin-dot {
+        font-size: 10px;
+
+        i {
+          width: 5px;
+          height: 5px;
+        }
+      }
+
+      .ant-spin-dot-item {
+        background-color: @warning-icon-color;
+      }
+
+      .ant-checkbox + span {
+        padding-left: 20px;
+      }
+
+      .jdn__locatorsList_button {
+        &-copy {
+          position: absolute;
+          right: 26px;
+          top: 2px;
+        }
+
+        &-menu {
+          position: absolute;
+          right: 0;
+          top: 2px;
+        }
+      }
+    }
+
+    &-progress {
+      display: flex;
+      flex-direction: column;
+
+      &-text {
+        margin: 8px 16px 0;
+        position: relative;
+
+        .jdn__footnote {
+          color: #000;
+        }
+
+        .ant-notification-notice {
+          box-shadow: none;
+
+          &-btn {
+            right: 16px;
+            margin-top: 0;
+          }
+        }
+      }
+
+      .jdn__progress_hide-info {
+        .ant-progress-text {
+          display: none;
+        }
+      }
+
+      .ant-progress {
+        padding: 0 2px 0 16px;
+      }
+    }
+
+    & .jdn__locatorsTree {
+      &-container {
+        overflow-y: auto;
+        height: 100%;
+      }
+
+      &-indent {
+        width: 24px;
+        display: inline-block;
+      }
+    }
+
+    .ant-tree {
+      &-treenode {
+        width: 100%;
+
+        &.jdn__tree-item--selected {
+          background-color: #ecf7ff;
+
+          &:hover {
+            background-color: #d4eefa;
+          }
+
+          &.jdn__tree-item--cm-selected {
+            background-color: #d4eefa;
+          }
+        }
+
+        &.jdn__tree-item--hidden {
+          display: none;
+        }
+
+        &:hover {
+          background-color: #f2f2f2;
+        }
+
+        &.jdn__tree-item--cm-selected {
+          background-color: #f2f2f2;
+        }
+      }
+    }
+
+    &_search {
+      width: 264px;
+      margin-top: 8px;
+    }
+  }
+
+  &__backConfirm_modal {
+    width: 416px !important;
+
+    .ant-modal-footer {
+      border-top: none;
+    }
+
+    .anticon-exclamation-circle {
+      color: #faad14;
+    }
+  }
+}

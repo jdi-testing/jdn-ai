@@ -1,4 +1,9 @@
-import { ElementLibrary, getJdiClassName, getJDILabel, getTypesMenuOptions } from "../components/PageObjects/utils/generationClassesMap";
+import {
+  ElementLibrary,
+  getJdiClassName,
+  getJDILabel,
+  getTypesMenuOptions,
+} from "../features/pageObjects/utils/generationClassesMap";
 
 const optionsMUI = [
   "Accordion",
