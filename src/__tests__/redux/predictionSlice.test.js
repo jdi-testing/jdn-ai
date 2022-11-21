@@ -3,8 +3,8 @@ import { addLocators, changeLocatorAttributes } from "../../features/locators/lo
 import { selectLocatorById } from "../../features/locators/locatorSelectors";
 import { store } from "../../app/store";
 import { locator1 } from "../__mocks__/locator.mock";
-import { ElementLibrary } from "../../components/PageObjects/utils/generationClassesMap";
 import { locatorTaskStatus } from "../../common/constants/constants";
+import { ElementLibrary } from "../../features/pageObjects/utils/generationClassesMap";
 
 /* global jest*/
 
