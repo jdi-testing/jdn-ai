@@ -15,13 +15,14 @@ export const cancellableActions: Middleware = (store) => (next) => (action) => {
 
   const { type, payload, meta } = action;
   switch (type) {
-    case "locators/changeLocatorAttributes": {
+    case "locators/changeLocatorAttributes":
+    case "pageObject/removeAll":
+    case "pageObject/removePageObject":
+    case "pageObject/changeName": {
       pushNotificationHandler();
       break;
     }
     case "locators/rerunGeneration/pending":
-      pushNotificationHandler(meta.arg);
-      break;
     case "locators/stopGeneration/fulfilled":
       pushNotificationHandler(meta.arg);
       break;
@@ -35,15 +36,6 @@ export const cancellableActions: Middleware = (store) => (next) => (action) => {
       break;
     case "locators/toggleDeletedGroup":
       pushNotificationHandler(payload);
-      break;
-    case "pageObject/removeAll":
-      pushNotificationHandler();
-      break;
-    case "pageObject/removePageObject":
-      pushNotificationHandler();
-      break;
-    case "pageObject/changeName":
-      pushNotificationHandler();
       break;
   }
   return result;

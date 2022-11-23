@@ -30,6 +30,7 @@ import {
 import { LocatorsSearch } from "./LocatorsSearch";
 import { locatorGenerationController } from "../locatorGenerationController";
 import { Menu } from "../../../common/components/menu/Menu";
+import { Filter } from "../../filter/Filter";
 
 export const EXPAND_STATE = {
   EXPANDED: "Expanded",
@@ -162,6 +163,7 @@ export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedS
   return (
     <React.Fragment>
       <LocatorsSearch value={searchString} onChange={setSearchString} />
+      <Filter />
       <Row className="jdn__locatorsList-header">
         <span className="jdn__locatorsList-header-title">
           <CaretDown

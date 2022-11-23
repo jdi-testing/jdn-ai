@@ -44,7 +44,7 @@ const locatorsSlice = createSlice({
         state,
         {
           payload,
-        }: // eslint-disable-next-line max-len
+        }:
       PayloadAction<ChangeLocatorAttributesPayload>
     ) {
       const { type, name, locator, element_id, validity, isCustomName } = payload;
@@ -123,7 +123,6 @@ const locatorsSlice = createSlice({
     },
     setElementGroupGeneration(state, { payload }: PayloadAction<{ ids: string[]; generate: boolean }>) {
       const { ids, generate } = payload;
-      // const newValue: Partial<Locator> = ;
       locatorsAdapter.upsertMany(state, ids.map((id) => ({ element_id: id, generate })) as Locator[]);
     },
     toggleElementGroupGeneration(state, { payload }: PayloadAction<Locator[]>) {
