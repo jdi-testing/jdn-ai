@@ -1,14 +1,14 @@
 import { Middleware } from "@reduxjs/toolkit";
-import { compact, isNil, size } from "lodash";
-import { pageType } from "../../common/constants/constants";
-import { getEnumKeyByValue } from "../../common/utils/helpersTS";
-import { selectLocatorById } from "../../features/locators/locatorSelectors";
-import { ElementId, Locator, LocatorTaskStatus } from "../../features/locators/locatorSlice.types";
-import { selectLocatorsByPageObject } from "../../features/pageObjects/pageObjectSelectors";
-import { ElementLibrary, libraryClasses } from "../../features/pageObjects/utils/generationClassesMap";
-import { sendMessage } from "../../pageServices/connector";
-import { selectCurrentPage } from "../mainSelectors";
-import { RootState } from "../store";
+import { compact, isNil, pick, size } from "lodash";
+import { pageType } from "../common/constants/constants";
+import { getEnumKeyByValue } from "../common/utils/helpersTS";
+import { selectLocatorById } from "../features/locators/locatorSelectors";
+import { ElementId, Locator, LocatorTaskStatus } from "../features/locators/locatorSlice.types";
+import { selectLocatorsByPageObject } from "../features/pageObjects/pageObjectSelectors";
+import { ElementLibrary, libraryClasses } from "../features/pageObjects/utils/generationClassesMap";
+import { sendMessage } from "./connector";
+import { selectCurrentPage } from "../app/mainSelectors";
+import { RootState } from "../app/store";
 
 const notify = (state: RootState, action: any, prevState: RootState) => {
   const { type, payload, meta } = action;
@@ -122,6 +122,9 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       _payload.forEach((element: Locator) => sendMessage.changeStatus(element));
       sendMessage.changeStatus(_payload);
       break;
+    }
+    case "filter/toggleClassFilter": {
+      sendMessage.toggleFilter(pick(payload, ["jdiClass", "value"]));
     }
   }
 };

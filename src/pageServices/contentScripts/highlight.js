@@ -10,6 +10,7 @@ export const highlightOnPage = () => {
   let perception;
   let listenersAreSet;
   let scrollableContainers = [];
+  const classFilter = {};
 
   const clearState = () => {
     nodes = null;
@@ -90,8 +91,7 @@ export const highlightOnPage = () => {
     if (element.deleted) {
       if (div) {
         div.setAttribute("jdn-status", "DELETED");
-        toggleElement({ element, skipScroll: true });
-        // div.remove();
+        toggleElement({ element, skipScroll: true }); // not sure if it's needed
       }
     } else {
       div.setAttribute("jdn-status", element.locator.taskStatus);
@@ -316,6 +316,19 @@ export const highlightOnPage = () => {
     });
   };
 
+  const applyFilter = ({ jdiClass, value }) => {
+    const classValue = Object.hasOwn(classFilter, jdiClass) ? classFilter[jdiClass] : true;
+    if (classValue === value) return;
+
+    classFilter[jdiClass] = value;
+    const filterElements = predictedElements.filter((elem) => elem.type === jdiClass);
+
+    filterElements.forEach((element) => {
+      const div = document.getElementById(element.jdnHash);
+      div.setAttribute("jdn-filtered", value ? "true" : false);
+    });
+  };
+
   const messageHandler = ({ message, param }, sender, sendResponse) => {
     if (message === "SET_HIGHLIGHT") {
       if (!listenersAreSet) setDocumentListeners();
@@ -353,6 +366,11 @@ export const highlightOnPage = () => {
 
     if (message === "CHANGE_STATUS") {
       changeGenerationStatus(param);
+    }
+
+    if (message === "TOGGLE_FILTER") {
+      console.log("TOGGLE_FILTER");
+      applyFilter(param);
     }
 
     if (message === "PING_SCRIPT" && param.scriptName === "highlightOnPage") {

@@ -16,8 +16,6 @@ export const Filter = () => {
 
   const classFilter = useSelector((state: RootState) => selectClassFiltefByPO(state, pageObject.id));
 
-  console.log(classFilter);
-
   const onClick = (key: string, oldValue: boolean) => () => {
     dispatch(
         toggleClassFilter({

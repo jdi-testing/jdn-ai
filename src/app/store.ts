@@ -7,7 +7,7 @@ import { createListeners } from "../pageServices/scriptListener";
 import mainSlice from "./mainSlice";
 import { cancellableActions } from "./middlewares/cancellableActions";
 import { logger } from "./middlewares/logger";
-import { scriptNotifier } from "./middlewares/scriptNotifier";
+import { scriptNotifier } from "../pageServices/scriptNotifier";
 
 const rootReducer = {
   main: mainSlice,
