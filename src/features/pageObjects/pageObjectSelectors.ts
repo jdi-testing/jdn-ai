@@ -1,7 +1,9 @@
 import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
-import { chain, isNil, last, size } from "lodash";
+import { chain, get, isNil, last, size } from "lodash";
 import { RootState } from "../../app/store";
 import { locatorTaskStatus } from "../../common/constants/constants";
+import { FilterKey } from "../filter/filter.types";
+import { selectFilterById } from "../filter/filterSelectors";
 import { isProgressStatus } from "../locators/locatorGenerationController";
 import { selectGeneratedLocators, selectLocators, selectLocatorsByProbability } from "../locators/locatorSelectors";
 import { PageObject, PageObjectId } from "./pageObjectSlice.types";
@@ -48,6 +50,19 @@ export const selectPageObjLocatorsByProbability = createSelector(
     selectLocatorsByProbability,
     (state: RootState, pageObjId: PageObjectId) => selectPageObjById(state, pageObjId)?.locators || [],
     (locByProbability, locByPageObj) => locByProbability.filter((loc) => locByPageObj.includes(loc.element_id))
+);
+
+export const selectFilteredLocators = createSelector(
+    selectLocatorsByPageObject,
+    selectFilterById,
+    (locators, filter) => {
+      if (!filter) return locators;
+      const _locators = locators?.filter((loc) => {
+        const filterValue = filter[FilterKey.JDIclassFilter];
+        return Object.hasOwn(filterValue, loc.type) ? get(filterValue, loc.type) : true;
+      });
+      return _locators;
+    }
 );
 
 export const selectLocatorsToConfirm = createSelector(selectLocatorsByPageObject, (elements = []) =>

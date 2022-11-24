@@ -1,4 +1,5 @@
 import { cloneDeep, map as mapFunction, size } from "lodash";
+import { convertToListWithChildren } from "../../../common/utils/helpers";
 import { getLocator } from "../locator/utils";
 import { Locator } from "../locatorSlice.types";
 import { SearchState } from "./LocatorsTree";
@@ -61,4 +62,37 @@ export const convertListToTree = (_list: Array<Locator>, searchString = "") => {
   }
 
   return tree.filter((treeElement) => treeElement.children?.length || treeElement.searchState !== SearchState.Hidden);
+};
+
+export const setNewParents = (origLocators: Array<Locator>, filteredLocators: Array<Locator>) => {
+  const origMap: Record<string, Locator> = {};
+  const filteredMap: Record<string, Locator> = {};
+  const newLocators: Array<Locator> = [];
+
+  for (let i = 0; i < origLocators.length; i++) {
+    const element = origLocators[i];
+    origMap[element.jdnHash] = element;
+  }
+
+  filteredLocators.forEach((element) => {
+    filteredMap[element.jdnHash] = element;
+  });
+
+  filteredLocators.forEach((element) => {
+    let parent_id = element.parent_id;
+    const newElement = { ...element };
+    if (parent_id === "" || filteredMap[parent_id] !== undefined) {
+      newLocators.push(newElement);
+      return;
+    }
+
+    do {
+      parent_id = origMap[parent_id].parent_id;
+      newElement.parent_id = parent_id !== "" ? filteredMap[parent_id]?.jdnHash : "";
+    } while (newElement.parent_id === undefined);
+
+    newLocators.push(newElement);
+  });
+
+  return convertToListWithChildren(newLocators);
 };

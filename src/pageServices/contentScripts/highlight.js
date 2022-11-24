@@ -325,7 +325,7 @@ export const highlightOnPage = () => {
 
     filterElements.forEach((element) => {
       const div = document.getElementById(element.jdnHash);
-      div.setAttribute("jdn-filtered", value ? "true" : false);
+      if (div) div.setAttribute("jdn-filtered", value ? "true" : false);
     });
   };
 

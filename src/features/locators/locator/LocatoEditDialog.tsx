@@ -4,7 +4,7 @@ import TextArea from "antd/lib/input/TextArea";
 import React, { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DialogWithForm } from "../../../common/components/DialogWithForm";
-import { ElementLabel, ElementLibrary, getTypesMenuOptions } from "../../pageObjects/utils/generationClassesMap";
+import { ElementClass, ElementLibrary, getTypesMenuOptions } from "../../pageObjects/utils/generationClassesMap";
 import { isNameUnique, isStringMatchesReservedWord } from "../../pageObjects/utils/pageObject";
 import { selectLocators } from "../locatorSelectors";
 import { Locator, ValidationErrorType } from "../locatorSlice.types";
@@ -19,7 +19,7 @@ interface Props extends Locator {
 
 interface EditFormProps {
   name: string;
-  type: ElementLabel;
+  type: ElementClass;
   locator: string;
 }
 

@@ -10,7 +10,8 @@ import { pageType } from "../../../common/constants/constants";
 import { ElementId, Locator as LocatorType } from "../locatorSlice.types";
 import {
   selectCurrentPageObject,
-  selectPageObjLocatorsByProbability
+  selectFilteredLocators,
+  selectPageObjLocatorsByProbability,
 } from "../../pageObjects/pageObjectSelectors";
 import { PageObjectId } from "../../pageObjects/pageObjectSlice.types";
 import { defaultLibrary } from "../../pageObjects/utils/generationClassesMap";
@@ -19,7 +20,7 @@ import { EXPAND_STATE } from "../locatorsPage/LocatorListHeader";
 import { LocatorsProgress } from "./LocatorsProgress";
 import { Notifications } from "./notifications/Notifications";
 import { useSize } from "./useSize";
-import { convertListToTree, LocatorTree } from "./utils";
+import { convertListToTree, LocatorTree, setNewParents } from "./utils";
 
 export enum SearchState {
   None = "none",
@@ -53,11 +54,7 @@ type TreeNode = {
   className: string;
 };
 
-export const LocatorsTree: React.FC<Props> = ({
-  pageObject: currentPageObject,
-  locatorIds,
-  viewProps,
-}) => {
+export const LocatorsTree: React.FC<Props> = ({ pageObject: currentPageObject, locatorIds, viewProps }) => {
   const [expandedKeys, setExpandedKeys] = useState(locatorIds);
   const [autoExpandParent, setAutoExpandParent] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -68,7 +65,12 @@ export const LocatorsTree: React.FC<Props> = ({
   const { expandAll, setExpandAll, searchString } = viewProps;
 
   const currentPage = useSelector(selectCurrentPage).page;
-  const locators = useSelector((_state: RootState) => selectPageObjLocatorsByProbability(_state, currentPageObject));
+  const origLocators = useSelector((_state: RootState) =>
+    selectPageObjLocatorsByProbability(_state, currentPageObject)
+  );
+  const filteredLocators = useSelector((_state: RootState) => selectFilteredLocators(_state, currentPageObject));
+  const locators =
+    size(origLocators) !== size(filteredLocators) ? setNewParents(origLocators, filteredLocators || []) : origLocators;
   const scrollToLocator = useSelector((_state: RootState) => _state.locators.present.scrollToLocator);
   const library = useSelector(selectCurrentPageObject)?.library || defaultLibrary;
 
@@ -103,7 +105,11 @@ export const LocatorsTree: React.FC<Props> = ({
 
   const locatorsMap = createLocatorsMap();
 
-  const locatorsTree = useMemo(() => convertListToTree(locators, searchString), [currentPage, searchString]);
+  const locatorsTree = useMemo(() => convertListToTree(locators, searchString), [
+    currentPage,
+    searchString,
+    filteredLocators,
+  ]);
 
   const renderTreeNodes = (data: Array<LocatorTree>): Array<TreeNode> => {
     const treeNodes: Array<TreeNode> = [];
@@ -149,7 +155,7 @@ export const LocatorsTree: React.FC<Props> = ({
         // bug in ant's typings, impossible to create correct ref type
         // eslint-disable-next-line
         // @ts-ignore
-        treeRef.current && treeRef.current.scrollTo({ key: scrollToLocator, aligh: "top"});
+        treeRef.current && treeRef.current.scrollTo({ key: scrollToLocator, aligh: "top" });
       }, 500);
     }
   }, [expandedKeys]);
