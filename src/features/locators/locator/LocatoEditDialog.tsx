@@ -1,10 +1,12 @@
 import { Form, Input, Select } from "antd";
 import { Rule, RuleObject } from "antd/lib/form";
 import TextArea from "antd/lib/input/TextArea";
-import React, { useMemo, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../app/store";
 import { DialogWithForm } from "../../../common/components/DialogWithForm";
-import { ElementClass, ElementLibrary, getTypesMenuOptions } from "../../pageObjects/utils/generationClassesMap";
+import { selectAvailableClasses } from "../../filter/filterSelectors";
+import { ElementClass, ElementLibrary } from "../../pageObjects/utils/generationClassesMap";
 import { isNameUnique, isStringMatchesReservedWord } from "../../pageObjects/utils/pageObject";
 import { selectLocators } from "../locatorSelectors";
 import { Locator, ValidationErrorType } from "../locatorSlice.types";
@@ -42,7 +44,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
   const [isEditedName, setIsEditedName] = useState<boolean>(Boolean(isCustomName));
 
   const locators = useSelector(selectLocators);
-  const types = useMemo(() => getTypesMenuOptions(library), [library]);
+  const types = useSelector((_state: RootState) => selectAvailableClasses(_state));
 
   const [form] = Form.useForm<EditFormProps>();
   const dispatch = useDispatch();
