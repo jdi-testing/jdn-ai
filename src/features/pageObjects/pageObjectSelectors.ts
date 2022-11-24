@@ -6,6 +6,7 @@ import { FilterKey } from "../filter/filter.types";
 import { selectFilterById } from "../filter/filterSelectors";
 import { isProgressStatus } from "../locators/locatorGenerationController";
 import { selectGeneratedLocators, selectLocators, selectLocatorsByProbability } from "../locators/locatorSelectors";
+import { Locator } from "../locators/locatorSlice.types";
 import { PageObject, PageObjectId } from "./pageObjectSlice.types";
 
 export const pageObjAdapter = createEntityAdapter<PageObject>({
@@ -65,11 +66,14 @@ export const selectFilteredLocators = createSelector(
     }
 );
 
-export const selectLocatorsToConfirm = createSelector(selectLocatorsByPageObject, (elements = []) =>
-  elements.filter((elem) => elem?.generate && !elem.deleted)
-);
+const filterConfirmedLocators = (elements: Array<Locator> = []) =>
+  elements.filter((elem) => elem?.generate && !elem.deleted);
 
-export const selectConfirmedLocators = selectLocatorsToConfirm;
+export const selectLocatorsToConfirm = createSelector(selectLocatorsByPageObject, filterConfirmedLocators);
+
+export const selectFilteredConfirmedLocators = createSelector(selectFilteredLocators, filterConfirmedLocators);
+
+export const selectConfirmedLocators = selectFilteredConfirmedLocators;
 
 export const selectGeneratedByPageObj = createSelector(
     selectGeneratedLocators,

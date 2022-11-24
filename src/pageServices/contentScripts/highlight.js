@@ -369,7 +369,6 @@ export const highlightOnPage = () => {
     }
 
     if (message === "TOGGLE_FILTER") {
-      console.log("TOGGLE_FILTER");
       applyFilter(param);
     }
 

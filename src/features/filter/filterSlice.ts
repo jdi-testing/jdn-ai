@@ -9,6 +9,13 @@ const filterSlice = createSlice({
   name: "filter",
   initialState: filterAdapter.getInitialState({}),
   reducers: {
+    removeAll(state) {
+      filterAdapter.removeAll(state);
+    },
+    removeFilters(state, {payload} : PayloadAction<{pageObjectIds: PageObjectId[]}>) {
+      const { pageObjectIds } = payload;
+      filterAdapter.removeMany(state, pageObjectIds);
+    },
     toggleClassFilter(
         state,
         {
@@ -32,4 +39,4 @@ const filterSlice = createSlice({
 });
 
 export default filterSlice.reducer;
-export const { toggleClassFilter } = filterSlice.actions;
+export const { removeAll, removeFilters, toggleClassFilter } = filterSlice.actions;
