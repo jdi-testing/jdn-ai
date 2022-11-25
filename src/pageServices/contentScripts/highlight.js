@@ -317,11 +317,18 @@ export const highlightOnPage = () => {
   };
 
   const applyFilter = ({ jdiClass, value }) => {
-    const classValue = Object.hasOwn(classFilter, jdiClass) ? classFilter[jdiClass] : true;
-    if (classValue === value) return;
+    let filterElements = [];
 
-    classFilter[jdiClass] = value;
-    const filterElements = predictedElements.filter((elem) => elem.type === jdiClass);
+    if (!jdiClass) { // in case of Select All
+      filterElements = [...predictedElements];
+      filterElements.forEach((element) => classFilter[element.type] = value);
+    } else {
+      const classValue = Object.hasOwn(classFilter, jdiClass) ? classFilter[jdiClass] : true;
+      if (classValue === value) return;
+
+      classFilter[jdiClass] = value;
+      filterElements = predictedElements.filter((elem) => elem.type === jdiClass);
+    }
 
     filterElements.forEach((element) => {
       const div = document.getElementById(element.jdnHash);
@@ -369,6 +376,7 @@ export const highlightOnPage = () => {
     }
 
     if (message === "TOGGLE_FILTER") {
+      console.log("TOGGLE_FILTER");
       applyFilter(param);
     }
 

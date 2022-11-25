@@ -162,8 +162,10 @@ export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedS
 
   return (
     <React.Fragment>
-      <LocatorsSearch value={searchString} onChange={setSearchString} />
-      <Filter />
+      <Row justify="space-between">
+        <LocatorsSearch value={searchString} onChange={setSearchString} />
+        <Filter />
+      </Row>
       <Row className="jdn__locatorsList-header">
         <span className="jdn__locatorsList-header-title">
           <CaretDown

@@ -123,7 +123,8 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       sendMessage.changeStatus(_payload);
       break;
     }
-    case "filter/toggleClassFilter": {
+    case "filter/toggleClassFilter":
+    case "filter/toggleClassFilterAll": {
       sendMessage.toggleFilter(pick(payload, ["jdiClass", "value"]));
     }
   }

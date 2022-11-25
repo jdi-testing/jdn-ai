@@ -12,7 +12,7 @@ const filterSlice = createSlice({
     removeAll(state) {
       filterAdapter.removeAll(state);
     },
-    removeFilters(state, {payload} : PayloadAction<{pageObjectIds: PageObjectId[]}>) {
+    removeFilters(state, { payload }: PayloadAction<{ pageObjectIds: PageObjectId[] }>) {
       const { pageObjectIds } = payload;
       filterAdapter.removeMany(state, pageObjectIds);
     },
@@ -35,8 +35,24 @@ const filterSlice = createSlice({
         });
       }
     },
+    toggleClassFilterAll(
+        state,
+        { payload }: PayloadAction<{ pageObjectId: PageObjectId; library: ElementLibrary; value: boolean }>
+    ) {
+      const { pageObjectId, value, library } = payload;
+      let newValue = simpleSelectFilterById(state, pageObjectId);
+      if (!newValue) {
+        newValue = { pageObjectId, [FilterKey.JDIclassFilter]: jdiClassFilterInit(library) };
+      }
+      const filter = { ...newValue[FilterKey.JDIclassFilter] };
+      // don't know how to fix it
+      // eslint-disable-next-line
+      // @ts-ignore
+      Object.keys(filter).forEach((key) => (filter[key] = value));
+      filterAdapter.upsertOne(state, { ...newValue, [FilterKey.JDIclassFilter]: filter });
+    },
   },
 });
 
 export default filterSlice.reducer;
-export const { removeAll, removeFilters, toggleClassFilter } = filterSlice.actions;
+export const { removeAll, removeFilters, toggleClassFilter, toggleClassFilterAll } = filterSlice.actions;
