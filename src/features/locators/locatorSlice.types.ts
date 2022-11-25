@@ -1,4 +1,4 @@
-import { ElementLabel } from "../pageObjects/utils/generationClassesMap";
+import { ElementClass } from "../pageObjects/utils/generationClassesMap";
 
 
 export enum LocatorsGenerationStatus {
@@ -68,7 +68,7 @@ export interface Locator extends PredictedEntity {
   isCustomLocator?: boolean;
   parent_id: string;
   priority?: LocatorCalculationPriority;
-  type: ElementLabel;
+  type: ElementClass;
   validity?: Validity;
 }
 

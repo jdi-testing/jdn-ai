@@ -5,7 +5,7 @@ import { stopGenerationReducer } from "../../common/thunks/stopGeneration";
 import { stopGenerationGroupReducer } from "../../common/thunks/stopGenerationGroup";
 import { generateLocatorsReducer } from "../pageObjects/pageObjList/pageObjGeneration/generateLocators";
 import { identifyElementsReducer } from "../pageObjects/pageObjList/pageObjGeneration/identifyElements";
-import { ElementLabel, ElementLibrary } from "../pageObjects/utils/generationClassesMap";
+import { ElementClass, ElementLibrary } from "../pageObjects/utils/generationClassesMap";
 import { locatorsAdapter, simpleSelectLocatorById } from "./locatorSelectors";
 import {
   ElementId,
@@ -24,7 +24,7 @@ const initialState: LocatorsState = {
 
 export interface ChangeLocatorAttributesPayload {
   element_id: ElementId;
-  type: ElementLabel;
+  type: ElementClass;
   name: string;
   locator: string;
   validity: Validity;
@@ -44,7 +44,7 @@ const locatorsSlice = createSlice({
         state,
         {
           payload,
-        }: // eslint-disable-next-line max-len
+        }:
       PayloadAction<ChangeLocatorAttributesPayload>
     ) {
       const { type, name, locator, element_id, validity, isCustomName } = payload;
@@ -123,7 +123,6 @@ const locatorsSlice = createSlice({
     },
     setElementGroupGeneration(state, { payload }: PayloadAction<{ ids: string[]; generate: boolean }>) {
       const { ids, generate } = payload;
-      // const newValue: Partial<Locator> = ;
       locatorsAdapter.upsertMany(state, ids.map((id) => ({ element_id: id, generate })) as Locator[]);
     },
     toggleElementGroupGeneration(state, { payload }: PayloadAction<Locator[]>) {

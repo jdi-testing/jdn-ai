@@ -1,6 +1,7 @@
 import { isUndefined } from "lodash";
 import { SCRIPT_ERROR } from "../common/constants/constants";
 import { Locator, PredictedEntity } from "../features/locators/locatorSlice.types";
+import { ElementClass } from "../features/pageObjects/utils/generationClassesMap";
 import { assignDataLabels } from "./contentScripts/assignDataLabels";
 import { runContextMenu } from "./contentScripts/contextmenu";
 import { highlightOnPage } from "./contentScripts/highlight";
@@ -186,6 +187,7 @@ export const sendMessage = {
   removeElement: (payload: Locator) => connector.sendMessage("REMOVE_ELEMENT", payload),
   toggle: (payload: { element: Locator; skipScroll?: boolean }) => connector.sendMessage("HIGHLIGHT_TOGGLED", payload),
   toggleDeleted: (el: Locator) => connector.sendMessage("TOGGLE_DELETED", el),
+  toggleFilter: (payload: {jdiClass: ElementClass, value: boolean}) => connector.sendMessage("TOGGLE_FILTER", payload),
 };
 
 export default Connector;

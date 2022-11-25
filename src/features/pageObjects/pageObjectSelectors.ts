@@ -1,9 +1,12 @@
 import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
-import { chain, isNil, last, size } from "lodash";
+import { chain, get, isNil, last, size } from "lodash";
 import { RootState } from "../../app/store";
 import { locatorTaskStatus } from "../../common/constants/constants";
+import { FilterKey } from "../filter/filter.types";
+import { selectFilterById } from "../filter/filterSelectors";
 import { isProgressStatus } from "../locators/locatorGenerationController";
 import { selectGeneratedLocators, selectLocators, selectLocatorsByProbability } from "../locators/locatorSelectors";
+import { Locator } from "../locators/locatorSlice.types";
 import { PageObject, PageObjectId } from "./pageObjectSlice.types";
 
 export const pageObjAdapter = createEntityAdapter<PageObject>({
@@ -50,11 +53,27 @@ export const selectPageObjLocatorsByProbability = createSelector(
     (locByProbability, locByPageObj) => locByProbability.filter((loc) => locByPageObj.includes(loc.element_id))
 );
 
-export const selectLocatorsToConfirm = createSelector(selectLocatorsByPageObject, (elements = []) =>
-  elements.filter((elem) => elem?.generate && !elem.deleted)
+export const selectFilteredLocators = createSelector(
+    selectLocatorsByPageObject,
+    selectFilterById,
+    (locators, filter) => {
+      if (!filter) return locators;
+      const _locators = locators?.filter((loc) => {
+        const filterValue = filter[FilterKey.JDIclassFilter];
+        return Object.hasOwn(filterValue, loc.type) ? get(filterValue, loc.type) : true;
+      });
+      return _locators;
+    }
 );
 
-export const selectConfirmedLocators = selectLocatorsToConfirm;
+const filterConfirmedLocators = (elements: Array<Locator> = []) =>
+  elements.filter((elem) => elem?.generate && !elem.deleted);
+
+export const selectLocatorsToConfirm = createSelector(selectLocatorsByPageObject, filterConfirmedLocators);
+
+export const selectFilteredConfirmedLocators = createSelector(selectFilteredLocators, filterConfirmedLocators);
+
+export const selectConfirmedLocators = selectFilteredConfirmedLocators;
 
 export const selectGeneratedByPageObj = createSelector(
     selectGeneratedLocators,

@@ -13,6 +13,7 @@ import { selectPageObjects } from "../../pageObjectSelectors";
 import { selectLocatorsToGenerate } from "../../../locators/locatorSelectors";
 import { removeAll as removeAllLocators } from "../../../locators/locatorsSlice";
 import { removeAll as removeAllPageObjects } from "../../pageObjectSlice";
+import { removeAll as removeAllFilters } from "../../../filter/filterSlice";
 import { RootState } from "../../../../app/store";
 
 const { confirm } = Modal;
@@ -51,6 +52,7 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
       onOk: () => {
         dispatch(removeAllLocators());
         dispatch(removeAllPageObjects());
+        dispatch(removeAllFilters());
       },
     });
   };
