@@ -86,7 +86,7 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
           onOk: handleOk,
           enableOk,
           confirmTitle: "You have unsaved changes",
-          confirmContent: "The list has been edited and the changes have not been accepted, do you want to save them?",
+          confirmContent: "You have unsaved changes in the locator list. Do you want to discard them?",
         });
       }
     };
