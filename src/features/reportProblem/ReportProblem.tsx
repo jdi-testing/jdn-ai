@@ -119,7 +119,7 @@ export const ReportProblem = () => {
       if (info.file.uid === _file.uid && _file.originFileObj) {
         if (_file.size !== 0 && (_file.size || Infinity) / 1024 / 1024 > 2) {
           _file.status = "error";
-          _file.response = "Max file size is 2 Mb";
+          _file.response = "The file cannot weigh more than 2Mb";
           _file.error = true;
           return _file;
         }
@@ -128,7 +128,7 @@ export const ReportProblem = () => {
           _file.url = (await toBase64(_file.originFileObj)) as string;
         } else {
           _file.status = "error";
-          _file.response = "This file type isn't allowed";
+          _file.response = "Invalid file extension, only image/*, *.zip, *.rar, *.json, *.txt";
           _file.error = true;
         }
         _file.linkProps = { download: _file.name };
