@@ -7,7 +7,6 @@ export const highlightOnPage = () => {
   let port;
   let nodes;
   let predictedElements;
-  let perception;
   let listenersAreSet;
   let scrollableContainers = [];
   const classFilter = {};
@@ -53,11 +52,6 @@ export const highlightOnPage = () => {
       elementLeft > containerRight ||
       elementRight < containerLeft
     );
-  };
-
-  const createLabelText = (element) => {
-    const predictedProbabilityPercent = Math.round(element.predicted_probability * 100);
-    return `${predictedProbabilityPercent}%, ${element.name}`;
   };
 
   const getClassName = (element) => {
@@ -114,7 +108,7 @@ export const highlightOnPage = () => {
 
   const changeElementName = (element) => {
     const div = updateElement(element);
-    div.querySelector(".jdn-class").textContent = createLabelText(element);
+    div.querySelector(".jdn-class").textContent = element.name;
   };
 
   const changeGenerationStatus = (element) => {
@@ -149,8 +143,7 @@ export const highlightOnPage = () => {
       const el = predictedElements.find((e) => e.element_id === element_id);
       return `
       <p class="jdn-tooltip-paragraph"><b>Name:</b> ${el.name}</p>
-      <p class="jdn-tooltip-paragraph"><b>Type:</b> ${el.type}</p>
-      <p class="jdn-tooltip-paragraph"><b>Prediction accuracy:</b> ${Math.round(el.predicted_probability * 100)}%</p>`;
+      <p class="jdn-tooltip-paragraph"><b>Type:</b> ${el.type}</p>`;
     };
 
     const checkTooltipVisibility = (tooltip, label) => {
@@ -185,7 +178,7 @@ export const highlightOnPage = () => {
     const labelContainer = document.createElement("div");
     const label = document.createElement("span");
     label.className = "jdn-label";
-    label.innerHTML = `<span class="jdn-class">${createLabelText(predictedElement)}</span>`;
+    label.innerHTML = `<span class="jdn-class">${predictedElement.name}</span>`;
     label.addEventListener("mouseover", () => {
       Object.assign(tooltip.style, tooltipDefaultStyle(label.getBoundingClientRect()));
       tooltip.innerHTML = tooltipInnerHTML();
@@ -224,7 +217,6 @@ export const highlightOnPage = () => {
   const findAndHighlight = (param) => {
     if (param) {
       if (!predictedElements) predictedElements = param.elements;
-      perception = param.perception;
     }
     let query = "";
     predictedElements.forEach(({ deleted, jdnHash }) => {
@@ -236,12 +228,7 @@ export const highlightOnPage = () => {
       if (isInViewport(element) && !isHiddenByOverflow(element)) {
         const hash = element.getAttribute("jdn-hash");
         const highlightElement = document.getElementById(hash);
-        const isAbovePerceptionTreshold = predictedElements.find((e) => {
-          return hash === e.jdnHash && e.predicted_probability >= perception;
-        });
-        if (!!highlightElement && !isAbovePerceptionTreshold) {
-          highlightElement.remove();
-        } else if (!highlightElement && isAbovePerceptionTreshold) {
+        if (!highlightElement) {
           const predicted = predictedElements.find((e) => e.jdnHash === hash);
           drawRectangle(element, predicted);
         }

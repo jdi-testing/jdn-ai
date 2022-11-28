@@ -32,17 +32,17 @@ export const ReportProblem = () => {
 
   useEffect(() => {
     const defaultFileList = async () =>
-    pageData && currentPage === PageType.LocatorsList ?
-      [
-        {
-          uid: "0",
-          name: "pageData.json",
-          status: "done" as UploadFileStatus,
-          url: (await toBase64(new Blob([pageData]) as RcFile)) as string | undefined,
-          linkProps: { download: "pageData.json" },
-        },
-      ] :
-      [];
+      pageData && currentPage === PageType.LocatorsList ?
+        [
+          {
+            uid: "0",
+            name: "pageData.json",
+            status: "done" as UploadFileStatus,
+            url: (await toBase64(new Blob([pageData]) as RcFile)) as string | undefined,
+            linkProps: { download: "pageData.json" },
+          },
+        ] :
+        [];
     defaultFileList().then(setFileList);
   }, [currentPage, pageData]);
 
@@ -146,7 +146,7 @@ export const ReportProblem = () => {
   };
 
   return (
-    <div>
+    <div className="jdn__reportProblem">
       <Tooltip title="Report a problem" placement="bottomRight" align={{ offset: [12, 0] }}>
         <Button
           onClick={showModal}
@@ -164,6 +164,7 @@ export const ReportProblem = () => {
             onOk: handleOk,
             setIsModalOpen,
             cancelCallback: () => setFileList([]),
+            className: "jdn__reportProblem_modal",
           }}
           formProps={{
             form,
@@ -193,8 +194,19 @@ export const ReportProblem = () => {
           >
             <TextArea rows={5} placeholder="Describe your problem" maxLength={2000} showCount />
           </Form.Item>
-          <Form.Item name="upload" label="Upload" valuePropName="upload" getValueFromEvent={normFile}>
-            {/* <Upload name="logo" action="/upload.do" listType="picture"> */}
+          <Form.Item
+            name="upload"
+            label="Upload"
+            valuePropName="upload"
+            getValueFromEvent={normFile}
+            extra={
+              <React.Fragment>
+                Extensions: image/*, *.zip, *.rar, *.json, *.txt<br />
+                File size maximum 2Mb, 10 files in total, total size
+                maximum 10Mb
+              </React.Fragment>
+            }
+          >
             <Upload name="attachments" onChange={handleUploadChange} {...{ fileList }}>
               <Button
                 icon={
