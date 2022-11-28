@@ -16,7 +16,7 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
     case "pageObject/addLocatorsToPageObj": {
       if (isNil(state.pageObject.present.currentPageObject)) return;
       const locators = selectLocatorsByPageObject(state, state.pageObject.present.currentPageObject);
-      locators && sendMessage.setHighlight({ elements: locators as Locator[], perception: state.main.perception });
+      locators && sendMessage.setHighlight({ elements: locators as Locator[]});
       break;
     }
     case "locators/changeLocatorAttributes": {
@@ -52,9 +52,6 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       break;
     case "main/changePageBack":
       if (selectCurrentPage(state).page === pageType.pageObject) sendMessage.killHighlight();
-      break;
-    case "main/changePerception":
-      sendMessage.setHighlight({ perception: payload });
       break;
     case "locators/stopGeneration/fulfilled": {
       const locator = selectLocatorById(state, meta.arg);
