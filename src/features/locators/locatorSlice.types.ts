@@ -63,7 +63,7 @@ export interface Locator extends PredictedEntity {
   jdnHash: string;
   locator: LocatorValue;
   name: string;
-  isCmHighlighted?: boolean;
+  active?: boolean;
   isCustomName?: boolean;
   isCustomLocator?: boolean;
   parent_id: string;

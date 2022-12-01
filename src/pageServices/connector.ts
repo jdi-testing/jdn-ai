@@ -6,6 +6,7 @@ import { assignDataLabels } from "./contentScripts/assignDataLabels";
 import { runContextMenu } from "./contentScripts/contextmenu";
 import { highlightOnPage } from "./contentScripts/highlight";
 import { highlightOrder } from "./contentScripts/highlightOrder";
+import { selectable } from "./contentScripts/selectable";
 import { urlListener } from "./contentScripts/urlListener";
 import { ScriptMessagePayload } from "./scriptListener";
 
@@ -146,6 +147,7 @@ class Connector {
         sendMessage.defineTabId(this.tabId);
         sendMessage.setClosedSession({ tabId: this.tabId, isClosed: false });
       }),
+      this.attachContentScript(selectable, "selectable"),
       this.attachCSS("contentScripts.css"),
     ]);
   }
@@ -188,6 +190,7 @@ export const sendMessage = {
   toggle: (payload: { element: Locator; skipScroll?: boolean }) => connector.sendMessage("HIGHLIGHT_TOGGLED", payload),
   toggleDeleted: (el: Locator) => connector.sendMessage("TOGGLE_DELETED", el),
   toggleFilter: (payload: {jdiClass: ElementClass, value: boolean}) => connector.sendMessage("TOGGLE_FILTER", payload),
+  unsetActive: (payload: Locator | Locator[]) => connector.sendMessage("UNSET_ACTIVE", payload),
 };
 
 export default Connector;

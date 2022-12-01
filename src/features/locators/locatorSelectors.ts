@@ -61,3 +61,7 @@ export const areChildrenChecked = createSelector(
     locator.children &&
     locator.children.every((childId) => locators.some((loc) => loc.element_id === childId && loc.generate))
 );
+
+export const selectActiveLocators = createSelector(selectLocators, (locators) =>
+  locators.filter((_loc) => _loc.active)
+);

@@ -125,7 +125,7 @@ export const LocatorsTree: React.FC<Props> = ({ pageObject: currentPageObject, l
           key: element_id,
           className: `${
             locatorsMap[element_id].generate && currentPage === pageType.locatorsList ? "jdn__tree-item--selected" : ""
-          }${locatorsMap[element_id].isCmHighlighted ? " jdn__tree-item--cm-selected" : ""}`,
+          }${locatorsMap[element_id].active ? " jdn__tree-item--active" : ""}`,
           title: (
             <Locator
               {...{ element: locatorsMap[element_id], currentPage, library, depth, searchState, searchString }}

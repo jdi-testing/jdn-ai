@@ -7,7 +7,7 @@ import { rerunGeneration } from "../common/thunks/rerunGeneration";
 import { stopGeneration } from "../common/thunks/stopGeneration";
 import { selectLocatorById } from "../features/locators/locatorSelectors";
 import {
-  addCmElementHighlight, clearCmElementHighlight, setScrollToLocator, toggleDeleted,
+  elementSetActive, elementUnsetActive, setScrollToLocator, toggleDeleted,
   toggleElementGeneration
 } from "../features/locators/locatorsSlice";
 import { selectLocatorByJdnHash, selectPageObjById } from "../features/pageObjects/pageObjectSelectors";
@@ -26,12 +26,8 @@ export const createListeners = (
     state: RootState
 ) => {
   const actions: Actions = {
-    CM_ELEMENT_HIGHLIGHT_ON: (payload) => {
-      dispatch(addCmElementHighlight(payload));
-    },
-    CM_ELEMENT_HIGHLIGHT_OFF: (payload) => {
-      dispatch(clearCmElementHighlight(selectLocatorByJdnHash(state, payload)!.element_id));
-    },
+    ELEMENT_SET_ACTIVE: (payload) => dispatch(elementSetActive(selectLocatorByJdnHash(state, payload)!.element_id)),
+    ELEMENT_UNSET_ACTIVE: (payload) => dispatch(elementUnsetActive(selectLocatorByJdnHash(state, payload)!.element_id)),
     GET_ELEMENT: (jdnHash, sender, sendResponse) => {
       const element = selectLocatorByJdnHash(state, jdnHash);
       const library =

@@ -35,17 +35,6 @@ export const runContextMenu = () => {
       }
     }
 
-    function removeHighlight() {
-      const el = document.querySelector(".cm--selected");
-      if (el) {
-        el.classList.remove("cm--selected");
-        sendMessage({
-          message: "CM_ELEMENT_HIGHLIGHT_OFF",
-          param: el.id,
-        });
-      }
-    }
-
     window.addEventListener("resize", onResize);
 
     this.setOptions = function(_options) {
@@ -219,13 +208,11 @@ export const runContextMenu = () => {
 
     this.hide = function() {
       document.getElementById("jdn_cm_" + num).classList.remove("display");
-      removeHighlight();
       window.removeEventListener("click", documentClick);
     };
 
     this.remove = function() {
       document.getElementById("jdn_cm_" + num).remove();
-      removeHighlight();
       window.removeEventListener("click", documentClick);
       window.removeEventListener("resize", onResize);
     };
@@ -491,11 +478,11 @@ export const runContextMenu = () => {
       const el = document.getElementById(predictedElement.jdnHash);
 
       sendMessage({
-        message: "CM_ELEMENT_HIGHLIGHT_ON",
-        param: predictedElement.element_id,
+        message: "ELEMENT_SET_ACTIVE",
+        param: predictedElement.jdnHash,
       });
 
-      el?.classList?.add("cm--selected");
+      el?.classList?.add("jdn-active");
     });
   };
 
