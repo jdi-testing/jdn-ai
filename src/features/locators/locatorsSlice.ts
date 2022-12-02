@@ -162,11 +162,15 @@ const locatorsSlice = createSlice({
     restoreLocators(state, { payload: locators }) {
       locatorsAdapter.setMany(state, locators);
     },
-    addCmElementHighlight(state, { payload }: PayloadAction<ElementId>) {
-      locatorsAdapter.upsertOne(state, { element_id: payload, isCmHighlighted: true } as Locator);
+    elementSetActive(state, { payload }: PayloadAction<ElementId>) {
+      locatorsAdapter.upsertOne(state, { element_id: payload, active: true } as Locator);
     },
-    clearCmElementHighlight(state, { payload }: PayloadAction<ElementId>) {
-      locatorsAdapter.upsertOne(state, { element_id: payload, isCmHighlighted: false } as Locator);
+    elementUnsetActive(state, { payload }: PayloadAction<ElementId>) {
+      locatorsAdapter.upsertOne(state, { element_id: payload, active: false } as Locator);
+    },
+    elementGroupUnsetActive(state, { payload }: PayloadAction<Array<Locator>>) {
+      const newValue = payload.map((_locator) => ({..._locator, active: false}));
+      locatorsAdapter.upsertMany(state, newValue);
     },
   },
   extraReducers: (builder) => {
@@ -196,6 +200,7 @@ export const {
   toggleDeletedGroup,
   updateLocator,
   restoreLocators,
-  addCmElementHighlight,
-  clearCmElementHighlight,
+  elementSetActive,
+  elementUnsetActive,
+  elementGroupUnsetActive,
 } = locatorsSlice.actions;

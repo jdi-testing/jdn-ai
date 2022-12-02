@@ -8,11 +8,11 @@ import { Chip } from "../../../common/components/Chip";
 import { CaretDown, DotsThree } from "phosphor-react";
 
 import {
+  elementGroupUnsetActive,
   setCalculationPriority,
   setElementGroupGeneration,
   toggleDeleted,
   toggleDeletedGroup,
-  toggleElementGroupGeneration,
 } from "../locatorsSlice";
 import { stopGenerationGroup } from "../../../common/thunks/stopGenerationGroup";
 import { rerunGeneration } from "../../../common/thunks/rerunGeneration";
@@ -31,6 +31,7 @@ import { LocatorsSearch } from "./LocatorsSearch";
 import { locatorGenerationController } from "../locatorGenerationController";
 import { Menu } from "../../../common/components/menu/Menu";
 import { Filter } from "../../filter/Filter";
+import { selectActiveLocators } from "../locatorSelectors";
 
 export const EXPAND_STATE = {
   EXPANDED: "Expanded",
@@ -47,6 +48,7 @@ export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedS
   const [searchString, setSearchString] = useState("");
 
   const currentPageObject = useSelector((_state) => _state.pageObject.present.currentPageObject);
+  const active = useSelector(selectActiveLocators);
   const selected = useMemo(() => [...generatedSelected, ...waitingSelected, ...deletedSelected], [
     generatedSelected,
     waitingSelected,
@@ -181,13 +183,14 @@ export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedS
           />
           <Checkbox checked={fullySelected} indeterminate={partiallySelected} onClick={handleOnCheck}></Checkbox>
           <Chip
-            hidden={!size(selected)}
-            primaryLabel={size(selected)}
+            hidden={!size(active)}
+            primaryLabel={size(active)}
             secondaryLabel={"selected"}
-            onDelete={() => dispatch(toggleElementGroupGeneration(selected))}
+            onDelete={() => dispatch(elementGroupUnsetActive(active))}
           />
         </span>
-        {!isNil(menu) ? (
+        {/* {!isNil(menu) ? ( */}
+        {false ? (
           <Dropdown arrow={{ pointAtCenter: true }} overlay={renderMenu()} trigger={["click"]} destroyPopupOnHide>
             <Button
               className="jdn__locatorsList_button jdn__locatorsList_button-menu"

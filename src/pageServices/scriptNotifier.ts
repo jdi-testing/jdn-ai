@@ -16,7 +16,7 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
     case "pageObject/addLocatorsToPageObj": {
       if (isNil(state.pageObject.present.currentPageObject)) return;
       const locators = selectLocatorsByPageObject(state, state.pageObject.present.currentPageObject);
-      locators && sendMessage.setHighlight({ elements: locators as Locator[]});
+      locators && sendMessage.setHighlight({ elements: locators as Locator[] });
       break;
     }
     case "locators/changeLocatorAttributes": {
@@ -120,9 +120,15 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       sendMessage.changeStatus(_payload);
       break;
     }
+    case "locators/elementUnsetActive":
+    case "locators/elementGroupUnsetActive": {
+      sendMessage.unsetActive(payload);
+      break;
+    }
     case "filter/toggleClassFilter":
     case "filter/toggleClassFilterAll": {
       sendMessage.toggleFilter(pick(payload, ["jdiClass", "value"]));
+      break;
     }
   }
 };

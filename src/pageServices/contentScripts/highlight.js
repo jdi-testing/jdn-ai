@@ -55,7 +55,7 @@ export const highlightOnPage = () => {
   };
 
   const getClassName = (element) => {
-    return `jdn-highlight ${element.generate ? "jdn-primary" : "jdn-secondary"}`;
+    return `jdn-highlight ${element.generate ? "jdn-primary" : "jdn-secondary"} ${element.active ? "jdn-active" : ""}`;
   };
 
   const updateElement = (element) => {
@@ -192,14 +192,6 @@ export const highlightOnPage = () => {
     Object.assign(div.style, divPosition(element.getBoundingClientRect()));
     labelContainer.appendChild(label);
     div.insertAdjacentElement("afterBegin", labelContainer);
-    div.onclick = () => {
-      chrome.runtime.sendMessage({
-        message: "TOGGLE_ELEMENT",
-        param: element_id,
-      }).catch((error) => {
-        if (error.message !== "The message port closed before a response was received.") throw new Error(error.message);
-      });
-    };
 
     document.body.appendChild(div);
   };
@@ -234,6 +226,7 @@ export const highlightOnPage = () => {
         }
       }
     });
+    chrome.storage.local.set({ JDN_HIGHLIGHT_IS_SET: { hash: Date.now() } });
   };
 
   let timer;
@@ -306,9 +299,10 @@ export const highlightOnPage = () => {
   const applyFilter = ({ jdiClass, value }) => {
     let filterElements = [];
 
-    if (!jdiClass) { // in case of Select All
+    if (!jdiClass) {
+      // in case of Select All
       filterElements = [...predictedElements];
-      filterElements.forEach((element) => classFilter[element.type] = value);
+      filterElements.forEach((element) => (classFilter[element.type] = value));
     } else {
       const classValue = Object.hasOwn(classFilter, jdiClass) ? classFilter[jdiClass] : true;
       if (classValue === value) return;
