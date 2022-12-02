@@ -192,18 +192,6 @@ export const highlightOnPage = () => {
     Object.assign(div.style, divPosition(element.getBoundingClientRect()));
     labelContainer.appendChild(label);
     div.insertAdjacentElement("afterBegin", labelContainer);
-    div.onclick = () => {
-      chrome.runtime
-          .sendMessage({
-            message: "TOGGLE_ELEMENT",
-            param: element_id,
-          })
-          .catch((error) => {
-            if (error.message !== "The message port closed before a response was received.") {
-              throw new Error(error.message);
-            }
-          });
-    };
 
     document.body.appendChild(div);
   };

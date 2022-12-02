@@ -32,6 +32,7 @@
         flex-shrink: 0;
         display: flex;
         gap: 8px;
+        line-height: 24px;
       }
 
       &-collapse {
@@ -48,6 +49,13 @@
       .ant-select-multiple .ant-select-selection-item {
         background-color: #ffffff;
         border: 1px solid #d9d9d9;
+        margin: 0;
+      }
+
+      .ant-select-selection-item-content {
+        & .jdn__footnote {
+          vertical-align: 2px;
+        }
       }
 
       .anticon-close {

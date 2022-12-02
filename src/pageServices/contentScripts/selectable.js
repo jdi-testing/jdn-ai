@@ -14,7 +14,6 @@ export const selectable = () => {
       selectedClass: "jdn-active",
       onSelect: (element) => sendMessage({ message: "ELEMENT_SET_ACTIVE", param: element.id }),
       onDeselect: (element) => {
-        console.log("on deselect");
         sendMessage({ message: "ELEMENT_UNSET_ACTIVE", param: element.id });
       },
     });
@@ -114,7 +113,6 @@ export const selectable = () => {
       this.disable();
       this.zone.addEventListener("mousedown", self.rectOpen);
       this.on = true;
-      console.log(this.items);
       return this;
     };
     this.disable = function () {
@@ -174,6 +172,10 @@ export const selectable = () => {
         aLeft > bLeft + b.offsetWidth
       );
     };
+    const isPlainClick = function (element) {
+      const { width, height } = element.getBoundingClientRect();
+      return width === 2 && height === 2;
+    };
     this.select = function (e) {
       const a = rb();
       if (!a) {
@@ -183,17 +185,27 @@ export const selectable = () => {
       document.body.classList.remove("s-noselect");
       document.body.removeEventListener("mousemove", self.rectDraw);
       window.removeEventListener("mouseup", self.select);
+      
       const s = self.options.selectedClass;
-      self.foreach(self.items, function (el) {
-        if (cross(a, el) === true) {
-          if (el.classList.contains(s)) {
-            el.classList.remove(s);
-            self.options.onDeselect && self.options.onDeselect(el);
-          } else {
-            el.classList.add(s);
-            self.options.onSelect && self.options.onSelect(el);
-          }
+      const toggleActiveClass = function (el) {
+        if (el.classList.contains(s)) {
+          el.classList.remove(s);
+          self.options.onDeselect && self.options.onDeselect(el);
+        } else {
+          el.classList.add(s);
+          self.options.onSelect && self.options.onSelect(el);
         }
+      };
+
+      if (isPlainClick(a)) {
+        const highlightTarget = e.target.closest("[jdn-highlight=true]");
+        if (!highlightTarget) return;
+        toggleActiveClass(highlightTarget);
+        return;
+      }
+
+      self.foreach(self.items, function (el) {
+        if (cross(a, el) === true) toggleActiveClass(el);
         setTimeout(function () {
           el.removeEventListener("click", self.suspend, true);
         }, 100);

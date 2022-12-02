@@ -9,7 +9,6 @@ import { CaretDown, DotsThree } from "phosphor-react";
 
 import {
   elementGroupUnsetActive,
-  elementUnsetActive,
   setCalculationPriority,
   setElementGroupGeneration,
   toggleDeleted,
@@ -190,7 +189,8 @@ export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedS
             onDelete={() => dispatch(elementGroupUnsetActive(active))}
           />
         </span>
-        {!isNil(menu) ? (
+        {/* {!isNil(menu) ? ( */}
+        {false ? (
           <Dropdown arrow={{ pointAtCenter: true }} overlay={renderMenu()} trigger={["click"]} destroyPopupOnHide>
             <Button
               className="jdn__locatorsList_button jdn__locatorsList_button-menu"
