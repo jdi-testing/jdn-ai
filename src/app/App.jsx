@@ -70,29 +70,27 @@ const App = () => {
   };
 
   return (
-    <ReduxProvider {...{ store }}>
-      <div>
-        <Backdrop />
-        <Layout className="jdn__app">
-          <Header className="jdn__header">
-            <StatusBar />
-          </Header>
-          <Content className="jdn__content">
-            {backendAvailable === BackendStatus.Accessed ? (
-              isInvalidSession ? (
-                <SeveralTabsWarning {...{ checkSession: () => checkSession(setIsInvalidSession) }} />
-              ) : (
-                renderPage()
-              )
-            ) : backendAvailable === BackendStatus.TryToAccess ? (
-              BackendStatus.TryToAccess
+    <div>
+      <Backdrop />
+      <Layout className="jdn__app">
+        <Header className="jdn__header">
+          <StatusBar />
+        </Header>
+        <Content className="jdn__content">
+          {backendAvailable === BackendStatus.Accessed ? (
+            isInvalidSession ? (
+              <SeveralTabsWarning {...{ checkSession: () => checkSession(setIsInvalidSession) }} />
             ) : (
-              <Guide />
-            )}
-          </Content>
-        </Layout>
-      </div>
-    </ReduxProvider>
+              renderPage()
+            )
+          ) : backendAvailable === BackendStatus.TryToAccess ? (
+            BackendStatus.TryToAccess
+          ) : (
+            <Guide />
+          )}
+        </Content>
+      </Layout>
+    </div>
   );
 };
 
