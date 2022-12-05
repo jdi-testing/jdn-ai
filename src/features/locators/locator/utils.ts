@@ -1,4 +1,4 @@
-import { filter, map } from "lodash";
+import { chain, filter } from "lodash";
 import { connector } from "../../../pageServices/connector";
 import { ElementLibrary } from "../../pageObjects/utils/generationClassesMap";
 import { createElementName } from "../../pageObjects/utils/pageObject";
@@ -36,7 +36,7 @@ export const createNewName = (
     library: ElementLibrary,
     elements: Locator[]
 ): string => {
-  const names = map(elements, "name");
+  const names = chain(elements).map("name").without(element.name).value();
   const newName = createElementName({ ...element }, library, names, newType);
 
   return newName;
