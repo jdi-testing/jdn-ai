@@ -5,14 +5,24 @@ import { setScriptMessage } from "../app/mainSlice";
 import { RootState } from "../app/store";
 import { rerunGeneration } from "../common/thunks/rerunGeneration";
 import { stopGeneration } from "../common/thunks/stopGeneration";
+import { stopGenerationGroup } from "../common/thunks/stopGenerationGroup";
 import { selectLocatorById } from "../features/locators/locatorSelectors";
 import {
-  elementSetActive, elementUnsetActive, setScrollToLocator, toggleDeleted,
-  toggleElementGeneration
+  elementSetActive,
+  elementUnsetActive,
+  setScrollToLocator,
+  toggleDeleted,
+  toggleDeletedGroup,
+  toggleElementGeneration,
+  toggleElementGroupGeneration,
 } from "../features/locators/locatorsSlice";
-import { selectLocatorByJdnHash, selectPageObjById } from "../features/pageObjects/pageObjectSelectors";
+import {
+  selectCurrentPageObject,
+  selectLocatorByJdnHash,
+  selectPageObjById,
+} from "../features/pageObjects/pageObjectSelectors";
 import { ElementLibrary, getTypesMenuOptions } from "../features/pageObjects/utils/generationClassesMap";
-import { connector } from "./connector";
+import { connector, sendMessage } from "./connector";
 import { showOverlay } from "./pageDataHandlers";
 
 export type ScriptMessagePayload = { message: keyof Actions; param: Record<string, never> };
@@ -26,40 +36,46 @@ export const createListeners = (
     state: RootState
 ) => {
   const actions: Actions = {
+    ELEMENT_SELECT: (payload) => {
+      dispatch(elementSetActive(payload.element_id));
+      sendMessage.setActive(payload);
+    },
     ELEMENT_SET_ACTIVE: (payload) => dispatch(elementSetActive(selectLocatorByJdnHash(state, payload)!.element_id)),
     ELEMENT_UNSET_ACTIVE: (payload) => dispatch(elementUnsetActive(selectLocatorByJdnHash(state, payload)!.element_id)),
-    GET_ELEMENT: (jdnHash, sender, sendResponse) => {
-      const element = selectLocatorByJdnHash(state, jdnHash);
-      const library =
-        !isNil(state.pageObject.present.currentPageObject) &&
-        selectPageObjById(state, state.pageObject.present.currentPageObject)!.library;
+    GET_ELEMENTS_DATA: (jdnHashes, sender, sendResponse) => {
+      const elements = jdnHashes.map((jdnHash: string) => selectLocatorByJdnHash(state, jdnHash));
+      const library = !isNil(state.pageObject.present.currentPageObject) && selectCurrentPageObject(state)?.library;
       sendResponse({
-        element,
+        elements,
         types: getTypesMenuOptions(library || ElementLibrary.MUI),
       });
     },
-    REMOVE_ELEMENT: (payload) => dispatch(toggleDeleted(payload)),
-    RESTORE_ELEMENT: (payload) => dispatch(toggleDeleted(payload)),
+    REMOVE_ELEMENT: (payload) => dispatch(toggleDeletedGroup(payload)),
+    RESTORE_ELEMENT: (payload) => dispatch(toggleDeletedGroup(payload)),
     OPEN_EDIT_LOCATOR_REQUEST: () => {
       // handled in Locator
     },
     RERUN_GENERATION: (payload) => {
-      const locator = selectLocatorById(state, payload);
-      locator && dispatch(rerunGeneration({ generationData: [locator] }));
+      dispatch(rerunGeneration({ generationData: payload }));
     },
     START_COLLECT_DATA: showOverlay,
-    STOP_GENERATION: (payload) => dispatch(stopGeneration(payload)),
+    /* eslint-disable */
+    // @ts-ignore
+    STOP_GROUP_GENERATION: (payload) => dispatch(stopGenerationGroup(payload)),
     TOGGLE_ELEMENT: (payload) => {
-      dispatch(toggleElementGeneration(payload));
+      dispatch(toggleElementGeneration(payload[0]));
       dispatch(setScrollToLocator(payload));
+    },
+    TOGGLE_ELEMENT_GROUP: (payload) => {
+      dispatch(toggleElementGroupGeneration(payload));
     },
   };
 
   const messageHandler = (
-      { message, param }: ScriptMessagePayload,
-      sender: chrome.runtime.MessageSender,
-      sendResponse: (response: Record<string, never>) => void,
-      _actions: Actions
+    { message, param }: ScriptMessagePayload,
+    sender: chrome.runtime.MessageSender,
+    sendResponse: (response: Record<string, never>) => void,
+    _actions: Actions
   ) => {
     if (_actions[message]) {
       _actions[message](param, sender, sendResponse);
@@ -68,7 +84,7 @@ export const createListeners = (
   };
 
   connector.updateMessageListener(
-      (payload: ScriptMessagePayload, sender: chrome.runtime.MessageSender, sendResponse: (response: any) => void) =>
-        messageHandler(payload, sender, sendResponse, actions)
+    (payload: ScriptMessagePayload, sender: chrome.runtime.MessageSender, sendResponse: (response: any) => void) =>
+      messageHandler(payload, sender, sendResponse, actions)
   );
 };

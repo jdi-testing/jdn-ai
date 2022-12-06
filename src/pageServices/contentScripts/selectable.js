@@ -34,16 +34,36 @@ export const selectable = () => {
         }
       });
     };
+
+    Selectables.prototype.setSelect = function(payload) {
+      const opt = this.options;
+      let query = "";
+
+      if (Array.isArray(payload)) {
+        payload.forEach(({ jdnHash }) => {
+          query += `${!!query.length ? ", " : ""}[id='${jdnHash}']`;
+        });
+      } else query = `[id='${payload.jdnHash}']`;
+
+      this.foreach(document.querySelectorAll(query), (element) => {
+        if (!element.classList.contains(opt.selectedClass)) {
+          element.classList.add(opt.selectedClass);
+        }
+      });
+    };
   };
 
-  const unsetActive = (payload) => {
-    selectables.unselect(payload);
-  };
+  const unsetActive = (payload) => selectables.unselect(payload);
+
+  const setActive = (payload) => selectables.setSelect(payload);
 
   const messageHandler = ({ message, param }) => {
     switch (message) {
       case "UNSET_ACTIVE":
         unsetActive(param);
+        break;
+      case "SET_ACTIVE":
+        setActive(param);
         break;
     }
   };
@@ -112,11 +132,13 @@ export const selectable = () => {
       this.items = document.querySelectorAll(this.options.zone + " " + this.options.elements);
       this.disable();
       this.zone.addEventListener("mousedown", self.rectOpen);
+      document.addEventListener("contextmenu", this.contextClick);
       this.on = true;
       return this;
     };
     this.disable = function () {
       this.zone.removeEventListener("mousedown", self.rectOpen);
+      document.removeEventListener("contextmenu", this.contextClick);
       this.on = false;
       return this;
     };
@@ -129,23 +151,28 @@ export const selectable = () => {
       e.stopPropagation();
       return false;
     };
+    this.isContextForGroup = function (e) {
+      const target = e.target.closest("[jdn-highlight=true]");
+      if (!target) return;
+      return target.classList.contains(self.options.selectedClass) && e.button === 2;
+    };
     this.rectOpen = function (e) {
       self.options.start && self.options.start(e);
       if (self.options.key && !e[self.options.key]) {
         return;
       }
-      document.body.classList.add("s-noselect");
       const s = self.options.selectedClass;
       self.foreach(self.items, function (el) {
         el.addEventListener("click", self.suspend, true); // skip any clicks
-        if (!e[self.options.moreUsing]) {
-          //   el.classList.remove(self.options.selectedClass);
+        if (!e[self.options.moreUsing] && !self.isContextForGroup(e)) {
           if (el.classList.contains(s)) {
             el.classList.remove(s);
             self.options.onDeselect && self.options.onDeselect(el);
           }
         }
       });
+
+      document.body.classList.add("s-noselect");
       self.ipos = [e.pageX, e.pageY];
       if (!rb()) {
         const gh = document.createElement("div");
@@ -185,7 +212,7 @@ export const selectable = () => {
       document.body.classList.remove("s-noselect");
       document.body.removeEventListener("mousemove", self.rectDraw);
       window.removeEventListener("mouseup", self.select);
-      
+
       const s = self.options.selectedClass;
       const toggleActiveClass = function (el) {
         if (el.classList.contains(s)) {
@@ -200,16 +227,16 @@ export const selectable = () => {
       if (isPlainClick(a)) {
         const highlightTarget = e.target.closest("[jdn-highlight=true]");
         if (!highlightTarget) return;
-        toggleActiveClass(highlightTarget);
-        return;
+        if (!self.isContextForGroup(e)) toggleActiveClass(highlightTarget);
+      } else {
+        self.foreach(self.items, function (el) {
+          if (cross(a, el) === true) toggleActiveClass(el);
+          setTimeout(function () {
+            el.removeEventListener("click", self.suspend, true);
+          }, 100);
+        });
       }
 
-      self.foreach(self.items, function (el) {
-        if (cross(a, el) === true) toggleActiveClass(el);
-        setTimeout(function () {
-          el.removeEventListener("click", self.suspend, true);
-        }, 100);
-      });
       a.parentNode.removeChild(a);
       self.options.stop && self.options.stop(e);
     };

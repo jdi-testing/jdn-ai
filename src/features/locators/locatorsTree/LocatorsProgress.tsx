@@ -9,7 +9,7 @@ import { rerunGeneration } from "../../../common/thunks/rerunGeneration";
 import {
   selectDeletedByPageObj,
   selectFailedByPageObject,
-  selectGeneratedByPageObj,
+  selectCalculatedByPageObj,
   selectInProgressByPageObj,
   selectPageObjLocatorsByProbability
 } from "../../pageObjects/pageObjectSelectors";
@@ -28,7 +28,7 @@ export const LocatorsProgress: React.FC<Props> = ({ currentPageObject }) => {
   const byProbability = useSelector((_state: RootState) =>
     selectPageObjLocatorsByProbability(_state, currentPageObject)
   );
-  const generated = useSelector((_state: RootState) => selectGeneratedByPageObj(_state, currentPageObject));
+  const generated = useSelector((_state: RootState) => selectCalculatedByPageObj(_state, currentPageObject));
   const inProgress = useSelector((_state: RootState) => selectInProgressByPageObj(_state, currentPageObject));
   const deleted = useSelector((_state: RootState) => selectDeletedByPageObj(_state, currentPageObject));
   const failed = useSelector((_state: RootState) => selectFailedByPageObject(_state, currentPageObject));

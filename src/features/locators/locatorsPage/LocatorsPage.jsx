@@ -12,10 +12,10 @@ import { pageType } from "../../../common/constants/constants";
 import { removeOverlay, showOverlay } from "../../../pageServices/pageDataHandlers";
 import {
   selectCurrentPageObject,
-  selectDeletedSelectedByPageObj,
-  selectGeneratedSelectedByPageObj,
+  selectDeletedGenerateByPageObj,
+  selectCalculatedGenerateByPageObj,
   selectLocatorsByPageObject,
-  selectWaitingSelectedByPageObj
+  selectInProgressGenerateByPageObj
 } from "../../pageObjects/pageObjectSelectors";
 import { clearLocators } from "../../pageObjects/pageObjectSlice";
 import { locatorGenerationController } from "../locatorGenerationController";
@@ -31,9 +31,9 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
   const currentPage = useSelector(selectCurrentPage).page;
   const locators = useSelector((_state) => selectLocatorsByPageObject(_state, currentPageObject));
   const locatorIds = useSelector(selectCurrentPageObject).locators;
-  const waitingSelected = useSelector((_state) => selectWaitingSelectedByPageObj(_state, currentPageObject));
-  const generatedSelected = useSelector((_state) => selectGeneratedSelectedByPageObj(_state, currentPageObject));
-  const deletedSelected = useSelector((_state) => selectDeletedSelectedByPageObj(_state, currentPageObject));
+  const inProgressGenerate = useSelector((_state) => selectInProgressGenerateByPageObj(_state, currentPageObject));
+  const calculatedGenerate = useSelector((_state) => selectCalculatedGenerateByPageObj(_state, currentPageObject));
+  const deletedGenerate = useSelector((_state) => selectDeletedGenerateByPageObj(_state, currentPageObject));
 
   const [locatorsSnapshot] = useState(locators);
 
@@ -43,7 +43,7 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
   };
 
   const handleConfirm = () => {
-    if (size(waitingSelected)) {
+    if (size(inProgressGenerate)) {
       confirm({
         title: "Сonfirm the selection",
         content: `Attention! Not all of the selected locators have already been generated. 
@@ -55,7 +55,7 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
           pageBack();
         },
       });
-    } else if (size(deletedSelected)) {
+    } else if (size(deletedGenerate)) {
       confirm({
         title: "Сonfirm the selection",
         content: `Not all selected locators will be generated.
@@ -79,7 +79,7 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
     const handleBack = () => {
       if (isEqual(locators, locatorsSnapshot)) pageBack();
       else {
-        const enableOk = size(waitingSelected) || size(generatedSelected);
+        const enableOk = size(inProgressGenerate) || size(calculatedGenerate);
         customConfirm({
           onAlt: handleDiscard,
           altText: "Discard",
@@ -119,7 +119,7 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
 
   const renderConfirmButton = () => {
     if (currentPage === pageType.locatorsList) {
-      const isDisabled = !size(waitingSelected) && !size(generatedSelected);
+      const isDisabled = !size(inProgressGenerate) && !size(calculatedGenerate);
       return (
         <React.Fragment>
           <Tooltip
@@ -140,12 +140,6 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
       <div className="jdn__locatorsList">
         <Breadcrumbs />
         <LocatorListHeader
-          {...{
-            locatorIds,
-            generatedSelected,
-            waitingSelected,
-            deletedSelected,
-          }}
           render={(viewProps) => (
             <div className="jdn__locatorsList-content">
               {size(locators) ? <LocatorsTree pageObject={currentPageObject} {...{ viewProps, locatorIds }} /> : null}

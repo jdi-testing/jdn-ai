@@ -68,7 +68,7 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       break;
     }
     case "locators/toggleElementGeneration": {
-      const element = selectLocatorById(state, payload);
+      const element = selectLocatorById(state, typeof payload === "string" ? payload : payload.element_id);
       element && sendMessage.toggle({ element });
       break;
     }

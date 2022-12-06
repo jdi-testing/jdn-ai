@@ -75,7 +75,7 @@ export const selectFilteredConfirmedLocators = createSelector(selectFilteredLoca
 
 export const selectConfirmedLocators = selectFilteredConfirmedLocators;
 
-export const selectGeneratedByPageObj = createSelector(
+export const selectCalculatedByPageObj = createSelector(
     selectGeneratedLocators,
     (state: RootState, pageObjId: PageObjectId) => selectPageObjById(state, pageObjId)?.locators || [],
     (locators, locByPageObj) =>
@@ -84,7 +84,11 @@ export const selectGeneratedByPageObj = createSelector(
           .value()
 );
 
-export const selectGeneratedSelectedByPageObj = createSelector(selectGeneratedByPageObj, (items) =>
+export const selectCalculatedActiveByPageObj = createSelector(selectCalculatedByPageObj, (locators) =>
+  locators.filter((_loc) => _loc.active)
+);
+
+export const selectCalculatedGenerateByPageObj = createSelector(selectCalculatedByPageObj, (items) =>
   items.filter((item) => item.generate)
 );
 
@@ -94,8 +98,12 @@ export const selectDeletedByPageObj = createSelector(selectPageObjLocatorsByProb
       .value()
 );
 
-export const selectDeletedSelectedByPageObj = createSelector(selectDeletedByPageObj, (items) =>
+export const selectDeletedGenerateByPageObj = createSelector(selectDeletedByPageObj, (items) =>
   items.filter((item) => item.generate)
+);
+
+export const selectDeletedActiveByPageObj = createSelector(selectDeletedByPageObj, (locators) =>
+  locators.filter((_loc) => _loc.active)
 );
 
 export const selectWaitingByPageObj = createSelector(selectPageObjLocatorsByProbability, (elements) =>
@@ -110,6 +118,10 @@ export const selectWaitingByPageObj = createSelector(selectPageObjLocatorsByProb
       .value()
 );
 
+export const selectWaitingActiveByPageObj = createSelector(selectWaitingByPageObj, (locators) =>
+  locators.filter((_loc) => _loc.active)
+);
+
 export const selectInProgressByPageObj = createSelector(selectPageObjLocatorsByProbability, (elements) =>
   chain(elements)
       .filter((el) => isProgressStatus(el.locator.taskStatus) && !el.deleted)
@@ -120,7 +132,7 @@ export const selectInProgressSelectedByPageObject = createSelector(selectInProgr
   items.filter((item) => item.generate)
 );
 
-export const selectWaitingSelectedByPageObj = createSelector(selectWaitingByPageObj, (items) =>
+export const selectInProgressGenerateByPageObj = createSelector(selectWaitingByPageObj, (items) =>
   items.filter((item) => item.generate)
 );
 
