@@ -286,47 +286,65 @@ export const runContextMenu = () => {
 
   let elementMenu;
   let contextEvent;
-  let predictedElement;
+  let predictedElements;
+  let types;
+  let highlightTargets;
 
-  const menuItems = (element, types) => {
-    const { element_id, locator, generate, jdnHash } = element;
+  /* helpers */
+
+  const notAddedToPO = () => predictedElements.some(({ generate }) => !generate);
+  const isGroup = () => predictedElements.length !== 1;
+  const noDeleted = () => predictedElements.some(({ deleted }) => !deleted);
+  const areInProgress = () =>
+    predictedElements.some(({ locator }) => locator.taskStatus === "PENDING" || locator.taskStatus === "STARTED");
+  const areRevoked = () => predictedElements.some(({ locator }) => locator.taskStatus === "REVOKED");
+  const areFailed = () => predictedElements.some(({ locator }) => locator.taskStatus === "FAILURE");
+
+  /* menu */
+
+  const menuItems = () => {
     const menuItems = [
       {
-        text: `${!generate ? "Select" : "Unselect"} locator`,
+        text: notAddedToPO() ? "Add to PO" : "Remove from PO",
         events: {
           click: () =>
             sendMessage({
-              message: "TOGGLE_ELEMENT",
-              param: element_id,
+              message: isGroup() ? "TOGGLE_ELEMENT_GROUP" : "TOGGLE_ELEMENT",
+              param: predictedElements,
             }),
         },
       },
       {
         type: ContextMenu.DIVIDER,
       },
-      ...(!element.deleted ?
+      ...(renderGenerationOption() || []),
+      ...(!isGroup() ?
         [
           {
             text: `<span>Edit</span>`,
             icon: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M4.34531 10.125H2.25C2.15055 10.125 2.05516 10.0855 1.98484 10.0152C1.91451 9.94484 1.875 9.84945 
-        1.875 9.75V7.65469C1.87483 7.60599 1.88427 7.55774 1.90277 7.5127C1.92127 7.46765 1.94847 7.4267 1.98281 
-        7.39218L7.60782 1.76718C7.64271 1.73175 7.6843 1.70361 7.73017 1.68441C7.77604 1.6652 7.82527 1.65531 7.875 
-        1.65531C7.92473 1.65531 7.97396 1.6652 8.01983 1.68441C8.0657 1.70361 8.1073 1.73175 8.14219 1.76718L10.2328 
-        3.85781C10.2682 3.8927 10.2964 3.9343 10.3156 3.98017C10.3348 4.02604 10.3447 4.07527 10.3447 4.125C10.3447 
-        4.17473 10.3348 4.22396 10.3156 4.26983C10.2964 4.3157 10.2682 4.35729 10.2328 4.39218L4.60782 10.0172C4.5733 
-        10.0515 4.53235 10.0787 4.4873 10.0972C4.44226 10.1157 4.39401 10.1252 4.34531 10.125V10.125Z" 
-        stroke="#5A5A5A" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M6.375 3L9 5.625" stroke="#5A5A5A" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>`,
+      <path d="M4.34531 10.125H2.25C2.15055 10.125 2.05516 10.0855 1.98484 10.0152C1.91451 9.94484 1.875 9.84945 
+      1.875 9.75V7.65469C1.87483 7.60599 1.88427 7.55774 1.90277 7.5127C1.92127 7.46765 1.94847 7.4267 1.98281 
+      7.39218L7.60782 1.76718C7.64271 1.73175 7.6843 1.70361 7.73017 1.68441C7.77604 1.6652 7.82527 1.65531 7.875 
+      1.65531C7.92473 1.65531 7.97396 1.6652 8.01983 1.68441C8.0657 1.70361 8.1073 1.73175 8.14219 1.76718L10.2328 
+      3.85781C10.2682 3.8927 10.2964 3.9343 10.3156 3.98017C10.3348 4.02604 10.3447 4.07527 10.3447 4.125C10.3447 
+      4.17473 10.3348 4.22396 10.3156 4.26983C10.2964 4.3157 10.2682 4.35729 10.2328 4.39218L4.60782 10.0172C4.5733 
+      10.0515 4.53235 10.0787 4.4873 10.0972C4.44226 10.1157 4.39401 10.1252 4.34531 10.125V10.125Z" 
+      stroke="#5A5A5A" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M6.375 3L9 5.625" stroke="#5A5A5A" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>`,
             events: {
               click: () =>
                 sendMessage({
                   message: "OPEN_EDIT_LOCATOR_REQUEST",
-                  param: { value: element, types },
+                  param: { value: predictedElements[0], types },
                 }),
             },
           },
+        ] :
+        []),
+      ...(noDeleted() ?
+        [
           {
             text: `<span class="cm_container_warning-option">Delete</span>`,
             icon: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -344,7 +362,7 @@ export const runContextMenu = () => {
               click: () =>
                 sendMessage({
                   message: "REMOVE_ELEMENT",
-                  param: element_id,
+                  param: predictedElements,
                 }),
             },
           },
@@ -368,7 +386,7 @@ export const runContextMenu = () => {
               click: () =>
                 sendMessage({
                   message: "RESTORE_ELEMENT",
-                  param: element_id,
+                  param: predictedElements,
                 }),
             },
           },
@@ -376,30 +394,36 @@ export const runContextMenu = () => {
       {
         type: ContextMenu.DIVIDER,
       },
+      ...(isGroup() ?
+        [
+          {
+            text: "Select element",
+            sub: [...getActiveElements()],
+          },
+        ] :
+        []),
       {
         text: `Bring to front`,
         events: {
-          click: () => chrome.storage.local.set({ JDN_BRING_TO_FRONT: { hash: Date.now(), jdnHash } }),
+          click: () => chrome.storage.local.set({ JDN_BRING_TO_FRONT: { hash: Date.now(), predictedElements } }),
         },
       },
       {
         text: `Bring to background`,
         events: {
-          click: () => chrome.storage.local.set({ JDN_BRING_TO_BACKGROUND: { hash: Date.now(), jdnHash } }),
+          click: () => chrome.storage.local.set({ JDN_BRING_TO_BACKGROUND: { hash: Date.now(), predictedElements } }),
         },
       },
     ];
-
-    const generationOption = renderGenerationOption(element_id, locator);
-    if (generationOption) menuItems.splice(3, 0, generationOption);
     return menuItems;
   };
 
-  const renderGenerationOption = (element_id, locator) => {
-    if (locator.taskStatus === "PENDING" || locator.taskStatus === "STARTED") {
-      return {
-        text: `<span>Pause generation</span>`,
-        icon: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+  const renderGenerationOption = () => {
+    if (areInProgress()) {
+      return [
+        {
+          text: `<span>Pause generation</span>`,
+          icon: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M9.375 1.875H7.6875C7.48039 1.875 7.3125 2.04289 7.3125 2.25V9.75C7.3125 9.95711 7.48039 10.125 7.6875 
       10.125H9.375C9.58211 10.125 9.75 9.95711 9.75 9.75V2.25C9.75 2.04289 9.58211 1.875 9.375 1.875Z" stroke="#5A5A5A"
        stroke-linecap="round" stroke-linejoin="round"/>
@@ -407,19 +431,21 @@ export const runContextMenu = () => {
       .3125C4.51961 10.125 4.6875 9.95711 4.6875 9.75V2.25C4.6875 2.04289 4.51961 1.875 4.3125 1.875Z" stroke="#5A5A5A"
        stroke-linecap="round" stroke-linejoin="round"/>
       </svg>`,
-        events: {
-          click: () =>
-            sendMessage({
-              message: "STOP_GENERATION",
-              param: element_id,
-            }),
+          events: {
+            click: () =>
+              sendMessage({
+                message: "STOP_GROUP_GENERATION",
+                param: predictedElements,
+              }),
+          },
         },
-      };
+      ];
     }
-    if (locator.taskStatus === "REVOKED") {
-      return {
-        text: `<span>Rerun</span>`,
-        icon: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+    if (areRevoked()) {
+      return [
+        {
+          text: `<span>Rerun</span>`,
+          icon: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M10.6922 5.68125L3.94687 1.55625C3.89009 1.52122 3.82499 1.50198 3.75829 1.5005C3.69159 1.49903 3.6257
          1.51537 3.56743 1.54786C3.50915 1.58034 3.4606 1.62778 3.42677 1.68529C3.39294 1.74279 3.37507 1.80828 3.375 
          1.875V10.125C3.37507 10.1917 3.39294 10.2572 3.42677 10.3147C3.4606 10.3722 3.50915 10.4197 3.56743 10.4521C3
@@ -428,19 +454,21 @@ export const runContextMenu = () => {
          5.87241 10.8254 5.81652C10.7935 5.76062 10.7476 5.714 10.6922 5.68125V5.68125Z" stroke="#5A5A5A" stroke-
          linecap="round" stroke-linejoin="round"/>
         </svg>`,
-        events: {
-          click: () =>
-            sendMessage({
-              message: "RERUN_GENERATION",
-              param: element_id,
-            }),
+          events: {
+            click: () =>
+              sendMessage({
+                message: "RERUN_GENERATION",
+                param: predictedElements,
+              }),
+          },
         },
-      };
+      ];
     }
-    if (locator.taskStatus === "FAILURE") {
-      return {
-        text: `<span>Retry</span>`,
-        icon: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+    if (areFailed()) {
+      return [
+        {
+          text: `<span>Retry</span>`,
+          icon: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M8.25928 4.67343H10.5093V2.42343" stroke="#5A5A5A" stroke-linecap="round" stroke-linejoin="round"/>
         <path d="M8.91556 8.91563C8.33881 9.49286 7.60381 9.88606 6.80354 10.0455C6.00328 10.2049 5.17371 10.1234 
         4.41977 9.81133C3.66583 9.49921 3.02139 8.9705 2.56798 8.29208C2.11457 7.61365 1.87256 6.81599 1.87256 6C1.
@@ -448,41 +476,53 @@ export const runContextMenu = () => {
         6.00328 1.79507 6.80354 1.95451C7.60381 2.11395 8.33881 2.50715 8.91556 3.08438L10.5093 4.67344" 
         stroke="#5A5A5A" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>`,
-        events: {
-          click: () =>
-            sendMessage({
-              message: "RERUN_GENERATION",
-              param: element_id,
-            }),
+          events: {
+            click: () =>
+              sendMessage({
+                message: "RERUN_GENERATION",
+                param: predictedElements,
+              }),
+          },
         },
-      };
+      ];
     }
+    return [];
+  };
+
+  const getActiveElements = () => {
+    const items = predictedElements.map((_element) => ({
+      text: _element.name,
+      events: {
+        click: () => sendMessage({
+          message: "ELEMENT_SELECT",
+          param: _element,
+        })
+      }
+    }));
+    return items;
   };
 
   const contextMenuListener = (event) => {
-    const highlightTarget = event.target.closest("[jdn-highlight=true]");
-    if (!highlightTarget) return;
+    highlightTargets = document.querySelectorAll(".jdn-active");
+
+    if (highlightTargets.length === 0) {
+      highlightTargets = event.target.closest("[jdn-highlight=true]");
+    }
+    if (highlightTargets.length === 0) return;
+
     event.preventDefault();
     contextEvent = event;
 
     sendMessage({
-      message: "GET_ELEMENT",
-      param: highlightTarget.id,
-    }).then(({ element, types }) => {
-      if (!element) return;
-      predictedElement = element;
-      types = types;
+      message: "GET_ELEMENTS_DATA",
+      param: Array.from(highlightTargets).map((_element) => _element.id),
+    }).then(({ elements, _types }) => {
+      if (!elements || !elements.length) return;
+      predictedElements = elements;
+      types = _types;
       elementMenu && elementMenu.remove();
-      elementMenu = new ContextMenu(menuItems(element, types));
+      elementMenu = new ContextMenu(menuItems());
       elementMenu.display(contextEvent);
-      const el = document.getElementById(predictedElement.jdnHash);
-
-      sendMessage({
-        message: "ELEMENT_SET_ACTIVE",
-        param: predictedElement.jdnHash,
-      });
-
-      el?.classList?.add("jdn-active");
     });
   };
 
@@ -496,10 +536,6 @@ export const runContextMenu = () => {
   };
 
   const messageHandler = ({ message, param }, sender, sendResponse) => {
-    if (message === "HIGHLIGHT_TOGGLED") {
-      predictedElement = param;
-    }
-
     if (message === "PING_SCRIPT" && param.scriptName === "runContextMenu") {
       sendResponse({ message: true });
     }
