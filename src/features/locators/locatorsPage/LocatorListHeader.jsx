@@ -17,7 +17,13 @@ import {
 import { stopGenerationGroup } from "../../../common/thunks/stopGenerationGroup";
 import { rerunGeneration } from "../../../common/thunks/rerunGeneration";
 import { locatorTaskStatus, LOCATOR_CALCULATION_PRIORITY } from "../../../common/constants/constants";
-import { selectInProgressSelectedByPageObject } from "../../pageObjects/pageObjectSelectors";
+import {
+  selectCalculatedActiveByPageObj,
+  selectCurrentPageObject,
+  selectDeletedActiveByPageObj,
+  selectInProgressSelectedByPageObject,
+  selectWaitingActiveByPageObj,
+} from "../../pageObjects/pageObjectSelectors";
 import {
   advanced,
   deleteOption,
@@ -42,27 +48,22 @@ export const EXPAND_STATE = {
 /* eslint-disable */
 // remove when current file all dependencies will migrate to TS
 
-export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedSelected, locatorIds, render }) => {
+export const LocatorListHeader = ({ render }) => {
   const dispatch = useDispatch();
   const [expandAll, setExpandAll] = useState(EXPAND_STATE.EXPANDED);
   const [searchString, setSearchString] = useState("");
 
-  const currentPageObject = useSelector((_state) => _state.pageObject.present.currentPageObject);
+  const { id: currentPageObject, locators: locatorIds } = useSelector(selectCurrentPageObject);
   const active = useSelector(selectActiveLocators);
-  const selected = useMemo(() => [...generatedSelected, ...waitingSelected, ...deletedSelected], [
-    generatedSelected,
-    waitingSelected,
-    deletedSelected,
-  ]);
+  const calculatedActive = useSelector((_state) => selectCalculatedActiveByPageObj(_state, currentPageObject));
+  const waitingActive = useSelector((_state) => selectWaitingActiveByPageObj(_state, currentPageObject));
+  const deletedActive = useSelector((_state) => selectDeletedActiveByPageObj(_state, currentPageObject));
 
-  const activeSelected = useMemo(() => [...generatedSelected, ...waitingSelected], [
-    generatedSelected,
-    waitingSelected,
-  ]);
+  const actualSelected = useMemo(() => [...calculatedActive, ...waitingActive], [calculatedActive, waitingActive]);
 
   const stoppedSelected = useMemo(
-    () => filter(waitingSelected, (el) => el.locator.taskStatus === locatorTaskStatus.REVOKED),
-    [waitingSelected]
+    () => filter(waitingActive, (el) => el.locator.taskStatus === locatorTaskStatus.REVOKED),
+    [waitingActive]
   );
 
   const inProgressSelected = useSelector((_state) => selectInProgressSelectedByPageObject(_state, currentPageObject));
@@ -86,17 +87,17 @@ export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedS
       }),
     [inProgressSelected]
   );
-  const fullySelected = size(selected) === size(locatorIds);
-  const partiallySelected = !!size(selected) && size(selected) < size(locatorIds);
+  const fullySelected = size(active) === size(locatorIds);
+  const partiallySelected = !!size(active) && size(active) < size(locatorIds);
 
   const handleOnCheck = () => {
     dispatch(setElementGroupGeneration({ ids: locatorIds, generate: !fullySelected }));
   };
 
   const handleDelete = () => {
-    activeSelected.length > 1
-      ? dispatch(toggleDeletedGroup(activeSelected, true))
-      : dispatch(toggleDeleted(activeSelected[0].element_id, true));
+    actualSelected.length > 1
+      ? dispatch(toggleDeletedGroup(actualSelected, true))
+      : dispatch(toggleDeleted(actualSelected[0].element_id, true));
   };
 
   const handleUpPriority = () => {
@@ -127,13 +128,13 @@ export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedS
     const getRerunGeneration = (time) => () =>
       dispatch(
         rerunGeneration({
-          generationData: generatedSelected,
+          generationData: calculatedActive,
           maxGenerationTime: time,
         })
       );
 
     const items = [
-      ...(size(deletedSelected) ? [restore(() => dispatch(toggleDeletedGroup(deletedSelected)))] : []),
+      ...(size(deletedActive) ? [restore(() => dispatch(toggleDeletedGroup(deletedActive)))] : []),
       ...(size(stoppedSelected) ? [rerun(() => dispatch(rerunGeneration({ generationData: stoppedSelected })))] : []),
       ...(size(inProgressSelected) ? [pause(() => dispatch(stopGenerationGroup(inProgressSelected)))] : []),
       ...(size(inProgressSelected) && (size(decreasedPrioritySelected) || size(noPrioritySelected))
@@ -142,7 +143,7 @@ export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedS
       ...(size(inProgressSelected) && (size(increasedPrioritySelected) || size(noPrioritySelected))
         ? [downPriority(handleDownPriority)]
         : []),
-      ...(size(generatedSelected)
+      ...(size(calculatedActive)
         ? [
             advanced([
               getRerunGeneration(1),
@@ -154,13 +155,13 @@ export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedS
             ]),
           ]
         : []),
-      ...(size(activeSelected) ? [deleteOption(handleDelete)] : []),
+      ...(size(actualSelected) ? [deleteOption(handleDelete)] : []),
     ];
 
     return size(items) ? <Menu {...{ items }} /> : null;
   };
 
-  const menu = useMemo(() => renderMenu(), [selected]);
+  const menu = useMemo(() => renderMenu(), [active]);
 
   return (
     <React.Fragment>
@@ -189,8 +190,7 @@ export const LocatorListHeader = ({ generatedSelected, waitingSelected, deletedS
             onDelete={() => dispatch(elementGroupUnsetActive(active))}
           />
         </span>
-        {/* {!isNil(menu) ? ( */}
-        {false ? (
+        {!isNil(menu) ? (
           <Dropdown arrow={{ pointAtCenter: true }} overlay={renderMenu()} trigger={["click"]} destroyPopupOnHide>
             <Button
               className="jdn__locatorsList_button jdn__locatorsList_button-menu"
