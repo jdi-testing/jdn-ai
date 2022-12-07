@@ -16,6 +16,7 @@ import {
   isImage,
   toBase64,
   MAX_COUNT_FILES,
+  MAX_FILES_SIZE_MB,
 } from "./utils";
 
 const { error } = Modal;
@@ -34,6 +35,8 @@ export const ReportProblem = () => {
   const currentPage = useSelector(selectCurrentPage).page;
 
   const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const filesSize =
+    fileList.reduce((a: number, b: UploadFile) => a + b.size!, 0) / 1024 / 1024;
 
   useEffect(() => {
     const defaultFileList = async () =>
@@ -177,7 +180,11 @@ export const ReportProblem = () => {
       {isModalOpen ? (
         <DialogWithForm
           modalProps={{
-            okButtonProps: { disabled: fileList.length > MAX_COUNT_FILES },
+            okButtonProps: {
+              disabled:
+                fileList.length > MAX_COUNT_FILES ||
+                filesSize > MAX_FILES_SIZE_MB,
+            },
             title: "Report a problem",
             open: isModalOpen,
             onOk: handleOk,
@@ -236,6 +243,16 @@ export const ReportProblem = () => {
                   }
                   return Promise.reject(
                     new Error("Only 10 files can be uploaded")
+                  );
+                },
+              }),
+              () => ({
+                validator() {
+                  if (filesSize <= MAX_FILES_SIZE_MB) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    new Error("The maximum file weight cannot exceed 10Mb")
                   );
                 },
               }),
