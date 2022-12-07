@@ -11,7 +11,12 @@ import { DialogWithForm } from "../../common/components/DialogWithForm";
 import { HttpEndpoint, request } from "../../services/backend";
 import { ValidationErrorType } from "../locators/locatorSlice.types";
 import { selectCurrentPageObject } from "../pageObjects/pageObjectSelectors";
-import { isAllowedExtension, isImage, toBase64, MAX_COUNT_FILES } from "./utils";
+import {
+  isAllowedExtension,
+  isImage,
+  toBase64,
+  MAX_COUNT_FILES,
+} from "./utils";
 
 const { error } = Modal;
 
@@ -32,17 +37,19 @@ export const ReportProblem = () => {
 
   useEffect(() => {
     const defaultFileList = async () =>
-      pageData && currentPage === PageType.LocatorsList ?
-        [
-          {
-            uid: "0",
-            name: "pageData.json",
-            status: "done" as UploadFileStatus,
-            url: (await toBase64(new Blob([pageData]) as RcFile)) as string | undefined,
-            linkProps: { download: "pageData.json" },
-          },
-        ] :
-        [];
+      pageData && currentPage === PageType.LocatorsList
+        ? [
+            {
+              uid: "0",
+              name: "pageData.json",
+              status: "done" as UploadFileStatus,
+              url: (await toBase64(new Blob([pageData]) as RcFile)) as
+                | string
+                | undefined,
+              linkProps: { download: "pageData.json" },
+            },
+          ]
+        : [];
     defaultFileList().then(setFileList);
   }, [currentPage, pageData]);
 
@@ -56,8 +63,8 @@ export const ReportProblem = () => {
       title: "Report is not available",
       content: (
         <React.Fragment>
-          Mail server is not accessible from your location and problem report can&apos;t be created automatically.
-          Please send an email{" "}
+          Mail server is not accessible from your location and problem report
+          can&apos;t be created automatically. Please send an email{" "}
           <a href="mailto:SupportJDI@epam.com" data-turbo-frame="">
             SupportJDI@epam.com
           </a>{" "}
@@ -68,19 +75,22 @@ export const ReportProblem = () => {
 
   const handleOk = () => {
     form
-        .validateFields()
-        .then((values) => {
+      .validateFields()
+      .then((values) => {
         // have no idea how make antd validate uploads properly
-          if (values.upload?.find((file) => file.status === "error")) throw new Error("invalid uploads");
-          sendReport(values);
-          form.resetFields();
-          setFileList([]);
-          setIsModalOpen(false);
-        })
-        .catch(() => {
-          const failedUploadFile = document.querySelector(".ant-upload-list-item-error");
-          failedUploadFile?.scrollIntoView({ behavior: "smooth" });
-        });
+        if (values.upload?.find((file) => file.status === "error"))
+          throw new Error("invalid uploads");
+        sendReport(values);
+        form.resetFields();
+        setFileList([]);
+        setIsModalOpen(false);
+      })
+      .catch(() => {
+        const failedUploadFile = document.querySelector(
+          ".ant-upload-list-item-error"
+        );
+        failedUploadFile?.scrollIntoView({ behavior: "smooth" });
+      });
   };
 
   const showModal = () => {
@@ -90,22 +100,25 @@ export const ReportProblem = () => {
     //     .then((response) => {
     //       if (response === 1) {
     //         setServerPingInProcess(false);
-            setIsModalOpen(true);
-        //   } else showExceprionConfirm();
-        // })
-        // .catch(() => showExceprionConfirm())
-        // .finally(() => setServerPingInProcess(false));
+    setIsModalOpen(true);
+    //   } else showExceprionConfirm();
+    // })
+    // .catch(() => showExceprionConfirm())
+    // .finally(() => setServerPingInProcess(false));
   };
 
   const sendReport = (values: ReportFormProps) => {
     const { upload, ...rest } = values;
 
-    const attachments = upload ?
-      upload.map((file: UploadFile) => ({
-        file_content: file.url?.replace(/data:(image|text|application)\/.+;base64,/, ""),
-        filename: file.name,
-      })) :
-      [];
+    const attachments = upload
+      ? upload.map((file: UploadFile) => ({
+          file_content: file.url?.replace(
+            /data:(image|text|application)\/.+;base64,/,
+            ""
+          ),
+          filename: file.name,
+        }))
+      : [];
 
     request.post(HttpEndpoint.REPORT_PROBLEM, {
       attachments,
@@ -128,7 +141,8 @@ export const ReportProblem = () => {
           _file.url = (await toBase64(_file.originFileObj)) as string;
         } else {
           _file.status = "error";
-          _file.response = "Invalid file extension, only image/*, *.zip, *.rar, *.json, *.txt";
+          _file.response =
+            "Invalid file extension, only image/*, *.zip, *.rar, *.json, *.txt";
           _file.error = true;
         }
         _file.linkProps = { download: _file.name };
@@ -147,7 +161,11 @@ export const ReportProblem = () => {
 
   return (
     <div className="jdn__reportProblem">
-      <Tooltip title="Report a problem" placement="bottomRight" align={{ offset: [12, 0] }}>
+      <Tooltip
+        title="Report a problem"
+        placement="bottomRight"
+        align={{ offset: [12, 0] }}
+      >
         <Button
           onClick={showModal}
           type="link"
@@ -191,28 +209,43 @@ export const ReportProblem = () => {
           <Form.Item
             label="Text"
             name="body"
-            rules={[{ required: true, message: "Please input your problem description" }]}
+            rules={[
+              {
+                required: true,
+                message: "Please input your problem description",
+              },
+            ]}
           >
-            <TextArea rows={5} placeholder="Describe your problem" maxLength={2000} showCount />
+            <TextArea
+              rows={5}
+              placeholder="Describe your problem"
+              maxLength={2000}
+              showCount
+            />
           </Form.Item>
           <Form.Item
             name="upload"
             label="Upload"
             valuePropName="upload"
             getValueFromEvent={normFile}
-            rules={[() => ({
-            validator(_, value) {
-              if (value.length <= MAX_COUNT_FILES) {
-                return Promise.resolve();
-              }
-              return Promise.reject(new Error("Only 10 files can be uploaded"));
-            },
-            })]}
+            rules={[
+              () => ({
+                validator(_, value) {
+                  if (value.length <= MAX_COUNT_FILES) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                    new Error("Only 10 files can be uploaded")
+                  );
+                },
+              }),
+            ]}
             extra={
               <React.Fragment>
-                Extensions: image/*, *.zip, *.rar, *.json, *.txt<br />
-                File size maximum 2Mb, 10 files in total, total size
-                maximum 10Mb
+                Extensions: image/*, *.zip, *.rar, *.json, *.txt
+                <br />
+                File size maximum 2Mb, 10 files in total, total size maximum
+                10Mb
               </React.Fragment>
             }
           >
@@ -225,7 +258,9 @@ export const ReportProblem = () => {
               <Tooltip
                 placement="right"
                 title={"Only 10 files can be uploaded"}
-                trigger={fileList.length >= MAX_COUNT_FILES ? ["hover", "focus"]: ""}
+                trigger={
+                  fileList.length >= MAX_COUNT_FILES ? ["hover", "focus"] : ""
+                }
               >
                 <Button
                   disabled={fileList.length >= MAX_COUNT_FILES}
@@ -235,8 +270,8 @@ export const ReportProblem = () => {
                     </span>
                   }
                 >
-                Upload
-              </Button>
+                  Upload
+                </Button>
               </Tooltip>
             </Upload>
           </Form.Item>

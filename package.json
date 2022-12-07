@@ -10,7 +10,8 @@
     "build:devenv": "webpack --mode production --env devenv",
     "patch": "npx mversion patch",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "lint": "lint-staged"
   },
   "main": "index.html",
   "repository": {
