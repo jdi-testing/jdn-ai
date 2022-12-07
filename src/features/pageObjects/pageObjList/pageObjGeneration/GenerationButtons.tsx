@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { RootState } from "../../../../app/store";
 import { IdentificationStatus } from "../../../locators/locatorSlice.types";
-import { selectPageObjById } from "../../pageObjectSelectors";
+import { selectCurrentPageObject } from "../../pageObjectSelectors";
 import { changeElementLibrary } from "../../pageObjectSlice";
 import { PageObjectId } from "../../pageObjectSlice.types";
 import { ElementLibrary, libraryNames } from "../../utils/generationClassesMap";
@@ -17,7 +17,7 @@ interface Props {
 
 export const GenerationButtons: React.FC<Props> = ({ pageObj }) => {
   const status = useSelector((state: RootState) => state.locators.present.status);
-  const currentPageObject = useSelector((state: RootState) => selectPageObjById(state, pageObj));
+  const currentPageObject = useSelector(selectCurrentPageObject);
   const { id, library } = currentPageObject!;
 
   const dispatch = useDispatch();

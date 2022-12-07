@@ -5,7 +5,7 @@ import { locatorTaskStatus } from "../../common/constants/constants";
 import { FilterKey } from "../filter/filter.types";
 import { selectFilterById } from "../filter/filterSelectors";
 import { isProgressStatus } from "../locators/locatorGenerationController";
-import { selectGeneratedLocators, selectLocators, selectLocatorsByProbability } from "../locators/locatorSelectors";
+import { selectLocators } from "../locators/locatorSelectors";
 import { Locator } from "../locators/locatorSlice.types";
 import { PageObject, PageObjectId } from "./pageObjectSlice.types";
 
@@ -37,25 +37,22 @@ export const selectMaxId = createSelector(simpleSelectPageObjects, (items) => {
   return res !== -Infinity ? res : null;
 });
 
-export const selectLocatorsByPageObject = createSelector(selectLocators, selectPageObjById, (elements, pageObj) => {
-  if (!pageObj) return;
-  const { locators: locatorIds } = pageObj;
-  if (!locatorIds || !size(locatorIds)) return;
-  return chain(locatorIds)
-      .map((id) => elements.find(({ element_id }) => element_id === id))
-      .compact()
-      .value();
-});
-
-export const selectPageObjLocatorsByProbability = createSelector(
-    selectLocatorsByProbability,
-    (state: RootState, pageObjId: PageObjectId) => selectPageObjById(state, pageObjId)?.locators || [],
+export const selectLocatorsByPageObject = createSelector(
+    selectLocators,
+    (state: RootState, pageObjId?: PageObjectId) => {
+      pageObjId = pageObjId || selectCurrentPageObject(state)?.id;
+      if (isNil(pageObjId)) return [];
+      return selectPageObjById(state, pageObjId)?.locators || [];
+    },
     (locByProbability, locByPageObj) => locByProbability.filter((loc) => locByPageObj.includes(loc.element_id))
 );
 
 export const selectFilteredLocators = createSelector(
     selectLocatorsByPageObject,
-    selectFilterById,
+    (state: RootState, pageObjectId?: PageObjectId) => {
+      pageObjectId = pageObjectId || selectCurrentPageObject(state)?.id;
+      return selectFilterById(state, pageObjectId!);
+    },
     (locators, filter) => {
       if (!filter) return locators;
       const _locators = locators?.filter((loc) => {
@@ -66,47 +63,49 @@ export const selectFilteredLocators = createSelector(
     }
 );
 
-const filterConfirmedLocators = (elements: Array<Locator> = []) =>
-  elements.filter((elem) => elem?.generate && !elem.deleted);
-
-export const selectLocatorsToConfirm = createSelector(selectLocatorsByPageObject, filterConfirmedLocators);
-
-export const selectFilteredConfirmedLocators = createSelector(selectFilteredLocators, filterConfirmedLocators);
-
-export const selectConfirmedLocators = selectFilteredConfirmedLocators;
-
-export const selectCalculatedByPageObj = createSelector(
-    selectGeneratedLocators,
-    (state: RootState, pageObjId: PageObjectId) => selectPageObjById(state, pageObjId)?.locators || [],
-    (locators, locByPageObj) =>
-      chain(locators)
-          .filter((loc) => locByPageObj.includes(loc.element_id))
-          .value()
+export const selectGenerateByPageObject = createSelector(selectFilteredLocators, (elements: Array<Locator> = []) =>
+  elements.filter((elem) => elem?.generate)
 );
 
+export const selectConfirmedLocators = createSelector(selectFilteredLocators, (elements: Array<Locator> = []) =>
+  elements.filter((elem) => elem?.generate && !elem.deleted)
+);
+
+// move to loc
+export const selectCalculatedByPageObj = createSelector(selectFilteredLocators, (locators: Locator[]) =>
+  locators.filter(
+      (_loc) => (_loc.locator.taskStatus === locatorTaskStatus.SUCCESS || _loc.isCustomLocator) && !_loc.deleted
+  )
+);
+
+// move to loc
 export const selectCalculatedActiveByPageObj = createSelector(selectCalculatedByPageObj, (locators) =>
   locators.filter((_loc) => _loc.active)
 );
 
+// move to loc
 export const selectCalculatedGenerateByPageObj = createSelector(selectCalculatedByPageObj, (items) =>
   items.filter((item) => item.generate)
 );
 
-export const selectDeletedByPageObj = createSelector(selectPageObjLocatorsByProbability, (items) =>
+// move to loc
+export const selectDeletedByPageObj = createSelector(selectFilteredLocators, (items) =>
   chain(items)
       .filter((el) => el.deleted || false)
       .value()
 );
 
+// move to loc
 export const selectDeletedGenerateByPageObj = createSelector(selectDeletedByPageObj, (items) =>
   items.filter((item) => item.generate)
 );
 
+// move to loc
 export const selectDeletedActiveByPageObj = createSelector(selectDeletedByPageObj, (locators) =>
   locators.filter((_loc) => _loc.active)
 );
 
-export const selectWaitingByPageObj = createSelector(selectPageObjLocatorsByProbability, (elements) =>
+export const selectWaitingByPageObj = createSelector(selectFilteredLocators, (elements) =>
   chain(elements)
       .filter(
           (el) =>
@@ -118,35 +117,37 @@ export const selectWaitingByPageObj = createSelector(selectPageObjLocatorsByProb
       .value()
 );
 
+// move to loc
 export const selectWaitingActiveByPageObj = createSelector(selectWaitingByPageObj, (locators) =>
   locators.filter((_loc) => _loc.active)
 );
 
-export const selectInProgressByPageObj = createSelector(selectPageObjLocatorsByProbability, (elements) =>
+// move to loc
+export const selectInProgressByPageObj = createSelector(selectFilteredLocators, (elements) =>
   chain(elements)
       .filter((el) => isProgressStatus(el.locator.taskStatus) && !el.deleted)
       .value()
 );
 
+// move to loc
 export const selectInProgressSelectedByPageObject = createSelector(selectInProgressByPageObj, (items) =>
   items.filter((item) => item.generate)
 );
 
+// move to loc
 export const selectInProgressGenerateByPageObj = createSelector(selectWaitingByPageObj, (items) =>
   items.filter((item) => item.generate)
 );
 
-export const selectFailedByPageObject = createSelector(selectPageObjLocatorsByProbability, (elements) =>
+// move to loc
+export const selectFailedByPageObject = createSelector(selectFilteredLocators, (elements) =>
   elements.filter((element) => element.locator.taskStatus === locatorTaskStatus.FAILURE)
 );
 
+// move to loc
 export const selectLocatorByJdnHash = createSelector(
     (state: RootState, jdnHash: string) => selectLocators(state).filter((loc) => loc.jdnHash === jdnHash),
-    (state: RootState) => {
-      if (isNil(state.pageObject.present.currentPageObject)) return [];
-      const pageObject = selectPageObjById(state, state.pageObject.present.currentPageObject);
-      return pageObject ? pageObject.locators : [];
-    },
+    (state: RootState) => selectCurrentPageObject(state)?.locators,
     (locators, pageObjLocators) => {
       return locators.find(({ element_id }) => pageObjLocators?.includes(element_id));
     }
@@ -168,3 +169,7 @@ export const selectEmptyPageObjects = createSelector(
 );
 
 export const selectLastElementLibrary = createSelector(selectPageObjects, (pageObjects) => last(pageObjects)?.library);
+
+export const selectActiveLocators = createSelector(selectFilteredLocators, (locators) =>
+  locators.filter((_loc) => _loc.active)
+);

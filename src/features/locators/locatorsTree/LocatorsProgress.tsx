@@ -11,27 +11,22 @@ import {
   selectFailedByPageObject,
   selectCalculatedByPageObj,
   selectInProgressByPageObj,
-  selectPageObjLocatorsByProbability
+  selectLocatorsByPageObject
 } from "../../pageObjects/pageObjectSelectors";
-import { PageObjectId } from "../../pageObjects/pageObjectSlice.types";
-
-interface Props {
-  currentPageObject: PageObjectId;
-}
 
 let timer: NodeJS.Timeout;
 
-export const LocatorsProgress: React.FC<Props> = ({ currentPageObject }) => {
+export const LocatorsProgress = () => {
   const [isProgressActive, setIsProgressActive] = useState(false);
   const generationStatus = useSelector((state: RootState) => state.locators.present.generationStatus);
 
   const byProbability = useSelector((_state: RootState) =>
-    selectPageObjLocatorsByProbability(_state, currentPageObject)
+    selectLocatorsByPageObject(_state)
   );
-  const generated = useSelector((_state: RootState) => selectCalculatedByPageObj(_state, currentPageObject));
-  const inProgress = useSelector((_state: RootState) => selectInProgressByPageObj(_state, currentPageObject));
-  const deleted = useSelector((_state: RootState) => selectDeletedByPageObj(_state, currentPageObject));
-  const failed = useSelector((_state: RootState) => selectFailedByPageObject(_state, currentPageObject));
+  const generated = useSelector((_state: RootState) => selectCalculatedByPageObj(_state));
+  const inProgress = useSelector((_state: RootState) => selectInProgressByPageObj(_state));
+  const deleted = useSelector((_state: RootState) => selectDeletedByPageObj(_state));
+  const failed = useSelector((_state: RootState) => selectFailedByPageObject(_state));
 
   const calculationReady = size(generated);
   const toBeCalculated = size(inProgress) + size(failed);

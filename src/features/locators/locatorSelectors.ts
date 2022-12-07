@@ -1,7 +1,6 @@
 import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
 
 import { RootState } from "../../app/store";
-import { locatorTaskStatus } from "../../common/constants/constants";
 import { ElementId, Locator } from "./locatorSlice.types";
 
 export const locatorsAdapter = createEntityAdapter<Locator>({
@@ -14,17 +13,7 @@ export const { selectAll: selectLocators, selectById: selectLocatorById } = loca
 
 export const { selectAll: simpleSelectLocators, selectById: simpleSelectLocatorById } = locatorsAdapter.getSelectors();
 
-export const selectLocatorsByProbability = createSelector(
-    selectLocators,
-    (state: RootState) => state.main.perception,
-    (items: Locator[], perception) => items.filter((e) => e.predicted_probability >= perception)
-);
-
-export const selectGeneratedLocators = createSelector(selectLocatorsByProbability, (items: Locator[]) =>
-  items.filter((el) => (el.locator.taskStatus === locatorTaskStatus.SUCCESS || el.isCustomLocator) && !el.deleted)
-);
-
-export const selectLocatorsToGenerate = createSelector(selectLocatorsByProbability, (items: Locator[]) =>
+export const selectLocatorsToGenerate = createSelector(selectLocators, (items: Locator[]) =>
   items.filter((el) => el.generate && !el.deleted)
 );
 
@@ -60,8 +49,4 @@ export const areChildrenChecked = createSelector(
       locator &&
     locator.children &&
     locator.children.every((childId) => locators.some((loc) => loc.element_id === childId && loc.generate))
-);
-
-export const selectActiveLocators = createSelector(selectLocators, (locators) =>
-  locators.filter((_loc) => _loc.active)
 );
