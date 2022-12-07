@@ -228,6 +228,22 @@ export const elementsWithoutNames = [
     "elemText": "support",
     "locator": {
       "fullXpath": "/html/body/footer/div/div/ul"
-    }
+    },
   },
+  {
+    "element_id": "1195797979872788259469412460",
+    "x": 1037.7396240234,
+    "y": 1972.7916870117,
+    "width": 142.2604217529,
+    "height": 15.3333339691,
+    "predicted_label": "list",
+    "predicted_probability": 1,
+    "sort_key": 2181.326557325,
+    "elemId": "",
+    "elemName": "",
+    "elemText": "5",
+    "locator": {
+      "fullXpath": "/html/body/footer/div/div/ul"
+    }
+  }
 ];
