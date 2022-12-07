@@ -20,7 +20,6 @@ import { LocatorsProgress } from "./LocatorsProgress";
 import { Notifications } from "./notifications/Notifications";
 import { useSize } from "./useSize";
 import { convertListToTree, LocatorTree, setNewParents } from "./utils";
-import { selectFilterById, selectFilters } from "../../filter/filterSelectors";
 
 export enum SearchState {
   None = "none",
@@ -62,9 +61,6 @@ export const LocatorsTree: React.FC<Props> = ({ locatorIds, viewProps }) => {
   const containerHeight = useSize(containerRef)?.height;
 
   const { expandAll, setExpandAll, searchString } = viewProps;
-
-  const filter = useSelector((state: RootState) => selectFilterById(state, 0));
-  console.log(filter);
 
   const currentPage = useSelector(selectCurrentPage).page;
   const origLocators = useSelector(selectLocatorsByPageObject);
