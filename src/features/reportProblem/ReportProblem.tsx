@@ -11,7 +11,7 @@ import { DialogWithForm } from "../../common/components/DialogWithForm";
 import { HttpEndpoint, request } from "../../services/backend";
 import { ValidationErrorType } from "../locators/locatorSlice.types";
 import { selectCurrentPageObject } from "../pageObjects/pageObjectSelectors";
-import { isAllowedExtension, isImage, toBase64 } from "./utils";
+import { isAllowedExtension, isImage, toBase64, MAX_COUNT_FILES } from "./utils";
 
 const { error } = Modal;
 
@@ -84,17 +84,17 @@ export const ReportProblem = () => {
   };
 
   const showModal = () => {
-    setServerPingInProcess(true);
-    request
-        .get(HttpEndpoint.PING_SMTP)
-        .then((response) => {
-          if (response === 1) {
-            setServerPingInProcess(false);
+    // setServerPingInProcess(true);
+    // request
+    //     .get(HttpEndpoint.PING_SMTP)
+    //     .then((response) => {
+    //       if (response === 1) {
+    //         setServerPingInProcess(false);
             setIsModalOpen(true);
-          } else showExceprionConfirm();
-        })
-        .catch(() => showExceprionConfirm())
-        .finally(() => setServerPingInProcess(false));
+        //   } else showExceprionConfirm();
+        // })
+        // .catch(() => showExceprionConfirm())
+        // .finally(() => setServerPingInProcess(false));
   };
 
   const sendReport = (values: ReportFormProps) => {
@@ -159,6 +159,7 @@ export const ReportProblem = () => {
       {isModalOpen ? (
         <DialogWithForm
           modalProps={{
+            okButtonProps: { disabled: fileList.length > MAX_COUNT_FILES },
             title: "Report a problem",
             open: isModalOpen,
             onOk: handleOk,
@@ -199,6 +200,14 @@ export const ReportProblem = () => {
             label="Upload"
             valuePropName="upload"
             getValueFromEvent={normFile}
+            rules={[() => ({
+            validator(_, value) {
+              if (value.length <= MAX_COUNT_FILES) {
+                return Promise.resolve();
+              }
+              return Promise.reject(new Error("Only 10 files can be uploaded"));
+            },
+            })]}
             extra={
               <React.Fragment>
                 Extensions: image/*, *.zip, *.rar, *.json, *.txt<br />
@@ -207,16 +216,28 @@ export const ReportProblem = () => {
               </React.Fragment>
             }
           >
-            <Upload name="attachments" onChange={handleUploadChange} {...{ fileList }}>
-              <Button
-                icon={
-                  <span role="img" className="anticon anticon-upload">
-                    <UploadSimple />
-                  </span>
-                }
+            <Upload
+              name="attachments"
+              onChange={handleUploadChange}
+              {...{ fileList }}
+              multiple={true}
+            >
+              <Tooltip
+                placement="right"
+                title={"Only 10 files can be uploaded"}
+                trigger={fileList.length >= MAX_COUNT_FILES ? ["hover", "focus"]: ""}
               >
+                <Button
+                  disabled={fileList.length >= MAX_COUNT_FILES}
+                  icon={
+                    <span role="img" className="anticon anticon-upload">
+                      <UploadSimple />
+                    </span>
+                  }
+                >
                 Upload
               </Button>
+              </Tooltip>
             </Upload>
           </Form.Item>
         </DialogWithForm>

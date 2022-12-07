@@ -14,3 +14,5 @@ export const isImage = (file: UploadFile) => file["type"]?.includes("image");
 export const allowedExtensions = ["zip", "json", "txt", "image/", "text/plain"];
 
 export const isAllowedExtension = (type: string) => !!allowedExtensions.find((extension) => type.includes(extension));
+
+export const MAX_COUNT_FILES = 10;
