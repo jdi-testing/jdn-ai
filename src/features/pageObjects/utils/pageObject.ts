@@ -12,7 +12,7 @@ import {
   take,
   toLower,
   toString,
-  upperFirst
+  upperFirst,
 } from "lodash";
 
 import { RootState } from "../../../app/store";
@@ -61,7 +61,7 @@ export const createElementName = (
     elemText ? join(take(normalizeString(elemText), subtract(60, size(string))), "") : "";
   const getClass = () => (newType || getJDILabel(predicted_label as keyof ElementLabel, library)).toLowerCase();
   const getIndex = (string: string) => toString(uniqueIndex(string));
-  const startsWithNumber = new RegExp("^[0-9].+$");
+  const startsWithNumber = new RegExp("^[0-9].*$");
   const checkNumberFirst = (string: string) => (string.match(startsWithNumber) ? `name${string}` : string);
 
   let _resultName = "";
