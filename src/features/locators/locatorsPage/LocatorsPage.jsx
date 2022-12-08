@@ -14,8 +14,8 @@ import {
   selectCurrentPageObject,
   selectDeletedGenerateByPageObj,
   selectCalculatedGenerateByPageObj,
-  selectLocatorsByPageObject,
-  selectInProgressGenerateByPageObj
+  selectInProgressGenerateByPageObj,
+  selectFilteredLocators
 } from "../../pageObjects/pageObjectSelectors";
 import { clearLocators } from "../../pageObjects/pageObjectSlice";
 import { locatorGenerationController } from "../locatorGenerationController";
@@ -27,13 +27,12 @@ const { confirm } = Modal;
 
 export const LocatorsPage = ({ alreadyGenerated }) => {
   const dispatch = useDispatch();
-  const currentPageObject = useSelector((_state) => _state.pageObject.present.currentPageObject);
   const currentPage = useSelector(selectCurrentPage).page;
-  const locators = useSelector((_state) => selectLocatorsByPageObject(_state, currentPageObject));
+  const locators = useSelector(selectFilteredLocators);
   const locatorIds = useSelector(selectCurrentPageObject).locators;
-  const inProgressGenerate = useSelector((_state) => selectInProgressGenerateByPageObj(_state, currentPageObject));
-  const calculatedGenerate = useSelector((_state) => selectCalculatedGenerateByPageObj(_state, currentPageObject));
-  const deletedGenerate = useSelector((_state) => selectDeletedGenerateByPageObj(_state, currentPageObject));
+  const inProgressGenerate = useSelector(selectInProgressGenerateByPageObj);
+  const calculatedGenerate = useSelector(selectCalculatedGenerateByPageObj);
+  const deletedGenerate = useSelector(selectDeletedGenerateByPageObj);
 
   const [locatorsSnapshot] = useState(locators);
 
@@ -142,7 +141,7 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
         <LocatorListHeader
           render={(viewProps) => (
             <div className="jdn__locatorsList-content">
-              {size(locators) ? <LocatorsTree pageObject={currentPageObject} {...{ viewProps, locatorIds }} /> : null}
+              {size(locators) ? <LocatorsTree {...{ viewProps, locatorIds }} /> : null}
             </div>
           )}
         />

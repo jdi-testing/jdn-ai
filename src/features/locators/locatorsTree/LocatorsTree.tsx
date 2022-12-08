@@ -11,9 +11,8 @@ import { ElementId, Locator as LocatorType } from "../locatorSlice.types";
 import {
   selectCurrentPageObject,
   selectFilteredLocators,
-  selectPageObjLocatorsByProbability,
+  selectLocatorsByPageObject,
 } from "../../pageObjects/pageObjectSelectors";
-import { PageObjectId } from "../../pageObjects/pageObjectSlice.types";
 import { defaultLibrary } from "../../pageObjects/utils/generationClassesMap";
 import { Locator } from "../locator";
 import { EXPAND_STATE } from "../locatorsPage/LocatorListHeader";
@@ -35,7 +34,6 @@ enum ExpandState {
 }
 
 interface Props {
-  pageObject: PageObjectId;
   locatorIds: Array<ElementId>;
   viewProps: {
     expandAll: ExpandState;
@@ -54,7 +52,7 @@ type TreeNode = {
   className: string;
 };
 
-export const LocatorsTree: React.FC<Props> = ({ pageObject: currentPageObject, locatorIds, viewProps }) => {
+export const LocatorsTree: React.FC<Props> = ({ locatorIds, viewProps }) => {
   const [expandedKeys, setExpandedKeys] = useState(locatorIds);
   const [autoExpandParent, setAutoExpandParent] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -65,10 +63,8 @@ export const LocatorsTree: React.FC<Props> = ({ pageObject: currentPageObject, l
   const { expandAll, setExpandAll, searchString } = viewProps;
 
   const currentPage = useSelector(selectCurrentPage).page;
-  const origLocators = useSelector((_state: RootState) =>
-    selectPageObjLocatorsByProbability(_state, currentPageObject)
-  );
-  const filteredLocators = useSelector((_state: RootState) => selectFilteredLocators(_state, currentPageObject));
+  const origLocators = useSelector(selectLocatorsByPageObject);
+  const filteredLocators = useSelector((_state: RootState) => selectFilteredLocators(_state));
   const locators =
     size(origLocators) !== size(filteredLocators) ? setNewParents(origLocators, filteredLocators || []) : origLocators;
   const scrollToLocator = useSelector((_state: RootState) => _state.locators.present.scrollToLocator);
@@ -175,7 +171,7 @@ export const LocatorsTree: React.FC<Props> = ({ pageObject: currentPageObject, l
         />
       </div>
       <Notifications />
-      <LocatorsProgress {...{ currentPageObject }} />
+      <LocatorsProgress />
     </React.Fragment>
   );
 };

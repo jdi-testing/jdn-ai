@@ -31,7 +31,7 @@ export const selectAvailableClasses = createSelector(
     (state: RootState) => selectClassFiltefByPO(state, selectCurrentPageObject(state)?.id || ""),
     (classFilter) => {
       return Object.entries(classFilter)
-          .map(([jdiClass, value]) => value ? jdiClass : null)
+          .map(([jdiClass, value]) => (value ? jdiClass : null))
           .filter((jdiClass) => !!jdiClass);
     }
 );

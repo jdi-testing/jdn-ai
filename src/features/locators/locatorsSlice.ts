@@ -11,8 +11,11 @@ import {
   ElementId,
   IdentificationStatus,
   Locator,
-  LocatorCalculationPriority, LocatorsGenerationStatus, LocatorsState, LocatorTaskStatus,
-  Validity
+  LocatorCalculationPriority,
+  LocatorsGenerationStatus,
+  LocatorsState,
+  LocatorTaskStatus,
+  Validity,
 } from "./locatorSlice.types";
 import { cancelStopGenerationReducer } from "./locatorsTree/notifications/cancelStopGeneration";
 
@@ -40,13 +43,7 @@ const locatorsSlice = createSlice({
     addLocators(state, { payload }) {
       locatorsAdapter.addMany(state, payload);
     },
-    changeLocatorAttributes(
-        state,
-        {
-          payload,
-        }:
-      PayloadAction<ChangeLocatorAttributesPayload>
-    ) {
+    changeLocatorAttributes(state, { payload }: PayloadAction<ChangeLocatorAttributesPayload>) {
       const { type, name, locator, element_id, validity, isCustomName } = payload;
       const _locator = simpleSelectLocatorById(state, element_id);
       if (!_locator) return;
@@ -121,9 +118,9 @@ const locatorsSlice = createSlice({
     setScrollToLocator(state, { payload: element_id }) {
       state.scrollToLocator = element_id;
     },
-    setElementGroupGeneration(state, { payload }: PayloadAction<{ ids: string[]; generate: boolean }>) {
-      const { ids, generate } = payload;
-      locatorsAdapter.upsertMany(state, ids.map((id) => ({ element_id: id, generate })) as Locator[]);
+    setElementGroupGeneration(state, { payload }: PayloadAction<{ locators: Locator[]; generate: boolean }>) {
+      const { locators, generate } = payload;
+      locatorsAdapter.upsertMany(state, locators.map(({ element_id }) => ({ element_id, generate })) as Locator[]);
     },
     toggleElementGroupGeneration(state, { payload }: PayloadAction<Locator[]>) {
       const newValue: Partial<Locator>[] = [];
@@ -169,7 +166,7 @@ const locatorsSlice = createSlice({
       locatorsAdapter.upsertOne(state, { element_id: payload, active: false } as Locator);
     },
     elementGroupUnsetActive(state, { payload }: PayloadAction<Array<Locator>>) {
-      const newValue = payload.map((_locator) => ({..._locator, active: false}));
+      const newValue = payload.map((_locator) => ({ ..._locator, active: false }));
       locatorsAdapter.upsertMany(state, newValue);
     },
   },

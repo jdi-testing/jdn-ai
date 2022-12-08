@@ -15,7 +15,7 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
   switch (type) {
     case "pageObject/addLocatorsToPageObj": {
       if (isNil(state.pageObject.present.currentPageObject)) return;
-      const locators = selectLocatorsByPageObject(state, state.pageObject.present.currentPageObject);
+      const locators = selectLocatorsByPageObject(state);
       locators && sendMessage.setHighlight({ elements: locators as Locator[] });
       break;
     }
@@ -92,8 +92,8 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       break;
     }
     case "locators/setElementGroupGeneration":
-      payload.ids.forEach((id: ElementId) => {
-        const element = selectLocatorById(state, id);
+      payload.locators.forEach((_loc: Locator) => {
+        const element = selectLocatorById(state, _loc.element_id);
         element && sendMessage.toggle({ element, skipScroll: true });
       });
       break;

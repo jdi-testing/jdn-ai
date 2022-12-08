@@ -18,9 +18,11 @@ import { stopGenerationGroup } from "../../../common/thunks/stopGenerationGroup"
 import { rerunGeneration } from "../../../common/thunks/rerunGeneration";
 import { locatorTaskStatus, LOCATOR_CALCULATION_PRIORITY } from "../../../common/constants/constants";
 import {
+  selectActiveLocators,
   selectCalculatedActiveByPageObj,
-  selectCurrentPageObject,
   selectDeletedActiveByPageObj,
+  selectFilteredLocators,
+  selectGenerateByPageObject,
   selectInProgressSelectedByPageObject,
   selectWaitingActiveByPageObj,
 } from "../../pageObjects/pageObjectSelectors";
@@ -37,7 +39,6 @@ import { LocatorsSearch } from "./LocatorsSearch";
 import { locatorGenerationController } from "../locatorGenerationController";
 import { Menu } from "../../../common/components/menu/Menu";
 import { Filter } from "../../filter/Filter";
-import { selectActiveLocators } from "../locatorSelectors";
 
 export const EXPAND_STATE = {
   EXPANDED: "Expanded",
@@ -53,11 +54,12 @@ export const LocatorListHeader = ({ render }) => {
   const [expandAll, setExpandAll] = useState(EXPAND_STATE.EXPANDED);
   const [searchString, setSearchString] = useState("");
 
-  const { id: currentPageObject, locators: locatorIds } = useSelector(selectCurrentPageObject);
+  const locators = useSelector(selectFilteredLocators);
+  const locatorsGenerate = useSelector(selectGenerateByPageObject);
   const active = useSelector(selectActiveLocators);
-  const calculatedActive = useSelector((_state) => selectCalculatedActiveByPageObj(_state, currentPageObject));
-  const waitingActive = useSelector((_state) => selectWaitingActiveByPageObj(_state, currentPageObject));
-  const deletedActive = useSelector((_state) => selectDeletedActiveByPageObj(_state, currentPageObject));
+  const calculatedActive = useSelector((_state) => selectCalculatedActiveByPageObj(_state));
+  const waitingActive = useSelector(selectWaitingActiveByPageObj);
+  const deletedActive = useSelector(selectDeletedActiveByPageObj);
 
   const actualSelected = useMemo(() => [...calculatedActive, ...waitingActive], [calculatedActive, waitingActive]);
 
@@ -66,7 +68,7 @@ export const LocatorListHeader = ({ render }) => {
     [waitingActive]
   );
 
-  const inProgressSelected = useSelector((_state) => selectInProgressSelectedByPageObject(_state, currentPageObject));
+  const inProgressSelected = useSelector(selectInProgressSelectedByPageObject);
 
   const noPrioritySelected = useMemo(() => filter(inProgressSelected, (_locator) => !_locator.priority), [
     inProgressSelected,
@@ -87,11 +89,11 @@ export const LocatorListHeader = ({ render }) => {
       }),
     [inProgressSelected]
   );
-  const fullySelected = size(active) === size(locatorIds);
-  const partiallySelected = !!size(active) && size(active) < size(locatorIds);
+  const fullySelected = size(locatorsGenerate) === size(locators);
+  const partiallySelected = !!size(locatorsGenerate) && size(locatorsGenerate) < size(locators);
 
   const handleOnCheck = () => {
-    dispatch(setElementGroupGeneration({ ids: locatorIds, generate: !fullySelected }));
+    dispatch(setElementGroupGeneration({ locators, generate: !fullySelected }));
   };
 
   const handleDelete = () => {
