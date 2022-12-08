@@ -16,6 +16,8 @@ export const allowedExtensions = ["zip", "json", "txt", "image/", "text/plain"];
 export const isAllowedExtension = (type: string) =>
   !!allowedExtensions.find((extension) => type.includes(extension));
 
+export const getFilesSize = (files: UploadFile[]) => files.reduce((a: number, b: UploadFile) => a + b.size!, 0) / 1024 / 1024;
+
 export const MAX_COUNT_FILES = 10;
 
 export const MAX_FILES_SIZE_MB = 10;

@@ -15,6 +15,7 @@ import {
   isAllowedExtension,
   isImage,
   toBase64,
+  getFilesSize,
   MAX_COUNT_FILES,
   MAX_FILES_SIZE_MB,
 } from "./utils";
@@ -35,24 +36,24 @@ export const ReportProblem = () => {
   const currentPage = useSelector(selectCurrentPage).page;
 
   const [fileList, setFileList] = useState<UploadFile[]>([]);
-  const filesSize =
-    fileList.reduce((a: number, b: UploadFile) => a + b.size!, 0) / 1024 / 1024;
+  const filesSize = getFilesSize(fileList);
+  const areFilesInvalid = fileList.length >= MAX_COUNT_FILES || filesSize > MAX_FILES_SIZE_MB;
 
   useEffect(() => {
     const defaultFileList = async () =>
-      pageData && currentPage === PageType.LocatorsList
-        ? [
-            {
-              uid: "0",
-              name: "pageData.json",
-              status: "done" as UploadFileStatus,
-              url: (await toBase64(new Blob([pageData]) as RcFile)) as
+      pageData && currentPage === PageType.LocatorsList ?
+        [
+          {
+            uid: "0",
+            name: "pageData.json",
+            status: "done" as UploadFileStatus,
+            url: (await toBase64(new Blob([pageData]) as RcFile)) as
                 | string
                 | undefined,
-              linkProps: { download: "pageData.json" },
-            },
-          ]
-        : [];
+            linkProps: { download: "pageData.json" },
+          },
+        ] :
+        [];
     defaultFileList().then(setFileList);
   }, [currentPage, pageData]);
 
@@ -78,50 +79,51 @@ export const ReportProblem = () => {
 
   const handleOk = () => {
     form
-      .validateFields()
-      .then((values) => {
+        .validateFields()
+        .then((values) => {
         // have no idea how make antd validate uploads properly
-        if (values.upload?.find((file) => file.status === "error"))
-          throw new Error("invalid uploads");
-        sendReport(values);
-        form.resetFields();
-        setFileList([]);
-        setIsModalOpen(false);
-      })
-      .catch(() => {
-        const failedUploadFile = document.querySelector(
-          ".ant-upload-list-item-error"
-        );
-        failedUploadFile?.scrollIntoView({ behavior: "smooth" });
-      });
+          if (values.upload?.find((file) => file.status === "error")) {
+            throw new Error("invalid uploads");
+          }
+          sendReport(values);
+          form.resetFields();
+          setFileList([]);
+          setIsModalOpen(false);
+        })
+        .catch(() => {
+          const failedUploadFile = document.querySelector(
+              ".ant-upload-list-item-error"
+          );
+          failedUploadFile?.scrollIntoView({ behavior: "smooth" });
+        });
   };
 
   const showModal = () => {
-    // setServerPingInProcess(true);
-    // request
-    //     .get(HttpEndpoint.PING_SMTP)
-    //     .then((response) => {
-    //       if (response === 1) {
-    //         setServerPingInProcess(false);
-    setIsModalOpen(true);
-    //   } else showExceprionConfirm();
-    // })
-    // .catch(() => showExceprionConfirm())
-    // .finally(() => setServerPingInProcess(false));
+    setServerPingInProcess(true);
+    request
+        .get(HttpEndpoint.PING_SMTP)
+        .then((response) => {
+          if (response === 1) {
+            setServerPingInProcess(false);
+            setIsModalOpen(true);
+          } else showExceprionConfirm();
+        })
+        .catch(() => showExceprionConfirm())
+        .finally(() => setServerPingInProcess(false));
   };
 
   const sendReport = (values: ReportFormProps) => {
     const { upload, ...rest } = values;
 
-    const attachments = upload
-      ? upload.map((file: UploadFile) => ({
-          file_content: file.url?.replace(
+    const attachments = upload ?
+      upload.map((file: UploadFile) => ({
+        file_content: file.url?.replace(
             /data:(image|text|application)\/.+;base64,/,
             ""
-          ),
-          filename: file.name,
-        }))
-      : [];
+        ),
+        filename: file.name,
+      })) :
+      [];
 
     request.post(HttpEndpoint.REPORT_PROBLEM, {
       attachments,
@@ -162,6 +164,19 @@ export const ReportProblem = () => {
     return e?.fileList;
   };
 
+  const getTextforUploadButtonTooltip = () => {
+    switch (true) {
+      case fileList.length >= MAX_COUNT_FILES && filesSize >= MAX_FILES_SIZE_MB:
+        return "Please check number of files and their weight";
+      case fileList.length >= MAX_COUNT_FILES:
+        return "Only 10 files can be uploaded";
+      case filesSize >= MAX_FILES_SIZE_MB:
+        return "The maximum files weight can not exceed 10Mb";
+      default:
+        return "Please check number of files or their weight";
+    }
+  };
+
   return (
     <div className="jdn__reportProblem">
       <Tooltip
@@ -182,8 +197,7 @@ export const ReportProblem = () => {
           modalProps={{
             okButtonProps: {
               disabled:
-                fileList.length > MAX_COUNT_FILES ||
-                filesSize > MAX_FILES_SIZE_MB,
+                fileList.length > MAX_COUNT_FILES || filesSize > MAX_FILES_SIZE_MB,
             },
             title: "Report a problem",
             open: isModalOpen,
@@ -242,17 +256,18 @@ export const ReportProblem = () => {
                     return Promise.resolve();
                   }
                   return Promise.reject(
-                    new Error("Only 10 files can be uploaded")
+                      new Error("Only 10 files can be uploaded")
                   );
                 },
               }),
               () => ({
-                validator() {
+                validator(_, value) {
+                  const filesSize = getFilesSize(value);
                   if (filesSize <= MAX_FILES_SIZE_MB) {
                     return Promise.resolve();
                   }
                   return Promise.reject(
-                    new Error("The maximum file weight cannot exceed 10Mb")
+                      new Error("The maximum files weight can not exceed 10Mb")
                   );
                 },
               }),
@@ -270,17 +285,15 @@ export const ReportProblem = () => {
               name="attachments"
               onChange={handleUploadChange}
               {...{ fileList }}
-              multiple={true}
+              multiple
             >
               <Tooltip
                 placement="right"
-                title={"Only 10 files can be uploaded"}
-                trigger={
-                  fileList.length >= MAX_COUNT_FILES ? ["hover", "focus"] : ""
-                }
+                title={getTextforUploadButtonTooltip()}
+                trigger={areFilesInvalid ? ["hover", "focus"] : ""}
               >
                 <Button
-                  disabled={fileList.length >= MAX_COUNT_FILES}
+                  disabled={areFilesInvalid}
                   icon={
                     <span role="img" className="anticon anticon-upload">
                       <UploadSimple />
