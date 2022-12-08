@@ -23,7 +23,7 @@ import { GenerationButtons } from "./pageObjGeneration/GenerationButtons";
 export const PageObjList = (props) => {
   const state = useSelector((state) => state);
   const currentPageObject = useSelector(
-    (state) => state.pageObject.present.currentPageObject
+      (state) => state.pageObject.present.currentPageObject
   );
   const pageObjects = useSelector(selectPageObjects);
   const [activePanel, setActivePanel] = useState([currentPageObject]);

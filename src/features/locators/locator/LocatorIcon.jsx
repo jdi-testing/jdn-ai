@@ -71,9 +71,9 @@ export const LocatorIcon = ({ validity, locator, deleted }) => {
     switch (locator.taskStatus) {
       case locatorTaskStatus.SUCCESS: {
         if (isEdited(locator)) {
-          return isValidLocator(validity)
-            ? successEditedIcon
-            : warningEditedIcon;
+          return isValidLocator(validity) ?
+            successEditedIcon :
+            warningEditedIcon;
         } else {
           break;
         }

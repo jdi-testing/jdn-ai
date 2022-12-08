@@ -13,8 +13,8 @@ export const PageObjCopyButton = ({ elements }) => {
 
   const getPageObjectForCopying = (locators) => {
     return locators
-      .map(({ locator, type, name }) => getLocatorString(locator, type, name))
-      .join("\n\n");
+        .map(({ locator, type, name }) => getLocatorString(locator, type, name))
+        .join("\n\n");
   };
 
   const handleCopy = (e, elements) => {

@@ -36,7 +36,7 @@ const App = () => {
   const backendAvailable = useSelector((state) => state.main.backendAvailable);
   const currentPage = useSelector(selectCurrentPage);
   const currentPageObject = useSelector(
-    (state) => state.pageObject.present.currentPageObject
+      (state) => state.pageObject.present.currentPageObject
   );
   const dispatch = useDispatch();
 
@@ -63,7 +63,7 @@ const App = () => {
   useEffect(() => {
     if (status === identificationStatus.success) {
       dispatch(
-        changePage({ page: pageType.locatorsList, pageObj: currentPageObject })
+          changePage({ page: pageType.locatorsList, pageObj: currentPageObject })
       );
     }
   }, [status]);

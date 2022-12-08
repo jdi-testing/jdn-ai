@@ -128,9 +128,9 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
           <Tooltip
             overlayClassName="jdn__button-tooltip"
             title={
-              isDisabled
-                ? "Please select locators for your current page object."
-                : ""
+              isDisabled ?
+                "Please select locators for your current page object." :
+                ""
             }
           >
             <Button
