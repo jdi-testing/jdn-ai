@@ -35,7 +35,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint"
+      "pre-push": "lint"
     }
   },
   "modulePaths": [
