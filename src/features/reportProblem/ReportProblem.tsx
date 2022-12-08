@@ -37,7 +37,7 @@ export const ReportProblem = () => {
 
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const filesSize = getFilesSize(fileList);
-  const areFilesInvalid = fileList.length >= MAX_COUNT_FILES || filesSize > MAX_FILES_SIZE_MB;
+  const areFilesInvalid = fileList.length >= MAX_COUNT_FILES || filesSize >= MAX_FILES_SIZE_MB;
 
   useEffect(() => {
     const defaultFileList = async () =>
