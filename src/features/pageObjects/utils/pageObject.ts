@@ -1,3 +1,4 @@
+import transliterate from "@sindresorhus/transliterate";
 import { saveAs } from "file-saver";
 import JSZip from "jszip";
 import {
@@ -58,7 +59,7 @@ export const createElementName = (
   const getName = () => (elemName ? normalizeString(elemName) : "");
   const getId = () => (elemId ? normalizeString(elemId) : "");
   const getText = (string: string) =>
-    elemText ? join(take(normalizeString(elemText), subtract(60, size(string))), "") : "";
+    elemText ? join(take(normalizeString(transliterate(elemText)), subtract(60, size(string))), "") : "";
   const getClass = () => (newType || getJDILabel(predicted_label as keyof ElementLabel, library)).toLowerCase();
   const getIndex = (string: string) => toString(uniqueIndex(string));
   const startsWithNumber = new RegExp("^[0-9].*$");
