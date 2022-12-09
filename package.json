@@ -1,6 +1,6 @@
 {
   "name": "jdn-ai-chrome-extension",
-  "version": "3.4.301",
+  "version": "3.4.302",
   "description": "jdn-ai chrome extension",
   "scripts": {
     "start": "webpack --watch --env devenv",
@@ -10,7 +10,11 @@
     "build:devenv": "webpack --mode production --env devenv",
     "patch": "npx mversion patch",
     "test": "jest",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "lint": "eslint --ext .jsx --ext .tsx --ext .ts --ext .js src/",
+    "lint:fix": "eslint --ext .jsx  --ext .tsx --ext .ts --ext .js src/ --fix",
+    "prettier": "prettier --write src/**/*.jsx",
+    "code:fix": "npm run lint:fix && npm run prettier"
   },
   "main": "index.html",
   "repository": {
@@ -31,11 +35,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-push": "lint"
     }
-  },
-  "lint-staged": {
-    "**/*": "prettier --write src/**/*.jsx"
   },
   "modulePaths": [
     "<rootDir>"
@@ -90,6 +91,7 @@
     "file-loader": "6.2.0",
     "file-saver": "2.0.5",
     "html-webpack-plugin": "5.5.0",
+    "husky": "^8.0.2",
     "jest": "^28.0.0",
     "jest-environment-jsdom": "^27.5.1",
     "jest-transform-stub": "2.0.0",

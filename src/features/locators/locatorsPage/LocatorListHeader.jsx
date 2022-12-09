@@ -16,7 +16,10 @@ import {
 } from "../locatorsSlice";
 import { stopGenerationGroup } from "../../../common/thunks/stopGenerationGroup";
 import { rerunGeneration } from "../../../common/thunks/rerunGeneration";
-import { locatorTaskStatus, LOCATOR_CALCULATION_PRIORITY } from "../../../common/constants/constants";
+import {
+  locatorTaskStatus,
+  LOCATOR_CALCULATION_PRIORITY,
+} from "../../../common/constants/constants";
 import {
   selectActiveLocators,
   selectCalculatedActiveByPageObj,
@@ -61,18 +64,26 @@ export const LocatorListHeader = ({ render }) => {
   const waitingActive = useSelector(selectWaitingActiveByPageObj);
   const deletedActive = useSelector(selectDeletedActiveByPageObj);
 
-  const actualSelected = useMemo(() => [...calculatedActive, ...waitingActive], [calculatedActive, waitingActive]);
+  const actualSelected = useMemo(
+    () => [...calculatedActive, ...waitingActive],
+    [calculatedActive, waitingActive]
+  );
 
   const stoppedSelected = useMemo(
-    () => filter(waitingActive, (el) => el.locator.taskStatus === locatorTaskStatus.REVOKED),
+    () =>
+      filter(
+        waitingActive,
+        (el) => el.locator.taskStatus === locatorTaskStatus.REVOKED
+      ),
     [waitingActive]
   );
 
   const inProgressSelected = useSelector(selectInProgressSelectedByPageObject);
 
-  const noPrioritySelected = useMemo(() => filter(inProgressSelected, (_locator) => !_locator.priority), [
-    inProgressSelected,
-  ]);
+  const noPrioritySelected = useMemo(
+    () => filter(inProgressSelected, (_locator) => !_locator.priority),
+    [inProgressSelected]
+  );
 
   const increasedPrioritySelected = useMemo(
     () =>
@@ -103,8 +114,12 @@ export const LocatorListHeader = ({ render }) => {
   };
 
   const handleUpPriority = () => {
-    const hashes = [...decreasedPrioritySelected, ...noPrioritySelected].map((element) => element.jdnHash);
-    const ids = [...decreasedPrioritySelected, ...noPrioritySelected].map((element) => element.element_id);
+    const hashes = [...decreasedPrioritySelected, ...noPrioritySelected].map(
+      (element) => element.jdnHash
+    );
+    const ids = [...decreasedPrioritySelected, ...noPrioritySelected].map(
+      (element) => element.element_id
+    );
     dispatch(
       setCalculationPriority({
         ids,
@@ -115,8 +130,12 @@ export const LocatorListHeader = ({ render }) => {
   };
 
   const handleDownPriority = () => {
-    const hashes = [...increasedPrioritySelected, ...noPrioritySelected].map((element) => element.jdnHash);
-    const ids = [...increasedPrioritySelected, ...noPrioritySelected].map((element) => element.element_id);
+    const hashes = [...increasedPrioritySelected, ...noPrioritySelected].map(
+      (element) => element.jdnHash
+    );
+    const ids = [...increasedPrioritySelected, ...noPrioritySelected].map(
+      (element) => element.element_id
+    );
     dispatch(
       setCalculationPriority({
         ids,
@@ -136,13 +155,25 @@ export const LocatorListHeader = ({ render }) => {
       );
 
     const items = [
-      ...(size(deletedActive) ? [restore(() => dispatch(toggleDeletedGroup(deletedActive)))] : []),
-      ...(size(stoppedSelected) ? [rerun(() => dispatch(rerunGeneration({ generationData: stoppedSelected })))] : []),
-      ...(size(inProgressSelected) ? [pause(() => dispatch(stopGenerationGroup(inProgressSelected)))] : []),
-      ...(size(inProgressSelected) && (size(decreasedPrioritySelected) || size(noPrioritySelected))
+      ...(size(deletedActive)
+        ? [restore(() => dispatch(toggleDeletedGroup(deletedActive)))]
+        : []),
+      ...(size(stoppedSelected)
+        ? [
+            rerun(() =>
+              dispatch(rerunGeneration({ generationData: stoppedSelected }))
+            ),
+          ]
+        : []),
+      ...(size(inProgressSelected)
+        ? [pause(() => dispatch(stopGenerationGroup(inProgressSelected)))]
+        : []),
+      ...(size(inProgressSelected) &&
+      (size(decreasedPrioritySelected) || size(noPrioritySelected))
         ? [upPriority(handleUpPriority)]
         : []),
-      ...(size(inProgressSelected) && (size(increasedPrioritySelected) || size(noPrioritySelected))
+      ...(size(inProgressSelected) &&
+      (size(increasedPrioritySelected) || size(noPrioritySelected))
         ? [downPriority(handleDownPriority)]
         : []),
       ...(size(calculatedActive)
@@ -175,16 +206,27 @@ export const LocatorListHeader = ({ render }) => {
         <span className="jdn__locatorsList-header-title">
           <CaretDown
             style={{
-              transform: expandAll === EXPAND_STATE.EXPANDED ? "rotate(180deg)" : "rotate(0deg)",
+              transform:
+                expandAll === EXPAND_STATE.EXPANDED
+                  ? "rotate(180deg)"
+                  : "rotate(0deg)",
             }}
             className="jdn__locatorsList-header-collapse"
             color="#878A9C"
             size={14}
             onClick={() =>
-              setExpandAll(expandAll === EXPAND_STATE.COLLAPSED ? EXPAND_STATE.EXPANDED : EXPAND_STATE.COLLAPSED)
+              setExpandAll(
+                expandAll === EXPAND_STATE.COLLAPSED
+                  ? EXPAND_STATE.EXPANDED
+                  : EXPAND_STATE.COLLAPSED
+              )
             }
           />
-          <Checkbox checked={fullySelected} indeterminate={partiallySelected} onClick={handleOnCheck}></Checkbox>
+          <Checkbox
+            checked={fullySelected}
+            indeterminate={partiallySelected}
+            onClick={handleOnCheck}
+          ></Checkbox>
           <Chip
             hidden={!size(active)}
             primaryLabel={size(active)}
@@ -193,7 +235,12 @@ export const LocatorListHeader = ({ render }) => {
           />
         </span>
         {!isNil(menu) ? (
-          <Dropdown arrow={{ pointAtCenter: true }} overlay={renderMenu()} trigger={["click"]} destroyPopupOnHide>
+          <Dropdown
+            arrow={{ pointAtCenter: true }}
+            overlay={renderMenu()}
+            trigger={["click"]}
+            destroyPopupOnHide
+          >
             <Button
               className="jdn__locatorsList_button jdn__locatorsList_button-menu"
               icon={<DotsThree size={18} onClick={(e) => e.preventDefault()} />}

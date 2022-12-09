@@ -11,7 +11,14 @@ import { DialogWithForm } from "../../common/components/DialogWithForm";
 import { HttpEndpoint, request } from "../../services/backend";
 import { ValidationErrorType } from "../locators/locatorSlice.types";
 import { selectCurrentPageObject } from "../pageObjects/pageObjectSelectors";
-import { isAllowedExtension, isImage, toBase64 } from "./utils";
+import {
+  isAllowedExtension,
+  isImage,
+  toBase64,
+  getFilesSize,
+  MAX_COUNT_FILES,
+  MAX_FILES_SIZE_MB,
+} from "./utils";
 
 const { error } = Modal;
 
@@ -29,6 +36,8 @@ export const ReportProblem = () => {
   const currentPage = useSelector(selectCurrentPage).page;
 
   const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const filesSize = getFilesSize(fileList);
+  const areFilesInvalid = fileList.length >= MAX_COUNT_FILES || filesSize >= MAX_FILES_SIZE_MB;
 
   useEffect(() => {
     const defaultFileList = async () =>
@@ -38,7 +47,9 @@ export const ReportProblem = () => {
             uid: "0",
             name: "pageData.json",
             status: "done" as UploadFileStatus,
-            url: (await toBase64(new Blob([pageData]) as RcFile)) as string | undefined,
+            url: (await toBase64(new Blob([pageData]) as RcFile)) as
+                | string
+                | undefined,
             linkProps: { download: "pageData.json" },
           },
         ] :
@@ -56,8 +67,8 @@ export const ReportProblem = () => {
       title: "Report is not available",
       content: (
         <React.Fragment>
-          Mail server is not accessible from your location and problem report can&apos;t be created automatically.
-          Please send an email{" "}
+          Mail server is not accessible from your location and problem report
+          can&apos;t be created automatically. Please send an email{" "}
           <a href="mailto:SupportJDI@epam.com" data-turbo-frame="">
             SupportJDI@epam.com
           </a>{" "}
@@ -71,14 +82,18 @@ export const ReportProblem = () => {
         .validateFields()
         .then((values) => {
         // have no idea how make antd validate uploads properly
-          if (values.upload?.find((file) => file.status === "error")) throw new Error("invalid uploads");
+          if (values.upload?.find((file) => file.status === "error")) {
+            throw new Error("invalid uploads");
+          }
           sendReport(values);
           form.resetFields();
           setFileList([]);
           setIsModalOpen(false);
         })
         .catch(() => {
-          const failedUploadFile = document.querySelector(".ant-upload-list-item-error");
+          const failedUploadFile = document.querySelector(
+              ".ant-upload-list-item-error"
+          );
           failedUploadFile?.scrollIntoView({ behavior: "smooth" });
         });
   };
@@ -102,7 +117,10 @@ export const ReportProblem = () => {
 
     const attachments = upload ?
       upload.map((file: UploadFile) => ({
-        file_content: file.url?.replace(/data:(image|text|application)\/.+;base64,/, ""),
+        file_content: file.url?.replace(
+            /data:(image|text|application)\/.+;base64,/,
+            ""
+        ),
         filename: file.name,
       })) :
       [];
@@ -128,7 +146,8 @@ export const ReportProblem = () => {
           _file.url = (await toBase64(_file.originFileObj)) as string;
         } else {
           _file.status = "error";
-          _file.response = "Invalid file extension, only image/*, *.zip, *.rar, *.json, *.txt";
+          _file.response =
+            "Invalid file extension, only image/*, *.zip, *.rar, *.json, *.txt";
           _file.error = true;
         }
         _file.linkProps = { download: _file.name };
@@ -145,9 +164,26 @@ export const ReportProblem = () => {
     return e?.fileList;
   };
 
+  const getTextforUploadButtonTooltip = () => {
+    switch (true) {
+      case fileList.length >= MAX_COUNT_FILES && filesSize >= MAX_FILES_SIZE_MB:
+        return "Please check number of files and their weight";
+      case fileList.length >= MAX_COUNT_FILES:
+        return "Only 10 files can be uploaded";
+      case filesSize >= MAX_FILES_SIZE_MB:
+        return "The maximum files weight can not exceed 10Mb";
+      default:
+        return "Please check number of files or their weight";
+    }
+  };
+
   return (
     <div className="jdn__reportProblem">
-      <Tooltip title="Report a problem" placement="bottomRight" align={{ offset: [12, 0] }}>
+      <Tooltip
+        title="Report a problem"
+        placement="bottomRight"
+        align={{ offset: [12, 0] }}
+      >
         <Button
           onClick={showModal}
           type="link"
@@ -159,6 +195,10 @@ export const ReportProblem = () => {
       {isModalOpen ? (
         <DialogWithForm
           modalProps={{
+            okButtonProps: {
+              disabled:
+                fileList.length > MAX_COUNT_FILES || filesSize > MAX_FILES_SIZE_MB,
+            },
             title: "Report a problem",
             open: isModalOpen,
             onOk: handleOk,
@@ -190,33 +230,79 @@ export const ReportProblem = () => {
           <Form.Item
             label="Text"
             name="body"
-            rules={[{ required: true, message: "Please input your problem description" }]}
+            rules={[
+              {
+                required: true,
+                message: "Please input your problem description",
+              },
+            ]}
           >
-            <TextArea rows={5} placeholder="Describe your problem" maxLength={2000} showCount />
+            <TextArea
+              rows={5}
+              placeholder="Describe your problem"
+              maxLength={2000}
+              showCount
+            />
           </Form.Item>
           <Form.Item
             name="upload"
             label="Upload"
             valuePropName="upload"
             getValueFromEvent={normFile}
+            rules={[
+              () => ({
+                validator(_, value) {
+                  if (value.length <= MAX_COUNT_FILES) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                      new Error("Only 10 files can be uploaded")
+                  );
+                },
+              }),
+              () => ({
+                validator(_, value) {
+                  const filesSize = getFilesSize(value);
+                  if (filesSize <= MAX_FILES_SIZE_MB) {
+                    return Promise.resolve();
+                  }
+                  return Promise.reject(
+                      new Error("The maximum files weight can not exceed 10Mb")
+                  );
+                },
+              }),
+            ]}
             extra={
               <React.Fragment>
-                Extensions: image/*, *.zip, *.rar, *.json, *.txt<br />
-                File size maximum 2Mb, 10 files in total, total size
-                maximum 10Mb
+                Extensions: image/*, *.zip, *.rar, *.json, *.txt
+                <br />
+                File size maximum 2Mb, 10 files in total, total size maximum
+                10Mb
               </React.Fragment>
             }
           >
-            <Upload name="attachments" onChange={handleUploadChange} {...{ fileList }}>
-              <Button
-                icon={
-                  <span role="img" className="anticon anticon-upload">
-                    <UploadSimple />
-                  </span>
-                }
+            <Upload
+              name="attachments"
+              onChange={handleUploadChange}
+              {...{ fileList }}
+              multiple
+            >
+              <Tooltip
+                placement="right"
+                title={getTextforUploadButtonTooltip()}
+                trigger={areFilesInvalid ? ["hover", "focus"] : ""}
               >
-                Upload
-              </Button>
+                <Button
+                  disabled={areFilesInvalid}
+                  icon={
+                    <span role="img" className="anticon anticon-upload">
+                      <UploadSimple />
+                    </span>
+                  }
+                >
+                  Upload
+                </Button>
+              </Tooltip>
             </Upload>
           </Form.Item>
         </DialogWithForm>
