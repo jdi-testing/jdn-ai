@@ -6,7 +6,7 @@
     "amd": true,
     "node": true
   },
-  "extends": ["plugin:react/recommended", "google", "plugin:@typescript-eslint/recommended"],
+  "extends": ["plugin:react/recommended", "plugin:@typescript-eslint/recommended"],
   "globals": {
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly",
@@ -20,18 +20,27 @@
     "ecmaVersion": 2020,
     "sourceType": "module"
   },
-  "plugins": ["react", "@typescript-eslint"],
+  "plugins": ["react", "@typescript-eslint", "prettier"],
   "rules": {
+    "prettier/prettier": ["error", {
+      "bracket-same-line": true,
+      "printWidth": 120
+    }],
     "ban-ts-comment": 0,
     "quotes": 0,
     "require-jsdoc": 0,
     "camelcase": 0,
-    "max-len": [1, { "code": 120 }],
     "object-curly-spacing": 0,
     "comma-dangle": 0,
     "react/prop-types": [
       0
-    ]
+    ],
+    "space-before-function-paren": "off",
+    "endOfLine": "off",
+    "max-len": ["error", {"code": 120, "ignoreUrls": true, "ignoreStrings": true, "ignoreTemplateLiterals": true}],
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-non-null-assertion": "off",
+    "@typescript-eslint/no-unused-vars": ["error", { "args": "after-used" }]
   },
   "settings": {
     "react": {

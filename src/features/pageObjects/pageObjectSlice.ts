@@ -29,7 +29,7 @@ const pageObjSlice = createSlice({
       const { id, name } = payload;
       pageObjAdapter.upsertOne(state, { id, name } as PageObject);
     },
-    changeElementLibrary(state, { payload }: PayloadAction<{id: PageObjectId, library: ElementLibrary}>) {
+    changeElementLibrary(state, { payload }: PayloadAction<{ id: PageObjectId; library: ElementLibrary }>) {
       const { id, library } = payload;
       pageObjAdapter.upsertOne(state, { id, library } as PageObject);
     },
@@ -49,9 +49,9 @@ const pageObjSlice = createSlice({
     setCurrentPageObj(state, { payload }) {
       state.currentPageObject = payload;
     },
-    setPageData(state, {payload}: PayloadAction<{id: PageObjectId, pageData: string}>) {
+    setPageData(state, { payload }: PayloadAction<{ id: PageObjectId; pageData: string }>) {
       pageObjAdapter.upsertOne(state, payload as PageObject);
-    }
+    },
   },
   extraReducers: (builder) => {
     addPageObjReducer(builder);

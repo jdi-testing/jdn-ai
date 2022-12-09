@@ -30,22 +30,24 @@ export const StatusBar = () => {
     const errorLocationIcon = serverLocation === LocalUrl ? <DesktopSlash /> : <CloudSlash size={16} color="#8C8C8C" />;
 
     const title =
-      generationStatus === LocatorsGenerationStatus.failed ?
-        "No connection" :
-        serverLocation === LocalUrl ?
-        "Local server" :
-        "Remote server";
+      generationStatus === LocatorsGenerationStatus.failed
+        ? "No connection"
+        : serverLocation === LocalUrl
+        ? "Local server"
+        : "Remote server";
 
     return backendAvailable === BackendStatus.Accessed ? (
       <Tooltip placement="bottomRight" align={{ offset: [12, 0] }} title={title}>
-        <Button type="link" icon={
-          generationStatus === LocatorsGenerationStatus.failed ? (
-          <Typography.Text type="danger">{errorLocationIcon}</Typography.Text>
-        ) : (
-          locationIcon
-        )
-        }>
-        </Button>
+        <Button
+          type="link"
+          icon={
+            generationStatus === LocatorsGenerationStatus.failed ? (
+              <Typography.Text type="danger">{errorLocationIcon}</Typography.Text>
+            ) : (
+              locationIcon
+            )
+          }
+        ></Button>
       </Tooltip>
     ) : null;
   };

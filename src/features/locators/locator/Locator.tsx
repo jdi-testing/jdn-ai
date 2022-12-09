@@ -5,9 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { pageType } from "../../../common/constants/constants";
 import { areChildrenChecked, isLocatorIndeterminate } from "../locatorSelectors";
-import {
-  setChildrenGeneration, toggleElementGeneration
-} from "../locatorsSlice";
+import { setChildrenGeneration, toggleElementGeneration } from "../locatorsSlice";
 
 import { size } from "lodash";
 import { PageType } from "../../../app/mainSlice.types";
@@ -32,14 +30,7 @@ interface Props {
 }
 
 // eslint-disable-next-line react/display-name
-export const Locator: React.FC<Props> = ({
-  element,
-  currentPage,
-  library,
-  searchState,
-  depth,
-  searchString,
-}) => {
+export const Locator: React.FC<Props> = ({ element, currentPage, library, searchState, depth, searchString }) => {
   const dispatch = useDispatch();
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);

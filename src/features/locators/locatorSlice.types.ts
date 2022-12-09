@@ -1,6 +1,5 @@
 import { ElementClass } from "../pageObjects/utils/generationClassesMap";
 
-
 export enum LocatorsGenerationStatus {
   noStatus = "",
   started = "Locators generation is running in background...",

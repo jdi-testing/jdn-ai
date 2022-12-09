@@ -18,7 +18,7 @@ export const selectable = () => {
       },
     });
 
-    Selectables.prototype.unselect = function(payload) {
+    Selectables.prototype.unselect = function (payload) {
       const opt = this.options;
       let query = "";
 
@@ -35,7 +35,7 @@ export const selectable = () => {
       });
     };
 
-    Selectables.prototype.setSelect = function(payload) {
+    Selectables.prototype.setSelect = function (payload) {
       const opt = this.options;
       let query = "";
 

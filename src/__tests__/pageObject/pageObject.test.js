@@ -1,7 +1,4 @@
-import {
-  locators,
-  pageObject,
-} from "../__mocks__/pageObjectMocks/pageObject.mock";
+import { locators, pageObject } from "../__mocks__/pageObjectMocks/pageObject.mock";
 import { elementsWithoutNames } from "../__mocks__/pageObjectMocks/elementsWithoutNames";
 import { elementsWithNames } from "../__mocks__/pageObjectMocks/elementsWithNames";
 import { ElementLibrary } from "../../features/pageObjects/utils/generationClassesMap";

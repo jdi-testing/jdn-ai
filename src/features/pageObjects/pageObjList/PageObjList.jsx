@@ -12,19 +12,14 @@ import PageSvg from "./page.svg";
 import { Footnote } from "../../../common/components/footnote/Footnote";
 import { Locator } from "../../locators/locator";
 import { Notifications } from "../../locators/locatorsTree/notifications/Notifications";
-import {
-  selectConfirmedLocators,
-  selectPageObjects,
-} from "../pageObjectSelectors";
+import { selectConfirmedLocators, selectPageObjects } from "../pageObjectSelectors";
 import { PageObjCopyButton } from "./PageObjCopyButton";
 import { PageObjectPlaceholder } from "./PageObjectPlaceholder";
 import { GenerationButtons } from "./pageObjGeneration/GenerationButtons";
 
 export const PageObjList = (props) => {
   const state = useSelector((state) => state);
-  const currentPageObject = useSelector(
-      (state) => state.pageObject.present.currentPageObject
-  );
+  const currentPageObject = useSelector((state) => state.pageObject.present.currentPageObject);
   const pageObjects = useSelector(selectPageObjects);
   const [activePanel, setActivePanel] = useState([currentPageObject]);
 
@@ -36,9 +31,7 @@ export const PageObjList = (props) => {
 
   const renderLocators = (elements) => {
     if (size(elements)) {
-      return elements.map((element) => (
-        <Locator key={element.element_id} {...{ element }} noScrolling={true} />
-      ));
+      return elements.map((element) => <Locator key={element.element_id} {...{ element }} noScrolling={true} />);
     } else {
       return "No locators selected";
     }
@@ -98,23 +91,14 @@ export const PageObjList = (props) => {
                     key={id}
                     header={
                       <React.Fragment>
-                        <Icon
-                          component={PageSvg}
-                          className="jdn__locatorsList-status"
-                        />
-                        <Typography.Text className="jdn__pageObject-content-text">
-                          {name}
-                        </Typography.Text>
+                        <Icon component={PageSvg} className="jdn__locatorsList-status" />
+                        <Typography.Text className="jdn__pageObject-content-text">{name}</Typography.Text>
                       </React.Fragment>
                     }
                     extra={
                       <>
-                        {isPageObjectNotEmpty && (
-                          <PageObjCopyButton {...{ elements }} />
-                        )}
-                        <PageObjMenu
-                          {...{ id, name, locators, elements, library }}
-                        />
+                        {isPageObjectNotEmpty && <PageObjCopyButton {...{ elements }} />}
+                        <PageObjMenu {...{ id, name, locators, elements, library }} />
                       </>
                     }
                   >

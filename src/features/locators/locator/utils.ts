@@ -31,10 +31,10 @@ export const evaluateXpath = (xPath: string) => {
 export const equalHashes = (jdnHash: string, locators: Locator[]) => filter(locators, { jdnHash });
 
 export const createNewName = (
-    element: Locator,
-    newType: string,
-    library: ElementLibrary,
-    elements: Locator[]
+  element: Locator,
+  newType: string,
+  library: ElementLibrary,
+  elements: Locator[]
 ): string => {
   const names = chain(elements).map("name").without(element.name).value();
   const newName = createElementName({ ...element }, library, names, newType);

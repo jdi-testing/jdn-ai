@@ -6,7 +6,7 @@ export const locatorsListMock = [
     jdnHash: "7967190244322359771369749968",
     locator: {
       fullXpath: "/html/body/header/div/nav/ul[1]",
-      taskStatus: "SUCCESS"
+      taskStatus: "SUCCESS",
     },
     name: "radiobuttonsUl",
     predictedAttrId: "",
@@ -26,7 +26,7 @@ export const locatorsListMock = [
     jdnHash: "3969471880322359761484771163",
     locator: {
       fullXpath: "/html/body/header/div/nav/div[2]",
-      taskStatus: "SUCCESS"
+      taskStatus: "SUCCESS",
     },
     name: "buttonDiv",
     predictedAttrId: "",
@@ -46,7 +46,7 @@ export const locatorsListMock = [
     jdnHash: "0045220328322359764482356698",
     locator: {
       fullXpath: "/html/body/header/div/nav/ul[1]/li[3]/a",
-      taskStatus: "FAILURE"
+      taskStatus: "FAILURE",
     },
     name: "textarea",
     predictedAttrId: "",
@@ -66,7 +66,7 @@ export const locatorsListMock = [
     jdnHash: "6771529534322359778589411351",
     locator: {
       fullXpath: "/html/body/footer/div/div/ul",
-      taskStatus: "STARTED"
+      taskStatus: "STARTED",
     },
     name: "listUl",
     predictedAttrId: "",
@@ -86,7 +86,7 @@ export const locatorsListMock = [
     jdnHash: "4899732051322359779677566872",
     locator: {
       fullXpath: "/html/body/header/div/nav/ul[2]/li/a",
-      taskStatus: "PENDING"
+      taskStatus: "PENDING",
     },
     name: "link",
     predictedAttrId: "",
@@ -106,7 +106,7 @@ export const locatorsListMock = [
     jdnHash: "4829071593322359778594168519",
     locator: {
       fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[3]/ul/li[3]",
-      taskStatus: "PENDING"
+      taskStatus: "PENDING",
     },
     name: "breadcrumbsLi",
     predictedAttrId: "",
@@ -117,7 +117,7 @@ export const locatorsListMock = [
     type: "Breadcrumbs",
     width: 0,
     x: 0,
-    y: 0
+    y: 0,
   },
   {
     element_id: "9636042053322359773245578788_0",
@@ -126,7 +126,7 @@ export const locatorsListMock = [
     jdnHash: "9636042053322359773245578788",
     locator: {
       fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[5]/ul/li[5]",
-      taskStatus: "PENDING"
+      taskStatus: "PENDING",
     },
     name: "breadcrumbsLi6",
     predictedAttrId: "",
@@ -137,7 +137,7 @@ export const locatorsListMock = [
     type: "Breadcrumbs",
     width: 0,
     x: 0,
-    y: 0
+    y: 0,
   },
   {
     element_id: "8381553594322359777170267551_0",
@@ -146,7 +146,7 @@ export const locatorsListMock = [
     jdnHash: "8381553594322359777170267551",
     locator: {
       fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[3]/ul",
-      taskStatus: "PENDING"
+      taskStatus: "PENDING",
     },
     name: "breadcrumbsUl",
     predictedAttrId: "",
@@ -157,7 +157,7 @@ export const locatorsListMock = [
     type: "Breadcrumbs",
     width: 0,
     x: 0,
-    y: 0
+    y: 0,
   },
   {
     element_id: "4899732051322359779677566873_0",
@@ -166,7 +166,7 @@ export const locatorsListMock = [
     jdnHash: "4899732051322359779677566873",
     locator: {
       fullXpath: "/html/body/header/div/nav/ul[2]/li/a",
-      taskStatus: "PENDING"
+      taskStatus: "PENDING",
     },
     name: "link",
     predictedAttrId: "",
@@ -186,7 +186,7 @@ export const locatorsListMock = [
     jdnHash: "4829071593322359778594168522",
     locator: {
       fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[3]/ul/li[3]",
-      taskStatus: "PENDING"
+      taskStatus: "PENDING",
     },
     name: "breadcrumbsLi2",
     predictedAttrId: "",
@@ -197,7 +197,7 @@ export const locatorsListMock = [
     type: "Breadcrumbs",
     width: 0,
     x: 0,
-    y: 0
+    y: 0,
   },
   {
     element_id: "9636042053322359773245578777_0",
@@ -206,7 +206,7 @@ export const locatorsListMock = [
     jdnHash: "9636042053322359773245578777",
     locator: {
       fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[5]/ul/li[5]",
-      taskStatus: "PENDING"
+      taskStatus: "PENDING",
     },
     name: "breadcrumbsLi7",
     predictedAttrId: "",
@@ -217,7 +217,7 @@ export const locatorsListMock = [
     type: "Breadcrumbs",
     width: 0,
     x: 0,
-    y: 0
+    y: 0,
   },
   {
     element_id: "8381553594322359777170267550_0",
@@ -226,7 +226,7 @@ export const locatorsListMock = [
     jdnHash: "8381553594322359777170267550",
     locator: {
       fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[3]/ul",
-      taskStatus: "PENDING"
+      taskStatus: "PENDING",
     },
     name: "breadcrumbsUl",
     predictedAttrId: "",
@@ -237,7 +237,6 @@ export const locatorsListMock = [
     type: "Breadcrumbs",
     width: 0,
     x: 0,
-    y: 0
-  }
+    y: 0,
+  },
 ];
-

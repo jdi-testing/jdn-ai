@@ -14,11 +14,11 @@ interface Props {
 }
 
 export const getItem = (
-    key: string,
-    label: ReactNode,
-    onClick?: () => void,
-    icon?: ReactNode,
-    children?: MenuItem[]
+  key: string,
+  label: ReactNode,
+  onClick?: () => void,
+  icon?: ReactNode,
+  children?: MenuItem[]
 ): MenuItem => ({
   key,
   label,

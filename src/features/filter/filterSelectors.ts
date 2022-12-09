@@ -13,25 +13,25 @@ export const filterAdapter = createEntityAdapter<Filter>({
 export const { selectAll: simpleSelectFilters, selectById: simpleSelectFilterById } = filterAdapter.getSelectors();
 
 export const { selectAll: selectFilters, selectById: selectFilterById } = filterAdapter.getSelectors<RootState>(
-    (state) => state.filters
+  (state) => state.filters
 );
 
 export const selectClassFiltefByPO = createSelector(
-    selectFilterById,
-    (state: RootState, id: PageObjectId) => selectPageObjById(state, id)?.library,
-    (filter, library = defaultLibrary) => {
-      if (!filter) {
-        return jdiClassFilterInit(library);
-      }
-      return filter?.[FilterKey.JDIclassFilter];
+  selectFilterById,
+  (state: RootState, id: PageObjectId) => selectPageObjById(state, id)?.library,
+  (filter, library = defaultLibrary) => {
+    if (!filter) {
+      return jdiClassFilterInit(library);
     }
+    return filter?.[FilterKey.JDIclassFilter];
+  }
 );
 
 export const selectAvailableClasses = createSelector(
-    (state: RootState) => selectClassFiltefByPO(state, selectCurrentPageObject(state)?.id || ""),
-    (classFilter) => {
-      return Object.entries(classFilter)
-          .map(([jdiClass, value]) => (value ? jdiClass : null))
-          .filter((jdiClass) => !!jdiClass);
-    }
+  (state: RootState) => selectClassFiltefByPO(state, selectCurrentPageObject(state)?.id || ""),
+  (classFilter) => {
+    return Object.entries(classFilter)
+      .map(([jdiClass, value]) => (value ? jdiClass : null))
+      .filter((jdiClass) => !!jdiClass);
+  }
 );

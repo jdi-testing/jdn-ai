@@ -3,7 +3,7 @@ import { compact, isNil, pick, size } from "lodash";
 import { pageType } from "../common/constants/constants";
 import { getEnumKeyByValue } from "../common/utils/helpersTS";
 import { selectLocatorById } from "../features/locators/locatorSelectors";
-import { ElementId, Locator, LocatorTaskStatus } from "../features/locators/locatorSlice.types";
+import { Locator, LocatorTaskStatus } from "../features/locators/locatorSlice.types";
 import { selectLocatorsByPageObject } from "../features/pageObjects/pageObjectSelectors";
 import { ElementLibrary, libraryClasses } from "../features/pageObjects/utils/generationClassesMap";
 import { sendMessage } from "./connector";

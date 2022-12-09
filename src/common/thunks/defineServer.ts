@@ -22,31 +22,31 @@ export const defineServer = createAsyncThunk("main/defineServer", async () => {
     checkVersion(request.get(HttpEndpoint.BUILD, undefined, RemoteUrl), true),
     checkVersion(request.get(HttpEndpoint.BUILD, undefined, LocalUrl), false),
   ]).then(
-      (response) => {
-        request.setBaseUrl(response.config.baseURL as BaseUrl);
-        return response;
-      },
-      ({ errors }) => {
-        const errorMessages = [errors[0].message, errors[1].message];
-        if (errorMessages.includes(BackendStatus.OutdatedPluginLocal)) {
-          throw new Error(BackendStatus.OutdatedPluginLocal);
-        } else if (errorMessages.includes(BackendStatus.OutdatedServerLocal)) {
-          throw new Error(BackendStatus.OutdatedServerLocal);
-        } else if (errorMessages.includes(BackendStatus.IncompatibleVersionRemote)) {
-          throw new Error(BackendStatus.IncompatibleVersionRemote);
-        } else throw new Error(BackendStatus.AccessFailed);
-      }
+    (response) => {
+      request.setBaseUrl(response.config.baseURL as BaseUrl);
+      return response;
+    },
+    ({ errors }) => {
+      const errorMessages = [errors[0].message, errors[1].message];
+      if (errorMessages.includes(BackendStatus.OutdatedPluginLocal)) {
+        throw new Error(BackendStatus.OutdatedPluginLocal);
+      } else if (errorMessages.includes(BackendStatus.OutdatedServerLocal)) {
+        throw new Error(BackendStatus.OutdatedServerLocal);
+      } else if (errorMessages.includes(BackendStatus.IncompatibleVersionRemote)) {
+        throw new Error(BackendStatus.IncompatibleVersionRemote);
+      } else throw new Error(BackendStatus.AccessFailed);
+    }
   );
 });
 
 export const defineServerReducer = (builder: ActionReducerMapBuilder<MainState>) => {
   return builder
-      .addCase(defineServer.fulfilled, (state, { payload }) => {
-        state.serverVersion = payload.data;
-        state.backendAvailable = BackendStatus.Accessed;
-        state.baseUrl = payload.config.baseURL as BaseUrl;
-      })
-      .addCase(defineServer.rejected, (state, { error }) => {
-        state.backendAvailable = error.message as BackendStatus;
-      });
+    .addCase(defineServer.fulfilled, (state, { payload }) => {
+      state.serverVersion = payload.data;
+      state.backendAvailable = BackendStatus.Accessed;
+      state.baseUrl = payload.config.baseURL as BaseUrl;
+    })
+    .addCase(defineServer.rejected, (state, { error }) => {
+      state.backendAvailable = error.message as BackendStatus;
+    });
 };

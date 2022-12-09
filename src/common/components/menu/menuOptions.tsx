@@ -10,7 +10,7 @@ import {
   PencilSimple,
   Play,
   TextT,
-  Trash
+  Trash,
 } from "phosphor-react";
 import React from "react";
 import { MenuItem } from "./Menu";

@@ -4,7 +4,7 @@ export const jdiClassFilterInit = (library: ElementLibrary) => mapJDIclassesToFi
 
 export const mapJDIclassesToFilter = (library: ElementLibrary) => {
   return Object.entries(libraryClasses[library]).reduce((acc: Record<ElementClass, boolean>, entry) => {
-    const [_, value] = entry;
+    const [, value] = entry;
     acc[value as ElementClass] = true;
     return acc;
   }, {} as Record<ElementClass, boolean>);

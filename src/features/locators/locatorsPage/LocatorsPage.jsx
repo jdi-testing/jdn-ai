@@ -9,16 +9,13 @@ import { changePageBack, setScriptMessage } from "../../../app/mainSlice";
 import { Breadcrumbs } from "../../../common/components/Breadcrumbs";
 import { customConfirm } from "../../../common/components/CustomConfirm";
 import { pageType } from "../../../common/constants/constants";
-import {
-  removeOverlay,
-  showOverlay,
-} from "../../../pageServices/pageDataHandlers";
+import { removeOverlay, showOverlay } from "../../../pageServices/pageDataHandlers";
 import {
   selectCurrentPageObject,
   selectDeletedGenerateByPageObj,
   selectCalculatedGenerateByPageObj,
   selectInProgressGenerateByPageObj,
-  selectFilteredLocators
+  selectFilteredLocators,
 } from "../../pageObjects/pageObjectSelectors";
 import { clearLocators } from "../../pageObjects/pageObjectSlice";
 import { locatorGenerationController } from "../locatorGenerationController";
@@ -88,8 +85,7 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
           onOk: handleOk,
           enableOk,
           confirmTitle: "You have unsaved changes",
-          confirmContent:
-            "You have unsaved changes in the locator list. Do you want to discard them?",
+          confirmContent: "You have unsaved changes in the locator list. Do you want to discard them?",
         });
       }
     };
@@ -127,18 +123,9 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
         <React.Fragment>
           <Tooltip
             overlayClassName="jdn__button-tooltip"
-            title={
-              isDisabled ?
-                "Please select locators for your current page object." :
-                ""
-            }
+            title={isDisabled ? "Please select locators for your current page object." : ""}
           >
-            <Button
-              type="primary"
-              onClick={handleConfirm}
-              className="jdn__buttons"
-              disabled={isDisabled}
-            >
+            <Button type="primary" onClick={handleConfirm} className="jdn__buttons" disabled={isDisabled}>
               Save
             </Button>
           </Tooltip>

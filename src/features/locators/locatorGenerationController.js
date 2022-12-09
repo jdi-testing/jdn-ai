@@ -8,11 +8,11 @@ export const isGeneratedStatus = (taskStatus) => taskStatus === locatorTaskStatu
 
 export const runGenerationHandler = async (elements, settings, onStatusChange, onGenerationFailed, pageObject) => {
   locatorGenerationController.scheduleTaskGroup(
-      elements,
-      settings,
-      (element_id, locator, jdnHash) => onStatusChange({ element_id, locator, jdnHash }),
-      onGenerationFailed,
-      pageObject,
+    elements,
+    settings,
+    (element_id, locator, jdnHash) => onStatusChange({ element_id, locator, jdnHash }),
+    onGenerationFailed,
+    pageObject
   );
 };
 
@@ -57,11 +57,14 @@ class LocatorGenerationController {
           }
           break;
         case "result_ready":
-          this.onStatusChange(this.scheduledTasks.get(payload.id), {
-            robulaXpath: payload.result,
-            taskStatus: locatorTaskStatus.SUCCESS,
-          },
-          payload.id);
+          this.onStatusChange(
+            this.scheduledTasks.get(payload.id),
+            {
+              robulaXpath: payload.result,
+              taskStatus: locatorTaskStatus.SUCCESS,
+            },
+            payload.id
+          );
           this.scheduledTasks.delete(payload.id);
           if (this.scheduledTasks.size === 0) {
             clearInterval(this.pingInterval);
@@ -97,7 +100,8 @@ class LocatorGenerationController {
 
     const sessionId = await this.getSessionId();
 
-    webSocketController.sendSocket(
+    webSocketController
+      .sendSocket(
         JSON.stringify({
           action: WebSocketMessage.SCHEDULE_MULTIPLE_XPATH_GENERATIONS,
           payload: {
@@ -112,9 +116,10 @@ class LocatorGenerationController {
             website_url: pageObject.url,
           },
         })
-    ).catch(() => {
-      this.noResponseHandler();
-    });
+      )
+      .catch(() => {
+        this.noResponseHandler();
+      });
 
     this.pingInterval = setInterval(() => {
       if (!this.pingTimeout) {
@@ -125,10 +130,10 @@ class LocatorGenerationController {
 
   pingSocket() {
     webSocketController.sendSocket(
-        JSON.stringify({
-          action: WebSocketMessage.PING,
-          payload: Date.now(),
-        })
+      JSON.stringify({
+        action: WebSocketMessage.PING,
+        payload: Date.now(),
+      })
     );
     this.pingTimeout = setTimeout(() => this.noResponseHandler(), 5000);
   }
@@ -141,10 +146,10 @@ class LocatorGenerationController {
   upPriority(ids) {
     ids.forEach((id) => {
       webSocketController.sendSocket(
-          JSON.stringify({
-            action: WebSocketMessage.UP_PRIORITY,
-            payload: { element_id: id },
-          })
+        JSON.stringify({
+          action: WebSocketMessage.UP_PRIORITY,
+          payload: { element_id: id },
+        })
       );
     });
   }
@@ -152,20 +157,20 @@ class LocatorGenerationController {
   downPriority(ids) {
     ids.forEach((id) => {
       webSocketController.sendSocket(
-          JSON.stringify({
-            action: WebSocketMessage.DOWN_PRIORITY,
-            payload: { element_id: id },
-          })
+        JSON.stringify({
+          action: WebSocketMessage.DOWN_PRIORITY,
+          payload: { element_id: id },
+        })
       );
     });
   }
 
   revokeTasks(hashes) {
     webSocketController.sendSocket(
-        JSON.stringify({
-          action: WebSocketMessage.REVOKE_TASKS,
-          payload: { id: hashes },
-        })
+      JSON.stringify({
+        action: WebSocketMessage.REVOKE_TASKS,
+        payload: { id: hashes },
+      })
     );
   }
 

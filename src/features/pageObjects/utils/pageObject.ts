@@ -34,10 +34,10 @@ export const isPONameUnique = (elements: Array<PageObject>, id: ElementId, newNa
   !elements.find((elem) => toLower(elem.name) === toLower(newName) && elem.id !== id);
 
 export const createElementName = (
-    element: Locator,
-    library: ElementLibrary,
-    uniqueNames: Array<string>,
-    newType?: string
+  element: Locator,
+  library: ElementLibrary,
+  uniqueNames: Array<string>,
+  newType?: string
 ) => {
   const { elemName, elemId, elemText, predicted_label } = element;
 
@@ -130,9 +130,9 @@ export const generateAndDownloadZip = async (state: RootState, template: Blob) =
     if (isNumber(file) || file.dir) return;
 
     filePromises.push(
-        file.async("string").then((content) => {
-          newZip.file(relativePath, content, { binary: true });
-        })
+      file.async("string").then((content) => {
+        newZip.file(relativePath, content, { binary: true });
+      })
     );
   });
 
@@ -153,27 +153,27 @@ export const generateAndDownloadZip = async (state: RootState, template: Blob) =
       await newZip.file(`src/main/java/site/pages/${page.title}.java`, page.pageCode, { binary: false });
 
       await newZip
-          .file("src/test/resources/test.properties")!
-          .async("string")
-          .then(function success(content) {
-            const testDomain = `${chain(po.url).split("/").dropRight().join("/").value()}/`;
-            const newContent = content.replace("${domain}", `${testDomain}`);
-            return newZip.file(`src/test/resources/test.properties`, newContent, { binary: true });
-          });
+        .file("src/test/resources/test.properties")!
+        .async("string")
+        .then(function success(content) {
+          const testDomain = `${chain(po.url).split("/").dropRight().join("/").value()}/`;
+          const newContent = content.replace("${domain}", `${testDomain}`);
+          return newZip.file(`src/test/resources/test.properties`, newContent, { binary: true });
+        });
 
       await newZip
-          .file("src/main/java/site/MySite.java")!
-          .async("string")
-          .then((content) => {
-            if (content.includes(instanceName)) instanceName = `${instanceName}1`;
-            const testUrl = chain(po.url).split("/").last().value();
-            const newContent = content.replace(
-                "// ADD SITE PAGES WITH URLS",
-                `// ADD SITE PAGES WITH URLS\n    @Url("/${testUrl}")\n    public static ${po.name} ${instanceName};
+        .file("src/main/java/site/MySite.java")!
+        .async("string")
+        .then((content) => {
+          if (content.includes(instanceName)) instanceName = `${instanceName}1`;
+          const testUrl = chain(po.url).split("/").last().value();
+          const newContent = content.replace(
+            "// ADD SITE PAGES WITH URLS",
+            `// ADD SITE PAGES WITH URLS\n    @Url("/${testUrl}")\n    public static ${po.name} ${instanceName};
                 `
-            );
-            return newZip.file(`src/main/java/site/MySite.java`, newContent, { binary: true });
-          });
+          );
+          return newZip.file(`src/main/java/site/MySite.java`, newContent, { binary: true });
+        });
 
       await newZip.file(`src/test/java/tests/${po.name}Tests.java`, testFileTemplate(instanceName, po.name));
     }

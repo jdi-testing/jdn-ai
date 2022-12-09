@@ -6,7 +6,7 @@ interface Props {
   hidden: boolean;
   primaryLabel: string;
   secondaryLabel: string;
-  onDelete: React.MouseEventHandler<HTMLSpanElement>
+  onDelete: React.MouseEventHandler<HTMLSpanElement>;
 }
 
 export const Chip: React.FC<Props> = ({ hidden, primaryLabel, secondaryLabel, onDelete }) => {
