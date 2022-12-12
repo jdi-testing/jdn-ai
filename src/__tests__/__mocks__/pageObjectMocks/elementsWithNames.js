@@ -80,5 +80,10 @@ export const elementsWithNames = [
     ...elementsWithoutNames[15],
     "name": "name5",
     "type": "List",
+  },
+  {
+    ...elementsWithoutNames[16],
+    "name": "list3",
+    "type": "List",
   }
 ];
