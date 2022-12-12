@@ -52,6 +52,8 @@ export const createElementName = (
     return index;
   };
 
+  const returnLatinCodepoints = (string: string) => /[^\u0000-\u00ff]/.test(string) ? "" : string;
+
   const normalizeString = (string: string) => chain(string).trim().camelCase().value();
 
   const isUnique = (_name: string) => uniqueNames.indexOf(_name) === -1;
@@ -59,7 +61,7 @@ export const createElementName = (
   const getName = () => (elemName ? normalizeString(elemName) : "");
   const getId = () => (elemId ? normalizeString(elemId) : "");
   const getText = (string: string) =>
-    elemText ? join(take(normalizeString(transliterate(elemText)), subtract(60, size(string))), "") : "";
+    elemText ? join(take(normalizeString(returnLatinCodepoints(transliterate(elemText))), subtract(60, size(string))), "") : "";
   const getClass = () => (newType || getJDILabel(predicted_label as keyof ElementLabel, library)).toLowerCase();
   const getIndex = (string: string) => toString(uniqueIndex(string));
   const startsWithNumber = new RegExp("^[0-9].*$");
