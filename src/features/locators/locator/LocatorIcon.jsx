@@ -5,7 +5,6 @@ import CheckedEdited from "./checked-edited.svg";
 import WarningEditedSvg from "./warning-edited.svg";
 import { locatorTaskStatus, VALIDATION_ERROR_TYPE } from "../../../common/constants/constants";
 import { PauseCircle, Trash, WarningCircle } from "phosphor-react";
-import { useRef } from "react";
 
 export const VALIDATION_ERROR_MESSAGES = {
   [VALIDATION_ERROR_TYPE.DUPLICATED_LOCATOR]: "The locator for this element already exists.", // warn
@@ -20,8 +19,6 @@ const isValidLocator = (validity) =>
   !validity?.locator.length || validity.locator === VALIDATION_ERROR_TYPE.NEW_ELEMENT;
 
 export const LocatorIcon = ({ validity, locator, deleted }) => {
-  const ref = useRef(null);
-
   const getTooltipText = () => validity?.locator || "Edited";
 
   const startedIcon = <Spin size="small" />;
@@ -54,7 +51,7 @@ export const LocatorIcon = ({ validity, locator, deleted }) => {
         if (isEdited(locator)) {
           return isValidLocator(validity) ? successEditedIcon : warningEditedIcon;
         } else {
-          break;
+          return null;
         }
       }
       case locatorTaskStatus.STARTED:
@@ -65,9 +62,9 @@ export const LocatorIcon = ({ validity, locator, deleted }) => {
       case locatorTaskStatus.FAILURE:
         return failureIcon;
       default:
-        break;
+        return null;
     }
   };
 
-  return <div ref={ref}>{renderIcon()}</div>;
+  return renderIcon();
 };
