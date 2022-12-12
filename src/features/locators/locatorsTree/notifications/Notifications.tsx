@@ -31,7 +31,7 @@ const messages = (value?: string) => {
 };
 
 const pageobjectUndo = { type: "PAGEOBJECT_UNDO" };
-const locatorUndo = { type: "LOCATOR_UNDO" };
+const locatorUndo = (payload?: any) => ({ type: "LOCATOR_UNDO", payload });
 const locatorJump = (payload: number) => ({ type: "LOCATOR_JUMP", payload });
 
 type UndoAction = typeof pageobjectUndo | typeof locatorUndo | typeof locatorJump;
@@ -53,13 +53,13 @@ export const Notifications = () => {
 
     switch (action?.type) {
       case "locators/changeLocatorAttributes":
-        openNotification(messages().EDITED, "success", locatorUndo);
+        openNotification(messages().EDITED, "success", locatorUndo({type: action?.type, payload: prevValue}));
         break;
       case "locators/rerunGeneration/pending":
         const { arg } = action.meta;
         const length = size(arg);
-        if (length === 1) openNotification(messages().RERUN, "success", locatorUndo);
-        else openNotification(messages(length.toString()).RERUN_GROUP, "success", locatorUndo);
+        if (length === 1) openNotification(messages().RERUN, "success", locatorUndo());
+        else openNotification(messages(length.toString()).RERUN_GROUP, "success", locatorUndo());
         break;
       case "locators/stopGeneration/fulfilled":
         const _locator = locators.find((_loc) => _loc.element_id === action.meta.arg);
@@ -75,7 +75,7 @@ export const Notifications = () => {
         openNotification(
           _prevValueLocator.deleted ? messages().RESTORE : messages().DELETE,
           _prevValueLocator.deleted ? "success" : "warning",
-          locatorUndo
+          locatorUndo({type: action?.type, payload: _prevValueLocator})
         );
         break;
       case "locators/toggleDeletedGroup":
@@ -85,14 +85,14 @@ export const Notifications = () => {
             ? messages(size(_prevValueGroup).toString()).RESTORE_GROUP
             : messages(size(_prevValueGroup).toString()).DELETE_GROUP,
           _prevValueGroup[0].deleted ? "success" : "warning",
-          locatorUndo
+          locatorUndo({type: action?.type, payload: _prevValueGroup})
         );
         break;
       case "pageObject/removeAll":
-        openNotification(messages().REMOVE_ALL, "warning", [pageobjectUndo, locatorUndo]);
+        openNotification(messages().REMOVE_ALL, "warning", [pageobjectUndo, locatorUndo()]);
         break;
       case "pageObject/removePageObject":
-        openNotification(messages().REMOVE_PO, "warning", [pageobjectUndo, locatorUndo]);
+        openNotification(messages().REMOVE_PO, "warning", [pageobjectUndo, locatorUndo()]);
         break;
       case "pageObject/changeName":
         openNotification(messages().EDIT_PO_NAME, "success", pageobjectUndo);

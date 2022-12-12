@@ -11,7 +11,11 @@ import { selectCurrentPage } from "../app/mainSelectors";
 import { RootState } from "../app/store";
 
 const notify = (state: RootState, action: any, prevState: RootState) => {
-  const { type, payload, meta } = action;
+  let { type, payload, meta } = action;
+  if (type === "LOCATOR_UNDO") {
+    type = payload.type;
+    payload = payload.payload;
+  }
   switch (type) {
     case "pageObject/addLocatorsToPageObj": {
       if (isNil(state.pageObject.present.currentPageObject)) return;
@@ -27,11 +31,6 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
         const locator = selectLocatorById(state, element_id);
         locator && sendMessage.changeElementName(locator);
         const classes = libraryClasses[library as ElementLibrary];
-        // if only I could know TS a little better
-        /* eslint-disable-next-line */
-        // @ts-ignore
-        const label = getEnumKeyByValue(classes, elementType);
-        sendMessage.assignDataLabels([{ jdnHash: locator?.jdnHash, predicted_label: label } as Locator]);
       } else if (prevValue?.validity?.locator.length) {
         // restore previously invalid locator
         const newValue = selectLocatorById(state, element_id);
