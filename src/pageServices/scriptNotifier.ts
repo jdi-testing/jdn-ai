@@ -36,7 +36,7 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
         newValue && sendMessage.addElement(newValue);
       } else if (validity?.locator.length) {
         // delete invalid locator
-        sendMessage.removeElement(prevValue);
+        sendMessage.removeElement (prevValue);
       }
       break;
     }
