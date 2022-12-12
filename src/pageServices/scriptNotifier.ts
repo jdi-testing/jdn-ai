@@ -4,7 +4,6 @@ import { pageType } from "../common/constants/constants";
 import { selectLocatorById } from "../features/locators/locatorSelectors";
 import { Locator, LocatorTaskStatus } from "../features/locators/locatorSlice.types";
 import { selectLocatorsByPageObject } from "../features/pageObjects/pageObjectSelectors";
-import { ElementLibrary, libraryClasses } from "../features/pageObjects/utils/generationClassesMap";
 import { sendMessage } from "./connector";
 import { selectCurrentPage } from "../app/mainSelectors";
 import { RootState } from "../app/store";
@@ -24,7 +23,7 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       break;
     }
     case "locators/changeLocatorAttributes": {
-      const { element_id, validity, type: elementType, name, library } = payload;
+      const { element_id, validity, type: elementType, name } = payload;
       const prevValue = selectLocatorById(prevState, element_id);
       if (!prevValue) return;
       if (prevValue.type !== elementType || prevValue.name !== name) {
@@ -36,7 +35,7 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
         newValue && sendMessage.addElement(newValue);
       } else if (validity?.locator.length) {
         // delete invalid locator
-        sendMessage.removeElement (prevValue);
+        sendMessage.removeElement(prevValue);
       }
       break;
     }
