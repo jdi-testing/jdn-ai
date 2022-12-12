@@ -53,7 +53,7 @@ export const Notifications = () => {
 
     switch (action?.type) {
       case "locators/changeLocatorAttributes":
-        openNotification(messages().EDITED, "success", locatorUndo({type: action?.type, payload: prevValue}));
+        openNotification(messages().EDITED, "success", locatorUndo({ type: action?.type, payload: prevValue }));
         break;
       case "locators/rerunGeneration/pending":
         const { arg } = action.meta;
@@ -75,7 +75,7 @@ export const Notifications = () => {
         openNotification(
           _prevValueLocator.deleted ? messages().RESTORE : messages().DELETE,
           _prevValueLocator.deleted ? "success" : "warning",
-          locatorUndo({type: action?.type, payload: _prevValueLocator})
+          locatorUndo({ type: action?.type, payload: _prevValueLocator })
         );
         break;
       case "locators/toggleDeletedGroup":
@@ -85,7 +85,7 @@ export const Notifications = () => {
             ? messages(size(_prevValueGroup).toString()).RESTORE_GROUP
             : messages(size(_prevValueGroup).toString()).DELETE_GROUP,
           _prevValueGroup[0].deleted ? "success" : "warning",
-          locatorUndo({type: action?.type, payload: _prevValueGroup})
+          locatorUndo({ type: action?.type, payload: _prevValueGroup })
         );
         break;
       case "pageObject/removeAll":

@@ -243,8 +243,8 @@ export const elementsWithoutNames = [
     elemName: "",
     elemText: "5",
     locator: {
-      fullXpath: "/html/body/footer/div/div/ul"
-    }
+      fullXpath: "/html/body/footer/div/div/ul",
+    },
   },
   {
     element_id: "1195797979872788259469412000",
@@ -259,7 +259,7 @@ export const elementsWithoutNames = [
     elemName: "",
     elemText: "设计价值观",
     locator: {
-      fullXpath: "/html/body/footer/div/div/ul"
-    }
-  }
+      fullXpath: "/html/body/footer/div/div/ul",
+    },
+  },
 ];

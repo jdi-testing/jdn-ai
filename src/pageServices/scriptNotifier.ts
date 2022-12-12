@@ -1,7 +1,6 @@
 import { Middleware } from "@reduxjs/toolkit";
 import { compact, isNil, pick, size } from "lodash";
 import { pageType } from "../common/constants/constants";
-import { getEnumKeyByValue } from "../common/utils/helpersTS";
 import { selectLocatorById } from "../features/locators/locatorSelectors";
 import { Locator, LocatorTaskStatus } from "../features/locators/locatorSlice.types";
 import { selectLocatorsByPageObject } from "../features/pageObjects/pageObjectSelectors";
@@ -11,7 +10,8 @@ import { selectCurrentPage } from "../app/mainSelectors";
 import { RootState } from "../app/store";
 
 const notify = (state: RootState, action: any, prevState: RootState) => {
-  let { type, payload, meta } = action;
+  let { type, payload } = action;
+  const { meta } = action;
   if (type === "LOCATOR_UNDO") {
     type = payload.type;
     payload = payload.payload;
@@ -30,7 +30,6 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       if (prevValue.type !== elementType || prevValue.name !== name) {
         const locator = selectLocatorById(state, element_id);
         locator && sendMessage.changeElementName(locator);
-        const classes = libraryClasses[library as ElementLibrary];
       } else if (prevValue?.validity?.locator.length) {
         // restore previously invalid locator
         const newValue = selectLocatorById(state, element_id);
