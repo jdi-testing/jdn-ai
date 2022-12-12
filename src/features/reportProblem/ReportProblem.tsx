@@ -261,7 +261,7 @@ export const ReportProblem = () => {
                   disabled={areFilesInvalid}
                   icon={
                     <span role="img" className="anticon anticon-upload">
-                <UploadSimple />
+                      <UploadSimple />
                     </span>
                   }
                 >
