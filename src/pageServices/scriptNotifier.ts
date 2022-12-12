@@ -1,17 +1,20 @@
 import { Middleware } from "@reduxjs/toolkit";
 import { compact, isNil, pick, size } from "lodash";
 import { pageType } from "../common/constants/constants";
-import { getEnumKeyByValue } from "../common/utils/helpersTS";
 import { selectLocatorById } from "../features/locators/locatorSelectors";
 import { Locator, LocatorTaskStatus } from "../features/locators/locatorSlice.types";
 import { selectLocatorsByPageObject } from "../features/pageObjects/pageObjectSelectors";
-import { ElementLibrary, libraryClasses } from "../features/pageObjects/utils/generationClassesMap";
 import { sendMessage } from "./connector";
 import { selectCurrentPage } from "../app/mainSelectors";
 import { RootState } from "../app/store";
 
 const notify = (state: RootState, action: any, prevState: RootState) => {
-  const { type, payload, meta } = action;
+  let { type, payload } = action;
+  const { meta } = action;
+  if (type === "LOCATOR_UNDO") {
+    type = payload.type;
+    payload = payload.payload;
+  }
   switch (type) {
     case "pageObject/addLocatorsToPageObj": {
       if (isNil(state.pageObject.present.currentPageObject)) return;
@@ -20,18 +23,12 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       break;
     }
     case "locators/changeLocatorAttributes": {
-      const { element_id, validity, type: elementType, name, library } = payload;
+      const { element_id, validity, type: elementType, name } = payload;
       const prevValue = selectLocatorById(prevState, element_id);
       if (!prevValue) return;
       if (prevValue.type !== elementType || prevValue.name !== name) {
         const locator = selectLocatorById(state, element_id);
         locator && sendMessage.changeElementName(locator);
-        const classes = libraryClasses[library as ElementLibrary];
-        // if only I could know TS a little better
-        /* eslint-disable-next-line */
-        // @ts-ignore
-        const label = getEnumKeyByValue(classes, elementType);
-        sendMessage.assignDataLabels([{ jdnHash: locator?.jdnHash, predicted_label: label } as Locator]);
       } else if (prevValue?.validity?.locator.length) {
         // restore previously invalid locator
         const newValue = selectLocatorById(state, element_id);

@@ -51,7 +51,7 @@ export const createElementName = (
     return index;
   };
 
-  const returnLatinCodepoints = (string: string) => /[^\u0000-\u00ff]/.test(string) ? "" : string;
+  const returnLatinCodepoints = (string: string) => (/[^\u0000-\u00ff]/.test(string) ? "" : string);
 
   const normalizeString = (string: string) => chain(string).trim().camelCase().value();
 

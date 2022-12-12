@@ -15,7 +15,6 @@ export const cancellableActions: Middleware = (store) => (next) => (action) => {
 
   const { type, payload, meta } = action;
   switch (type) {
-    case "locators/changeLocatorAttributes":
     case "pageObject/removeAll":
     case "pageObject/removePageObject":
     case "pageObject/changeName": {
@@ -29,6 +28,11 @@ export const cancellableActions: Middleware = (store) => (next) => (action) => {
     case "locators/stopGenerationGroup/fulfilled": {
       const _arr: Locator[] = compact(payload);
       pushNotificationHandler(_arr);
+      break;
+    }
+    case "locators/changeLocatorAttributes": {
+      const { element_id } = payload;
+      pushNotificationHandler(selectLocatorById(prevState, element_id));
       break;
     }
     case "locators/toggleDeleted":
