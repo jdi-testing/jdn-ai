@@ -6,8 +6,14 @@ import { MaxGenerationTime } from "../../../app/mainSlice.types";
 import { Menu, MenuItem } from "../../../common/components/menu/Menu";
 import {
   advanced,
-  deleteOption, downPriority, edit,
-  pause, rerun, restore, retry, upPriority
+  deleteOption,
+  downPriority,
+  edit,
+  pause,
+  rerun,
+  restore,
+  retry,
+  upPriority,
 } from "../../../common/components/menu/menuOptions";
 import { rerunGeneration } from "../../../common/thunks/rerunGeneration";
 import { stopGeneration } from "../../../common/thunks/stopGeneration";
@@ -33,20 +39,20 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen }) =>
 
   const handleUpPriority = () => {
     dispatch(
-        setCalculationPriority({
-          element_id,
-          priority: LocatorCalculationPriority.Increased,
-        })
+      setCalculationPriority({
+        element_id,
+        priority: LocatorCalculationPriority.Increased,
+      })
     );
     locatorGenerationController.upPriority([jdnHash]);
   };
 
   const handleDownPriority = () => {
     dispatch(
-        setCalculationPriority({
-          element_id,
-          priority: LocatorCalculationPriority.Decreased,
-        })
+      setCalculationPriority({
+        element_id,
+        priority: LocatorCalculationPriority.Decreased,
+      })
     );
     locatorGenerationController.downPriority([jdnHash]);
   };
@@ -54,10 +60,10 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen }) =>
   const renderMenu = () => {
     const getRerunGeneration = (time: MaxGenerationTime) => () =>
       dispatch(
-          rerunGeneration({
-            generationData: [element],
-            maxGenerationTime: time,
-          })
+        rerunGeneration({
+          generationData: [element],
+          maxGenerationTime: time,
+        })
       );
 
     let items: MenuItem[] = [];
@@ -68,30 +74,30 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen }) =>
       items = [
         edit(handleEditClick),
         ...(isLocatorInProgress ? [pause(() => dispatch(stopGeneration(element_id)))] : []),
-        ...(isLocatorInProgress && priority !== LocatorCalculationPriority.Increased ?
-          [upPriority(handleUpPriority)] :
-          []),
-        ...(isLocatorInProgress && priority !== LocatorCalculationPriority.Decreased ?
-          [downPriority(handleDownPriority)] :
-          []),
-        ...(locator.taskStatus === LocatorTaskStatus.REVOKED ?
-          [rerun(() => dispatch(rerunGeneration({ generationData: [element] })))] :
-          []),
-        ...(locator.taskStatus === LocatorTaskStatus.FAILURE ?
-          [retry(() => dispatch(rerunGeneration({ generationData: [element] })))] :
-          []),
-        ...(locator.taskStatus === LocatorTaskStatus.SUCCESS ?
-          [
-            advanced([
-              getRerunGeneration(1),
-              getRerunGeneration(3),
-              getRerunGeneration(5),
-              getRerunGeneration(10),
-              getRerunGeneration(60),
-              getRerunGeneration(3600),
-            ]),
-          ] :
-          []),
+        ...(isLocatorInProgress && priority !== LocatorCalculationPriority.Increased
+          ? [upPriority(handleUpPriority)]
+          : []),
+        ...(isLocatorInProgress && priority !== LocatorCalculationPriority.Decreased
+          ? [downPriority(handleDownPriority)]
+          : []),
+        ...(locator.taskStatus === LocatorTaskStatus.REVOKED
+          ? [rerun(() => dispatch(rerunGeneration({ generationData: [element] })))]
+          : []),
+        ...(locator.taskStatus === LocatorTaskStatus.FAILURE
+          ? [retry(() => dispatch(rerunGeneration({ generationData: [element] })))]
+          : []),
+        ...(locator.taskStatus === LocatorTaskStatus.SUCCESS
+          ? [
+              advanced([
+                getRerunGeneration(1),
+                getRerunGeneration(3),
+                getRerunGeneration(5),
+                getRerunGeneration(10),
+                getRerunGeneration(60),
+                getRerunGeneration(3600),
+              ]),
+            ]
+          : []),
         deleteOption(() => dispatch(toggleDeleted(element_id))),
       ];
     }

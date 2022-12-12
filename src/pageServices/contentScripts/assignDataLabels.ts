@@ -9,9 +9,9 @@ export const assignDataLabels = () => {
   };
 
   const messageHandler = (
-      { message, param }: { message: any; param: any },
-      _: chrome.runtime.MessageSender,
-      sendResponse: (response: any) => void
+    { message, param }: { message: any; param: any },
+    _: chrome.runtime.MessageSender,
+    sendResponse: (response: any) => void
   ) => {
     if (message === "ASSIGN_DATA_LABEL") {
       assignDataLabel(param);

@@ -23,8 +23,8 @@ const mainSlice = createSlice({
   initialState,
   reducers: {
     changePage(
-        state,
-        { payload }: PayloadAction<{ page: PageType; pageObj?: PageObjectId; alreadyGenerated?: boolean }>
+      state,
+      { payload }: PayloadAction<{ page: PageType; pageObj?: PageObjectId; alreadyGenerated?: boolean }>
     ) {
       state.pageHistory.push(payload);
       state.notifications = [];

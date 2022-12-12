@@ -102,8 +102,8 @@ const locatorsSlice = createSlice({
       locatorsAdapter.upsertMany(state, newValue as Locator[]);
     },
     setCalculationPriority(
-        state,
-        { payload }: PayloadAction<{ element_id: ElementId; priority: LocatorCalculationPriority; ids?: ElementId[] }>
+      state,
+      { payload }: PayloadAction<{ element_id: ElementId; priority: LocatorCalculationPriority; ids?: ElementId[] }>
     ) {
       const { element_id, ids, priority } = payload;
       if (element_id) locatorsAdapter.upsertOne(state, { element_id, priority } as Locator);
@@ -172,11 +172,11 @@ const locatorsSlice = createSlice({
   },
   extraReducers: (builder) => {
     identifyElementsReducer(builder),
-    generateLocatorsReducer(builder),
-    rerunGenerationReducer(builder),
-    stopGenerationReducer(builder),
-    stopGenerationGroupReducer(builder),
-    cancelStopGenerationReducer(builder);
+      generateLocatorsReducer(builder),
+      rerunGenerationReducer(builder),
+      stopGenerationReducer(builder),
+      stopGenerationGroupReducer(builder),
+      cancelStopGenerationReducer(builder);
   },
 });
 

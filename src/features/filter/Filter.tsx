@@ -23,23 +23,23 @@ export const Filter = () => {
 
   const classFilter = useSelector((state: RootState) => selectClassFiltefByPO(state, pageObject.id));
   const classFilterArr =
-    searchTerm === "" ?
-      Object.entries(classFilter) :
-      Object.entries(classFilter).filter(([key]) => toLower(key).includes(toLower(searchTerm)));
+    searchTerm === ""
+      ? Object.entries(classFilter)
+      : Object.entries(classFilter).filter(([key]) => toLower(key).includes(toLower(searchTerm)));
 
   const areSelectedAll = useMemo(() => {
     const arr = Object.entries(classFilter);
-    return !arr.some(([key, value]) => !value);
+    return !arr.some(([, value]) => !value);
   }, [classFilter]);
 
   const handleFilterChange = (key: string, oldValue: boolean) => () => {
     dispatch(
-        toggleClassFilter({
-          pageObjectId: pageObject.id,
-          library: pageObject.library,
-          jdiClass: key as ElementClass,
-          value: !oldValue,
-        })
+      toggleClassFilter({
+        pageObjectId: pageObject.id,
+        library: pageObject.library,
+        jdiClass: key as ElementClass,
+        value: !oldValue,
+      })
     );
   };
 
@@ -60,11 +60,11 @@ export const Filter = () => {
 
   const handleSelectAllChange: SwitchChangeEventHandler = (checked) => {
     dispatch(
-        toggleClassFilterAll({
-          pageObjectId: pageObject.id,
-          library: pageObject.library,
-          value: checked,
-        })
+      toggleClassFilterAll({
+        pageObjectId: pageObject.id,
+        library: pageObject.library,
+        value: checked,
+      })
     );
   };
 

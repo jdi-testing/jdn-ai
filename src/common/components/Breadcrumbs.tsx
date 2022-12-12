@@ -14,13 +14,11 @@ export const Breadcrumbs = () => {
       {currentPage.page === PageType.LocatorsList ? (
         <Breadcrumb>
           <Breadcrumb.Item>
-            <Tooltip title={pageObject?.url} placement="bottomLeft" overlayStyle={{maxWidth: "96%"}}>
+            <Tooltip title={pageObject?.url} placement="bottomLeft" overlayStyle={{ maxWidth: "96%" }}>
               {pageObject?.name}
             </Tooltip>
           </Breadcrumb.Item>
-          <Breadcrumb.Item>
-            {currentPage.alreadyGenerated ? "Editing" : "Creating"}
-          </Breadcrumb.Item>
+          <Breadcrumb.Item>{currentPage.alreadyGenerated ? "Editing" : "Creating"}</Breadcrumb.Item>
         </Breadcrumb>
       ) : null}
     </div>

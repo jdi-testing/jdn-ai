@@ -22,7 +22,7 @@ export const RenamePageObjectDialog: React.FC<Props> = ({ isModalOpen, setIsModa
   const [form] = useForm();
   const dispatch = useDispatch();
 
-  const nameValidityRules: Rule[] =[
+  const nameValidityRules: Rule[] = [
     {
       required: true,
       message: ValidationErrorType.EmptyValue,
@@ -40,19 +40,19 @@ export const RenamePageObjectDialog: React.FC<Props> = ({ isModalOpen, setIsModa
         if (value.length && !isPONameUnique(pageObjects, pageObjId, value)) {
           return Promise.reject(new Error(ValidationErrorType.DuplicatedPageObjName));
         } else return Promise.resolve();
-      }
-    })
+      },
+    }),
   ];
 
   const handleOk = () => {
     form
-        .validateFields()
-        .then((values) => {
-          dispatch(changeName({id: pageObjId, ...values}));
-          form.resetFields();
-          setIsModalOpen(false);
-        })
-        .catch((error) => console.log(error));
+      .validateFields()
+      .then((values) => {
+        dispatch(changeName({ id: pageObjId, ...values }));
+        form.resetFields();
+        setIsModalOpen(false);
+      })
+      .catch((error) => console.log(error));
   };
 
   return (

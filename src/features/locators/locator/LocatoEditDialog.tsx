@@ -120,21 +120,21 @@ export const LocatorEditDialog: React.FC<Props> = ({
 
   const handleOk = () => {
     form
-        .validateFields()
-        .then((values) => {
-          dispatch(
-              changeLocatorAttributes({
-                ...values,
-                element_id,
-                library,
-                validity: { locator: locatorValidity },
-                isCustomName: isEditedName,
-              })
-          );
-          form.resetFields();
-          setIsModalOpen(false);
-        })
-        .catch((error) => console.log(error));
+      .validateFields()
+      .then((values) => {
+        dispatch(
+          changeLocatorAttributes({
+            ...values,
+            element_id,
+            library,
+            validity: { locator: locatorValidity },
+            isCustomName: isEditedName,
+          })
+        );
+        form.resetFields();
+        setIsModalOpen(false);
+      })
+      .catch((error) => console.log(error));
   };
 
   return (

@@ -81,9 +81,9 @@ export const Notifications = () => {
       case "locators/toggleDeletedGroup":
         const _prevValueGroup = prevValue as Array<Locator>;
         openNotification(
-          _prevValueGroup[0].deleted ?
-            messages(size(_prevValueGroup).toString()).RESTORE_GROUP :
-            messages(size(_prevValueGroup).toString()).DELETE_GROUP,
+          _prevValueGroup[0].deleted
+            ? messages(size(_prevValueGroup).toString()).RESTORE_GROUP
+            : messages(size(_prevValueGroup).toString()).DELETE_GROUP,
           _prevValueGroup[0].deleted ? "success" : "warning",
           locatorUndo
         );
@@ -118,9 +118,9 @@ export const Notifications = () => {
   };
 
   const openNotification = (
-      message: string,
-      type: AlertProps["type"],
-      action?: UndoAction | Array<UndoAction> | CancelAnyAction
+    message: string,
+    type: AlertProps["type"],
+    action?: UndoAction | Array<UndoAction> | CancelAnyAction
   ) => {
     notification.destroy();
 

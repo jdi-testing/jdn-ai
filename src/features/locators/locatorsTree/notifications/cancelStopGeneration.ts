@@ -5,10 +5,10 @@ import { locatorsAdapter, simpleSelectLocatorById } from "../../locatorSelectors
 import { Locator, LocatorsState } from "../../locatorSlice.types";
 
 export const cancelStopGeneration = createAsyncThunk(
-    "locators/cancelStopGeneration",
-    async (generationData: Locator[], thunkAPI) => {
-      thunkAPI.dispatch(runXpathGeneration({ generationData }));
-    }
+  "locators/cancelStopGeneration",
+  async (generationData: Locator[], thunkAPI) => {
+    thunkAPI.dispatch(runXpathGeneration({ generationData }));
+  }
 );
 
 /* eslint-disable */

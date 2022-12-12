@@ -11,11 +11,8 @@ window.onbeforeunload = clearTabSession;
 function clearTabSession() {
   const tabId = chrome.devtools.inspectedWindow.tabId;
 
-  chrome.tabs.sendMessage(
-      tabId,
-      {
-        message: "SET_CLOSED_SESSION",
-        param: { tabId, isClosed: true }
-      },
-  );
+  chrome.tabs.sendMessage(tabId, {
+    message: "SET_CLOSED_SESSION",
+    param: { tabId, isClosed: true },
+  });
 }

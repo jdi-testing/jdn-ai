@@ -3,7 +3,7 @@ export const getPageData = () => {
     if (error.message !== "The message port closed before a response was received.") throw new Error(error.message);
   });
 
-  const hashAttribute = 'jdn-hash';
+  const hashAttribute = "jdn-hash";
   function gen_uuid(e) {
     let hashValue = e.getAttribute(hashAttribute);
     if (!hashValue) {

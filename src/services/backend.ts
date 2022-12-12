@@ -51,8 +51,8 @@ class Request {
   async post<D>(url: HttpEndpoint, payload: D, config?: AxiosRequestConfig, baseURL?: BaseUrl) {
     if (!this.baseUrl && !baseURL) throw new Error("base URL is required");
     return this.request
-        .post(url, payload, { ...config, baseURL: this.baseUrl || baseURL })
-        .then((response) => response.data);
+      .post(url, payload, { ...config, baseURL: this.baseUrl || baseURL })
+      .then((response) => response.data);
   }
 
   async getBlob(url: HttpEndpoint, config?: AxiosRequestConfig) {

@@ -10,10 +10,10 @@ describe("pageObject reducers", () => {
     store.dispatch(clearAll());
 
     jest
-        .spyOn(pageObject, "getPageAttributes")
-        .mockImplementation(() => (
-          [{result: { title: "HomePage", url: "https://jdi-testing.github.io/jdi-light/contacts.html" }}]
-        ));
+      .spyOn(pageObject, "getPageAttributes")
+      .mockImplementation(() => [
+        { result: { title: "HomePage", url: "https://jdi-testing.github.io/jdi-light/contacts.html" } },
+      ]);
 
     store.dispatch(addPageObj());
     store.dispatch(addPageObj());

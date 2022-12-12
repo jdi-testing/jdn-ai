@@ -47,11 +47,11 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, locators, elements, lib
     const handleEdit = () => {
       dispatch(setCurrentPageObj(id));
       dispatch(
-          changePage({
-            page: PageType.LocatorsList,
-            pageObj: currentPageObject,
-            alreadyGenerated: true,
-          })
+        changePage({
+          page: PageType.LocatorsList,
+          pageObj: currentPageObject,
+          alreadyGenerated: true,
+        })
       );
     };
 

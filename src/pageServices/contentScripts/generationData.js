@@ -36,38 +36,24 @@ export const getGenerationAttributes = () => {
     const paths = [];
 
     // Use nodeName (instead of localName) so namespace prefix is included (if any).
-    for (
-      ;
-      element && element.nodeType == Node.ELEMENT_NODE;
-      element = element.parentNode
-    ) {
+    for (; element && element.nodeType == Node.ELEMENT_NODE; element = element.parentNode) {
       let index = 0;
       let hasFollowingSiblings = false;
-      for (
-        let sibling = element.previousSibling;
-        sibling;
-        sibling = sibling.previousSibling
-      ) {
+      for (let sibling = element.previousSibling; sibling; sibling = sibling.previousSibling) {
         // Ignore document type declaration.
         if (sibling.nodeType == Node.DOCUMENT_TYPE_NODE) continue;
 
         if (sibling.nodeName == element.nodeName) ++index;
       }
 
-      for (
-        let sibling = element.nextSibling;
-        sibling && !hasFollowingSiblings;
-        sibling = sibling.nextSibling
-      ) {
+      for (let sibling = element.nextSibling; sibling && !hasFollowingSiblings; sibling = sibling.nextSibling) {
         if (sibling.nodeName == element.nodeName) {
           hasFollowingSiblings = true;
         }
       }
 
-      const tagName =
-              (element.prefix ? element.prefix + ":" : "") + element.localName;
-      const pathIndex =
-              index || hasFollowingSiblings ? "[" + (index + 1) + "]" : "";
+      const tagName = (element.prefix ? element.prefix + ":" : "") + element.localName;
+      const pathIndex = index || hasFollowingSiblings ? "[" + (index + 1) + "]" : "";
       paths.splice(0, 0, tagName + pathIndex);
     }
 
@@ -89,32 +75,29 @@ export const getGenerationAttributes = () => {
     }
     const regex = /(_|-)([a-z])/g;
     const toCamelCase = (string) => string[1].toUpperCase();
-    return string
-        .toLowerCase()
-        .replace(regex, toCamelCase)
-        .replaceAll("-", "_");
+    return string.toLowerCase().replace(regex, toCamelCase).replaceAll("-", "_");
   };
 
   const mapElements = (elements) => {
-    const generationAttributes = (elements.map((predictedElement) => {
-      const element = document.querySelector(
-          `[jdn-hash='${predictedElement.jdnHash}']`
-      );
-      if (!element) {
-        return;
-      }
-      const attrName = element.getAttribute("name");
-      predictedElement.elemName = attrName ? camelCase(attrName) : "";
-      predictedElement.elemId = element.id ? camelCase(element.id) : "";
-      predictedElement.elemText = element.text;
-      predictedElement.locator = {
-        fullXpath: getElementTreeXPath(element),
-      };
+    const generationAttributes = elements
+      .map((predictedElement) => {
+        const element = document.querySelector(`[jdn-hash='${predictedElement.jdnHash}']`);
+        if (!element) {
+          return;
+        }
+        const attrName = element.getAttribute("name");
+        predictedElement.elemName = attrName ? camelCase(attrName) : "";
+        predictedElement.elemId = element.id ? camelCase(element.id) : "";
+        predictedElement.elemText = element.text;
+        predictedElement.locator = {
+          fullXpath: getElementTreeXPath(element),
+        };
 
-      return {
-        ...predictedElement,
-      };
-    })).filter((el) => !!el);
+        return {
+          ...predictedElement,
+        };
+      })
+      .filter((el) => !!el);
     return generationAttributes;
   };
 
@@ -123,7 +106,7 @@ export const getGenerationAttributes = () => {
       sendResponse(mapElements(param));
     }
 
-    if (message === "PING_SCRIPT" && (param.scriptName === "getGenerationAttributes")) {
+    if (message === "PING_SCRIPT" && param.scriptName === "getGenerationAttributes") {
       sendResponse({ message: true });
     }
   });

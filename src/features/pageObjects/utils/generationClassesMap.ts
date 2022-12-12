@@ -125,12 +125,12 @@ export const getJdiClassName = (label: keyof ElementLabel, library: ElementLibra
 
 export const getTypesMenuOptions = (library: ElementLibrary) =>
   compact(
-      uniq(
-          Object.values(libraryClasses[library])
-              .map((value) => {
-                if (value !== defaultClass) return value;
-                else return undefined;
-              })
-              .sort()
-      )
+    uniq(
+      Object.values(libraryClasses[library])
+        .map((value) => {
+          if (value !== defaultClass) return value;
+          else return undefined;
+        })
+        .sort()
+    )
   );

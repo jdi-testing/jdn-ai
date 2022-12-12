@@ -17,10 +17,10 @@ const filterSlice = createSlice({
       filterAdapter.removeMany(state, pageObjectIds);
     },
     toggleClassFilter(
-        state,
-        {
-          payload, // eslint-disable-next-line max-len
-        }: PayloadAction<{ pageObjectId: PageObjectId; library: ElementLibrary; jdiClass: ElementClass; value: boolean }>
+      state,
+      {
+        payload, // eslint-disable-next-line max-len
+      }: PayloadAction<{ pageObjectId: PageObjectId; library: ElementLibrary; jdiClass: ElementClass; value: boolean }>
     ) {
       const { pageObjectId, jdiClass, value, library } = payload;
       const newValue = simpleSelectFilterById(state, pageObjectId);
@@ -36,8 +36,8 @@ const filterSlice = createSlice({
       }
     },
     toggleClassFilterAll(
-        state,
-        { payload }: PayloadAction<{ pageObjectId: PageObjectId; library: ElementLibrary; value: boolean }>
+      state,
+      { payload }: PayloadAction<{ pageObjectId: PageObjectId; library: ElementLibrary; value: boolean }>
     ) {
       const { pageObjectId, value, library } = payload;
       let newValue = simpleSelectFilterById(state, pageObjectId);

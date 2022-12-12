@@ -4,23 +4,16 @@ import { Dispatch } from "react";
 import { setScriptMessage } from "../app/mainSlice";
 import { RootState } from "../app/store";
 import { rerunGeneration } from "../common/thunks/rerunGeneration";
-import { stopGeneration } from "../common/thunks/stopGeneration";
 import { stopGenerationGroup } from "../common/thunks/stopGenerationGroup";
-import { selectLocatorById } from "../features/locators/locatorSelectors";
 import {
   elementSetActive,
   elementUnsetActive,
   setScrollToLocator,
-  toggleDeleted,
   toggleDeletedGroup,
   toggleElementGeneration,
   toggleElementGroupGeneration,
 } from "../features/locators/locatorsSlice";
-import {
-  selectCurrentPageObject,
-  selectLocatorByJdnHash,
-  selectPageObjById,
-} from "../features/pageObjects/pageObjectSelectors";
+import { selectCurrentPageObject, selectLocatorByJdnHash } from "../features/pageObjects/pageObjectSelectors";
 import { ElementLibrary, getTypesMenuOptions } from "../features/pageObjects/utils/generationClassesMap";
 import { connector, sendMessage } from "./connector";
 import { showOverlay } from "./pageDataHandlers";
@@ -32,8 +25,8 @@ type Response<T> = (payload: T, sender: chrome.runtime.MessageSender, sendRespon
 type Actions<P = any> = Record<string, Response<P>>;
 
 export const createListeners = (
-    dispatch: Dispatch<{ payload?: any; type?: string } | AsyncThunkAction<any, any, any>>,
-    state: RootState
+  dispatch: Dispatch<{ payload?: any; type?: string } | AsyncThunkAction<any, any, any>>,
+  state: RootState
 ) => {
   const actions: Actions = {
     ELEMENT_SELECT: (payload) => {

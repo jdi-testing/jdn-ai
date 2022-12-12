@@ -20,7 +20,6 @@ export const assignParents = () => {
     return elements;
   };
 
-
   chrome.runtime.onMessage.addListener(({ message, param }, sender, sendResponse) => {
     if (message === "ASSIGN_PARENTS") {
       sendResponse(findParents(param));

@@ -12,7 +12,7 @@ import { ElementLibrary, libraryNames } from "../../utils/generationClassesMap";
 import { identifyElements } from "./identifyElements";
 
 interface Props {
-  pageObj: PageObjectId,
+  pageObj: PageObjectId;
 }
 
 export const GenerationButtons: React.FC<Props> = ({ pageObj }) => {

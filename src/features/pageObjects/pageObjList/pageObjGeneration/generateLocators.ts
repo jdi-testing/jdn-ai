@@ -32,7 +32,7 @@ export const generateLocators = createAsyncThunk("locators/generateLocators", as
   const locators = selectLocators(state as RootState);
   if (availableForGeneration.length) {
     const noLocator = availableForGeneration.filter(
-        (element) => locators.findIndex((loc) => loc.element_id === element.element_id) === -1
+      (element) => locators.findIndex((loc) => loc.element_id === element.element_id) === -1
     );
     if (noLocator.length) {
       const { generationData } = await requestGenerationData(noLocator, library);
@@ -54,13 +54,13 @@ export const generateLocators = createAsyncThunk("locators/generateLocators", as
 
 export const generateLocatorsReducer = (builder: ActionReducerMapBuilder<LocatorsState>) => {
   return builder
-      .addCase(generateLocators.pending, (state) => {
-        state.generationStatus = LocatorsGenerationStatus.started;
-      })
-      .addCase(generateLocators.fulfilled, (state) => {
-        state.generationStatus = LocatorsGenerationStatus.complete;
-      })
-      .addCase(generateLocators.rejected, (state, { error }) => {
-        throw new Error(error.stack);
-      });
+    .addCase(generateLocators.pending, (state) => {
+      state.generationStatus = LocatorsGenerationStatus.started;
+    })
+    .addCase(generateLocators.fulfilled, (state) => {
+      state.generationStatus = LocatorsGenerationStatus.complete;
+    })
+    .addCase(generateLocators.rejected, (state, { error }) => {
+      throw new Error(error.stack);
+    });
 };

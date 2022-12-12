@@ -20,35 +20,35 @@ export const addPageObj = createAsyncThunk("pageObject/addPageObj", async (paylo
 
 export const addPageObjReducer = (builder) => {
   return builder
-      .addCase(addPageObj.fulfilled, (state, { payload }) => {
-        const { className, url, lastSelectedLibrary } = payload;
+    .addCase(addPageObj.fulfilled, (state, { payload }) => {
+      const { className, url, lastSelectedLibrary } = payload;
 
-        // create unique PO name
-        let maxExistingId = selectMaxId(state);
-        const id = !isNull(maxExistingId) ? ++maxExistingId : 0;
-        const pageObjects = simpleSelectPageObjects(state);
-        const names = map(pageObjects, "name");
-        let name = className;
+      // create unique PO name
+      let maxExistingId = selectMaxId(state);
+      const id = !isNull(maxExistingId) ? ++maxExistingId : 0;
+      const pageObjects = simpleSelectPageObjects(state);
+      const names = map(pageObjects, "name");
+      let name = className;
 
-        for (let index = 0; !isPONameUnique(pageObjects, null, name); index++) {
-          const repeats = size(
-              names.filter((_name) => {
-                const res = toLower(_name).includes(toLower(className));
-                return res;
-              })
-          );
-          name = `${className}${repeats + index}`;
-        }
+      for (let index = 0; !isPONameUnique(pageObjects, null, name); index++) {
+        const repeats = size(
+          names.filter((_name) => {
+            const res = toLower(_name).includes(toLower(className));
+            return res;
+          })
+        );
+        name = `${className}${repeats + index}`;
+      }
 
-        pageObjAdapter.addOne(state, {
-          id,
-          name,
-          url,
-          library: lastSelectedLibrary || defaultLibrary,
-        });
-        state.currentPageObject = id;
-      })
-      .addCase(addPageObj.rejected, (state, { error }) => {
-        throw new Error(error.stack);
+      pageObjAdapter.addOne(state, {
+        id,
+        name,
+        url,
+        library: lastSelectedLibrary || defaultLibrary,
       });
+      state.currentPageObject = id;
+    })
+    .addCase(addPageObj.rejected, (state, { error }) => {
+      throw new Error(error.stack);
+    });
 };

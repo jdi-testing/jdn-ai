@@ -11,7 +11,7 @@ import {
   selectFailedByPageObject,
   selectCalculatedByPageObj,
   selectInProgressByPageObj,
-  selectLocatorsByPageObject
+  selectLocatorsByPageObject,
 } from "../../pageObjects/pageObjectSelectors";
 
 let timer: NodeJS.Timeout;
@@ -20,9 +20,7 @@ export const LocatorsProgress = () => {
   const [isProgressActive, setIsProgressActive] = useState(false);
   const generationStatus = useSelector((state: RootState) => state.locators.present.generationStatus);
 
-  const byProbability = useSelector((_state: RootState) =>
-    selectLocatorsByPageObject(_state)
-  );
+  const byProbability = useSelector((_state: RootState) => selectLocatorsByPageObject(_state));
   const generated = useSelector((_state: RootState) => selectCalculatedByPageObj(_state));
   const inProgress = useSelector((_state: RootState) => selectInProgressByPageObj(_state));
   const deleted = useSelector((_state: RootState) => selectDeletedByPageObj(_state));
@@ -62,9 +60,9 @@ export const LocatorsProgress = () => {
         <div className="jdn__locatorsList-progress">
           <div className="jdn__locatorsList-progress-text">
             <Footnote>
-              {size(inProgress) ?
-                `${locatorsGenerationStatus.started} (${calculationReady}/${total})` :
-                generationStatus}
+              {size(inProgress)
+                ? `${locatorsGenerationStatus.started} (${calculationReady}/${total})`
+                : generationStatus}
             </Footnote>
             {generationStatus === locatorsGenerationStatus.failed ? (
               <span className="ant-notification-notice-btn">
@@ -78,9 +76,9 @@ export const LocatorsProgress = () => {
             status={generationStatus === locatorsGenerationStatus.failed ? "exception" : undefined}
             percent={readinessPercentage}
             className={
-              readinessPercentage !== 100 && generationStatus !== locatorsGenerationStatus.failed ?
-                "jdn__progress_hide-info" :
-                ""
+              readinessPercentage !== 100 && generationStatus !== locatorsGenerationStatus.failed
+                ? "jdn__progress_hide-info"
+                : ""
             }
           />
         </div>

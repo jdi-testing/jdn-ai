@@ -21,13 +21,13 @@ describe("changeLocatorAttributes reducer", () => {
 
   test("edit type and name", () => {
     store.dispatch(
-        changeLocatorAttributes({
-          element_id: "8736312404689610766421832473",
-          locator: "//*[@class='sidebar-menu left']",
-          name: "myAwesomeLocator",
-          type: "ProgressBar",
-          library: ElementLibrary.MUI,
-        })
+      changeLocatorAttributes({
+        element_id: "8736312404689610766421832473",
+        locator: "//*[@class='sidebar-menu left']",
+        name: "myAwesomeLocator",
+        type: "ProgressBar",
+        library: ElementLibrary.MUI,
+      })
     );
     const locator = selectLocatorById(store.getState(), "8736312404689610766421832473");
     expect(locator.type).toBe("ProgressBar");
@@ -38,13 +38,13 @@ describe("changeLocatorAttributes reducer", () => {
 
   test("din't edit type and name", () => {
     store.dispatch(
-        changeLocatorAttributes({
-          element_id: "8736312404689610766421832473",
-          locator: "//*[@class='sidebar-menu left']",
-          name: "myAwesomeLocator",
-          type: "ProgressBar",
-          library: ElementLibrary.MUI,
-        })
+      changeLocatorAttributes({
+        element_id: "8736312404689610766421832473",
+        locator: "//*[@class='sidebar-menu left']",
+        name: "myAwesomeLocator",
+        type: "ProgressBar",
+        library: ElementLibrary.MUI,
+      })
     );
     const locator = selectLocatorById(store.getState(), "8736312404689610766421832473");
     expect(locator.type).toBe("ProgressBar");
@@ -55,13 +55,13 @@ describe("changeLocatorAttributes reducer", () => {
 
   test("edit type, custom name stays the same", () => {
     store.dispatch(
-        changeLocatorAttributes({
-          element_id: "8736312404689610766421832473",
-          locator: "//*[@class='sidebar-menu left']",
-          name: "myAwesomeLocator",
-          type: "Dialog",
-          library: ElementLibrary.MUI,
-        })
+      changeLocatorAttributes({
+        element_id: "8736312404689610766421832473",
+        locator: "//*[@class='sidebar-menu left']",
+        name: "myAwesomeLocator",
+        type: "Dialog",
+        library: ElementLibrary.MUI,
+      })
     );
     const locator = selectLocatorById(store.getState(), "8736312404689610766421832473");
     expect(locator.type).toBe("Dialog");
@@ -72,14 +72,14 @@ describe("changeLocatorAttributes reducer", () => {
 
   test("edit locator", () => {
     store.dispatch(
-        changeLocatorAttributes({
-          element_id: "8736312404689610766421832473",
-          locator: "//*[@class='any-class']",
-          name: "myAwesomeLocator",
-          isCustomName: true,
-          type: "Dialog",
-          library: ElementLibrary.MUI,
-        })
+      changeLocatorAttributes({
+        element_id: "8736312404689610766421832473",
+        locator: "//*[@class='any-class']",
+        name: "myAwesomeLocator",
+        isCustomName: true,
+        type: "Dialog",
+        library: ElementLibrary.MUI,
+      })
     );
     const locator = selectLocatorById(store.getState(), "8736312404689610766421832473");
     expect(locator.type).toBe("Dialog");
@@ -93,16 +93,16 @@ describe("changeLocatorAttributes reducer", () => {
   test("warned validation", () => {
     const oldLocator = selectLocatorById(store.getState(), "8736312404689610766421832473");
     store.dispatch(
-        changeLocatorAttributes({
-          element_id: "8736312404689610766421832473",
-          locator: "//*[@class='any-class112']",
-          name: "myAwesomeLocator",
-          type: "Dialog",
-          validity: {
-            locator: "NOT_FOUND"
-          },
-          library: ElementLibrary.MUI,
-        })
+      changeLocatorAttributes({
+        element_id: "8736312404689610766421832473",
+        locator: "//*[@class='any-class112']",
+        name: "myAwesomeLocator",
+        type: "Dialog",
+        validity: {
+          locator: "NOT_FOUND",
+        },
+        library: ElementLibrary.MUI,
+      })
     );
     const locator = selectLocatorById(store.getState(), "8736312404689610766421832473");
     expect(locator).toBeDefined();

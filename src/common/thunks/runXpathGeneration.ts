@@ -21,18 +21,18 @@ export const runXpathGeneration = createAsyncThunk("locators/scheduleGeneration"
     !isNil(state.pageObject.present.currentPageObject) &&
     selectPageObjById(state, state.pageObject.present.currentPageObject);
   await runGenerationHandler(
-      generationData,
-      { ...xpathConfig, maximum_generation_time: maxGenerationTime || xpathConfig.maximum_generation_time },
-      (el: Locator) => {
-        const { element_id, jdnHash } = el;
-        let foundId;
-        if (!element_id) {
-          foundId = selectLocatorByJdnHash(state, jdnHash)?.element_id;
-        }
-        thunkAPI.dispatch(updateLocator({ ...el, element_id: element_id || foundId }));
-      },
-      (ids: string[]) => thunkAPI.dispatch(failGeneration(ids)),
-      pageObject
+    generationData,
+    { ...xpathConfig, maximum_generation_time: maxGenerationTime || xpathConfig.maximum_generation_time },
+    (el: Locator) => {
+      const { element_id, jdnHash } = el;
+      let foundId;
+      if (!element_id) {
+        foundId = selectLocatorByJdnHash(state, jdnHash)?.element_id;
+      }
+      thunkAPI.dispatch(updateLocator({ ...el, element_id: element_id || foundId }));
+    },
+    (ids: string[]) => thunkAPI.dispatch(failGeneration(ids)),
+    pageObject
   );
   return generationData;
 });

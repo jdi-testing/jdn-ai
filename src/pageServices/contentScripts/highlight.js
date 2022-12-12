@@ -121,23 +121,23 @@ export const highlightOnPage = () => {
     const { element_id, jdnHash } = predictedElement;
     const divPosition = (rect) => {
       const { top, left, height, width } = rect || {};
-      return rect ?
-        {
-          left: `${left + window.pageXOffset + document.body.scrollLeft}px`,
-          top: `${top + window.pageYOffset + document.body.scrollTop}px`,
-          height: `${height}px`,
-          width: `${width}px`,
-        } :
-        {};
+      return rect
+        ? {
+            left: `${left + window.pageXOffset + document.body.scrollLeft}px`,
+            top: `${top + window.pageYOffset + document.body.scrollTop}px`,
+            height: `${height}px`,
+            width: `${width}px`,
+          }
+        : {};
     };
     const tooltipDefaultStyle = (rect) => {
       const { right, top, height, width } = rect;
-      return rect ?
-        {
-          right: `calc(100% - ${right + window.pageXOffset - width / 2}px)`,
-          top: `${top + window.pageYOffset + height}px`,
-        } :
-        {};
+      return rect
+        ? {
+            right: `calc(100% - ${right + window.pageXOffset - width / 2}px)`,
+            top: `${top + window.pageYOffset + height}px`,
+          }
+        : {};
     };
     const tooltipInnerHTML = () => {
       const el = predictedElements.find((e) => e.element_id === element_id);

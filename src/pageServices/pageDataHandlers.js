@@ -37,22 +37,22 @@ const sendToModel = async (result, enpoint) => {
 export const predictElements = (endpoint) => {
   let pageData;
   return connector
-      .attachContentScript(getPageData)
-      .then((data) => {
-        const { result } = data[0];
-        pageData = result[0];
-        return sendToModel(result, endpoint);
-      })
-      .then(
-          (response) => {
-            removeOverlay();
-            return { data: response, pageData };
-          },
-          (error) => {
-            removeOverlay();
-            return error;
-          }
-      );
+    .attachContentScript(getPageData)
+    .then((data) => {
+      const { result } = data[0];
+      pageData = result[0];
+      return sendToModel(result, endpoint);
+    })
+    .then(
+      (response) => {
+        removeOverlay();
+        return { data: response, pageData };
+      },
+      (error) => {
+        removeOverlay();
+        return error;
+      }
+    );
 };
 const requestGenerationAttributes = (elements) =>
   connector.attachContentScript(getGenerationAttributes).then(() =>
@@ -72,7 +72,7 @@ export const requestGenerationData = async (elements, library) => {
 
 export const setParents = async (elements) => {
   return connector
-      .attachContentScript(assignParents)
-      .then(() => sendMessage.assignParents(elements))
-      .then((response) => response);
+    .attachContentScript(assignParents)
+    .then(() => sendMessage.assignParents(elements))
+    .then((response) => response);
 };

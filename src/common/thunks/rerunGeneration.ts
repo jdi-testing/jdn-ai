@@ -14,10 +14,10 @@ export const rerunGeneration = createAsyncThunk("locators/rerunGeneration", (met
 
 export const rerunGenerationReducer = (builder: ActionReducerMapBuilder<LocatorsState>) => {
   return builder
-      .addCase(rerunGeneration.pending, (state) => {
-        state.generationStatus = LocatorsGenerationStatus.started;
-      })
-      .addCase(rerunGeneration.fulfilled, (state) => {
-        state.generationStatus = LocatorsGenerationStatus.complete;
-      });
+    .addCase(rerunGeneration.pending, (state) => {
+      state.generationStatus = LocatorsGenerationStatus.started;
+    })
+    .addCase(rerunGeneration.fulfilled, (state) => {
+      state.generationStatus = LocatorsGenerationStatus.complete;
+    });
 };

@@ -12,15 +12,16 @@ import { scriptNotifier } from "../pageServices/scriptNotifier";
 const rootReducer = {
   main: mainSlice,
   filters: filterSlice,
-  locators: undoable(locatorsSlice, {undoType: "LOCATOR_UNDO", jumpType: "LOCATOR_JUMP"}),
-  pageObject: undoable(pageObjectSlice, {undoType: "PAGEOBJECT_UNDO"}),
+  locators: undoable(locatorsSlice, { undoType: "LOCATOR_UNDO", jumpType: "LOCATOR_JUMP" }),
+  pageObject: undoable(pageObjectSlice, { undoType: "PAGEOBJECT_UNDO" }),
 };
 
 export const store = configureStore({
   reducer: rootReducer,
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware({
-    serializableCheck: { ignoredActions: ["locators/setElementGroupGeneration", "locators/updateLocator"] }
-  }).concat([logger, scriptNotifier, cancellableActions]),
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: { ignoredActions: ["locators/setElementGroupGeneration", "locators/updateLocator"] },
+    }).concat([logger, scriptNotifier, cancellableActions]),
 });
 
 store.subscribe(() => createListeners(store.dispatch, store.getState()));

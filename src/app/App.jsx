@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ReactDOM from "react-dom";
-import {
-  Provider as ReduxProvider,
-  useDispatch,
-  useSelector,
-} from "react-redux";
+import { Provider as ReduxProvider, useDispatch, useSelector } from "react-redux";
 
 import "antd/dist/antd.less";
 import "antd/lib/style/themes/default.less";
@@ -35,9 +31,7 @@ const App = () => {
   const status = useSelector((state) => state.locators.present.status);
   const backendAvailable = useSelector((state) => state.main.backendAvailable);
   const currentPage = useSelector(selectCurrentPage);
-  const currentPageObject = useSelector(
-      (state) => state.pageObject.present.currentPageObject
-  );
+  const currentPageObject = useSelector((state) => state.pageObject.present.currentPageObject);
   const dispatch = useDispatch();
 
   useOnTabUpdate();
@@ -62,9 +56,7 @@ const App = () => {
 
   useEffect(() => {
     if (status === identificationStatus.success) {
-      dispatch(
-          changePage({ page: pageType.locatorsList, pageObj: currentPageObject })
-      );
+      dispatch(changePage({ page: pageType.locatorsList, pageObj: currentPageObject }));
     }
   }, [status]);
 
@@ -87,9 +79,7 @@ const App = () => {
         <Content className="jdn__content">
           {backendAvailable === BackendStatus.Accessed ? (
             isInvalidSession ? (
-              <SeveralTabsWarning
-                {...{ checkSession: () => checkSession(setIsInvalidSession) }}
-              />
+              <SeveralTabsWarning {...{ checkSession: () => checkSession(setIsInvalidSession) }} />
             ) : (
               renderPage()
             )
