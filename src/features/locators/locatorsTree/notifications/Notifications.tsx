@@ -75,7 +75,7 @@ export const Notifications = () => {
         openNotification(
           _prevValueLocator.deleted ? messages().RESTORE : messages().DELETE,
           _prevValueLocator.deleted ? "success" : "warning",
-          locatorUndo({ type: action?.type, payload: _prevValueLocator })
+          locatorUndo({ type: action?.type, payload: _prevValueLocator.element_id })
         );
         break;
       case "locators/toggleDeletedGroup":
