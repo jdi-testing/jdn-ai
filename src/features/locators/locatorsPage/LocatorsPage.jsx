@@ -1,4 +1,4 @@
-import { Button, Modal, Tooltip } from "antd";
+import { Button, Modal, Tooltip, Row } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -22,6 +22,7 @@ import { locatorGenerationController } from "../locatorGenerationController";
 import { removeLocators, restoreLocators } from "../locatorsSlice";
 import { LocatorsTree } from "../locatorsTree";
 import { LocatorListHeader } from "./LocatorListHeader";
+import { Filter } from "../../filter/Filter";
 
 const { confirm } = Modal;
 
@@ -137,7 +138,10 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
   return (
     <React.Fragment>
       <div className="jdn__locatorsList">
-        <Breadcrumbs />
+        <Row justify="space-between">
+          <Breadcrumbs />
+          <Filter />
+        </Row>
         <LocatorListHeader
           render={(viewProps) => (
             <div className="jdn__locatorsList-content">
