@@ -94,7 +94,7 @@ export const Filter = () => {
       onOpenChange={handleOpenChange}
       {...{ open }}
     >
-      <Button type="link" icon={<Funnel size={14} color="#8C8C8C" />} />
+      <Button className="jdn__filter_filter-button" type="link" icon={<Funnel size={14} color="#8C8C8C" />} />
     </Dropdown>
   );
 };
