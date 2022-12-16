@@ -21,17 +21,12 @@ interface Meta {
   library: ElementLibrary;
 }
 
-const filterByProbability = (elements: PredictedEntity[], perception: number) => {
-  return elements.filter((e) => e.predicted_probability >= perception);
-};
-
 export const generateLocators = createAsyncThunk("locators/generateLocators", async (payload: Meta, thunkAPI) => {
   const { predictedElements, library } = payload;
-  const availableForGeneration = filterByProbability(predictedElements, 0.5);
   const state = thunkAPI.getState();
   const locators = selectLocators(state as RootState);
-  if (availableForGeneration.length) {
-    const noLocator = availableForGeneration.filter(
+  if (predictedElements.length) {
+    const noLocator = predictedElements.filter(
       (element) => locators.findIndex((loc) => loc.element_id === element.element_id) === -1
     );
     if (noLocator.length) {
