@@ -89,7 +89,12 @@ export enum VuetifyClasses {
   button = "Button",
 }
 
-export type ElementLabel = typeof MUIclasses | typeof HTML5classes | typeof NgMatClasses | typeof VuetifyClasses | typeof defaultClass;
+export type ElementLabel =
+  | typeof MUIclasses
+  | typeof HTML5classes
+  | typeof NgMatClasses
+  | typeof VuetifyClasses
+  | typeof defaultClass;
 export type ElementClass = MUIclasses | HTML5classes | NgMatClasses | typeof defaultClass;
 
 export enum ElementLibrary {

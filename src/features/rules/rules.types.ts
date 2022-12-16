@@ -1,18 +1,18 @@
-import { ElementLabel, VuetifyClasses } from "../pageObjects/utils/generationClassesMap";
+import { VuetifyClasses } from "../pageObjects/utils/generationClassesMap";
 
 export type JDNLabel = keyof typeof VuetifyClasses;
 
 export interface RulesMap {
-    jdnLabel: JDNLabel,
-    rules: Rule,
+  jdnLabel: JDNLabel;
+  rules: Rule;
 }
 
 export interface Rule {
-    tag: string,
-    classes: string[],
+  tag: string;
+  classes: string[];
 }
 
 export interface SelectorsMap {
-    jdnLabel: JDNLabel,
-    selector: string,
+  jdnLabel: JDNLabel;
+  selector: string;
 }

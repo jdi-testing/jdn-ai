@@ -7,7 +7,7 @@ export const findByRules = () => {
   return connector
     .attachContentScript(findBySelectors)
     .then(() => {
-        return sendMessage.findBySelectors(selectors)
+      return sendMessage.findBySelectors(selectors);
     })
     .then((result) => {
       console.log(result);
