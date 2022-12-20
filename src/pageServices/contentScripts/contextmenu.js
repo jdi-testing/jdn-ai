@@ -109,10 +109,14 @@ export const runContextMenu = () => {
             if (ContextUtil.getProperty(options, "sub_icon", "") != "") {
               sub_span.innerHTML = ContextUtil.getProperty(options, "sub_icon", "");
             } else {
-              sub_span.innerHTML = `<svg width="8" height="10" viewBox="0 0 8 10" fill="none" 
-              xmlns="http://www.w3.org/2000/svg">
-              <path d="M8 5L0.5 9.33013L0.5 0.669872L8 5Z" fill="white"/>
-              </svg>
+              sub_span.innerHTML = `<svg width="7" height="12" viewBox="0 0 7 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6.39777 5.66428L0.360269 0.948654C0.344493 0.936233 0.325533 0.928515 0.305568 0.926384C0.285603 0.924253 
+              0.265441 0.927797 0.247399 0.936608C0.229357 0.94542 0.214166 0.959141 0.203571 0.976196C0.192976 0.993252 0.187406 
+              1.01295 0.187501 1.03303V2.0683C0.187501 2.13392 0.218305 2.19687 0.269198 2.23705L5.09063 6.00178L0.269198 
+              9.76651C0.216966 9.80669 0.187501 9.86964 0.187501 9.93526V10.9705C0.187501 11.0603 0.290626 11.1098 0.360269 
+              11.0549L6.39777 6.33928C6.44908 6.29925 6.4906 6.24805 6.51915 6.18957C6.5477 6.13108 6.56254 6.06686 6.56254 
+              6.00178C6.56254 5.9367 6.5477 5.87247 6.51915 5.81399C6.4906 5.75551 6.44908 5.70431 6.39777 5.66428Z" fill="#5A5A5A"/>
+              </svg>              
               `;
             }
           }
@@ -308,7 +312,7 @@ export const runContextMenu = () => {
       ...(notAddedToPO()
         ? [
             {
-              text: "Add to PO",
+              text: "Add to Page Object",
               events: {
                 click: () =>
                   sendMessage({
@@ -322,7 +326,7 @@ export const runContextMenu = () => {
       ...(addedToPO()
         ? [
             {
-              text: "Remove from PO",
+              text: "Remove from Page Object",
               events: {
                 click: () =>
                   sendMessage({
