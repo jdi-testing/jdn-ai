@@ -293,6 +293,7 @@ export const runContextMenu = () => {
   /* helpers */
 
   const notAddedToPO = () => predictedElements.some(({ generate }) => !generate);
+  const addedToPO = () => predictedElements.some(({ generate }) => generate);
   const isGroup = () => predictedElements.length !== 1;
   const noDeleted = () => predictedElements.some(({ deleted }) => !deleted);
   const areInProgress = () =>
@@ -304,16 +305,26 @@ export const runContextMenu = () => {
 
   const menuItems = () => {
     const menuItems = [
-      {
-        text: notAddedToPO() ? "Add to PO" : "Remove from PO",
+      ...notAddedToPO() ? [{
+        text: "Add to PO",
         events: {
           click: () =>
             sendMessage({
               message: isGroup() ? "TOGGLE_ELEMENT_GROUP" : "TOGGLE_ELEMENT",
-              param: predictedElements,
+              param: predictedElements.filter((element) => !element.generate),
             }),
         },
-      },
+      }] : [],
+      ...addedToPO() ? [{
+        text: "Remove from PO",
+        events: {
+          click: () =>
+            sendMessage({
+              message: isGroup() ? "TOGGLE_ELEMENT_GROUP" : "TOGGLE_ELEMENT",
+              param: predictedElements.filter((element) => element.generate),
+            }),
+        },
+      }] : [],
       {
         type: ContextMenu.DIVIDER,
       },
