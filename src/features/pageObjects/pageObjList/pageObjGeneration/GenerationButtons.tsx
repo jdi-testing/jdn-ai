@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { RootState } from "../../../../app/store";
 import { IdentificationStatus } from "../../../locators/locatorSlice.types";
-import { selectCurrentPageObject, selectPageObjById } from "../../pageObjectSelectors";
+import { selectCurrentPageObject } from "../../pageObjectSelectors";
 import { changeElementLibrary } from "../../pageObjectSlice";
 import { PageObjectId } from "../../pageObjectSlice.types";
 import { ElementLibrary, libraryNames } from "../../utils/generationClassesMap";

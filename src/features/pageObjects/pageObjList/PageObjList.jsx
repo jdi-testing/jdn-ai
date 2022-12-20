@@ -41,7 +41,7 @@ export const PageObjList = (props) => {
     return (
       <div className="jdn__pageObject__settings">
         <Footnote className="jdn__pageObject__settings-url">{url}</Footnote>
-        <GenerationButtons pageObj={pageObjId} {...{library}} />
+        <GenerationButtons pageObj={pageObjId} {...{ library }} />
       </div>
     );
   };
