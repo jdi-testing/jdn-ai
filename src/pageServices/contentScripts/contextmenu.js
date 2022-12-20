@@ -305,26 +305,34 @@ export const runContextMenu = () => {
 
   const menuItems = () => {
     const menuItems = [
-      ...notAddedToPO() ? [{
-        text: "Add to PO",
-        events: {
-          click: () =>
-            sendMessage({
-              message: isGroup() ? "TOGGLE_ELEMENT_GROUP" : "TOGGLE_ELEMENT",
-              param: predictedElements.filter((element) => !element.generate),
-            }),
-        },
-      }] : [],
-      ...addedToPO() ? [{
-        text: "Remove from PO",
-        events: {
-          click: () =>
-            sendMessage({
-              message: isGroup() ? "TOGGLE_ELEMENT_GROUP" : "TOGGLE_ELEMENT",
-              param: predictedElements.filter((element) => element.generate),
-            }),
-        },
-      }] : [],
+      ...(notAddedToPO()
+        ? [
+            {
+              text: "Add to PO",
+              events: {
+                click: () =>
+                  sendMessage({
+                    message: isGroup() ? "TOGGLE_ELEMENT_GROUP" : "TOGGLE_ELEMENT",
+                    param: predictedElements.filter((element) => !element.generate),
+                  }),
+              },
+            },
+          ]
+        : []),
+      ...(addedToPO()
+        ? [
+            {
+              text: "Remove from PO",
+              events: {
+                click: () =>
+                  sendMessage({
+                    message: isGroup() ? "TOGGLE_ELEMENT_GROUP" : "TOGGLE_ELEMENT",
+                    param: predictedElements.filter((element) => element.generate),
+                  }),
+              },
+            },
+          ]
+        : []),
       {
         type: ContextMenu.DIVIDER,
       },
