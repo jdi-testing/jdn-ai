@@ -132,13 +132,11 @@ export const selectable = () => {
       this.items = document.querySelectorAll(this.options.zone + " " + this.options.elements);
       this.disable();
       this.zone.addEventListener("mousedown", self.rectOpen);
-      document.addEventListener("contextmenu", this.contextClick);
       this.on = true;
       return this;
     };
     this.disable = function () {
       this.zone.removeEventListener("mousedown", self.rectOpen);
-      document.removeEventListener("contextmenu", this.contextClick);
       this.on = false;
       return this;
     };
@@ -182,7 +180,7 @@ export const selectable = () => {
         document.body.appendChild(gh);
       }
       document.body.addEventListener("mousemove", self.rectDraw);
-      window.addEventListener("mouseup", self.select);
+      document.body.addEventListener("mouseup", self.select);
     };
     var rb = function () {
       return document.getElementById("s-rectBox");
@@ -211,7 +209,7 @@ export const selectable = () => {
       delete self.ipos;
       document.body.classList.remove("s-noselect");
       document.body.removeEventListener("mousemove", self.rectDraw);
-      window.removeEventListener("mouseup", self.select);
+      document.body.removeEventListener("mouseup", self.select);
 
       const s = self.options.selectedClass;
       const toggleActiveClass = function (el) {
@@ -236,7 +234,10 @@ export const selectable = () => {
         });
       }
 
-      a.parentNode.removeChild(a);
+      // setTimeout to allow click listeners in other scripts (eg. contextmenu.js) work correctly
+      setTimeout(function () {
+        a.parentNode.removeChild(a);
+      }, 100);
       self.options.stop && self.options.stop(e);
     };
     this.rectDraw = function (e) {
