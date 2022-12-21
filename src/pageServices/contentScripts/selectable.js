@@ -146,7 +146,6 @@ export const selectable = () => {
     };
     this.suspend = function (e) {
       e.preventDefault();
-      e.stopPropagation();
       return false;
     };
     this.isContextForGroup = function (e) {
