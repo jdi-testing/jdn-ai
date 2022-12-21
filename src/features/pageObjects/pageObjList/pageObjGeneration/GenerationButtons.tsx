@@ -13,12 +13,12 @@ import { identifyElements } from "./identifyElements";
 
 interface Props {
   pageObj: PageObjectId;
+  library: ElementLibrary;
 }
 
-export const GenerationButtons: React.FC<Props> = ({ pageObj }) => {
+export const GenerationButtons: React.FC<Props> = ({ pageObj, library }) => {
   const status = useSelector((state: RootState) => state.locators.present.status);
   const currentPageObject = useSelector(selectCurrentPageObject);
-  const { id, library } = currentPageObject!;
 
   const dispatch = useDispatch();
 
@@ -31,7 +31,7 @@ export const GenerationButtons: React.FC<Props> = ({ pageObj }) => {
             id="library"
             defaultValue={library}
             className="jdn__select"
-            onChange={(_library) => dispatch(changeElementLibrary({ id, library: _library }))}
+            onChange={(_library) => dispatch(changeElementLibrary({ id: pageObj, library: _library }))}
           >
             <Select.Option value={ElementLibrary.MUI}>{libraryNames.MUI}</Select.Option>
             <Select.Option value={ElementLibrary.HTML5}>{libraryNames.HTML5}</Select.Option>
