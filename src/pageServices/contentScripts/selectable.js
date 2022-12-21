@@ -226,8 +226,7 @@ export const selectable = () => {
 
       if (isPlainClick(a)) {
         const highlightTarget = e.target.closest("[jdn-highlight=true]");
-        if (!highlightTarget) return;
-        if (!self.isContextForGroup(e)) toggleActiveClass(highlightTarget);
+        if (highlightTarget && !self.isContextForGroup(e)) toggleActiveClass(highlightTarget);
       } else {
         self.foreach(self.items, function (el) {
           if (cross(a, el) === true) toggleActiveClass(el);
