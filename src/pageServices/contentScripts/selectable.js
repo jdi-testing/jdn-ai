@@ -180,6 +180,7 @@ export const selectable = () => {
       }
       document.body.addEventListener("mousemove", self.rectDraw);
       document.body.addEventListener("mouseup", self.select);
+      document.body.addEventListener("mouseleave", self.select);
     };
     var rb = function () {
       return document.getElementById("s-rectBox");
@@ -209,6 +210,7 @@ export const selectable = () => {
       document.body.classList.remove("s-noselect");
       document.body.removeEventListener("mousemove", self.rectDraw);
       document.body.removeEventListener("mouseup", self.select);
+      document.body.removeEventListener("mouseleave", self.select);
 
       const s = self.options.selectedClass;
       const toggleActiveClass = function (el) {
