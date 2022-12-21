@@ -45,6 +45,7 @@ const pageObjSlice = createSlice({
     },
     removePageObject(state, { payload: id }) {
       pageObjAdapter.removeOne(state, id);
+      if (state.currentPageObject === id) state.currentPageObject = undefined;
     },
     setCurrentPageObj(state, { payload }) {
       state.currentPageObject = payload;
