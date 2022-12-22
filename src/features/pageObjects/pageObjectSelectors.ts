@@ -40,7 +40,7 @@ export const selectMaxId = createSelector(simpleSelectPageObjects, (items) => {
 export const selectLocatorsByPageObject = createSelector(
   selectLocators,
   (state: RootState, pageObjId?: PageObjectId) => {
-    pageObjId = pageObjId || selectCurrentPageObject(state)?.id;
+    pageObjId = isNil(pageObjId) ? selectCurrentPageObject(state)?.id : pageObjId;
     if (isNil(pageObjId)) return [];
     return selectPageObjById(state, pageObjId)?.locators || [];
   },
