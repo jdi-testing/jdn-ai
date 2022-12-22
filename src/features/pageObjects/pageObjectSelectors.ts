@@ -67,6 +67,19 @@ export const selectGenerateByPageObject = createSelector(selectFilteredLocators,
   elements.filter((elem) => elem?.generate)
 );
 
+export const selectActiveGenerateByPO = createSelector(selectGenerateByPageObject, (elements: Array<Locator> = []) =>
+  elements.filter((elem) => elem?.active)
+);
+
+export const selectNonGenerateByPageObject = createSelector(selectFilteredLocators, (elements: Array<Locator> = []) =>
+  elements.filter((elem) => !elem?.generate)
+);
+
+export const selectActiveNonGenerateByPO = createSelector(
+  selectNonGenerateByPageObject,
+  (elements: Array<Locator> = []) => elements.filter((elem) => elem?.active)
+);
+
 export const selectConfirmedLocators = createSelector(selectFilteredLocators, (elements: Array<Locator> = []) =>
   elements.filter((elem) => elem?.generate && !elem.deleted)
 );
