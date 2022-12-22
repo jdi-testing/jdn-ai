@@ -123,3 +123,15 @@ export const deleteOption = (onClick: () => void) => ({
   onClick,
   label: <Typography.Text type="danger">Delete</Typography.Text>,
 });
+
+export const addToPO = (onClick: () => void) => ({
+  key: "16",
+  onClick,
+  label: <Typography.Text>Add to Page Object</Typography.Text>,
+});
+
+export const removeFromPO = (onClick: () => void) => ({
+  key: "17",
+  onClick,
+  label: <Typography.Text>Remove from Page Object</Typography.Text>,
+});

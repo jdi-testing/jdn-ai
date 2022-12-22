@@ -13,12 +13,15 @@ import {
   setElementGroupGeneration,
   toggleDeleted,
   toggleDeletedGroup,
+  toggleElementGroupGeneration,
 } from "../locatorsSlice";
 import { stopGenerationGroup } from "../../../common/thunks/stopGenerationGroup";
 import { rerunGeneration } from "../../../common/thunks/rerunGeneration";
 import { locatorTaskStatus, LOCATOR_CALCULATION_PRIORITY } from "../../../common/constants/constants";
 import {
+  selectActiveGenerateByPO,
   selectActiveLocators,
+  selectActiveNonGenerateByPO,
   selectCalculatedActiveByPageObj,
   selectDeletedActiveByPageObj,
   selectFilteredLocators,
@@ -27,10 +30,12 @@ import {
   selectWaitingActiveByPageObj,
 } from "../../pageObjects/pageObjectSelectors";
 import {
+  addToPO,
   advanced,
   deleteOption,
   downPriority,
   pause,
+  removeFromPO,
   rerun,
   restore,
   upPriority,
@@ -55,6 +60,8 @@ export const LocatorListHeader = ({ render }) => {
 
   const locators = useSelector(selectFilteredLocators);
   const locatorsGenerate = useSelector(selectGenerateByPageObject);
+  const activeNonGenerate = useSelector(selectActiveNonGenerateByPO);
+  const activeGenerate = useSelector(selectActiveGenerateByPO);
   const active = useSelector(selectActiveLocators);
   const calculatedActive = useSelector((_state) => selectCalculatedActiveByPageObj(_state));
   const waitingActive = useSelector(selectWaitingActiveByPageObj);
@@ -135,6 +142,8 @@ export const LocatorListHeader = ({ render }) => {
       );
 
     const items = [
+      ...(size(activeNonGenerate) ? [addToPO(() => dispatch(toggleElementGroupGeneration(activeNonGenerate)))] : []),
+      ...(size(activeGenerate) ? [removeFromPO(() => dispatch(toggleElementGroupGeneration(activeGenerate)))] : []),
       ...(size(deletedActive) ? [restore(() => dispatch(toggleDeletedGroup(deletedActive)))] : []),
       ...(size(stoppedSelected) ? [rerun(() => dispatch(rerunGeneration({ generationData: stoppedSelected })))] : []),
       ...(size(inProgressSelected) ? [pause(() => dispatch(stopGenerationGroup(inProgressSelected)))] : []),
