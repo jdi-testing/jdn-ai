@@ -8,7 +8,8 @@ export const LocatorCopyButton = ({ element }) => {
   const [copyTooltipTitle, setTooltipTitle] = useState(copyTitle.Copy);
   const { locator, type, name } = element;
 
-  const handleCopy = () => {
+  const handleCopy = (event) => {
+    event.stopPropagation();
     const locatorString = getLocatorString(locator, type, name);
     copyToClipboard(locatorString);
     setTooltipTitle(copyTitle.Copied);

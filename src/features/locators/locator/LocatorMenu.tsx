@@ -106,18 +106,20 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen }) =>
   };
 
   return (
-    <Dropdown
-      arrow={{ pointAtCenter: true }}
-      overlay={renderMenu()}
-      align={{ offset: [10, 0] }}
-      trigger={["click"]}
-      getPopupContainer={(triggerNode) => triggerNode}
-      destroyPopupOnHide
-    >
-      <Button
-        className="jdn__locatorsList_button jdn__locatorsList_button-menu"
-        icon={<DotsThree size={18} onClick={(e) => e.preventDefault()} />}
-      />
-    </Dropdown>
+    <div onClick={(e) => e.stopPropagation()}>
+      <Dropdown
+        arrow={{ pointAtCenter: true }}
+        overlay={renderMenu()}
+        align={{ offset: [10, 0] }}
+        trigger={["click"]}
+        getPopupContainer={(triggerNode) => triggerNode}
+        destroyPopupOnHide
+      >
+        <Button
+          className="jdn__locatorsList_button jdn__locatorsList_button-menu"
+          icon={<DotsThree size={18} onClick={(e) => e.preventDefault()} />}
+        />
+      </Dropdown>
+    </div>
   );
 };
