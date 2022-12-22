@@ -1,3 +1,4 @@
+import { PageObjectId } from "../pageObjects/pageObjectSlice.types";
 import { ElementClass } from "../pageObjects/utils/generationClassesMap";
 
 export enum LocatorsGenerationStatus {
@@ -65,6 +66,7 @@ export interface Locator extends PredictedEntity {
   active?: boolean;
   isCustomName?: boolean;
   isCustomLocator?: boolean;
+  pageObj: PageObjectId,
   parent_id: string;
   priority?: LocatorCalculationPriority;
   type: ElementClass;

@@ -360,6 +360,14 @@ export const highlightOnPage = () => {
       applyFilter(param);
     }
 
+    if (message === "SET_ACTIVE" || message === "UNSET_ACTIVE") {
+      updateElement(param);
+    }
+
+    if (message === "TOGGLE_ACTIVE_GROUP") {
+      param.forEach((element) => updateElement(element));
+    }
+
     if (message === "PING_SCRIPT" && param.scriptName === "highlightOnPage") {
       sendResponse({ message: true });
     }

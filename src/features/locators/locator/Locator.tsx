@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { pageType } from "../../../common/constants/constants";
 import { areChildrenChecked, isLocatorIndeterminate } from "../locatorSelectors";
-import { setChildrenGeneration, toggleElementGeneration } from "../locatorsSlice";
+import { elementSetActive, setActiveSingle, setChildrenGeneration, toggleElementGeneration } from "../locatorsSlice";
 
 import { size } from "lodash";
 import { PageType } from "../../../app/mainSlice.types";
@@ -35,7 +35,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, library, search
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const { element_id, type, name, locator, generate, validity, deleted } = element;
+  const { element_id, type, name, locator, generate, validity, deleted, active } = element;
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -72,6 +72,11 @@ export const Locator: React.FC<Props> = ({ element, currentPage, library, search
     }
   };
 
+  const handleLocatorClick: React.MouseEventHandler<HTMLDivElement> = (event) => {
+    if (event.ctrlKey) dispatch(elementSetActive(element_id));
+    else dispatch(setActiveSingle(element))
+  };
+
   const renderColorizedString = () => {
     const handleClick: React.MouseEventHandler<HTMLSpanElement> = (event) => {
       if (event.detail === 2) {
@@ -95,7 +100,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, library, search
   };
 
   return (
-    <div ref={ref} className="jdn__xpath_container">
+    <div ref={ref} className="jdn__xpath_container" onClick={handleLocatorClick}>
       {currentPage === pageType.locatorsList ? (
         <div className="jdn__xpath_locators">
           <Checkbox

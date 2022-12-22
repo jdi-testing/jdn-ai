@@ -31,7 +31,6 @@ export const createListeners = (
   const actions: Actions = {
     ELEMENT_SELECT: (payload) => {
       dispatch(elementSetActive(payload.element_id));
-      sendMessage.setActive(payload);
     },
     ELEMENT_SET_ACTIVE: (payload) => dispatch(elementSetActive(selectLocatorByJdnHash(state, payload)!.element_id)),
     ELEMENT_UNSET_ACTIVE: (payload) => dispatch(elementUnsetActive(selectLocatorByJdnHash(state, payload)!.element_id)),

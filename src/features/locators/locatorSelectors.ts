@@ -1,6 +1,7 @@
-import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
+import { createDraftSafeSelector, createEntityAdapter, createSelector, EntityState } from "@reduxjs/toolkit";
 
 import { RootState } from "../../app/store";
+import { PageObjectId } from "../pageObjects/pageObjectSlice.types";
 import { ElementId, Locator } from "./locatorSlice.types";
 
 export const locatorsAdapter = createEntityAdapter<Locator>({
@@ -11,7 +12,11 @@ export const { selectAll: selectLocators, selectById: selectLocatorById } = loca
   (state) => state.locators.present
 );
 
-export const { selectAll: simpleSelectLocators, selectById: simpleSelectLocatorById } = locatorsAdapter.getSelectors();
+export const selectLocatorsByPageObject = createSelector(
+  selectLocators,
+  (_: RootState, pageObj: PageObjectId) => pageObj,
+  (locators: Locator[], pageObj: PageObjectId) => locators.filter((_loc) => _loc.pageObj === pageObj)
+);
 
 export const selectLocatorsToGenerate = createSelector(selectLocators, (items: Locator[]) =>
   items.filter((el) => el.generate && !el.deleted)
@@ -49,4 +54,18 @@ export const areChildrenChecked = createSelector(
     locator &&
     locator.children &&
     locator.children.every((childId) => locators.some((loc) => loc.element_id === childId && loc.generate))
+);
+
+/* these selectors are for using inside reducers */
+
+export const { selectAll: simpleSelectLocators, selectById: simpleSelectLocatorById } = locatorsAdapter.getSelectors();
+
+/* eslint-disable */
+/* wrong toolkit typings */
+
+// @ts-ignore
+export const simpleSelectLocatorsByPageObject = createDraftSafeSelector(
+  simpleSelectLocators,
+  (_: EntityState<Locator>, pageObj: PageObjectId) => pageObj,
+  (locators: Locator[], pageObj: PageObjectId) => locators.filter((_loc) => _loc.pageObj === pageObj)
 );

@@ -65,6 +65,9 @@ export const selectable = () => {
       case "SET_ACTIVE":
         setActive(param);
         break;
+      case "TOGGLE_ACTIVE_GROUP": {
+        param.forEach((_loc) => _loc.active ? setActive(_loc) : unsetActive(_loc))
+      }
     }
   };
 

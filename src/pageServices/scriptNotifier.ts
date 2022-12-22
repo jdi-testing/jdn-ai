@@ -39,6 +39,16 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       }
       break;
     }
+    case "locators/setActiveSingle": {
+      const locators = selectLocatorsByPageObject(state)
+      locators && sendMessage.toggleActiveGroup(locators);
+      break;
+    }
+    case "locators/elementSetActive": {
+      const locator = selectLocatorById(state, payload);
+      locator && sendMessage.setActive(locator);
+      break;
+    }
     case "locators/generateLocators/pending": {
       const { predictedElements } = meta.arg;
       sendMessage.assignDataLabels(predictedElements);
