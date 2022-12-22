@@ -15,7 +15,7 @@ import {
 } from "../features/locators/locatorsSlice";
 import { selectCurrentPageObject, selectLocatorByJdnHash } from "../features/pageObjects/pageObjectSelectors";
 import { ElementLibrary, getTypesMenuOptions } from "../features/pageObjects/utils/generationClassesMap";
-import { connector, sendMessage } from "./connector";
+import { connector } from "./connector";
 import { showOverlay } from "./pageDataHandlers";
 
 export type ScriptMessagePayload = { message: keyof Actions; param: Record<string, never> };
@@ -31,7 +31,6 @@ export const createListeners = (
   const actions: Actions = {
     ELEMENT_SELECT: (payload) => {
       dispatch(elementSetActive(payload.element_id));
-      sendMessage.setActive(payload);
     },
     ELEMENT_SET_ACTIVE: (payload) => dispatch(elementSetActive(selectLocatorByJdnHash(state, payload)!.element_id)),
     ELEMENT_UNSET_ACTIVE: (payload) => dispatch(elementUnsetActive(selectLocatorByJdnHash(state, payload)!.element_id)),

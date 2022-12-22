@@ -25,6 +25,7 @@ export const identifyElements = createAsyncThunk(
         element_id: `${el.element_id}_${pageObj}`,
         jdnHash: el.element_id,
         predicted_probability: Math.round(el.predicted_probability * 100) / 100,
+        pageObj: pageObj,
       }));
       thunkAPI.dispatch(generateLocators({ predictedElements: rounded, library }));
       thunkAPI.dispatch(setPageData({ id: pageObj, pageData }));
