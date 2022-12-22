@@ -27,7 +27,6 @@ import {
   selectFilteredLocators,
   selectGenerateByPageObject,
   selectInProgressSelectedByPageObject,
-  selectNonGenerateByPageObject,
   selectWaitingActiveByPageObj,
 } from "../../pageObjects/pageObjectSelectors";
 import {
