@@ -6,11 +6,7 @@ import { stopGenerationGroupReducer } from "../../common/thunks/stopGenerationGr
 import { generateLocatorsReducer } from "../pageObjects/pageObjList/pageObjGeneration/generateLocators";
 import { identifyElementsReducer } from "../pageObjects/pageObjList/pageObjGeneration/identifyElements";
 import { ElementClass, ElementLibrary } from "../pageObjects/utils/generationClassesMap";
-import {
-  locatorsAdapter,
-  simpleSelectLocatorById,
-  simpleSelectLocatorsByPageObject,
-} from "./locatorSelectors";
+import { locatorsAdapter, simpleSelectLocatorById, simpleSelectLocatorsByPageObject } from "./locatorSelectors";
 import {
   ElementId,
   IdentificationStatus,
