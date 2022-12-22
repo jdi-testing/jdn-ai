@@ -149,7 +149,6 @@ export const selectable = () => {
     };
     this.suspend = function (e) {
       e.preventDefault();
-      e.stopPropagation();
       return false;
     };
     this.isContextForGroup = function (e) {
@@ -184,6 +183,7 @@ export const selectable = () => {
       }
       document.body.addEventListener("mousemove", self.rectDraw);
       document.body.addEventListener("mouseup", self.select);
+      document.body.addEventListener("mouseleave", self.select);
     };
     var rb = function () {
       return document.getElementById("s-rectBox");
@@ -213,6 +213,7 @@ export const selectable = () => {
       document.body.classList.remove("s-noselect");
       document.body.removeEventListener("mousemove", self.rectDraw);
       document.body.removeEventListener("mouseup", self.select);
+      document.body.removeEventListener("mouseleave", self.select);
 
       const s = self.options.selectedClass;
       const toggleActiveClass = function (el) {
@@ -239,7 +240,7 @@ export const selectable = () => {
 
       // setTimeout to allow click listeners in other scripts (eg. contextmenu.js) work correctly
       setTimeout(function () {
-        a.parentNode.removeChild(a);
+        if (a) a.parentNode.removeChild(a);
       }, 100);
       self.options.stop && self.options.stop(e);
     };

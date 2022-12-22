@@ -528,9 +528,7 @@ export const runContextMenu = () => {
 
   const contextMenuListener = (event) => {
     highlightTargets = document.querySelectorAll(".jdn-active");
-
-    const highlightTarget = event.target.closest("[jdn-highlight=true]");
-    if (!highlightTarget) return;
+    if (highlightTargets.length === 0) return;
 
     event.preventDefault();
     contextEvent = event;
