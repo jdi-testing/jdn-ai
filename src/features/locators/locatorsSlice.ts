@@ -9,7 +9,6 @@ import { ElementClass, ElementLibrary } from "../pageObjects/utils/generationCla
 import {
   locatorsAdapter,
   simpleSelectLocatorById,
-  simpleSelectLocators,
   simpleSelectLocatorsByPageObject,
 } from "./locatorSelectors";
 import {

@@ -40,7 +40,7 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       break;
     }
     case "locators/setActiveSingle": {
-      const locators = selectLocatorsByPageObject(state)
+      const locators = selectLocatorsByPageObject(state);
       locators && sendMessage.toggleActiveGroup(locators);
       break;
     }

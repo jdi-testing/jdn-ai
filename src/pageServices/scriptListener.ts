@@ -15,7 +15,7 @@ import {
 } from "../features/locators/locatorsSlice";
 import { selectCurrentPageObject, selectLocatorByJdnHash } from "../features/pageObjects/pageObjectSelectors";
 import { ElementLibrary, getTypesMenuOptions } from "../features/pageObjects/utils/generationClassesMap";
-import { connector, sendMessage } from "./connector";
+import { connector } from "./connector";
 import { showOverlay } from "./pageDataHandlers";
 
 export type ScriptMessagePayload = { message: keyof Actions; param: Record<string, never> };

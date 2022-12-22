@@ -35,7 +35,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, library, search
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const { element_id, type, name, locator, generate, validity, deleted, active } = element;
+  const { element_id, type, name, locator, generate, validity, deleted } = element;
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -74,7 +74,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, library, search
 
   const handleLocatorClick: React.MouseEventHandler<HTMLDivElement> = (event) => {
     if (event.ctrlKey) dispatch(elementSetActive(element_id));
-    else dispatch(setActiveSingle(element))
+    else dispatch(setActiveSingle(element));
   };
 
   const renderColorizedString = () => {

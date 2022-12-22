@@ -1,6 +1,6 @@
 import { isUndefined } from "lodash";
 import { SCRIPT_ERROR } from "../common/constants/constants";
-import { ElementId, Locator, PredictedEntity } from "../features/locators/locatorSlice.types";
+import { Locator, PredictedEntity } from "../features/locators/locatorSlice.types";
 import { ElementClass } from "../features/pageObjects/utils/generationClassesMap";
 import { assignDataLabels } from "./contentScripts/assignDataLabels";
 import { runContextMenu } from "./contentScripts/contextmenu";

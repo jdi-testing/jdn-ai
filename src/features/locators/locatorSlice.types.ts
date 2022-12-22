@@ -66,7 +66,7 @@ export interface Locator extends PredictedEntity {
   active?: boolean;
   isCustomName?: boolean;
   isCustomLocator?: boolean;
-  pageObj: PageObjectId,
+  pageObj: PageObjectId;
   parent_id: string;
   priority?: LocatorCalculationPriority;
   type: ElementClass;
