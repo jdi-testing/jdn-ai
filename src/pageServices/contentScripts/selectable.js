@@ -67,7 +67,11 @@ export const selectable = () => {
         break;
       case "TOGGLE_ACTIVE_GROUP": {
         param.forEach((_loc) => (_loc.active ? setActive(_loc) : unsetActive(_loc)));
+        break;
       }
+      case "KILL_HIGHLIGHT":
+        selectables.disable();
+        break;
     }
   };
 
