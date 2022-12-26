@@ -22,7 +22,6 @@ export const selectClassFiltefByPO = createSelector(
   selectFilterById,
   (state: RootState, id: PageObjectId) => selectPageObjById(state, id)?.library,
   (filter, library = defaultLibrary) => {
-    console.log(library);
     if (!filter) {
       return jdiClassFilterInit(library);
     }
