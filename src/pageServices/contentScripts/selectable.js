@@ -245,7 +245,7 @@ export const selectable = () => {
 
       // setTimeout to allow click listeners in other scripts (eg. contextmenu.js) work correctly
       setTimeout(function () {
-        if (a) a.parentNode.removeChild(a);
+        if (a && a.parentNode) a.parentNode.removeChild(a);
       }, 100);
       self.options.stop && self.options.stop(e);
     };
