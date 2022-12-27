@@ -20,7 +20,7 @@ export const store = configureStore({
   reducer: rootReducer,
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: { ignoredActions: ["locators/setElementGroupGeneration", "locators/updateLocator"] },
+      serializableCheck: { ignoredActions: ["locators/setElementGroupGeneration", "locators/updateLocator", "locators/elementSetActive"] },
     }).concat([logger, scriptNotifier, cancellableActions]),
 });
 
