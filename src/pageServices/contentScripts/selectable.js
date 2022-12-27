@@ -79,6 +79,7 @@ export const selectable = () => {
 
   chrome.storage.onChanged.addListener((event) => {
     if (event.hasOwnProperty("JDN_HIGHLIGHT_IS_SET")) runSelectable();
+    if (event.hasOwnProperty("IS_DISCONNECTED")) selectables && selectables.disable();
   });
 
   /*
