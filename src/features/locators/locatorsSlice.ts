@@ -162,6 +162,9 @@ const locatorsSlice = createSlice({
     elementSetActive(state, { payload }: PayloadAction<ElementId>) {
       locatorsAdapter.upsertOne(state, { element_id: payload, active: true } as Locator);
     },
+    elementGroupSetActive(state, { payload }: PayloadAction<Locator[]>) {
+      locatorsAdapter.upsertMany(state, payload.map((_locator) => ({ ..._locator, active: true })) as Locator[]);
+    },
     setActiveSingle(state, { payload: locator }: PayloadAction<Locator>) {
       const newValue = simpleSelectLocatorsByPageObject(state, locator.pageObj).map((_loc) =>
         _loc.element_id === locator.element_id ? { ..._loc, active: true } : { ..._loc, active: false }
@@ -206,5 +209,6 @@ export const {
   elementSetActive,
   setActiveSingle,
   elementUnsetActive,
+  elementGroupSetActive,
   elementGroupUnsetActive,
 } = locatorsSlice.actions;
