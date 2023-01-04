@@ -6,6 +6,8 @@ import { RootState } from "../app/store";
 import { rerunGeneration } from "../common/thunks/rerunGeneration";
 import { stopGenerationGroup } from "../common/thunks/stopGenerationGroup";
 import {
+  elementGroupSetActive,
+  elementGroupUnsetActive,
   elementSetActive,
   elementUnsetActive,
   setScrollToLocator,
@@ -32,8 +34,20 @@ export const createListeners = (
     ELEMENT_SELECT: (payload) => {
       dispatch(elementSetActive(payload.element_id));
     },
-    ELEMENT_SET_ACTIVE: (payload) => dispatch(elementSetActive(selectLocatorByJdnHash(state, payload)!.element_id)),
-    ELEMENT_UNSET_ACTIVE: (payload) => dispatch(elementUnsetActive(selectLocatorByJdnHash(state, payload)!.element_id)),
+    ELEMENT_SET_ACTIVE: (payload) => {
+      dispatch(elementSetActive(selectLocatorByJdnHash(state, payload)!.element_id));
+    },
+    ELEMENT_GROUP_SET_ACTIVE: (payload) => {
+      const locatorIds = payload.map((jdnHash: string) => selectLocatorByJdnHash(state, jdnHash));
+      dispatch(elementGroupSetActive(locatorIds));
+    },
+    ELEMENT_UNSET_ACTIVE: (payload) => {
+      dispatch(elementUnsetActive(selectLocatorByJdnHash(state, payload)!.element_id));
+    },
+    ELEMENT_GROUP_UNSET_ACTIVE: (payload) => {
+      const locatorIds = payload.map((jdnHash: string) => selectLocatorByJdnHash(state, jdnHash));
+      dispatch(elementGroupUnsetActive(locatorIds));
+    },
     GET_ELEMENTS_DATA: (jdnHashes, sender, sendResponse) => {
       const elements = jdnHashes.map((jdnHash: string) => selectLocatorByJdnHash(state, jdnHash));
       const library = !isNil(state.pageObject.present.currentPageObject) && selectCurrentPageObject(state)?.library;
