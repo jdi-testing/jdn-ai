@@ -7,14 +7,21 @@ export const selectable = () => {
     });
 
   const runSelectable = () => {
+    if (selectables) {
+      selectables.disable();
+      selectables.enable();
+      return;
+    }
     selectables = new Selectables({
       elements: ".jdn-highlight",
       moreUsing: "ctrlKey",
       zone: "body",
       selectedClass: "jdn-active",
-      onSelect: (element) => sendMessage({ message: "ELEMENT_SET_ACTIVE", param: element.id }),
-      onDeselect: (element) => {
-        sendMessage({ message: "ELEMENT_UNSET_ACTIVE", param: element.id });
+      onSelect: (payload) => {
+        sendMessage({ message: "ELEMENT_GROUP_SET_ACTIVE", param: payload });
+      },
+      onDeselect: (payload) => {
+        sendMessage({ message: "ELEMENT_GROUP_UNSET_ACTIVE", param: payload });
       },
     });
 
@@ -57,7 +64,7 @@ export const selectable = () => {
 
   const setActive = (payload) => selectables.setSelect(payload);
 
-  const messageHandler = ({ message, param }) => {
+  const messageHandler = ({ message, param }, sender, sendResponse) => {
     switch (message) {
       case "UNSET_ACTIVE":
         unsetActive(param);
@@ -70,8 +77,12 @@ export const selectable = () => {
         break;
       }
       case "KILL_HIGHLIGHT":
-        selectables.disable();
+        selectables = selectables.disable();
         break;
+      case "PING_SCRIPT": {
+        if (param.scriptName === "selectable") sendResponse({ message: true });
+        break;
+      }
     }
   };
 
@@ -79,7 +90,7 @@ export const selectable = () => {
 
   chrome.storage.onChanged.addListener((event) => {
     if (event.hasOwnProperty("JDN_HIGHLIGHT_IS_SET")) runSelectable();
-    if (event.hasOwnProperty("IS_DISCONNECTED")) selectables && selectables.disable();
+    if (event.hasOwnProperty("IS_DISCONNECTED")) selectables && (selectables = selectables.disable());
   });
 
   /*
@@ -128,6 +139,7 @@ export const selectable = () => {
     };
     this.options = extend(defaults, opts || {});
     this.on = false;
+    this.selectedItems = new Set;
     const self = this;
     this.enable = function () {
       if (this.on) {
@@ -167,15 +179,17 @@ export const selectable = () => {
         return;
       }
       const s = self.options.selectedClass;
+      self.selectedItems = new Set;
       self.foreach(self.items, function (el) {
-        el.addEventListener("click", self.suspend, true); // skip any clicks
+        el.addEventListener("click", self.suspend); // skip any clicks
         if (!e[self.options.moreUsing] && !self.isContextForGroup(e)) {
           if (el.classList.contains(s)) {
             el.classList.remove(s);
-            self.options.onDeselect && self.options.onDeselect(el);
+            self.selectedItems.add(el.id);
           }
         }
       });
+      self.options.onDeselect && self.selectedItems.size && self.options.onDeselect(Array.from(self.selectedItems));
 
       document.body.classList.add("s-noselect");
       self.ipos = [e.pageX, e.pageY];
@@ -210,6 +224,7 @@ export const selectable = () => {
       return width === 2 && height === 2;
     };
     this.select = function (e) {
+      let runOnSelect;
       const a = rb();
       if (!a) {
         return;
@@ -224,10 +239,10 @@ export const selectable = () => {
       const toggleActiveClass = function (el) {
         if (el.classList.contains(s)) {
           el.classList.remove(s);
-          self.options.onDeselect && self.options.onDeselect(el);
+          runOnSelect = false;
         } else {
           el.classList.add(s);
-          self.options.onSelect && self.options.onSelect(el);
+          runOnSelect = true;
         }
       };
 
@@ -235,10 +250,14 @@ export const selectable = () => {
         const highlightTarget = e.target.closest("[jdn-highlight=true]");
         if (highlightTarget && !self.isContextForGroup(e)) toggleActiveClass(highlightTarget);
       } else {
+        self.selectedItems = new Set;
         self.foreach(self.items, function (el) {
-          if (cross(a, el) === true) toggleActiveClass(el);
+          if (cross(a, el) === true) {
+            self.selectedItems.add(el.id);
+            toggleActiveClass(el);
+          }
           setTimeout(function () {
-            el.removeEventListener("click", self.suspend, true);
+            el.removeEventListener("click", self.suspend);
           }, 100);
         });
       }
@@ -247,6 +266,10 @@ export const selectable = () => {
       setTimeout(function () {
         if (a && a.parentNode) a.parentNode.removeChild(a);
       }, 100);
+      
+      if (runOnSelect) self.options.onSelect && self.options.onSelect(Array.from(self.selectedItems));
+      else if (runOnSelect === false) self.options.onDeselect && self.options.onDeselect(Array.from(self.selectedItems));
+
       self.options.stop && self.options.stop(e);
     };
     this.rectDraw = function (e) {
