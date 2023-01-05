@@ -41,6 +41,16 @@ div[id^="jdn_cm_"] {
       box-sizing: border-box;
     }
 
+    &.cm_border_right > ul ul {
+      left: unset;
+      right: 100%;
+    }
+
+    &.cm_border_bottom > ul ul {
+      top: unset;
+      bottom: 0;
+    }
+
     ul {
       list-style-type: none;
       padding: 0;
@@ -133,16 +143,6 @@ div[id^="jdn_cm_"] {
         &:hover {
           background-color: inherit;
         }
-      }
-
-      &.cm_border_right > ul ul {
-        left: unset;
-        right: 100%;
-      }
-
-      &.cm_border_bottom > ul ul {
-        top: unset;
-        bottom: 0;
       }
 
       &[disabled=""] {
