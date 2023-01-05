@@ -81,7 +81,6 @@ export const selectable = () => {
         break;
       case "PING_SCRIPT": {
         if (param.scriptName === "selectable") sendResponse({ message: true });
-        console.log("selectables added");
         break;
       }
     }
