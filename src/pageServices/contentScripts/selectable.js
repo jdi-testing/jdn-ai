@@ -64,7 +64,7 @@ export const selectable = () => {
 
   const setActive = (payload) => selectables.setSelect(payload);
 
-  const messageHandler = ({ message, param }) => {
+  const messageHandler = ({ message, param }, sender, sendResponse) => {
     switch (message) {
       case "UNSET_ACTIVE":
         unsetActive(param);
@@ -79,6 +79,11 @@ export const selectable = () => {
       case "KILL_HIGHLIGHT":
         selectables = selectables.disable();
         break;
+      case "PING_SCRIPT": {
+        if (param.scriptName === "selectable") sendResponse({ message: true });
+        console.log("selectables added");
+        break;
+      }
     }
   };
 
