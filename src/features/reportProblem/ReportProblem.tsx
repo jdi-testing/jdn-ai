@@ -177,7 +177,10 @@ export const ReportProblem = () => {
         <DialogWithForm
           modalProps={{
             okButtonProps: {
-              disabled: fileList.length > MAX_COUNT_FILES || filesSize > MAX_FILES_SIZE_MB,
+              disabled:
+                fileList.length > MAX_COUNT_FILES ||
+                filesSize > MAX_FILES_SIZE_MB ||
+                fileList.some((file) => file.status === "error"),
             },
             title: "Report a problem",
             open: isModalOpen,
@@ -251,7 +254,7 @@ export const ReportProblem = () => {
               </React.Fragment>
             }
           >
-            <Upload name="attachments" onChange={handleUploadChange} {...{ fileList }} multiple>
+            <Upload name="attachments" onChange={handleUploadChange} multiple>
               <Tooltip
                 placement="right"
                 title={getTextforUploadButtonTooltip()}
