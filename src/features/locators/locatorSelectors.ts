@@ -12,12 +12,6 @@ export const { selectAll: selectLocators, selectById: selectLocatorById } = loca
   (state) => state.locators.present
 );
 
-export const selectLocatorsByPageObject = createSelector(
-  selectLocators,
-  (_: RootState, pageObj: PageObjectId) => pageObj,
-  (locators: Locator[], pageObj: PageObjectId) => locators.filter((_loc) => _loc.pageObj === pageObj)
-);
-
 export const selectLocatorsToGenerate = createSelector(selectLocators, (items: Locator[]) =>
   items.filter((el) => el.generate && !el.deleted)
 );
