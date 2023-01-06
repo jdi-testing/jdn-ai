@@ -1,4 +1,4 @@
-import { Button, Dropdown, Menu } from "antd";
+import { Button, Dropdown } from "antd";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -62,22 +62,21 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, locators, elements, lib
       deleteOption(handleRemove),
     ];
 
-    return <Menu {...{ items }} />;
+    return {...{ items }};
   };
 
   return (
-    <React.Fragment>
+    <div onClick={(e) => e.stopPropagation()}>
       <Dropdown
         arrow={{ pointAtCenter: true }}
         align={{ offset: [10, 0] }}
         trigger={["click"]}
-        overlay={renderMenu(id, locators, elements, name)}
+        menu={renderMenu(id, locators, elements, name)}
         getPopupContainer={(triggerNode) => triggerNode}
         destroyPopupOnHide
       >
         <Button
           className="jdn__locatorsList_button jdn__locatorsList_button-menu"
-          onClick={(e) => e.stopPropagation()}
           data-testid="dropdown-button"
           icon={<DotsThree size={18} />}
         ></Button>
@@ -88,6 +87,6 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, locators, elements, lib
         pageObjId={id}
         {...{ name }}
       />
-    </React.Fragment>
+    </div>
   );
 };
