@@ -1,5 +1,4 @@
 export const selectable = () => {
-  let selectables;
 
   const sendMessage = (message) =>
     chrome.runtime.sendMessage(message).catch((error) => {
