@@ -48,7 +48,7 @@ export const Filter = () => {
         onClick: handleFilterChange(key, value),
       };
     });
-    return {...{ items }};
+    return { ...{ items } };
   };
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {

@@ -102,7 +102,7 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen }) =>
       ];
     }
 
-    return {...{ items }};
+    return { ...{ items } };
   };
 
   return (

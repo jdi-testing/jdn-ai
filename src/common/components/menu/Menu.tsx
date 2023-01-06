@@ -8,10 +8,6 @@ export interface MenuItem {
   children?: MenuItem[];
 }
 
-interface Props {
-  items: MenuItem[];
-}
-
 export const getItem = (
   key: string,
   label: ReactNode,

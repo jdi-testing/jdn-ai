@@ -62,7 +62,7 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, locators, elements, lib
       deleteOption(handleRemove),
     ];
 
-    return {...{ items }};
+    return { ...{ items } };
   };
 
   return (
