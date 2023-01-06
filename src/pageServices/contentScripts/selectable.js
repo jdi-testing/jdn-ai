@@ -1,5 +1,4 @@
 export const selectable = () => {
-
   const sendMessage = (message) =>
     chrome.runtime.sendMessage(message).catch((error) => {
       if (error.message !== "The message port closed before a response was received.") throw new Error(error.message);
