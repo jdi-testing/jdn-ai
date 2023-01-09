@@ -12,6 +12,7 @@ div[id^="jdn_cm_"] {
   &.cm_container {
     position: fixed;
     box-sizing: border-box;
+    min-width: 196px;
     opacity: 0;
     transform: scale(0);
     transition: transform 0.1s;
@@ -40,6 +41,16 @@ div[id^="jdn_cm_"] {
       box-sizing: border-box;
     }
 
+    &.cm_border_right > ul ul {
+      left: unset;
+      right: 100%;
+    }
+
+    &.cm_border_bottom > ul ul {
+      top: unset;
+      bottom: 0;
+    }
+
     ul {
       list-style-type: none;
       padding: 0;
@@ -53,6 +64,8 @@ div[id^="jdn_cm_"] {
       padding: 10px 12px 10px 16px;
       cursor: pointer;
       white-space: nowrap;
+      display: flex;
+      align-items: center;
 
       &:hover {
         background-color: #f5f5f5;
@@ -63,17 +76,23 @@ div[id^="jdn_cm_"] {
       }
 
       .cm_icon_span {
-        display: inline-block;
+        display: block;
+        width: 12px;
+        height: 12px;
         margin-right: 8px;
-        vertical-align: top;
 
         svg {
           fill: none;
         }
       }
 
+      .cm_text {
+        height: 16px;
+      }
+
       .cm_sub_span {
         width: 1em;
+        height: 12px;
         display: inline-block;
         text-align: center;
         position: absolute;
@@ -124,16 +143,6 @@ div[id^="jdn_cm_"] {
         &:hover {
           background-color: inherit;
         }
-      }
-
-      &.cm_border_right > ul ul {
-        left: unset;
-        right: 100%;
-      }
-
-      &.cm_border_bottom > ul ul {
-        top: unset;
-        bottom: 0;
       }
 
       &[disabled=""] {

@@ -6,7 +6,7 @@ import { stopGenerationGroupReducer } from "../../common/thunks/stopGenerationGr
 import { generateLocatorsReducer } from "../pageObjects/pageObjList/pageObjGeneration/generateLocators";
 import { identifyElementsReducer } from "../pageObjects/pageObjList/pageObjGeneration/identifyElements";
 import { ElementClass, ElementLibrary } from "../pageObjects/utils/generationClassesMap";
-import { locatorsAdapter, simpleSelectLocatorById } from "./locatorSelectors";
+import { locatorsAdapter, simpleSelectLocatorById, simpleSelectLocatorsByPageObject } from "./locatorSelectors";
 import {
   ElementId,
   IdentificationStatus,
@@ -162,6 +162,15 @@ const locatorsSlice = createSlice({
     elementSetActive(state, { payload }: PayloadAction<ElementId>) {
       locatorsAdapter.upsertOne(state, { element_id: payload, active: true } as Locator);
     },
+    elementGroupSetActive(state, { payload }: PayloadAction<Locator[]>) {
+      locatorsAdapter.upsertMany(state, payload.map((_locator) => ({ ..._locator, active: true })) as Locator[]);
+    },
+    setActiveSingle(state, { payload: locator }: PayloadAction<Locator>) {
+      const newValue = simpleSelectLocatorsByPageObject(state, locator.pageObj).map((_loc) =>
+        _loc.element_id === locator.element_id ? { ..._loc, active: true } : { ..._loc, active: false }
+      );
+      locatorsAdapter.upsertMany(state, newValue);
+    },
     elementUnsetActive(state, { payload }: PayloadAction<ElementId>) {
       locatorsAdapter.upsertOne(state, { element_id: payload, active: false } as Locator);
     },
@@ -198,6 +207,8 @@ export const {
   updateLocator,
   restoreLocators,
   elementSetActive,
+  setActiveSingle,
   elementUnsetActive,
+  elementGroupSetActive,
   elementGroupUnsetActive,
 } = locatorsSlice.actions;

@@ -40,7 +40,7 @@ export const selectMaxId = createSelector(simpleSelectPageObjects, (items) => {
 export const selectLocatorsByPageObject = createSelector(
   selectLocators,
   (state: RootState, pageObjId?: PageObjectId) => {
-    pageObjId = pageObjId || selectCurrentPageObject(state)?.id;
+    pageObjId = isNil(pageObjId) ? selectCurrentPageObject(state)?.id : pageObjId;
     if (isNil(pageObjId)) return [];
     return selectPageObjById(state, pageObjId)?.locators || [];
   },
@@ -65,6 +65,19 @@ export const selectFilteredLocators = createSelector(
 
 export const selectGenerateByPageObject = createSelector(selectFilteredLocators, (elements: Array<Locator> = []) =>
   elements.filter((elem) => elem?.generate)
+);
+
+export const selectActiveGenerateByPO = createSelector(selectGenerateByPageObject, (elements: Array<Locator> = []) =>
+  elements.filter((elem) => elem?.active)
+);
+
+export const selectNonGenerateByPageObject = createSelector(selectFilteredLocators, (elements: Array<Locator> = []) =>
+  elements.filter((elem) => !elem?.generate)
+);
+
+export const selectActiveNonGenerateByPO = createSelector(
+  selectNonGenerateByPageObject,
+  (elements: Array<Locator> = []) => elements.filter((elem) => elem?.active)
 );
 
 export const selectConfirmedLocators = createSelector(selectFilteredLocators, (elements: Array<Locator> = []) =>

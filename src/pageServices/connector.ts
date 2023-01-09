@@ -1,6 +1,6 @@
 import { isUndefined } from "lodash";
 import { SCRIPT_ERROR } from "../common/constants/constants";
-import { ElementId, Locator, PredictedEntity } from "../features/locators/locatorSlice.types";
+import { Locator, PredictedEntity } from "../features/locators/locatorSlice.types";
 import { ElementClass } from "../features/pageObjects/utils/generationClassesMap";
 import { assignDataLabels } from "./contentScripts/assignDataLabels";
 import { runContextMenu } from "./contentScripts/contextmenu";
@@ -187,10 +187,11 @@ export const sendMessage = {
   openEditLocator: (payload: { value: Locator; types: string[] }, onResponse?: () => void) =>
     connector.sendMessage("OPEN_EDIT_LOCATOR", payload, onResponse),
   removeElement: (payload: Locator) => connector.sendMessage("REMOVE_ELEMENT", payload),
-  setActive: (payload: ElementId) => connector.sendMessage("SET_ACTIVE", payload),
+  setActive: (payload: Locator | Locator[]) => connector.sendMessage("SET_ACTIVE", payload),
   toggle: (payload: { element: Locator; skipScroll?: boolean }) => connector.sendMessage("HIGHLIGHT_TOGGLED", payload),
   toggleDeleted: (el: Locator) => connector.sendMessage("TOGGLE_DELETED", el),
   toggleFilter: (payload: {jdiClass: ElementClass, value: boolean}) => connector.sendMessage("TOGGLE_FILTER", payload),
+  toggleActiveGroup: (payload: Locator[]) => connector.sendMessage("TOGGLE_ACTIVE_GROUP", payload),
   unsetActive: (payload: Locator | Locator[]) => connector.sendMessage("UNSET_ACTIVE", payload),
 };
 

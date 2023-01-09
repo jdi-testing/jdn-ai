@@ -1,5 +1,4 @@
-import React, { ReactNode } from "react";
-import { Menu as AntMenu } from "antd";
+import { ReactNode } from "react";
 
 export interface MenuItem {
   key: string;
@@ -7,10 +6,6 @@ export interface MenuItem {
   onClick?: (() => void) | undefined;
   label: ReactNode;
   children?: MenuItem[];
-}
-
-interface Props {
-  items: MenuItem[];
 }
 
 export const getItem = (
@@ -26,7 +21,3 @@ export const getItem = (
   icon,
   children,
 });
-
-export const Menu: React.FC<Props> = ({ items }) => {
-  return <AntMenu onClick={({ domEvent }) => domEvent.stopPropagation()} {...{ items }} />;
-};

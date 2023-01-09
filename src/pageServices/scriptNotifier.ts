@@ -12,8 +12,8 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
   let { type, payload } = action;
   const { meta } = action;
   if (type === "LOCATOR_UNDO") {
-    type = payload.type;
-    payload = payload.payload;
+    type = payload?.type;
+    payload = payload?.payload;
   }
   switch (type) {
     case "pageObject/addLocatorsToPageObj": {
@@ -37,6 +37,16 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
         // delete invalid locator
         sendMessage.removeElement(prevValue);
       }
+      break;
+    }
+    case "locators/setActiveSingle": {
+      const locators = selectLocatorsByPageObject(state);
+      locators && sendMessage.toggleActiveGroup(locators);
+      break;
+    }
+    case "locators/elementSetActive": {
+      const locator = selectLocatorById(state, payload);
+      locator && sendMessage.setActive(locator);
       break;
     }
     case "locators/generateLocators/pending": {

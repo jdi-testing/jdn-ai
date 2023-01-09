@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { pageType } from "../../../common/constants/constants";
 import { areChildrenChecked, isLocatorIndeterminate } from "../locatorSelectors";
-import { setChildrenGeneration, toggleElementGeneration } from "../locatorsSlice";
+import { elementSetActive, setActiveSingle, setChildrenGeneration, toggleElementGeneration } from "../locatorsSlice";
 
 import { size } from "lodash";
 import { PageType } from "../../../app/mainSlice.types";
@@ -43,6 +43,9 @@ export const Locator: React.FC<Props> = ({ element, currentPage, library, search
   const allChildrenChecked = useSelector((state: RootState) => areChildrenChecked(state, element_id));
   const scriptMessage = useSelector((_state: RootState) => _state.main.scriptMessage);
 
+  let timer: NodeJS.Timeout;
+  useEffect(() => clearTimeout(timer), []);
+
   useEffect(() => {
     ref && depth && setIndents(ref, depth);
   }, [searchString]);
@@ -59,7 +62,8 @@ export const Locator: React.FC<Props> = ({ element, currentPage, library, search
     }
   }, [scriptMessage]);
 
-  const handleOnChange = () => {
+  const handleOnChange: React.MouseEventHandler<HTMLDivElement> = (event) => {
+    event.stopPropagation();
     if (!generate) {
       dispatch(toggleElementGeneration(element_id));
     } else {
@@ -72,10 +76,21 @@ export const Locator: React.FC<Props> = ({ element, currentPage, library, search
     }
   };
 
+  const handleLocatorClick: React.MouseEventHandler<HTMLDivElement> = (event) => {
+    if (event.ctrlKey) dispatch(elementSetActive(element_id));
+    else dispatch(setActiveSingle(element));
+  };
+
   const renderColorizedString = () => {
-    const handleClick: React.MouseEventHandler<HTMLSpanElement> = (event) => {
+    const handleClick: React.MouseEventHandler<HTMLDivElement> = (event) => {
+      event.stopPropagation();
       if (event.detail === 2) {
         setIsEditModalOpen(true);
+        clearTimeout(timer);
+      } else {
+        timer = setTimeout(() => {
+          handleLocatorClick(event);
+        }, 200);
       }
     };
 
@@ -89,39 +104,41 @@ export const Locator: React.FC<Props> = ({ element, currentPage, library, search
         <br />
         <span className="jdn__xpath_item-type">public</span>
         <span>&nbsp;{type as string}&nbsp;</span>
-        {name}
+        {name};
       </span>
     );
   };
 
   return (
-    <div ref={ref} className="jdn__xpath_container">
-      {currentPage === pageType.locatorsList ? (
-        <div className="jdn__xpath_locators">
-          <Checkbox
-            checked={generate}
-            indeterminate={indeterminate}
-            onClick={handleOnChange}
-            disabled={searchState === SearchState.Hidden}
-          ></Checkbox>
-          <Text
-            className={`jdn__xpath_item${deleted ? " jdn__xpath_item--deleted" : ""}${
-              searchState === SearchState.Hidden ? " jdn__xpath_item--disabled" : ""
-            }`}
-          >
-            <LocatorIcon {...{ validity, locator, deleted }} />
-            {renderColorizedString()}
-          </Text>
-          {searchState !== SearchState.Hidden ? (
-            <React.Fragment>
-              <LocatorCopyButton {...{ element }} />
-              <LocatorMenu {...{ element, setIsEditModalOpen }} />
-            </React.Fragment>
-          ) : null}
-        </div>
-      ) : (
-        <Text className="jdn__xpath_item">{renderColorizedString()}</Text>
-      )}
+    <React.Fragment>
+      <div ref={ref} className="jdn__xpath_container" onClick={handleLocatorClick}>
+        {currentPage === pageType.locatorsList ? (
+          <div className="jdn__xpath_locators">
+            <Checkbox
+              checked={generate}
+              indeterminate={indeterminate}
+              onClick={handleOnChange}
+              disabled={searchState === SearchState.Hidden}
+            ></Checkbox>
+            <Text
+              className={`jdn__xpath_item${deleted ? " jdn__xpath_item--deleted" : ""}${
+                searchState === SearchState.Hidden ? " jdn__xpath_item--disabled" : ""
+              }`}
+            >
+              <LocatorIcon {...{ validity, locator, deleted }} />
+              {renderColorizedString()}
+            </Text>
+            {searchState !== SearchState.Hidden ? (
+              <React.Fragment>
+                <LocatorCopyButton {...{ element }} />
+                <LocatorMenu {...{ element, setIsEditModalOpen }} />
+              </React.Fragment>
+            ) : null}
+          </div>
+        ) : (
+          <Text className="jdn__xpath_item">{renderColorizedString()}</Text>
+        )}
+      </div>
       {isEditModalOpen ? (
         <LocatorEditDialog
           {...{ library }}
@@ -130,6 +147,6 @@ export const Locator: React.FC<Props> = ({ element, currentPage, library, search
           setIsModalOpen={setIsEditModalOpen}
         />
       ) : null}
-    </div>
+    </React.Fragment>
   );
 };
