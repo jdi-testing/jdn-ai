@@ -104,7 +104,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, library, search
         <br />
         <span className="jdn__xpath_item-type">public</span>
         <span>&nbsp;{type as string}&nbsp;</span>
-        {name}
+        {name};
       </span>
     );
   };
