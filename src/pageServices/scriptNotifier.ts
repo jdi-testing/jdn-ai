@@ -12,8 +12,8 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
   let { type, payload } = action;
   const { meta } = action;
   if (type === "LOCATOR_UNDO") {
-    type = payload.type;
-    payload = payload.payload;
+    type = payload?.type;
+    payload = payload?.payload;
   }
   switch (type) {
     case "pageObject/addLocatorsToPageObj": {
