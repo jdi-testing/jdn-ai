@@ -122,14 +122,14 @@ export const highlightOnPage = () => {
   const setActiveElement = (element, toScroll) => {
     updateElement(element);
     if (toScroll) scrollToElement(element.jdnHash);
-  }
+  };
 
   const toggleActiveGroup = (elements) => {
     elements.forEach((element) => updateElement(element));
     const active = elements.find(({ active }) => active);
     console.log(active);
     if (active) scrollToElement(active.jdnHash);
-  }
+  };
 
   const drawRectangle = (element, predictedElement) => {
     const { element_id, jdnHash } = predictedElement;
@@ -137,20 +137,20 @@ export const highlightOnPage = () => {
       const { top, left, height, width } = rect || {};
       return rect
         ? {
-          left: `${left + window.pageXOffset + document.body.scrollLeft}px`,
-          top: `${top + window.pageYOffset + document.body.scrollTop}px`,
-          height: `${height}px`,
-          width: `${width}px`,
-        }
+            left: `${left + window.pageXOffset + document.body.scrollLeft}px`,
+            top: `${top + window.pageYOffset + document.body.scrollTop}px`,
+            height: `${height}px`,
+            width: `${width}px`,
+          }
         : {};
     };
     const tooltipDefaultStyle = (rect) => {
       const { right, top, height, width } = rect;
       return rect
         ? {
-          right: `calc(100% - ${right + window.pageXOffset - width / 2}px)`,
-          top: `${top + window.pageYOffset + height}px`,
-        }
+            right: `calc(100% - ${right + window.pageXOffset - width / 2}px)`,
+            top: `${top + window.pageYOffset + height}px`,
+          }
         : {};
     };
     const tooltipInnerHTML = () => {

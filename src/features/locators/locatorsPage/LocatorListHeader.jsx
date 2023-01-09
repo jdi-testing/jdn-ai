@@ -167,7 +167,7 @@ export const LocatorListHeader = ({ render }) => {
       ...(size(actualSelected) ? [deleteOption(handleDelete)] : []),
     ];
 
-    return size(items) ? {...{ items }} : null;
+    return size(items) ? { ...{ items } } : null;
   };
 
   const menu = useMemo(() => renderMenu(), [active]);
