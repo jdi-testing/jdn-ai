@@ -162,7 +162,10 @@ const locatorsSlice = createSlice({
     elementSetActive(state, { payload }: PayloadAction<ElementId>) {
       locatorsAdapter.upsertOne(state, { element_id: payload, active: true } as Locator);
     },
-    elementGroupSetActive(state, { payload }: PayloadAction<Locator[] | {locators: Array<Locator>, fromScript: boolean}>) {
+    elementGroupSetActive(
+      state,
+      { payload }: PayloadAction<Locator[] | { locators: Array<Locator>; fromScript: boolean }>
+    ) {
       const locators = Array.isArray(payload) ? payload : payload.locators;
       locatorsAdapter.upsertMany(state, locators.map((_locator) => ({ ..._locator, active: true })) as Locator[]);
     },
@@ -175,7 +178,10 @@ const locatorsSlice = createSlice({
     elementUnsetActive(state, { payload }: PayloadAction<ElementId>) {
       locatorsAdapter.upsertOne(state, { element_id: payload, active: false } as Locator);
     },
-    elementGroupUnsetActive(state, { payload }: PayloadAction<Array<Locator> | {locators: Array<Locator>, fromScript: boolean}>) {
+    elementGroupUnsetActive(
+      state,
+      { payload }: PayloadAction<Array<Locator> | { locators: Array<Locator>; fromScript: boolean }>
+    ) {
       const locators = Array.isArray(payload) ? payload : payload.locators;
       const newValue = locators.map((_locator) => ({ ..._locator, active: false }));
       locatorsAdapter.upsertMany(state, newValue);

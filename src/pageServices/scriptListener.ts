@@ -40,7 +40,7 @@ export const createListeners = (
     },
     ELEMENT_GROUP_SET_ACTIVE: (payload) => {
       const locators = payload.map((jdnHash: string) => selectLocatorByJdnHash(state, jdnHash));
-      dispatch(elementGroupSetActive({locators, fromScript: true}));
+      dispatch(elementGroupSetActive({ locators, fromScript: true }));
       dispatch(setScrollToLocator(locators[0].element_id));
     },
     ELEMENT_UNSET_ACTIVE: (payload) => {
@@ -48,7 +48,7 @@ export const createListeners = (
     },
     ELEMENT_GROUP_UNSET_ACTIVE: (payload) => {
       const locators = payload.map((jdnHash: string) => selectLocatorByJdnHash(state, jdnHash)) as Locator[];
-      dispatch(elementGroupUnsetActive({locators, fromScript: true}));
+      dispatch(elementGroupUnsetActive({ locators, fromScript: true }));
     },
     GET_ELEMENTS_DATA: (jdnHashes, sender, sendResponse) => {
       const elements = jdnHashes.map((jdnHash: string) => selectLocatorByJdnHash(state, jdnHash));
