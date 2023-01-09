@@ -16,8 +16,8 @@ There are 2 independent parts, which must be installed separately
 
 ### **Plugin part**
 *It is recommended to use the version from [Chrome Web store](https://chrome.google.com/webstore/detail/jdn/dldagjdnndapekahhbpeemjifghccldg).*  
-1. [Download](https://github.com/jdi-testing/jdn-ai/releases?q=release) the latest version of plugin.
-   *  For the developers team only: [Download](https://github.com/jdi-testing/jdn-ai/releases) the latest version (you need a .zip file named like the needed JDN version)
+1. [Download](https://github.com/jdi-testing/jdn-ai/releases?q=release) the latest release of plugin.
+   *  For the developers team only: [Download](https://github.com/jdi-testing/jdn-ai/releases) the latest release (you need a .zip file named like the needed JDN version)
 2. Unpack the content to any convenient place (the result folder name is “dist”)
 3. Open Chrome Settings → choose option “More tools” → choose option Extensions → turn on the Developer mode → click “Load unpacked”
 4. Select unpacked folder with the plugin on subfolders level (in the way that the contend as “CSS” and “Images”, don’t do it just for “dist” folder)
