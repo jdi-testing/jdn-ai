@@ -21,17 +21,28 @@ const { confirm } = Modal;
 interface Props {
   template: Blob;
   toggleExpand: () => void;
+  setActivePanel: (pageObjectId: string[]) => void;
   isExpanded: boolean;
 }
 
-export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isExpanded }) => {
+export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isExpanded, setActivePanel }) => {
   const state = useSelector((state) => state) as RootState;
   const pageObjects = useSelector(selectPageObjects);
   const locatorsToGenerate = useSelector(selectLocatorsToGenerate);
   const enableDownload = useMemo(() => !!size(locatorsToGenerate), [locatorsToGenerate]);
 
   const dispatch = useDispatch();
-  const handleAddPageObject = () => dispatch(addPageObj());
+  const handleAddPageObject = () => {
+    const newPO = pageObjects.find((pageObject) => !pageObject.locators?.length);
+    const isSomePOcreated = pageObjects.some((pageObject) => pageObject.locators?.length);
+
+    if (newPO || (isSomePOcreated && newPO)) {
+      setActivePanel([newPO!.id]);
+      return;
+    }
+
+    dispatch(addPageObj());
+  };
 
   const handleDownload = () => {
     dispatch(pushNotification({ action: { type: "downloadTemplate" } }));
@@ -41,7 +52,7 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
   const handleRemoveAll = () => {
     confirm({
       title: size(pageObjects) === 1 ? "Delete this page object?" : "Delete these page objects?",
-      content: `All page objects and packages will be cleared and you can lose all your data. 
+      content: `All page objects and packages will be cleared and you can lose all your data.
       You cannot undo this action.`,
       okText: "Delete all",
       // okType: "danger",

@@ -65,7 +65,7 @@ export const PageObjList = (props) => {
 
   return (
     <div className="jdn__locatorsList">
-      <PageObjListHeader {...{ ...props, toggleExpand, isExpanded }} />
+      <PageObjListHeader {...{ ...props, toggleExpand, isExpanded, setActivePanel }} />
       <div className="jdn__locatorsList-content jdn__pageObj-content">
         {size(pageObjects) ? (
           <React.Fragment>
