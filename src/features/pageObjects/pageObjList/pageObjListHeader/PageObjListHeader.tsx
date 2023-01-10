@@ -30,14 +30,14 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
   const pageObjects = useSelector(selectPageObjects);
   const locatorsToGenerate = useSelector(selectLocatorsToGenerate);
   const enableDownload = useMemo(() => !!size(locatorsToGenerate), [locatorsToGenerate]);
+  const newPOstub = pageObjects.find((pageObject) => !pageObject.locators?.length);
+  const isSomePOcreated = pageObjects.some((pageObject) => pageObject.locators?.length);
 
   const dispatch = useDispatch();
-  const handleAddPageObject = () => {
-    const newPO = pageObjects.find((pageObject) => !pageObject.locators?.length);
-    const isSomePOcreated = pageObjects.some((pageObject) => pageObject.locators?.length);
 
-    if (newPO || (isSomePOcreated && newPO)) {
-      setActivePanel([newPO!.id]);
+  const handleAddPageObject = () => {
+    if (newPOstub || (isSomePOcreated && newPOstub)) {
+      setActivePanel([newPOstub.id]);
       return;
     }
 
@@ -96,7 +96,13 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
             <Button size="small" onClick={handleDownload} icon={<DownloadSimple size={16} color="#595959" />} />
           </Tooltip>
         ) : null}
-        <Button type="primary" size="small" onClick={handleAddPageObject} icon={<Plus size={16} color="#fff" />}>
+        <Button
+          type="primary"
+          size="small"
+          onClick={handleAddPageObject}
+          disabled={!!newPOstub}
+          icon={<Plus size={16} color={newPOstub ? "#00000040" : "#fff"} />}
+        >
           Page object
         </Button>
       </Space>
