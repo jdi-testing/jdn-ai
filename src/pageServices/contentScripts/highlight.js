@@ -127,7 +127,6 @@ export const highlightOnPage = () => {
   const toggleActiveGroup = (elements) => {
     elements.forEach((element) => updateElement(element));
     const active = elements.find(({ active }) => active);
-    console.log(active);
     if (active) scrollToElement(active.jdnHash);
   };
 
