@@ -143,7 +143,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
         title: "Edit locator",
         open: isModalOpen,
         onOk: handleOk,
-        enableOverlay: true,
+        enableOverlay: isModalOpen,
         setIsModalOpen,
       }}
       formProps={{
