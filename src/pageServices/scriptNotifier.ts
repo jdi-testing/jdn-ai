@@ -129,7 +129,7 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
     }
     case "locators/elementUnsetActive":
     case "locators/elementGroupUnsetActive": {
-      sendMessage.unsetActive(payload);
+      if (!payload.fromScript) sendMessage.unsetActive(payload);
       break;
     }
     case "filter/toggleClassFilter":
