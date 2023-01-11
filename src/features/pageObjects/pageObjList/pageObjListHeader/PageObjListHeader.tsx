@@ -31,12 +31,11 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
   const locatorsToGenerate = useSelector(selectLocatorsToGenerate);
   const enableDownload = useMemo(() => !!size(locatorsToGenerate), [locatorsToGenerate]);
   const newPOstub = pageObjects.find((pageObject) => !pageObject.locators?.length);
-  const isSomePOcreated = pageObjects.some((pageObject) => pageObject.locators?.length);
 
   const dispatch = useDispatch();
 
   const handleAddPageObject = () => {
-    if (newPOstub || (isSomePOcreated && newPOstub)) {
+    if (newPOstub) {
       setActivePanel([newPOstub.id]);
       return;
     }
