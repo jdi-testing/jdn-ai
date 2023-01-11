@@ -4,7 +4,7 @@ import { toLower } from "lodash";
 import { Funnel } from "phosphor-react";
 import React, { ChangeEvent, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Menu, MenuItem } from "../../common/components/menu/Menu";
+import { MenuItem } from "../../common/components/menu/Menu";
 import { selectCurrentPageObject } from "../pageObjects/pageObjectSelectors";
 import { ElementClass } from "../pageObjects/utils/generationClassesMap";
 import { FilterHeader } from "./FilterHeader";
@@ -48,7 +48,7 @@ export const Filter = () => {
         onClick: handleFilterChange(key, value),
       };
     });
-    return <Menu {...{ items }} />;
+    return { ...{ items } };
   };
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -71,7 +71,7 @@ export const Filter = () => {
 
   return (
     <Dropdown
-      overlay={renderClassList()}
+      menu={renderClassList()}
       dropdownRender={(menu) => (
         <div className="jdn__filter_dropdown-content">
           <FilterHeader onClickClose={() => setOpen(false)} />

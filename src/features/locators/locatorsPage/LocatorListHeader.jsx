@@ -42,7 +42,6 @@ import {
 } from "../../../common/components/menu/menuOptions";
 import { LocatorsSearch } from "./LocatorsSearch";
 import { locatorGenerationController } from "../locatorGenerationController";
-import { Menu } from "../../../common/components/menu/Menu";
 
 export const EXPAND_STATE = {
   EXPANDED: "Expanded",
@@ -168,7 +167,7 @@ export const LocatorListHeader = ({ render }) => {
       ...(size(actualSelected) ? [deleteOption(handleDelete)] : []),
     ];
 
-    return size(items) ? <Menu {...{ items }} /> : null;
+    return size(items) ? { ...{ items } } : null;
   };
 
   const menu = useMemo(() => renderMenu(), [active]);
@@ -200,7 +199,7 @@ export const LocatorListHeader = ({ render }) => {
           />
         </span>
         {!isNil(menu) ? (
-          <Dropdown arrow={{ pointAtCenter: true }} overlay={renderMenu()} trigger={["click"]} destroyPopupOnHide>
+          <Dropdown arrow={{ pointAtCenter: true }} menu={renderMenu()} trigger={["click"]} destroyPopupOnHide>
             <Button
               className="jdn__locatorsList_button jdn__locatorsList_button-menu"
               icon={<DotsThree size={18} onClick={(e) => e.preventDefault()} />}

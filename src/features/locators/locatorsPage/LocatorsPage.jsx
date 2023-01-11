@@ -45,9 +45,8 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
   const handleConfirm = () => {
     if (size(inProgressGenerate)) {
       confirm({
-        title: "Сonfirm the selection",
-        content: `Attention! Not all of the selected locators have already been generated.
-          We recommend to wait until the generation is completed.`,
+        title: "Сonfirm this locators list",
+        content: `Not all of the selected locators have already been generated, we recommend waiting until the generation is complete.`,
         okText: "Confirm selection",
         cancelText: "Cancel",
         onOk: () => {
@@ -85,8 +84,9 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
           altText: "Discard",
           onOk: handleOk,
           enableOk,
-          confirmTitle: "You have unsaved changes",
-          confirmContent: "You have unsaved changes in the locator list. Do you want to discard them?",
+          confirmTitle: "Save this locators list?",
+          confirmContent:
+            "The list has been edited and the changes have not been accepted. Do you want to save changes?",
         });
       }
     };
