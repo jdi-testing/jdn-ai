@@ -18,7 +18,6 @@ import { LocatorCopyButton } from "./LocatorCopyButton";
 import { LocatorIcon } from "./LocatorIcon";
 import { LocatorMenu } from "./LocatorMenu";
 import { getLocator, setIndents } from "./utils";
-import { showOverlay } from "../../../pageServices/pageDataHandlers";
 
 interface Props {
   element: LocatorInterface;
@@ -43,10 +42,6 @@ export const Locator: React.FC<Props> = ({ element, currentPage, library, search
   const indeterminate = useSelector((state: RootState) => isLocatorIndeterminate(state, element_id));
   const allChildrenChecked = useSelector((state: RootState) => areChildrenChecked(state, element_id));
   const scriptMessage = useSelector((_state: RootState) => _state.main.scriptMessage);
-  const onOpenEditModal = () => {
-    setIsEditModalOpen(true);
-    showOverlay();
-  };
 
   let timer: NodeJS.Timeout;
   useEffect(() => clearTimeout(timer), []);
@@ -62,7 +57,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, library, search
     switch (message) {
       case "OPEN_EDIT_LOCATOR_REQUEST":
         if (param?.value.element_id !== element_id) return;
-        onOpenEditModal();
+        setIsEditModalOpen(true);
         break;
     }
   }, [scriptMessage]);
@@ -90,7 +85,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, library, search
     const handleClick: React.MouseEventHandler<HTMLDivElement> = (event) => {
       event.stopPropagation();
       if (event.detail === 2) {
-        onOpenEditModal();
+        setIsEditModalOpen(true);
         clearTimeout(timer);
       } else {
         timer = setTimeout(() => {
@@ -136,7 +131,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, library, search
             {searchState !== SearchState.Hidden ? (
               <React.Fragment>
                 <LocatorCopyButton {...{ element }} />
-                <LocatorMenu {...{ element, onOpenEditModal }} />
+                <LocatorMenu {...{ element, setIsEditModalOpen }} />
               </React.Fragment>
             ) : null}
           </div>

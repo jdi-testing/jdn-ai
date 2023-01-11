@@ -23,15 +23,19 @@ import { setCalculationPriority, toggleDeleted } from "../locatorsSlice";
 
 interface Props {
   element: Locator;
-  onOpenEditModal: () => void;
+  setIsEditModalOpen: (val: boolean) => void;
 }
 
-export const LocatorMenu: React.FC<Props> = ({ element, onOpenEditModal }) => {
+export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen }) => {
   const dispatch = useDispatch();
 
   const { element_id, locator, deleted, priority, jdnHash } = element;
 
   const isLocatorInProgress = isProgressStatus(locator.taskStatus);
+
+  const handleEditClick = () => {
+    setIsEditModalOpen(true);
+  };
 
   const handleUpPriority = () => {
     dispatch(
@@ -68,7 +72,7 @@ export const LocatorMenu: React.FC<Props> = ({ element, onOpenEditModal }) => {
       items = [restore(() => dispatch(toggleDeleted(element_id)))];
     } else {
       items = [
-        edit(onOpenEditModal),
+        edit(handleEditClick),
         ...(isLocatorInProgress ? [pause(() => dispatch(stopGeneration(element_id)))] : []),
         ...(isLocatorInProgress && priority !== LocatorCalculationPriority.Increased
           ? [upPriority(handleUpPriority)]

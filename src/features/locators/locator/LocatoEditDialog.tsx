@@ -12,7 +12,6 @@ import { isNameUnique, isStringMatchesReservedWord } from "../../pageObjects/uti
 import { Locator, ValidationErrorType } from "../locatorSlice.types";
 import { changeLocatorAttributes } from "../locatorsSlice";
 import { createNewName, equalHashes, evaluateXpath, getLocator, isValidJavaVariable } from "./utils";
-import { removeOverlay } from "../../../pageServices/pageDataHandlers";
 
 interface Props extends Locator {
   isModalOpen: boolean;
@@ -134,7 +133,6 @@ export const LocatorEditDialog: React.FC<Props> = ({
         );
         form.resetFields();
         setIsModalOpen(false);
-        removeOverlay();
       })
       .catch((error) => console.log(error));
   };
@@ -145,8 +143,8 @@ export const LocatorEditDialog: React.FC<Props> = ({
         title: "Edit locator",
         open: isModalOpen,
         onOk: handleOk,
+        enableOverlay: true,
         setIsModalOpen,
-        cancelCallback: removeOverlay,
       }}
       formProps={{
         form,
