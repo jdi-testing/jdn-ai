@@ -18,12 +18,6 @@ export function camelCase(n) {
 export const getClassName = (title) => {
   let className = camelCase(title);
 
-  const classNameArr = className.split(/(?=[A-Z])/);
-  if (Number(classNameArr[0])) {
-    classNameArr.shift();
-    className = classNameArr.join("");
-  }
-
   const isCyrillic = (term) => {
     const cyrillicPattern = /[а-яА-ЯЁё]/;
     return cyrillicPattern.test(term);
@@ -33,6 +27,14 @@ export const getClassName = (title) => {
     // eslint-disable-next-line new-cap
     className = CyrillicToTranslit().transform(className, " ");
   }
+
+  const classNameArr = className.split(/(?=[A-Z])/);
+
+  if (Number(classNameArr[0])) {
+    classNameArr.shift();
+    className = classNameArr.join("");
+  }
+
   if (className.length > 56) className = className.slice(0, 55);
   if (className.length > 4 && className.substr(-4).toLowerCase() !== "page") className += "Page";
   return className;
