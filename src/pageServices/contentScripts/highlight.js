@@ -4,7 +4,6 @@
 
 /* global chrome */
 export const highlightOnPage = () => {
-  console.log("highlight");
   let port;
   let nodes;
   let predictedElements;
