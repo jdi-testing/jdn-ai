@@ -58,6 +58,13 @@ export const highlightOnPage = () => {
     return `jdn-highlight ${element.generate ? "jdn-primary" : "jdn-secondary"} ${element.active ? "jdn-active" : ""}`;
   };
 
+  const scrollToElement = (jdnHash) => {
+    const originDiv = document.querySelector(`[jdn-hash='${jdnHash}']`);
+    if (!isInViewport(originDiv) || isHiddenByOverflow(originDiv)) {
+      originDiv.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+    }
+  };
+
   const updateElement = (element) => {
     if (!predictedElements) return null;
     const i = predictedElements.findIndex((e) => e.element_id === element.element_id);
@@ -71,12 +78,7 @@ export const highlightOnPage = () => {
     if (div) {
       div.className = getClassName(element);
     }
-    if (!skipScroll) {
-      const originDiv = document.querySelector(`[jdn-hash='${element.jdnHash}']`);
-      if ((!isInViewport(originDiv) || isHiddenByOverflow(originDiv)) && element.generate) {
-        originDiv.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
-      }
-    }
+    if (!skipScroll && element.generate) scrollToElement(element.jdnHash);
   };
 
   const toggleDeletedElement = (element) => {
@@ -115,6 +117,17 @@ export const highlightOnPage = () => {
     const div = updateElement(element);
     if (!div) return;
     div.setAttribute("jdn-status", element.locator.taskStatus);
+  };
+
+  const setActiveElement = (element, toScroll) => {
+    updateElement(element);
+    if (toScroll) scrollToElement(element.jdnHash);
+  };
+
+  const toggleActiveGroup = (elements) => {
+    elements.forEach((element) => updateElement(element));
+    const active = elements.find(({ active }) => active);
+    if (active) scrollToElement(active.jdnHash);
   };
 
   const drawRectangle = (element, predictedElement) => {
@@ -360,12 +373,16 @@ export const highlightOnPage = () => {
       applyFilter(param);
     }
 
-    if (message === "SET_ACTIVE" || message === "UNSET_ACTIVE") {
+    if (message === "SET_ACTIVE") {
+      setActiveElement(param, true);
+    }
+
+    if (message === "UNSET_ACTIVE") {
       updateElement(param);
     }
 
     if (message === "TOGGLE_ACTIVE_GROUP") {
-      param.forEach((element) => updateElement(element));
+      toggleActiveGroup(param);
     }
 
     if (message === "PING_SCRIPT" && param.scriptName === "highlightOnPage") {
