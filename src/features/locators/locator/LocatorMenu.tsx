@@ -3,7 +3,7 @@ import { DotsThree } from "phosphor-react";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { MaxGenerationTime } from "../../../app/mainSlice.types";
-import { Menu, MenuItem } from "../../../common/components/menu/Menu";
+import { MenuItem } from "../../../common/components/menu/Menu";
 import {
   advanced,
   deleteOption,
@@ -102,14 +102,14 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen }) =>
       ];
     }
 
-    return <Menu {...{ items }} />;
+    return { ...{ items } };
   };
 
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <Dropdown
         arrow={{ pointAtCenter: true }}
-        overlay={renderMenu()}
+        menu={renderMenu()}
         align={{ offset: [10, 0] }}
         trigger={["click"]}
         getPopupContainer={(triggerNode) => triggerNode}
