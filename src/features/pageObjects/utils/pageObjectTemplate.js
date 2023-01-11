@@ -18,6 +18,12 @@ export function camelCase(n) {
 export const getClassName = (title) => {
   let className = camelCase(title);
 
+  const classNameArr = className.split(/(?=[A-Z])/);
+  if (Number(classNameArr[0])) {
+    classNameArr.shift();
+    className = classNameArr.join("");
+  }
+
   const isCyrillic = (term) => {
     const cyrillicPattern = /[а-яА-ЯЁё]/;
     return cyrillicPattern.test(term);
