@@ -5,7 +5,13 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { pageType } from "../../../common/constants/constants";
 import { areChildrenChecked, isLocatorIndeterminate } from "../locatorSelectors";
-import { elementSetActive, elementUnsetActive, setActiveSingle, setChildrenGeneration, toggleElementGeneration } from "../locatorsSlice";
+import {
+  elementSetActive,
+  elementUnsetActive,
+  setActiveSingle,
+  setChildrenGeneration,
+  toggleElementGeneration,
+} from "../locatorsSlice";
 
 import { size } from "lodash";
 import { PageType } from "../../../app/mainSlice.types";
@@ -80,8 +86,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, library, search
     if (event.ctrlKey) {
       if (active) dispatch(elementUnsetActive(element_id));
       else dispatch(elementSetActive(element_id));
-    }
-    else dispatch(setActiveSingle(element));
+    } else dispatch(setActiveSingle(element));
   };
 
   const renderColorizedString = () => {
