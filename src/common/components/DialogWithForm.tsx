@@ -25,6 +25,8 @@ export const DialogWithForm: React.FC<DialogFormProps> = ({ modalProps, formProp
   const { form, ...restForm } = formProps;
   const { open, setIsModalOpen, cancelCallback, enableOverlay = false, ...restModal } = modalProps;
 
+  // it works correctly until we use conditional rendering
+  // for <LocatorEditDialog> in Locator.tsx
   useEffect(() => {
     if (enableOverlay) showOverlay();
     return () => removeOverlay();
