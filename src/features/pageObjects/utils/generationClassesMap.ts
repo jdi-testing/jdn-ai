@@ -87,6 +87,7 @@ export enum NgMatClasses {
 
 export enum VuetifyClasses {
   button = "Button",
+  icon = "Icon",
 }
 
 export type ElementLabel =

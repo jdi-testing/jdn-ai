@@ -8,4 +8,11 @@ export const VueRules: RulesMap[] = [
       classes: ["v-btn"],
     },
   },
+  {
+    jdnLabel: "icon",
+    rules: {
+      tag: "i",
+      classes: ["v-icon"],
+    }
+  }
 ];

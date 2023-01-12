@@ -17,21 +17,35 @@ export const findBySelectors = () => {
   };
 
   const markupElements = (elements: NodeListOf<Element>, jdnLabel: JDNLabel) => {
-    removeLabels();
-    return elements.forEach((elem) => {
+    elements.forEach((elem) => {
       elem.setAttribute(JDN_LABEL, jdnLabel);
       if (!elem.getAttribute(JDN_HASH)) elem.setAttribute(JDN_HASH, gen_uuid());
     });
   };
 
-  const findElements = async (selectorsMap: SelectorsMap[], callback: (arr: any[]) => void) => {
-    selectorsMap.forEach(({ jdnLabel, selector }) => markupElements(document.querySelectorAll(selector), jdnLabel));
+  const cleanUpContent = (elements: NodeListOf<Element>, selectorsMap: SelectorsMap) => {
+    const elementsSet = new Set(Array.from(elements));
+    Array.from(elements).forEach((_elem) => {
+      const label = _elem.getAttribute(JDN_LABEL) as JDNLabel;
+      if (!selectorsMap[label]?.detectContent) {
+        const content = _elem.querySelectorAll(`[${JDN_LABEL}]`);
+        content.forEach((_content) => elementsSet.delete(_content));
+      }
+    })
+    return Array.from(elementsSet);
+  };
+
+  const findElements = async (selectorsMap: SelectorsMap, callback: (arr: any[]) => void) => {
+    Object.entries(selectorsMap).forEach(([jdnLabel, { selector, detectContent }]) =>
+      markupElements(document.querySelectorAll(selector), jdnLabel as JDNLabel)
+    );
     callback(
-      Array.from(document.querySelectorAll(`[${JDN_LABEL}]`)).map((_elem) => ({
+      cleanUpContent(document.querySelectorAll(`[${JDN_LABEL}]`), selectorsMap).map((_elem) => ({
         element_id: _elem.getAttribute(JDN_HASH),
         predicted_label: _elem.getAttribute(JDN_LABEL),
       }))
     );
+    removeLabels();
   };
 
   const messageHandler = (

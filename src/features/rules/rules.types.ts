@@ -5,6 +5,7 @@ export type JDNLabel = keyof typeof VuetifyClasses;
 export interface RulesMap {
   jdnLabel: JDNLabel;
   rules: Rule;
+  detectContent?: boolean;
 }
 
 export interface Rule {
@@ -12,7 +13,10 @@ export interface Rule {
   classes: string[];
 }
 
-export interface SelectorsMap {
-  jdnLabel: JDNLabel;
-  selector: string;
-}
+// export interface SelectorsMap {
+//   jdnLabel: JDNLabel;
+//   selector: string;
+//   detectContent?: boolean;
+// }
+
+export type SelectorsMap = Partial<Record<JDNLabel, {selector: string, detectContent?: boolean}>>;
