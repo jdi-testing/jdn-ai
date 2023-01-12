@@ -28,7 +28,7 @@ export const getClassName = (title) => {
     className = CyrillicToTranslit().transform(className, " ");
   }
 
-  const classNameArr = className.split(/(?=[A-Z])/);
+  const classNameArr = className.split(/(?=[a-zA-Zа])/);
 
   if (Number(classNameArr[0])) {
     classNameArr.shift();
@@ -36,7 +36,7 @@ export const getClassName = (title) => {
   }
 
   if (className.length > 56) className = className.slice(0, 55);
-  if (className.length > 4 && className.substr(-4).toLowerCase() !== "page") className += "Page";
+  if (className.length > 4 && className.slice(-4).toLowerCase() !== "page") className += "Page";
   return className;
 };
 
