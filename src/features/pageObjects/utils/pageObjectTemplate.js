@@ -28,7 +28,7 @@ export const getClassName = (title) => {
     className = CyrillicToTranslit().transform(className, " ");
   }
 
-  const classNameArr = className.split(/(?=[A-Z])/);
+  const classNameArr = className.split(/(?=[a-zA-Zа])/);
 
   if (Number(classNameArr[0])) {
     classNameArr.shift();
