@@ -11,6 +11,6 @@ export const VueRules: RulesMap[] = [
     jdnLabel: "icon",
     rules: {
       classes: ["v-icon"],
-    }
-  }
+    },
+  },
 ];

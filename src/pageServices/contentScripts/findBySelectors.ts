@@ -32,13 +32,13 @@ export const findBySelectors = () => {
         const content = _elem.querySelectorAll(`[${JDN_LABEL}]`);
         content.forEach((_content) => elementsSet.delete(_content));
       }
-    })
+    });
 
     return Array.from(elementsSet);
   };
 
   const findElements = async (selectorsMap: SelectorsMap, callback: (arr: any[]) => void) => {
-    Object.entries(selectorsMap).forEach(([jdnLabel, { selector, detectContent }]) =>
+    Object.entries(selectorsMap).forEach(([jdnLabel, { selector }]) =>
       markupElements(document.querySelectorAll(selector), jdnLabel as JDNLabel)
     );
 
@@ -48,7 +48,7 @@ export const findBySelectors = () => {
         predicted_label: _elem.getAttribute(JDN_LABEL),
       }))
     );
-    
+
     removeLabels();
   };
 
