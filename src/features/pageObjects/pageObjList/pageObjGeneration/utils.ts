@@ -9,9 +9,6 @@ export const findByRules = () => {
     .then(() => {
       return sendMessage.findBySelectors(selectors);
     })
-    .then((result) => {
-      console.log(result);
-      return { data: result };
-    })
+    .then((result) => ({ data: result }))
     .catch((err) => console.log(err));
 };

@@ -13,7 +13,7 @@ export const createSelector = (rules: Rule) => {
 export const getLibrarySelectors = () => {
   const selectors: SelectorsMap = {};
   VueRules.forEach(
-    ({ jdnLabel, rules, detectContent }) => (selectors[jdnLabel] = { selector: createSelector(rules), detectContent })
+    ({ jdnLabel, rules, ...rest }) => (selectors[jdnLabel] = { selector: createSelector(rules), ...rest })
   );
   return selectors;
 };

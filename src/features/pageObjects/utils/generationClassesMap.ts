@@ -87,7 +87,10 @@ export enum NgMatClasses {
 
 export enum VuetifyClasses {
   button = "Button",
+  card = "Card",
+  dataIterator = "DataIterator",
   icon = "Icon",
+  sheet = "Sheet",
 }
 
 export type ElementLabel =
