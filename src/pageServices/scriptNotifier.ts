@@ -128,6 +128,9 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       break;
     }
     case "locators/elementUnsetActive":
+      const locator = selectLocatorById(state, payload);
+      if (!payload.fromScript && locator) sendMessage.unsetActive(locator);
+      break;
     case "locators/elementGroupUnsetActive": {
       if (!payload.fromScript) sendMessage.unsetActive(payload);
       break;
