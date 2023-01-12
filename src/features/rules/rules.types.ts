@@ -9,14 +9,8 @@ export interface RulesMap {
 }
 
 export interface Rule {
-  tag: string;
-  classes: string[];
+  tag?: string;
+  classes?: string[];
 }
-
-// export interface SelectorsMap {
-//   jdnLabel: JDNLabel;
-//   selector: string;
-//   detectContent?: boolean;
-// }
 
 export type SelectorsMap = Partial<Record<JDNLabel, {selector: string, detectContent?: boolean}>>;

@@ -176,7 +176,7 @@ export const sendMessage = {
   checkSession: (payload: null, onResponse?: () => void): Promise<{ message: string; tabId: number }[]> =>
     connector.sendMessageToAllTabs("CHECK_SESSION", payload, onResponse),
   defineTabId: (payload: number) => connector.sendMessage("DEFINE_TAB_ID", payload),
-  findBySelectors: (payload: SelectorsMap[]) => connector.sendMessage("FIND_BY_SELECTORS", payload),
+  findBySelectors: (payload: SelectorsMap) => connector.sendMessage("FIND_BY_SELECTORS", payload),
   setClosedSession: (payload: { tabId: number; isClosed: boolean }) =>
     connector.sendMessage("SET_CLOSED_SESSION", payload),
   setHighlight: (payload: { elements?: Locator[]; perception?: number }) =>

@@ -25,6 +25,7 @@ export const findBySelectors = () => {
 
   const cleanUpContent = (elements: NodeListOf<Element>, selectorsMap: SelectorsMap) => {
     const elementsSet = new Set(Array.from(elements));
+
     Array.from(elements).forEach((_elem) => {
       const label = _elem.getAttribute(JDN_LABEL) as JDNLabel;
       if (!selectorsMap[label]?.detectContent) {
@@ -32,6 +33,7 @@ export const findBySelectors = () => {
         content.forEach((_content) => elementsSet.delete(_content));
       }
     })
+
     return Array.from(elementsSet);
   };
 
@@ -39,12 +41,14 @@ export const findBySelectors = () => {
     Object.entries(selectorsMap).forEach(([jdnLabel, { selector, detectContent }]) =>
       markupElements(document.querySelectorAll(selector), jdnLabel as JDNLabel)
     );
+
     callback(
       cleanUpContent(document.querySelectorAll(`[${JDN_LABEL}]`), selectorsMap).map((_elem) => ({
         element_id: _elem.getAttribute(JDN_HASH),
         predicted_label: _elem.getAttribute(JDN_LABEL),
       }))
     );
+    
     removeLabels();
   };
 
