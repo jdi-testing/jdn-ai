@@ -10,7 +10,7 @@ export const VueRules: RulesMap[] = [
   {
     jdnLabel: "card",
     rules: {
-      classes: ["v-card"]
+      classes: ["v-card"],
     },
     detectContent: true,
   },
@@ -30,7 +30,7 @@ export const VueRules: RulesMap[] = [
   {
     jdnLabel: "sheet",
     rules: {
-      classes: ["v-sheet"]
+      classes: ["v-sheet"],
     },
     detectContent: true,
     priority: "low",

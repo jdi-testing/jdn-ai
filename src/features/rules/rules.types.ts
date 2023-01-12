@@ -17,4 +17,6 @@ export interface Rule {
   classes?: string[];
 }
 
-export type SelectorsMap = Partial<Record<JDNLabel, { selector: string; detectContent?: boolean; priority?: RulesMap["priority"] }>>;
+export type SelectorsMap = Partial<
+  Record<JDNLabel, { selector: string; detectContent?: boolean; priority?: RulesMap["priority"] }>
+>;

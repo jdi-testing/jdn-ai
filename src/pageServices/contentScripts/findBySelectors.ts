@@ -51,12 +51,12 @@ export const findBySelectors = () => {
         // @ts-ignore
         const prioritized: Partial<Record<RulesMap["priority"], JDNLabel>> = {};
         // @ts-ignore
-        labels.forEach((_label) => prioritized[selectorsMap[_label as JDNLabel]?.priority || "normal"] = _label);
+        labels.forEach((_label) => (prioritized[selectorsMap[_label as JDNLabel]?.priority || "normal"] = _label));
         _elem.setAttribute(JDN_LABEL, prioritized.normal || prioritized.low || defaultClass);
       }
-    })
+    });
     return Array.from(elements);
-  }
+  };
 
   const findElements = async (selectorsMap: SelectorsMap, callback: (arr: any[]) => void) => {
     Object.entries(selectorsMap).forEach(([jdnLabel, { selector }]) =>
@@ -64,7 +64,10 @@ export const findBySelectors = () => {
     );
 
     callback(
-      cleanUpContent(removeConflictedClasses(document.querySelectorAll(`[${JDN_LABEL}]`), selectorsMap), selectorsMap).map((_elem) => ({
+      cleanUpContent(
+        removeConflictedClasses(document.querySelectorAll(`[${JDN_LABEL}]`), selectorsMap),
+        selectorsMap
+      ).map((_elem) => ({
         element_id: _elem.getAttribute(JDN_HASH),
         predicted_label: _elem.getAttribute(JDN_LABEL),
       }))
