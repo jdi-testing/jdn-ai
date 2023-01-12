@@ -1,6 +1,7 @@
 import CyrillicToTranslit from "cyrillic-to-translit-js";
 import { getLocator } from "../../../features/locators/locator/utils";
 import { ElementLibrary } from "./generationClassesMap";
+import { camelCase as camelize } from "lodash";
 
 export function camelCase(n) {
   let name = "";
@@ -16,7 +17,7 @@ export function camelCase(n) {
 }
 
 export const getClassName = (title) => {
-  let className = camelCase(title);
+  let className = camelize(title);
 
   const isCyrillic = (term) => {
     const cyrillicPattern = /[а-яА-ЯЁё]/;
@@ -28,12 +29,7 @@ export const getClassName = (title) => {
     className = CyrillicToTranslit().transform(className, " ");
   }
 
-  const classNameArr = className.split(/(?=[a-zA-Zа])/);
-
-  if (Number(classNameArr[0])) {
-    classNameArr.shift();
-    className = classNameArr.join("");
-  }
+  className = className.substring(className.search(/[a-zA-Za]/)); // removing numbers in the start of string
 
   if (className.length > 56) className = className.slice(0, 55);
   if (className.length > 4 && className.slice(-4).toLowerCase() !== "page") className += "Page";
