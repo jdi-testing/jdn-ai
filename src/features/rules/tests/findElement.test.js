@@ -1,6 +1,5 @@
 import { JSDOM } from "jsdom";
 import { findBySelectors } from "../../../pageServices/contentScripts/findBySelectors";
-import { findByRules } from "../../pageObjects/pageObjList/pageObjGeneration/utils";
 import { getLibrarySelectors } from "../createSelector";
 import { VueRules } from "../Vue.rules";
 import { card } from "./mocks/card.mock";
