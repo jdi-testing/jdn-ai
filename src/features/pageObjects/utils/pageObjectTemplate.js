@@ -1,19 +1,7 @@
 import CyrillicToTranslit from "cyrillic-to-translit-js";
 import { getLocator } from "../../../features/locators/locator/utils";
 import { ElementLibrary } from "./generationClassesMap";
-
-export function camelCase(n) {
-  let name = "";
-  if (n) {
-    const arrayName = n.split(/[^a-zA-Zа-яёА-ЯЁ0-9_$]/);
-    for (let j = 0; j < arrayName.length; j++) {
-      if (arrayName[j]) {
-        name += arrayName[j][0].toUpperCase() + arrayName[j].slice(1);
-      }
-    }
-  }
-  return name;
-}
+import { camelCase, upperFirst } from "lodash";
 
 export const getClassName = (title) => {
   let className = camelCase(title);
@@ -28,15 +16,11 @@ export const getClassName = (title) => {
     className = CyrillicToTranslit().transform(className, " ");
   }
 
-  const classNameArr = className.split(/(?=[A-Z])/);
-
-  if (Number(classNameArr[0])) {
-    classNameArr.shift();
-    className = classNameArr.join("");
-  }
+  className = className.substring(className.search(/[a-zA-Za]/)); // removing numbers in the start of string
+  className = upperFirst(className); // we generate Java class name, so we always need a capital first letter
 
   if (className.length > 56) className = className.slice(0, 55);
-  if (className.length > 4 && className.substr(-4).toLowerCase() !== "page") className += "Page";
+  if (className.length > 4 && className.slice(-4).toLowerCase() !== "page") className += "Page";
   return className;
 };
 
