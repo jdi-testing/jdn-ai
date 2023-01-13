@@ -10,6 +10,7 @@ export const highlightOnPage = () => {
   let listenersAreSet;
   let scrollableContainers = [];
   const classFilter = {};
+  let tooltip;
 
   const clearState = () => {
     nodes = null;
@@ -58,6 +59,13 @@ export const highlightOnPage = () => {
     return `jdn-highlight ${element.generate ? "jdn-primary" : "jdn-secondary"} ${element.active ? "jdn-active" : ""}`;
   };
 
+  const scrollToElement = (jdnHash) => {
+    const originDiv = document.querySelector(`[jdn-hash='${jdnHash}']`);
+    if (!isInViewport(originDiv) || isHiddenByOverflow(originDiv)) {
+      originDiv.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+    }
+  };
+
   const updateElement = (element) => {
     if (!predictedElements) return null;
     const i = predictedElements.findIndex((e) => e.element_id === element.element_id);
@@ -71,12 +79,7 @@ export const highlightOnPage = () => {
     if (div) {
       div.className = getClassName(element);
     }
-    if (!skipScroll) {
-      const originDiv = document.querySelector(`[jdn-hash='${element.jdnHash}']`);
-      if ((!isInViewport(originDiv) || isHiddenByOverflow(originDiv)) && element.generate) {
-        originDiv.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
-      }
-    }
+    if (!skipScroll && element.generate) scrollToElement(element.jdnHash);
   };
 
   const toggleDeletedElement = (element) => {
@@ -117,6 +120,17 @@ export const highlightOnPage = () => {
     div.setAttribute("jdn-status", element.locator.taskStatus);
   };
 
+  const setActiveElement = (element, toScroll) => {
+    updateElement(element);
+    if (toScroll) scrollToElement(element.jdnHash);
+  };
+
+  const toggleActiveGroup = (elements) => {
+    elements.forEach((element) => updateElement(element));
+    const active = elements.find(({ active }) => active);
+    if (active) scrollToElement(active.jdnHash);
+  };
+
   const drawRectangle = (element, predictedElement) => {
     const { element_id, jdnHash } = predictedElement;
     const divPosition = (rect) => {
@@ -129,6 +143,12 @@ export const highlightOnPage = () => {
             width: `${width}px`,
           }
         : {};
+    };
+    const addTooltip = () => {
+      if (tooltip) return;
+      tooltip = document.createElement("div");
+      tooltip.className = "jdn-tooltip";
+      document.body.appendChild(tooltip);
     };
     const tooltipDefaultStyle = (rect) => {
       const { right, top, height, width } = rect;
@@ -150,10 +170,8 @@ export const highlightOnPage = () => {
       const { left: tooltipLeft, right: tooltipRight, width: tooltipWidth } = tooltip.getBoundingClientRect();
       const { top: labelTop, height: labelHeight } = label.getBoundingClientRect();
       if (tooltipLeft < 0) {
-        document.body.removeChild(tooltip);
         tooltip.style.right = `calc(100% - ${tooltipRight}px - ${tooltipWidth}px - ${window.pageXOffset}px)`;
         tooltip.classList.add("jdn-tooltip-right");
-        document.body.appendChild(tooltip);
       }
 
       const { bottom: bodyBottom } = document.body.getBoundingClientRect();
@@ -161,10 +179,8 @@ export const highlightOnPage = () => {
       if (bodyBottom < tooltipBottom) {
         const { height: tooltipHeight } = tooltip.getBoundingClientRect();
         const cornerHeight = 19;
-        document.body.removeChild(tooltip);
         tooltip.style.top = `${labelTop + window.pageYOffset - tooltipHeight - cornerHeight - labelHeight}px`;
         tooltip.classList.add("jdn-tooltip-top");
-        document.body.appendChild(tooltip);
       }
     };
 
@@ -173,20 +189,20 @@ export const highlightOnPage = () => {
     div.className = getClassName(predictedElement);
     div.setAttribute("jdn-highlight", true);
     div.setAttribute("jdn-status", predictedElement.locator.taskStatus);
-    const tooltip = document.createElement("div");
-    tooltip.className = "jdn-tooltip";
     const labelContainer = document.createElement("div");
     const label = document.createElement("span");
     label.className = "jdn-label";
     label.innerHTML = `<span class="jdn-class">${predictedElement.name}</span>`;
+
+    addTooltip();
     label.addEventListener("mouseover", () => {
       Object.assign(tooltip.style, tooltipDefaultStyle(label.getBoundingClientRect()));
       tooltip.innerHTML = tooltipInnerHTML();
-      document.body.appendChild(tooltip);
+      tooltip.classList.remove("jdn-tooltip-hidden");
       checkTooltipVisibility(tooltip, label);
     });
     label.addEventListener("mouseout", () => {
-      document.body.removeChild(tooltip);
+      tooltip.className = "jdn-tooltip jdn-tooltip-hidden";
     });
 
     Object.assign(div.style, divPosition(element.getBoundingClientRect()));
@@ -358,6 +374,18 @@ export const highlightOnPage = () => {
 
     if (message === "TOGGLE_FILTER") {
       applyFilter(param);
+    }
+
+    if (message === "SET_ACTIVE") {
+      setActiveElement(param, true);
+    }
+
+    if (message === "UNSET_ACTIVE") {
+      updateElement(param);
+    }
+
+    if (message === "TOGGLE_ACTIVE_GROUP") {
+      toggleActiveGroup(param);
     }
 
     if (message === "PING_SCRIPT" && param.scriptName === "highlightOnPage") {

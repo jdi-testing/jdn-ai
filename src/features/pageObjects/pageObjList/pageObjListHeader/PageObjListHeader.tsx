@@ -21,17 +21,27 @@ const { confirm } = Modal;
 interface Props {
   template: Blob;
   toggleExpand: () => void;
+  setActivePanel: (pageObjectId: string[]) => void;
   isExpanded: boolean;
 }
 
-export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isExpanded }) => {
+export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isExpanded, setActivePanel }) => {
   const state = useSelector((state) => state) as RootState;
   const pageObjects = useSelector(selectPageObjects);
   const locatorsToGenerate = useSelector(selectLocatorsToGenerate);
   const enableDownload = useMemo(() => !!size(locatorsToGenerate), [locatorsToGenerate]);
+  const newPOstub = pageObjects.find((pageObject) => !pageObject.locators?.length);
 
   const dispatch = useDispatch();
-  const handleAddPageObject = () => dispatch(addPageObj());
+
+  const handleAddPageObject = () => {
+    if (newPOstub) {
+      setActivePanel([newPOstub.id]);
+      return;
+    }
+
+    dispatch(addPageObj());
+  };
 
   const handleDownload = () => {
     dispatch(pushNotification({ action: { type: "downloadTemplate" } }));
@@ -41,7 +51,7 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
   const handleRemoveAll = () => {
     confirm({
       title: size(pageObjects) === 1 ? "Delete this page object?" : "Delete these page objects?",
-      content: `All page objects and packages will be cleared and you can lose all your data. 
+      content: `All page objects and packages will be cleared and you can lose all your data.
       You cannot undo this action.`,
       okText: "Delete all",
       // okType: "danger",
@@ -85,7 +95,13 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
             <Button size="small" onClick={handleDownload} icon={<DownloadSimple size={16} color="#595959" />} />
           </Tooltip>
         ) : null}
-        <Button type="primary" size="small" onClick={handleAddPageObject} icon={<Plus size={16} color="#fff" />}>
+        <Button
+          type="primary"
+          size="small"
+          onClick={handleAddPageObject}
+          disabled={!!newPOstub}
+          icon={<Plus size={16} color={newPOstub ? "#00000040" : "#fff"} />}
+        >
           Page object
         </Button>
       </Space>

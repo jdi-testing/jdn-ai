@@ -26,6 +26,7 @@ export const identifyElements = createAsyncThunk(
         ...el,
         element_id: `${el.element_id}_${pageObj}`,
         jdnHash: el.element_id,
+        pageObj: pageObj,
       }));
       thunkAPI.dispatch(generateLocators({ predictedElements: byPageObject, library }));
       thunkAPI.dispatch(setPageData({ id: pageObj, pageData }));

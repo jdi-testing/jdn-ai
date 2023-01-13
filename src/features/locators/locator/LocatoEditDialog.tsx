@@ -6,9 +6,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../app/store";
 import { DialogWithForm } from "../../../common/components/DialogWithForm";
 import { selectAvailableClasses } from "../../filter/filterSelectors";
+import { selectLocatorsByPageObject } from "../../pageObjects/pageObjectSelectors";
 import { ElementClass, ElementLibrary } from "../../pageObjects/utils/generationClassesMap";
 import { isNameUnique, isStringMatchesReservedWord } from "../../pageObjects/utils/pageObject";
-import { selectLocators } from "../locatorSelectors";
 import { Locator, ValidationErrorType } from "../locatorSlice.types";
 import { changeLocatorAttributes } from "../locatorsSlice";
 import { createNewName, equalHashes, evaluateXpath, getLocator, isValidJavaVariable } from "./utils";
@@ -43,7 +43,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
   const [locatorValidity, setLocatorValidity] = useState<string>(validity?.locator || "");
   const [isEditedName, setIsEditedName] = useState<boolean>(Boolean(isCustomName));
 
-  const locators = useSelector(selectLocators);
+  const locators = useSelector(selectLocatorsByPageObject);
   const types = useSelector((_state: RootState) => selectAvailableClasses(_state));
 
   const [form] = Form.useForm<EditFormProps>();
@@ -143,6 +143,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
         title: "Edit locator",
         open: isModalOpen,
         onOk: handleOk,
+        enableOverlay: isModalOpen,
         setIsModalOpen,
       }}
       formProps={{
@@ -154,7 +155,13 @@ export const LocatorEditDialog: React.FC<Props> = ({
         <Input onChange={handleNameChange} />
       </Form.Item>
       <Form.Item name="type" label="Block type:">
-        <Select onChange={handleTypeChange}>
+        <Select
+          onChange={handleTypeChange}
+          showSearch
+          filterOption={(input, option) =>
+            (option?.value?.toString() ?? "").toLowerCase().includes(input.toLowerCase())
+          }
+        >
           {types.map((_type) => (
             <Select.Option key={_type} value={_type}>
               {_type}

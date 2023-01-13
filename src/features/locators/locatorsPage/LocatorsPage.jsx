@@ -1,4 +1,4 @@
-import { Button, Modal, Tooltip } from "antd";
+import { Button, Modal, Tooltip, Row } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -22,6 +22,7 @@ import { locatorGenerationController } from "../locatorGenerationController";
 import { removeLocators, restoreLocators } from "../locatorsSlice";
 import { LocatorsTree } from "../locatorsTree";
 import { LocatorListHeader } from "./LocatorListHeader";
+import { Filter } from "../../filter/Filter";
 
 const { confirm } = Modal;
 
@@ -44,9 +45,8 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
   const handleConfirm = () => {
     if (size(inProgressGenerate)) {
       confirm({
-        title: "Сonfirm the selection",
-        content: `Attention! Not all of the selected locators have already been generated.
-          We recommend to wait until the generation is completed.`,
+        title: "Сonfirm this locators list",
+        content: `Not all of the selected locators have already been generated, we recommend waiting until the generation is complete.`,
         okText: "Confirm selection",
         cancelText: "Cancel",
         onOk: () => {
@@ -84,8 +84,9 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
           altText: "Discard",
           onOk: handleOk,
           enableOk,
-          confirmTitle: "You have unsaved changes",
-          confirmContent: "You have unsaved changes in the locator list. Do you want to discard them?",
+          confirmTitle: "Save this locators list?",
+          confirmContent:
+            "The list has been edited and the changes have not been accepted. Do you want to save changes?",
         });
       }
     };
@@ -137,7 +138,10 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
   return (
     <React.Fragment>
       <div className="jdn__locatorsList">
-        <Breadcrumbs />
+        <Row justify="space-between">
+          <Breadcrumbs />
+          <Filter />
+        </Row>
         <LocatorListHeader
           render={(viewProps) => (
             <div className="jdn__locatorsList-content">

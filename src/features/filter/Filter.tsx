@@ -4,24 +4,21 @@ import { toLower } from "lodash";
 import { Funnel } from "phosphor-react";
 import React, { ChangeEvent, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../app/store";
-import { Menu, MenuItem } from "../../common/components/menu/Menu";
+import { MenuItem } from "../../common/components/menu/Menu";
 import { selectCurrentPageObject } from "../pageObjects/pageObjectSelectors";
 import { ElementClass } from "../pageObjects/utils/generationClassesMap";
 import { FilterHeader } from "./FilterHeader";
-import { selectClassFiltefByPO } from "./filterSelectors";
+import { selectDetectedClassesFilter } from "./filterSelectors";
 import { toggleClassFilter, toggleClassFilterAll } from "./filterSlice";
 
 export const Filter = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [open, setOpen] = useState(false);
-
   const pageObject = useSelector(selectCurrentPageObject);
   const dispatch = useDispatch();
 
   if (!pageObject) throw new Error("empty page object");
-
-  const classFilter = useSelector((state: RootState) => selectClassFiltefByPO(state, pageObject.id));
+  const classFilter = useSelector(selectDetectedClassesFilter);
   const classFilterArr =
     searchTerm === ""
       ? Object.entries(classFilter)
@@ -51,7 +48,7 @@ export const Filter = () => {
         onClick: handleFilterChange(key, value),
       };
     });
-    return <Menu {...{ items }} />;
+    return { ...{ items } };
   };
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -74,7 +71,7 @@ export const Filter = () => {
 
   return (
     <Dropdown
-      overlay={renderClassList()}
+      menu={renderClassList()}
       dropdownRender={(menu) => (
         <div className="jdn__filter_dropdown-content">
           <FilterHeader onClickClose={() => setOpen(false)} />
@@ -94,7 +91,7 @@ export const Filter = () => {
       onOpenChange={handleOpenChange}
       {...{ open }}
     >
-      <Button type="link" icon={<Funnel size={14} color="#8C8C8C" />} />
+      <Button className="jdn__filter_filter-button" type="link" icon={<Funnel size={14} color="#8C8C8C" />} />
     </Dropdown>
   );
 };

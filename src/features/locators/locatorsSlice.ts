@@ -6,7 +6,7 @@ import { stopGenerationGroupReducer } from "../../common/thunks/stopGenerationGr
 import { generateLocatorsReducer } from "../pageObjects/pageObjList/pageObjGeneration/generateLocators";
 import { identifyElementsReducer } from "../pageObjects/pageObjList/pageObjGeneration/identifyElements";
 import { ElementClass, ElementLibrary } from "../pageObjects/utils/generationClassesMap";
-import { locatorsAdapter, simpleSelectLocatorById } from "./locatorSelectors";
+import { locatorsAdapter, simpleSelectLocatorById, simpleSelectLocatorsByPageObject } from "./locatorSelectors";
 import {
   ElementId,
   IdentificationStatus,
@@ -115,7 +115,7 @@ const locatorsSlice = createSlice({
     setGenerationStatus(state, { payload }) {
       state.generationStatus = payload;
     },
-    setScrollToLocator(state, { payload: element_id }) {
+    setScrollToLocator(state, { payload: element_id }: PayloadAction<ElementId>) {
       state.scrollToLocator = element_id;
     },
     setElementGroupGeneration(state, { payload }: PayloadAction<{ locators: Locator[]; generate: boolean }>) {
@@ -162,11 +162,28 @@ const locatorsSlice = createSlice({
     elementSetActive(state, { payload }: PayloadAction<ElementId>) {
       locatorsAdapter.upsertOne(state, { element_id: payload, active: true } as Locator);
     },
+    elementGroupSetActive(
+      state,
+      { payload }: PayloadAction<Locator[] | { locators: Array<Locator>; fromScript: boolean }>
+    ) {
+      const locators = Array.isArray(payload) ? payload : payload.locators;
+      locatorsAdapter.upsertMany(state, locators.map((_locator) => ({ ..._locator, active: true })) as Locator[]);
+    },
+    setActiveSingle(state, { payload: locator }: PayloadAction<Locator>) {
+      const newValue = simpleSelectLocatorsByPageObject(state, locator.pageObj).map((_loc) =>
+        _loc.element_id === locator.element_id ? { ..._loc, active: true } : { ..._loc, active: false }
+      );
+      locatorsAdapter.upsertMany(state, newValue);
+    },
     elementUnsetActive(state, { payload }: PayloadAction<ElementId>) {
       locatorsAdapter.upsertOne(state, { element_id: payload, active: false } as Locator);
     },
-    elementGroupUnsetActive(state, { payload }: PayloadAction<Array<Locator>>) {
-      const newValue = payload.map((_locator) => ({ ..._locator, active: false }));
+    elementGroupUnsetActive(
+      state,
+      { payload }: PayloadAction<Array<Locator> | { locators: Array<Locator>; fromScript: boolean }>
+    ) {
+      const locators = Array.isArray(payload) ? payload : payload.locators;
+      const newValue = locators.map((_locator) => ({ ..._locator, active: false }));
       locatorsAdapter.upsertMany(state, newValue);
     },
   },
@@ -198,6 +215,8 @@ export const {
   updateLocator,
   restoreLocators,
   elementSetActive,
+  setActiveSingle,
   elementUnsetActive,
+  elementGroupSetActive,
   elementGroupUnsetActive,
 } = locatorsSlice.actions;

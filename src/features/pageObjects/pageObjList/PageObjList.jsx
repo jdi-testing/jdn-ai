@@ -37,20 +37,20 @@ export const PageObjList = (props) => {
     }
   };
 
-  const renderPageObjSettings = (pageObjId, url) => {
+  const renderPageObjSettings = (pageObjId, url, library) => {
     return (
       <div className="jdn__pageObject__settings">
         <Footnote className="jdn__pageObject__settings-url">{url}</Footnote>
-        <GenerationButtons pageObj={pageObjId} />
+        <GenerationButtons pageObj={pageObjId} {...{ library }} />
       </div>
     );
   };
 
-  const renderContent = (pageObjId, url, elements) => {
+  const renderContent = (pageObjId, url, elements, library) => {
     if (size(elements)) {
       return renderLocators(elements);
     } else {
-      return renderPageObjSettings(pageObjId, url);
+      return renderPageObjSettings(pageObjId, url, library);
     }
   };
 
@@ -65,7 +65,7 @@ export const PageObjList = (props) => {
 
   return (
     <div className="jdn__locatorsList">
-      <PageObjListHeader {...{ ...props, toggleExpand, isExpanded }} />
+      <PageObjListHeader {...{ ...props, toggleExpand, isExpanded, setActivePanel }} />
       <div className="jdn__locatorsList-content jdn__pageObj-content">
         {size(pageObjects) ? (
           <React.Fragment>
@@ -102,7 +102,7 @@ export const PageObjList = (props) => {
                       </>
                     }
                   >
-                    {renderContent(id, url, elements)}
+                    {renderContent(id, url, elements, library)}
                   </Collapse.Panel>
                 );
               })}

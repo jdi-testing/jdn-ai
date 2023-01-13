@@ -7,14 +7,21 @@ export const selectable = () => {
     });
 
   const runSelectable = () => {
+    if (selectables) {
+      selectables.disable();
+      selectables.enable();
+      return;
+    }
     selectables = new Selectables({
       elements: ".jdn-highlight",
       moreUsing: "ctrlKey",
       zone: "body",
       selectedClass: "jdn-active",
-      onSelect: (element) => sendMessage({ message: "ELEMENT_SET_ACTIVE", param: element.id }),
-      onDeselect: (element) => {
-        sendMessage({ message: "ELEMENT_UNSET_ACTIVE", param: element.id });
+      onSelect: (payload) => {
+        sendMessage({ message: "ELEMENT_GROUP_SET_ACTIVE", param: payload });
+      },
+      onDeselect: (payload) => {
+        sendMessage({ message: "ELEMENT_GROUP_UNSET_ACTIVE", param: payload });
       },
     });
 
@@ -57,7 +64,7 @@ export const selectable = () => {
 
   const setActive = (payload) => selectables.setSelect(payload);
 
-  const messageHandler = ({ message, param }) => {
+  const messageHandler = ({ message, param }, sender, sendResponse) => {
     switch (message) {
       case "UNSET_ACTIVE":
         unsetActive(param);
@@ -65,6 +72,17 @@ export const selectable = () => {
       case "SET_ACTIVE":
         setActive(param);
         break;
+      case "TOGGLE_ACTIVE_GROUP": {
+        param.forEach((_loc) => (_loc.active ? setActive(_loc) : unsetActive(_loc)));
+        break;
+      }
+      case "KILL_HIGHLIGHT":
+        selectables = selectables.disable();
+        break;
+      case "PING_SCRIPT": {
+        if (param.scriptName === "selectable") sendResponse({ message: true });
+        break;
+      }
     }
   };
 
@@ -72,6 +90,7 @@ export const selectable = () => {
 
   chrome.storage.onChanged.addListener((event) => {
     if (event.hasOwnProperty("JDN_HIGHLIGHT_IS_SET")) runSelectable();
+    if (event.hasOwnProperty("IS_DISCONNECTED")) selectables && (selectables = selectables.disable());
   });
 
   /*
@@ -120,6 +139,7 @@ export const selectable = () => {
     };
     this.options = extend(defaults, opts || {});
     this.on = false;
+    this.selectedItems = new Set;
     const self = this;
     this.enable = function () {
       if (this.on) {
@@ -132,13 +152,11 @@ export const selectable = () => {
       this.items = document.querySelectorAll(this.options.zone + " " + this.options.elements);
       this.disable();
       this.zone.addEventListener("mousedown", self.rectOpen);
-      document.addEventListener("contextmenu", this.contextClick);
       this.on = true;
       return this;
     };
     this.disable = function () {
       this.zone.removeEventListener("mousedown", self.rectOpen);
-      document.removeEventListener("contextmenu", this.contextClick);
       this.on = false;
       return this;
     };
@@ -158,19 +176,11 @@ export const selectable = () => {
     };
     this.rectOpen = function (e) {
       self.options.start && self.options.start(e);
-      if (self.options.key && !e[self.options.key]) {
-        return;
-      }
-      const s = self.options.selectedClass;
+      if (self.options.key && !e[self.options.key]) return;
       self.foreach(self.items, function (el) {
-        el.addEventListener("click", self.suspend, true); // skip any clicks
-        if (!e[self.options.moreUsing] && !self.isContextForGroup(e)) {
-          if (el.classList.contains(s)) {
-            el.classList.remove(s);
-            self.options.onDeselect && self.options.onDeselect(el);
-          }
-        }
+        el.addEventListener("click", self.suspend); // skip any clicks
       });
+      self.options.onDeselect && self.selectedItems.size && self.options.onDeselect(Array.from(self.selectedItems));
 
       document.body.classList.add("s-noselect");
       self.ipos = [e.pageX, e.pageY];
@@ -182,7 +192,8 @@ export const selectable = () => {
         document.body.appendChild(gh);
       }
       document.body.addEventListener("mousemove", self.rectDraw);
-      window.addEventListener("mouseup", self.select);
+      document.body.addEventListener("mouseup", self.select);
+      document.body.addEventListener("mouseleave", self.select);
     };
     var rb = function () {
       return document.getElementById("s-rectBox");
@@ -204,6 +215,8 @@ export const selectable = () => {
       return width === 2 && height === 2;
     };
     this.select = function (e) {
+      const selected = new Set;
+      const deselected = new Set;
       const a = rb();
       if (!a) {
         return;
@@ -211,35 +224,63 @@ export const selectable = () => {
       delete self.ipos;
       document.body.classList.remove("s-noselect");
       document.body.removeEventListener("mousemove", self.rectDraw);
-      window.removeEventListener("mouseup", self.select);
+      document.body.removeEventListener("mouseup", self.select);
+      document.body.removeEventListener("mouseleave", self.select);
 
       const s = self.options.selectedClass;
       const toggleActiveClass = function (el) {
         if (el.classList.contains(s)) {
+          deselected.add(el.id);
           el.classList.remove(s);
-          self.options.onDeselect && self.options.onDeselect(el);
         } else {
+          selected.add(el.id);
           el.classList.add(s);
-          self.options.onSelect && self.options.onSelect(el);
         }
       };
 
       if (isPlainClick(a)) {
         const highlightTarget = e.target.closest("[jdn-highlight=true]");
-        if (!highlightTarget) return;
-        if (!self.isContextForGroup(e)) toggleActiveClass(highlightTarget);
+
+        if (highlightTarget && !self.isContextForGroup(e)) { // simple click on any highlight
+          if (!e[self.options.moreUsing]) self.removePreviousSelection();
+          toggleActiveClass(highlightTarget);
+        } else if (!highlightTarget) self.removePreviousSelection(); // simple click outside highlight
+
       } else {
+        self.selectedItems = new Set;
         self.foreach(self.items, function (el) {
-          if (cross(a, el) === true) toggleActiveClass(el);
+          if (cross(a, el) === true) {
+            toggleActiveClass(el);
+          }
           setTimeout(function () {
-            el.removeEventListener("click", self.suspend, true);
+            el.removeEventListener("click", self.suspend);
           }, 100);
         });
       }
 
-      a.parentNode.removeChild(a);
-      self.options.stop && self.options.stop(e);
+      // setTimeout to allow click listeners in other scripts (eg. contextmenu.js) work correctly
+      setTimeout(function () {
+        if (a && a.parentNode) a.parentNode.removeChild(a);
+      }, 100);
+      
+      if (selected.size && self.options.onSelect) self.options.onSelect(Array.from(selected));
+      if (deselected.size && self.options.onDeselect) self.options.onDeselect(Array.from(deselected));
+
+      if (self.options.stop) self.options.stop(e);
     };
+
+    this.removePreviousSelection = function () {
+      const deselected = new Set;
+      self.foreach(self.items, function (el) {
+          const s = self.options.selectedClass;
+          if (el.classList.contains(s)) {
+            el.classList.remove(s);
+            deselected.add(el.id);
+          }
+      });
+      if (self.options.onDeselect && deselected.size) self.options.onDeselect(Array.from(deselected));
+    }
+
     this.rectDraw = function (e) {
       const g = rb();
       if (!self.ipos || g === null) {
@@ -256,11 +297,16 @@ export const selectable = () => {
       if (y1 > y2) {
         (tmp = y2), (y2 = y1), (y1 = tmp);
       }
-      (g.style.left = x1 + "px"),
-        (g.style.top = y1 + "px"),
-        (g.style.width = x2 - x1 + "px"),
-        (g.style.height = y2 - y1 + "px");
+      g.style.left = x1 + "px";
+      g.style.top = y1 + "px";
+      g.style.width = x2 - x1 + "px";
+      g.style.height = y2 - y1 + "px";
+
+      if ((g.style.width !== "0px" || g.style.height !== "0px") && !e[self.options.moreUsing]) {
+        self.removePreviousSelection();
+      }
     };
+
     this.options.selectables = this;
     if (this.options.enabled) {
       return this.enable();

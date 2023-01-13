@@ -13,12 +13,15 @@ import {
   setElementGroupGeneration,
   toggleDeleted,
   toggleDeletedGroup,
+  toggleElementGroupGeneration,
 } from "../locatorsSlice";
 import { stopGenerationGroup } from "../../../common/thunks/stopGenerationGroup";
 import { rerunGeneration } from "../../../common/thunks/rerunGeneration";
 import { locatorTaskStatus, LOCATOR_CALCULATION_PRIORITY } from "../../../common/constants/constants";
 import {
+  selectActiveGenerateByPO,
   selectActiveLocators,
+  selectActiveNonGenerateByPO,
   selectCalculatedActiveByPageObj,
   selectDeletedActiveByPageObj,
   selectFilteredLocators,
@@ -27,18 +30,18 @@ import {
   selectWaitingActiveByPageObj,
 } from "../../pageObjects/pageObjectSelectors";
 import {
+  addToPO,
   advanced,
   deleteOption,
   downPriority,
   pause,
+  removeFromPO,
   rerun,
   restore,
   upPriority,
 } from "../../../common/components/menu/menuOptions";
 import { LocatorsSearch } from "./LocatorsSearch";
 import { locatorGenerationController } from "../locatorGenerationController";
-import { Menu } from "../../../common/components/menu/Menu";
-import { Filter } from "../../filter/Filter";
 
 export const EXPAND_STATE = {
   EXPANDED: "Expanded",
@@ -56,6 +59,8 @@ export const LocatorListHeader = ({ render }) => {
 
   const locators = useSelector(selectFilteredLocators);
   const locatorsGenerate = useSelector(selectGenerateByPageObject);
+  const activeNonGenerate = useSelector(selectActiveNonGenerateByPO);
+  const activeGenerate = useSelector(selectActiveGenerateByPO);
   const active = useSelector(selectActiveLocators);
   const calculatedActive = useSelector((_state) => selectCalculatedActiveByPageObj(_state));
   const waitingActive = useSelector(selectWaitingActiveByPageObj);
@@ -136,6 +141,8 @@ export const LocatorListHeader = ({ render }) => {
       );
 
     const items = [
+      ...(size(activeNonGenerate) ? [addToPO(() => dispatch(toggleElementGroupGeneration(activeNonGenerate)))] : []),
+      ...(size(activeGenerate) ? [removeFromPO(() => dispatch(toggleElementGroupGeneration(activeGenerate)))] : []),
       ...(size(deletedActive) ? [restore(() => dispatch(toggleDeletedGroup(deletedActive)))] : []),
       ...(size(stoppedSelected) ? [rerun(() => dispatch(rerunGeneration({ generationData: stoppedSelected })))] : []),
       ...(size(inProgressSelected) ? [pause(() => dispatch(stopGenerationGroup(inProgressSelected)))] : []),
@@ -160,7 +167,7 @@ export const LocatorListHeader = ({ render }) => {
       ...(size(actualSelected) ? [deleteOption(handleDelete)] : []),
     ];
 
-    return size(items) ? <Menu {...{ items }} /> : null;
+    return size(items) ? { ...{ items } } : null;
   };
 
   const menu = useMemo(() => renderMenu(), [active]);
@@ -169,7 +176,6 @@ export const LocatorListHeader = ({ render }) => {
     <React.Fragment>
       <Row justify="space-between">
         <LocatorsSearch value={searchString} onChange={setSearchString} />
-        <Filter />
       </Row>
       <Row className="jdn__locatorsList-header">
         <span className="jdn__locatorsList-header-title">
@@ -193,7 +199,7 @@ export const LocatorListHeader = ({ render }) => {
           />
         </span>
         {!isNil(menu) ? (
-          <Dropdown arrow={{ pointAtCenter: true }} overlay={renderMenu()} trigger={["click"]} destroyPopupOnHide>
+          <Dropdown arrow={{ pointAtCenter: true }} menu={renderMenu()} trigger={["click"]} destroyPopupOnHide>
             <Button
               className="jdn__locatorsList_button jdn__locatorsList_button-menu"
               icon={<DotsThree size={18} onClick={(e) => e.preventDefault()} />}
