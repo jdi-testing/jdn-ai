@@ -23,4 +23,12 @@ export const pageObjectsNames = [
     input: "Lorem Ipsum has been page",
     output: "LoremIpsumHasBeenPage",
   },
+  {
+    input: "/dfgf - Поиск в Google",
+    output: "DfgfPoiskVGooglePage",
+  },
+  {
+    input: "**42**anyQuestion",
+    output: "AnyQuestionPage",
+  },
 ];
