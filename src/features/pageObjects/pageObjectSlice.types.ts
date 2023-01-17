@@ -14,4 +14,6 @@ export interface PageObject {
   name: string;
   pageData: string;
   url: string;
+  pathname: string;
+  origin: string;
 }

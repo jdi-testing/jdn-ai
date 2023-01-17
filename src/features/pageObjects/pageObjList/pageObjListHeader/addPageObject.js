@@ -40,11 +40,15 @@ export const addPageObjReducer = (builder) => {
         name = `${className}${repeats + index}`;
       }
 
+      const { pathname, origin } = new URL(url);
+
       pageObjAdapter.addOne(state, {
         id,
         name,
         url,
         library: lastSelectedLibrary || defaultLibrary,
+        pathname,
+        origin,
       });
       state.currentPageObject = id;
     })
