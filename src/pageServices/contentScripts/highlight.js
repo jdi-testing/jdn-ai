@@ -147,7 +147,7 @@ export const highlightOnPage = () => {
     const addTooltip = () => {
       if (tooltip) return;
       tooltip = document.createElement("div");
-      tooltip.className = "jdn-tooltip";
+      tooltip.className = "jdn-tooltip jdn-tooltip-hidden";
       document.body.appendChild(tooltip);
     };
     const tooltipDefaultStyle = (rect) => {
