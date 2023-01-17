@@ -31,4 +31,12 @@ export const pageObjectsNames = [
     input: "**42**anyQuestion",
     output: "AnyQuestionPage",
   },
+  {
+    input: "/ძებნა - Google",
+    output: "DzebnaGooglePage",
+  },
+  {
+    input: "88*بحث جوجل",
+    output: "BhthJwjlPage",
+  },
 ];
