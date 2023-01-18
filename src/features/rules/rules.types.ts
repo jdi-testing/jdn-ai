@@ -15,6 +15,9 @@ export interface RulesMap {
 export interface Rule {
   tag?: string;
   classes?: string[];
+  attributes?: [string, string][];
+  parent?: Rule;
+  children?: Rule[];
 }
 
 export type SelectorsMap = Partial<
