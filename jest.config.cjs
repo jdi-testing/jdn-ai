@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-var-requires
-const {TestEnvironment} = require('jest-environment-jsdom');
+const { TestEnvironment } = require('jest-environment-jsdom');
 
 module.exports = {
   "globals": {
@@ -14,7 +14,7 @@ module.exports = {
     "^.+\\.(ts|tsx)?$": "ts-jest"
   },
   "transformIgnorePatterns": [
-    "/node_modules/(?!antd|@ant-design|rc-.+?|@babel/runtime).+(js|jsx)$"
+    "/node_modules/(?!(@sindresorhus|antd|@ant-design|rc-.+?|@babel/runtime))/.+(js|jsx)$"
   ],
   "testPathIgnorePatterns": [
     "__mocks__"
