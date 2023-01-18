@@ -5,12 +5,13 @@ import { VueRules } from "../Vue.rules";
 import { card } from "./mocks/card.mock";
 import { iconButton } from "./mocks/iconButton.mock";
 import { manySimpleElements } from "./mocks/manySimpleElements.mock.js";
+import { vueRulesMock } from "./mocks/vueRules.mock";
 
 const runQuery = (domSource, callback) => {
   const dom = new JSDOM(domSource);
   global.document = dom.window.document;
 
-  const selectors = getLibrarySelectors(VueRules);
+  const selectors = getLibrarySelectors(vueRulesMock());
   findBySelectors();
   chrome.runtime.sendMessage({ message: "FIND_BY_SELECTORS", param: selectors }, callback);
 };

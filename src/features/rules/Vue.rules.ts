@@ -69,12 +69,12 @@ export const VueRules: RulesMap[] = [
     },
     detectContent: true,
   },
-  {
-    jdnLabel: "dataTable",
-    rules: {
-      attributes: [["file", "v-data-table/usage"]],
-    },
-  },
+  // {
+  //   jdnLabel: "dataTable",
+  //   rules: {
+  //     attributes: [["file", "v-data-table/usage"]],
+  //   },
+  // },
   {
     jdnLabel: "datePicker",
     rules: {
@@ -166,12 +166,12 @@ export const VueRules: RulesMap[] = [
       classes: ["v-input", "v-select"],
     },
   },
-  {
-    jdnLabel: "simpleTable",
-    rules: {
-      attributes: [["file", "v-simple-table/usage"]],
-    },
-  },
+  // {
+  //   jdnLabel: "simpleTable",
+  //   rules: {
+  //     attributes: [["file", "v-simple-table/usage"]],
+  //   },
+  // },
   {
     jdnLabel: "slider",
     rules: {
@@ -216,10 +216,4 @@ export const VueRules: RulesMap[] = [
       classes: ["v-toolbar"],
     },
   },
-  // {
-  //   jdnLabel: "vuetifybuttons",
-  //   rules: {
-  //     classes: [],
-  //   }
-  // },
 ];

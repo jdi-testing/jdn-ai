@@ -140,11 +140,6 @@ const mainConfig = {
         test: /\.md$/,
         use: "raw-loader",
       },
-      {
-        test: /\.html$/,
-        exclude: /node_modules/,
-        use: {loader: 'html-loader'}
-      },
     ],
   },
 };
