@@ -155,7 +155,13 @@ export const LocatorEditDialog: React.FC<Props> = ({
         <Input onChange={handleNameChange} />
       </Form.Item>
       <Form.Item name="type" label="Block type:">
-        <Select onChange={handleTypeChange}>
+        <Select
+          onChange={handleTypeChange}
+          showSearch
+          filterOption={(input, option) =>
+            (option?.value?.toString() ?? "").toLowerCase().includes(input.toLowerCase())
+          }
+        >
           {types.map((_type) => (
             <Select.Option key={_type} value={_type}>
               {_type}

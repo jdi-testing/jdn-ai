@@ -1,20 +1,11 @@
-import CyrillicToTranslit from "cyrillic-to-translit-js";
 import { getLocator } from "../../../features/locators/locator/utils";
 import { ElementLibrary } from "./generationClassesMap";
 import { camelCase, upperFirst } from "lodash";
+import transliterate from "@sindresorhus/transliterate";
 
 export const getClassName = (title) => {
-  let className = camelCase(title);
-
-  const isCyrillic = (term) => {
-    const cyrillicPattern = /[а-яА-ЯЁё]/;
-    return cyrillicPattern.test(term);
-  };
-
-  if (isCyrillic(className)) {
-    // eslint-disable-next-line new-cap
-    className = CyrillicToTranslit().transform(className, " ");
-  }
+  let className = transliterate(title);
+  className = camelCase(className);
 
   className = className.substring(className.search(/[a-zA-Za]/)); // removing numbers in the start of string
   className = upperFirst(className); // we generate Java class name, so we always need a capital first letter

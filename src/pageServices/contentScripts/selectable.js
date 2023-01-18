@@ -139,6 +139,7 @@ export const selectable = () => {
     };
     this.options = extend(defaults, opts || {});
     this.on = false;
+    this.selectedItems = new Set;
     const self = this;
     this.enable = function () {
       if (this.on) {
@@ -179,6 +180,7 @@ export const selectable = () => {
       self.foreach(self.items, function (el) {
         el.addEventListener("click", self.suspend); // skip any clicks
       });
+      self.options.onDeselect && self.selectedItems.size && self.options.onDeselect(Array.from(self.selectedItems));
 
       document.body.classList.add("s-noselect");
       self.ipos = [e.pageX, e.pageY];
@@ -245,6 +247,7 @@ export const selectable = () => {
         } else if (!highlightTarget) self.removePreviousSelection(); // simple click outside highlight
 
       } else {
+        self.selectedItems = new Set;
         self.foreach(self.items, function (el) {
           if (cross(a, el) === true) {
             toggleActiveClass(el);
