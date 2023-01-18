@@ -15,8 +15,7 @@ export interface RulesMap {
 export interface Rule {
   tag?: string;
   classes?: string[];
-  attributes?: [string, string][];
-  parent?: Rule;
+  // attributes?: [string, string][]; see DataTable and SimpleTable
   children?: Rule[];
 }
 
