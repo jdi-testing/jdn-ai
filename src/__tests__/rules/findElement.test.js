@@ -10,6 +10,8 @@ const runQuery = (domSource, callback) => {
   const dom = new JSDOM(domSource);
   global.document = dom.window.document;
 
+  // we can't use original VueRules, 
+  // because test env doesn't work with selectors containing ':has' directive
   const selectors = getLibrarySelectors(vueRulesMock());
   findBySelectors();
   chrome.runtime.sendMessage({ message: "FIND_BY_SELECTORS", param: selectors }, callback);
