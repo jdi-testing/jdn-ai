@@ -2,7 +2,7 @@ import { Rule, SelectorsMap } from "./rules.types";
 import { VueRules } from "./Vue.rules";
 
 export const createSelector = (rules: Rule) => {
-    let selector = "";
+  let selector = "";
 
   selector = `${selector}${rules.tag || ""}`;
   if (rules.classes)
@@ -20,8 +20,6 @@ export const createSelector = (rules: Rule) => {
 
 export const getLibrarySelectors = (rules: typeof VueRules) => {
   const selectors: SelectorsMap = {};
-  rules.forEach(
-    ({ jdnLabel, rules, ...rest }) => (selectors[jdnLabel] = { selector: createSelector(rules), ...rest })
-  );
+  rules.forEach(({ jdnLabel, rules, ...rest }) => (selectors[jdnLabel] = { selector: createSelector(rules), ...rest }));
   return selectors;
 };
