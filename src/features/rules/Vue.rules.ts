@@ -29,7 +29,7 @@ export const VueRules: RulesMap[] = [
     jdnLabel: "bottomsheet",
     rules: {
       classes: ["v-bottom-sheet"],
-    }
+    },
   },
   {
     jdnLabel: "card",
@@ -42,25 +42,25 @@ export const VueRules: RulesMap[] = [
     jdnLabel: "calendar",
     rules: {
       classes: ["v-calendar"],
-    }
+    },
   },
   {
     jdnLabel: "carousel",
     rules: {
       classes: ["v-carousel"],
-    }
+    },
   },
   {
     jdnLabel: "checkbox",
     rules: {
       classes: ["v-input--checkbox"],
-    }
+    },
   },
   {
     jdnLabel: "combobox",
     rules: {
       classes: ["v-select", "v-autocomplete"],
-    }
+    },
   },
   {
     jdnLabel: "dataIterator",
@@ -72,10 +72,8 @@ export const VueRules: RulesMap[] = [
   {
     jdnLabel: "dataTable",
     rules: {
-      attributes: [
-        ["file", "v-data-table/usage"],
-      ]
-    }
+      attributes: [["file", "v-data-table/usage"]],
+    },
   },
   {
     jdnLabel: "datePicker",
@@ -84,9 +82,9 @@ export const VueRules: RulesMap[] = [
       children: [
         {
           classes: ["v-date-picker-table--date"],
-        }
-      ]
-    }
+        },
+      ],
+    },
   },
   {
     jdnLabel: "datePickerMonth",
@@ -95,9 +93,9 @@ export const VueRules: RulesMap[] = [
       children: [
         {
           classes: ["v-date-picker-table--month"],
-        }
-      ]
-    }
+        },
+      ],
+    },
   },
   {
     jdnLabel: "dialog",
@@ -130,63 +128,61 @@ export const VueRules: RulesMap[] = [
     jdnLabel: "listItemGoups",
     rules: {
       classes: ["v-list-item-group"],
-    }
+    },
   },
   {
     jdnLabel: "menu",
     rules: {
       classes: ["v-menu__content"],
-    }
+    },
   },
   {
     jdnLabel: "pagination",
     rules: {
       classes: ["v-pagination"],
-    }
+    },
   },
   {
     jdnLabel: "radiobutton",
     rules: {
       classes: ["v-radio"],
-    }
+    },
   },
   {
     jdnLabel: "radiobuttons",
     rules: {
       classes: ["v-input--radio-group"],
-    }
+    },
   },
   {
     jdnLabel: "rangeSlider",
     rules: {
       classes: ["v-input--range-slider"],
-    }
+    },
   },
   {
     jdnLabel: "select",
     rules: {
       classes: ["v-input", "v-select"],
-    }
+    },
   },
   {
     jdnLabel: "simpleTable",
     rules: {
-      attributes: [
-        ["file", "v-simple-table/usage"],
-      ]
-    }
+      attributes: [["file", "v-simple-table/usage"]],
+    },
   },
   {
     jdnLabel: "slider",
     rules: {
       classes: ["v-input__slider"],
-    }
+    },
   },
   {
     jdnLabel: "slideGroup",
     rules: {
       classes: ["v-slide-group"],
-    }
+    },
   },
   {
     jdnLabel: "sheet",
@@ -200,25 +196,25 @@ export const VueRules: RulesMap[] = [
     jdnLabel: "switch",
     rules: {
       classes: ["v-input--switch"],
-    }
+    },
   },
   {
     jdnLabel: "textfield",
     rules: {
       classes: ["v-text-field"],
-    }
+    },
   },
   {
     jdnLabel: "timepicker",
     rules: {
       classes: ["v-picker--time"],
-    }
+    },
   },
   {
     jdnLabel: "toolbar",
     rules: {
       classes: ["v-toolbar"],
-    }
+    },
   },
   // {
   //   jdnLabel: "vuetifybuttons",

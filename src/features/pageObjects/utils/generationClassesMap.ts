@@ -103,7 +103,7 @@ export enum VuetifyClasses {
   dialog = "Dialog",
   icon = "Icon",
   input = "Input",
-  itemGroup = "ItemGroup", 
+  itemGroup = "ItemGroup",
   listItemGoups = "ListItemGroups", //
   menu = "Menu", //
   pagination = "Pagination", //
