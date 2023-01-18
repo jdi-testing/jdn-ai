@@ -1,4 +1,4 @@
-import { VueRules } from "../../Vue.rules";
+import { VueRules } from "../../../features/rules/Vue.rules";
 
 const exceptionClasses = ["dataTable", "datePicker", "datePickerMonth", "simpleTable"];
 

@@ -1,10 +1,10 @@
 import { JSDOM } from "jsdom";
-import { findBySelectors } from "../../../pageServices/contentScripts/findBySelectors";
-import { getLibrarySelectors } from "../createSelector";
-import { card } from "./mocks/card.mock";
-import { iconButton } from "./mocks/iconButton.mock";
-import { manySimpleElements } from "./mocks/manySimpleElements.mock.js";
-import { vueRulesMock } from "./mocks/vueRules.mock";
+import { getLibrarySelectors } from "../../features/rules/createSelector";
+import { findBySelectors } from "../../pageServices/contentScripts/findBySelectors";
+import { card } from "./__mocks__/card.mock";
+import { iconButton } from "./__mocks__/iconButton.mock";
+import { manySimpleElements } from "./__mocks__/manySimpleElements.mock.js";
+import { vueRulesMock } from "./__mocks__/vueRules.mock";
 
 const runQuery = (domSource, callback) => {
   const dom = new JSDOM(domSource);

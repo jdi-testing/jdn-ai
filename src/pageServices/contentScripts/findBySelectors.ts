@@ -8,7 +8,7 @@ export const findBySelectors = () => {
   // elements with conflicted labels
   const conflictLabels: Element[] = [];
 
-  const gen_uuid = () =>
+  const generateUUID = () =>
     Math.random().toString().substring(2, 12) +
     Date.now().toString().substring(5) +
     Math.random().toString().substring(2, 12);
@@ -26,14 +26,14 @@ export const findBySelectors = () => {
         label = `${label} ${jdnLabel}`;
       }
       elem.setAttribute(JDN_LABEL, label || jdnLabel);
-      if (!elem.getAttribute(JDN_HASH)) elem.setAttribute(JDN_HASH, gen_uuid());
+      if (!elem.getAttribute(JDN_HASH)) elem.setAttribute(JDN_HASH, generateUUID());
     });
   };
 
   const cleanUpContent = (elements: Element[], selectorsMap: SelectorsMap) => {
-    const elementsSet = new Set(Array.from(elements));
+    const elementsSet = new Set(elements);
 
-    Array.from(elements).forEach((_elem) => {
+    elements.forEach((_elem) => {
       const label = _elem.getAttribute(JDN_LABEL) as JDNLabel;
       if (!selectorsMap[label]?.detectContent) {
         const content = _elem.querySelectorAll(`[${JDN_LABEL}]`);

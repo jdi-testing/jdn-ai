@@ -1,5 +1,5 @@
-import { createSelector } from "../createSelector";
-import { ruleMock1, ruleMock2, ruleMock3, ruleMock4, ruleMock5 } from "./mocks/ruleMocks";
+import { createSelector } from "../../features/rules/createSelector";
+import { ruleMock1, ruleMock2, ruleMock3, ruleMock4, ruleMock5 } from "./__mocks__/ruleMocks";
 
 test("create correct selector", () => {
   expect(createSelector(ruleMock1)).toBe("button.v-btn");
