@@ -73,37 +73,37 @@
 }
 
 .jdn-primary {
-  background-color: var(@primary-background);
-  border: 1px solid var(@primary);
+  background-color: @primary-background;
+  border: 1px solid @primary;
 
   .jdn-label {
-    background-color: var(@primary);
+    background-color: @primary;
   }
 
   &.jdn-active {
-    border: 2px solid var(@primary-active);
-    background-color: var(@primary-background-active);
+    border: 2px solid @primary-active;
+    background-color: @primary-background-active;
 
     .jdn-label {
-      background-color: var(@primary-active);
+      background-color: @primary-active;
     }
   }
 }
 
 .jdn-secondary {
-  border: 1px solid var(@secondary);
-  background-color: var(@secondary-background);
+  border: 1px solid @secondary;
+  background-color: @secondary-background;
 
   .jdn-label {
-    background-color: var(@secondary);
+    background-color: @secondary;
   }
 
   &.jdn-active {
-    border: 2px solid var(@secondary-active);
-    background-color: var(@secondary-background-active);
+    border: 2px solid @secondary-active;
+    background-color: @secondary-background-active;
 
     .jdn-label {
-      background-color: var(@secondary-active);
+      background-color: @secondary-active;
     }
   }
 }
@@ -133,19 +133,19 @@
 
 [jdn-status="FAILURE"] {
   &.jdn-secondary {
-    border: 1px solid var(@secondary-failure);
-    background-color: var(@secondary-failure-background);
+    border: 1px solid @secondary-failure;
+    background-color: @secondary-failure-background;
 
     .jdn-label {
-      background-color: var(@secondary-failure);
+      background-color: @secondary-failure;
     }
 
     &.jdn-active {
-      border: 2px solid var(@secondary-failure-active);
-      background-color: var(@secondary-failure-background-active);
+      border: 2px solid @secondary-failure-active;
+      background-color: @secondary-failure-background-active;
 
       .jdn-label {
-        background-color: var(@secondary-failure-active);
+        background-color: @secondary-failure-active;
       }
     }
   }
@@ -157,19 +157,19 @@
   }
 
   &.jdn-primary {
-    border: 1px solid var(@primary-deleted);
-    background-color: var(@primary-deleted-background);
+    border: 1px solid @primary-deleted;
+    background-color: @primary-deleted-background;
 
     .jdn-label {
-      background-color: var(@primary-deleted);
+      background-color: @primary-deleted;
     }
 
     &.jdn-active {
-      border: 2px solid var(@primary-deleted-active);
-      background-color: var(@primary-deleted-background-active);
+      border: 2px solid @primary-deleted-active;
+      background-color: @primary-deleted-background-active;
 
       .jdn-label {
-        background-color: var(@primary-deleted-active);
+        background-color: @primary-deleted-active;
       }
     }
   }
