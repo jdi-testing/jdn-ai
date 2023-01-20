@@ -75,13 +75,7 @@ export interface Locator extends PredictedEntity {
 
 export interface PredictedEntity {
   element_id: ElementId;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
   predicted_label: string;
-  predicted_probability: number;
-  sort_key: number;
 }
 
 export enum ValidationErrorType {

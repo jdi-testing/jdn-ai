@@ -1,0 +1,19 @@
+diff --git a/node_modules/jest-webextension-mock/dist/setup.js b/node_modules/jest-webextension-mock/dist/setup.js
+index cd0c2eb..3b9da37 100644
+--- a/node_modules/jest-webextension-mock/dist/setup.js
++++ b/node_modules/jest-webextension-mock/dist/setup.js
+@@ -37,13 +37,8 @@ var runtime = {
+   }),
+   sendMessage: jest.fn(function (message, cb) {
+     onMessageListeners.forEach(function (listener) {
+-      return listener(message);
++      return listener(message, null, cb);
+     });
+-
+-    if (cb !== undefined) {
+-      return cb();
+-    }
+-
+     return Promise.resolve();
+   }),
+   onMessage: {

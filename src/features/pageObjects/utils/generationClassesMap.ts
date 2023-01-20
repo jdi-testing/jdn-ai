@@ -85,13 +85,55 @@ export enum NgMatClasses {
   tree = "MaterialTree",
 }
 
-export type ElementLabel = typeof MUIclasses | typeof HTML5classes | typeof NgMatClasses | typeof defaultClass;
+export enum VuetifyClasses {
+  alert = "Alert",
+  autocomplete = "Autocomplete",
+  bottomnavigation = "BottomNavigation",
+  bottomsheet = "BottomSheet",
+  button = "VuetifyButton",
+  calendar = "Calendar",
+  card = "Card",
+  carousel = "Carousel",
+  checkbox = "Checkbox",
+  combobox = "Combobox",
+  dataIterator = "DataIterator",
+  // dataTable = "DataTable",
+  datePicker = "DatePicker",
+  datePickerMonth = "DatePickerMonth",
+  dialog = "Dialog",
+  icon = "Icon",
+  input = "Input",
+  itemGroup = "ItemGroup",
+  listItemGoups = "ListItemGroups",
+  menu = "Menu",
+  pagination = "Pagination",
+  radiobutton = "RadioButton",
+  radiobuttons = "RadioButtons",
+  rangeSlider = "RangeSlider",
+  select = "Select",
+  // simpleTable = "SimpleTable",
+  slider = "Slider",
+  slideGroup = "SlideGroup",
+  sheet = "Sheet",
+  switch = "Switch",
+  textfield = "TextField",
+  timepicker = "TimePicker",
+  toolbar = "ToolBar",
+}
+
+export type ElementLabel =
+  | typeof MUIclasses
+  | typeof HTML5classes
+  | typeof NgMatClasses
+  | typeof VuetifyClasses
+  | typeof defaultClass;
 export type ElementClass = MUIclasses | HTML5classes | NgMatClasses | typeof defaultClass;
 
 export enum ElementLibrary {
   MUI = "MUI",
   HTML5 = "HTML5",
   NgMat = "NgMat",
+  Vuetify = "Vuetify",
 }
 
 export const defaultLibrary = ElementLibrary.MUI;
@@ -100,18 +142,21 @@ export const libraryNames: Record<ElementLibrary, string> = {
   [ElementLibrary.MUI]: "Material UI",
   [ElementLibrary.HTML5]: "HTML 5",
   [ElementLibrary.NgMat]: "Angular Material",
+  [ElementLibrary.Vuetify]: "Vuetify",
 };
 
 export const libraryClasses: Record<ElementLibrary, ElementLabel> = {
   [ElementLibrary.MUI]: MUIclasses,
   [ElementLibrary.HTML5]: HTML5classes,
   [ElementLibrary.NgMat]: NgMatClasses,
+  [ElementLibrary.Vuetify]: VuetifyClasses,
 };
 
 export const predictEndpoints: Record<ElementLibrary, HttpEndpoint> = {
   [ElementLibrary.MUI]: HttpEndpoint.MUI_PREDICT,
   [ElementLibrary.HTML5]: HttpEndpoint.HTML5_PREDICT,
   [ElementLibrary.NgMat]: HttpEndpoint.NGMAT_PREDICT,
+  [ElementLibrary.Vuetify]: HttpEndpoint.NGMAT_PREDICT,
 };
 
 export const getJDILabel = (label: keyof ElementLabel, library: ElementLibrary): ElementClass =>

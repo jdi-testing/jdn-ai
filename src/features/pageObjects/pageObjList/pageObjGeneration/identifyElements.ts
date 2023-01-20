@@ -6,6 +6,7 @@ import { PageObjectId } from "../../pageObjectSlice.types";
 import { ElementLibrary, predictEndpoints } from "../../utils/generationClassesMap";
 
 import { generateLocators } from "./generateLocators";
+import { findByRules } from "./utils";
 
 interface Meta {
   library: ElementLibrary;
@@ -17,19 +18,19 @@ export const identifyElements = createAsyncThunk(
   async ({ library, pageObj }: Meta, thunkAPI) => {
     thunkAPI.dispatch(setCurrentPageObj(pageObj));
 
-    const endpoint = predictEndpoints[library];
     try {
-      const { data: res, pageData } = await predictElements(endpoint);
-      const rounded = res.map((el: PredictedEntity) => ({
+      const endpoint = predictEndpoints[library];
+      const { data: res, pageData } =
+        library !== ElementLibrary.Vuetify ? await predictElements(endpoint) : await findByRules();
+      const byPageObject = res.map((el: PredictedEntity) => ({
         ...el,
         element_id: `${el.element_id}_${pageObj}`,
         jdnHash: el.element_id,
-        predicted_probability: Math.round(el.predicted_probability * 100) / 100,
         pageObj: pageObj,
       }));
-      thunkAPI.dispatch(generateLocators({ predictedElements: rounded, library }));
+      thunkAPI.dispatch(generateLocators({ predictedElements: byPageObject, library }));
       thunkAPI.dispatch(setPageData({ id: pageObj, pageData }));
-      return thunkAPI.fulfillWithValue(rounded);
+      return thunkAPI.fulfillWithValue(byPageObject);
     } catch (error) {
       return thunkAPI.rejectWithValue(null);
     }
