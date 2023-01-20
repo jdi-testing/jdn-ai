@@ -187,11 +187,15 @@
       &-treenode {
         width: 100%;
 
+       &:hover {
+        background-color: @hovered-locator;
+      }
+
         &.jdn__tree-item--selected {
-          background-color: #ecf7ff;
+          background-color: transparent;
 
           &.jdn__tree-item--active {
-            background-color: #d4eefa;
+            background-color: @active-locator;
           }
         }
 
@@ -200,7 +204,11 @@
         }
 
         &.jdn__tree-item--active {
-          background-color: #f2f2f2;
+          background-color: @active-locator;
+
+          &.ant-tree-treenode:hover {
+            background-color: @active-locator;
+          }
         }
       }
 
