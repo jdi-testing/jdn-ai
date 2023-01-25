@@ -14,7 +14,7 @@ export const copyToClipboard = (text: string) => {
   chrome.devtools.inspectedWindow.eval(`copy('${transformedText}')`);
 };
 
-export const getLocatorString = (locator: LocatorValue, type: ElementLibrary | ElementClass, name: string) =>
+export const getLocatorString = (locator: LocatorValue, type: ElementLibrary | ElementClass, name: string): string =>
   `@UI("${getLocator(locator)}")\npublic ${type} ${name};`;
 
 export const convertToListWithChildren = (_list: Array<Locator>) => {

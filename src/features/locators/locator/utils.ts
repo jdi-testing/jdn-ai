@@ -9,7 +9,7 @@ export const getLocator = ({ fullXpath, robulaXpath, customXpath }: LocatorValue
   return customXpath || robulaXpath || fullXpath || "";
 };
 
-export const getLocatorWithJDIAnnotation = ({ fullXpath, robulaXpath }: LocatorValue) =>
+export const getLocatorWithJDIAnnotation = ({ fullXpath, robulaXpath }: LocatorValue): string =>
   `${fullXpath} @UI("${robulaXpath}")`;
 
 export const isValidJavaVariable = (value: string) => /^[a-zA-Z_$]([a-zA-Z0-9_])*$/.test(value);
@@ -74,7 +74,10 @@ export enum LocatorOption {
   FullCode = "Full code",
 }
 
-export const copyLocator = (selectedLocators: Pick<Locator, "locator" | "type" | "name">[], option?: string) => () => {
+export const copyLocator = (
+  selectedLocators: Pick<Locator, "locator" | "type" | "name">[],
+  option?: string
+) => (): void => {
   let xPath: string;
   switch (option) {
     case LocatorOption.Xpath:
