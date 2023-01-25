@@ -39,9 +39,11 @@ import {
   rerun,
   restore,
   upPriority,
+  copyLocatorOption,
 } from "../../../common/components/menu/menuOptions";
 import { LocatorsSearch } from "./LocatorsSearch";
 import { locatorGenerationController } from "../locatorGenerationController";
+import { copyLocator, LocatorOption } from "../locator/utils";
 
 export const EXPAND_STATE = {
   EXPANDED: "Expanded",
@@ -142,6 +144,17 @@ export const LocatorListHeader = ({ render }) => {
 
     const items = [
       ...(size(activeNonGenerate) ? [addToPO(() => dispatch(toggleElementGroupGeneration(activeNonGenerate)))] : []),
+      ...(size(actualSelected) > 1
+        ? [
+            copyLocatorOption([
+              copyLocator(actualSelected, LocatorOption.Xpath),
+              () => "", // for xPath+Selenium
+              copyLocator(actualSelected, LocatorOption.XpathAndJDI),
+              () => "", // for CSS selector
+              copyLocator(actualSelected),
+            ])
+          ]
+        : []),
       ...(size(activeGenerate) ? [removeFromPO(() => dispatch(toggleElementGroupGeneration(activeGenerate)))] : []),
       ...(size(deletedActive) ? [restore(() => dispatch(toggleDeletedGroup(deletedActive)))] : []),
       ...(size(stoppedSelected) ? [rerun(() => dispatch(rerunGeneration({ generationData: stoppedSelected })))] : []),

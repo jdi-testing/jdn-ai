@@ -1,7 +1,7 @@
 import { cloneDeep } from "lodash";
 import { getLocator } from "../../features/locators/locator/utils";
 import { Locator, LocatorValue } from "../../features/locators/locatorSlice.types";
-import { ElementLibrary } from "../../features/pageObjects/utils/generationClassesMap";
+import { ElementLibrary, ElementClass } from "../../features/pageObjects/utils/generationClassesMap";
 import { VALIDATION_ERROR_TYPE } from "../constants/constants";
 
 export const floatToPercent = (value: number) => {
@@ -14,7 +14,7 @@ export const copyToClipboard = (text: string) => {
   chrome.devtools.inspectedWindow.eval(`copy('${transformedText}')`);
 };
 
-export const getLocatorString = (locator: LocatorValue, type: ElementLibrary, name: string) =>
+export const getLocatorString = (locator: LocatorValue, type: ElementLibrary | ElementClass, name: string): string =>
   `@UI("${getLocator(locator)}")\npublic ${type} ${name};`;
 
 export const convertToListWithChildren = (_list: Array<Locator>) => {

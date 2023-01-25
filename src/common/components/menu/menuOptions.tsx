@@ -11,9 +11,11 @@ import {
   Play,
   TextT,
   Trash,
+  CopySimple,
 } from "phosphor-react";
 import React from "react";
 import { MenuItem } from "./Menu";
+import { LocatorOption } from "../../../features/locators/locator/utils";
 
 export const restore = (onClick: () => void): MenuItem => ({
   key: "0",
@@ -134,4 +136,40 @@ export const removeFromPO = (onClick: () => void) => ({
   key: "17",
   onClick,
   label: <Typography.Text>Remove from Page Object</Typography.Text>,
+});
+
+export const copyLocatorOption = (onClick: Array<() => void>) => ({
+  key: "6",
+  icon: <CopySimple size={14} />,
+  onClick: undefined,
+  label: "Copy",
+  children: [
+    {
+      key: "6-0",
+      onClick: onClick[0],
+      label: LocatorOption.Xpath,
+    },
+    {
+      key: "6-1",
+      onClick: onClick[1],
+      label: LocatorOption.XpathAndSelenium,
+      disabled: true,
+    },
+    {
+      key: "6-2",
+      onClick: onClick[2],
+      label: LocatorOption.XpathAndJDI,
+    },
+    {
+      key: "6-3",
+      onClick: onClick[3],
+      label: LocatorOption.CSSSelector,
+      disabled: true,
+    },
+    {
+      key: "6-4",
+      onClick: onClick[4],
+      label: LocatorOption.FullCode,
+    },
+  ],
 });

@@ -3,10 +3,14 @@ import { connector } from "../../../pageServices/connector";
 import { ElementLibrary } from "../../pageObjects/utils/generationClassesMap";
 import { createElementName } from "../../pageObjects/utils/pageObject";
 import { Locator, LocatorValue } from "../locatorSlice.types";
+import { copyToClipboard, getLocatorString } from "../../../common/utils/helpers";
 
 export const getLocator = ({ fullXpath, robulaXpath, customXpath }: LocatorValue) => {
   return customXpath || robulaXpath || fullXpath || "";
 };
+
+export const getLocatorWithJDIAnnotation = ({ fullXpath, robulaXpath }: LocatorValue): string =>
+  `${fullXpath} @UI("${robulaXpath}")`;
 
 export const isValidJavaVariable = (value: string) => /^[a-zA-Z_$]([a-zA-Z0-9_])*$/.test(value);
 
@@ -60,4 +64,31 @@ export const setIndents = (ref: React.RefObject<HTMLDivElement>, depth: number) 
     if (indentElement) indentContainer?.removeChild(indentElement);
     else break;
   }
+};
+
+export enum LocatorOption {
+  Xpath = "xPath",
+  XpathAndSelenium = "xPath + Selenium",
+  XpathAndJDI = "xPath + JDI annotation",
+  CSSSelector = "CSS selector",
+  FullCode = "Full code",
+}
+
+export const copyLocator = (
+  selectedLocators: Pick<Locator, "locator" | "type" | "name">[],
+  option?: string
+) => (): void => {
+  let xPath: string;
+  switch (option) {
+    case LocatorOption.Xpath:
+      xPath = selectedLocators.map(({ locator }) => locator.fullXpath).join("\n");
+      break;
+    case LocatorOption.XpathAndJDI:
+      xPath = selectedLocators.map(({ locator }) => getLocatorWithJDIAnnotation(locator)).join("\n");
+      break;
+    default:
+      xPath = selectedLocators.map(({ locator, type, name }) => getLocatorString(locator, type, name)).join("\n");
+  }
+
+  copyToClipboard(xPath);
 };
