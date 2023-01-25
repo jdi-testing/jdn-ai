@@ -14,12 +14,14 @@ import {
   restore,
   retry,
   upPriority,
+  copyLocatorOption,
 } from "../../../common/components/menu/menuOptions";
 import { rerunGeneration } from "../../../common/thunks/rerunGeneration";
 import { stopGeneration } from "../../../common/thunks/stopGeneration";
 import { isProgressStatus, locatorGenerationController } from "../locatorGenerationController";
 import { Locator, LocatorCalculationPriority, LocatorTaskStatus } from "../locatorSlice.types";
 import { setCalculationPriority, toggleDeleted } from "../locatorsSlice";
+import { copyLocator, LocatorOption } from "../locator/utils";
 
 interface Props {
   element: Locator;
@@ -29,7 +31,7 @@ interface Props {
 export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen }) => {
   const dispatch = useDispatch();
 
-  const { element_id, locator, deleted, priority, jdnHash } = element;
+  const { element_id, locator, deleted, priority, jdnHash, type, name } = element;
 
   const isLocatorInProgress = isProgressStatus(locator.taskStatus);
 
@@ -67,12 +69,22 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen }) =>
       );
 
     let items: MenuItem[] = [];
+    const selectedLocators: Pick<Locator, "locator" | "type" | "name">[] = [{ locator, type, name }];
 
     if (deleted) {
       items = [restore(() => dispatch(toggleDeleted(element_id)))];
     } else {
       items = [
         edit(handleEditClick),
+        ...[
+          copyLocatorOption([
+            copyLocator(selectedLocators, LocatorOption.Xpath),
+            () => "", // for xPath+Selenium
+            copyLocator(selectedLocators, LocatorOption.XpathAndJDI),
+            () => "", // for CSS selector
+            copyLocator(selectedLocators),
+          ]),
+        ],
         ...(isLocatorInProgress ? [pause(() => dispatch(stopGeneration(element_id)))] : []),
         ...(isLocatorInProgress && priority !== LocatorCalculationPriority.Increased
           ? [upPriority(handleUpPriority)]
