@@ -23,7 +23,7 @@ export interface ReportFormProps {
 
 export const ReportProblem = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [serverPingInProcess, setServerPingInProcess] = useState(false);
+  const [serverPingInProcess] = useState(false); // temporally lint fix
   const [form] = Form.useForm<ReportFormProps>();
   const pageData = useSelector(selectCurrentPageObject)?.pageData;
   const currentPage = useSelector(selectCurrentPage).page;
@@ -53,7 +53,7 @@ export const ReportProblem = () => {
     if (files) files.scrollTop = files.scrollHeight;
   }, [fileList]);
 
-  const showExceprionConfirm = () =>
+  const showExceptionConfirm = () =>
     error({
       title: "Report is not available",
       content: (
@@ -88,17 +88,18 @@ export const ReportProblem = () => {
   };
 
   const showModal = () => {
-    setServerPingInProcess(true);
-    request
-      .get(HttpEndpoint.PING_SMTP)
-      .then((response) => {
-        if (response === 1) {
-          setServerPingInProcess(false);
-          setIsModalOpen(true);
-        } else showExceprionConfirm();
-      })
-      .catch(() => showExceprionConfirm())
-      .finally(() => setServerPingInProcess(false));
+    showExceptionConfirm(); // temporally solution until fixing mail server
+    // setServerPingInProcess(true);
+    // request
+    //   .get(HttpEndpoint.PING_SMTP)
+    //   .then((response) => {
+    //     if (response === 1) {
+    //       setServerPingInProcess(false);
+    //       setIsModalOpen(true);
+    //     } else showExceptionConfirm();
+    //   })
+    //   .catch(() => showExceptionConfirm())
+    //   .finally(() => setServerPingInProcess(false));
   };
 
   const sendReport = (values: ReportFormProps) => {
@@ -149,7 +150,7 @@ export const ReportProblem = () => {
     return e?.fileList;
   };
 
-  const getTextforUploadButtonTooltip = () => {
+  const getTextForUploadButtonTooltip = () => {
     switch (true) {
       case fileList.length >= MAX_COUNT_FILES && filesSize >= MAX_FILES_SIZE_MB:
         return "Please check number of files and their weight";
@@ -257,7 +258,7 @@ export const ReportProblem = () => {
             <Upload name="attachments" onChange={handleUploadChange} multiple>
               <Tooltip
                 placement="right"
-                title={getTextforUploadButtonTooltip()}
+                title={getTextForUploadButtonTooltip()}
                 trigger={areFilesInvalid ? ["hover", "focus"] : ""}
               >
                 <Button
