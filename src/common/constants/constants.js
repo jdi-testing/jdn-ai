@@ -5,7 +5,7 @@ export const identificationStatus = {
   loading: "Loading...",
   success: "Successful!",
   removed: "Removed",
-  error: "An error occured",
+  error: "An error occurred",
 };
 
 export const locatorsGenerationStatus = {
