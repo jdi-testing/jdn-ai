@@ -23,7 +23,7 @@ export interface ReportFormProps {
 
 export const ReportProblem = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [serverPingInProcess, setServerPingInProcess] = useState(false);
+  const [serverPingInProcess] = useState(false); // temporally lint fix
   const [form] = Form.useForm<ReportFormProps>();
   const pageData = useSelector(selectCurrentPageObject)?.pageData;
   const currentPage = useSelector(selectCurrentPage).page;
