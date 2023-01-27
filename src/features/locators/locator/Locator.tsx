@@ -19,11 +19,12 @@ import { RootState } from "../../../app/store";
 import { ElementLibrary } from "../../pageObjects/utils/generationClassesMap";
 import { Locator as LocatorInterface } from "../locatorSlice.types";
 import { SearchState } from "../locatorsTree/LocatorsTree";
-import { LocatorEditDialog } from "./LocatoEditDialog";
+import { LocatorEditDialog } from "./LocatorEditDialog";
 import { LocatorCopyButton } from "./LocatorCopyButton";
 import { LocatorIcon } from "./LocatorIcon";
 import { LocatorMenu } from "./LocatorMenu";
 import { getLocator, setIndents } from "./utils";
+import { setScriptMessage } from "../../../app/mainSlice";
 
 interface Props {
   element: LocatorInterface;
@@ -61,9 +62,10 @@ export const Locator: React.FC<Props> = ({ element, currentPage, library, search
     const param = scriptMessage?.param;
 
     switch (message) {
-      case "OPEN_EDIT_LOCATOR_REQUEST":
+      case "OPEN_EDIT_LOCATOR":
         if (param?.value.element_id !== element_id) return;
         setIsEditModalOpen(true);
+        dispatch(setScriptMessage({}));
         break;
     }
   }, [scriptMessage]);

@@ -359,7 +359,7 @@ export const runContextMenu = () => {
               events: {
                 click: () =>
                   sendMessage({
-                    message: "OPEN_EDIT_LOCATOR_REQUEST",
+                    message: "OPEN_EDIT_LOCATOR",
                     param: { value: predictedElements[0], types },
                   }),
               },

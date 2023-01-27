@@ -60,7 +60,7 @@ export const createListeners = (
     },
     REMOVE_ELEMENT: (payload) => dispatch(toggleDeletedGroup(payload)),
     RESTORE_ELEMENT: (payload) => dispatch(toggleDeletedGroup(payload)),
-    OPEN_EDIT_LOCATOR_REQUEST: () => {
+    OPEN_EDIT_LOCATOR: () => {
       // handled in Locator
     },
     RERUN_GENERATION: (payload) => {
