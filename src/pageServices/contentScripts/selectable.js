@@ -107,9 +107,9 @@ export const selectable = () => {
   function Selectables(opts) {
     "use strict";
     const defaults = {
-      zone: "#wrapper", // ID of the element whith selectables.
+      zone: "#wrapper", // ID of the element with selectables.
       elements: "a", //  items to be selectable .list-group, #id > .class,'htmlelement' - valid querySelectorAll
-      selectedClass: "active", // class name to apply to seleted items
+      selectedClass: "active", // class name to apply to selected items
       key: false, // 'altKey,ctrlKey,metaKey,false  // activate using optional key
       moreUsing: "shiftKey", // altKey,ctrlKey,metaKey   // add more to selection
       enabled: true, // false to .enable() at later time
@@ -143,7 +143,7 @@ export const selectable = () => {
     const self = this;
     this.enable = function () {
       if (this.on) {
-        throw new Error(this.constructor.name + " :: is alredy enabled");
+        throw new Error(this.constructor.name + " :: is already enabled");
       }
       this.zone = document.querySelector(this.options.zone);
       if (!this.zone) {
@@ -262,7 +262,7 @@ export const selectable = () => {
       setTimeout(function () {
         if (a && a.parentNode) a.parentNode.removeChild(a);
       }, 100);
-      
+
       if (selected.size && self.options.onSelect) self.options.onSelect(Array.from(selected));
       if (deselected.size && self.options.onDeselect) self.options.onDeselect(Array.from(deselected));
 
