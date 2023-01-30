@@ -9,11 +9,9 @@ export const getLocator = ({ fullXpath, robulaXpath, customXpath }: LocatorValue
   return customXpath || robulaXpath || fullXpath || "";
 };
 
-const getLocatorWithJDIAnnotation = ({ robulaXpath }: LocatorValue): string =>
-  `@UI("${robulaXpath}")`;
+const getLocatorWithJDIAnnotation = ({ robulaXpath }: LocatorValue): string => `@UI("${robulaXpath}")`;
 
-const getLocatorWithSelenium = ({ robulaXpath }: LocatorValue): string =>
-  `@FindBy(xpath = "${robulaXpath}")`;
+const getLocatorWithSelenium = ({ robulaXpath }: LocatorValue): string => `@FindBy(xpath = "${robulaXpath}")`;
 
 export const isValidJavaVariable = (value: string) => /^[a-zA-Z_$]([a-zA-Z0-9_])*$/.test(value);
 
