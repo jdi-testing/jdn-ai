@@ -12,6 +12,9 @@ export const getLocator = ({ fullXpath, robulaXpath, customXpath }: LocatorValue
 export const getLocatorWithJDIAnnotation = ({ fullXpath, robulaXpath }: LocatorValue): string =>
   `${fullXpath} @UI("${robulaXpath}")`;
 
+const getLocatorWithSelenium = ({ robulaXpath }: LocatorValue): string =>
+  `@FindBy(xpath = "${robulaXpath}")`;
+
 export const isValidJavaVariable = (value: string) => /^[a-zA-Z_$]([a-zA-Z0-9_])*$/.test(value);
 
 export const evaluateXpath = (xPath: string) => {
@@ -68,7 +71,7 @@ export const setIndents = (ref: React.RefObject<HTMLDivElement>, depth: number) 
 
 export enum LocatorOption {
   Xpath = "xPath",
-  XpathAndSelenium = "xPath + Selenium",
+  XpathAndSelenium = "xPath + FindBy",
   XpathAndJDI = "xPath + JDI annotation",
   CSSSelector = "CSS selector",
   FullCode = "Full code",
@@ -82,6 +85,9 @@ export const copyLocator = (
   switch (option) {
     case LocatorOption.Xpath:
       xPath = selectedLocators.map(({ locator }) => locator.fullXpath).join("\n");
+      break;
+    case LocatorOption.XpathAndSelenium:
+      xPath = selectedLocators.map(({ locator }) => getLocatorWithSelenium(locator)).join("\n");
       break;
     case LocatorOption.XpathAndJDI:
       xPath = selectedLocators.map(({ locator }) => getLocatorWithJDIAnnotation(locator)).join("\n");
