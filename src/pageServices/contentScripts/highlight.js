@@ -58,7 +58,7 @@ export const highlightOnPage = () => {
 
   const isFilteredOut = (type) => {
     return filter && Object.hasOwn(filter, type) && !filter[type];
-  }
+  };
 
   const getClassName = (element) => {
     return `jdn-highlight ${element.generate ? "jdn-primary" : "jdn-secondary"} ${element.active ? "jdn-active" : ""}`;
@@ -319,7 +319,7 @@ export const highlightOnPage = () => {
 
   const applyFilter = (classFilterValue) => {
     const { jdiClass, value } = classFilterValue;
-    filter = {...filter, [jdiClass]: value};
+    filter = { ...filter, [jdiClass]: value };
     let filterElements = [];
 
     if (!jdiClass) {
