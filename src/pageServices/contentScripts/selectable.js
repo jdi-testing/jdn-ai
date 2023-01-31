@@ -211,8 +211,10 @@ export const selectable = () => {
       );
     };
     const isPlainClick = function (element) {
-      const { width, height } = element.getBoundingClientRect();
-      return width === 2 && height === 2;
+      return (
+        (!element.style.width || element.style.width === "0px") &&
+        (!element.style.height || element.style.height === "0px")
+      );
     };
     this.select = function (e) {
       const selected = new Set;
