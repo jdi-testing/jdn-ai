@@ -148,7 +148,7 @@ export const LocatorListHeader = ({ render }) => {
         ? [
             copyLocatorOption([
               copyLocator(actualSelected, LocatorOption.Xpath),
-              () => "", // for xPath+Selenium
+              copyLocator(actualSelected, LocatorOption.XpathAndSelenium),
               copyLocator(actualSelected, LocatorOption.XpathAndJDI),
               () => "", // for CSS selector
               copyLocator(actualSelected),
