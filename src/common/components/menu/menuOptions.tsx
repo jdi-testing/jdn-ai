@@ -153,7 +153,6 @@ export const copyLocatorOption = (onClick: Array<() => void>) => ({
       key: "6-1",
       onClick: onClick[1],
       label: LocatorOption.XpathAndSelenium,
-      disabled: true,
     },
     {
       key: "6-2",
