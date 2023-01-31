@@ -9,9 +9,9 @@ export const getLocator = ({ fullXpath, robulaXpath, customXpath }: LocatorValue
   return customXpath || robulaXpath || fullXpath || "";
 };
 
-const getLocatorWithJDIAnnotation = ({ robulaXpath }: LocatorValue): string => `@UI("${robulaXpath}")`;
+const getLocatorWithJDIAnnotation = (locator: LocatorValue): string => `@UI("${getLocator(locator)}")`;
 
-const getLocatorWithSelenium = ({ robulaXpath }: LocatorValue): string => `@FindBy(xpath = "${robulaXpath}")`;
+const getLocatorWithSelenium = (locator: LocatorValue): string => `@FindBy(xpath = "${getLocator(locator)}")`;
 
 export const isValidJavaVariable = (value: string) => /^[a-zA-Z_$]([a-zA-Z0-9_])*$/.test(value);
 
@@ -82,7 +82,7 @@ export const copyLocator = (
   let xPath: string;
   switch (option) {
     case LocatorOption.Xpath:
-      xPath = selectedLocators.map(({ locator }) => `"${locator.robulaXpath}"`).join("\n");
+      xPath = selectedLocators.map(({ locator }) => `"${getLocator(locator)}"`).join("\n");
       break;
     case LocatorOption.XpathAndSelenium:
       xPath = selectedLocators.map(({ locator }) => getLocatorWithSelenium(locator)).join("\n");
