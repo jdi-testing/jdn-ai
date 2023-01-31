@@ -79,7 +79,7 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen }) =>
         ...[
           copyLocatorOption([
             copyLocator(selectedLocators, LocatorOption.Xpath),
-            () => "", // for xPath+Selenium
+            copyLocator(selectedLocators, LocatorOption.XpathAndSelenium),
             copyLocator(selectedLocators, LocatorOption.XpathAndJDI),
             () => "", // for CSS selector
             copyLocator(selectedLocators),
