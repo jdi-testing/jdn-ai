@@ -11,6 +11,7 @@ export const highlightOnPage = () => {
   let scrollableContainers = [];
   const classFilter = {};
   let tooltip;
+  let filter;
 
   const clearState = () => {
     nodes = null;
@@ -54,6 +55,10 @@ export const highlightOnPage = () => {
       elementRight < containerLeft
     );
   };
+
+  const isFilteredOut = (type) => {
+    return filter && Object.hasOwn(filter, type) && !filter[type];
+  }
 
   const getClassName = (element) => {
     return `jdn-highlight ${element.generate ? "jdn-primary" : "jdn-secondary"} ${element.active ? "jdn-active" : ""}`;
@@ -227,8 +232,8 @@ export const highlightOnPage = () => {
       if (!predictedElements) predictedElements = param.elements;
     }
     let query = "";
-    predictedElements.forEach(({ deleted, jdnHash }) => {
-      if (deleted) return;
+    predictedElements.forEach(({ deleted, type, jdnHash }) => {
+      if (deleted || isFilteredOut(type)) return;
       query += `${!!query.length ? ", " : ""}[jdn-hash='${jdnHash}']`;
     });
     nodes = document.querySelectorAll(query);
@@ -312,7 +317,9 @@ export const highlightOnPage = () => {
     });
   };
 
-  const applyFilter = ({ jdiClass, value }) => {
+  const applyFilter = (classFilterValue) => {
+    const { jdiClass, value } = classFilterValue;
+    filter = {...filter, [jdiClass]: value};
     let filterElements = [];
 
     if (!jdiClass) {
