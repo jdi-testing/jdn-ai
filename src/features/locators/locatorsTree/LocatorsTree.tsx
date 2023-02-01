@@ -17,7 +17,7 @@ import { defaultLibrary } from "../../pageObjects/utils/generationClassesMap";
 import { Locator } from "../locator";
 import { EXPAND_STATE } from "../locatorsPage/LocatorListHeader";
 import { LocatorsProgress } from "./LocatorsProgress";
-import { Notifications } from "./notifications/Notifications";
+import { Notifications } from "../../notifications/Notifications";
 import { useSize } from "./useSize";
 import { convertListToTree, LocatorTree, setNewParents } from "./utils";
 

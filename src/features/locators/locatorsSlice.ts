@@ -17,7 +17,7 @@ import {
   LocatorTaskStatus,
   Validity,
 } from "./locatorSlice.types";
-import { cancelStopGenerationReducer } from "./locatorsTree/notifications/cancelStopGeneration";
+import { cancelStopGenerationReducer } from "../notifications/cancelStopGeneration";
 
 const initialState: LocatorsState = {
   generationStatus: LocatorsGenerationStatus.noStatus,

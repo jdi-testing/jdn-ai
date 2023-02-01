@@ -11,7 +11,7 @@ import { CaretDown } from "phosphor-react";
 import PageSvg from "./page.svg";
 import { Footnote } from "../../../common/components/footnote/Footnote";
 import { Locator } from "../../locators/locator";
-import { Notifications } from "../../locators/locatorsTree/notifications/Notifications";
+import { Notifications } from "../../notifications/Notifications";
 import { selectConfirmedLocators, selectPageObjects } from "../pageObjectSelectors";
 import { PageObjCopyButton } from "./PageObjCopyButton";
 import { PageObjectPlaceholder } from "./PageObjectPlaceholder";
