@@ -152,7 +152,7 @@ export const LocatorListHeader = ({ render }) => {
               copyLocator(actualSelected, LocatorOption.XpathAndJDI),
               () => "", // for CSS selector
               copyLocator(actualSelected),
-            ])
+            ]),
           ]
         : []),
       ...(size(activeGenerate) ? [removeFromPO(() => dispatch(toggleElementGroupGeneration(activeGenerate)))] : []),
