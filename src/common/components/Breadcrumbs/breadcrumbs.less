@@ -1,9 +1,11 @@
+@import "../../styles/variables.less";
+
 .jdn {
 	&__breadcrumb {
-		color: rgba(0, 0, 0, 0.45);
+		overflow-wrap: anywhere;
 
-		span:last-of-type {
-			color: rgba(0, 0, 0, 0.85);
+		span:first-of-type {
+			color: @breadcrumb-first-child;
 		}
 	}
 }

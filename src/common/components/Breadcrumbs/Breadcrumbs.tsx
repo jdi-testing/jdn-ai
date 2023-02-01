@@ -12,7 +12,7 @@ export const Breadcrumbs = () => {
   return currentPage.page === PageType.LocatorsList ? (
     <div className="jdn__breadcrumb">
       <Tooltip title={pageObject?.url} placement="bottomLeft" overlayStyle={{ maxWidth: "96%" }}>
-        {`${pageObject?.name} / `}
+        {`${pageObject?.name} > `}
       </Tooltip>
       <span>{currentPage.alreadyGenerated ? "Editing" : "Creating"}</span>
     </div>
