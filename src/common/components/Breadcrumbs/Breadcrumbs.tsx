@@ -10,7 +10,7 @@ export const Breadcrumbs = (): ReactElement | null => {
   const pageObject = useSelector(selectCurrentPageObject);
 
   return currentPage.page === PageType.LocatorsList ? (
-    <div className="jdn__breadcrumb">
+    <div className="jdn__breadcrumbs">
       <Tooltip title={pageObject?.url} placement="bottomLeft" overlayStyle={{ maxWidth: "96%" }}>
         <Typography.Text type="secondary">{`${pageObject?.name} > `}</Typography.Text>
       </Tooltip>
