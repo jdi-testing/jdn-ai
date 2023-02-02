@@ -1,9 +1,7 @@
 import {
   ElementLibrary,
-  getJdiClassName,
-  getJDILabel,
-  getTypesMenuOptions,
 } from "../features/locators/types/generationClassesMap";
+import { getJdiClassName, getJDILabel, getTypesMenuOptions } from "../features/locators/utils/locatorTypesUtils";
 
 const optionsMUI = [
   "Accordion",
