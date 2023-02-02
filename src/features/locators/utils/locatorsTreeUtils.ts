@@ -2,7 +2,7 @@ import { cloneDeep, map as mapFunction, size } from "lodash";
 import { convertToListWithChildren } from "../../../common/utils/helpers";
 import { getLocator } from "../../locators/utils/utils";
 import { Locator } from "../../locators/types/locator.types";
-import { SearchState } from "../LocatorsTree";
+import { SearchState } from "../components/LocatorsTree";
 
 export const includesSeacrSubstr = (strings: Array<string>, searchString: string) => {
   const includesSubstring = strings.filter((string) => {

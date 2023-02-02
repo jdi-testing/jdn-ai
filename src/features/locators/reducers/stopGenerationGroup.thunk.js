@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { locatorTaskStatus } from "../../../common/constants/constants";
-import { locatorsAdapter } from "../../../features/locators/locator.selectors";
+import { locatorsAdapter } from "../locators.selectors";
 import { stopGenerationHandler } from "../../../features/locators/utils/locatorGenerationController";
 
 export const stopGenerationGroup = createAsyncThunk("locators/stopGenerationGroup", async (elements) => {

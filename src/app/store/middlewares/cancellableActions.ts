@@ -1,6 +1,6 @@
 import { Middleware } from "@reduxjs/toolkit";
 import { compact } from "lodash";
-import { selectLocatorById } from "../../../features/locators/locator.selectors";
+import { selectLocatorById } from "../../../features/locators/locators.selectors";
 import { Locator } from "../../../features/locators/types/locator.types";
 import { pushNotification } from "../../main.slice";
 import { RootState } from "../store";

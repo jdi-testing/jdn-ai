@@ -4,7 +4,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { pageType } from "../../common/constants/constants";
-import { areChildrenChecked, isLocatorIndeterminate } from "./locator.selectors";
+import { areChildrenChecked, isLocatorIndeterminate } from "./locators.selectors";
+import { isMacPlatform } from "../../common/utils/helpers";
 import {
   elementSetActive,
   elementUnsetActive,
@@ -18,7 +19,7 @@ import { PageType } from "../../app/types/mainSlice.types";
 import { RootState } from "../../app/store/store";
 import { ElementLibrary } from "./types/generationClassesMap";
 import { Locator as LocatorInterface } from "./types/locator.types";
-import { SearchState } from "./LocatorsTree";
+import { SearchState } from "./components/LocatorsTree";
 import { LocatorEditDialog } from "./components/LocatorEditDialog";
 import { LocatorCopyButton } from "./components/LocatorCopyButton";
 import { LocatorIcon } from "./components/LocatorIcon";
@@ -85,7 +86,8 @@ export const Locator: React.FC<Props> = ({ element, currentPage, library, search
   };
 
   const handleLocatorClick: React.MouseEventHandler<HTMLDivElement> = (event) => {
-    if (event.ctrlKey) {
+    const keyPressed = isMacPlatform(window) ? event.metaKey : event.ctrlKey;
+    if (keyPressed) {
       if (active) dispatch(elementUnsetActive(element_id));
       else dispatch(elementSetActive(element_id));
     } else dispatch(setActiveSingle(element));

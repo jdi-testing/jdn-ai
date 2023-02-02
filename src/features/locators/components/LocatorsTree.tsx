@@ -4,22 +4,22 @@ import React, { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { CaretDown } from "phosphor-react";
-import { selectCurrentPage } from "../../app/main.selectors";
-import { RootState } from "../../app/store/store";
-import { pageType } from "../../common/constants/constants";
-import { ElementId, Locator as LocatorType } from "../locators/types/locator.types";
+import { selectCurrentPage } from "../../../app/main.selectors";
+import { RootState } from "../../../app/store/store";
+import { pageType } from "../../../common/constants/constants";
+import { ElementId, Locator as LocatorType } from "../types/locator.types";
 import {
   selectCurrentPageObject,
   selectFilteredLocators,
   selectLocatorsByPageObject,
-} from "../pageObjects/pageObject.selectors";
-import { defaultLibrary } from "./types/generationClassesMap";
-import { EXPAND_STATE } from "./components/LocatorListHeader";
-import { LocatorsProgress } from "./components/LocatorsProgress";
-import { useSize } from "./utils/useSize";
-import { convertListToTree, LocatorTree, setNewParents } from "./utils/locatorsTreeUtils";
-import { Locator } from "../locators/Locator";
-import { Notifications } from "../../common/components/notification/Notifications";
+} from "../../pageObjects/pageObject.selectors";
+import { defaultLibrary } from "../types/generationClassesMap";
+import { EXPAND_STATE } from "./LocatorListHeader";
+import { LocatorsProgress } from "./LocatorsProgress";
+import { useSize } from "../utils/useSize";
+import { convertListToTree, LocatorTree, setNewParents } from "../utils/locatorsTreeUtils";
+import { Locator } from "../Locator";
+import { Notifications } from "../../../common/components/notification/Notifications";
 
 export enum SearchState {
   None = "none",

@@ -6,7 +6,7 @@ import { isEqual, size } from "lodash";
 
 import { selectCurrentPage } from "../../app/main.selectors";
 import { changePageBack, setScriptMessage } from "../../app/main.slice";
-import { Breadcrumbs } from "../../common/components/Breadcrumbs";
+import { Breadcrumbs } from "../../common/components/breadcrumbs/Breadcrumbs";
 import { customConfirm } from "../../common/components/CustomConfirm";
 import { pageType } from "../../common/constants/constants";
 import { removeOverlay, showOverlay } from "../../pageServices/pageDataHandlers";
@@ -20,7 +20,7 @@ import {
 import { clearLocators } from "../pageObjects/pageObject.slice";
 import { locatorGenerationController } from "../locators/utils/locatorGenerationController";
 import { removeLocators, restoreLocators } from "./locators.slice";
-import { LocatorsTree } from "./LocatorsTree";
+import { LocatorsTree } from "./components/LocatorsTree";
 import { LocatorListHeader } from "./components/LocatorListHeader";
 import { Filter } from "../filter/Filter";
 
@@ -45,7 +45,7 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
   const handleConfirm = () => {
     if (size(inProgressGenerate)) {
       confirm({
-        title: "Сonfirm this locators list",
+        title: "Confirm this locators list",
         content: `Not all of the selected locators have already been generated, we recommend waiting until the generation is complete.`,
         okText: "Confirm selection",
         cancelText: "Cancel",
@@ -56,7 +56,7 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
       });
     } else if (size(deletedGenerate)) {
       confirm({
-        title: "Сonfirm the selection",
+        title: "Confirm the selection",
         content: `Not all selected locators will be generated.
         You can cancel the generation and restore the required locators first.`,
         okText: "Confirm",
@@ -138,7 +138,7 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
   return (
     <React.Fragment>
       <div className="jdn__locatorsList">
-        <Row justify="space-between">
+        <Row justify="space-between" wrap={false}>
           <Breadcrumbs />
           <Filter />
         </Row>
