@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { pageType } from "../../../common/constants/constants";
+import { isMacPlatform } from "../../../common/utils/helpers";
 import { areChildrenChecked, isLocatorIndeterminate } from "../locatorSelectors";
 import {
   elementSetActive,
@@ -85,7 +86,8 @@ export const Locator: React.FC<Props> = ({ element, currentPage, library, search
   };
 
   const handleLocatorClick: React.MouseEventHandler<HTMLDivElement> = (event) => {
-    if (event.ctrlKey) {
+    const keyPressed = isMacPlatform(window) ? event.metaKey : event.ctrlKey;
+    if (keyPressed) {
       if (active) dispatch(elementUnsetActive(element_id));
       else dispatch(elementSetActive(element_id));
     } else dispatch(setActiveSingle(element));
