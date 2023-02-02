@@ -1,10 +1,10 @@
 import { sendMessage } from "../../pageServices/connector";
-import { addLocators, changeLocatorAttributes } from "../../features/locators/locatorsSlice";
-import { selectLocatorById } from "../../features/locators/locatorSelectors";
-import { store } from "../../app/store";
+import { addLocators, changeLocatorAttributes } from "../../features/locators/locators.slice";
+import { selectLocatorById } from "../../features/locators/locators.selectors";
+import { store } from "../../app/store/store";
 import { locator1 } from "../__mocks__/locator.mock";
 import { locatorTaskStatus } from "../../common/constants/constants";
-import { ElementLibrary } from "../../features/pageObjects/utils/generationClassesMap";
+import { ElementLibrary } from "../../features/locators/types/generationClassesMap";
 
 /* global jest*/
 

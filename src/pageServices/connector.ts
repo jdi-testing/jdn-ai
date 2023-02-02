@@ -1,8 +1,8 @@
 import { isUndefined } from "lodash";
 import { SCRIPT_ERROR } from "../common/constants/constants";
-import { Locator, PredictedEntity } from "../features/locators/locatorSlice.types";
-import { ElementClass } from "../features/pageObjects/utils/generationClassesMap";
-import { SelectorsMap } from "../features/rules/rules.types";
+import { Locator, PredictedEntity } from "../features/locators/types/locator.types";
+import { ElementClass } from "../features/locators/types/generationClassesMap";
+import { SelectorsMap } from "../services/rules/rules.types";
 import { assignDataLabels } from "./contentScripts/assignDataLabels";
 import { runContextMenu } from "./contentScripts/contextmenu";
 import { highlightOnPage } from "./contentScripts/highlight";
