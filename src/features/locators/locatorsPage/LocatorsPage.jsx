@@ -6,7 +6,7 @@ import { isEqual, size } from "lodash";
 
 import { selectCurrentPage } from "../../../app/mainSelectors";
 import { changePageBack, setScriptMessage } from "../../../app/mainSlice";
-import { Breadcrumbs } from "../../../common/components/Breadcrumbs/Breadcrumbs";
+import { Breadcrumbs } from "../../../common/components/breadcrumbs/Breadcrumbs";
 import { customConfirm } from "../../../common/components/CustomConfirm";
 import { pageType } from "../../../common/constants/constants";
 import { removeOverlay, showOverlay } from "../../../pageServices/pageDataHandlers";
