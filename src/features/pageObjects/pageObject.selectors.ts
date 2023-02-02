@@ -4,7 +4,7 @@ import { RootState } from "../../app/store/store";
 import { locatorTaskStatus } from "../../common/constants/constants";
 import { selectFilterById } from "../filter/filter.selectors";
 import { FilterKey } from "../filter/types/filter.types";
-import { selectLocators } from "../locators/locator.selectors";
+import { selectLocators } from "../locators/locators.selectors";
 import { Locator } from "../locators/types/locator.types";
 import { isProgressStatus } from "../locators/utils/locatorGenerationController";
 import { PageObject, PageObjectId } from "./types/pageObjectSlice.types";

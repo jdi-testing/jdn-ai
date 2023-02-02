@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { pageType } from "../../common/constants/constants";
-import { areChildrenChecked, isLocatorIndeterminate } from "./locator.selectors";
+import { areChildrenChecked, isLocatorIndeterminate } from "./locators.selectors";
 import { isMacPlatform } from "../../common/utils/helpers";
 import {
   elementSetActive,

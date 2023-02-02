@@ -3,7 +3,7 @@ import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "../../../app/store/store";
 import { convertToListWithChildren } from "../../../common/utils/helpers";
 import { requestGenerationData, setParents } from "../../../pageServices/pageDataHandlers";
-import { selectLocators } from "../locator.selectors";
+import { selectLocators } from "../locators.selectors";
 import {
   Locator,
   LocatorsGenerationStatus,

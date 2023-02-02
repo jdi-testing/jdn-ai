@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { size } from "lodash";
 import { cancelStopGenerationReducer } from "../../common/components/notification/reducers/cancelStopGeneration.thunk";
 import { ElementClass, ElementLibrary } from "./types/generationClassesMap";
-import { locatorsAdapter, simpleSelectLocatorById, simpleSelectLocatorsByPageObject } from "./locator.selectors";
+import { locatorsAdapter, simpleSelectLocatorById, simpleSelectLocatorsByPageObject } from "./locators.selectors";
 import { generateLocatorsReducer } from "./reducers/generateLocators.thunk";
 import { identifyElementsReducer } from "./reducers/identifyElements.thunk";
 import { rerunGenerationReducer } from "./reducers/rerunGeneration.thunk";

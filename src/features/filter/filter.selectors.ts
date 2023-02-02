@@ -6,7 +6,7 @@ import { defaultLibrary } from "../locators/types/generationClassesMap";
 import { Filter, FilterKey } from "./types/filter.types";
 import { ElementClass } from "../locators/types/generationClassesMap";
 import { jdiClassFilterInit } from "./utils/filterSet";
-import { selectLocatorById } from "../locators/locator.selectors";
+import { selectLocatorById } from "../locators/locators.selectors";
 
 export const filterAdapter = createEntityAdapter<Filter>({
   selectId: (filter) => filter.pageObjectId,
