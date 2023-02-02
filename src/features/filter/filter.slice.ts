@@ -54,6 +54,5 @@ const filterSlice = createSlice({
   },
 });
 
-console.log(filterSlice.actions);
 export default filterSlice.reducer;
 export const { removeAll, removeFilters, toggleClassFilter, toggleClassFilterAll } = filterSlice.actions;
