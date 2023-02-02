@@ -38,3 +38,5 @@ export const convertToListWithChildren = (_list: Array<Locator>) => {
 };
 
 export const isErrorValidationType = (type: string) => VALIDATION_ERROR_TYPE.hasOwnProperty(type);
+
+export const isMacPlatform = (param: Window) => param.navigator?.userAgent.indexOf("Mac") != -1;
