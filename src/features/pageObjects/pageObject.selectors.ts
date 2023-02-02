@@ -9,7 +9,6 @@ import { Locator } from "../locators/types/locator.types";
 import { isProgressStatus } from "../locators/utils/locatorGenerationController";
 import { PageObject, PageObjectId } from "./types/pageObjectSlice.types";
 
-
 export const pageObjAdapter = createEntityAdapter<PageObject>({
   selectId: (pageObj) => pageObj.id,
 });

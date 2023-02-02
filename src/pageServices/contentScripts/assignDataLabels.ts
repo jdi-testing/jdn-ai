@@ -1,6 +1,5 @@
 import { Locator } from "../../features/locators/types/locator.types";
 
-
 export const assignDataLabels = () => {
   const assignDataLabel = (hashes: Array<Locator>) => {
     hashes.forEach(({ jdnHash, predicted_label }) => {

@@ -1,5 +1,11 @@
 import { compact, uniq } from "lodash";
-import { ElementLabel, ElementLibrary, ElementClass, libraryClasses, defaultClass } from "../types/generationClassesMap";
+import {
+  ElementLabel,
+  ElementLibrary,
+  ElementClass,
+  libraryClasses,
+  defaultClass,
+} from "../types/generationClassesMap";
 
 export const getJDILabel = (label: keyof ElementLabel, library: ElementLibrary): ElementClass =>
   libraryClasses[library][label] || defaultClass;

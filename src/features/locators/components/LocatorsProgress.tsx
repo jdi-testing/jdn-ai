@@ -5,7 +5,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../app/store/store";
 import { Footnote } from "../../../common/components/footnote/Footnote";
 import { locatorsGenerationStatus } from "../../../common/constants/constants";
-import { selectLocatorsByPageObject, selectCalculatedByPageObj, selectInProgressByPageObj, selectDeletedByPageObj, selectFailedByPageObject } from "../../pageObjects/pageObject.selectors";
+import {
+  selectLocatorsByPageObject,
+  selectCalculatedByPageObj,
+  selectInProgressByPageObj,
+  selectDeletedByPageObj,
+  selectFailedByPageObject,
+} from "../../pageObjects/pageObject.selectors";
 import { rerunGeneration } from "../reducers/rerunGeneration.thunk";
 
 let timer: NodeJS.Timeout;

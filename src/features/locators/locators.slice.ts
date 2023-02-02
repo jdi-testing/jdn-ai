@@ -8,7 +8,16 @@ import { identifyElementsReducer } from "./reducers/identifyElements.thunk";
 import { rerunGenerationReducer } from "./reducers/rerunGeneration.thunk";
 import { stopGenerationReducer } from "./reducers/stopGeneration.thunk";
 import { stopGenerationGroupReducer } from "./reducers/stopGenerationGroup.thunk";
-import { LocatorsState, LocatorsGenerationStatus, IdentificationStatus, ElementId, Validity, LocatorTaskStatus, Locator, LocatorCalculationPriority } from "./types/locator.types";
+import {
+  LocatorsState,
+  LocatorsGenerationStatus,
+  IdentificationStatus,
+  ElementId,
+  Validity,
+  LocatorTaskStatus,
+  Locator,
+  LocatorCalculationPriority,
+} from "./types/locator.types";
 
 const initialState: LocatorsState = {
   generationStatus: LocatorsGenerationStatus.noStatus,

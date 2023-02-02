@@ -1,4 +1,3 @@
-import { uniq, compact } from "lodash";
 import { HttpEndpoint } from "../../../services/backend";
 
 export const defaultClass = "UIElement";

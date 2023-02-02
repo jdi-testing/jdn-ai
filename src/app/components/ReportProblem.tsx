@@ -9,7 +9,14 @@ import { selectCurrentPage } from "../main.selectors";
 import { PageType } from "../types/mainSlice.types";
 import { DialogWithForm } from "../../common/components/DialogWithForm";
 import { HttpEndpoint, request } from "../../services/backend";
-import { isAllowedExtension, isImage, toBase64, getFilesSize, MAX_COUNT_FILES, MAX_FILES_SIZE_MB } from "../utils/reportProblem";
+import {
+  isAllowedExtension,
+  isImage,
+  toBase64,
+  getFilesSize,
+  MAX_COUNT_FILES,
+  MAX_FILES_SIZE_MB,
+} from "../utils/reportProblem";
 import { ValidationErrorType } from "../../features/locators/types/locator.types";
 import { selectCurrentPageObject } from "../../features/pageObjects/pageObject.selectors";
 
