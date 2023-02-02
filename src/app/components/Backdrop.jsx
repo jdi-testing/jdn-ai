@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
-import { identificationStatus } from "../../constants/constants";
+import { identificationStatus } from "../../common/constants/constants";
 import "./Backdrop.less";
 export const Backdrop = () => {
   const showBackdrop = useSelector((state) => state.main.showBackdrop);

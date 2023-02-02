@@ -6,7 +6,7 @@ import "antd/dist/antd.less";
 import "antd/lib/style/themes/default.less";
 
 import Layout, { Content, Header } from "antd/lib/layout/layout";
-import { Backdrop } from "../common/components/backdrop/backdrop";
+import { Backdrop } from "./components/Backdrop";
 import { identificationStatus, pageType } from "../common/constants/constants";
 import { StatusBar } from "./components/StatusBar";
 import { SeveralTabsWarning } from "./components/SeveralTabsWarning";
