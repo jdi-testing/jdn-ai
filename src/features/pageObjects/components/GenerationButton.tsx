@@ -5,11 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { RootState } from "../../../app/store/store";
 import { IdentificationStatus } from "../../locators/types/locator.types";
-import { selectCurrentPageObject } from "../../pageObjects/pageObject.selectors";
-import { changeElementLibrary } from "../../pageObjects/pageObject.slice";
-import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
-import { ElementLibrary, libraryNames } from "../types/generationClassesMap";
-import { identifyElements } from "../reducers/identifyElements.thunk";
+import { selectCurrentPageObject } from "../pageObject.selectors";
+import { changeElementLibrary } from "../pageObject.slice";
+import { PageObjectId } from "../types/pageObjectSlice.types";
+import { ElementLibrary, libraryNames } from "../../locators/types/generationClassesMap";
+import { identifyElements } from "../../locators/reducers/identifyElements.thunk";
 
 interface Props {
   pageObj: PageObjectId;

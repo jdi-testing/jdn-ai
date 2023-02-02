@@ -5,16 +5,16 @@ import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { CaretDown } from "phosphor-react";
-import PageSvg from "./assets/page.svg";
-import { Footnote } from "../../common/components/footnote/Footnote";
-import { selectConfirmedLocators, selectPageObjects } from "./pageObject.selectors";
-import { GenerationButton } from "../locators/components/GenerationButton";
-import { PageObjectPlaceholder } from "./components/PageObjectPlaceholder";
-import { PageObjCopyButton } from "./components/PageObjCopyButton";
-import { Locator } from "../locators/Locator";
-import { PageObjMenu } from "./components/PageObjMenu";
-import { PageObjListHeader } from "./components/PageObjListHeader";
-import { Notifications } from "../../common/components/notification/Notifications";
+import PageSvg from "../assets/page.svg";
+import { Footnote } from "../../../common/components/footnote/Footnote";
+import { selectConfirmedLocators, selectPageObjects } from "../pageObject.selectors";
+import { GenerationButton } from "./GenerationButton";
+import { PageObjectPlaceholder } from "./PageObjectPlaceholder";
+import { PageObjCopyButton } from "./PageObjCopyButton";
+import { Locator } from "../../locators/Locator";
+import { PageObjMenu } from "./PageObjMenu";
+import { PageObjListHeader } from "./PageObjListHeader";
+import { Notifications } from "../../../common/components/notification/Notifications";
 
 export const PageObjList = (props) => {
   const state = useSelector((state) => state);

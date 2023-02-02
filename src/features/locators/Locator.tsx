@@ -18,7 +18,7 @@ import { PageType } from "../../app/types/mainSlice.types";
 import { RootState } from "../../app/store/store";
 import { ElementLibrary } from "./types/generationClassesMap";
 import { Locator as LocatorInterface } from "./types/locator.types";
-import { SearchState } from "./LocatorsTree";
+import { SearchState } from "./components/LocatorsTree";
 import { LocatorEditDialog } from "./components/LocatorEditDialog";
 import { LocatorCopyButton } from "./components/LocatorCopyButton";
 import { LocatorIcon } from "./components/LocatorIcon";

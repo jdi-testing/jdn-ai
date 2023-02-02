@@ -20,7 +20,7 @@ import {
 import { clearLocators } from "../pageObjects/pageObject.slice";
 import { locatorGenerationController } from "../locators/utils/locatorGenerationController";
 import { removeLocators, restoreLocators } from "./locators.slice";
-import { LocatorsTree } from "./LocatorsTree";
+import { LocatorsTree } from "./components/LocatorsTree";
 import { LocatorListHeader } from "./components/LocatorListHeader";
 import { Filter } from "../filter/Filter";
 
