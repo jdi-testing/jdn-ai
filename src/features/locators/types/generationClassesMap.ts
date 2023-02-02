@@ -126,6 +126,7 @@ export type ElementLabel =
   | typeof NgMatClasses
   | typeof VuetifyClasses
   | typeof defaultClass;
+
 export type ElementClass = MUIclasses | HTML5classes | NgMatClasses | typeof defaultClass;
 
 export enum ElementLibrary {

@@ -1,15 +1,14 @@
 import { Button, Checkbox, Dropdown, Input, Switch, Typography } from "antd";
 import { SwitchChangeEventHandler } from "antd/lib/switch";
-import { toLower } from "lodash";
 import { Funnel } from "phosphor-react";
 import React, { ChangeEvent, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MenuItem } from "../../common/components/menu/Menu";
 import { selectCurrentPageObject } from "../pageObjects/pageObject.selectors";
 import { ElementClass } from "../locators/types/generationClassesMap";
 import { FilterHeader } from "./components/FilterHeader";
-import { selectDetectedClassesFilter } from "./filter.selectors";
+import { selectDetectedClassesFilter, selectIfSelectedAll } from "./filter.selectors";
 import { toggleClassFilter, toggleClassFilterAll } from "./filter.slice";
+import { convertFilterToArr } from "./utils/filterSet";
 
 export const Filter = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -18,16 +17,10 @@ export const Filter = () => {
   const dispatch = useDispatch();
 
   if (!pageObject) throw new Error("empty page object");
-  const classFilter = useSelector(selectDetectedClassesFilter);
-  const classFilterArr =
-    searchTerm === ""
-      ? Object.entries(classFilter)
-      : Object.entries(classFilter).filter(([key]) => toLower(key).includes(toLower(searchTerm)));
 
-  const areSelectedAll = useMemo(() => {
-    const arr = Object.entries(classFilter);
-    return !arr.some(([, value]) => !value);
-  }, [classFilter]);
+  const classFilter = useSelector(selectDetectedClassesFilter);
+  const areSelectedAll = useSelector(selectIfSelectedAll);
+  const classFilterArr = useMemo(() => convertFilterToArr(classFilter, searchTerm), [classFilter, searchTerm]);
 
   const handleFilterChange = (key: string, oldValue: boolean) => () => {
     dispatch(
@@ -40,15 +33,14 @@ export const Filter = () => {
     );
   };
 
-  const renderClassList = () => {
-    const items: MenuItem[] = classFilterArr.map(([key, value]) => {
+  const menuItems = {
+    items: classFilterArr.map(([key, value]) => {
       return {
         key,
         label: <Checkbox checked={value}>{key}</Checkbox>,
         onClick: handleFilterChange(key, value),
       };
-    });
-    return { ...{ items } };
+    }),
   };
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -71,18 +63,20 @@ export const Filter = () => {
 
   return (
     <Dropdown
-      menu={renderClassList()}
+      menu={menuItems}
       dropdownRender={(menu) => (
         <div className="jdn__filter_dropdown-content">
           <FilterHeader onClickClose={() => setOpen(false)} />
           <div className="jdn__filter_dropdown_control">
             <Input allowClear placeholder="Start typing" value={searchTerm} onChange={handleInputChange} />
           </div>
-          <div className="jdn__filter_dropdown_control">
-            <Switch size="small" checked={areSelectedAll} onChange={handleSelectAllChange} />
-            <Typography.Text> Select all</Typography.Text>
+          <div className="jdn__filter_dropdown_scroll">
+            <div className="jdn__filter_dropdown_control">
+              <Switch size="small" checked={areSelectedAll} onChange={handleSelectAllChange} />
+              <Typography.Text> Select all</Typography.Text>
+            </div>
+            {menu}
           </div>
-          {menu}
         </div>
       )}
       trigger={["click"]}

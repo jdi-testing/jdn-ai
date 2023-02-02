@@ -1,8 +1,5 @@
 .jdn__filter {
   &_dropdown {
-    overflow-y: auto;
-    max-height: calc(100vh - 115px);
-
     &-content {
       background: #fff;
       box-shadow: 0 3px 6px -4px rgb(0 0 0 / 12%), 0 6px 16px 0 rgb(0 0 0 / 8%), 0 9px 28px 8px rgb(0 0 0 / 5%);
@@ -17,6 +14,11 @@
       padding: 12px 16px 0;
       line-height: 32px;
       text-align: start;
+    }
+
+    &_scroll {
+      overflow-y: auto;
+      max-height: calc(100vh - 115px);
     }
 
     .ant-modal-header {
