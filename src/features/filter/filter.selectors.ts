@@ -54,3 +54,8 @@ export const selectAvailableClasses = createSelector(
       .filter((jdiClass) => !!jdiClass);
   }
 );
+
+export const selectIfSelectedAll = createSelector(selectDetectedClassesFilter, (classFilter) => {
+  const arr = Object.entries(classFilter);
+  return !arr.some(([, value]) => !value);
+});
