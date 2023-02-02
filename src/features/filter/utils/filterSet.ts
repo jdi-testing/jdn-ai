@@ -2,7 +2,10 @@ import { defaultClass, ElementClass, ElementLibrary, libraryClasses } from "../.
 import { ClassFilterValue } from "../types/filter.types";
 import { toLower } from "lodash";
 
-export const jdiClassFilterInit = (library: ElementLibrary) => ({...mapJDIclassesToFilter(library), [defaultClass]: true});
+export const jdiClassFilterInit = (library: ElementLibrary) => ({
+  ...mapJDIclassesToFilter(library),
+  [defaultClass]: true,
+});
 
 export const mapJDIclassesToFilter = (library: ElementLibrary) => {
   return Object.entries(libraryClasses[library]).reduce((acc: Record<ElementClass, boolean>, entry) => {
