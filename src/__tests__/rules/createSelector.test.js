@@ -1,4 +1,4 @@
-import { createSelector } from "../../features/rules/createSelector";
+import { createSelector } from "../../services/rules/createSelector";
 import { ruleMock1, ruleMock2, ruleMock3, ruleMock4, ruleMock5 } from "./__mocks__/ruleMocks";
 
 test("create correct selector", () => {

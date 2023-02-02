@@ -1,7 +1,7 @@
 import { cloneDeep } from "lodash";
-import { getLocator } from "../../features/locators/locator/utils";
-import { Locator, LocatorValue } from "../../features/locators/locatorSlice.types";
-import { ElementLibrary, ElementClass } from "../../features/pageObjects/utils/generationClassesMap";
+import { getLocator } from "../../features/locators/utils/utils";
+import { Locator, LocatorValue } from "../../features/locators/types/locator.types";
+import { ElementLibrary, ElementClass } from "../../features/locators/types/generationClassesMap";
 import { VALIDATION_ERROR_TYPE } from "../constants/constants";
 
 export const floatToPercent = (value: number) => {

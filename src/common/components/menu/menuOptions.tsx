@@ -15,7 +15,7 @@ import {
 } from "phosphor-react";
 import React from "react";
 import { MenuItem } from "./Menu";
-import { LocatorOption } from "../../../features/locators/locator/utils";
+import { LocatorOption } from "../../../features/locators/utils/utils";
 
 export const restore = (onClick: () => void): MenuItem => ({
   key: "0",

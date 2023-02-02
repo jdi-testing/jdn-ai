@@ -1,4 +1,4 @@
-import { ElementClass, ElementLibrary, libraryClasses } from "../../pageObjects/utils/generationClassesMap";
+import { ElementClass, ElementLibrary, libraryClasses } from "../../locators/types/generationClassesMap";
 
 export const jdiClassFilterInit = (library: ElementLibrary) => mapJDIclassesToFilter(library);
 

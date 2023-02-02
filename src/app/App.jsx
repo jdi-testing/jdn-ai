@@ -6,24 +6,24 @@ import "antd/dist/antd.less";
 import "antd/lib/style/themes/default.less";
 
 import Layout, { Content, Header } from "antd/lib/layout/layout";
-import { Backdrop } from "../common/components/Backdrop/Backdrop";
+import { Backdrop } from "../common/components/backdrop/backdrop";
 import { identificationStatus, pageType } from "../common/constants/constants";
-import { StatusBar } from "../features/statusBar/StatusBar";
-import { SeveralTabsWarning } from "../features/tabsWarning/SeveralTabsWarning";
+import { StatusBar } from "./components/StatusBar";
+import { SeveralTabsWarning } from "./components/SeveralTabsWarning";
 import { HttpEndpoint, request } from "../services/backend";
-import { checkSession, getSessionId } from "./appUtils";
-import { selectCurrentPage } from "./mainSelectors";
-import { changePage } from "./mainSlice";
-import { store } from "./store";
-import { useOnTabUpdate } from "./useOnTabUpdate";
+import { checkSession, getSessionId } from "./utils/appUtils";
+import { selectCurrentPage } from "./main.selectors";
+import { changePage } from "./main.slice";
+import { store } from "./store/store";
+import { useOnTabUpdate } from "./utils/useOnTabUpdate";
 
-import { defineServer } from "../common/thunks/defineServer";
-import { Guide } from "../features/guide/Guide";
+import { defineServer } from "./reducers/defineServer.thunk";
+import { Guide } from "./components/Guide";
 import { connector } from "../pageServices/connector";
-import "./index.less";
-import { BackendStatus } from "./mainSlice.types";
-import { LocatorsPage } from "../features/locators/locatorsPage/LocatorsPage";
-import { PageObjectPage } from "../features/pageObjects/pageObjectPage/PageObjectPage";
+import "./styles/index.less";
+import { BackendStatus } from "./types/mainSlice.types";
+import { LocatorsPage } from "../features/locators/LocatorsPage";
+import { PageObjectPage } from "../features/pageObjects/PageObjectPage";
 
 const App = () => {
   const [isInvalidSession, setIsInvalidSession] = useState(false);
@@ -35,6 +35,16 @@ const App = () => {
   const dispatch = useDispatch();
 
   useOnTabUpdate();
+
+  useEffect(() => {
+    connector.onTabUpdate(() => {
+      dispatch(clearAll());
+      locatorGenerationController.revokeAll();
+      dispatch(removeEmptyPageObjects());
+      removeOverlay();
+      connector.attachStaticScripts();
+    });
+  }, []);
 
   useEffect(() => {
     connector.attachStaticScripts().then(() => {

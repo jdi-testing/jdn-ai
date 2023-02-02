@@ -2,7 +2,7 @@ import { locators, pageObject } from "../__mocks__/pageObjectMocks/pageObject.mo
 import { elementsWithoutNames } from "../__mocks__/pageObjectMocks/elementsWithoutNames";
 import { elementsWithNames } from "../__mocks__/pageObjectMocks/elementsWithNames";
 import { pageObjectsNames } from "../__mocks__/pageObjectMocks/pageObjectNames";
-import { ElementLibrary } from "../../features/pageObjects/utils/generationClassesMap";
+import { ElementLibrary } from "../../features/locators/types/generationClassesMap";
 import { pageObjectTemplate } from "../../features/pageObjects/utils/pageObjectTemplate";
 import { createLocatorNames } from "../../features/pageObjects/utils/pageObject";
 import { getClassName } from "../../features/pageObjects/utils/pageObjectTemplate";

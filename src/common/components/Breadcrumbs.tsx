@@ -1,9 +1,9 @@
 import { Breadcrumb, Tooltip } from "antd";
 import React from "react";
 import { useSelector } from "react-redux";
-import { selectCurrentPage } from "../../app/mainSelectors";
-import { PageType } from "../../app/mainSlice.types";
-import { selectCurrentPageObject } from "../../features/pageObjects/pageObjectSelectors";
+import { selectCurrentPage } from "../../app/main.selectors";
+import { PageType } from "../../app/types/mainSlice.types";
+import { selectCurrentPageObject } from "../../features/pageObjects/pageObject.selectors";
 
 export const Breadcrumbs = () => {
   const currentPage = useSelector(selectCurrentPage);

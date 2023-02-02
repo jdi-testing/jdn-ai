@@ -15,15 +15,16 @@ import {
   upperFirst,
 } from "lodash";
 
-import { RootState } from "../../../app/store";
-import { selectConfirmedLocators, selectPageObjects } from "../../../features/pageObjects/pageObjectSelectors";
+import { RootState } from "../../../app/store/store";
+import { selectConfirmedLocators, selectPageObjects } from "../pageObject.selectors";
 import { connector } from "../../../pageServices/connector";
-import { ElementId, Locator } from "../../locators/locatorSlice.types";
-import { PageObject } from "../pageObjectSlice.types";
-import { ElementLabel, ElementLibrary, getJDILabel } from "./generationClassesMap";
+import { ElementId, Locator } from "../../locators/types/locator.types";
+import { PageObject } from "../../pageObjects/types/pageObjectSlice.types";
+import { ElementLabel, ElementLibrary } from "../../locators/types/generationClassesMap";
 import javaReservedWords from "./javaReservedWords.json";
 import { pageObjectTemplate } from "./pageObjectTemplate";
 import { testFileTemplate } from "./testTemplate";
+import { getJDILabel } from "../../locators/utils/locatorTypesUtils";
 
 export const isStringMatchesReservedWord = (string: string) => javaReservedWords.includes(string);
 

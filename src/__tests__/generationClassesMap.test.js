@@ -3,7 +3,7 @@ import {
   getJdiClassName,
   getJDILabel,
   getTypesMenuOptions,
-} from "../features/pageObjects/utils/generationClassesMap";
+} from "../features/locators/types/generationClassesMap";
 
 const optionsMUI = [
   "Accordion",

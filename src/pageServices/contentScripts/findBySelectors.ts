@@ -1,5 +1,5 @@
-import { defaultClass } from "../../features/pageObjects/utils/generationClassesMap";
-import { JDNLabel, RulesMap, SelectorsMap } from "../../features/rules/rules.types";
+import { defaultClass } from "../../features/locators/types/generationClassesMap";
+import { JDNLabel, RulesMap, SelectorsMap } from "../../services/rules/rules.types";
 
 export const findBySelectors = () => {
   const JDN_HASH = "jdn-hash";

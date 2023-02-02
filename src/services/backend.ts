@@ -1,5 +1,5 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
-import { BaseUrl } from "../app/mainSlice.types";
+import { BaseUrl } from "../app/types/mainSlice.types";
 
 export enum HttpEndpoint {
   BUILD = "build",

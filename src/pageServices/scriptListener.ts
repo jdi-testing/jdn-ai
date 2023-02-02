@@ -1,11 +1,9 @@
 import { AsyncThunkAction } from "@reduxjs/toolkit";
 import { isNil } from "lodash";
 import { Dispatch } from "react";
-import { setScriptMessage } from "../app/mainSlice";
-import { RootState } from "../app/store";
-import { rerunGeneration } from "../common/thunks/rerunGeneration";
-import { stopGenerationGroup } from "../common/thunks/stopGenerationGroup";
-import { Locator } from "../features/locators/locatorSlice.types";
+import { setScriptMessage } from "../app/main.slice";
+import { RootState } from "../app/store/store";
+import { Locator } from "../features/locators/types/locator.types";
 import {
   elementGroupSetActive,
   elementGroupUnsetActive,
@@ -15,11 +13,13 @@ import {
   toggleDeletedGroup,
   toggleElementGeneration,
   toggleElementGroupGeneration,
-} from "../features/locators/locatorsSlice";
-import { selectCurrentPageObject, selectLocatorByJdnHash } from "../features/pageObjects/pageObjectSelectors";
-import { ElementLibrary, getTypesMenuOptions } from "../features/pageObjects/utils/generationClassesMap";
+} from "../features/locators/locators.slice";
+import { selectCurrentPageObject, selectLocatorByJdnHash } from "../features/pageObjects/pageObject.selectors";
+import { ElementLibrary } from "../features/locators/types/generationClassesMap";
 import { connector } from "./connector";
 import { showOverlay } from "./pageDataHandlers";
+import { rerunGeneration } from "../features/locators/reducers/rerunGeneration.thunk";
+import { getTypesMenuOptions } from "../features/locators/utils/locatorTypesUtils";
 
 export type ScriptMessagePayload = { message: keyof Actions; param: Record<string, never> };
 

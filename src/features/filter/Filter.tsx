@@ -5,11 +5,11 @@ import { Funnel } from "phosphor-react";
 import React, { ChangeEvent, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { MenuItem } from "../../common/components/menu/Menu";
-import { selectCurrentPageObject } from "../pageObjects/pageObjectSelectors";
-import { ElementClass } from "../pageObjects/utils/generationClassesMap";
-import { FilterHeader } from "./FilterHeader";
-import { selectDetectedClassesFilter } from "./filterSelectors";
-import { toggleClassFilter, toggleClassFilterAll } from "./filterSlice";
+import { selectCurrentPageObject } from "../pageObjects/pageObject.selectors";
+import { ElementClass } from "../locators/types/generationClassesMap";
+import { FilterHeader } from "./components/FilterHeader";
+import { selectDetectedClassesFilter } from "./filter.selectors";
+import { toggleClassFilter, toggleClassFilterAll } from "./filter.slice";
 
 export const Filter = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");

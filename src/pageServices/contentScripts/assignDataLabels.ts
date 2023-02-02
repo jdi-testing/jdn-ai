@@ -1,4 +1,5 @@
-import { Locator } from "../../features/locators/locatorSlice.types";
+import { Locator } from "../../features/locators/types/locator.types";
+
 
 export const assignDataLabels = () => {
   const assignDataLabel = (hashes: Array<Locator>) => {

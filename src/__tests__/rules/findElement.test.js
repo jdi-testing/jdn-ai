@@ -1,5 +1,5 @@
 import { JSDOM } from "jsdom";
-import { getLibrarySelectors } from "../../features/rules/createSelector";
+import { getLibrarySelectors } from "../../services/rules/createSelector";
 import { findBySelectors } from "../../pageServices/contentScripts/findBySelectors";
 import { card } from "./__mocks__/card.mock";
 import { iconButton } from "./__mocks__/iconButton.mock";

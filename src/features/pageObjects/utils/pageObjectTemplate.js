@@ -1,7 +1,7 @@
-import { getLocator } from "../../../features/locators/locator/utils";
-import { ElementLibrary } from "./generationClassesMap";
+import { ElementLibrary } from "../../locators/types/generationClassesMap";
 import { camelCase, upperFirst } from "lodash";
 import transliterate from "@sindresorhus/transliterate";
+import { getLocator } from "../../locators/utils/utils";
 
 export const getClassName = (title) => {
   let className = transliterate(title);
