@@ -10,6 +10,7 @@ interface Props {
 export const LocatorsSearch: React.FC<Props> = ({ value, onChange }) => {
   return (
     <Input
+      size="small"
       allowClear
       className="jdn__locatorsList_search"
       placeholder="Search by type, name or locator"
