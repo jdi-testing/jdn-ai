@@ -58,7 +58,7 @@ export const getPageData = () => {
   assign_uuid();
   const res = getTreeDataset();
   /*
-    IMPORTANT! stringify them right here for not to change fiels order.
+    IMPORTANT! stringify them right here for not to change files order.
     Otherwise 500 server error occurs
   */
   return [JSON.stringify(res), res.length];
