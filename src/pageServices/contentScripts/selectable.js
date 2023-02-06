@@ -7,6 +7,7 @@ export const selectable = () => {
     });
 
   const runSelectable = () => {
+    const keyForMultiSelect = window.navigator?.userAgent.indexOf("Mac") != -1 ? "metaKey" : "ctrlKey";
     if (selectables) {
       selectables.disable();
       selectables.enable();
@@ -14,7 +15,7 @@ export const selectable = () => {
     }
     selectables = new Selectables({
       elements: ".jdn-highlight",
-      moreUsing: "ctrlKey",
+      moreUsing: keyForMultiSelect,
       zone: "body",
       selectedClass: "jdn-active",
       onSelect: (payload) => {
