@@ -52,8 +52,9 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
     const isOnePO = size(pageObjects) === 1;
     confirm({
       title: isOnePO ? "Delete page object?" : "Delete all page objects?",
-      content: isOnePO ? "This page object will be deleted and you can lose all your data" :
-      "All page objects will be deleted and you can lose all your data",
+      content: isOnePO
+        ? "This page object will be deleted and you can lose all your data"
+        : "All page objects will be deleted and you can lose all your data",
       okText: isOnePO ? "Delete" : "Delete all",
       okButtonProps: {
         type: "primary",
