@@ -521,6 +521,9 @@ export const runContextMenu = () => {
   };
 
   const contextMenuListener = (event) => {
+    const isMacPlatform = window.navigator?.userAgent.indexOf("Mac") != -1;
+    if (isMacPlatform && event.ctrlKey) return;
+
     highlightTargets = document.querySelectorAll(".jdn-active");
     if (highlightTargets.length === 0) return;
 
