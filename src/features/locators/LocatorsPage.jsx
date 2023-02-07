@@ -1,5 +1,5 @@
 import { Button, Modal, Tooltip, Row } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { isEqual, size } from "lodash";
@@ -35,6 +35,8 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
   const calculatedGenerate = useSelector(selectCalculatedGenerateByPageObj);
   const deletedGenerate = useSelector(selectDeletedGenerateByPageObj);
 
+  const breadcrumbsRef = useRef(null);
+  const [locatorsListHeight, setLocatorListHeight] = useState();
   const [locatorsSnapshot] = useState(locators);
 
   const pageBack = () => {
@@ -72,6 +74,23 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
     return () => {
       removeOverlay();
     };
+  }, []);
+
+  // For changing locatorsList-content height depends on header height
+  useEffect(() => {
+    if (!breadcrumbsRef.current) return;
+    const PLUGIN_HEADER_HEIGHT = 169;
+    let breadcrumbsHeight = breadcrumbsRef?.current?.clientHeight;
+    setLocatorListHeight(window.innerHeight - PLUGIN_HEADER_HEIGHT - breadcrumbsHeight);
+
+    const resizeObserver = new ResizeObserver(() => {
+      // Do what you want to do when the size of the element changes
+      breadcrumbsHeight = breadcrumbsRef?.current?.clientHeight;
+      setLocatorListHeight(window.innerHeight - PLUGIN_HEADER_HEIGHT - breadcrumbsHeight);
+    });
+
+    resizeObserver.observe(breadcrumbsRef.current);
+    return () => resizeObserver.disconnect();
   }, []);
 
   const renderBackButton = () => {
@@ -139,12 +158,12 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
     <React.Fragment>
       <div className="jdn__locatorsList">
         <Row justify="space-between" wrap={false}>
-          <Breadcrumbs />
+          <Breadcrumbs ref={breadcrumbsRef} />
           <Filter />
         </Row>
         <LocatorListHeader
           render={(viewProps) => (
-            <div className="jdn__locatorsList-content">
+            <div className="jdn__locatorsList-content" style={{ height: `${locatorsListHeight}px` }}>
               {size(locators) ? <LocatorsTree {...{ viewProps, locatorIds }} /> : null}
             </div>
           )}
