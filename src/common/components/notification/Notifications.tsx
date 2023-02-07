@@ -30,14 +30,14 @@ export const Notifications = () => {
     openNotification(messages().ACTION_CANCELLED, "warning");
   };
 
-  const openNotification = (message: string, type: AlertProps["type"], action?: Action) => {
+  const openNotification = (message: string, type: AlertProps["type"], cancelAction?: Action) => {
     notification.destroy();
 
     const container = document.body.querySelector(".jdn__notification") as HTMLElement;
 
     container &&
       notification.open({
-        message: <Alert showIcon message={message} type={type} action={renderCancelButton(action)} />,
+        message: <Alert showIcon message={message} type={type} action={renderCancelButton(cancelAction)} />,
         duration: 5,
         getContainer: () => container,
         placement: "bottomRight",

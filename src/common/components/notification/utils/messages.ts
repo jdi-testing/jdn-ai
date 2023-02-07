@@ -15,6 +15,6 @@ export const messages = (value?: string) => {
     EDIT_PO_NAME: "The page object name was edited",
     DOWNLOAD_FILE: "The Java file was downloaded",
     DOWNLOAD_TEMPLATE: "The archive with template was downloaded",
-    ACTION_CANCELLED: "Tha action was cancelled",
+    ACTION_CANCELLED: "The action was cancelled",
   };
 };

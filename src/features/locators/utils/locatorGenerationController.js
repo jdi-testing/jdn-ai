@@ -7,7 +7,7 @@ export const isProgressStatus = (taskStatus) => locatorProgressStatus.hasOwnProp
 export const isGeneratedStatus = (taskStatus) => taskStatus === locatorTaskStatus.SUCCESS;
 
 export const runGenerationHandler = async (elements, settings, onStatusChange, onGenerationFailed, pageObject) => {
-  locatorGenerationController.scheduleTaskGroup(
+  return locatorGenerationController.scheduleTaskGroup(
     elements,
     settings,
     (element_id, locator, jdnHash) => onStatusChange({ element_id, locator, jdnHash }),
@@ -100,7 +100,7 @@ class LocatorGenerationController {
 
     const sessionId = await this.getSessionId();
 
-    webSocketController
+    return webSocketController
       .sendSocket(
         JSON.stringify({
           action: WebSocketMessage.SCHEDULE_MULTIPLE_XPATH_GENERATIONS,
@@ -117,15 +117,16 @@ class LocatorGenerationController {
           },
         })
       )
+      .then(() => {
+        this.pingInterval = setInterval(() => {
+          if (!this.pingTimeout) {
+            this.pingSocket();
+          }
+        }, 5000);
+      })
       .catch(() => {
         this.noResponseHandler();
       });
-
-    this.pingInterval = setInterval(() => {
-      if (!this.pingTimeout) {
-        this.pingSocket();
-      }
-    }, 5000);
   }
 
   pingSocket() {
@@ -135,7 +136,9 @@ class LocatorGenerationController {
         payload: Date.now(),
       })
     );
-    this.pingTimeout = setTimeout(() => this.noResponseHandler(), 5000);
+    this.pingTimeout = setTimeout(() => {
+      this.noResponseHandler();
+    }, 5000);
   }
 
   noResponseHandler() {

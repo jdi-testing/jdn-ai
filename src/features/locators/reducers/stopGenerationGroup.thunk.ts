@@ -1,30 +1,27 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
+import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
 import { locatorTaskStatus } from "../../../common/constants/constants";
 import { locatorsAdapter } from "../locators.selectors";
-import { stopGenerationHandler } from "../../../features/locators/utils/locatorGenerationController";
+import { Locator, LocatorsState } from "../types/locator.types";
+import { stopGenerationHandler } from "../utils/locatorGenerationController";
 
-export const stopGenerationGroup = createAsyncThunk("locators/stopGenerationGroup", async (elements) => {
+export const stopGenerationGroup = createAsyncThunk("locators/stopGenerationGroup", async (elements: Locator[]) => {
   const hashes = elements.map(({ jdnHash }) => jdnHash);
   return stopGenerationHandler(hashes);
 });
 
-export const stopGenerationGroupReducer = (builder) => {
+export const stopGenerationGroupReducer = (builder: ActionReducerMapBuilder<LocatorsState>) => {
   return builder
     .addCase(stopGenerationGroup.pending, (state, { meta }) => {
-      state.showBackdrop = true;
       const newValue = meta.arg.map(({ element_id, locator }) => {
         return {
           element_id,
           locator: { ...locator, taskStatus: locatorTaskStatus.REVOKED },
         };
       });
+      // @ts-ignore
       locatorsAdapter.upsertMany(state, newValue);
     })
-    .addCase(stopGenerationGroup.fulfilled, (state) => {
-      state.showBackdrop = false;
-    })
-    .addCase(stopGenerationGroup.rejected, (state, { error }) => {
-      state.showBackdrop = false;
+    .addCase(stopGenerationGroup.rejected, (_, { error }) => {
       throw new Error(error.stack);
     });
 };

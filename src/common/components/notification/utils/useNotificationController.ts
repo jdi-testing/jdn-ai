@@ -7,6 +7,7 @@ import { messages } from "./messages";
 import { Action } from "../types/notification.types";
 import { locatorUndo, pageobjectUndo } from "./undoActions";
 import { Locator } from "../../../../features/locators/types/locator.types";
+import { cancelRerun } from "../reducers/cancelRerun.thunk";
 
 export const useNotificationController = (
   lastNotification: Notification | undefined,
@@ -22,11 +23,14 @@ export const useNotificationController = (
       case "locators/changeLocatorAttributes":
         openNotification(messages().EDITED, "success", locatorUndo({ type: action?.type, payload: prevValue }));
         break;
-      case "locators/rerunGeneration/pending":
+      case "locators/rerunGeneration/fulfilled":
         const { arg } = action.meta;
-        const length = size(arg);
-        if (length === 1) openNotification(messages().RERUN, "success", locatorUndo());
-        else openNotification(messages(length.toString()).RERUN_GROUP, "success", locatorUndo());
+        const length = size(arg.generationData);
+        const rerunCancelAction = cancelRerun(action.meta.arg);
+        if (length === 1) openNotification(messages().RERUN, "success", rerunCancelAction);
+        else {
+          openNotification(messages(length.toString()).RERUN_GROUP, "success", rerunCancelAction); // create cancelRerun thunk
+        }
         break;
       case "locators/stopGeneration/fulfilled":
         const _locator = locators.find((_loc) => _loc.element_id === action.meta.arg);

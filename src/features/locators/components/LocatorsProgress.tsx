@@ -4,7 +4,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../app/store/store";
 import { Footnote } from "../../../common/components/footnote/Footnote";
-import { locatorsGenerationStatus } from "../../../common/constants/constants";
 import {
   selectLocatorsByPageObject,
   selectCalculatedByPageObj,
@@ -13,6 +12,8 @@ import {
   selectFailedByPageObject,
 } from "../../pageObjects/pageObject.selectors";
 import { rerunGeneration } from "../reducers/rerunGeneration.thunk";
+import { LocatorsGenerationStatus } from "../types/locator.types";
+import { LocatorGenerationMessage } from "../types/locatorStatus.types";
 
 let timer: NodeJS.Timeout;
 
@@ -61,22 +62,25 @@ export const LocatorsProgress = () => {
           <div className="jdn__locatorsList-progress-text">
             <Footnote>
               {size(inProgress)
-                ? `${locatorsGenerationStatus.started} (${calculationReady}/${total})`
-                : generationStatus}
+                ? `${LocatorGenerationMessage.started} (${calculationReady}/${total})`
+                : LocatorGenerationMessage.complete}
             </Footnote>
-            {generationStatus === locatorsGenerationStatus.failed ? (
-              <span className="ant-notification-notice-btn">
-                <Button type="text" size="small" onClick={handleRetry}>
-                  Retry
-                </Button>
-              </span>
+            {generationStatus === LocatorsGenerationStatus.failed ? (
+              <React.Fragment>
+                <Footnote>{LocatorGenerationMessage.failed}</Footnote>
+                <span className="ant-notification-notice-btn">
+                  <Button type="text" size="small" onClick={handleRetry}>
+                    Retry
+                  </Button>
+                </span>
+              </React.Fragment>
             ) : null}
           </div>
           <Progress
-            status={generationStatus === locatorsGenerationStatus.failed ? "exception" : undefined}
+            status={generationStatus === LocatorsGenerationStatus.failed ? "exception" : undefined}
             percent={readinessPercentage}
             className={
-              readinessPercentage !== 100 && generationStatus !== locatorsGenerationStatus.failed
+              readinessPercentage !== 100 && generationStatus !== LocatorsGenerationStatus.failed
                 ? "jdn__progress_hide-info"
                 : ""
             }
