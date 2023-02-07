@@ -1,20 +1,5 @@
 export const readmeLinkAddress = "https://github.com/jdi-testing/jdn-ai#readme";
 
-export const identificationStatus = {
-  noStatus: "",
-  loading: "Loading...",
-  success: "Successful!",
-  removed: "Removed",
-  error: "An error occurred",
-};
-
-export const locatorsGenerationStatus = {
-  noStatus: "",
-  started: "Locators generation is running in background...",
-  complete: "Locators generation is successfully completed",
-  failed: "Network error, check network settings or run server locally.",
-};
-
 export const locatorProgressStatus = {
   PENDING: "PENDING",
   STARTED: "STARTED",

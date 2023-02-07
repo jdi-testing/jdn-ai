@@ -16,7 +16,7 @@ const { loader: _loader } = MiniCssExtractPlugin;
 const mainConfig = {
   devtool: "inline-cheap-module-source-map",
   mode: "development",
-  entry: ["./src/app/App.jsx", "./manifest.json"],
+  entry: ["./src/app/App.tsx", "./manifest.json"],
   output: {
     path: join(__dirname, "dist"),
     filename: "[name].bundle.js",

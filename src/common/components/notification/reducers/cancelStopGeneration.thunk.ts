@@ -1,7 +1,7 @@
 import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
+import { locatorsAdapter } from "../../../../features/locators/locators.selectors";
 import { runXpathGeneration } from "../../../../features/locators/reducers/runXpathGeneration.thunk";
-import { Locator, LocatorsState } from "../../../../features/locators/types/locator.types";
-import { locatorTaskStatus } from "../../../constants/constants";
+import { Locator, LocatorsState, LocatorTaskStatus } from "../../../../features/locators/types/locator.types";
 
 export const cancelStopGeneration = createAsyncThunk(
   "locators/cancelStopGeneration",
@@ -23,7 +23,7 @@ export const cancelStopGenerationReducer = (builder: ActionReducerMapBuilder<Loc
           // @ts-ignore
           existingLocator && locatorsAdapter.upsertOne(state, {
             element_id,
-            locator: { ...existingLocator.locator, taskStatus: locatorTaskStatus.PENDING },
+            locator: { ...existingLocator.locator, taskStatus: LocatorTaskStatus.PENDING },
           });
         });
       })

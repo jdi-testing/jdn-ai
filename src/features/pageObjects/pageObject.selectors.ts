@@ -37,13 +37,15 @@ export const selectMaxId = createSelector(simpleSelectPageObjects, (items) => {
   return res !== -Infinity ? res : null;
 });
 
+export const getLocatosIdsByPO = (state: RootState, pageObjId?: PageObjectId) => {
+  pageObjId = isNil(pageObjId) ? selectCurrentPageObject(state)?.id : pageObjId;
+  if (isNil(pageObjId)) return [];
+  return selectPageObjById(state, pageObjId)?.locators || [];
+};
+
 export const selectLocatorsByPageObject = createSelector(
   selectLocators,
-  (state: RootState, pageObjId?: PageObjectId) => {
-    pageObjId = isNil(pageObjId) ? selectCurrentPageObject(state)?.id : pageObjId;
-    if (isNil(pageObjId)) return [];
-    return selectPageObjById(state, pageObjId)?.locators || [];
-  },
+  getLocatosIdsByPO,
   (locByProbability, locByPageObj) => locByProbability.filter((loc) => locByPageObj.includes(loc.element_id))
 );
 

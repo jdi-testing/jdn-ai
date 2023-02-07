@@ -5,7 +5,7 @@ import locatorsSlice from "../../features/locators/locators.slice";
 import pageObjectSlice from "../../features/pageObjects/pageObject.slice";
 import { createListeners } from "../../pageServices/scriptListener";
 import mainSlice from "../main.slice";
-import { cancellableActions } from "./middlewares/cancellableActions";
+import { cancellableActions } from "../../common/components/notification/middlewares/cancellableActions";
 import { logger } from "./middlewares/logger";
 import { scriptNotifier } from "../../pageServices/scriptNotifier";
 

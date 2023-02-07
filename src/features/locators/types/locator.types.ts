@@ -2,10 +2,11 @@ import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
 import { ElementClass } from "./generationClassesMap";
 
 export enum LocatorsGenerationStatus {
-  noStatus = "",
-  started = "Locators generation is running in background...",
-  complete = "Locators generation is successfully completed",
-  failed = "Network error, check network settings or run server locally.",
+  noStatus = "noStatus",
+  starting = "starting",
+  started = "started",
+  complete = "complete",
+  failed = "failed",
 }
 
 export enum IdentificationStatus {
