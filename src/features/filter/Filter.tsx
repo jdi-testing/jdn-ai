@@ -37,8 +37,7 @@ export const Filter = () => {
     items: classFilterArr.map(([key, value]) => {
       return {
         key,
-        label: <Checkbox checked={value}>{key}</Checkbox>,
-        onClick: handleFilterChange(key, value),
+        label: <Checkbox checked={value} onChange={handleFilterChange(key, value)}>{key}</Checkbox>,
       };
     }),
   };
