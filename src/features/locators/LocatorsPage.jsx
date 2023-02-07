@@ -47,7 +47,7 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
       confirm({
         title: "Confirm this locators list",
         content: `Not all of the selected locators have already been generated, we recommend waiting until the generation is complete.`,
-        okText: "Confirm selection",
+        okText: "Confirm",
         cancelText: "Cancel",
         onOk: () => {
           locatorGenerationController.revokeAll();
