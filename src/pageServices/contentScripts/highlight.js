@@ -11,7 +11,6 @@ export const highlightOnPage = () => {
   let scrollableContainers = [];
   const classFilter = {};
   let tooltip;
-  let filter;
 
   const clearState = () => {
     nodes = null;
@@ -57,7 +56,7 @@ export const highlightOnPage = () => {
   };
 
   const isFilteredOut = (type) => {
-    return filter && Object.hasOwn(filter, type) && !filter[type];
+    return classFilter && Object.hasOwn(classFilter, type) && !classFilter[type];
   };
 
   const getClassName = (element) => {
@@ -236,7 +235,7 @@ export const highlightOnPage = () => {
       if (deleted || isFilteredOut(type)) return;
       query += `${!!query.length ? ", " : ""}[jdn-hash='${jdnHash}']`;
     });
-    nodes = document.querySelectorAll(query);
+    nodes = query.length ? document.querySelectorAll(query) : [];
     nodes.forEach((element) => {
       if (isInViewport(element) && !isHiddenByOverflow(element)) {
         const hash = element.getAttribute("jdn-hash");
@@ -319,7 +318,6 @@ export const highlightOnPage = () => {
 
   const applyFilter = (classFilterValue) => {
     const { jdiClass, value } = classFilterValue;
-    filter = { ...filter, [jdiClass]: value };
     let filterElements = [];
 
     if (!jdiClass) {
