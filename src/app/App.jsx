@@ -7,13 +7,13 @@ import "antd/lib/style/themes/default.less";
 
 import Layout, { Content, Header } from "antd/lib/layout/layout";
 import { Backdrop } from "./components/Backdrop";
-import { identificationStatus, pageType } from "../common/constants/constants";
+import { pageType } from "../common/constants/constants";
 import { StatusBar } from "./components/StatusBar";
 import { SeveralTabsWarning } from "./components/SeveralTabsWarning";
 import { HttpEndpoint, request } from "../services/backend";
 import { checkSession, getSessionId } from "./utils/appUtils";
 import { selectCurrentPage } from "./main.selectors";
-import { changePage } from "./main.slice";
+import { clearAll } from "./main.slice";
 import { store } from "./store/store";
 import { useOnTabUpdate } from "./utils/useOnTabUpdate";
 
@@ -28,10 +28,8 @@ import { PageObjectPage } from "../features/pageObjects/PageObjectPage";
 const App = () => {
   const [isInvalidSession, setIsInvalidSession] = useState(false);
   const [template, setTemplate] = useState();
-  const status = useSelector((state) => state.locators.present.status);
   const backendAvailable = useSelector((state) => state.main.backendAvailable);
   const currentPage = useSelector(selectCurrentPage);
-  const currentPageObject = useSelector((state) => state.pageObject.present.currentPageObject);
   const dispatch = useDispatch();
 
   useOnTabUpdate();
@@ -63,12 +61,6 @@ const App = () => {
       getSessionId();
     }
   }, [backendAvailable]);
-
-  useEffect(() => {
-    if (status === identificationStatus.success) {
-      dispatch(changePage({ page: pageType.locatorsList, pageObj: currentPageObject }));
-    }
-  }, [status]);
 
   const renderPage = () => {
     const { page, alreadyGenerated } = currentPage;

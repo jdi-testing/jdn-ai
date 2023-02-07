@@ -29,7 +29,7 @@ class WebSocketController {
     } else {
       const send = () => {
         if (this.readyState === 0) {
-          setTimeout(() => send(), 10);
+          return new Promise((resolve) => resolve(setTimeout(() => send(), 10)));
         } else return new Promise((resolve) => resolve(this.socket.send(json)));
       };
 

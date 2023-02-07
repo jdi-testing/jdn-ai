@@ -4,13 +4,7 @@ import { RootState } from "../../../app/store/store";
 import { convertToListWithChildren } from "../../../common/utils/helpers";
 import { requestGenerationData, setParents } from "../../../pageServices/pageDataHandlers";
 import { selectLocators } from "../locators.selectors";
-import {
-  Locator,
-  LocatorsGenerationStatus,
-  LocatorsState,
-  LocatorTaskStatus,
-  PredictedEntity,
-} from "../types/locator.types";
+import { Locator, LocatorsState, LocatorTaskStatus, PredictedEntity } from "../types/locator.types";
 import { addLocators } from "../locators.slice";
 import { addLocatorsToPageObj } from "../../pageObjects/pageObject.slice";
 import { ElementLibrary } from "../types/generationClassesMap";
@@ -48,14 +42,7 @@ export const generateLocators = createAsyncThunk("locators/generateLocators", as
 });
 
 export const generateLocatorsReducer = (builder: ActionReducerMapBuilder<LocatorsState>) => {
-  return builder
-    .addCase(generateLocators.pending, (state) => {
-      state.generationStatus = LocatorsGenerationStatus.started;
-    })
-    .addCase(generateLocators.fulfilled, (state) => {
-      state.generationStatus = LocatorsGenerationStatus.complete;
-    })
-    .addCase(generateLocators.rejected, (state, { error }) => {
-      throw new Error(error.stack);
-    });
+  return builder.addCase(generateLocators.rejected, (state, { error }) => {
+    throw new Error(error.stack);
+  });
 };

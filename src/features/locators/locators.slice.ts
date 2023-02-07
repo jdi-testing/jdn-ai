@@ -18,6 +18,8 @@ import {
   Locator,
   LocatorCalculationPriority,
 } from "./types/locator.types";
+import { cancelRerunReducer } from "../../common/components/notification/reducers/cancelRerun.thunk";
+import { runXpathGenerationReducer } from "./reducers/runXpathGeneration.thunk";
 
 const initialState: LocatorsState = {
   generationStatus: LocatorsGenerationStatus.noStatus,
@@ -193,7 +195,9 @@ const locatorsSlice = createSlice({
       rerunGenerationReducer(builder),
       stopGenerationReducer(builder),
       stopGenerationGroupReducer(builder),
-      cancelStopGenerationReducer(builder);
+      cancelRerunReducer(builder),
+      cancelStopGenerationReducer(builder),
+      runXpathGenerationReducer(builder);
   },
 });
 
