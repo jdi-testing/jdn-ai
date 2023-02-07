@@ -2,7 +2,6 @@
   &__pageObject {
     &-content-text {
       word-break: break-all;
-      padding-right: 12px;
       margin-left: 8px;
     }
 
@@ -32,13 +31,34 @@
     .ant-collapse-header {
       gap: 8px;
 
+      .ant-collapse-header-text {
+        display: flex;
+      }
+
+      .ant-collapse-extra {
+        display: flex;
+
+        .ant-dropdown {
+          left: 120px !important; // fixed context menu under the button
+        }
+      }
+
+      .jdn__locatorsList_button-copy,
+      .jdn__locatorsList_button-menu {
+        padding: 0;
+        height: 20px;
+        position: relative;
+        right: 0;
+        top: 0;
+      }
+
       .jdn__locatorsList_button-copy {
-        display: none;
+        visibility: hidden;
       }
 
       &:hover {
         .jdn__locatorsList_button-copy {
-          display: inline-block;
+          visibility: visible;
         }
       }
     }
