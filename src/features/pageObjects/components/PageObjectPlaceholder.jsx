@@ -8,8 +8,8 @@ export const PageObjectPlaceholder = () => {
   return (
     <div className="jdn__pageObject_placeholder">
       <Icon component={PageBigSvg} />
-      <Footnote>There are no created page objects.</Footnote>
-      <Footnote>{`Open the needed page and click the "New page object" button to get started.`}</Footnote>
+      <Footnote>No page objects created</Footnote>
+      <Footnote>Open the desired page and click the &quot;+ Page object&quot; button to start</Footnote>
     </div>
   );
 };

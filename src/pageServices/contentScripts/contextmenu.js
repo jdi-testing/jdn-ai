@@ -491,11 +491,7 @@ export const runContextMenu = () => {
           text: `<span>Retry</span>`,
           icon: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M8.25928 4.67343H10.5093V2.42343" stroke="#5A5A5A" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M8.91556 8.91563C8.33881 9.49286 7.60381 9.88606 6.80354 10.0455C6.00328 10.2049 5.17371 10.1234
-        4.41977 9.81133C3.66583 9.49921 3.02139 8.9705 2.56798 8.29208C2.11457 7.61365 1.87256 6.81599 1.87256 6C1.
-        87256 5.18401 2.11457 4.38635 2.56798 3.70792C3.02139 3.0295 3.66583 2.50079 4.41977 2.18868C5.17371 1.87656
-        6.00328 1.79507 6.80354 1.95451C7.60381 2.11395 8.33881 2.50715 8.91556 3.08438L10.5093 4.67344"
-        stroke="#5A5A5A" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M8.91556 8.91563C8.33881 9.49286 7.60381 9.88606 6.80354 10.0455C6.00328 10.2049 5.17371 10.1234 4.41977 9.81133C3.66583 9.49921 3.02139 8.9705 2.56798 8.29208C2.11457 7.61365 1.87256 6.81599 1.87256 6C1.87256 5.18401 2.11457 4.38635 2.56798 3.70792C3.02139 3.0295 3.66583 2.50079 4.41977 2.18868C5.17371 1.87656 6.00328 1.79507 6.80354 1.95451C7.60381 2.11395 8.33881 2.50715 8.91556 3.08438L10.5093 4.67344" stroke="#5A5A5A" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>`,
           events: {
             click: () =>
@@ -525,6 +521,9 @@ export const runContextMenu = () => {
   };
 
   const contextMenuListener = (event) => {
+    const isMacPlatform = window.navigator?.userAgent.indexOf("Mac") != -1;
+    if (isMacPlatform && event.ctrlKey) return;
+
     highlightTargets = document.querySelectorAll(".jdn-active");
     if (highlightTargets.length === 0) return;
 
