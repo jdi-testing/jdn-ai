@@ -3,7 +3,7 @@ import { PLUGIN_HEADER_HEIGHT, DEFAULT_BREADCRUMBS_HEIGHT } from "./constants";
 export const useCalculateHeaderSize = (
   target: React.RefObject<HTMLDivElement>,
   setHeaderHeight: (height: number) => void
-) => {
+): void | (() => void) => {
   if (!target.current) return;
   let breadcrumbsHeight = target?.current?.clientHeight;
   setHeaderHeight(PLUGIN_HEADER_HEIGHT + breadcrumbsHeight);
