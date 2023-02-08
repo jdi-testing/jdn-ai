@@ -1,4 +1,3 @@
-import { EntityState } from "@reduxjs/toolkit";
 import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
 import { ElementClass } from "./generationClassesMap";
 
