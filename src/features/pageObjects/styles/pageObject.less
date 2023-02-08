@@ -24,6 +24,21 @@
       padding-left: 54px;
     }
 
+    &_button {
+      &-menu,
+      &-copy {
+        padding: 0;
+        height: 20px;
+        position: relative;
+        right: 0;
+        top: 0;
+      }
+
+      &-copy {
+        visibility: hidden;
+      }
+    }
+
     & .ant-collapse > .ant-collapse-item > .ant-collapse-header .ant-collapse-arrow {
       margin-right: 0px;
     }
@@ -43,21 +58,8 @@
         }
       }
 
-      .jdn__pageObj_button-copy,
-      .jdn__pageObj_button-menu {
-        padding: 0;
-        height: 20px;
-        position: relative;
-        right: 0;
-        top: 0;
-      }
-
-      .jdn__pageObj_button-copy {
-        visibility: hidden;
-      }
-
       &:hover {
-        .jdn__pageObj_button-copy {
+        .jdn__pageObject_button-copy {
           visibility: visible;
         }
       }
