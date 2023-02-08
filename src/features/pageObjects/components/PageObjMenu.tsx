@@ -76,7 +76,7 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, locators, elements, lib
         destroyPopupOnHide
       >
         <Button
-          className="jdn__locatorsList_button jdn__locatorsList_button-menu"
+          className="jdn__locatorsList_button jdn__locatorsList_button-menu jdn__pageObj_button-menu"
           data-testid="dropdown-button"
           icon={<DotsThree size={18} />}
         ></Button>
