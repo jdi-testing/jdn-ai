@@ -15,12 +15,12 @@ export const stopGeneration = createAsyncThunk("locators/stopGeneration", async 
 
 export const stopGenerationReducer = (builder: ActionReducerMapBuilder<LocatorsState & EntityState<Locator>>) => {
   return builder.addCase(stopGeneration.pending, (state, { meta }) => {
-    const id = meta.arg;    
+    const id = meta.arg;
     const existingLocator = simpleSelectLocatorById(state, id);
     if (!existingLocator) return;
     // @ts-ignore
     locatorsAdapter.upsertOne(state, {
-      element_id: id,      
+      element_id: id,
       locator: { ...existingLocator.locator, taskStatus: LocatorTaskStatus.REVOKED },
     });
   })
