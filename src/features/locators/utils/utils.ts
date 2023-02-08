@@ -4,6 +4,7 @@ import { ElementLibrary } from "../types/generationClassesMap";
 import { createElementName } from "../../pageObjects/utils/pageObject";
 import { Locator, LocatorValue } from "../types/locator.types";
 import { copyToClipboard, getLocatorString } from "../../../common/utils/helpers";
+import { LocatorOption } from "./constants";
 
 export const getLocator = ({ fullXpath, robulaXpath, customXpath }: LocatorValue) => {
   return customXpath || robulaXpath || fullXpath || "";
@@ -66,14 +67,6 @@ export const setIndents = (ref: React.RefObject<HTMLDivElement>, depth: number) 
     else break;
   }
 };
-
-export enum LocatorOption {
-  Xpath = "xPath",
-  XpathAndSelenium = "xPath + FindBy",
-  XpathAndJDI = "xPath + JDI annotation",
-  CSSSelector = "CSS selector",
-  FullCode = "Full code",
-}
 
 export const copyLocator = (
   selectedLocators: Pick<Locator, "locator" | "type" | "name">[],
