@@ -23,6 +23,7 @@ import { removeLocators, restoreLocators } from "./locators.slice";
 import { LocatorsTree } from "./components/LocatorsTree";
 import { LocatorListHeader } from "./components/LocatorListHeader";
 import { Filter } from "../filter/Filter";
+import { useCalculateHeaderSize } from "./utils/useCalculateHeaderSize";
 
 const { confirm } = Modal;
 
@@ -36,7 +37,7 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
   const deletedGenerate = useSelector(selectDeletedGenerateByPageObj);
 
   const breadcrumbsRef = useRef(null);
-  const [locatorsListHeight, setLocatorListHeight] = useState();
+  const [headerHeight, setHeaderHeight] = useState();
   const [locatorsSnapshot] = useState(locators);
 
   const pageBack = () => {
@@ -78,19 +79,7 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
 
   // For changing locatorsList-content height depends on header height
   useEffect(() => {
-    if (!breadcrumbsRef.current) return;
-    const PLUGIN_HEADER_HEIGHT = 169;
-    let breadcrumbsHeight = breadcrumbsRef?.current?.clientHeight;
-    setLocatorListHeight(window.innerHeight - PLUGIN_HEADER_HEIGHT - breadcrumbsHeight);
-
-    const resizeObserver = new ResizeObserver(() => {
-      // Do what you want to do when the size of the element changes
-      breadcrumbsHeight = breadcrumbsRef?.current?.clientHeight;
-      setLocatorListHeight(window.innerHeight - PLUGIN_HEADER_HEIGHT - breadcrumbsHeight);
-    });
-
-    resizeObserver.observe(breadcrumbsRef.current);
-    return () => resizeObserver.disconnect();
+    useCalculateHeaderSize(breadcrumbsRef, setHeaderHeight);
   }, []);
 
   const renderBackButton = () => {
@@ -163,7 +152,7 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
         </Row>
         <LocatorListHeader
           render={(viewProps) => (
-            <div className="jdn__locatorsList-content" style={{ height: `${locatorsListHeight}px` }}>
+            <div className="jdn__locatorsList-content" style={{ height: `calc(100vh - ${headerHeight}px)` }}>
               {size(locators) ? <LocatorsTree {...{ viewProps, locatorIds }} /> : null}
             </div>
           )}
