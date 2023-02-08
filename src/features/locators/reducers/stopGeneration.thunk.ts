@@ -1,7 +1,7 @@
-import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
+import { ActionReducerMapBuilder, createAsyncThunk, EntityState } from "@reduxjs/toolkit";
 import { RootState } from "../../../app/store/store";
-import { selectLocatorById } from "../locators.selectors";
-import { ElementId, LocatorsState } from "../types/locator.types";
+import { locatorsAdapter, selectLocatorById, simpleSelectLocatorById } from "../locators.selectors";
+import { ElementId, Locator, LocatorsState, LocatorTaskStatus } from "../types/locator.types";
 import { stopGenerationHandler } from "../utils/locatorGenerationController";
 
 export const stopGeneration = createAsyncThunk("locators/stopGeneration", async (element_id: ElementId, thunkAPI) => {
@@ -13,19 +13,18 @@ export const stopGeneration = createAsyncThunk("locators/stopGeneration", async 
 /* eslint-disable */
 /* wrong toolkit typings */
 
-export const stopGenerationReducer = (builder: ActionReducerMapBuilder<LocatorsState>) => {
+export const stopGenerationReducer = (builder: ActionReducerMapBuilder<LocatorsState & EntityState<Locator>>) => {
   return builder.addCase(stopGeneration.pending, (state, { meta }) => {
-    const element_id = meta.arg;
-    // @ts-ignore
-    const existingLocator = simpleSelectLocatorById(state, element_id);
+    const id = meta.arg;    
+    const existingLocator = simpleSelectLocatorById(state, id);
+    if (!existingLocator) return;
     // @ts-ignore
     locatorsAdapter.upsertOne(state, {
-      element_id,
-      // @ts-ignore
-      locator: { ...existingLocator.locator, taskStatus: locatorTaskStatus.REVOKED },
+      element_id: id,      
+      locator: { ...existingLocator.locator, taskStatus: LocatorTaskStatus.REVOKED },
     });
   })
-      .addCase(stopGeneration.rejected, (state, { error }) => {
-        throw new Error(error.stack);
-      });
+    .addCase(stopGeneration.rejected, (state, { error }) => {
+      throw new Error(error.stack);
+    });
 };
