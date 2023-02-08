@@ -16,6 +16,7 @@ import {
 import { defaultLibrary } from "../types/generationClassesMap";
 import { EXPAND_STATE } from "./LocatorListHeader";
 import { LocatorsProgress } from "./LocatorsProgress";
+import { useSize } from "../utils/useSize";
 import { convertListToTree, LocatorTree, setNewParents } from "../utils/locatorsTreeUtils";
 import { Locator } from "../Locator";
 import { Notifications } from "../../../common/components/notification/Notifications";
@@ -54,7 +55,10 @@ type TreeNode = {
 export const LocatorsTree: React.FC<Props> = ({ locatorIds, viewProps }) => {
   const [expandedKeys, setExpandedKeys] = useState(locatorIds);
   const [autoExpandParent, setAutoExpandParent] = useState(true);
+  const containerRef = useRef<HTMLDivElement>(null);
   const treeRef = useRef(null);
+
+  const containerHeight = useSize(containerRef)?.height;
 
   const { expandAll, setExpandAll, searchString } = viewProps;
 
@@ -154,7 +158,7 @@ export const LocatorsTree: React.FC<Props> = ({ locatorIds, viewProps }) => {
 
   return (
     <React.Fragment>
-      <div className="jdn__locatorsTree-container">
+      <div ref={containerRef} className="jdn__locatorsTree-container">
         {/* incompatible type of Key */}
         {/* eslint-disable-next-line */}
         {/* @ts-ignore */}
@@ -163,6 +167,7 @@ export const LocatorsTree: React.FC<Props> = ({ locatorIds, viewProps }) => {
           {...{ expandedKeys, onExpand, autoExpandParent }}
           switcherIcon={<CaretDown color="#878A9C" size={14} />}
           treeData={treeNodes}
+          height={containerHeight || 0}
         />
       </div>
       <Notifications />

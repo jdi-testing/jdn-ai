@@ -23,7 +23,6 @@ import { removeLocators, restoreLocators } from "./locators.slice";
 import { LocatorsTree } from "./components/LocatorsTree";
 import { LocatorListHeader } from "./components/LocatorListHeader";
 import { Filter } from "../filter/Filter";
-import { useContentSize } from "./utils/useContentSize";
 
 const { confirm } = Modal;
 
@@ -77,10 +76,22 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
     };
   }, []);
 
-  console.log("rerender!");
+  // For changing locatorsList-content height depends on header height
+  useEffect(() => {
+    if (!breadcrumbsRef.current) return;
+    const PLUGIN_HEADER_HEIGHT = 169;
+    let breadcrumbsHeight = breadcrumbsRef?.current?.clientHeight;
+    setLocatorListHeight(window.innerHeight - PLUGIN_HEADER_HEIGHT - breadcrumbsHeight);
 
-  // For changing locatorsList-content height depends on header and window height
-  useContentSize(breadcrumbsRef, setLocatorListHeight);
+    const resizeObserver = new ResizeObserver(() => {
+      // Do what you want to do when the size of the element changes
+      breadcrumbsHeight = breadcrumbsRef?.current?.clientHeight;
+      setLocatorListHeight(window.innerHeight - PLUGIN_HEADER_HEIGHT - breadcrumbsHeight);
+    });
+
+    resizeObserver.observe(breadcrumbsRef.current);
+    return () => resizeObserver.disconnect();
+  }, []);
 
   const renderBackButton = () => {
     const handleBack = () => {
