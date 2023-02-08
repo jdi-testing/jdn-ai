@@ -182,7 +182,7 @@ export const highlightOnPage = () => {
       const { bottom: tooltipBottom } = tooltip.getBoundingClientRect();
       if (bodyBottom < tooltipBottom) {
         const { height: tooltipHeight } = tooltip.getBoundingClientRect();
-        const cornerHeight = 19;
+        const cornerHeight = 13;
         tooltip.style.top = `${labelTop + window.pageYOffset - tooltipHeight - cornerHeight - labelHeight}px`;
         tooltip.classList.add("jdn-tooltip-top");
       }
