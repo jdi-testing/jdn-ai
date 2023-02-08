@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, Draft, PayloadAction } from "@reduxjs/toolkit";
 import { size } from "lodash";
 import { cancelStopGenerationReducer } from "../../common/components/notification/reducers/cancelStopGeneration.thunk";
 import { ElementClass, ElementLibrary } from "./types/generationClassesMap";

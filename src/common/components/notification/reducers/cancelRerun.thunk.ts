@@ -1,4 +1,4 @@
-import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
+import { ActionReducerMapBuilder, createAsyncThunk, EntityState } from "@reduxjs/toolkit";
 import { locatorsAdapter, simpleSelectLocatorById } from "../../../../features/locators/locators.selectors";
 import { Locator, LocatorsState, LocatorTaskStatus } from "../../../../features/locators/types/locator.types";
 import { stopGenerationHandler } from "../../../../features/locators/utils/locatorGenerationController";
@@ -11,14 +11,12 @@ export const cancelRerun = createAsyncThunk(
   }
 );
 
-export const cancelRerunReducer = (builder: ActionReducerMapBuilder<LocatorsState>) => {
+export const cancelRerunReducer = (builder: ActionReducerMapBuilder<LocatorsState & EntityState<Locator>>) => {
   return builder
-    .addCase(cancelRerun.pending, (state: LocatorsState, { meta }) => {
+    .addCase(cancelRerun.pending, (state, { meta }) => {
       const { arg } = meta;
       arg.generationData.forEach(({ element_id }) => {
-        // @ts-ignore
         const existingLocator = simpleSelectLocatorById(state, element_id);
-        // @ts-ignore
         existingLocator &&
           // @ts-ignore
           locatorsAdapter.upsertOne(state, {

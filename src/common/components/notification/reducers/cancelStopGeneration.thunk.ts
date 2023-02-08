@@ -1,5 +1,5 @@
-import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
-import { locatorsAdapter } from "../../../../features/locators/locators.selectors";
+import { ActionReducerMapBuilder, createAsyncThunk, EntityState } from "@reduxjs/toolkit";
+import { locatorsAdapter, simpleSelectLocatorById } from "../../../../features/locators/locators.selectors";
 import { runXpathGeneration } from "../../../../features/locators/reducers/runXpathGeneration.thunk";
 import { Locator, LocatorsState, LocatorTaskStatus } from "../../../../features/locators/types/locator.types";
 
@@ -13,15 +13,15 @@ export const cancelStopGeneration = createAsyncThunk(
 /* eslint-disable */
 /* wrong toolkit typings */
 
-export const cancelStopGenerationReducer = (builder: ActionReducerMapBuilder<LocatorsState>) => {
+export const cancelStopGenerationReducer = (builder: ActionReducerMapBuilder<LocatorsState & EntityState<Locator>>) => {
   return builder
       .addCase(cancelStopGeneration.pending, (state, { meta }) => {
         const { arg } = meta;
         arg.forEach(({ element_id }) => {
-          // @ts-ignore
           const existingLocator = simpleSelectLocatorById(state, element_id);
+          existingLocator &&
           // @ts-ignore
-          existingLocator && locatorsAdapter.upsertOne(state, {
+            locatorsAdapter.upsertOne(state, {
             element_id,
             locator: { ...existingLocator.locator, taskStatus: LocatorTaskStatus.PENDING },
           });
