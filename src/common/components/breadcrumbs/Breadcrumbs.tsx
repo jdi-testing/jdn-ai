@@ -5,7 +5,6 @@ import { selectCurrentPage } from "../../../app/main.selectors";
 import { PageType } from "../../../app/types/mainSlice.types";
 import { selectCurrentPageObject } from "../../../features/pageObjects/pageObject.selectors";
 
-// eslint-disable-next-line react/display-name
 export const Breadcrumbs = React.forwardRef((props, ref: ForwardedRef<HTMLDivElement>): ReactElement | null => {
   const currentPage = useSelector(selectCurrentPage);
   const pageObject = useSelector(selectCurrentPageObject);
@@ -19,3 +18,5 @@ export const Breadcrumbs = React.forwardRef((props, ref: ForwardedRef<HTMLDivEle
     </div>
   ) : null;
 });
+
+Breadcrumbs.displayName = "Breadcrumbs";
