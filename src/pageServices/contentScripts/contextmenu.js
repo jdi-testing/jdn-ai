@@ -174,7 +174,8 @@ export const runContextMenu = () => {
       const mouseOffset = parseInt(ContextUtil.getProperty(options, "mouse_offset", 2));
 
       if (windowWidth - clickCoordsX < menuWidth) {
-        menu.style.left = windowWidth - menuWidth + scrollX - 13 + "px";
+        const MENU_EDGE_OFFSET = 13;
+        menu.style.left = windowWidth - menuWidth + scrollX + MENU_EDGE_OFFSET + "px";
       } else {
         menu.style.left = clickCoordsX + mouseOffset + scrollX + "px";
       }
