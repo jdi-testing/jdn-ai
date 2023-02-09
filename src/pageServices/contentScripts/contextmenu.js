@@ -4,6 +4,8 @@ export const runContextMenu = () => {
   ----->
 */
 
+  console.log("contextmenu");
+
   const sendMessage = (message) =>
     chrome.runtime.sendMessage(message).catch((error) => {
       if (error.message !== "The message port closed before a response was received.") throw new Error(error.message);
@@ -174,9 +176,9 @@ export const runContextMenu = () => {
       const mouseOffset = parseInt(ContextUtil.getProperty(options, "mouse_offset", 2));
 
       if (windowWidth - clickCoordsX < menuWidth) {
-        menu.style.left = windowWidth - menuWidth + pageXOffset + "px";
+        menu.style.left = windowWidth - menuWidth + scrollX - 13 + "px";
       } else {
-        menu.style.left = clickCoordsX + mouseOffset + pageXOffset + "px";
+        menu.style.left = clickCoordsX + mouseOffset + scrollX + "px";
       }
 
       if (windowHeight - clickCoordsY < menuHeight) {
@@ -549,7 +551,7 @@ export const runContextMenu = () => {
 
   const runDocumentListeners = () => {
     document.oncontextmenu = contextMenuListener;
-    document.addEventListener("mouseleave", mouseLeaveListener);
+    // document.addEventListener("mouseleave", mouseLeaveListener);
   };
 
   const messageHandler = ({ message, param }, sender, sendResponse) => {
