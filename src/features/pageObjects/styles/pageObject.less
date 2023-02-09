@@ -31,20 +31,43 @@
       padding-left: 54px;
     }
 
-    & .ant-collapse>.ant-collapse-item>.ant-collapse-header .ant-collapse-arrow {
+    &_button {
+      &-menu,
+      &-copy {
+        padding: 0;
+        height: 20px;
+        position: relative;
+        right: 0;
+        top: 0;
+      }
+
+      &-copy {
+        visibility: hidden;
+      }
+    }
+
+    & .ant-collapse > .ant-collapse-item > .ant-collapse-header .ant-collapse-arrow {
       margin-right: 0px;
     }
 
     .ant-collapse-header {
       gap: 8px;
 
-      .jdn__locatorsList_button-copy {
-        display: none;
+      .ant-collapse-header-text {
+        display: flex;
+      }
+
+      .ant-collapse-extra {
+        display: flex;
+
+        .ant-dropdown {
+          left: -120px !important; // fixed context menu under the button
+        }
       }
 
       &:hover {
-        .jdn__locatorsList_button-copy {
-          display: inline-block;
+        .jdn__pageObject_button-copy {
+          visibility: visible;
         }
       }
     }

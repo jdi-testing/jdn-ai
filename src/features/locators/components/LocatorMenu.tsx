@@ -19,7 +19,8 @@ import {
 import { isProgressStatus, locatorGenerationController } from "../utils/locatorGenerationController";
 import { Locator, LocatorCalculationPriority, LocatorTaskStatus } from "../types/locator.types";
 import { setCalculationPriority, toggleDeleted } from "../locators.slice";
-import { copyLocator, LocatorOption } from "../utils/utils";
+import { copyLocator } from "../utils/utils";
+import { LocatorOption } from "../utils/constants";
 import { rerunGeneration } from "../reducers/rerunGeneration.thunk";
 import { stopGeneration } from "../reducers/stopGeneration.thunk";
 

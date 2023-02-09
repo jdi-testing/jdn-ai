@@ -40,7 +40,8 @@ import {
   copyLocatorOption,
 } from "../../../common/components/menu/menuOptions";
 import { locatorGenerationController } from "../../locators/utils/locatorGenerationController";
-import { copyLocator, LocatorOption } from "../../locators/utils/utils";
+import { copyLocator } from "../../locators/utils/utils";
+import { LocatorOption } from "../../locators/utils/constants";
 import { LocatorsSearch } from "./LocatorsSearch";
 import { rerunGeneration } from "../reducers/rerunGeneration.thunk";
 import { stopGenerationGroup } from "../reducers/stopGenerationGroup.thunk";

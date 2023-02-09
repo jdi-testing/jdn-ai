@@ -33,14 +33,13 @@ enum ExpandState {
   Custom = "Custom",
 }
 
-interface Props {
+export interface LocatorTreeProps {
   locatorIds: Array<ElementId>;
   viewProps: {
     expandAll: ExpandState;
     setExpandAll: (val: ExpandState) => void;
     searchString: string;
   };
-  searchString: string;
 }
 
 type TreeNode = {
@@ -52,7 +51,7 @@ type TreeNode = {
   className: string;
 };
 
-export const LocatorsTree: React.FC<Props> = ({ locatorIds, viewProps }) => {
+export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps }) => {
   const [expandedKeys, setExpandedKeys] = useState(locatorIds);
   const [autoExpandParent, setAutoExpandParent] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
