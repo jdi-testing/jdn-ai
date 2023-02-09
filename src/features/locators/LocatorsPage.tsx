@@ -1,5 +1,5 @@
 import { Button, Modal, Tooltip, Row } from "antd";
-import React, { useEffect, useState } from "react";
+import React, { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { isEqual, size } from "lodash";
@@ -9,33 +9,43 @@ import { changePageBack, setScriptMessage } from "../../app/main.slice";
 import { Breadcrumbs } from "../../common/components/breadcrumbs/Breadcrumbs";
 import { customConfirm } from "../../common/components/CustomConfirm";
 import { pageType } from "../../common/constants/constants";
-import { removeOverlay, showOverlay } from "../../pageServices/pageDataHandlers";
 import {
-  selectCurrentPageObject,
   selectDeletedGenerateByPageObj,
   selectCalculatedGenerateByPageObj,
   selectInProgressGenerateByPageObj,
   selectFilteredLocators,
+  getLocatosIdsByPO,
 } from "../pageObjects/pageObject.selectors";
 import { clearLocators } from "../pageObjects/pageObject.slice";
-import { locatorGenerationController } from "../locators/utils/locatorGenerationController";
+import { locatorGenerationController } from "./utils/locatorGenerationController";
 import { removeLocators, restoreLocators } from "./locators.slice";
-import { LocatorsTree } from "./components/LocatorsTree";
+import { LocatorsTree, LocatorTreeProps } from "./components/LocatorsTree";
 import { LocatorListHeader } from "./components/LocatorListHeader";
 import { Filter } from "../filter/Filter";
+import { useCalculateHeaderSize } from "./utils/useCalculateHeaderSize";
+import { useOverlay } from "./utils/useOverlay";
+
+interface Props {
+  alreadyGenerated?: boolean;
+}
 
 const { confirm } = Modal;
 
-export const LocatorsPage = ({ alreadyGenerated }) => {
+export const LocatorsPage: React.FC<Props> = ({ alreadyGenerated }) => {
   const dispatch = useDispatch();
   const currentPage = useSelector(selectCurrentPage).page;
   const locators = useSelector(selectFilteredLocators);
-  const locatorIds = useSelector(selectCurrentPageObject).locators;
+  const locatorIds = useSelector(getLocatosIdsByPO);
   const inProgressGenerate = useSelector(selectInProgressGenerateByPageObj);
   const calculatedGenerate = useSelector(selectCalculatedGenerateByPageObj);
   const deletedGenerate = useSelector(selectDeletedGenerateByPageObj);
 
+  const breadcrumbsRef = useRef(null);
   const [locatorsSnapshot] = useState(locators);
+  // For changing locatorsList-content height depends on header height
+  const containerHeight = useCalculateHeaderSize(breadcrumbsRef);
+  // overlay for web page
+  useOverlay(alreadyGenerated || false);
 
   const pageBack = () => {
     dispatch(setScriptMessage({}));
@@ -65,20 +75,11 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
     } else pageBack();
   };
 
-  useEffect(() => {
-    if (alreadyGenerated) {
-      showOverlay();
-    }
-    return () => {
-      removeOverlay();
-    };
-  }, []);
-
   const renderBackButton = () => {
     const handleBack = () => {
       if (isEqual(locators, locatorsSnapshot)) pageBack();
       else {
-        const enableOk = size(inProgressGenerate) || size(calculatedGenerate);
+        const enableOk = !!(size(inProgressGenerate) || size(calculatedGenerate));
         customConfirm({
           onAlt: handleDiscard,
           altText: "Discard",
@@ -99,7 +100,7 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
       locatorGenerationController.revokeAll();
       if (!size(locatorsSnapshot)) {
         dispatch(removeLocators(locatorIds));
-        dispatch(clearLocators());
+        dispatch(clearLocators(undefined));
       } else {
         dispatch(restoreLocators(locatorsSnapshot));
       }
@@ -139,12 +140,12 @@ export const LocatorsPage = ({ alreadyGenerated }) => {
     <React.Fragment>
       <div className="jdn__locatorsList">
         <Row justify="space-between" wrap={false}>
-          <Breadcrumbs />
+          <Breadcrumbs ref={breadcrumbsRef} />
           <Filter />
         </Row>
         <LocatorListHeader
-          render={(viewProps) => (
-            <div className="jdn__locatorsList-content">
+          render={(viewProps: LocatorTreeProps["viewProps"]) => (
+            <div className="jdn__locatorsList-content" style={{ height: containerHeight }}>
               {size(locators) ? <LocatorsTree {...{ viewProps, locatorIds }} /> : null}
             </div>
           )}
