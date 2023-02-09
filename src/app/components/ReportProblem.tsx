@@ -20,7 +20,7 @@ import {
 import { ValidationErrorType } from "../../features/locators/types/locator.types";
 import { selectCurrentPageObject } from "../../features/pageObjects/pageObject.selectors";
 
-const { error } = Modal;
+const { info } = Modal;
 
 export interface ReportFormProps {
   body: string;
@@ -61,16 +61,14 @@ export const ReportProblem = () => {
   }, [fileList]);
 
   const showExceptionConfirm = () =>
-    error({
-      title: "Report is not available",
+    info({
+      title: "Problem report",
       content: (
         <React.Fragment>
-          Mail server is not accessible from your location and problem report can&apos;t be created automatically.
           Please send an email{" "}
           <a href="mailto:SupportJDI@epam.com" data-turbo-frame="">
             SupportJDI@epam.com
-          </a>{" "}
-          by yourself.
+          </a>
         </React.Fragment>
       ),
     });
