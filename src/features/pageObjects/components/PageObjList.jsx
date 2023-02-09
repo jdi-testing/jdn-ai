@@ -1,5 +1,5 @@
 import Icon from "@ant-design/icons";
-import { Collapse, Typography } from "antd";
+import { Collapse, Tooltip, Typography } from "antd";
 import { size } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
@@ -36,7 +36,7 @@ export const PageObjList = (props) => {
     }
   };
 
-  const renderPageObjSettings = (pageObjId, url, library) => {
+  const renderPageObjGeneration = (pageObjId, url, library) => {
     return (
       <div className="jdn__pageObject__settings">
         <Footnote className="jdn__pageObject__settings-url">{url}</Footnote>
@@ -49,7 +49,7 @@ export const PageObjList = (props) => {
     if (size(elements)) {
       return renderLocators(elements);
     } else {
-      return renderPageObjSettings(pageObjId, url, library);
+      return renderPageObjGeneration(pageObjId, url, library);
     }
   };
 
@@ -65,7 +65,7 @@ export const PageObjList = (props) => {
   return (
     <div className="jdn__locatorsList">
       <PageObjListHeader {...{ ...props, toggleExpand, isExpanded, setActivePanel }} />
-      <div className="jdn__locatorsList-content jdn__pageObj-content">
+      <div className="jdn__locatorsList-content jdn__pageObject-content">
         {size(pageObjects) ? (
           <React.Fragment>
             <Collapse
@@ -89,10 +89,10 @@ export const PageObjList = (props) => {
                   <Collapse.Panel
                     key={id}
                     header={
-                      <React.Fragment>
+                      <Tooltip title={url} placement="bottomLeft" getPopupContainer={(triggerNode) => triggerNode}>
                         <Icon component={PageSvg} className="jdn__locatorsList-status" />
                         <Typography.Text className="jdn__pageObject-content-text">{name}</Typography.Text>
-                      </React.Fragment>
+                      </Tooltip>
                     }
                     extra={
                       <>
