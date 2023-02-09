@@ -1,8 +1,14 @@
 .jdn {
   &__pageObject {
-    &-content-text {
-      word-break: break-all;
-      margin-left: 8px;
+    &-content {
+      &-text {
+        word-break: break-all;
+        margin-left: 8px;
+      }
+      
+      & .ant-tooltip {
+        max-width: 100%;
+      }
     }
 
     .jdn__notification {

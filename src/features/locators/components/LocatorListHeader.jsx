@@ -204,7 +204,12 @@ export const LocatorListHeader = ({ render }) => {
               setExpandAll(expandAll === EXPAND_STATE.COLLAPSED ? EXPAND_STATE.EXPANDED : EXPAND_STATE.COLLAPSED)
             }
           />
-          <Checkbox checked={fullySelected} indeterminate={partiallySelected} onClick={handleOnCheck}></Checkbox>
+          <Checkbox
+            checked={fullySelected}
+            indeterminate={partiallySelected}
+            onClick={handleOnCheck}
+            disabled={!size(locators)}
+          ></Checkbox>
           <Chip
             hidden={!size(active)}
             primaryLabel={size(active)}
