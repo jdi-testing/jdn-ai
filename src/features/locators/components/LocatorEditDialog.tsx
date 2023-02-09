@@ -103,14 +103,13 @@ export const LocatorEditDialog: React.FC<Props> = ({
       .catch((error) => console.log(error));
   };
 
-  const renderValidationWarning = () => (
+  const renderValidationWarning = () =>
     !validationEnabled ? (
       <div className="jdn__locatorEdit-warning">
-        <Icon component={WarningFilled} className="ant-alert-icon" style={{ color: "#faad14" }} />
+        <Icon component={WarningFilled} className="ant-alert-icon" />
         <Footnote>Validation is possible only on Page Object creation</Footnote>
       </div>
-    ) : null
-  )
+    ) : null;
 
   return (
     <DialogWithForm
