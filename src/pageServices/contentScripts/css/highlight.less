@@ -41,15 +41,17 @@
   line-height: 18px;
   letter-spacing: 0;
   padding: 12px;
-  margin-top: 15px;
+  margin-top: 13px;
 
   &::after {
     content: "";
     position: absolute;
     right: 10px;
-    top: -19px;
-    border: 9px solid transparent;
+    top: -10px;
+    border-width: 0px 9px 10px;
+    border-style: solid;
     border-bottom: 10px solid rgba(0, 0, 0, 0.8);
+    border-color: transparent transparent rgba(0, 0, 0, 0.8);
   }
 
   &-right::after {
@@ -59,7 +61,8 @@
 
   &-top::after {
     border-color: rgba(0, 0, 0, 0.8) transparent transparent;
-    bottom: -19px;
+    border-width: 10px 9px 0px;
+    bottom: -10px;
     top: unset;
   }
 

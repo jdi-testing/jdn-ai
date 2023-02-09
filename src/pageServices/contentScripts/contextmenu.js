@@ -345,7 +345,7 @@ export const runContextMenu = () => {
         ? [
             {
               text: `<span>Edit</span>`,
-              icon: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              icon: `<svg width="14" height="14" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M4.34531 10.125H2.25C2.15055 10.125 2.05516 10.0855 1.98484 10.0152C1.91451 9.94484 1.875 9.84945
       1.875 9.75V7.65469C1.87483 7.60599 1.88427 7.55774 1.90277 7.5127C1.92127 7.46765 1.94847 7.4267 1.98281
       7.39218L7.60782 1.76718C7.64271 1.73175 7.6843 1.70361 7.73017 1.68441C7.77604 1.6652 7.82527 1.65531 7.875
@@ -370,7 +370,7 @@ export const runContextMenu = () => {
         ? [
             {
               text: `<span class="cm_container_warning-option">Delete</span>`,
-              icon: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              icon: `<svg width="14" height="14" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M10.125 2.625H1.875" stroke="#FF4D4F" stroke-linecap="round" stroke-linejoin="round"/>
         <path d="M4.875 4.875V7.875" stroke="#FF4D4F" stroke-linecap="round" stroke-linejoin="round"/>
         <path d="M7.125 4.875V7.875" stroke="#FF4D4F" stroke-linecap="round" stroke-linejoin="round"/>
@@ -393,7 +393,7 @@ export const runContextMenu = () => {
         : [
             {
               text: `Restore`,
-              icon: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+              icon: `<svg width="14" height="14" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M3.74072 4.67343H1.49072V2.42343" stroke="#5A5A5A" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M8.91572 3.08436C8.53304 2.70112 8.07855 2.39708 7.57826 2.18964C7.07797 1.9822 6.54169 1.87543
             6.0001 1.87543C5.4585 1.87543 4.92223 1.9822 4.42193 2.18964C3.92164 2.39708 3.46716 2.70112 3.08447
@@ -446,7 +446,7 @@ export const runContextMenu = () => {
       return [
         {
           text: `<span>Pause generation</span>`,
-          icon: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+          icon: `<svg width="14" height="14" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M9.375 1.875H7.6875C7.48039 1.875 7.3125 2.04289 7.3125 2.25V9.75C7.3125 9.95711 7.48039 10.125 7.6875 10.125H9.375C9.58211 10.125 9.75 9.95711 9.75 9.75V2.25C9.75 2.04289 9.58211 1.875 9.375 1.875Z"
             stroke="#5A5A5A" stroke-linecap="round" stroke-linejoin="round"/>
           <path d="M4.3125 1.875H2.625C2.41789 1.875 2.25 2.04289 2.25 2.25V9.75C2.25 9.95711 2.41789 10.125 2.625 10.125H4.3125C4.51961 10.125 4.6875 9.95711 4.6875 9.75V2.25C4.6875 2.04289 4.51961 1.875 4.3125 1.875Z"
@@ -466,7 +466,7 @@ export const runContextMenu = () => {
       return [
         {
           text: `<span>Rerun</span>`,
-          icon: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+          icon: `<svg width="14" height="14" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M10.6922 5.68125L3.94687 1.55625C3.89009 1.52122 3.82499 1.50198 3.75829 1.5005C3.69159 1.49903 3.6257
          1.51537 3.56743 1.54786C3.50915 1.58034 3.4606 1.62778 3.42677 1.68529C3.39294 1.74279 3.37507 1.80828 3.375
          1.875V10.125C3.37507 10.1917 3.39294 10.2572 3.42677 10.3147C3.4606 10.3722 3.50915 10.4197 3.56743 10.4521C3
@@ -489,7 +489,7 @@ export const runContextMenu = () => {
       return [
         {
           text: `<span>Retry</span>`,
-          icon: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+          icon: `<svg width="14" height="14" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M8.25928 4.67343H10.5093V2.42343" stroke="#5A5A5A" stroke-linecap="round" stroke-linejoin="round"/>
         <path d="M8.91556 8.91563C8.33881 9.49286 7.60381 9.88606 6.80354 10.0455C6.00328 10.2049 5.17371 10.1234 4.41977 9.81133C3.66583 9.49921 3.02139 8.9705 2.56798 8.29208C2.11457 7.61365 1.87256 6.81599 1.87256 6C1.87256 5.18401 2.11457 4.38635 2.56798 3.70792C3.02139 3.0295 3.66583 2.50079 4.41977 2.18868C5.17371 1.87656 6.00328 1.79507 6.80354 1.95451C7.60381 2.11395 8.33881 2.50715 8.91556 3.08438L10.5093 4.67344" stroke="#5A5A5A" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>`,
