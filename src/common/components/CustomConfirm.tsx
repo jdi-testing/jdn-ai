@@ -8,7 +8,7 @@ interface Props extends ModalProps {
   enableOk: boolean;
   onAlt: () => void;
   altText: string;
-  destroy: () => void;
+  destroy?: () => void;
 }
 
 export const customConfirm = (props: Props) => {
@@ -35,19 +35,19 @@ export const CustomConfirm: React.FC<Props> = ({
   const handleOk = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     onOk && onOk(e);
     setIsModalOpen(false);
-    destroy();
+    destroy && destroy();
   };
 
   const handleCancel = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     onCancel && onCancel(e);
     setIsModalOpen(false);
-    destroy();
+    destroy && destroy();
   };
 
   const handleAlt = () => {
     onAlt();
     setIsModalOpen(false);
-    destroy();
+    destroy && destroy();
   };
 
   return (
