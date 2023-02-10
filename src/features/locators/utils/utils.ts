@@ -7,7 +7,8 @@ import { copyToClipboard, getLocatorString } from "../../../common/utils/helpers
 import { LocatorOption } from "./constants";
 
 export const getLocator = ({ fullXpath, robulaXpath, customXpath }: LocatorValue) => {
-  return customXpath || robulaXpath || fullXpath || "";
+  if (typeof customXpath === "string") return customXpath;
+  else return robulaXpath || fullXpath || "";
 };
 
 const getLocatorWithJDIAnnotation = (locator: LocatorValue): string => `@UI("${getLocator(locator)}")`;
