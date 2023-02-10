@@ -1,5 +1,6 @@
 import { Form, Input, Select } from "antd";
-import { Rule, RuleObject } from "antd/lib/form";
+import Icon from "@ant-design/icons";
+import { Rule } from "antd/lib/form";
 import TextArea from "antd/lib/input/TextArea";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -8,10 +9,16 @@ import { DialogWithForm } from "../../../common/components/DialogWithForm";
 import { selectAvailableClasses } from "../../filter/filter.selectors";
 import { selectLocatorsByPageObject } from "../../pageObjects/pageObject.selectors";
 import { ElementClass, ElementLibrary } from "../types/generationClassesMap";
-import { isNameUnique, isStringMatchesReservedWord } from "../../pageObjects/utils/pageObject";
-import { Locator, ValidationErrorType } from "../types/locator.types";
+import { isNameUnique } from "../../pageObjects/utils/pageObject";
+import { Locator } from "../types/locator.types";
 import { changeLocatorAttributes } from "../locators.slice";
-import { createNewName, equalHashes, evaluateXpath, getLocator, isValidJavaVariable } from "../utils/utils";
+import { createNewName, getLocator } from "../utils/utils";
+import { useLocatorValidationEnabled } from "../utils/useLocatorValidationEnabled";
+import { createLocatorValidationRules } from "../utils/locatorValidationRules";
+import { createNameValidationRules } from "../utils/nameValidationRules";
+
+import WarningFilled from "../assets/warningFilled.svg";
+import { Footnote } from "../../../common/components/footnote/Footnote";
 
 interface Props extends Locator {
   isModalOpen: boolean;
@@ -40,7 +47,8 @@ export const LocatorEditDialog: React.FC<Props> = ({
   elemName,
   elemText,
 }) => {
-  const [locatorValidity, setLocatorValidity] = useState<string>(validity?.locator || "");
+  const isValidationEnabled = useLocatorValidationEnabled();
+  const [locatorValidity, setLocatorValidity] = useState<string>(isValidationEnabled ? validity?.locator || "" : "");
   const [isEditedName, setIsEditedName] = useState<boolean>(Boolean(isCustomName));
 
   const locators = useSelector(selectLocatorsByPageObject);
@@ -67,56 +75,14 @@ export const LocatorEditDialog: React.FC<Props> = ({
     setIsEditedName(true);
   };
 
-  const nameValidationRules: Rule[] = [
-    {
-      required: true,
-      message: ValidationErrorType.EmptyValue,
-    },
-    () => ({
-      validator(_: RuleObject, value: string) {
-        if (!value.length) return Promise.resolve();
-        if (!isValidJavaVariable(value) || isStringMatchesReservedWord(value)) {
-          return Promise.reject(new Error(ValidationErrorType.InvalidName));
-        } else if (_isNameUnique(value)) {
-          return Promise.reject(new Error(ValidationErrorType.DuplicatedName));
-        } else return Promise.resolve();
-      },
-    }),
-  ];
+  const nameValidationRules: Rule[] = createNameValidationRules(_isNameUnique);
 
-  const locatorValidationRules: Rule[] = [
-    () => ({
-      validator(_: RuleObject, value: string) {
-        if (!value.length) {
-          setLocatorValidity(ValidationErrorType.EmptyValue);
-          return Promise.resolve();
-        }
-        return evaluateXpath(value).then((response) => {
-          const result = response[0].result;
-          let length;
-          let foundHash;
-
-          if (result !== ValidationErrorType.NotFound) {
-            length = JSON.parse(result).length;
-            foundHash = JSON.parse(result).foundHash;
-          }
-
-          if (result === ValidationErrorType.NotFound || length === 0) {
-            setLocatorValidity(ValidationErrorType.NotFound);
-          } else if (length > 1) {
-            setLocatorValidity(ValidationErrorType.MultipleElements);
-          } else if (length === 1) {
-            if (foundHash !== jdnHash) {
-              if (equalHashes(foundHash, locators).length) setLocatorValidity(ValidationErrorType.DuplicatedLocator);
-              else setLocatorValidity(ValidationErrorType.NewElement);
-            } else {
-              setLocatorValidity("");
-            }
-          }
-        });
-      },
-    }),
-  ];
+  const locatorValidationRules: Rule[] = createLocatorValidationRules(
+    setLocatorValidity,
+    isValidationEnabled,
+    locators,
+    jdnHash
+  );
 
   const handleOk = () => {
     form
@@ -136,6 +102,14 @@ export const LocatorEditDialog: React.FC<Props> = ({
       })
       .catch((error) => console.log(error));
   };
+
+  const renderValidationWarning = () =>
+    !isValidationEnabled ? (
+      <div className="jdn__locatorEdit-warning">
+        <Icon component={WarningFilled} className="ant-alert-icon" />
+        <Footnote>Validation is possible only on Page Object creation</Footnote>
+      </div>
+    ) : null;
 
   return (
     <DialogWithForm
@@ -175,6 +149,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
         rules={locatorValidationRules}
         validateStatus={locatorValidity ? "warning" : ""}
         help={locatorValidity}
+        extra={renderValidationWarning()}
       >
         {/* antd's bug with applying class to TextArea*/}
         <TextArea className={locatorValidity.length ? "ant-input-status-warning" : ""} />

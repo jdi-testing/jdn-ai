@@ -7,6 +7,7 @@ import { selectLocatorsByPageObject } from "../features/pageObjects/pageObject.s
 import { sendMessage } from "./connector";
 import { selectCurrentPage } from "../app/main.selectors";
 import { RootState } from "../app/store/store";
+import { PageType } from "../app/types/mainSlice.types";
 
 const notify = (state: RootState, action: any, prevState: RootState) => {
   let { type, payload } = action;
@@ -15,6 +16,19 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
     type = payload?.type;
     payload = payload?.payload;
   }
+  switch (type) {
+    case "main/changePage":
+      if (selectCurrentPage(state).page === pageType.pageObject) sendMessage.killHighlight();
+      break;
+    case "main/changePageBack":
+      if (selectCurrentPage(state).page === pageType.pageObject) sendMessage.killHighlight();
+      break;
+  }
+
+  const noHighlight =
+    selectCurrentPage(state).alreadyGenerated || selectCurrentPage(state).page === PageType.PageObject;
+  if (noHighlight) return;
+
   switch (type) {
     case "pageObject/addLocatorsToPageObj": {
       if (isNil(state.pageObject.present.currentPageObject)) return;
@@ -54,12 +68,6 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       sendMessage.assignDataLabels(predictedElements);
       break;
     }
-    case "main/changePage":
-      if (selectCurrentPage(state).page === pageType.pageObject) sendMessage.killHighlight();
-      break;
-    case "main/changePageBack":
-      if (selectCurrentPage(state).page === pageType.pageObject) sendMessage.killHighlight();
-      break;
     case "locators/stopGeneration/fulfilled": {
       const locator = selectLocatorById(state, meta.arg);
       locator && sendMessage.changeStatus(locator);
