@@ -174,8 +174,7 @@ export const runContextMenu = () => {
       const mouseOffset = parseInt(ContextUtil.getProperty(options, "mouse_offset", 2));
 
       if (windowWidth - clickCoordsX < menuWidth) {
-        const MENU_EDGE_OFFSET = 13;
-        menu.style.left = windowWidth - menuWidth + scrollX + MENU_EDGE_OFFSET + "px";
+        menu.style.right = "4px";
       } else {
         menu.style.left = clickCoordsX + mouseOffset + scrollX + "px";
       }
@@ -550,7 +549,7 @@ export const runContextMenu = () => {
 
   const runDocumentListeners = () => {
     document.oncontextmenu = contextMenuListener;
-    document.addEventListener("mouseleave", mouseLeaveListener);
+    // document.addEventListener("mouseleave", mouseLeaveListener);
   };
 
   const messageHandler = ({ message, param }, sender, sendResponse) => {
