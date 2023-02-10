@@ -22,7 +22,6 @@ import {
   selectActiveNonGenerateByPO,
   selectCalculatedActiveByPageObj,
   selectDeletedActiveByPageObj,
-  selectFailedByPageObject,
   selectFailedSelectedByPageObject,
   selectFilteredLocators,
   selectGenerateByPageObject,
