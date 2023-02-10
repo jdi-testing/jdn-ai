@@ -143,14 +143,6 @@ div[jdn-highlight="true"] {
 .jdn-tooltip {
   all: revert;
 
-  &::before,
-  &::after,
-  *:not(circle, path),
-  *::before,
-  *::after {
-    all: revert;
-  }
-
   position: absolute;
   display: inline-block;
   background-color: rgba(0, 0, 0, 0.8);
@@ -163,7 +155,15 @@ div[jdn-highlight="true"] {
   padding: 12px;
   margin-top: 13px;
 
-  &-paragraph {
+  &::before,
+  &::after,
+  *:not(circle, path),
+  *::before,
+  *::after {
+    all: revert;
+  }
+
+  div.jdn-tooltip-paragraph {
     margin: 0 0 5px;
     color: @color-white;
   
