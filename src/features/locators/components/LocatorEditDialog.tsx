@@ -47,8 +47,8 @@ export const LocatorEditDialog: React.FC<Props> = ({
   elemName,
   elemText,
 }) => {
-  const validationEnabled = useLocatorValidationEnabled();
-  const [locatorValidity, setLocatorValidity] = useState<string>(validationEnabled ? validity?.locator || "" : "");
+  const isValidationEnabled = useLocatorValidationEnabled();
+  const [locatorValidity, setLocatorValidity] = useState<string>(isValidationEnabled ? validity?.locator || "" : "");
   const [isEditedName, setIsEditedName] = useState<boolean>(Boolean(isCustomName));
 
   const locators = useSelector(selectLocatorsByPageObject);
@@ -79,7 +79,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
 
   const locatorValidationRules: Rule[] = createLocatorValidationRules(
     setLocatorValidity,
-    validationEnabled,
+    isValidationEnabled,
     locators,
     jdnHash
   );
@@ -104,7 +104,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
   };
 
   const renderValidationWarning = () =>
-    !validationEnabled ? (
+    !isValidationEnabled ? (
       <div className="jdn__locatorEdit-warning">
         <Icon component={WarningFilled} className="ant-alert-icon" />
         <Footnote>Validation is possible only on Page Object creation</Footnote>

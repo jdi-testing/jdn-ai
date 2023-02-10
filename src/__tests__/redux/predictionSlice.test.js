@@ -5,6 +5,8 @@ import { store } from "../../app/store/store";
 import { locator1 } from "../__mocks__/locator.mock";
 import { locatorTaskStatus } from "../../common/constants/constants";
 import { ElementLibrary } from "../../features/locators/types/generationClassesMap";
+import { changePage } from "../../app/main.slice";
+import { PageType } from "../../app/types/mainSlice.types";
 
 /* global jest*/
 
@@ -14,6 +16,7 @@ describe("changeLocatorAttributes reducer", () => {
 
   beforeAll(() => {
     store.dispatch(addLocators([locator1]));
+    store.dispatch(changePage({ page: PageType.LocatorsList }));
 
     changeElementNameSpy = jest.spyOn(sendMessage, "changeElementName");
     removeElementSpy = jest.spyOn(sendMessage, "removeElement");
