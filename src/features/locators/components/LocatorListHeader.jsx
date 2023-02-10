@@ -22,6 +22,7 @@ import {
   selectActiveNonGenerateByPO,
   selectCalculatedActiveByPageObj,
   selectDeletedActiveByPageObj,
+  selectFailedSelectedByPageObject,
   selectFilteredLocators,
   selectGenerateByPageObject,
   selectInProgressSelectedByPageObject,
@@ -38,6 +39,7 @@ import {
   restore,
   upPriority,
   copyLocatorOption,
+  retry,
 } from "../../../common/components/menu/menuOptions";
 import { locatorGenerationController } from "../../locators/utils/locatorGenerationController";
 import { copyLocator } from "../../locators/utils/utils";
@@ -68,6 +70,7 @@ export const LocatorListHeader = ({ render }) => {
   const calculatedActive = useSelector((_state) => selectCalculatedActiveByPageObj(_state));
   const waitingActive = useSelector(selectWaitingActiveByPageObj);
   const deletedActive = useSelector(selectDeletedActiveByPageObj);
+  const failedSelected = useSelector((_state) => selectFailedSelectedByPageObject(_state));
 
   const actualSelected = useMemo(() => [...calculatedActive, ...waitingActive], [calculatedActive, waitingActive]);
 
@@ -145,6 +148,7 @@ export const LocatorListHeader = ({ render }) => {
 
     const items = [
       ...(size(activeNonGenerate) ? [addToPO(() => dispatch(toggleElementGroupGeneration(activeNonGenerate)))] : []),
+      ...(size(activeGenerate) ? [removeFromPO(() => dispatch(toggleElementGroupGeneration(activeGenerate)))] : []),
       ...(size(actualSelected) > 1
         ? [
             copyLocatorOption([
@@ -156,7 +160,6 @@ export const LocatorListHeader = ({ render }) => {
             ]),
           ]
         : []),
-      ...(size(activeGenerate) ? [removeFromPO(() => dispatch(toggleElementGroupGeneration(activeGenerate)))] : []),
       ...(size(deletedActive) ? [restore(() => dispatch(toggleDeletedGroup(deletedActive)))] : []),
       ...(size(stoppedSelected) ? [rerun(() => dispatch(rerunGeneration({ generationData: stoppedSelected })))] : []),
       ...(size(inProgressSelected) ? [pause(() => dispatch(stopGenerationGroup(inProgressSelected)))] : []),
@@ -178,6 +181,7 @@ export const LocatorListHeader = ({ render }) => {
             ]),
           ]
         : []),
+      ...(size(failedSelected) ? [retry(() => dispatch(rerunGeneration({ generationData: failedSelected })))] : []),
       ...(size(actualSelected) ? [deleteOption(handleDelete)] : []),
     ];
 

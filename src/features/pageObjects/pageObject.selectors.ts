@@ -159,6 +159,10 @@ export const selectFailedByPageObject = createSelector(selectFilteredLocators, (
   elements.filter((element) => element.locator.taskStatus === locatorTaskStatus.FAILURE)
 );
 
+export const selectFailedSelectedByPageObject = createSelector(selectFailedByPageObject, (elements) =>
+  elements.filter((element) => element.active)
+);
+
 // move to loc
 export const selectLocatorByJdnHash = createSelector(
   (state: RootState, jdnHash: string) => selectLocators(state).filter((loc) => loc.jdnHash === jdnHash),
