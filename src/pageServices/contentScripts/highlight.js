@@ -166,8 +166,8 @@ export const highlightOnPage = () => {
     const tooltipInnerHTML = () => {
       const el = predictedElements.find((e) => e.element_id === element_id);
       return `
-      <p class="jdn-tooltip-paragraph"><b>Name:</b> ${el.name}</p>
-      <p class="jdn-tooltip-paragraph"><b>Type:</b> ${el.type}</p>`;
+      <div class="jdn-tooltip-paragraph"><b>Name:</b> ${el.name}</div>
+      <div class="jdn-tooltip-paragraph"><b>Type:</b> ${el.type}</div>`;
     };
 
     const checkTooltipVisibility = (tooltip, label) => {
