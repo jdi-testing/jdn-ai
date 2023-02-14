@@ -222,7 +222,7 @@ export const LocatorListHeader = ({ render }) => {
           />
         </span>
         {!isNil(menu) ? (
-          <Dropdown arrow={{ pointAtCenter: true }} menu={renderMenu()} trigger={["click"]} destroyPopupOnHide>
+          <Dropdown menu={renderMenu()} trigger={["click"]} destroyPopupOnHide>
             <Button
               className="jdn__locatorsList_button jdn__locatorsList_button-menu"
               icon={<DotsThree size={18} onClick={(e) => e.preventDefault()} />}
