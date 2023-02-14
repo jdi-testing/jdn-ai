@@ -165,10 +165,6 @@ export const selectable = () => {
       const r = el.getBoundingClientRect();
       return { top: r.top + document.body.scrollTop, left: r.left + document.body.scrollLeft };
     };
-    this.suspend = function (e) {
-      e.stopPropagation();
-      return false;
-    };
     this.isContextForGroup = function (e) {
       const target = e.target.closest("[jdn-highlight=true]");
       if (!target) return;
@@ -177,9 +173,6 @@ export const selectable = () => {
     this.rectOpen = function (e) {
       self.options.start && self.options.start(e);
       if (self.options.key && !e[self.options.key]) return;
-      self.foreach(self.items, function (el) {
-        el.addEventListener("click", self.suspend); // skip any clicks
-      });
       self.options.onDeselect && self.selectedItems.size && self.options.onDeselect(Array.from(self.selectedItems));
 
       document.body.classList.add("s-noselect");
@@ -253,9 +246,6 @@ export const selectable = () => {
           if (cross(a, el) === true) {
             toggleActiveClass(el);
           }
-          setTimeout(function () {
-            el.removeEventListener("click", self.suspend);
-          }, 100);
         });
       }
 
