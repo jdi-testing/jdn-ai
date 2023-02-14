@@ -25,7 +25,7 @@ import { BackendStatus } from "./types/mainSlice.types";
 import { LocatorsPage } from "../features/locators/LocatorsPage";
 import { PageObjectPage } from "../features/pageObjects/PageObjectPage";
 import { locatorGenerationController } from "../features/locators/utils/locatorGenerationController";
-import { removeEmptyPageObjects } from "../features/locators/reducers/removeEmptyPageObjects.thunk";
+import { removeEmptyPageObjects } from "../features/pageObjects/reducers/removeEmptyPageObjects.thunk";
 import { removeOverlay } from "../pageServices/pageDataHandlers";
 
 const App = () => {
