@@ -141,7 +141,7 @@ class Connector {
         this.createPort();
         chrome.storage.sync.set({ IS_DISCONNECTED: false });
       }),
-      this.attachContentScript(runContextMenu, "runContextMenu"),
+      // this.attachContentScript(runContextMenu, "runContextMenu"),
       this.attachContentScript(assignDataLabels, "assignDataLabels"),
       this.attachContentScript(highlightOrder, "highlightOrder"),
       this.attachContentScript(urlListener, "urlListener").then(() => {
@@ -149,6 +149,7 @@ class Connector {
         sendMessage.setClosedSession({ tabId: this.tabId, isClosed: false });
       }),
       this.attachContentScript(selectable, "selectable"),
+      this.attachContentScript(runContextMenu, "runContextMenu"),
       this.attachCSS("contentScripts.css"),
     ]);
   }
@@ -165,7 +166,7 @@ class Connector {
 
 export const connector = new Connector();
 
-// messages, are sent from plugun to content scripts
+// messages, are sent from plugin to content scripts
 export const sendMessage = {
   addElement: (el: Locator) => connector.sendMessage("ADD_ELEMENT", el),
   assignDataLabels: (payload: PredictedEntity[]) => connector.sendMessage("ASSIGN_DATA_LABEL", payload),

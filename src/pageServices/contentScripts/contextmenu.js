@@ -521,26 +521,28 @@ export const runContextMenu = () => {
   };
 
   const contextMenuListener = (event) => {
+    event.preventDefault();
+    debugger;
     const isMacPlatform = window.navigator?.userAgent.indexOf("Mac") != -1;
     if (isMacPlatform && event.ctrlKey) return;
 
-    highlightTargets = document.querySelectorAll(".jdn-active");
-    if (highlightTargets.length === 0) return;
+    setTimeout(() => {
+      highlightTargets = document.querySelectorAll(".jdn-active");
+      if (highlightTargets.length === 0) return;
+      contextEvent = event;
 
-    event.preventDefault();
-    contextEvent = event;
-
-    sendMessage({
-      message: "GET_ELEMENTS_DATA",
-      param: Array.from(highlightTargets).map((_element) => _element.id),
-    }).then(({ elements, _types }) => {
-      if (!elements || !elements.length) return;
-      predictedElements = elements;
-      types = _types;
-      elementMenu && elementMenu.remove();
-      elementMenu = new ContextMenu(menuItems());
-      elementMenu.display(contextEvent);
-    });
+      sendMessage({
+        message: "GET_ELEMENTS_DATA",
+        param: Array.from(highlightTargets).map((_element) => _element.id),
+      }).then(({ elements, _types }) => {
+        if (!elements || !elements.length) return;
+        predictedElements = elements;
+        types = _types;
+        elementMenu && elementMenu.remove();
+        elementMenu = new ContextMenu(menuItems());
+        elementMenu.display(contextEvent);
+      });
+    }, 200);
   };
 
   const mouseLeaveListener = () => {
