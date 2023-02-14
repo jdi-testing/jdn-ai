@@ -519,12 +519,13 @@ export const runContextMenu = () => {
   };
 
   const contextMenuListener = (event) => {
-    event.preventDefault();
     const isMacPlatform = window.navigator?.userAgent.indexOf("Mac") != -1;
     if (isMacPlatform && event.ctrlKey) return;
 
-    highlightTargets = document.querySelectorAll(".jdn-active");
-    if (highlightTargets.length === 0) return;
+    const highlightTarget = event.target.closest("[jdn-highlight=true]");
+    if (!highlightTarget) return;
+
+    event.preventDefault();
 
     setTimeout(() => {
       contextEvent = event;
