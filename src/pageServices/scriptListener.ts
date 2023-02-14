@@ -1,5 +1,4 @@
 import { AsyncThunkAction } from "@reduxjs/toolkit";
-import { isNil } from "lodash";
 import { Dispatch } from "react";
 import { setScriptMessage } from "../app/main.slice";
 import { RootState } from "../app/store/store";
@@ -14,7 +13,7 @@ import {
   toggleElementGeneration,
   toggleElementGroupGeneration,
 } from "../features/locators/locators.slice";
-import { selectCurrentPageObject, selectLocatorByJdnHash, selectActiveLocators } from "../features/pageObjects/pageObject.selectors";
+import { selectLocatorByJdnHash, selectActiveLocators } from "../features/pageObjects/pageObject.selectors";
 import { connector } from "./connector";
 import { showOverlay } from "./pageDataHandlers";
 import { rerunGeneration } from "../features/locators/reducers/rerunGeneration.thunk";
@@ -50,7 +49,6 @@ export const createListeners = (
     },
     GET_ACTIVE_ELEMENTS: (_, sender, sendResponse) => {
       const elements = selectActiveLocators(state);
-      const library = !isNil(state.pageObject.present.currentPageObject) && selectCurrentPageObject(state)?.library;
       sendResponse({
         elements,
       });
