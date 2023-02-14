@@ -522,7 +522,7 @@ export const runContextMenu = () => {
 
   const contextMenuListener = (event) => {
     event.preventDefault();
-    debugger;
+
     const isMacPlatform = window.navigator?.userAgent.indexOf("Mac") != -1;
     if (isMacPlatform && event.ctrlKey) return;
 
@@ -542,7 +542,7 @@ export const runContextMenu = () => {
         elementMenu = new ContextMenu(menuItems());
         elementMenu.display(contextEvent);
       });
-    }, 200);
+    }, 100);
   };
 
   const mouseLeaveListener = () => {
