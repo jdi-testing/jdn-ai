@@ -524,7 +524,7 @@ export const runContextMenu = () => {
     if (isMacPlatform && event.ctrlKey) return;
 
     highlightTargets = document.querySelectorAll(".jdn-active");
-      if (highlightTargets.length === 0) return;
+    if (highlightTargets.length === 0) return;
 
     setTimeout(() => {
       contextEvent = event;
