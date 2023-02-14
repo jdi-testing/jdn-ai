@@ -14,12 +14,10 @@ import {
   toggleElementGeneration,
   toggleElementGroupGeneration,
 } from "../features/locators/locators.slice";
-import { selectCurrentPageObject, selectLocatorByJdnHash } from "../features/pageObjects/pageObject.selectors";
-import { ElementLibrary } from "../features/locators/types/generationClassesMap";
+import { selectCurrentPageObject, selectLocatorByJdnHash, selectActiveLocators } from "../features/pageObjects/pageObject.selectors";
 import { connector } from "./connector";
 import { showOverlay } from "./pageDataHandlers";
 import { rerunGeneration } from "../features/locators/reducers/rerunGeneration.thunk";
-import { getTypesMenuOptions } from "../features/locators/utils/locatorTypesUtils";
 
 export type ScriptMessagePayload = { message: keyof Actions; param: Record<string, never> };
 
@@ -50,12 +48,11 @@ export const createListeners = (
       const locators = payload.map((jdnHash: string) => selectLocatorByJdnHash(state, jdnHash)) as Locator[];
       dispatch(elementGroupUnsetActive({ locators, fromScript: true }));
     },
-    GET_ELEMENTS_DATA: (jdnHashes, sender, sendResponse) => {
-      const elements = jdnHashes.map((jdnHash: string) => selectLocatorByJdnHash(state, jdnHash));
+    GET_ACTIVE_ELEMENTS: (_, sender, sendResponse) => {
+      const elements = selectActiveLocators(state);
       const library = !isNil(state.pageObject.present.currentPageObject) && selectCurrentPageObject(state)?.library;
       sendResponse({
         elements,
-        types: getTypesMenuOptions(library || ElementLibrary.MUI),
       });
     },
     REMOVE_ELEMENT: (payload) => dispatch(toggleDeletedGroup(payload)),
