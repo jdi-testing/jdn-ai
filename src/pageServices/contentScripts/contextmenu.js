@@ -543,12 +543,15 @@ export const runContextMenu = () => {
   };
 
   const mouseLeaveListener = () => {
+    console.log("I hid menu!");
+
     elementMenu && elementMenu.hide();
   };
 
   const runDocumentListeners = () => {
     document.oncontextmenu = contextMenuListener;
-    document.addEventListener("mouseleave", mouseLeaveListener);
+    window.addEventListener("blur", mouseLeaveListener);
+    window.addEventListener("focus", () => console.log("window got focus!"));
   };
 
   const messageHandler = ({ message, param }, sender, sendResponse) => {
