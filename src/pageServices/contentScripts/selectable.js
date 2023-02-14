@@ -166,16 +166,19 @@ export const selectable = () => {
       return { top: r.top + document.body.scrollTop, left: r.left + document.body.scrollLeft };
     };
     this.suspend = function (e) {
-      e.preventDefault();
+      console.log("click");
+      // e.preventDefault();
       e.stopPropagation();
       return false;
     };
     this.isContextForGroup = function (e) {
+      debugger;
       const target = e.target.closest("[jdn-highlight=true]");
       if (!target) return;
       return target.classList.contains(self.options.selectedClass) && e.button === 2;
     };
     this.rectOpen = function (e) {
+      console.log("mousedown");
       self.options.start && self.options.start(e);
       if (self.options.key && !e[self.options.key]) return;
       self.foreach(self.items, function (el) {
@@ -218,6 +221,9 @@ export const selectable = () => {
       );
     };
     this.select = function (e) {
+      console.log("mouseup");
+      console.log("mouseleave");
+      debugger;
       const selected = new Set;
       const deselected = new Set;
       const a = rb();
@@ -240,7 +246,7 @@ export const selectable = () => {
           el.classList.add(s);
         }
       };
-
+      debugger;
       if (isPlainClick(a)) {
         const highlightTarget = e.target.closest("[jdn-highlight=true]");
 
@@ -285,6 +291,7 @@ export const selectable = () => {
     }
 
     this.rectDraw = function (e) {
+      console.log("mousemove");
       const g = rb();
       if (!self.ipos || g === null) {
         return;

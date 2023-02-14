@@ -519,24 +519,26 @@ export const runContextMenu = () => {
   };
 
   const contextMenuListener = (event) => {
+    event.preventDefault();
     const isMacPlatform = window.navigator?.userAgent.indexOf("Mac") != -1;
     if (isMacPlatform && event.ctrlKey) return;
 
-    const highlightTarget = event.target.closest("[jdn-highlight=true]");
-    if (!highlightTarget) return;
+    highlightTargets = document.querySelectorAll(".jdn-active");
+      if (highlightTargets.length === 0) return;
 
-    event.preventDefault();
-    contextEvent = event;
+    setTimeout(() => {
+      contextEvent = event;
 
-    sendMessage({
-      message: "GET_ACTIVE_ELEMENTS",
-    }).then(({ elements }) => {
-      if (!elements || !elements.length) return;
-      predictedElements = elements;
-      elementMenu && elementMenu.remove();
-      elementMenu = new ContextMenu(menuItems());
-      elementMenu.display(contextEvent);
-    });
+      sendMessage({
+        message: "GET_ACTIVE_ELEMENTS",
+      }).then(({ elements }) => {
+        if (!elements || !elements.length) return;
+        predictedElements = elements;
+        elementMenu && elementMenu.remove();
+        elementMenu = new ContextMenu(menuItems());
+        elementMenu.display(contextEvent);
+      });
+    }, 200);
   };
 
   const mouseLeaveListener = () => {
