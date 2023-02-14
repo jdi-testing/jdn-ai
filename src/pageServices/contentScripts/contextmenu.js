@@ -538,7 +538,7 @@ export const runContextMenu = () => {
         elementMenu = new ContextMenu(menuItems());
         elementMenu.display(contextEvent);
       });
-    }, 200);
+    }, 100);
   };
 
   const mouseLeaveListener = () => {
