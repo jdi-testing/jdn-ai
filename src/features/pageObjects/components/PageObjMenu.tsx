@@ -68,7 +68,7 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, locators, elements, lib
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <Dropdown
-        align={{ offset: [10, 0] }}
+        align={{ offset: [15, 0] }}
         trigger={["click"]}
         menu={renderMenu(id, locators, elements, name)}
         getPopupContainer={(triggerNode) => triggerNode}
