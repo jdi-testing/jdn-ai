@@ -141,7 +141,7 @@ class Connector {
         this.createPort();
         chrome.storage.sync.set({ IS_DISCONNECTED: false });
       }),
-      // this.attachContentScript(runContextMenu, "runContextMenu"),
+      this.attachContentScript(runContextMenu, "runContextMenu"),
       this.attachContentScript(assignDataLabels, "assignDataLabels"),
       this.attachContentScript(highlightOrder, "highlightOrder"),
       this.attachContentScript(urlListener, "urlListener").then(() => {
@@ -149,7 +149,6 @@ class Connector {
         sendMessage.setClosedSession({ tabId: this.tabId, isClosed: false });
       }),
       this.attachContentScript(selectable, "selectable"),
-      this.attachContentScript(runContextMenu, "runContextMenu"),
       this.attachCSS("contentScripts.css"),
     ]);
   }
