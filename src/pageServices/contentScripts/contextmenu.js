@@ -165,8 +165,8 @@ export const runContextMenu = () => {
       const clickCoordsX = clickCoords.x;
       const clickCoordsY = clickCoords.y;
 
-      const menuWidth = menu.offsetWidth ;
-      const menuHeight = menu.offsetHeight ;
+      const menuWidth = menu.offsetWidth;
+      const menuHeight = menu.offsetHeight;
 
       const windowWidth = window.innerWidth;
       const windowHeight = window.innerHeight;
@@ -550,7 +550,7 @@ export const runContextMenu = () => {
 
   const runDocumentListeners = () => {
     document.oncontextmenu = contextMenuListener;
-    // document.addEventListener("mouseleave", mouseLeaveListener);
+    document.addEventListener("mouseleave", mouseLeaveListener);
   };
 
   const messageHandler = ({ message, param }, sender, sendResponse) => {
