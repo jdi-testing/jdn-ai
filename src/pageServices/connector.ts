@@ -165,7 +165,7 @@ class Connector {
 
 export const connector = new Connector();
 
-// messages, are sent from plugun to content scripts
+// messages, are sent from plugin to content scripts
 export const sendMessage = {
   addElement: (el: Locator) => connector.sendMessage("ADD_ELEMENT", el),
   assignDataLabels: (payload: PredictedEntity[]) => connector.sendMessage("ASSIGN_DATA_LABEL", payload),
