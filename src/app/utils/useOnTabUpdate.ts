@@ -15,7 +15,7 @@ export const useOnTabUpdate = (onScriptsInited: () => Promise<void>) => {
       locatorGenerationController.revokeAll();
       dispatch(removeEmptyPageObjects());
       removeOverlay();
-    }
+    };
 
     connector.initScripts(onScriptsInited, disconnectHandler);
   }, []);
