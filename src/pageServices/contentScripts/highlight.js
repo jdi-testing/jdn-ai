@@ -147,7 +147,7 @@ export const highlightOnPage = () => {
           if (elementPosition == "fixed" || elementPosition == "sticky") {
             return true;
           }
-        } while (element = element.offsetParent);
+        } while ((element = element.offsetParent));
         return false;
       };
 
@@ -155,10 +155,10 @@ export const highlightOnPage = () => {
 
       return rect
         ? {
-            left: `${ isFixedElement ? left : (left + window.pageXOffset + document.body.scrollLeft) }px`,
-            top: `${ isFixedElement ? top : (top + window.pageYOffset + document.body.scrollTop) }px`,
-            height: `${ height }px`,
-            width: `${ width }px`,
+            left: `${isFixedElement ? left : left + window.pageXOffset + document.body.scrollLeft}px`,
+            top: `${isFixedElement ? top : top + window.pageYOffset + document.body.scrollTop}px`,
+            height: `${height}px`,
+            width: `${width}px`,
             ...(isFixedElement && { position: "fixed" }),
           }
         : {};
