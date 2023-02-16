@@ -88,8 +88,6 @@ class Connector {
 
   onTabUpdate(onInitHandler: () => Promise<void>, onDisconnectHandler: () => void) {
     const listener = (port: chrome.runtime.Port | undefined) => {
-        this.getTab();
-        console.log("port ",  port);
         if (this.port) this.port = undefined;
         if (typeof onDisconnectHandler === "function") onDisconnectHandler();
         this.initScripts(onInitHandler, onDisconnectHandler);
