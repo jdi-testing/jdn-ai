@@ -13,20 +13,15 @@ import { SeveralTabsWarning } from "./components/SeveralTabsWarning";
 import { HttpEndpoint, request } from "../services/backend";
 import { checkSession, getSessionId } from "./utils/appUtils";
 import { selectCurrentPage } from "./main.selectors";
-import { clearAll } from "./main.slice";
 import { RootState, store } from "./store/store";
 import { useOnTabUpdate } from "./utils/useOnTabUpdate";
 
 import { defineServer } from "./reducers/defineServer.thunk";
 import { Guide } from "./components/Guide";
-import { connector } from "../pageServices/connector";
 import "./styles/index.less";
 import { BackendStatus } from "./types/mainSlice.types";
 import { LocatorsPage } from "../features/locators/LocatorsPage";
 import { PageObjectPage } from "../features/pageObjects/PageObjectPage";
-import { locatorGenerationController } from "../features/locators/utils/locatorGenerationController";
-import { removeEmptyPageObjects } from "../features/pageObjects/reducers/removeEmptyPageObjects.thunk";
-import { removeOverlay } from "../pageServices/pageDataHandlers";
 
 const App = () => {
   const [isInvalidSession, setIsInvalidSession] = useState(false);
@@ -35,22 +30,9 @@ const App = () => {
   const currentPage = useSelector(selectCurrentPage);
   const dispatch = useDispatch();
 
-  useOnTabUpdate();
+  useOnTabUpdate(() => checkSession(setIsInvalidSession));
 
   useEffect(() => {
-    connector.onTabUpdate(() => {
-      dispatch(clearAll());
-      locatorGenerationController.revokeAll();
-      dispatch(removeEmptyPageObjects());
-      removeOverlay();
-      connector.attachStaticScripts();
-    });
-  }, []);
-
-  useEffect(() => {
-    connector.attachStaticScripts().then(() => {
-      checkSession(setIsInvalidSession);
-    });
     dispatch(defineServer());
   }, []);
 
