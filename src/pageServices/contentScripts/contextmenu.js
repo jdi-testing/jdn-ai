@@ -165,24 +165,24 @@ export const runContextMenu = () => {
       const clickCoordsX = clickCoords.x;
       const clickCoordsY = clickCoords.y;
 
-      const menuWidth = menu.offsetWidth + 4;
-      const menuHeight = menu.offsetHeight + 4;
+      const menuWidth = menu.offsetWidth;
+      const menuHeight = menu.offsetHeight;
 
       const windowWidth = window.innerWidth;
       const windowHeight = window.innerHeight;
 
-      const mouseOffset = parseInt(ContextUtil.getProperty(options, "mouse_offset", 2));
+      const mouseOffset = parseInt(ContextUtil.getProperty(options, "mouse_offset", 0));
 
       if (windowWidth - clickCoordsX < menuWidth) {
-        menu.style.right = "4px";
+        menu.style.left = clickCoordsX - menuWidth + mouseOffset + scrollX + "px";
       } else {
         menu.style.left = clickCoordsX + mouseOffset + scrollX + "px";
       }
 
       if (windowHeight - clickCoordsY < menuHeight) {
-        menu.style.top = windowHeight - menuHeight + pageYOffset + "px";
+        menu.style.top = clickCoordsY - menuHeight + mouseOffset + scrollY + "px";
       } else {
-        menu.style.top = clickCoordsY + mouseOffset + pageYOffset + "px";
+        menu.style.top = clickCoordsY + mouseOffset + scrollY + "px";
       }
 
       menu.style.position = "absolute";
