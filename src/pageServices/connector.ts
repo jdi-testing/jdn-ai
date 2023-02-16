@@ -35,6 +35,12 @@ class Connector {
     this.getTab();
   }
 
+  async initScripts(onInitHandler: () => Promise<void>, onDisconnectHandler: () => void) {
+    await this.attachStaticScripts();
+    onInitHandler();
+    this.onTabUpdate(onInitHandler, onDisconnectHandler);
+  }
+
   handleError(error: Error) {
     if (typeof this.onerror === "function") this.onerror(error);
     else throw error;
@@ -80,21 +86,17 @@ class Connector {
     chrome.runtime.onMessage.addListener(this.onmessage);
   }
 
-  onTabUpdate(callback: () => void) {
-    // @ts-ignore
-    const listener = (tabId: number, changeinfo) => {
-      if (changeinfo && changeinfo.status === "complete" && this.tabId === tabId) {
+  onTabUpdate(onInitHandler: () => Promise<void>, onDisconnectHandler: () => void) {
+    const listener = (port: chrome.runtime.Port | undefined) => {
         this.getTab();
-        if (this.port) {
-          this.port.disconnect();
-          this.port = undefined;
-        }
-        if (typeof callback === "function") callback();
-      }
+        console.log("port ",  port);
+        if (this.port) this.port = undefined;
+        if (typeof onDisconnectHandler === "function") onDisconnectHandler();
+        this.initScripts(onInitHandler, onDisconnectHandler);
     };
 
-    if (!chrome.tabs.onUpdated.hasListener(listener)) {
-      chrome.tabs.onUpdated.addListener(listener);
+    if (this.port && !this.port.onDisconnect.hasListener(listener)) {
+      this.port.onDisconnect.addListener(listener);
     }
   }
 

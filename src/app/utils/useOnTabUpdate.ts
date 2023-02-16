@@ -6,16 +6,17 @@ import { connector } from "../../pageServices/connector";
 import { removeOverlay } from "../../pageServices/pageDataHandlers";
 import { clearAll } from "../main.slice";
 
-export const useOnTabUpdate = () => {
+export const useOnTabUpdate = (onScriptsInited: () => Promise<void>) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    connector.onTabUpdate(() => {
+    const disconnectHandler = () => {
       dispatch(clearAll());
       locatorGenerationController.revokeAll();
       dispatch(removeEmptyPageObjects());
       removeOverlay();
-      connector.attachStaticScripts();
-    });
+    }
+
+    connector.initScripts(onScriptsInited, disconnectHandler);
   }, []);
 };
