@@ -307,7 +307,7 @@ export const highlightOnPage = () => {
     const hasHorizontalScroll = (node) =>
       node.scrollWidth > node.clientWidth &&
       (getComputedStyle(node).overflowX === "scroll" || getComputedStyle(node).overflowX == "auto");
-    const isRootNode = (node) => node.parentElement === null;
+    const isRootNode = (node) => node.parentElement === null || node.tagName === "BODY";
 
     nodes.forEach((node) => {
       if ((hasVerticalScroll(node) || hasHorizontalScroll(node)) && !isRootNode(node)) {
