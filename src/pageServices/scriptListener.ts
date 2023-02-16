@@ -1,5 +1,4 @@
 import { AsyncThunkAction } from "@reduxjs/toolkit";
-import { isNil } from "lodash";
 import { Dispatch } from "react";
 import { setScriptMessage } from "../app/main.slice";
 import { RootState } from "../app/store/store";
@@ -14,12 +13,10 @@ import {
   toggleElementGeneration,
   toggleElementGroupGeneration,
 } from "../features/locators/locators.slice";
-import { selectCurrentPageObject, selectLocatorByJdnHash } from "../features/pageObjects/pageObject.selectors";
-import { ElementLibrary } from "../features/locators/types/generationClassesMap";
+import { selectLocatorByJdnHash, selectActiveLocators } from "../features/pageObjects/pageObject.selectors";
 import { connector } from "./connector";
 import { showOverlay } from "./pageDataHandlers";
 import { rerunGeneration } from "../features/locators/reducers/rerunGeneration.thunk";
-import { getTypesMenuOptions } from "../features/locators/utils/locatorTypesUtils";
 
 export type ScriptMessagePayload = { message: keyof Actions; param: Record<string, never> };
 
@@ -50,12 +47,10 @@ export const createListeners = (
       const locators = payload.map((jdnHash: string) => selectLocatorByJdnHash(state, jdnHash)) as Locator[];
       dispatch(elementGroupUnsetActive({ locators, fromScript: true }));
     },
-    GET_ELEMENTS_DATA: (jdnHashes, sender, sendResponse) => {
-      const elements = jdnHashes.map((jdnHash: string) => selectLocatorByJdnHash(state, jdnHash));
-      const library = !isNil(state.pageObject.present.currentPageObject) && selectCurrentPageObject(state)?.library;
+    GET_ACTIVE_ELEMENTS: (_, sender, sendResponse) => {
+      const elements = selectActiveLocators(state);
       sendResponse({
         elements,
-        types: getTypesMenuOptions(library || ElementLibrary.MUI),
       });
     },
     REMOVE_ELEMENT: (payload) => dispatch(toggleDeletedGroup(payload)),
