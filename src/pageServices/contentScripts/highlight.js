@@ -140,25 +140,26 @@ export const highlightOnPage = () => {
     const divPosition = (element) => {
       const rect = element.getBoundingClientRect();
       const { top, left, height, width } = rect || {};
+
       const checkPositionElement = (element) => {
         do {
           let elementPosition = getComputedStyle(element).position;
           if (elementPosition == "fixed" || elementPosition == "sticky") {
-            return { isFixedElement: true, elementPosition };
+            return true;
           }
-        } while ((element = element.offsetParent));
+        } while (element = element.offsetParent);
         return false;
       };
 
-      const { isFixedElement, elementPosition } = checkPositionElement(element);
+      const isFixedElement = checkPositionElement(element);
 
       return rect
         ? {
-            left: `${left + window.pageXOffset + document.body.scrollLeft}px`,
-            top: `${top + window.pageYOffset + document.body.scrollTop}px`,
-            height: `${height}px`,
-            width: `${width}px`,
-            ...(isFixedElement && { position: elementPosition }),
+            left: `${ isFixedElement ? left : (left + window.pageXOffset + document.body.scrollLeft) }px`,
+            top: `${ isFixedElement ? top : (top + window.pageYOffset + document.body.scrollTop) }px`,
+            height: `${ height }px`,
+            width: `${ width }px`,
+            ...(isFixedElement && { position: "fixed" }),
           }
         : {};
     };
