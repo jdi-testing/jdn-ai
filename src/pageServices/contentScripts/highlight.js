@@ -137,14 +137,28 @@ export const highlightOnPage = () => {
 
   const drawRectangle = (element, predictedElement) => {
     const { element_id, jdnHash } = predictedElement;
-    const divPosition = (rect) => {
+    const divPosition = (element) => {
+      const rect = element.getBoundingClientRect();
       const { top, left, height, width } = rect || {};
+      const checkPositionElement = (element) => {
+        do {
+          let elementPosition = getComputedStyle(element).position;
+          if (elementPosition == "fixed" || elementPosition == "sticky") {
+            return { isFixedElement: true, elementPosition };
+          }
+        } while ((element = element.offsetParent));
+        return false;
+      };
+
+      const { isFixedElement, elementPosition } = checkPositionElement(element);
+
       return rect
         ? {
             left: `${left + window.pageXOffset + document.body.scrollLeft}px`,
             top: `${top + window.pageYOffset + document.body.scrollTop}px`,
             height: `${height}px`,
             width: `${width}px`,
+            ...(isFixedElement && { position: elementPosition }),
           }
         : {};
     };
@@ -209,7 +223,7 @@ export const highlightOnPage = () => {
       tooltip.className = "jdn-tooltip jdn-tooltip-hidden";
     });
 
-    Object.assign(div.style, divPosition(element.getBoundingClientRect()));
+    Object.assign(div.style, divPosition(element));
     labelContainer.appendChild(label);
     div.insertAdjacentElement("afterBegin", labelContainer);
 
