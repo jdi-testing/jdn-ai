@@ -8,6 +8,18 @@ export const VueRules: RulesMap[] = [
     },
   },
   {
+    jdnLabel: "appBar",
+    rules: {
+      classes: ["v-app-bar"],
+    },
+  },
+  {
+    jdnLabel: "aspectRatios",
+    rules: {
+      classes: ["v-responsive"],
+    },
+  },
+  {
     jdnLabel: "button",
     rules: {
       classes: ["v-btn"],
@@ -196,6 +208,12 @@ export const VueRules: RulesMap[] = [
     jdnLabel: "switch",
     rules: {
       classes: ["v-input--switch"],
+    },
+  },
+  {
+    jdnLabel: "systembar",
+    rules: {
+      classes: ["v-system-bar"],
     },
   },
   {
