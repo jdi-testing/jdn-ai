@@ -353,7 +353,8 @@ export const VueRules: RulesMap[] = [
     rules: {
       classes: ["v-snackbar"],
     },
-  },  {
+  },
+  {
     jdnLabel: "stepper",
     rules: {
       classes: ["v-stepper"],
