@@ -59,13 +59,7 @@ test("recognize content if detectContent: true", () => {
 });
 
 test("recognize with 'excludeClasses'", () => {
-  const inputs = [
-    vuetifyAutocomplete,
-    vuetifySelect,
-    vuetifyOverflowBtn,
-    vuetifyTextField,
-    vuetifyInput
-  ].join("");
+  const inputs = [vuetifyAutocomplete, vuetifySelect, vuetifyOverflowBtn, vuetifyTextField, vuetifyInput].join("");
 
   const checkResult = (result) => {
     expect(result.length).toBe(5);
@@ -77,4 +71,4 @@ test("recognize with 'excludeClasses'", () => {
   };
 
   runQuery(inputs, checkResult);
-})
+});

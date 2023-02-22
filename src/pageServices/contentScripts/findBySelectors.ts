@@ -19,7 +19,6 @@ export const findBySelectors = () => {
   };
 
   const markupElements = (elements: NodeListOf<Element>, jdnLabel: JDNLabel) => {
-    
     elements.forEach((elem) => {
       let label = elem.getAttribute(JDN_LABEL);
       if (label) {
