@@ -1,6 +1,6 @@
 # JDN plugin
 
-[JDN plugin](https://chrome.google.com/webstore/detail/jdn/dldagjdnndapekahhbpeemjifghccldg) is a Google Chrome extension. It helps Test Automation Engineers to create Page Objects in the test automation framework and speed up test development in test environments such as Eclipse IDE or ItelleJ IDEA.
+[JDN plugin](https://chrome.google.com/webstore/detail/jdn/dldagjdnndapekahhbpeemjifghccldg) is a Google Chrome extension. It helps Test Automation Engineers to create Page Objects in the test automation framework and speed up test development in test environments such as Eclipse IDE or IntelleJ IDEA.
 
 The plugin allows generating Page Objects with the following restrictions:
 -	is applicable to the JDI framework;
@@ -12,6 +12,17 @@ The plugin allows generating Page Objects with the following restrictions:
 **Video instructions**
 
 You can find the video instructions on Youtube in [English](https://www.youtube.com/watch?v=b2o6R98icRU) or in [Russian](https://www.youtube.com/watch?v=FJWJjxmJUMw).
+
+* [Plugin setup](#plugin-setup)
+  * [Frontend setup](#frontend-setup)
+  * [Server setup](#server-setup)
+* [Working with JDN plugin](#working-with-jdn-plugin)
+  * [Launch JDN plugin](#launch-jdn-plugin)
+  * [Generate page objects](#generate-page-objects)
+  * [Download page objects](#download-page-objects)
+  * [Manage locators](#manage-locators)
+* [FAQ](#faq)
+* [Support](#support)
 
 ## Plugin setup
 The current JDN version is available both in Chrome Web Store and can be downloaded as a client-server application.
@@ -37,30 +48,34 @@ If the plugin does not work after downloading from Chrome Web Store, you can ist
 
 ### Server setup
 
-*If you are an EPAM employee, skip this section. Turn on EPAM VPN to enable connection to the server. In other cases, please use the instructions below.*  
+*If you are an EPAM employee, skip this section. Turn on EPAM VPN to enable connection to the server and make sure the connection is established. In other cases, please use the instructions below.*  
 
 1. Set up [Docker](https://www.docker.com/products/docker-desktop)  
 2. Download the latest Docker Compose file from the `develop` branch and run `docker compose`  
 3. On _Windows 10_, use command line; on _macOS_, use the native terminal.
 
-**macOS/Linux**
-```shell
-curl --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/rc-2/docker-compose-rc.yaml && docker compose up
-```
 **Windows**
 ```shell
 curl.exe --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/rc-2/docker-compose-rc.yaml && docker compose up
 ```
+**macOS/Linux**
+```shell
+curl --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/rc-2/docker-compose-rc.yaml && docker compose up
+```
 
 <details>
   <summary>Commands to install Development version</summary>
-  **macOS/Linux**
-```shell
-curl --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/develop/docker-compose.yaml && docker compose up
-```
+  
 **Windows**
+
 ```shell
 curl.exe --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/develop/docker-compose.yaml && docker compose up
+```
+
+**macOS/Linux**
+
+```shell
+curl --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/develop/docker-compose.yaml && docker compose up
 ```
 
 </details>
@@ -71,9 +86,9 @@ curl.exe --output docker-compose.yaml --url https://raw.githubusercontent.com/jd
 
 **Prerequisites**: check that the backend part is running. *The current version of backend should be displayed in the JDN plugin tab near the front-end version: it is the easiest way to check that back-end is installed properly and connected.*
 
-**Note**: You can launch JDN plugin in only one tab. Incognito mode is not supported.
+**Note**: You can launch JDN plugin in only one tab. Incognito mode is not supported yet.
 
-### Launching JDN plugin
+### Launch JDN plugin
 
 1. Open the page to create page objects in Chrome.
 2. Navigate to DevTools by pressing Command+Option+J (Mac) or Control+Shift+J (Windows, Linux, ChromeOS).
@@ -83,7 +98,7 @@ curl.exe --output docker-compose.yaml --url https://raw.githubusercontent.com/jd
 ![alt text](https://user-images.githubusercontent.com/53625116/192780907-6fdd41f4-cbbf-4335-b1fe-9db2da2f10af.png)
 
 
-### Generating page objects
+### Generate page objects
 1. Click on the **+Page object** button.
 2. Choose the library.
 3. Click on the **Generate** button in the new section. 
@@ -92,51 +107,34 @@ The generation process may take some time. The locators will be generated for th
 5. Check one, several or all locators.
 6. Click the **Save** button. Now, you can delete or download page objects.
 
-### Manipulating Page Objects
+### Download page objects
 ![alt text](https://user-images.githubusercontent.com/53625116/192288508-5a9c5760-04eb-4048-82ff-5118b007f6dc.png)
 
-
-#### Download Page Objects
 To download a single Page object:
 1. Call the Page Object Actions Menu by clicking the three dots icon.
-2. Choose the download option. Page Object will be downloaded to your computer in Java format.
+2. Choose the download option. Page Object will be downloaded to your computer as a Java file.
 
-To download all generated page objects, click the download icon at the top of the list. Page objects will be downloaded as an archive.
+You can also copy a Page object to clipboard.
 
-#### Delete Page Objects
-To delete a Page object with locators in it:
-1. Call the Page Object Actions Menu by clicking the three dots icon.
-2. Choose the delete option and click on the Confirm button.  Page Object, including all locators, will be deleted from the Page Objects list.
+To download all generated page objects as a project template, click the download icon at the top of the list. The project template will be downloaded as an archive.
 
-To delete all Page objects, click the delete icon at the top of the list.
-
-### Manupulating Locators List
+### Manage locators
 ![alt text](https://user-images.githubusercontent.com/53625116/192290963-aab9c701-522e-4161-a7d2-68884dd389ed.png)
 
-#### Managing locators
+To manage a locator, click the thee dots button next to it and choose an action:
 
-* **Locator Context menu**
-  * Left Button Mouse Click - selects an object
-  * Right Button Mouse Click - opens the context menu
-
-* **Locator Actions menu**
-  * actions with a specific locator - click on the menu button next to the locator or hover locator and click the Copy icon;
-  * actions with a group of locators - select the required locators using checkboxes and use the control buttons that appeared at the top of the table.
-
-*	**Locator List Quick Actions menu**
-
-#### Available actions with locators
-
-- **Edit** -  you can change the block type, variable name or xPath of the locator;
-- **Delete** / **Restore** - you can delete a locator or a bunch of locators;
-- **Stop**/ **Rerun** generating - if a locator is generating, you can stop the process;
--	**Change the priority** – you can change the priority of a locator generating.
+- **Edit** - change the block type, variable name or xPath of the locator;
+- **Copy** - copy to clipboard in various formats;
+- **Advanced calculation** - allow more time for processing the locator. The default period is 1 second.
+- **Delete** / **Restore** - delete a locator or a bunch of locators;
+- **Stop**/ **Rerun** generating - stop processing, if a locator is generating;
+-	**Change the priority** – change the priority of a locator generating.
 
 *Actions that are available only from the context menu:*
 -	**Bring to front/back** – if you want to manage overlapped elements.
 
-## [FAQ](https://jdi-family.atlassian.net/l/cp/cV133esQ)
-Frequently asked questions
+## FAQ
+[Frequently asked questions](https://jdi-family.atlassian.net/l/cp/cV133esQ)
 ## Support
 Support chat in [Skype](https://join.skype.com/clvyVvnZvWqc)
 
