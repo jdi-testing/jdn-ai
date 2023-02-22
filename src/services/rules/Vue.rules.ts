@@ -20,13 +20,6 @@ export const VueRules: RulesMap[] = [
     },
   },
   {
-    jdnLabel: "autocomplete",
-    rules: {
-      classes: ["v-autocomplete"],
-      excludingClasses: ["v-overflow-btn"],
-    },
-  },
-  {
     jdnLabel: "avatar",
     rules: {
       classes: ["v-avatar"],
@@ -111,12 +104,13 @@ export const VueRules: RulesMap[] = [
       classes: ["v-color-picker"],
     },
   },
-  // {
-  //   jdnLabel: "combobox",
-  //   rules: {
-  //     classes: ["v-select", "v-autocomplete"],
-  //   },
-  // },
+  {
+    jdnLabel: "combobox",
+    rules: {
+      classes: ["v-autocomplete"],
+      excludingClasses: ["v-overflow-btn"],
+    },
+  },
   {
     jdnLabel: "dataIterator",
     rules: {

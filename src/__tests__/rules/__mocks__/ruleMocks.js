@@ -29,3 +29,8 @@ export const ruleMock5 = {
     },
   ],
 };
+
+export const ruleMock6 = {
+    classes: ["v-select"],
+    excludingClasses: ["v-autocomplete", "v-overflow-btn"],
+  };

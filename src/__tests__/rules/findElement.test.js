@@ -62,7 +62,7 @@ test("recognize with 'excludeClasses'", () => {
 
   const checkResult = (result) => {
     expect(result.length).toBe(5);
-    expect(result[0].predicted_label).toBe("autocomplete");
+    expect(result[0].predicted_label).toBe("combobox");
     expect(result[1].predicted_label).toBe("select");
     expect(result[2].predicted_label).toBe("overflowButton");
     expect(result[3].predicted_label).toBe("textfield");
