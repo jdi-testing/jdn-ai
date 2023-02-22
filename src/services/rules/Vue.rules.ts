@@ -199,8 +199,8 @@ export const VueRules: RulesMap[] = [
       children: [
         {
           classes: ["row"],
-        }
-      ]
+        },
+      ],
     },
     detectContent: true,
   },
