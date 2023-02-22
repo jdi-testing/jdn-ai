@@ -9,12 +9,13 @@ export interface RulesMap {
   // to detect elements that are inside other elements
   detectContent?: boolean;
   // to resolve conflict if one element is predicted with mwny different classes
-  priority?: "normal" | "low";
+  priority?: "high" | "normal" | "low";
 }
 
 export interface Rule {
   tag?: string;
   classes?: string[];
+  excludeClasses?: string[],
   // attributes?: [string, string][]; see DataTable and SimpleTable
   children?: Rule[];
 }

@@ -88,7 +88,7 @@ export enum VuetifyClasses {
   alert = "Alert",
   appBar = "AppBar",
   aspectRatios = "AspectRatios",
-  autocomplete = "Autocomplete", // conflicts with select and textfield
+  autocomplete = "Autocomplete",
   avatar = "Avatar",
   badge = "Badge",
   banner = "Banner",
@@ -125,7 +125,7 @@ export enum VuetifyClasses {
   menu = "Menu",
   navigationDrawer = "NavigationDrawer",
   otpInput = "OtpInput",
-  overflowButton = "OverflowButton", // conflicts with autocomplete and select
+  overflowButton = "OverflowButton",
   overlay = "Overlay",
   pagination = "Pagination",
   // paginationPage = "PaginationPage", // what is it?

@@ -23,6 +23,7 @@ export const VueRules: RulesMap[] = [
     jdnLabel: "autocomplete",
     rules: {
       classes: ["v-autocomplete"],
+      excludeClasses: ["v-overflow-btn"],
     },
   },
   {
@@ -313,7 +314,8 @@ export const VueRules: RulesMap[] = [
   {
     jdnLabel: "select",
     rules: {
-      classes: ["v-input", "v-select"],
+      classes: ["v-select"],
+      excludeClasses: ["v-autocomlete", "v-overflow-btn"],
     },
   },
   // {
@@ -395,6 +397,7 @@ export const VueRules: RulesMap[] = [
     rules: {
       classes: ["v-text-field"],
     },
+    priority: "low",
   },
   {
     jdnLabel: "timeline",

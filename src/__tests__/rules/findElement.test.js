@@ -5,6 +5,12 @@ import { card } from "./__mocks__/card.mock";
 import { iconButton } from "./__mocks__/iconButton.mock";
 import { manySimpleElements } from "./__mocks__/manySimpleElements.mock.js";
 import { vueRulesMock } from "./__mocks__/vueRules.mock";
+import { vuetifyAutocomplete } from "./__mocks__/vuetifyAutocomplete";
+import { vuetifySelect } from "./__mocks__/vuetifySelect";
+import { vuetifyOverflowBtn } from "./__mocks__/vuetifyOverflowBtn";
+import { vuetifyTextField } from "./__mocks__/vuetifyTextField";
+import { vuetifyInput } from "./__mocks__/vuetifyInput";
+import { VueRules } from "../../services/rules/Vue.rules";
 
 const runQuery = (domSource, callback) => {
   const dom = new JSDOM(domSource);
@@ -51,3 +57,28 @@ test("recognize content if detectContent: true", () => {
   };
   runQuery(card, checkResult);
 });
+
+test("recognize with 'excludeClasses'", () => {
+  // const inputs = [
+  //   vuetifyAutocomplete,
+  //   vuetifySelect,
+  //   vuetifyOverflowBtn,
+  //   vuetifyTextField,
+  //   vuetifyInput
+  // ].join("");
+
+  // console.log(inputs);
+
+  const checkResult = (result) => {
+    console.log("__Result", result);
+    expect(result.length).toBe(5);
+    // expect(result[0].predicted_label).toBe("autocomplete");
+    // expect(result[1].predicted_label).toBe("select");
+    // expect(result[2].predicted_label).toBe("overflowButton");
+    // expect(result[3].predicted_label).toBe("textfield");
+    // expect(result[4].predicted_label).toBe("input");
+  };
+
+  // runQuery(vuetifyAutocomplete, checkResult, VueRules);
+  runQuery(iconButton, checkResult);
+})
