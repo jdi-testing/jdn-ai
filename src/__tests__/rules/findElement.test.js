@@ -16,7 +16,7 @@ const runQuery = (domSource, callback) => {
   const dom = new JSDOM(domSource);
   global.document = dom.window.document;
 
-  // we can't use original VueRules,
+  // we can't use original VueRules with "children" property,
   // because test env doesn't work with selectors containing ':has' directive
   const selectors = getLibrarySelectors(vueRulesMock());
   findBySelectors();
@@ -59,26 +59,22 @@ test("recognize content if detectContent: true", () => {
 });
 
 test("recognize with 'excludeClasses'", () => {
-  // const inputs = [
-  //   vuetifyAutocomplete,
-  //   vuetifySelect,
-  //   vuetifyOverflowBtn,
-  //   vuetifyTextField,
-  //   vuetifyInput
-  // ].join("");
-
-  // console.log(inputs);
+  const inputs = [
+    vuetifyAutocomplete,
+    vuetifySelect,
+    vuetifyOverflowBtn,
+    vuetifyTextField,
+    vuetifyInput
+  ].join("");
 
   const checkResult = (result) => {
-    console.log("__Result", result);
     expect(result.length).toBe(5);
-    // expect(result[0].predicted_label).toBe("autocomplete");
-    // expect(result[1].predicted_label).toBe("select");
-    // expect(result[2].predicted_label).toBe("overflowButton");
-    // expect(result[3].predicted_label).toBe("textfield");
-    // expect(result[4].predicted_label).toBe("input");
+    expect(result[0].predicted_label).toBe("autocomplete");
+    expect(result[1].predicted_label).toBe("select");
+    expect(result[2].predicted_label).toBe("overflowButton");
+    expect(result[3].predicted_label).toBe("textfield");
+    expect(result[4].predicted_label).toBe("input");
   };
 
-  // runQuery(vuetifyAutocomplete, checkResult, VueRules);
-  runQuery(iconButton, checkResult);
+  runQuery(inputs, checkResult);
 })

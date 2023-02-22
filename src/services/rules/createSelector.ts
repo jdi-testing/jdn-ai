@@ -8,6 +8,11 @@ export const createSelector = (rules: Rule) => {
   if (rules.classes)
     rules.classes.forEach((_class) => {
       selector = `${selector}.${_class}`;
+      if (rules.excludingClasses) {
+        rules.excludingClasses.forEach((excludingClass) => {
+          selector = `${selector}:not([class*='${excludingClass}'])`;
+        })
+      }
       if (rules.children) {
         rules.children.forEach((_childRule) => {
           selector = `${selector}:has(${createSelector(_childRule)})`;

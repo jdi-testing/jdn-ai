@@ -23,7 +23,7 @@ export const VueRules: RulesMap[] = [
     jdnLabel: "autocomplete",
     rules: {
       classes: ["v-autocomplete"],
-      excludeClasses: ["v-overflow-btn"],
+      excludingClasses: ["v-overflow-btn"],
     },
   },
   {
@@ -111,12 +111,12 @@ export const VueRules: RulesMap[] = [
       classes: ["v-color-picker"],
     },
   },
-  {
-    jdnLabel: "combobox",
-    rules: {
-      classes: ["v-select", "v-autocomplete"],
-    },
-  },
+  // {
+  //   jdnLabel: "combobox",
+  //   rules: {
+  //     classes: ["v-select", "v-autocomplete"],
+  //   },
+  // },
   {
     jdnLabel: "dataIterator",
     rules: {
@@ -315,7 +315,7 @@ export const VueRules: RulesMap[] = [
     jdnLabel: "select",
     rules: {
       classes: ["v-select"],
-      excludeClasses: ["v-autocomlete", "v-overflow-btn"],
+      excludingClasses: ["v-autocomplete", "v-overflow-btn"],
     },
   },
   // {

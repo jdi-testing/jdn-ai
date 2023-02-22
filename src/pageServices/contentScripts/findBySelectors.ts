@@ -19,6 +19,7 @@ export const findBySelectors = () => {
   };
 
   const markupElements = (elements: NodeListOf<Element>, jdnLabel: JDNLabel) => {
+    
     elements.forEach((elem) => {
       let label = elem.getAttribute(JDN_LABEL);
       if (label) {
@@ -83,6 +84,7 @@ export const findBySelectors = () => {
   ) => {
     switch (message) {
       case "FIND_BY_SELECTORS":
+        debugger;
         findElements(param, sendResponse);
         break;
 
