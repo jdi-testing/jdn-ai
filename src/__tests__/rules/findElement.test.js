@@ -10,7 +10,6 @@ import { vuetifySelect } from "./__mocks__/vuetifySelect";
 import { vuetifyOverflowBtn } from "./__mocks__/vuetifyOverflowBtn";
 import { vuetifyTextField } from "./__mocks__/vuetifyTextField";
 import { vuetifyInput } from "./__mocks__/vuetifyInput";
-import { VueRules } from "../../services/rules/Vue.rules";
 
 const runQuery = (domSource, callback) => {
   const dom = new JSDOM(domSource);
