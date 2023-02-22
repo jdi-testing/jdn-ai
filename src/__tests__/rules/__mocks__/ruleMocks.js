@@ -22,7 +22,7 @@ export const ruleMock4 = {
 };
 
 export const ruleMock5 = {
-  classes: ["v-picker"],
+  classes: ["v-picker", "v-light"],
   children: [
     {
       classes: ["v-picker--date", "v-input"],
@@ -32,5 +32,20 @@ export const ruleMock5 = {
 
 export const ruleMock6 = {
   classes: ["v-select"],
-  excludingClasses: ["v-autocomplete", "v-overflow-btn"],
+};
+
+export const ruleMock7 = {
+  children: [
+    {
+      tag: "colgroup",
+    },
+  ],
+};
+
+export const ruleMock8 = {
+  children: [
+    {
+      classes: ["v-light"],
+    },
+  ],
 };

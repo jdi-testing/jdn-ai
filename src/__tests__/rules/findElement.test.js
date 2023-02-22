@@ -57,7 +57,7 @@ test("recognize content if detectContent: true", () => {
   runQuery(card, checkResult);
 });
 
-test("recognize with 'excludeClasses'", () => {
+test("recognize with 'excludingRules'", () => {
   const inputs = [vuetifyAutocomplete, vuetifySelect, vuetifyOverflowBtn, vuetifyTextField, vuetifyInput].join("");
 
   const checkResult = (result) => {

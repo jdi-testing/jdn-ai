@@ -6,16 +6,17 @@ export interface RulesMap {
   jdnLabel: JDNLabel;
   // attributes of an Element to recognize
   rules: Rule;
+  // attributes that make element unapplicable for a certain label
+  excludingRules?: Rule;
   // to detect elements that are inside other elements
   detectContent?: boolean;
   // to resolve conflict if one element is predicted with mwny different classes
-  priority?: "high" | "normal" | "low";
+  priority?: "normal" | "low";
 }
 
 export interface Rule {
   tag?: string;
   classes?: string[];
-  excludingClasses?: string[];
   // attributes?: [string, string][]; see DataTable and SimpleTable
   children?: Rule[];
 }

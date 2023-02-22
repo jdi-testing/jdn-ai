@@ -18,6 +18,8 @@ export const VueRules: RulesMap[] = [
     rules: {
       classes: ["v-responsive"],
     },
+    detectContent: true,
+    priority: "low",
   },
   {
     jdnLabel: "avatar",
@@ -108,7 +110,9 @@ export const VueRules: RulesMap[] = [
     jdnLabel: "combobox",
     rules: {
       classes: ["v-autocomplete"],
-      excludingClasses: ["v-overflow-btn"],
+    },
+    excludingRules: {
+      classes: ["v-overflow-btn"],
     },
   },
   {
@@ -118,12 +122,17 @@ export const VueRules: RulesMap[] = [
     },
     detectContent: true,
   },
-  // {
-  //   jdnLabel: "dataTable",
-  //   rules: {
-  //     attributes: [["file", "v-data-table/usage"]],
-  //   },
-  // },
+  {
+    jdnLabel: "dataTable",
+    rules: {
+      classes: ["v-data-table"],
+      children: [
+        {
+          tag: "colgroup",
+        },
+      ],
+    },
+  },
   {
     jdnLabel: "datePicker",
     rules: {
@@ -182,6 +191,18 @@ export const VueRules: RulesMap[] = [
     rules: {
       classes: ["v-footer"],
     },
+  },
+  {
+    jdnLabel: "grid",
+    rules: {
+      classes: ["container"],
+      children: [
+        {
+          classes: ["row"],
+        }
+      ]
+    },
+    detectContent: true,
   },
   {
     jdnLabel: "icon",
@@ -309,15 +330,24 @@ export const VueRules: RulesMap[] = [
     jdnLabel: "select",
     rules: {
       classes: ["v-select"],
-      excludingClasses: ["v-autocomplete", "v-overflow-btn"],
+    },
+    excludingRules: {
+      classes: ["v-autocomplete", "v-overflow-btn"],
     },
   },
-  // {
-  //   jdnLabel: "simpleTable",
-  //   rules: {
-  //     attributes: [["file", "v-simple-table/usage"]],
-  //   },
-  // },
+  {
+    jdnLabel: "simpleTable",
+    rules: {
+      classes: ["v-data-table"],
+    },
+    excludingRules: {
+      children: [
+        {
+          tag: "colgroup",
+        },
+      ],
+    },
+  },
   {
     jdnLabel: "skeletonLoader",
     rules: {

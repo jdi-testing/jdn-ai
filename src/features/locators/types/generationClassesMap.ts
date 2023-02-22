@@ -88,7 +88,7 @@ export enum VuetifyClasses {
   alert = "Alert",
   appBar = "AppBar",
   aspectRatios = "AspectRatios",
-  autocomplete = "Autocomplete",
+  autocomplete = "Autocomplete", // no rule
   avatar = "Avatar",
   badge = "Badge",
   banner = "Banner",
@@ -96,7 +96,7 @@ export enum VuetifyClasses {
   bottomsheet = "BottomSheet",
   breadcrumbs = "Breadcrumbs",
   button = "VuetifyButton",
-  buttonGroup = "ButtonGroup", // conflicts with v-item-group
+  buttonGroup = "ButtonGroup",
   calendar = "Calendar",
   card = "Card",
   carousel = "Carousel",
@@ -106,7 +106,7 @@ export enum VuetifyClasses {
   colorpicker = "ColorPicker",
   combobox = "Combobox",
   dataIterator = "DataIterator",
-  // dataTable = "DataTable", // need to update detector
+  dataTable = "DataTable",
   datePicker = "DatePicker",
   datePickerMonth = "DatePickerMonth",
   dialog = "Dialog",
@@ -115,7 +115,7 @@ export enum VuetifyClasses {
   expansionPanels = "ExpansionPanels",
   fileInput = "FileInput",
   footer = "Footer",
-  // grid = "Grid", // what exactly?
+  grid = "Grid",
   icon = "Icon",
   image = "Image",
   input = "Input",
@@ -137,13 +137,13 @@ export enum VuetifyClasses {
   rangeSlider = "RangeSlider",
   rating = "Rating",
   select = "Select",
-  // simpleTable = "SimpleTable", // need additional implementation
+  simpleTable = "SimpleTable",
   skeletonLoader = "SkeletonLoader",
   slider = "Slider",
   slideGroup = "SlideGroup",
   sheet = "Sheet",
   snackbar = "Snackbar",
-  // sparkline = "Sparkline", // need additional implementation
+  sparkline = "Sparkline", // no rule
   // step = "Step", // item of a stepper?
   stepper = "Stepper",
   subheader = "Subheader",
