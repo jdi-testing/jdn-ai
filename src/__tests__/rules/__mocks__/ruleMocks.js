@@ -49,3 +49,7 @@ export const ruleMock8 = {
     },
   ],
 };
+
+export const ruleMock9 = {
+  selector: "[class*=text-]",
+};

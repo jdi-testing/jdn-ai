@@ -83,6 +83,7 @@ export const findBySelectors = () => {
   ) => {
     switch (message) {
       case "FIND_BY_SELECTORS":
+        debugger;
         findElements(param, sendResponse);
         break;
 

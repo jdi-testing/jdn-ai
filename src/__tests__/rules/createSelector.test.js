@@ -8,6 +8,7 @@ import {
   ruleMock6,
   ruleMock7,
   ruleMock8,
+  ruleMock9,
 } from "./__mocks__/ruleMocks";
 
 test("create correct selector", () => {
@@ -20,4 +21,5 @@ test("create correct selector", () => {
   expect(createSelector(ruleMock6, ruleMock3)).toBe(".v-select:not(i)");
   expect(createSelector(ruleMock6, ruleMock7)).toBe(".v-select:not(:has(colgroup))");
   expect(createSelector(ruleMock6, ruleMock8)).toBe(".v-select:not(:has([class*='v-light']))");
+  expect(createSelector(ruleMock9)).toBe("[class*=text-]");
 });

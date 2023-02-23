@@ -6,6 +6,8 @@ export const createSelector = (rules: Rule, excludingRules?: Rule) => {
 
   selector = `${selector}${rules.tag || ""}`;
 
+  if (rules.selector) selector = `${selector}${rules.selector}`;
+
   if (rules.classes)
     rules.classes.forEach((_class) => {
       selector = `${selector}.${_class}`;
@@ -40,9 +42,6 @@ export const createSelector = (rules: Rule, excludingRules?: Rule) => {
   };
 
   if (excludingRules) selector = createNegativeSelector(selector, excludingRules);
-  // rules.excludingClasses.forEach((excludingClass) => {
-  //   selector = `${selector}:not([class*='${excludingClass}'])`;
-  // });
 
   return selector;
 };
