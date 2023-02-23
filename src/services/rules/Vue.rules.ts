@@ -168,12 +168,12 @@ export const VueRules: RulesMap[] = [
       classes: ["v-divider"],
     },
   },
-  {
-    jdnLabel: "expansionPanel",
-    rules: {
-      classes: ["v-expansion-panel"],
-    },
-  },
+  // {
+  //   jdnLabel: "expansionPanel",
+  //   rules: {
+  //     classes: ["v-expansion-panel"],
+  //   },
+  // },
   {
     jdnLabel: "expansionPanels",
     rules: {
@@ -231,13 +231,25 @@ export const VueRules: RulesMap[] = [
     priority: "low",
   },
   {
+    jdnLabel: "list",
+    rules: {
+      classes: ["v-list"],
+    },
+  },
+  {
     jdnLabel: "listGroup",
     rules: {
       classes: ["v-list-group"],
     },
   },
   {
-    jdnLabel: "listItemGoups",
+    jdnLabel: "listItem",
+    rules: {
+      classes: ["v-list-item"],
+    },
+  },
+  {
+    jdnLabel: "listItemGroups",
     rules: {
       classes: ["v-list-item-group"],
     },
