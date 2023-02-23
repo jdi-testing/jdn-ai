@@ -278,12 +278,13 @@ export const VueRules: RulesMap[] = [
       classes: ["v-pagination"],
     },
   },
-  // {
-  //   jdnLabel: "paginationPage",
-  //   rules: {
-  //     classes: [],
-  //   },
-  // },
+  {
+    jdnLabel: "paginationPage",
+    rules: {
+      tag: "button",
+      classes: ["v-pagination__item"],
+    },
+  },
   {
     jdnLabel: "parallax",
     rules: {
@@ -384,6 +385,12 @@ export const VueRules: RulesMap[] = [
     jdnLabel: "stepper",
     rules: {
       classes: ["v-stepper"],
+    },
+  },
+  {
+    jdnLabel: "step",
+    rules: {
+      classes: ["v-stepper__step"],
     },
   },
   {

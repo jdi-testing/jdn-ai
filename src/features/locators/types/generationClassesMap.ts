@@ -128,7 +128,7 @@ export enum VuetifyClasses {
   overflowButton = "OverflowButton",
   overlay = "Overlay",
   pagination = "Pagination",
-  // paginationPage = "PaginationPage", // what is it?
+  paginationPage = "PaginationPage",
   parallax = "Parallax",
   progressCircular = "ProgressCircular",
   progressLinear = "ProgressLinear",
@@ -144,7 +144,7 @@ export enum VuetifyClasses {
   sheet = "Sheet",
   snackbar = "Snackbar",
   sparkline = "Sparkline", // no rule
-  // step = "Step", // item of a stepper?
+  step = "Step",
   stepper = "Stepper",
   subheader = "Subheader",
   switch = "Switch",
