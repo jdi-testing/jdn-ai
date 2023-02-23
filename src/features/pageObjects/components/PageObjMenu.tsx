@@ -12,7 +12,7 @@ import { ElementId, Locator } from "../../locators/types/locator.types";
 import { removeLocators } from "../../locators/locators.slice";
 import { removePageObject, setCurrentPageObj } from "../pageObject.slice";
 import { PageObjectId } from "../types/pageObjectSlice.types";
-import { ElementLibrary } from "../../locators/types/generationClassesMap";
+import { ElementLibrary } from "../../locators/types/generationClasses.types";
 import { generatePageObject } from "../../pageObjects/utils/pageObject";
 import { RenamePageObjectDialog } from "./RenamePageObjDialog";
 

@@ -7,7 +7,7 @@ import { selectLocators } from "../locators.selectors";
 import { Locator, LocatorsState, LocatorTaskStatus, PredictedEntity } from "../types/locator.types";
 import { addLocators } from "../locators.slice";
 import { addLocatorsToPageObj } from "../../pageObjects/pageObject.slice";
-import { ElementLibrary } from "../types/generationClassesMap";
+import { ElementLibrary } from "../types/generationClasses.types";
 import { runXpathGeneration } from "./runXpathGeneration.thunk";
 
 interface Meta {

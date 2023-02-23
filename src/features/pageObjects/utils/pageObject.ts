@@ -20,7 +20,7 @@ import { selectConfirmedLocators, selectPageObjects } from "../pageObject.select
 import { connector } from "../../../pageServices/connector";
 import { ElementId, Locator } from "../../locators/types/locator.types";
 import { PageObject } from "../../pageObjects/types/pageObjectSlice.types";
-import { ElementLabel, ElementLibrary } from "../../locators/types/generationClassesMap";
+import { ElementLabel, ElementLibrary } from "../../locators/types/generationClasses.types";
 import javaReservedWords from "./javaReservedWords.json";
 import { pageObjectTemplate } from "./pageObjectTemplate";
 import { testFileTemplate } from "./testTemplate";

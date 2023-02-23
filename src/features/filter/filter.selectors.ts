@@ -2,9 +2,9 @@ import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store/store";
 import { selectCurrentPageObject, selectPageObjById } from "../pageObjects/pageObject.selectors";
 import { PageObjectId } from "../pageObjects/types/pageObjectSlice.types";
-import { defaultLibrary } from "../locators/types/generationClassesMap";
+import { defaultLibrary } from "../locators/types/generationClasses.types";
 import { Filter, FilterKey } from "./types/filter.types";
-import { ElementClass } from "../locators/types/generationClassesMap";
+import { ElementClass } from "../locators/types/generationClasses.types";
 import { jdiClassFilterInit } from "./utils/filterSet";
 import { selectLocatorById } from "../locators/locators.selectors";
 

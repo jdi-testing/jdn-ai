@@ -1,4 +1,4 @@
-import { VuetifyClasses } from "../../features/locators/types/generationClassesMap";
+import { VuetifyClasses } from "../../features/locators/types/vuetifyClasses.types";
 
 export type JDNLabel = keyof typeof VuetifyClasses;
 

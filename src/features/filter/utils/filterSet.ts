@@ -1,4 +1,4 @@
-import { defaultClass, ElementClass, ElementLibrary, libraryClasses } from "../../locators/types/generationClassesMap";
+import { defaultClass, ElementClass, ElementLibrary, libraryClasses } from "../../locators/types/generationClasses.types";
 import { ClassFilterValue } from "../types/filter.types";
 import { toLower } from "lodash";
 

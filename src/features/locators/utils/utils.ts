@@ -1,6 +1,6 @@
 import { chain, filter } from "lodash";
 import { connector } from "../../../pageServices/connector";
-import { ElementLibrary } from "../types/generationClassesMap";
+import { ElementLibrary } from "../types/generationClasses.types";
 import { createElementName } from "../../pageObjects/utils/pageObject";
 import { Locator, LocatorValue } from "../types/locator.types";
 import { copyToClipboard, getLocatorString } from "../../../common/utils/helpers";

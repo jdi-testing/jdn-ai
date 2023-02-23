@@ -1,4 +1,4 @@
-import { ElementLibrary } from "../../locators/types/generationClassesMap";
+import { ElementLibrary } from "../../locators/types/generationClasses.types";
 import { camelCase, upperFirst } from "lodash";
 import transliterate from "@sindresorhus/transliterate";
 import { getLocator } from "../../locators/utils/utils";
