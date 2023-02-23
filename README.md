@@ -50,7 +50,7 @@ If the plugin does not work after downloading from the Chrome Web Store, you can
 
 ### Server setup
 
-*If you are an EPAM employee, skip this section. Turn on EPAM VPN to enable connection to the server and make sure the connection is established. In other cases, please use the instructions below.*  
+If you are an EPAM employee, skip this section. Turn on EPAM VPN to enable connection to the server and :warning: make sure the VPN connection is established. In other cases, please use the instructions below.
 
 1. Set up [Docker](https://www.docker.com/products/docker-desktop)  
 2. Download the latest Docker Compose file from the `develop` branch and run `docker compose`  
@@ -82,7 +82,7 @@ curl --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-te
 
 </details>
 
-![alt text](https://img.icons8.com/emoji/16/000000/warning-emoji.png) Attention! It can take time to build the docker image, please, wait till the end of the installation.
+:warning: It can take time to build the docker image, please, wait till the end of the installation.
 
 ## Working with JDN plugin
 
@@ -93,7 +93,7 @@ curl --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-te
 ### Launch JDN plugin
 
 1. Open the page to create page objects in Chrome.
-2. Navigate to DevTools by pressing Command+Option+J (Mac) or Control+Shift+J (Windows, Linux, ChromeOS).
+2. Navigate to DevTools by pressing Control+Shift+J (Windows, Linux, ChromeOS) or Command+Option+J (Mac).
 3. Make sure DevTools has a dockside view. If not, click the vertical dots **⋮** icon at the top right and choose **Dock to left** or **Dock to right**.
 4. In the top menu, click the more **»** icon and choose **JDN**.
 
