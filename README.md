@@ -13,6 +13,8 @@ The plugin allows generating Page Objects with the following restrictions:
 
 You can find the video instructions on YouTube in [English](https://www.youtube.com/watch?v=b2o6R98icRU) or in [Russian](https://www.youtube.com/watch?v=FJWJjxmJUMw).
 
+**Contents**
+
 * [Plugin setup](#plugin-setup)
   * [Frontend setup](#frontend-setup)
   * [Server setup](#server-setup)
@@ -108,7 +110,8 @@ The generation process may take some time. The locators will be generated for th
 6. Click the **Save** button. Now, you can delete or download page objects.
 
 ### Download page objects
-![alt text](https://user-images.githubusercontent.com/53625116/192288508-5a9c5760-04eb-4048-82ff-5118b007f6dc.png)
+
+<img width="414" alt="jdn-download" src="https://user-images.githubusercontent.com/92522442/220601858-2c9b7f7c-c8f8-4b98-ac6e-907fb54fc0a3.png">
 
 To download a single Page object:
 1. Call the Page Object Actions Menu by clicking the three dots icon.
@@ -119,7 +122,8 @@ You can also copy a Page object to the clipboard.
 To download all generated page objects as a project template, click the download icon at the top of the list. The project template will be downloaded as an archive.
 
 ### Manage locators
-![alt text](https://user-images.githubusercontent.com/53625116/192290963-aab9c701-522e-4161-a7d2-68884dd389ed.png)
+
+<img width="413" alt="jdn-locators" src="https://user-images.githubusercontent.com/92522442/220602083-76c1c4e1-5104-4f02-8724-c10328c5284f.png">
 
 To manage a locator, click the thee dots button next to it and choose an action:
 
