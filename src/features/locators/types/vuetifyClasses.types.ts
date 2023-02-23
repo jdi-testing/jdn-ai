@@ -65,7 +65,7 @@ export enum VuetifyClasses {
   systembar = "SystemBar",
   tableCheckbox = "TableCheckbox",
   tabs = "VuetifyTabs",
-  text = "Text",   // what is it?
+  text = "Text",
   textArea = "TextArea",
   textfield = "TextField",
   timeline = "TimeLine",
