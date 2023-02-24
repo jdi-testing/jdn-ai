@@ -342,7 +342,6 @@ export const highlightOnPage = () => {
 
   const messageHandler = ({ message, param }, sender, sendResponse) => {
     if (message === "SET_HIGHLIGHT") {
-      debugger;
       if (!listenersAreSet) setDocumentListeners();
       if (!scrollableContainers.length) detectScrollableContainers();
       findAndHighlight(param);

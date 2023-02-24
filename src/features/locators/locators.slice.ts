@@ -61,6 +61,9 @@ const locatorsSlice = createSlice({
       }
       locatorsAdapter.upsertOne(state, newValue);
     },
+    changeIdentificationStatus(state, { payload }: PayloadAction<IdentificationStatus>) {
+      state.status = payload;
+    },
     failGeneration(state, { payload }: PayloadAction<string[]>) {
       state.generationStatus = LocatorsGenerationStatus.failed;
       payload.forEach((element_id) => {
@@ -204,6 +207,7 @@ const locatorsSlice = createSlice({
 export default locatorsSlice.reducer;
 export const {
   addLocators,
+  changeIdentificationStatus,
   changeLocatorAttributes,
   failGeneration,
   removeLocators,

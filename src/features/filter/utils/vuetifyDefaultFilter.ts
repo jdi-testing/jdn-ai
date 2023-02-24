@@ -1,7 +1,7 @@
 import { ElementClass } from "../../locators/types/generationClasses.types";
 import { VuetifyClasses } from "../../locators/types/vuetifyClasses.types";
 
-export const defaultFilterOn: ElementClass[] = [
+export const vuetifyDefaultFilterOn: ElementClass[] = [
   VuetifyClasses.alert,
   VuetifyClasses.bottomnavigation,
   VuetifyClasses.bottomsheet,
