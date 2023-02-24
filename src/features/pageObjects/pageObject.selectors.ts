@@ -2,8 +2,7 @@ import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
 import { chain, get, isNil, last, size } from "lodash";
 import { RootState } from "../../app/store/store";
 import { locatorTaskStatus } from "../../common/constants/constants";
-import { selectFilterById } from "../filter/filter.selectors";
-import { FilterKey } from "../filter/types/filter.types";
+import { selectClassFiltefByPO } from "../filter/filter.selectors";
 import { selectLocators } from "../locators/locators.selectors";
 import { Locator } from "../locators/types/locator.types";
 import { isProgressStatus } from "../locators/utils/locatorGenerationController";
@@ -51,14 +50,11 @@ export const selectLocatorsByPageObject = createSelector(
 
 export const selectFilteredLocators = createSelector(
   selectLocatorsByPageObject,
-  (state: RootState, pageObjectId?: PageObjectId) => {
-    pageObjectId = pageObjectId || selectCurrentPageObject(state)?.id;
-    return selectFilterById(state, pageObjectId!);
-  },
+  selectClassFiltefByPO,
   (locators, filter) => {
     if (!filter) return locators;
     const _locators = locators?.filter((loc) => {
-      const filterValue = filter[FilterKey.JDIclassFilter];
+      const filterValue = filter;
       return Object.hasOwn(filterValue, loc.type) ? get(filterValue, loc.type) : true;
     });
     return _locators;

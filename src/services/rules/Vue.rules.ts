@@ -478,6 +478,7 @@ export const VueRules: RulesMap[] = [
     rules: {
       classes: ["v-tooltip"],
     },
+    detectContent: true,
   },
   {
     jdnLabel: "treeview",

@@ -13,7 +13,7 @@ export type ElementLabel =
   | typeof VuetifyClasses
   | typeof defaultClass;
 
-export type ElementClass = MUIclasses | HTML5classes | NgMatClasses | typeof defaultClass;
+export type ElementClass = MUIclasses | HTML5classes | NgMatClasses | VuetifyClasses | typeof defaultClass;
 
 export enum ElementLibrary {
   MUI = "MUI",

@@ -8,6 +8,7 @@ import { sendMessage } from "./connector";
 import { selectCurrentPage } from "../app/main.selectors";
 import { RootState } from "../app/store/store";
 import { PageType } from "../app/types/mainSlice.types";
+import { selectClassFiltefByPO } from "../features/filter/filter.selectors";
 
 const notify = (state: RootState, action: any, prevState: RootState) => {
   let { type, payload } = action;
@@ -33,7 +34,8 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
     case "pageObject/addLocatorsToPageObj": {
       if (isNil(state.pageObject.present.currentPageObject)) return;
       const locators = selectLocatorsByPageObject(state);
-      locators && sendMessage.setHighlight({ elements: locators as Locator[] });
+      const filter = selectClassFiltefByPO(state);
+      locators && sendMessage.setHighlight({ elements: locators as Locator[], filter });
       break;
     }
     case "locators/changeLocatorAttributes": {

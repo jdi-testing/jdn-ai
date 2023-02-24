@@ -6,16 +6,17 @@ import {
 } from "../../locators/types/generationClasses.types";
 import { ClassFilterValue } from "../types/filter.types";
 import { toLower } from "lodash";
+import { defaultFilterOn } from "./defaultFilter";
 
 export const jdiClassFilterInit = (library: ElementLibrary) => ({
   ...mapJDIclassesToFilter(library),
   [defaultClass]: true,
 });
 
-export const mapJDIclassesToFilter = (library: ElementLibrary) => {
+export const mapJDIclassesToFilter = (library: ElementLibrary): Record<ElementClass, boolean> => {
   return Object.entries(libraryClasses[library]).reduce((acc: Record<ElementClass, boolean>, entry) => {
-    const [, value] = entry;
-    acc[value as ElementClass] = true;
+    const [, value] = entry as [string, ElementClass];
+    acc[value as ElementClass] = defaultFilterOn.includes(value);
     return acc;
   }, {} as Record<ElementClass, boolean>);
 };

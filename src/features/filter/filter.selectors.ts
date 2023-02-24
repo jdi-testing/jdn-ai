@@ -20,10 +20,11 @@ export const { selectAll: selectFilters, selectById: selectFilterById } = filter
 
 export const selectClassFiltefByPO = createSelector(
   selectFilterById,
-  (state: RootState, id: PageObjectId) => selectPageObjById(state, id)?.library,
-  (filter, library = defaultLibrary) => {
+  (state: RootState, id?: PageObjectId) =>
+    id ? selectPageObjById(state, id)?.library : selectCurrentPageObject(state)?.library,
+  (filter, library) => {
     if (!filter) {
-      return jdiClassFilterInit(library);
+      return jdiClassFilterInit(library || defaultLibrary);
     }
     return filter?.[FilterKey.JDIclassFilter];
   }
