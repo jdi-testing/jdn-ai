@@ -1,5 +1,5 @@
 import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
-import { ElementClass } from "./generationClassesMap";
+import { ElementClass } from "./generationClasses.types";
 
 export enum LocatorsGenerationStatus {
   noStatus = "noStatus",

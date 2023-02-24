@@ -5,7 +5,7 @@ import {
   ElementClass,
   libraryClasses,
   defaultClass,
-} from "../types/generationClassesMap";
+} from "../types/generationClasses.types";
 
 export const getJDILabel = (label: keyof ElementLabel, library: ElementLibrary): ElementClass =>
   libraryClasses[library][label] || defaultClass;

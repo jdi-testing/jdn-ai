@@ -1,4 +1,4 @@
-import { VuetifyClasses } from "../../features/locators/types/generationClassesMap";
+import { VuetifyClasses } from "../../features/locators/types/vuetifyClasses.types";
 
 export type JDNLabel = keyof typeof VuetifyClasses;
 
@@ -6,6 +6,8 @@ export interface RulesMap {
   jdnLabel: JDNLabel;
   // attributes of an Element to recognize
   rules: Rule;
+  // attributes that make element unapplicable for a certain label
+  excludingRules?: Rule;
   // to detect elements that are inside other elements
   detectContent?: boolean;
   // to resolve conflict if one element is predicted with mwny different classes
@@ -15,7 +17,7 @@ export interface RulesMap {
 export interface Rule {
   tag?: string;
   classes?: string[];
-  // attributes?: [string, string][]; see DataTable and SimpleTable
+  selector?: string;
   children?: Rule[];
 }
 

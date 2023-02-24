@@ -12,8 +12,7 @@ export const Backdrop = () => {
   if (
     showBackdrop ||
     status === IdentificationStatus.loading ||
-    status === IdentificationStatus.success ||
-    generationStatus === LocatorsGenerationStatus.starting
+    (status === IdentificationStatus.success && generationStatus === LocatorsGenerationStatus.starting)
   ) {
     return <div className="backdrop"></div>;
   }

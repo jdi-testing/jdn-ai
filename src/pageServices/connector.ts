@@ -1,7 +1,7 @@
 import { isUndefined } from "lodash";
 import { SCRIPT_ERROR } from "../common/constants/constants";
 import { Locator, PredictedEntity } from "../features/locators/types/locator.types";
-import { ElementClass } from "../features/locators/types/generationClassesMap";
+import { ElementClass } from "../features/locators/types/generationClasses.types";
 import { SelectorsMap } from "../services/rules/rules.types";
 import { assignDataLabels } from "./contentScripts/assignDataLabels";
 import { runContextMenu } from "./contentScripts/contextmenu";
@@ -10,6 +10,7 @@ import { highlightOrder } from "./contentScripts/highlightOrder";
 import { selectable } from "./contentScripts/selectable";
 import { urlListener } from "./contentScripts/urlListener";
 import { ScriptMessagePayload } from "./scriptListener";
+import { ClassFilterValue } from "../features/filter/types/filter.types";
 
 export interface ScriptMessage {
   message: string;
@@ -179,7 +180,7 @@ export const sendMessage = {
   findBySelectors: (payload: SelectorsMap) => connector.sendMessage("FIND_BY_SELECTORS", payload),
   setClosedSession: (payload: { tabId: number; isClosed: boolean }) =>
     connector.sendMessage("SET_CLOSED_SESSION", payload),
-  setHighlight: (payload: { elements?: Locator[]; perception?: number }) =>
+  setHighlight: (payload: { elements?: Locator[]; filter?: ClassFilterValue }) =>
     connector.sendMessage("SET_HIGHLIGHT", payload),
   killHighlight: (payload?: {}, onResponse?: () => void) => connector.sendMessage("KILL_HIGHLIGHT", null, onResponse),
   generateAttributes: (payload: PredictedEntity, onResponse: () => void) =>

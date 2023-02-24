@@ -4,7 +4,7 @@ import { Funnel } from "phosphor-react";
 import React, { ChangeEvent, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectCurrentPageObject } from "../pageObjects/pageObject.selectors";
-import { ElementClass } from "../locators/types/generationClassesMap";
+import { ElementClass } from "../locators/types/generationClasses.types";
 import { FilterHeader } from "./components/FilterHeader";
 import { selectDetectedClassesFilter, selectIfSelectedAll } from "./filter.selectors";
 import { toggleClassFilter, toggleClassFilterAll } from "./filter.slice";

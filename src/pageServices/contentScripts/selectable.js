@@ -78,7 +78,7 @@ export const selectable = () => {
         break;
       }
       case "KILL_HIGHLIGHT":
-        selectables = selectables.disable();
+        if (selectables) selectables = selectables.disable();
         break;
       case "PING_SCRIPT": {
         if (param.scriptName === "selectable") sendResponse({ message: true });

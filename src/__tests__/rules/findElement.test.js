@@ -5,12 +5,17 @@ import { card } from "./__mocks__/card.mock";
 import { iconButton } from "./__mocks__/iconButton.mock";
 import { manySimpleElements } from "./__mocks__/manySimpleElements.mock.js";
 import { vueRulesMock } from "./__mocks__/vueRules.mock";
+import { vuetifyAutocomplete } from "./__mocks__/vuetifyAutocomplete";
+import { vuetifySelect } from "./__mocks__/vuetifySelect";
+import { vuetifyOverflowBtn } from "./__mocks__/vuetifyOverflowBtn";
+import { vuetifyTextField } from "./__mocks__/vuetifyTextField";
+import { vuetifyInput } from "./__mocks__/vuetifyInput";
 
 const runQuery = (domSource, callback) => {
   const dom = new JSDOM(domSource);
   global.document = dom.window.document;
 
-  // we can't use original VueRules,
+  // we can't use original VueRules with "children" property,
   // because test env doesn't work with selectors containing ':has' directive
   const selectors = getLibrarySelectors(vueRulesMock());
   findBySelectors();
@@ -50,4 +55,19 @@ test("recognize content if detectContent: true", () => {
     expect(data[2].predicted_label).toBe("button");
   };
   runQuery(card, checkResult);
+});
+
+test("recognize with 'excludingRules'", () => {
+  const inputs = [vuetifyAutocomplete, vuetifySelect, vuetifyOverflowBtn, vuetifyTextField, vuetifyInput].join("");
+
+  const checkResult = (result) => {
+    expect(result.length).toBe(5);
+    expect(result[0].predicted_label).toBe("combobox");
+    expect(result[1].predicted_label).toBe("select");
+    expect(result[2].predicted_label).toBe("overflowButton");
+    expect(result[3].predicted_label).toBe("textfield");
+    expect(result[4].predicted_label).toBe("input");
+  };
+
+  runQuery(inputs, checkResult);
 });

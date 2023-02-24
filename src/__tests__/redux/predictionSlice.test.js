@@ -4,7 +4,7 @@ import { selectLocatorById } from "../../features/locators/locators.selectors";
 import { store } from "../../app/store/store";
 import { locator1 } from "../__mocks__/locator.mock";
 import { locatorTaskStatus } from "../../common/constants/constants";
-import { ElementLibrary } from "../../features/locators/types/generationClassesMap";
+import { ElementLibrary } from "../../features/locators/types/generationClasses.types";
 import { changePage } from "../../app/main.slice";
 import { PageType } from "../../app/types/mainSlice.types";
 
