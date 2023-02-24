@@ -1,6 +1,6 @@
 # JDN plugin
 
-[JDN plugin](https://chrome.google.com/webstore/detail/jdn/dldagjdnndapekahhbpeemjifghccldg) is a Google Chrome extension. It helps Test Automation Engineers to create Page Objects in the test automation framework and speed up test development in test environments such as Eclipse IDE or IntelleJ IDEA.
+[JDN plugin](https://chrome.google.com/webstore/detail/jdn/dldagjdnndapekahhbpeemjifghccldg) is a Google Chrome extension. It helps Test Automation Engineers to create Page Objects in the test automation framework and speed up test development in test environments such as Eclipse IDE or IntelliJ IDEA.
 
 The plugin allows generating Page Objects with the following restrictions:
 -	is applicable to the JDI framework;
