@@ -30,7 +30,6 @@ export const useNotificationController = (
         }
         break;
       case "locators/stopGeneration/fulfilled":
-        const _locator = locators.find((_loc) => _loc.element_id === action.meta.arg);
         openNotification(messages().STOP_GENERATION, "warning");
         break;
       case "locators/stopGenerationGroup/fulfilled":
