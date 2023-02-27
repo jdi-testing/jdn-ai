@@ -2,12 +2,10 @@ import { AlertProps } from "antd";
 import { size } from "lodash";
 import { useEffect } from "react";
 import { Notification } from "../../../../app/types/mainSlice.types";
-import { cancelStopGeneration } from "../reducers/cancelStopGeneration.thunk";
 import { messages } from "./messages";
 import { Action } from "../types/notification.types";
 import { locatorUndo, pageobjectUndo } from "./undoActions";
 import { Locator } from "../../../../features/locators/types/locator.types";
-import { cancelRerun } from "../reducers/cancelRerun.thunk";
 
 export const useNotificationController = (
   lastNotification: Notification | undefined,
@@ -26,20 +24,17 @@ export const useNotificationController = (
       case "locators/rerunGeneration/fulfilled":
         const { arg } = action.meta;
         const length = size(arg.generationData);
-        const rerunCancelAction = cancelRerun(action.meta.arg);
-        if (length === 1) openNotification(messages().RERUN, "success", rerunCancelAction);
+        if (length === 1) openNotification(messages().RERUN, "success");
         else {
-          openNotification(messages(length.toString()).RERUN_GROUP, "success", rerunCancelAction); // create cancelRerun thunk
+          openNotification(messages(length.toString()).RERUN_GROUP, "success");
         }
         break;
       case "locators/stopGeneration/fulfilled":
         const _locator = locators.find((_loc) => _loc.element_id === action.meta.arg);
-        const cancelAction = _locator && cancelStopGeneration([_locator]);
-        openNotification(messages().STOP_GENERATION, "warning", cancelAction);
+        openNotification(messages().STOP_GENERATION, "warning");
         break;
       case "locators/stopGenerationGroup/fulfilled":
-        const _cancelAction = cancelStopGeneration(action.meta.arg);
-        openNotification(messages(size(action.meta.arg).toString()).STOP_GENERATION_GROUP, "warning", _cancelAction);
+        openNotification(messages(size(action.meta.arg).toString()).STOP_GENERATION_GROUP, "warning");
         break;
       case "locators/toggleDeleted":
         const _prevValueLocator = prevValue as Locator;

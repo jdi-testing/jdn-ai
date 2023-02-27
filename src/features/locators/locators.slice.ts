@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { size } from "lodash";
-import { cancelStopGenerationReducer } from "../../common/components/notification/reducers/cancelStopGeneration.thunk";
 import { ElementClass, ElementLibrary } from "./types/generationClasses.types";
 import { locatorsAdapter, simpleSelectLocatorById, simpleSelectLocatorsByPageObject } from "./locators.selectors";
 import { generateLocatorsReducer } from "./reducers/generateLocators.thunk";
@@ -18,7 +17,6 @@ import {
   Locator,
   LocatorCalculationPriority,
 } from "./types/locator.types";
-import { cancelRerunReducer } from "../../common/components/notification/reducers/cancelRerun.thunk";
 import { runXpathGenerationReducer } from "./reducers/runXpathGeneration.thunk";
 
 const initialState: LocatorsState = {
@@ -198,8 +196,6 @@ const locatorsSlice = createSlice({
       rerunGenerationReducer(builder),
       stopGenerationReducer(builder),
       stopGenerationGroupReducer(builder),
-      cancelRerunReducer(builder),
-      cancelStopGenerationReducer(builder),
       runXpathGenerationReducer(builder);
   },
 });
