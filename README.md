@@ -125,13 +125,13 @@ To download all generated page objects as a project template, click the download
 
 <img width="413" alt="jdn-locators" src="https://user-images.githubusercontent.com/92522442/220602083-76c1c4e1-5104-4f02-8724-c10328c5284f.png">
 
-To manage a locator, click the thee dots button next to it and choose an action:
+To manage a locator, click the three dots button next to it and choose an action:
 
 - **Edit** - change the block type, variable name or xPath of the locator;
 - **Copy** - copy to clipboard in various formats;
 - **Advanced calculation** - allow more time for processing the locator. The default period is 1 second.
 - **Delete** / **Restore** - delete a locator or a bunch of locators;
-- **Stop**/ **Rerun** generating - stop processing, if a locator is generating;
+- **Stop**/ **Rerun** generating - stop processing if a locator is generating;
 -	**Change the priority** – change the priority of a locator generating.
 
 ## FAQ
