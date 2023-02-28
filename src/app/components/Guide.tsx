@@ -13,9 +13,9 @@ import { useGuideRehype } from "../utils/useGuideRehype";
 const splitMD = (source: string) => source.match(/^#+ [^#]*/gm);
 
 const pluginGuide = (splittedMD: Array<string>): string =>
-  splittedMD.find((markdown: string) => markdown.includes("**Plugin part**")) || "";
+  splittedMD.find((markdown: string) => markdown.includes("### Frontend setup")) || "";
 const serverGuide = (splittedMD: Array<string>) =>
-  splittedMD.find((markdown: string) => markdown.includes("**Server part**")) || "";
+  splittedMD.find((markdown: string) => markdown.includes("### Server setup")) || "";
 
 export const Guide = () => {
   const backendAvailable = useSelector((_state: RootState) => _state.main.backendAvailable);
@@ -37,12 +37,12 @@ export const Guide = () => {
   const steps = [
     {
       title: "Step 1",
-      description: "Update plugin",
+      description: "Frontent setup",
       content: pluginGuideComponent,
     },
     {
       title: "Step 2",
-      description: "Setup server",
+      description: "Server setup",
       content: [serverGuideComponent],
     },
     {
@@ -66,8 +66,8 @@ export const Guide = () => {
       <Typography.Title level={5}>Installation guide</Typography.Title>
       <div className="jdn__guide_content">
         <Steps current={currentStep}>
-          {steps.map((item) => (
-            <Steps.Step key={item.title} title={item.title} description={item.description} />
+          {steps.map(({ title, description }) => (
+            <Steps.Step key={title} title={title} description={description} />
           ))}
         </Steps>
         <div className="steps-content">{steps[currentStep].content}</div>

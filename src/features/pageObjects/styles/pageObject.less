@@ -55,24 +55,52 @@
       }
     }
 
-    & .ant-collapse > .ant-collapse-item > .ant-collapse-header .ant-collapse-arrow {
-      margin-right: 0px;
-    }
+    .ant-collapse {
+      border: none;
+      border-radius: 0;
 
-    .ant-collapse-header {
-      gap: 8px;
+      & > .ant-collapse-item {
+        border: none;
 
-      .ant-collapse-header-text {
-        display: flex;
-      }
+        & > .ant-collapse-header {
+          background: #fff;
+          padding: 5px 8px;
+          font-size: 12px;
+          gap: 8px;
 
+          .ant-collapse-header-text {
+            display: flex;
+          }
+
+          .ant-collapse-extra {
+            display: flex;
+
+            .ant-dropdown {
+              left: -120px !important; // fixed context menu under the button
+            }
+          }
+
+          &:hover {
+            .jdn__pageObject_button-copy {
+              visibility: visible;
+            }
+          }
+        }
+        
       .ant-collapse-extra {
         display: flex;
       }
 
-      &:hover {
-        .jdn__pageObject_button-copy {
-          visibility: visible;
+        & > .ant-collapse-content {
+          border: none;
+
+          & > .ant-collapse-content-box {
+            padding: 0 0;
+          }
+        }
+
+        & > .ant-collapse-header .ant-collapse-arrow {
+          margin-right: 0px;
         }
       }
     }
