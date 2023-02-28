@@ -12,7 +12,7 @@ import { ElementId, Locator } from "../../locators/types/locator.types";
 import { removeLocators } from "../../locators/locators.slice";
 import { removePageObject, setCurrentPageObj } from "../pageObject.slice";
 import { PageObjectId } from "../types/pageObjectSlice.types";
-import { ElementLibrary } from "../../locators/types/generationClassesMap";
+import { ElementLibrary } from "../../locators/types/generationClasses.types";
 import { generatePageObject } from "../../pageObjects/utils/pageObject";
 import { RenamePageObjectDialog } from "./RenamePageObjDialog";
 
@@ -68,15 +68,14 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, locators, elements, lib
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <Dropdown
-        arrow={{ pointAtCenter: true }}
-        align={{ offset: [10, 0] }}
+        align={{ offset: [15, 0] }}
         trigger={["click"]}
         menu={renderMenu(id, locators, elements, name)}
         getPopupContainer={(triggerNode) => triggerNode}
         destroyPopupOnHide
       >
         <Button
-          className="jdn__locatorsList_button jdn__locatorsList_button-menu jdn__pageObject_button-menu"
+          className="jdn__locatorsList_button jdn__pageObject_button-menu"
           data-testid="dropdown-button"
           icon={<DotsThree size={18} />}
         ></Button>

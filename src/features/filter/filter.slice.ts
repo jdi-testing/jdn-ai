@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { PageObjectId } from "../pageObjects/types/pageObjectSlice.types";
-import { ElementClass, ElementLibrary } from "../locators/types/generationClassesMap";
+import { ElementClass, ElementLibrary } from "../locators/types/generationClasses.types";
 import { FilterKey } from "./types/filter.types";
 import { filterAdapter, simpleSelectFilterById } from "./filter.selectors";
 import { jdiClassFilterInit } from "./utils/filterSet";

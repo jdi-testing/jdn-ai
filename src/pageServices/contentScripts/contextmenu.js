@@ -165,24 +165,24 @@ export const runContextMenu = () => {
       const clickCoordsX = clickCoords.x;
       const clickCoordsY = clickCoords.y;
 
-      const menuWidth = menu.offsetWidth + 4;
-      const menuHeight = menu.offsetHeight + 4;
+      const menuWidth = menu.offsetWidth;
+      const menuHeight = menu.offsetHeight;
 
       const windowWidth = window.innerWidth;
       const windowHeight = window.innerHeight;
 
-      const mouseOffset = parseInt(ContextUtil.getProperty(options, "mouse_offset", 2));
+      const mouseOffset = parseInt(ContextUtil.getProperty(options, "mouse_offset", 0));
 
       if (windowWidth - clickCoordsX < menuWidth) {
-        menu.style.right = "4px";
+        menu.style.left = clickCoordsX - menuWidth + mouseOffset + scrollX + "px";
       } else {
         menu.style.left = clickCoordsX + mouseOffset + scrollX + "px";
       }
 
       if (windowHeight - clickCoordsY < menuHeight) {
-        menu.style.top = windowHeight - menuHeight + pageYOffset + "px";
+        menu.style.top = clickCoordsY - menuHeight + mouseOffset + scrollY + "px";
       } else {
-        menu.style.top = clickCoordsY + mouseOffset + pageYOffset + "px";
+        menu.style.top = clickCoordsY + mouseOffset + scrollY + "px";
       }
 
       menu.style.position = "absolute";
@@ -291,8 +291,6 @@ export const runContextMenu = () => {
   let elementMenu;
   let contextEvent;
   let predictedElements;
-  let types;
-  let highlightTargets;
 
   /* helpers */
 
@@ -360,7 +358,7 @@ export const runContextMenu = () => {
                 click: () =>
                   sendMessage({
                     message: "OPEN_EDIT_LOCATOR",
-                    param: { value: predictedElements[0], types },
+                    param: { value: predictedElements[0] },
                   }),
               },
             },
@@ -524,23 +522,24 @@ export const runContextMenu = () => {
     const isMacPlatform = window.navigator?.userAgent.indexOf("Mac") != -1;
     if (isMacPlatform && event.ctrlKey) return;
 
-    highlightTargets = document.querySelectorAll(".jdn-active");
-    if (highlightTargets.length === 0) return;
+    const highlightTarget = event.target.closest("[jdn-highlight=true]");
+    if (!highlightTarget) return;
 
     event.preventDefault();
-    contextEvent = event;
 
-    sendMessage({
-      message: "GET_ELEMENTS_DATA",
-      param: Array.from(highlightTargets).map((_element) => _element.id),
-    }).then(({ elements, _types }) => {
-      if (!elements || !elements.length) return;
-      predictedElements = elements;
-      types = _types;
-      elementMenu && elementMenu.remove();
-      elementMenu = new ContextMenu(menuItems());
-      elementMenu.display(contextEvent);
-    });
+    setTimeout(() => {
+      contextEvent = event;
+
+      sendMessage({
+        message: "GET_ACTIVE_ELEMENTS",
+      }).then(({ elements }) => {
+        if (!elements || !elements.length) return;
+        predictedElements = elements;
+        elementMenu && elementMenu.remove();
+        elementMenu = new ContextMenu(menuItems());
+        elementMenu.display(contextEvent);
+      });
+    }, 100);
   };
 
   const mouseLeaveListener = () => {

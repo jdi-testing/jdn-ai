@@ -1,7 +1,7 @@
 import { isUndefined } from "lodash";
 import { SCRIPT_ERROR } from "../common/constants/constants";
 import { Locator, PredictedEntity } from "../features/locators/types/locator.types";
-import { ElementClass } from "../features/locators/types/generationClassesMap";
+import { ElementClass } from "../features/locators/types/generationClasses.types";
 import { SelectorsMap } from "../services/rules/rules.types";
 import { assignDataLabels } from "./contentScripts/assignDataLabels";
 import { runContextMenu } from "./contentScripts/contextmenu";
@@ -10,6 +10,7 @@ import { highlightOrder } from "./contentScripts/highlightOrder";
 import { selectable } from "./contentScripts/selectable";
 import { urlListener } from "./contentScripts/urlListener";
 import { ScriptMessagePayload } from "./scriptListener";
+import { ClassFilterValue } from "../features/filter/types/filter.types";
 
 export interface ScriptMessage {
   message: string;
@@ -33,6 +34,12 @@ class Connector {
 
   constructor() {
     this.getTab();
+  }
+
+  async initScripts(onInitHandler: () => Promise<void>, onDisconnectHandler: () => void) {
+    await this.attachStaticScripts();
+    onInitHandler();
+    this.onTabUpdate(onInitHandler, onDisconnectHandler);
   }
 
   handleError(error: Error) {
@@ -80,21 +87,15 @@ class Connector {
     chrome.runtime.onMessage.addListener(this.onmessage);
   }
 
-  onTabUpdate(callback: () => void) {
-    // @ts-ignore
-    const listener = (tabId: number, changeinfo) => {
-      if (changeinfo && changeinfo.status === "complete" && this.tabId === tabId) {
-        this.getTab();
-        if (this.port) {
-          this.port.disconnect();
-          this.port = undefined;
-        }
-        if (typeof callback === "function") callback();
-      }
+  onTabUpdate(onInitHandler: () => Promise<void>, onDisconnectHandler: () => void) {
+    const listener = (port: chrome.runtime.Port | undefined) => {
+        if (this.port) this.port = undefined;
+        if (typeof onDisconnectHandler === "function") onDisconnectHandler();
+        this.initScripts(onInitHandler, onDisconnectHandler);
     };
 
-    if (!chrome.tabs.onUpdated.hasListener(listener)) {
-      chrome.tabs.onUpdated.addListener(listener);
+    if (this.port && !this.port.onDisconnect.hasListener(listener)) {
+      this.port.onDisconnect.addListener(listener);
     }
   }
 
@@ -165,7 +166,7 @@ class Connector {
 
 export const connector = new Connector();
 
-// messages, are sent from plugun to content scripts
+// messages, are sent from plugin to content scripts
 export const sendMessage = {
   addElement: (el: Locator) => connector.sendMessage("ADD_ELEMENT", el),
   assignDataLabels: (payload: PredictedEntity[]) => connector.sendMessage("ASSIGN_DATA_LABEL", payload),
@@ -179,7 +180,7 @@ export const sendMessage = {
   findBySelectors: (payload: SelectorsMap) => connector.sendMessage("FIND_BY_SELECTORS", payload),
   setClosedSession: (payload: { tabId: number; isClosed: boolean }) =>
     connector.sendMessage("SET_CLOSED_SESSION", payload),
-  setHighlight: (payload: { elements?: Locator[]; perception?: number }) =>
+  setHighlight: (payload: { elements?: Locator[]; filter?: ClassFilterValue }) =>
     connector.sendMessage("SET_HIGHLIGHT", payload),
   killHighlight: (payload?: {}, onResponse?: () => void) => connector.sendMessage("KILL_HIGHLIGHT", null, onResponse),
   generateAttributes: (payload: PredictedEntity, onResponse: () => void) =>

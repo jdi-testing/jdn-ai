@@ -17,19 +17,9 @@ div[id^="jdn_cm_"] {
     transform: scale(0);
     transition: transform 0.1s;
     transform-origin: top left;
-    padding: 19px 0 0 0;
     font-family: "Source Sans Pro", sans-serif;
     font-size: 12px;
     z-index: 6000;
-
-    &::after {
-      content: "";
-      position: absolute;
-      left: 10px;
-      top: 0;
-      border: 9px solid transparent;
-      border-bottom: 10px solid white;
-    }
 
     &.display {
       opacity: 1;

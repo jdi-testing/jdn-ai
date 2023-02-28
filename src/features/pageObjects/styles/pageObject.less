@@ -9,6 +9,15 @@
       & .ant-tooltip {
         max-width: 100%;
         word-break: break-all;
+        padding: 10px 13px;
+      }
+
+      & .ant-tooltip-inner {
+        max-height: 350px;
+        overflow-y: clip;
+        display: -webkit-box;
+        -webkit-line-clamp: 15;
+        -webkit-box-orient: vertical;
       }
     }
 
@@ -37,17 +46,12 @@
         padding: 0;
         height: 20px;
         position: relative;
+        right: 0;
         top: 0;
-      }
-
-      &-menu {
-        right: 2px;
       }
 
       &-copy {
         visibility: hidden;
-        right: 26px;
-        top: -2px;
       }
     }
 
@@ -82,6 +86,10 @@
             }
           }
         }
+        
+      .ant-collapse-extra {
+        display: flex;
+      }
 
         & > .ant-collapse-content {
           border: none;

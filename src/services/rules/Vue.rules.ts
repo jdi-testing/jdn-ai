@@ -8,15 +8,35 @@ export const VueRules: RulesMap[] = [
     },
   },
   {
-    jdnLabel: "button",
+    jdnLabel: "appBar",
     rules: {
-      classes: ["v-btn"],
+      classes: ["v-app-bar"],
     },
   },
   {
-    jdnLabel: "autocomplete",
+    jdnLabel: "aspectRatios",
     rules: {
-      classes: ["v-autocomplete"],
+      classes: ["v-responsive"],
+    },
+    detectContent: true,
+    priority: "low",
+  },
+  {
+    jdnLabel: "avatar",
+    rules: {
+      classes: ["v-avatar"],
+    },
+  },
+  {
+    jdnLabel: "badge",
+    rules: {
+      classes: ["v-badge"],
+    },
+  },
+  {
+    jdnLabel: "banner",
+    rules: {
+      classes: ["v-banner"],
     },
   },
   {
@@ -29,6 +49,24 @@ export const VueRules: RulesMap[] = [
     jdnLabel: "bottomsheet",
     rules: {
       classes: ["v-bottom-sheet"],
+    },
+  },
+  {
+    jdnLabel: "breadcrumbs",
+    rules: {
+      classes: ["v-breadcrumbs"],
+    },
+  },
+  {
+    jdnLabel: "button",
+    rules: {
+      classes: ["v-btn"],
+    },
+  },
+  {
+    jdnLabel: "buttonGroup",
+    rules: {
+      classes: ["v-btn-toggle"],
     },
   },
   {
@@ -57,9 +95,24 @@ export const VueRules: RulesMap[] = [
     },
   },
   {
+    jdnLabel: "chipgroup",
+    rules: {
+      classes: ["v-chip-group"],
+    },
+  },
+  {
+    jdnLabel: "colorpicker",
+    rules: {
+      classes: ["v-color-picker"],
+    },
+  },
+  {
     jdnLabel: "combobox",
     rules: {
-      classes: ["v-select", "v-autocomplete"],
+      classes: ["v-autocomplete"],
+    },
+    excludingRules: {
+      classes: ["v-overflow-btn"],
     },
   },
   {
@@ -69,12 +122,17 @@ export const VueRules: RulesMap[] = [
     },
     detectContent: true,
   },
-  // {
-  //   jdnLabel: "dataTable",
-  //   rules: {
-  //     attributes: [["file", "v-data-table/usage"]],
-  //   },
-  // },
+  {
+    jdnLabel: "dataTable",
+    rules: {
+      classes: ["v-data-table"],
+      children: [
+        {
+          tag: "colgroup",
+        },
+      ],
+    },
+  },
   {
     jdnLabel: "datePicker",
     rules: {
@@ -105,9 +163,57 @@ export const VueRules: RulesMap[] = [
     priority: "low",
   },
   {
+    jdnLabel: "divider",
+    rules: {
+      classes: ["v-divider"],
+    },
+  },
+  // {
+  //   jdnLabel: "expansionPanel",
+  //   rules: {
+  //     classes: ["v-expansion-panel"],
+  //   },
+  // },
+  {
+    jdnLabel: "expansionPanels",
+    rules: {
+      classes: ["v-expansion-panels"],
+    },
+  },
+  {
+    jdnLabel: "fileInput",
+    rules: {
+      classes: ["v-file-input"],
+    },
+  },
+  {
+    jdnLabel: "footer",
+    rules: {
+      classes: ["v-footer"],
+    },
+  },
+  {
+    jdnLabel: "grid",
+    rules: {
+      classes: ["container"],
+      children: [
+        {
+          classes: ["row"],
+        },
+      ],
+    },
+    detectContent: true,
+  },
+  {
     jdnLabel: "icon",
     rules: {
       classes: ["v-icon"],
+    },
+  },
+  {
+    jdnLabel: "image",
+    rules: {
+      classes: ["v-img"],
     },
   },
   {
@@ -125,7 +231,25 @@ export const VueRules: RulesMap[] = [
     priority: "low",
   },
   {
-    jdnLabel: "listItemGoups",
+    jdnLabel: "list",
+    rules: {
+      classes: ["v-list"],
+    },
+  },
+  {
+    jdnLabel: "listGroup",
+    rules: {
+      classes: ["v-list-group"],
+    },
+  },
+  {
+    jdnLabel: "listItem",
+    rules: {
+      classes: ["v-list-item"],
+    },
+  },
+  {
+    jdnLabel: "listItemGroups",
     rules: {
       classes: ["v-list-item-group"],
     },
@@ -137,9 +261,58 @@ export const VueRules: RulesMap[] = [
     },
   },
   {
+    jdnLabel: "navigationDrawer",
+    rules: {
+      classes: ["v-navigation-drawer"],
+    },
+  },
+  {
+    jdnLabel: "otpInput",
+    rules: {
+      classes: ["v-otp-input"],
+    },
+  },
+  {
+    jdnLabel: "overflowButton",
+    rules: {
+      classes: ["v-overflow-btn"],
+    },
+  },
+  {
+    jdnLabel: "overlay",
+    rules: {
+      classes: ["v-overlay"],
+    },
+  },
+  {
     jdnLabel: "pagination",
     rules: {
       classes: ["v-pagination"],
+    },
+  },
+  {
+    jdnLabel: "paginationPage",
+    rules: {
+      tag: "button",
+      classes: ["v-pagination__item"],
+    },
+  },
+  {
+    jdnLabel: "parallax",
+    rules: {
+      classes: ["v-parallax"],
+    },
+  },
+  {
+    jdnLabel: "progressCircular",
+    rules: {
+      classes: ["v-progress-circular"],
+    },
+  },
+  {
+    jdnLabel: "progressLinear",
+    rules: {
+      classes: ["v-progress-linear"],
     },
   },
   {
@@ -161,17 +334,39 @@ export const VueRules: RulesMap[] = [
     },
   },
   {
-    jdnLabel: "select",
+    jdnLabel: "rating",
     rules: {
-      classes: ["v-input", "v-select"],
+      classes: ["v-rating"],
     },
   },
-  // {
-  //   jdnLabel: "simpleTable",
-  //   rules: {
-  //     attributes: [["file", "v-simple-table/usage"]],
-  //   },
-  // },
+  {
+    jdnLabel: "select",
+    rules: {
+      classes: ["v-select"],
+    },
+    excludingRules: {
+      classes: ["v-autocomplete", "v-overflow-btn"],
+    },
+  },
+  {
+    jdnLabel: "simpleTable",
+    rules: {
+      classes: ["v-data-table"],
+    },
+    excludingRules: {
+      children: [
+        {
+          tag: "colgroup",
+        },
+      ],
+    },
+  },
+  {
+    jdnLabel: "skeletonLoader",
+    rules: {
+      classes: ["v-skeleton-loader"],
+    },
+  },
   {
     jdnLabel: "slider",
     rules: {
@@ -193,15 +388,77 @@ export const VueRules: RulesMap[] = [
     priority: "low",
   },
   {
+    jdnLabel: "snackbar",
+    rules: {
+      classes: ["v-snackbar"],
+    },
+  },
+  {
+    jdnLabel: "stepper",
+    rules: {
+      classes: ["v-stepper"],
+    },
+  },
+  {
+    jdnLabel: "step",
+    rules: {
+      classes: ["v-stepper__step"],
+    },
+  },
+  {
+    jdnLabel: "subheader",
+    rules: {
+      classes: ["v-subheader"],
+    },
+  },
+  {
     jdnLabel: "switch",
     rules: {
       classes: ["v-input--switch"],
     },
   },
   {
+    jdnLabel: "systembar",
+    rules: {
+      classes: ["v-system-bar"],
+    },
+  },
+  {
+    jdnLabel: "tabs",
+    rules: {
+      classes: ["v-tabs"],
+    },
+  },
+  {
+    jdnLabel: "tableCheckbox",
+    rules: {
+      classes: ["v-simple-checkbox"],
+    },
+  },
+  {
+    jdnLabel: "text",
+    rules: {
+      selector: `.text-h1, .text-h2, .text-h3, .text-h4, .text-h5, .text-h6, .text-subtitle-1, 
+      .text-subtitle-2, .text-body-1, .text-body-2, .text-button, .text-caption, .text-overline`,
+    },
+  },
+  {
+    jdnLabel: "textArea",
+    rules: {
+      classes: ["v-textarea"],
+    },
+  },
+  {
     jdnLabel: "textfield",
     rules: {
       classes: ["v-text-field"],
+    },
+    priority: "low",
+  },
+  {
+    jdnLabel: "timeline",
+    rules: {
+      classes: ["v-timeline"],
     },
   },
   {
@@ -215,5 +472,32 @@ export const VueRules: RulesMap[] = [
     rules: {
       classes: ["v-toolbar"],
     },
+  },
+  {
+    jdnLabel: "tooltip",
+    rules: {
+      classes: ["v-tooltip"],
+    },
+    detectContent: true,
+  },
+  {
+    jdnLabel: "treeview",
+    rules: {
+      classes: ["v-treeview"],
+    },
+  },
+  {
+    jdnLabel: "virtualscroller",
+    rules: {
+      classes: ["v-virtual-scroll"],
+    },
+  },
+  {
+    jdnLabel: "windows",
+    rules: {
+      classes: ["v-window"],
+    },
+    priority: "low",
+    detectContent: true,
   },
 ];

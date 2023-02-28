@@ -8,7 +8,7 @@ import { IdentificationStatus } from "../../locators/types/locator.types";
 import { selectCurrentPageObject } from "../pageObject.selectors";
 import { changeElementLibrary } from "../pageObject.slice";
 import { PageObjectId } from "../types/pageObjectSlice.types";
-import { ElementLibrary, libraryNames } from "../../locators/types/generationClassesMap";
+import { ElementLibrary, libraryNames } from "../../locators/types/generationClasses.types";
 import { identifyElements } from "../../locators/reducers/identifyElements.thunk";
 
 interface Props {
@@ -35,7 +35,7 @@ export const GenerationButton: React.FC<Props> = ({ pageObj, library }) => {
           >
             <Select.Option value={ElementLibrary.MUI}>{libraryNames.MUI}</Select.Option>
             <Select.Option value={ElementLibrary.HTML5}>{libraryNames.HTML5}</Select.Option>
-            {/* <Select.Option value={ElementLibrary.Vuetify}>{libraryNames.Vuetify}</Select.Option> */}
+            <Select.Option value={ElementLibrary.Vuetify}>{libraryNames.Vuetify}</Select.Option>
             {/* <Select.Option value={ElementLibrary.NgMat}>{libraryNames.NgMat}</Select.Option> */}
           </Select>
         </Space>

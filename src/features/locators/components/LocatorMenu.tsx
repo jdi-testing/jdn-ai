@@ -121,7 +121,6 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen }) =>
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <Dropdown
-        arrow={{ pointAtCenter: true }}
         menu={renderMenu()}
         align={{ offset: [10, 0] }}
         trigger={["click"]}

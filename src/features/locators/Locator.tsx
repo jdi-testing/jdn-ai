@@ -17,7 +17,7 @@ import {
 import { size } from "lodash";
 import { PageType } from "../../app/types/mainSlice.types";
 import { RootState } from "../../app/store/store";
-import { ElementLibrary } from "./types/generationClassesMap";
+import { ElementLibrary } from "./types/generationClasses.types";
 import { Locator as LocatorInterface } from "./types/locator.types";
 import { SearchState } from "./components/LocatorsTree";
 import { LocatorEditDialog } from "./components/LocatorEditDialog";

@@ -3,7 +3,7 @@ import { isNil } from "lodash";
 import { pageObjAdapter, simpleSelectPageObjById } from "./pageObject.selectors";
 import { PageObjectState, PageObject, PageObjectId } from "./types/pageObjectSlice.types";
 import { addPageObjReducer } from "./utils/addPageObject.thunk";
-import { ElementLibrary } from "../locators/types/generationClassesMap";
+import { ElementLibrary } from "../locators/types/generationClasses.types";
 
 const initialState: PageObjectState = {};
 
