@@ -37,7 +37,7 @@ export const Guide = () => {
   const steps = [
     {
       title: "Step 1",
-      description: "Frontent setup",
+      description: "Frontend setup",
       content: pluginGuideComponent,
     },
     {
