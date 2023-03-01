@@ -261,7 +261,13 @@ export const highlightOnPage = () => {
     }, 300);
   };
 
+  const removeTooltip = () => {
+    const tooltip = document.querySelector(".jdn-tooltip");
+    if (tooltip) tooltip.remove();
+  }
+
   const removeHighlightElements = (callback) => {
+    removeTooltip();
     if (predictedElements) {
       predictedElements.forEach(({ jdnHash }) => {
         const el = document.getElementById(jdnHash);
