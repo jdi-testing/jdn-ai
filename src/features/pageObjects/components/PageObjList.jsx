@@ -89,7 +89,12 @@ export const PageObjList = (props) => {
                   <Collapse.Panel
                     key={id}
                     header={
-                      <Tooltip title={url} placement="bottomLeft" getPopupContainer={(triggerNode) => triggerNode}>
+                      <Tooltip
+                        title={url}
+                        placement="bottomLeft"
+                        getPopupContainer={(triggerNode) => triggerNode}
+                        align={{ offset: [-28, 0] }}
+                      >
                         <Icon component={PageSvg} className="jdn__locatorsList-status" />
                         <Typography.Text className="jdn__pageObject-content-text">{name}</Typography.Text>
                       </Tooltip>

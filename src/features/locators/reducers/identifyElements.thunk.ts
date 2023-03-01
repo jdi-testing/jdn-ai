@@ -3,7 +3,7 @@ import { predictElements } from "../../../pageServices/pageDataHandlers";
 import { IdentificationStatus, LocatorsState, PredictedEntity } from "../../locators/types/locator.types";
 import { setCurrentPageObj, setPageData } from "../../pageObjects/pageObject.slice";
 import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
-import { ElementLibrary, predictEndpoints } from "../types/generationClassesMap";
+import { ElementLibrary, predictEndpoints } from "../types/generationClasses.types";
 
 import { generateLocators } from "./generateLocators.thunk";
 import { findByRules } from "../utils/generationButton";

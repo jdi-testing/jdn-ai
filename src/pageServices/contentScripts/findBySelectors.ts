@@ -1,4 +1,4 @@
-import { defaultClass } from "../../features/locators/types/generationClassesMap";
+import { defaultClass } from "../../features/locators/types/generationClasses.types";
 import { JDNLabel, RulesMap, SelectorsMap } from "../../services/rules/rules.types";
 
 export const findBySelectors = () => {

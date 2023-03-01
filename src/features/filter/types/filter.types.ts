@@ -1,5 +1,5 @@
 import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
-import { ElementClass } from "../../locators/types/generationClassesMap";
+import { ElementClass } from "../../locators/types/generationClasses.types";
 
 export interface Filter extends FilterType {
   pageObjectId: PageObjectId;

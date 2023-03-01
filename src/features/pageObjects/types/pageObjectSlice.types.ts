@@ -1,5 +1,5 @@
 import { ElementId } from "../../locators/types/locator.types";
-import { ElementLibrary } from "../../locators/types/generationClassesMap";
+import { ElementLibrary } from "../../locators/types/generationClasses.types";
 
 export type PageObjectId = string;
 

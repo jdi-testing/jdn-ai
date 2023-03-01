@@ -1,6 +1,6 @@
 {
   "name": "jdn-ai-chrome-extension",
-  "version": "3.8.396",
+  "version": "3.9.404",
   "description": "jdn-ai chrome extension",
   "scripts": {
     "start": "webpack --watch --env devenv",
@@ -60,7 +60,10 @@
     "react-dom": "17.0.2",
     "react-redux": "7.2.6",
     "react-remark": "^2.1.0",
-    "redux-undo": "^1.0.1"
+    "redux-undo": "^1.0.1",
+    "rehype-raw": "^6.1.1",
+    "rehype-sanitize": "^5.0.1",
+    "remark-emoji": "^3.1.1"
   },
   "devDependencies": {
     "@babel/core": "7.17.5",

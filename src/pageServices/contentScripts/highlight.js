@@ -9,7 +9,7 @@ export const highlightOnPage = () => {
   let predictedElements;
   let listenersAreSet;
   let scrollableContainers = [];
-  const classFilter = {};
+  let classFilter = {};
   let tooltip;
 
   const clearState = () => {
@@ -245,6 +245,7 @@ export const highlightOnPage = () => {
     if (param) {
       if (!predictedElements) predictedElements = param.elements;
     }
+    if (param?.filter) classFilter = param.filter;
     let query = "";
     predictedElements.forEach(({ deleted, type, jdnHash }) => {
       if (deleted || isFilteredOut(type)) return;
@@ -275,7 +276,13 @@ export const highlightOnPage = () => {
     }, 300);
   };
 
+  const removeTooltip = () => {
+    const tooltip = document.querySelector(".jdn-tooltip");
+    if (tooltip) tooltip.remove();
+  };
+
   const removeHighlightElements = (callback) => {
+    removeTooltip();
     if (predictedElements) {
       predictedElements.forEach(({ jdnHash }) => {
         const el = document.getElementById(jdnHash);
@@ -322,7 +329,7 @@ export const highlightOnPage = () => {
     const hasHorizontalScroll = (node) =>
       node.scrollWidth > node.clientWidth &&
       (getComputedStyle(node).overflowX === "scroll" || getComputedStyle(node).overflowX == "auto");
-    const isRootNode = (node) => node.parentElement === null;
+    const isRootNode = (node) => node.parentElement === null || node.tagName === "BODY";
 
     nodes.forEach((node) => {
       if ((hasVerticalScroll(node) || hasHorizontalScroll(node)) && !isRootNode(node)) {
@@ -350,6 +357,7 @@ export const highlightOnPage = () => {
     filterElements.forEach((element) => {
       const div = document.getElementById(element.jdnHash);
       if (div) div.setAttribute("jdn-filtered", value ? "true" : false);
+      else findAndHighlight();
     });
   };
 

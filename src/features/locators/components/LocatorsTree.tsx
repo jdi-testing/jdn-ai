@@ -13,7 +13,7 @@ import {
   selectFilteredLocators,
   selectLocatorsByPageObject,
 } from "../../pageObjects/pageObject.selectors";
-import { defaultLibrary } from "../types/generationClassesMap";
+import { defaultLibrary } from "../types/generationClasses.types";
 import { EXPAND_STATE } from "./LocatorListHeader";
 import { LocatorsProgress } from "./LocatorsProgress";
 import { useSize } from "../utils/useSize";

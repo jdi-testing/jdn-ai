@@ -8,7 +8,7 @@ import { IdentificationStatus } from "../../locators/types/locator.types";
 import { selectCurrentPageObject } from "../pageObject.selectors";
 import { changeElementLibrary } from "../pageObject.slice";
 import { PageObjectId } from "../types/pageObjectSlice.types";
-import { ElementLibrary, libraryNames } from "../../locators/types/generationClassesMap";
+import { ElementLibrary, libraryNames } from "../../locators/types/generationClasses.types";
 import { identifyElements } from "../../locators/reducers/identifyElements.thunk";
 
 interface Props {

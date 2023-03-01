@@ -8,7 +8,7 @@ import { RootState } from "../../../app/store/store";
 import { DialogWithForm } from "../../../common/components/DialogWithForm";
 import { selectAvailableClasses } from "../../filter/filter.selectors";
 import { selectLocatorsByPageObject } from "../../pageObjects/pageObject.selectors";
-import { ElementClass, ElementLibrary } from "../types/generationClassesMap";
+import { ElementClass, ElementLibrary } from "../types/generationClasses.types";
 import { isNameUnique } from "../../pageObjects/utils/pageObject";
 import { Locator } from "../types/locator.types";
 import { changeLocatorAttributes } from "../locators.slice";

@@ -1,4 +1,4 @@
-import { ElementLibrary } from "../features/locators/types/generationClassesMap";
+import { ElementLibrary } from "../features/locators/types/generationClasses.types";
 import { getJdiClassName, getJDILabel, getTypesMenuOptions } from "../features/locators/utils/locatorTypesUtils";
 
 const optionsMUI = [
