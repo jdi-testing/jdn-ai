@@ -264,7 +264,7 @@ export const highlightOnPage = () => {
   const removeTooltip = () => {
     const tooltip = document.querySelector(".jdn-tooltip");
     if (tooltip) tooltip.remove();
-  }
+  };
 
   const removeHighlightElements = (callback) => {
     removeTooltip();
