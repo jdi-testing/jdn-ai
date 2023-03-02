@@ -7,6 +7,7 @@ import { Filter, FilterKey } from "./types/filter.types";
 import { ElementClass } from "../locators/types/generationClasses.types";
 import { jdiClassFilterInit } from "./utils/filterSet";
 import { selectLocatorById } from "../locators/locators.selectors";
+import { isNil } from "lodash";
 
 export const filterAdapter = createEntityAdapter<Filter>({
   selectId: (filter) => filter.pageObjectId,
@@ -19,10 +20,12 @@ export const { selectAll: selectFilters, selectById: selectFilterById } = filter
 );
 
 export const selectClassFiltefByPO = createSelector(
-  selectFilterById,
-  (state: RootState, id?: PageObjectId) =>
-    id ? selectPageObjById(state, id)?.library : selectCurrentPageObject(state)?.library,
-  (filter, library) => {
+  (state: RootState, id?: PageObjectId) => {    
+    const pageObject =  !isNil(id) ? selectPageObjById(state, id) : selectCurrentPageObject(state);
+    const filter = selectFilters(state).find(({ pageObjectId }: Filter) => pageObjectId === pageObject?.id);
+    return { filter, library: pageObject?.library }
+  },
+  ({filter, library}) => {
     if (!filter) {
       return jdiClassFilterInit(library || defaultLibrary);
     }

@@ -63,7 +63,7 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
 
   const currentPage = useSelector(selectCurrentPage).page;
   const origLocators = useSelector(selectLocatorsByPageObject);
-  const filteredLocators = useSelector((_state: RootState) => selectFilteredLocators(_state));
+  const filteredLocators = useSelector(selectFilteredLocators);
   const locators =
     size(origLocators) !== size(filteredLocators) ? setNewParents(origLocators, filteredLocators || []) : origLocators;
   const scrollToLocator = useSelector((_state: RootState) => _state.locators.present.scrollToLocator);
