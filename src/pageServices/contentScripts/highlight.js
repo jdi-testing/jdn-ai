@@ -141,25 +141,24 @@ export const highlightOnPage = () => {
       const rect = element.getBoundingClientRect();
       const { top, left, height, width } = rect || {};
 
-      const checkPositionElement = (element) => {
-        do {
-          let elementPosition = getComputedStyle(element).position;
-          if (elementPosition == "fixed" || elementPosition == "sticky") {
-            return true;
-          }
-        } while ((element = element.offsetParent));
-        return false;
-      };
+      // const checkPositionElement = (element) => {
+      //   do {
+      //     let elementPosition = getComputedStyle(element).position;
+      //     if (elementPosition == "fixed" || elementPosition == "sticky") {
+      //       return true;
+      //     }
+      //   } while ((element = element.offsetParent));
+      //   return false;
+      // };
 
-      const isFixedElement = checkPositionElement(element);
+      // const isFixedElement = checkPositionElement(element);
 
       return rect
         ? {
-            left: `${isFixedElement ? left : left + window.pageXOffset + document.body.scrollLeft}px`,
-            top: `${isFixedElement ? top : top + window.pageYOffset + document.body.scrollTop}px`,
+            left: `${left + window.pageXOffset + document.body.scrollLeft}px`,
+            top: `${top + window.pageYOffset + document.body.scrollTop}px`,
             height: `${height}px`,
             width: `${width}px`,
-            ...(isFixedElement && { position: "fixed" }),
           }
         : {};
     };
@@ -256,9 +255,16 @@ export const highlightOnPage = () => {
       if (isInViewport(element) && !isHiddenByOverflow(element)) {
         const hash = element.getAttribute("jdn-hash");
         const highlightElement = document.getElementById(hash);
+        const predicted = predictedElements.find((e) => e.jdnHash === hash);
         if (!highlightElement) {
-          const predicted = predictedElements.find((e) => e.jdnHash === hash);
           drawRectangle(element, predicted);
+        } else {
+          const elementRect = element.getBoundingClientRect();
+          const highlightElementRect = highlightElement.getBoundingClientRect();
+          if (JSON.stringify(elementRect) !== JSON.stringify(highlightElementRect)) {
+            highlightElement.remove();
+            drawRectangle(element, predicted);
+          }
         }
       }
     });
