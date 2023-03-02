@@ -21,7 +21,7 @@ export const LocatorCopyButton = ({ element }) => {
 
   return (
     <React.Fragment>
-      <Tooltip placement="bottom" title={copyTooltipTitle}>
+      <Tooltip placement="bottom" title={copyTooltipTitle} align={{ offset: [0, -10] }}>
         <Button
           onClick={handleCopy}
           onMouseEnter={handleMouseEnter}
