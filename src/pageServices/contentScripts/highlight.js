@@ -136,7 +136,7 @@ export const highlightOnPage = () => {
     const getDivPosition = (elementRect) => {
       const { top, left, height, width } = elementRect || {};
 
-      return rect
+      return elementRect
         ? {
             left: `${left + window.pageXOffset + document.body.scrollLeft}px`,
             top: `${top + window.pageYOffset + document.body.scrollTop}px`,
