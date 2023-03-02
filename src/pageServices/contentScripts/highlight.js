@@ -18,8 +18,8 @@ export const highlightOnPage = () => {
     scrollableContainers = [];
   };
 
-  const isInViewport = (element) => {
-    const { top, right, bottom, left } = element.getBoundingClientRect();
+  const isInViewport = (elementRect) => {
+    const { top, right, bottom, left } = elementRect;
 
     // at least a part of an element should be in the viewport
     return (
@@ -28,7 +28,7 @@ export const highlightOnPage = () => {
     );
   };
 
-  const isHiddenByOverflow = (element) => {
+  const isHiddenByOverflow = (element, elementRect) => {
     const container = scrollableContainers.find((_container) => _container.contains(element));
 
     if (!container) return false;
@@ -40,12 +40,7 @@ export const highlightOnPage = () => {
       left: containerLeft,
     } = container.getBoundingClientRect();
 
-    const {
-      top: elementTop,
-      right: elementRight,
-      bottom: elementBottom,
-      left: elementLeft,
-    } = element.getBoundingClientRect();
+    const { top: elementTop, right: elementRight, bottom: elementBottom, left: elementLeft } = elementRect;
 
     return (
       elementTop > containerBottom ||
@@ -65,7 +60,8 @@ export const highlightOnPage = () => {
 
   const scrollToElement = (jdnHash) => {
     const originDiv = document.querySelector(`[jdn-hash='${jdnHash}']`);
-    if (!isInViewport(originDiv) || isHiddenByOverflow(originDiv)) {
+    const originDivRect = originDiv.getBoundingClientRect();
+    if (!isInViewport(originDivRect) || isHiddenByOverflow(originDiv, originDivRect)) {
       originDiv.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
     }
   };
@@ -135,23 +131,10 @@ export const highlightOnPage = () => {
     if (active) scrollToElement(active.jdnHash);
   };
 
-  const drawRectangle = (element, predictedElement) => {
+  const drawRectangle = (elementRect, predictedElement) => {
     const { element_id, jdnHash } = predictedElement;
-    const divPosition = (element) => {
-      const rect = element.getBoundingClientRect();
-      const { top, left, height, width } = rect || {};
-
-      // const checkPositionElement = (element) => {
-      //   do {
-      //     let elementPosition = getComputedStyle(element).position;
-      //     if (elementPosition == "fixed" || elementPosition == "sticky") {
-      //       return true;
-      //     }
-      //   } while ((element = element.offsetParent));
-      //   return false;
-      // };
-
-      // const isFixedElement = checkPositionElement(element);
+    const getDivPosition = (elementRect) => {
+      const { top, left, height, width } = elementRect || {};
 
       return rect
         ? {
@@ -223,7 +206,7 @@ export const highlightOnPage = () => {
       tooltip.className = "jdn-tooltip jdn-tooltip-hidden";
     });
 
-    Object.assign(div.style, divPosition(element));
+    Object.assign(div.style, getDivPosition(elementRect));
     labelContainer.appendChild(label);
     div.insertAdjacentElement("afterBegin", labelContainer);
 
@@ -252,18 +235,18 @@ export const highlightOnPage = () => {
     });
     nodes = query.length ? document.querySelectorAll(query) : [];
     nodes.forEach((element) => {
-      if (isInViewport(element) && !isHiddenByOverflow(element)) {
+      const elementRect = element.getBoundingClientRect();
+      if (isInViewport(elementRect) && !isHiddenByOverflow(element, elementRect)) {
         const hash = element.getAttribute("jdn-hash");
         const highlightElement = document.getElementById(hash);
         const predicted = predictedElements.find((e) => e.jdnHash === hash);
         if (!highlightElement) {
-          drawRectangle(element, predicted);
+          drawRectangle(elementRect, predicted);
         } else {
-          const elementRect = element.getBoundingClientRect();
           const highlightElementRect = highlightElement.getBoundingClientRect();
           if (JSON.stringify(elementRect) !== JSON.stringify(highlightElementRect)) {
             highlightElement.remove();
-            drawRectangle(element, predicted);
+            drawRectangle(elementRect, predicted);
           }
         }
       }
