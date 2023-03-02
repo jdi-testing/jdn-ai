@@ -20,12 +20,12 @@ export const { selectAll: selectFilters, selectById: selectFilterById } = filter
 );
 
 export const selectClassFiltefByPO = createSelector(
-  (state: RootState, id?: PageObjectId) => {    
-    const pageObject =  !isNil(id) ? selectPageObjById(state, id) : selectCurrentPageObject(state);
+  (state: RootState, id?: PageObjectId) => {
+    const pageObject = !isNil(id) ? selectPageObjById(state, id) : selectCurrentPageObject(state);
     const filter = selectFilters(state).find(({ pageObjectId }: Filter) => pageObjectId === pageObject?.id);
-    return { filter, library: pageObject?.library }
+    return { filter, library: pageObject?.library };
   },
-  ({filter, library}) => {
+  ({ filter, library }) => {
     if (!filter) {
       return jdiClassFilterInit(library || defaultLibrary);
     }
