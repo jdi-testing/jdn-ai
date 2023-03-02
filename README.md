@@ -7,7 +7,7 @@ The plugin allows generating Page Objects with the following restrictions:
 -	creates xPath locators’ type;
 -	works with Material UI and HTML5 websites.
 
-:warning: Before using this plugin, you will have to [launch locally](#server-setup) the backend server unless you are an EPAM employee.
+:warning: Before using this plugin, you will have to [launch the backend server locally](#server-setup) unless you are an EPAM employee.
 
 **Video instructions**
 
@@ -44,8 +44,8 @@ If the plugin does not work after downloading from the Chrome Web Store, you can
    *  For the developer team only: [Download](https://github.com/jdi-testing/jdn-ai/releases) the latest build (you need a .zip file named like the needed JDN version).
 2. Unpack the content to a local folder (the result folder name is `dist`).
 3. Open Chrome Settings → choose the option “More tools” → choose the option Extensions → turn on the Developer mode → click “Load unpacked”.
-4. Select the `dist` folder with the plugin on the subfolders level.
-5. Open Chrome developer tools via F12 (fn+f12) hotkey. The JDN tab is added as the last tab of Devtools.
+4. Select the `dist` folder with the plugin on the subfolder's level.
+5. Open Chrome developer tools via F12 (fn+f12) hotkey. The JDN tab is added as the last tab of DevTools.
 </details>
 
 ### Server setup
