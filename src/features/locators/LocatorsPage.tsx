@@ -15,6 +15,7 @@ import {
   selectInProgressGenerateByPageObj,
   selectFilteredLocators,
   getLocatorsIdsByPO,
+  selectCheckedLocators,
 } from "../pageObjects/pageObject.selectors";
 import { clearLocators } from "../pageObjects/pageObject.slice";
 import { locatorGenerationController } from "./utils/locatorGenerationController";
@@ -122,6 +123,7 @@ export const LocatorsPage: React.FC<Props> = ({ alreadyGenerated }) => {
 
   const renderConfirmButton = () => {
     if (currentPage === pageType.locatorsList) {
+      const checkedLocators = useSelector(selectCheckedLocators);
       const isDisabled = !size(inProgressGenerate) && !size(calculatedGenerate);
       return (
         <React.Fragment>
@@ -130,7 +132,7 @@ export const LocatorsPage: React.FC<Props> = ({ alreadyGenerated }) => {
             title={isDisabled ? "Please select locators for your current page object." : ""}
           >
             <Button type="primary" onClick={handleConfirm} className="jdn__buttons" disabled={isDisabled}>
-              Save
+              {!size(checkedLocators) ? "Save" : (size(checkedLocators) > 1 ? "Save 2+ locators" : "Save 1 locator")}
             </Button>
           </Tooltip>
         </React.Fragment>

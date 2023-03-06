@@ -188,3 +188,7 @@ export const selectLastElementLibrary = createSelector(selectPageObjects, (pageO
 export const selectActiveLocators = createSelector(selectFilteredLocators, (locators) =>
   locators.filter((_loc) => _loc.active)
 );
+
+export const selectCheckedLocators = createSelector(selectFilteredLocators, (locators) =>
+  locators.filter((_loc) => _loc.generate)
+);
