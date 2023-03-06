@@ -14,7 +14,7 @@ import {
   selectCalculatedGenerateByPageObj,
   selectInProgressGenerateByPageObj,
   selectFilteredLocators,
-  getLocatosIdsByPO,
+  getLocatorsIdsByPO,
 } from "../pageObjects/pageObject.selectors";
 import { clearLocators } from "../pageObjects/pageObject.slice";
 import { locatorGenerationController } from "./utils/locatorGenerationController";
@@ -36,7 +36,7 @@ export const LocatorsPage: React.FC<Props> = ({ alreadyGenerated }) => {
   const dispatch = useDispatch();
   const currentPage = useSelector(selectCurrentPage).page;
   const locators = useSelector(selectFilteredLocators);
-  const locatorIds = useSelector(getLocatosIdsByPO);
+  const locatorIds = useSelector(getLocatorsIdsByPO);
   const inProgressGenerate = useSelector(selectInProgressGenerateByPageObj);
   const calculatedGenerate = useSelector(selectCalculatedGenerateByPageObj);
   const deletedGenerate = useSelector(selectDeletedGenerateByPageObj);
