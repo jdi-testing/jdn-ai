@@ -132,7 +132,7 @@ export const LocatorsPage: React.FC<Props> = ({ alreadyGenerated }) => {
             title={isDisabled ? "Please select locators for your current page object." : ""}
           >
             <Button type="primary" onClick={handleConfirm} className="jdn__buttons" disabled={isDisabled}>
-              {!size(checkedLocators) ? "Save" : (size(checkedLocators) > 1 ? "Save 2+ locators" : "Save 1 locator")}
+              {!size(checkedLocators) ? "Save" : size(checkedLocators) > 1 ? "Save 2+ locators" : "Save 1 locator"}
             </Button>
           </Tooltip>
         </React.Fragment>
