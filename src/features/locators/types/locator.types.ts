@@ -91,3 +91,9 @@ export enum ValidationErrorType {
   NewElement = "The locator leads to the new element.", // success
   NotFound = "The locator was not found on the page.", // warn
 }
+
+export interface LocatorMenuRef {
+  current?: {
+    [key: string]: HTMLButtonElement | null;
+  };
+}
