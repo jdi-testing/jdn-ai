@@ -155,6 +155,11 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
   const treeNodes = renderTreeNodes(locatorsTree);
 
   const handleRightClick = (info: { event: React.MouseEvent; node: TreeNode }) => {
+    if (
+      info.event.target instanceof Element &&
+      (info.event.target.localName === "svg" || info.event.target.localName === "input")
+    )
+      return;
     if (locatorMenuRef?.current) locatorMenuRef.current[info.node.key]?.click();
   };
 
