@@ -37,7 +37,7 @@ const pageObjSlice = createSlice({
       const id = payload || state.currentPageObject;
       pageObjAdapter.upsertOne(state, { id, locators: undefined } as PageObject);
     },
-    extendByPO(state, { payload }: PayloadAction<{ originId: PageObjectId, extendingId: PageObjectId }>) {
+    extendByPO(state, { payload }: PayloadAction<{ originId: PageObjectId; extendingId: PageObjectId }>) {
       const { originId, extendingId } = payload;
       pageObjAdapter.upsertOne(state, { id: originId, extended: extendingId } as PageObject);
     },

@@ -30,7 +30,12 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, locators, elements, lib
   const [isRenameModalOpen, setIsRenameModalOpen] = useState(false);
   const currentPageObject = useSelector((_state: RootState) => _state.pageObject.present.currentPageObject);
 
-  const renderMenu = (id: PageObjectId, locatorIds: ElementId[] | undefined, locatorObjects: Locator[], name: string) => {
+  const renderMenu = (
+    id: PageObjectId,
+    locatorIds: ElementId[] | undefined,
+    locatorObjects: Locator[],
+    name: string
+  ) => {
     const handleRename = () => setIsRenameModalOpen(true);
 
     const handleRemove = () => {

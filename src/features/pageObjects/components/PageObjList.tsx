@@ -38,7 +38,9 @@ export const PageObjList: React.FC<Props> = (props) => {
 
   const renderLocators = (elements: LocatorType[], library: ElementLibrary) => {
     if (size(elements)) {
-      return elements.map((element) => <Locator {...{ element, library }} key={element.element_id} currentPage={PageType.PageObject} />);
+      return elements.map((element) => (
+        <Locator {...{ element, library }} key={element.element_id} currentPage={PageType.PageObject} />
+      ));
     } else {
       return "No locators selected";
     }
@@ -87,7 +89,7 @@ export const PageObjList: React.FC<Props> = (props) => {
                 />
               )}
               expandIconPosition="start"
-              {...(!isNil(activePanel) ? { activeKey: activePanel } : {}) }
+              {...(!isNil(activePanel) ? { activeKey: activePanel } : {})}
               /* @ts-ignore */
               onChange={setActivePanel}
             >
@@ -104,7 +106,7 @@ export const PageObjList: React.FC<Props> = (props) => {
                         getPopupContainer={(triggerNode) => triggerNode}
                         align={{ offset: [-28, 0] }}
                       >
-                        <PageObjectIcon {...{isBaseClass, extended}} />
+                        <PageObjectIcon {...{ isBaseClass, extended }} />
                         <Typography.Text className="jdn__pageObject-content-text">{name}</Typography.Text>
                       </Tooltip>
                     }

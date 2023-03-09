@@ -18,5 +18,5 @@ export interface PageObject {
   pathname: string;
   pageData: string;
   search: string;
-  url: string; 
+  url: string;
 }
