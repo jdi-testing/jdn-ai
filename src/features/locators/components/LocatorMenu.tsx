@@ -17,7 +17,12 @@ import {
   copyLocatorOption,
 } from "../../../common/components/menu/menuOptions";
 import { isProgressStatus, locatorGenerationController } from "../utils/locatorGenerationController";
-import { Locator, LocatorCalculationPriority, LocatorTaskStatus } from "../types/locator.types";
+import {
+  Locator,
+  LocatorCalculationPriority,
+  LocatorTaskStatus,
+  LocatorMenuRef as LocatorMenuRefInterface,
+} from "../types/locator.types";
 import { setCalculationPriority, toggleDeleted } from "../locators.slice";
 import { copyLocator } from "../utils/utils";
 import { LocatorOption } from "../utils/constants";
@@ -27,9 +32,10 @@ import { stopGeneration } from "../reducers/stopGeneration.thunk";
 interface Props {
   element: Locator;
   setIsEditModalOpen: (val: boolean) => void;
+  locatorMenuRef?: LocatorMenuRefInterface;
 }
 
-export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen }) => {
+export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, locatorMenuRef }) => {
   const dispatch = useDispatch();
 
   const { element_id, locator, deleted, priority, jdnHash, type, name } = element;
@@ -128,6 +134,9 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen }) =>
         destroyPopupOnHide
       >
         <Button
+          ref={(el: HTMLButtonElement) => {
+            if (locatorMenuRef?.current) locatorMenuRef.current[element_id] = el;
+          }}
           className="jdn__locatorsList_button jdn__locatorsList_button-menu"
           icon={<DotsThree size={18} onClick={(e) => e.preventDefault()} />}
         />
