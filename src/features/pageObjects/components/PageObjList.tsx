@@ -1,9 +1,11 @@
+import Icon from "@ant-design/icons";
 import { Collapse, Tooltip, Typography } from "antd";
 import { isNil, size } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { CaretDown } from "phosphor-react";
+import PageSvg from "../assets/page.svg";
 import { Footnote } from "../../../common/components/footnote/Footnote";
 import { selectConfirmedLocators, selectPageObjects } from "../pageObject.selectors";
 import { GenerationButton } from "./GenerationButton";
@@ -13,7 +15,6 @@ import { Locator } from "../../locators/Locator";
 import { PageObjMenu } from "./PageObjMenu";
 import { PageObjListHeader } from "./PageObjListHeader";
 import { Notifications } from "../../../common/components/notification/Notifications";
-import { PageObjectIcon } from "./PageObjectIcon";
 import { RootState } from "../../../app/store/store";
 import { Locator as LocatorType } from "../../locators/types/locator.types";
 import { PageObjectId } from "../types/pageObjectSlice.types";
@@ -106,7 +107,7 @@ export const PageObjList: React.FC<Props> = (props) => {
                         getPopupContainer={(triggerNode) => triggerNode}
                         align={{ offset: [-28, 0] }}
                       >
-                        <PageObjectIcon {...{ isBaseClass, extended }} />
+                        <Icon component={PageSvg} className="jdn__locatorsList-status" />
                         <Typography.Text className="jdn__pageObject-content-text">{name}</Typography.Text>
                       </Tooltip>
                     }
