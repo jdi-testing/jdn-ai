@@ -40,7 +40,6 @@ export const useGuideRehype = () =>
         details: (props) => {
           // @ts-ignore
           const header = Children.onlyText(Children.filter(props.children, (child) => child.type === "summary"));
-          console.log(header);
           return (
             <div className="jdn__guide_collapse">
               <Collapse ghost>
