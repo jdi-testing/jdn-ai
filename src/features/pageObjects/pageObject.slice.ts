@@ -37,6 +37,10 @@ const pageObjSlice = createSlice({
       const id = payload || state.currentPageObject;
       pageObjAdapter.upsertOne(state, { id, locators: undefined } as PageObject);
     },
+    extendByPO(state, { payload }: PayloadAction<{ originId: PageObjectId, extendingId: PageObjectId }>) {
+      const { originId, extendingId } = payload;
+      pageObjAdapter.upsertOne(state, { id: originId, extended: extendingId } as PageObject);
+    },
     removeAll(state) {
       pageObjAdapter.removeAll(state);
     },
@@ -49,6 +53,10 @@ const pageObjSlice = createSlice({
     },
     setCurrentPageObj(state, { payload }) {
       state.currentPageObject = payload;
+    },
+    setBaseClass(state, { payload }: PayloadAction<PageObjectId>) {
+      // probably, we need to check whether it's the only base class
+      pageObjAdapter.upsertOne(state, { id: payload, isBaseClass: true } as PageObject);
     },
     setPageData(state, { payload }: PayloadAction<{ id: PageObjectId; pageData: string }>) {
       pageObjAdapter.upsertOne(state, payload as PageObject);
@@ -66,9 +74,11 @@ export const {
   changeElementLibrary,
   changeName,
   clearLocators,
+  extendByPO,
   removeAll,
   removePageObjects,
   removePageObject,
+  setBaseClass,
   setCurrentPageObj,
   setPageData,
 } = pageObjSlice.actions;

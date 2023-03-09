@@ -8,13 +8,15 @@ export interface PageObjectState {
 }
 
 export interface PageObject {
+  isBaseClass?: boolean;
+  extended?: PageObjectId;
   id: PageObjectId;
   library: ElementLibrary;
   locators?: ElementId[];
   name: string;
-  pageData: string;
-  url: string;
-  pathname: string;
-  search: string;
   origin: string;
+  pathname: string;
+  pageData: string;
+  search: string;
+  url: string; 
 }
