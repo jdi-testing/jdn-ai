@@ -94,7 +94,7 @@ export const PageObjList: React.FC<Props> = (props) => {
               /* @ts-ignore */
               onChange={setActivePanel}
             >
-              {pageObjects.map(({ id, name, url, locators, library, isBaseClass, extended }) => {
+              {pageObjects.map(({ id, name, url, locators, library }) => {
                 const elements = selectConfirmedLocators(state as RootState, id);
                 const isPageObjectNotEmpty = !!size(elements);
                 return (
