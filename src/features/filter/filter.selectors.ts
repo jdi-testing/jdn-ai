@@ -19,7 +19,7 @@ export const { selectAll: selectFilters, selectById: selectFilterById } = filter
   (state) => state.filters
 );
 
-export const selectClassFiltefByPO = createSelector(
+export const selectClassFilterByPO = createSelector(
   (state: RootState, id?: PageObjectId) => {
     const pageObject = !isNil(id) ? selectPageObjById(state, id) : selectCurrentPageObject(state);
     const filter = selectFilters(state).find(({ pageObjectId }: Filter) => pageObjectId === pageObject?.id);
@@ -37,7 +37,7 @@ export const selectDetectedClassesFilter = createSelector(
   (state: RootState) => selectCurrentPageObject(state),
   (state: RootState) => state,
   (pageObj, state) => {
-    const classFilterPO = selectClassFiltefByPO(state, pageObj!.id);
+    const classFilterPO = selectClassFilterByPO(state, pageObj!.id);
     if (pageObj?.locators) {
       const locatorType = new Set(pageObj?.locators.map((locatorId) => selectLocatorById(state, locatorId)?.type));
       return Object.entries(classFilterPO).reduce((result: Record<ElementClass, boolean>, entry) => {
@@ -51,7 +51,7 @@ export const selectDetectedClassesFilter = createSelector(
 );
 
 export const selectAvailableClasses = createSelector(
-  (state: RootState) => selectClassFiltefByPO(state, selectCurrentPageObject(state)?.id || ""),
+  (state: RootState) => selectClassFilterByPO(state, selectCurrentPageObject(state)?.id || ""),
   (classFilter) => {
     return Object.entries(classFilter)
       .map(([jdiClass, value]) => (value ? jdiClass : null))

@@ -15,5 +15,6 @@ export interface PageObject {
   pageData: string;
   url: string;
   pathname: string;
+  search: string;
   origin: string;
 }

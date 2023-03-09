@@ -169,7 +169,8 @@ export const generateAndDownloadZip = async (state: RootState, template: Blob) =
         .async("string")
         .then((content) => {
           if (content.includes(instanceName)) instanceName = `${instanceName}1`;
-          const testUrl = po.pathname;
+          const urlSearchParams = po.search;
+          const testUrl = urlSearchParams.length ? po.pathname + urlSearchParams : po.pathname;
           const newContent = content.replace(
             "// ADD SITE PAGES WITH URLS",
             `// ADD SITE PAGES WITH URLS\n    @Url("${testUrl}")\n    public static ${po.name} ${instanceName};

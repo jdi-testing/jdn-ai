@@ -2,7 +2,7 @@ import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
 import { chain, get, isNil, last, size } from "lodash";
 import { RootState } from "../../app/store/store";
 import { locatorTaskStatus } from "../../common/constants/constants";
-import { selectClassFiltefByPO } from "../filter/filter.selectors";
+import { selectClassFilterByPO } from "../filter/filter.selectors";
 import { selectLocators } from "../locators/locators.selectors";
 import { Locator } from "../locators/types/locator.types";
 import { isProgressStatus } from "../locators/utils/locatorGenerationController";
@@ -36,7 +36,7 @@ export const selectMaxId = createSelector(simpleSelectPageObjects, (items) => {
   return res !== -Infinity ? res : null;
 });
 
-export const getLocatosIdsByPO = (state: RootState, pageObjId?: PageObjectId) => {
+export const getLocatorsIdsByPO = (state: RootState, pageObjId?: PageObjectId) => {
   pageObjId = isNil(pageObjId) ? selectCurrentPageObject(state)?.id : pageObjId;
   if (isNil(pageObjId)) return [];
   return selectPageObjById(state, pageObjId)?.locators || [];
@@ -44,13 +44,13 @@ export const getLocatosIdsByPO = (state: RootState, pageObjId?: PageObjectId) =>
 
 export const selectLocatorsByPageObject = createSelector(
   selectLocators,
-  getLocatosIdsByPO,
+  getLocatorsIdsByPO,
   (locByProbability, locByPageObj) => locByProbability.filter((loc) => locByPageObj.includes(loc.element_id))
 );
 
 export const selectFilteredLocators = createSelector(
   selectLocatorsByPageObject,
-  selectClassFiltefByPO,
+  selectClassFilterByPO,
   (locators, filter) => {
     if (!filter) return locators;
     const _locators = locators?.filter((loc) => {
@@ -187,4 +187,8 @@ export const selectLastElementLibrary = createSelector(selectPageObjects, (pageO
 
 export const selectActiveLocators = createSelector(selectFilteredLocators, (locators) =>
   locators.filter((_loc) => _loc.active)
+);
+
+export const selectCheckedLocators = createSelector(selectFilteredLocators, (locators) =>
+  locators.filter((_loc) => _loc.generate)
 );
