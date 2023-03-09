@@ -18,7 +18,7 @@ import { size } from "lodash";
 import { PageType } from "../../app/types/mainSlice.types";
 import { RootState } from "../../app/store/store";
 import { ElementLibrary } from "./types/generationClasses.types";
-import { Locator as LocatorInterface } from "./types/locator.types";
+import { Locator as LocatorInterface, LocatorMenuRef as LocatorMenuRefInterface } from "./types/locator.types";
 import { SearchState } from "./components/LocatorsTree";
 import { LocatorEditDialog } from "./components/LocatorEditDialog";
 import { LocatorCopyButton } from "./components/LocatorCopyButton";
@@ -35,10 +35,19 @@ interface Props {
   searchState?: SearchState;
   depth?: number;
   searchString?: string;
+  locatorMenuRef?: LocatorMenuRefInterface;
 }
 
 // eslint-disable-next-line react/display-name
-export const Locator: React.FC<Props> = ({ element, currentPage, library, searchState, depth, searchString }) => {
+export const Locator: React.FC<Props> = ({
+  element,
+  currentPage,
+  library,
+  searchState,
+  depth,
+  searchString,
+  locatorMenuRef,
+}) => {
   const dispatch = useDispatch();
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -143,7 +152,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, library, search
             {searchState !== SearchState.Hidden ? (
               <React.Fragment>
                 <LocatorCopyButton {...{ element }} />
-                <LocatorMenu {...{ element, setIsEditModalOpen }} />
+                <LocatorMenu {...{ element, setIsEditModalOpen, locatorMenuRef }} />
               </React.Fragment>
             ) : null}
           </div>

@@ -7,7 +7,7 @@ import { CaretDown } from "phosphor-react";
 import { selectCurrentPage } from "../../../app/main.selectors";
 import { RootState } from "../../../app/store/store";
 import { pageType } from "../../../common/constants/constants";
-import { ElementId, Locator as LocatorType } from "../types/locator.types";
+import { ElementId, Locator as LocatorType, LocatorMenuRef as LocatorMenuRefInterface } from "../types/locator.types";
 import {
   selectCurrentPageObject,
   selectFilteredLocators,
@@ -54,6 +54,8 @@ type TreeNode = {
 export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps }) => {
   const [expandedKeys, setExpandedKeys] = useState(locatorIds);
   const [autoExpandParent, setAutoExpandParent] = useState(true);
+
+  const locatorMenuRef = useRef<LocatorMenuRefInterface["current"]>({});
   const containerRef = useRef<HTMLDivElement>(null);
   const treeRef = useRef(null);
 
@@ -123,7 +125,15 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
           }${locatorsMap[element_id].active ? " jdn__tree-item--active" : ""}`,
           title: (
             <Locator
-              {...{ element: locatorsMap[element_id], currentPage, library, depth, searchState, searchString }}
+              {...{
+                element: locatorsMap[element_id],
+                currentPage,
+                library,
+                depth,
+                searchState,
+                searchString,
+                locatorMenuRef,
+              }}
             />
           ),
           children: size(children) && children ? createTree(children) : [],
@@ -143,6 +153,15 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
   };
 
   const treeNodes = renderTreeNodes(locatorsTree);
+
+  const handleRightClick = (info: { event: React.MouseEvent; node: TreeNode }) => {
+    if (
+      info.event.target instanceof Element &&
+      (info.event.target.localName === "svg" || info.event.target.localName === "input")
+    )
+      return;
+    if (locatorMenuRef?.current) locatorMenuRef.current[info.node.key]?.click();
+  };
 
   useEffect(() => {
     if (scrollToLocator) {
@@ -166,6 +185,7 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
           {...{ expandedKeys, onExpand, autoExpandParent }}
           switcherIcon={<CaretDown color="#878A9C" size={14} />}
           treeData={treeNodes}
+          onRightClick={handleRightClick}
           height={containerHeight || 0}
         />
       </div>
