@@ -7,7 +7,7 @@ import { IdentificationStatus } from "../locators/types/locator.types";
 import { PageObjList } from "./components/PageObjList";
 
 interface Props {
-  template: any;
+  template?: Blob;
 }
 
 export const PageObjectPage: React.FC<Props> = (props) => {

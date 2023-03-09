@@ -1,11 +1,9 @@
-import Icon from "@ant-design/icons";
 import { Collapse, Tooltip, Typography } from "antd";
-import { size } from "lodash";
+import { isNil, size } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { CaretDown } from "phosphor-react";
-import PageSvg from "../assets/page.svg";
 import { Footnote } from "../../../common/components/footnote/Footnote";
 import { selectConfirmedLocators, selectPageObjects } from "../pageObject.selectors";
 import { GenerationButton } from "./GenerationButton";
@@ -15,10 +13,20 @@ import { Locator } from "../../locators/Locator";
 import { PageObjMenu } from "./PageObjMenu";
 import { PageObjListHeader } from "./PageObjListHeader";
 import { Notifications } from "../../../common/components/notification/Notifications";
+import { PageObjectIcon } from "./PageObjectIcon";
+import { RootState } from "../../../app/store/store";
+import { Locator as LocatorType } from "../../locators/types/locator.types";
+import { PageObjectId } from "../types/pageObjectSlice.types";
+import { ElementLibrary } from "../../locators/types/generationClasses.types";
+import { PageType } from "../../../app/types/mainSlice.types";
 
-export const PageObjList = (props) => {
+interface Props {
+  template?: Blob;
+}
+
+export const PageObjList: React.FC<Props> = (props) => {
   const state = useSelector((state) => state);
-  const currentPageObject = useSelector((state) => state.pageObject.present.currentPageObject);
+  const currentPageObject = useSelector((state: RootState) => state.pageObject.present.currentPageObject);
   const pageObjects = useSelector(selectPageObjects);
   const [activePanel, setActivePanel] = useState([currentPageObject]);
 
@@ -28,15 +36,15 @@ export const PageObjList = (props) => {
     setActivePanel([currentPageObject]);
   }, [currentPageObject]);
 
-  const renderLocators = (elements) => {
+  const renderLocators = (elements: LocatorType[], library: ElementLibrary) => {
     if (size(elements)) {
-      return elements.map((element) => <Locator key={element.element_id} {...{ element }} noScrolling={true} />);
+      return elements.map((element) => <Locator {...{ element, library }} key={element.element_id} currentPage={PageType.PageObject} />);
     } else {
       return "No locators selected";
     }
   };
 
-  const renderPageObjGeneration = (pageObjId, url, library) => {
+  const renderPageObjGeneration = (pageObjId: PageObjectId, url: string, library: ElementLibrary) => {
     return (
       <div className="jdn__pageObject__settings">
         <Footnote className="jdn__pageObject__settings-url">{url}</Footnote>
@@ -45,9 +53,9 @@ export const PageObjList = (props) => {
     );
   };
 
-  const renderContent = (pageObjId, url, elements, library) => {
+  const renderContent = (pageObjId: PageObjectId, url: string, elements: LocatorType[], library: ElementLibrary) => {
     if (size(elements)) {
-      return renderLocators(elements);
+      return renderLocators(elements, library);
     } else {
       return renderPageObjGeneration(pageObjId, url, library);
     }
@@ -79,11 +87,12 @@ export const PageObjList = (props) => {
                 />
               )}
               expandIconPosition="start"
-              activeKey={activePanel}
+              {...(!isNil(activePanel) ? { activeKey: activePanel } : {}) }
+              /* @ts-ignore */
               onChange={setActivePanel}
             >
-              {pageObjects.map(({ id, name, url, locators, library }) => {
-                const elements = selectConfirmedLocators(state, id);
+              {pageObjects.map(({ id, name, url, locators, library, isBaseClass, extended }) => {
+                const elements = selectConfirmedLocators(state as RootState, id);
                 const isPageObjectNotEmpty = !!size(elements);
                 return (
                   <Collapse.Panel
@@ -95,7 +104,7 @@ export const PageObjList = (props) => {
                         getPopupContainer={(triggerNode) => triggerNode}
                         align={{ offset: [-28, 0] }}
                       >
-                        <Icon component={PageSvg} className="jdn__locatorsList-status" />
+                        <PageObjectIcon {...{isBaseClass, extended}} />
                         <Typography.Text className="jdn__pageObject-content-text">{name}</Typography.Text>
                       </Tooltip>
                     }
