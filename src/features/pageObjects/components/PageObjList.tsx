@@ -26,15 +26,23 @@ interface Props {
 }
 
 export const PageObjList: React.FC<Props> = (props) => {
+  const DEFAULT_ACTIVE_KEY = "0";
   const state = useSelector((state) => state);
-  const currentPageObject = useSelector((state: RootState) => state.pageObject.present.currentPageObject);
+  // due to antd types: onChange?: (key: string | string[]) => void;
+  const currentPageObject = useSelector((state: RootState): string | undefined =>
+    state.pageObject.present.currentPageObject?.toString()
+  );
   const pageObjects = useSelector(selectPageObjects);
-  const [activePanel, setActivePanel] = useState([currentPageObject]);
+  const [activePanel, setActivePanel] = useState<string[] | undefined>([DEFAULT_ACTIVE_KEY]);
 
   const isExpanded = !!size(activePanel);
 
   useEffect(() => {
-    setActivePanel([currentPageObject]);
+    if (currentPageObject) {
+      setActivePanel([currentPageObject]);
+    } else {
+      setActivePanel([DEFAULT_ACTIVE_KEY]);
+    }
   }, [currentPageObject]);
 
   const renderLocators = (elements: LocatorType[], library: ElementLibrary) => {
@@ -68,7 +76,9 @@ export const PageObjList: React.FC<Props> = (props) => {
     if (size(activePanel)) {
       setActivePanel([]);
     } else {
-      const keys = pageObjects.map((po) => po.id);
+      const keys = pageObjects.map(
+        (po) => po.id.toString() // due to antd types: onChange?: (key: string | string[]) => void;
+      );
       setActivePanel(keys);
     }
   };
@@ -80,6 +90,7 @@ export const PageObjList: React.FC<Props> = (props) => {
         {size(pageObjects) ? (
           <React.Fragment>
             <Collapse
+              defaultActiveKey={[DEFAULT_ACTIVE_KEY]}
               expandIcon={({ isActive }) => (
                 <CaretDown
                   style={{
@@ -91,8 +102,7 @@ export const PageObjList: React.FC<Props> = (props) => {
               )}
               expandIconPosition="start"
               {...(!isNil(activePanel) ? { activeKey: activePanel } : {})}
-              /* @ts-ignore */
-              onChange={setActivePanel}
+              onChange={(key) => setActivePanel([...key])}
             >
               {pageObjects.map(({ id, name, url, locators, library }) => {
                 const elements = selectConfirmedLocators(state as RootState, id);
