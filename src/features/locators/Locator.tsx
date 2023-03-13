@@ -34,7 +34,7 @@ interface Props {
   disabled?: boolean;
   searchState?: SearchState;
   depth?: number;
-  searchString: string;
+  searchString?: string;
   locatorMenuRef?: LocatorMenuRefInterface;
 }
 

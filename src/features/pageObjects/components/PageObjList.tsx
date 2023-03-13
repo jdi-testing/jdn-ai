@@ -1,6 +1,6 @@
 import Icon from "@ant-design/icons";
 import { Collapse, Tooltip, Typography } from "antd";
-import { size } from "lodash";
+import { isNil, size } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 
@@ -15,28 +15,47 @@ import { Locator } from "../../locators/Locator";
 import { PageObjMenu } from "./PageObjMenu";
 import { PageObjListHeader } from "./PageObjListHeader";
 import { Notifications } from "../../../common/components/notification/Notifications";
+import { RootState } from "../../../app/store/store";
+import { Locator as LocatorType } from "../../locators/types/locator.types";
+import { PageObjectId } from "../types/pageObjectSlice.types";
+import { ElementLibrary } from "../../locators/types/generationClasses.types";
+import { PageType } from "../../../app/types/mainSlice.types";
 
-export const PageObjList = (props) => {
+interface Props {
+  template?: Blob;
+}
+
+export const PageObjList: React.FC<Props> = (props) => {
+  const DEFAULT_ACTIVE_KEY = "0";
   const state = useSelector((state) => state);
-  const currentPageObject = useSelector((state) => state.pageObject.present.currentPageObject);
+  // due to antd types: onChange?: (key: string | string[]) => void;
+  const currentPageObject = useSelector((state: RootState): string | undefined =>
+    state.pageObject.present.currentPageObject?.toString()
+  );
   const pageObjects = useSelector(selectPageObjects);
-  const [activePanel, setActivePanel] = useState([currentPageObject]);
+  const [activePanel, setActivePanel] = useState<string[] | undefined>([DEFAULT_ACTIVE_KEY]);
 
   const isExpanded = !!size(activePanel);
 
   useEffect(() => {
-    setActivePanel([currentPageObject]);
+    if (currentPageObject) {
+      setActivePanel([currentPageObject]);
+    } else {
+      setActivePanel([DEFAULT_ACTIVE_KEY]);
+    }
   }, [currentPageObject]);
 
-  const renderLocators = (elements) => {
+  const renderLocators = (elements: LocatorType[], library: ElementLibrary) => {
     if (size(elements)) {
-      return elements.map((element) => <Locator key={element.element_id} {...{ element }} noScrolling={true} />);
+      return elements.map((element) => (
+        <Locator {...{ element, library }} key={element.element_id} currentPage={PageType.PageObject} />
+      ));
     } else {
       return "No locators selected";
     }
   };
 
-  const renderPageObjGeneration = (pageObjId, url, library) => {
+  const renderPageObjGeneration = (pageObjId: PageObjectId, url: string, library: ElementLibrary) => {
     return (
       <div className="jdn__pageObject__settings">
         <Footnote className="jdn__pageObject__settings-url">{url}</Footnote>
@@ -45,9 +64,9 @@ export const PageObjList = (props) => {
     );
   };
 
-  const renderContent = (pageObjId, url, elements, library) => {
+  const renderContent = (pageObjId: PageObjectId, url: string, elements: LocatorType[], library: ElementLibrary) => {
     if (size(elements)) {
-      return renderLocators(elements);
+      return renderLocators(elements, library);
     } else {
       return renderPageObjGeneration(pageObjId, url, library);
     }
@@ -57,7 +76,9 @@ export const PageObjList = (props) => {
     if (size(activePanel)) {
       setActivePanel([]);
     } else {
-      const keys = pageObjects.map((po) => po.id);
+      const keys = pageObjects.map(
+        (po) => po.id.toString() // due to antd types: onChange?: (key: string | string[]) => void;
+      );
       setActivePanel(keys);
     }
   };
@@ -69,6 +90,7 @@ export const PageObjList = (props) => {
         {size(pageObjects) ? (
           <React.Fragment>
             <Collapse
+              defaultActiveKey={[DEFAULT_ACTIVE_KEY]}
               expandIcon={({ isActive }) => (
                 <CaretDown
                   style={{
@@ -79,11 +101,11 @@ export const PageObjList = (props) => {
                 />
               )}
               expandIconPosition="start"
-              activeKey={activePanel}
-              onChange={setActivePanel}
+              {...(!isNil(activePanel) ? { activeKey: activePanel } : {})}
+              onChange={(key) => setActivePanel([...key])}
             >
               {pageObjects.map(({ id, name, url, locators, library }) => {
-                const elements = selectConfirmedLocators(state, id);
+                const elements = selectConfirmedLocators(state as RootState, id);
                 const isPageObjectNotEmpty = !!size(elements);
                 return (
                   <Collapse.Panel

@@ -1,7 +1,7 @@
 import { ElementId } from "../../locators/types/locator.types";
 import { ElementLibrary } from "../../locators/types/generationClasses.types";
 
-export type PageObjectId = string;
+export type PageObjectId = number;
 
 export interface PageObjectState {
   currentPageObject?: PageObjectId;
@@ -12,9 +12,9 @@ export interface PageObject {
   library: ElementLibrary;
   locators?: ElementId[];
   name: string;
-  pageData: string;
-  url: string;
-  pathname: string;
-  search: string;
   origin: string;
+  pathname: string;
+  pageData: string;
+  search: string;
+  url: string;
 }
