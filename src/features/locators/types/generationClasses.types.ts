@@ -26,7 +26,7 @@ export const defaultLibrary = ElementLibrary.MUI;
 
 export const libraryNames: Record<ElementLibrary, string> = {
   [ElementLibrary.MUI]: "Material UI",
-  [ElementLibrary.HTML5]: "HTML 5",
+  [ElementLibrary.HTML5]: "HTML5",
   [ElementLibrary.NgMat]: "Angular Material",
   [ElementLibrary.Vuetify]: "Vuetify",
 };
