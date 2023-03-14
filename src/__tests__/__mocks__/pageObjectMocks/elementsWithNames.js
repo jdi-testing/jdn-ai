@@ -8,17 +8,17 @@ export const elementsWithNames = [
   },
   {
     ...elementsWithoutNames[1],
-    name: "radio78Radio79",
+    name: "radio80",
     type: "List",
   },
   {
     ...elementsWithoutNames[2],
-    name: "radio78Radio79Radio80",
+    name: "radio78Radio79",
     type: "List",
   },
   {
     ...elementsWithoutNames[3],
-    name: "anyNymber",
+    name: "name11111",
     type: "Badge",
   },
   {
@@ -28,12 +28,12 @@ export const elementsWithNames = [
   },
   {
     ...elementsWithoutNames[5],
-    name: "chipOfTheChipsCccchippp",
+    name: "cccchippp",
     type: "Chip",
   },
   {
     ...elementsWithoutNames[6],
-    name: "anyNymber11111",
+    name: "name11111AnyNymber",
     type: "Badge",
   },
   {
@@ -85,5 +85,25 @@ export const elementsWithNames = [
     ...elementsWithoutNames[16],
     name: "list3",
     type: "List",
+  },
+  {
+    ...elementsWithoutNames[17],
+    name: "clickThisControl",
+    type: "RadioButtons",
+  },
+  {
+    ...elementsWithoutNames[18],
+    name: "clickThisControlWithVeryLongTextTextTextTextTextTextTextText",
+    type: "RadioButtons",
+  },
+  {
+    ...elementsWithoutNames[19],
+    name: "clickThisControlWithVeryLongTextTextTextTextTextTextTRadio79",
+    type: "RadioButtons",
+  },
+  {
+    ...elementsWithoutNames[20],
+    name: "unicorn",
+    type: "RadioButtons",
   },
 ];
