@@ -5,13 +5,12 @@ import {
   entries,
   isEmpty,
   isNumber,
-  join,
   lowerFirst,
   size,
   subtract,
-  take,
   toLower,
   toString,
+  truncate,
   upperFirst,
 } from "lodash";
 
@@ -25,6 +24,7 @@ import javaReservedWords from "./javaReservedWords.json";
 import { pageObjectTemplate } from "./pageObjectTemplate";
 import { testFileTemplate } from "./testTemplate";
 import { getJDILabel } from "../../locators/utils/locatorTypesUtils";
+import { MAX_LOCATOR_NAME_LENGTH } from "./constants";
 
 export const isStringMatchesReservedWord = (string: string) => javaReservedWords.includes(string);
 
@@ -40,7 +40,7 @@ export const createElementName = (
   uniqueNames: Array<string>,
   newType?: string
 ) => {
-  const { elemName, elemId, elemText, predicted_label } = element;
+  const { elemName, elemId, elemText, predicted_label, elemAriaLabel } = element;
 
   const uniqueIndex = (name: string) => {
     let index = 1;
@@ -52,31 +52,62 @@ export const createElementName = (
     return index;
   };
 
-  const returnLatinCodepoints = (string: string) => (/[^\u0000-\u00ff]/.test(string) ? "" : string);
+  const returnLatinCodePoints = (string: string) => (/[^\u0000-\u00ff]/.test(string) ? "" : string);
 
-  const normalizeString = (string: string) => chain(string).trim().camelCase().value();
+  const normalizeString = (string: string) =>
+    chain(string).trim().camelCase().truncate({ length: MAX_LOCATOR_NAME_LENGTH, omission: "" }).value();
 
   const isUnique = (_name: string) => uniqueNames.indexOf(_name) === -1;
 
+  const concat = (origin: string) => (append: string) => {
+    const _origin = origin;
+    if (_origin)
+      return truncate(_origin, { length: subtract(60, size(append)), omission: "" }).concat(upperFirst(append));
+    else return append;
+  };
+
   const getName = () => (elemName ? normalizeString(elemName) : "");
+  const getText = () => (elemText ? normalizeString(returnLatinCodePoints(elemText)) : "");
+  const getAriaLabel = () => (elemAriaLabel ? normalizeString(returnLatinCodePoints(elemAriaLabel)) : "");
   const getId = () => (elemId ? normalizeString(elemId) : "");
-  const getText = (string: string) =>
-    elemText ? join(take(normalizeString(returnLatinCodepoints(elemText)), subtract(60, size(string))), "") : "";
   const getClass = () => (newType || getJDILabel(predicted_label as keyof ElementLabel, library)).toLowerCase();
   const getIndex = (string: string) => toString(uniqueIndex(string));
+
+  const pickingTerms = [getName, getText, getAriaLabel];
+  const concatenatingTerms = [getId, getClass, getIndex];
+
   const startsWithNumber = new RegExp("^[0-9].*$");
   const checkNumberFirst = (string: string) => (string.match(startsWithNumber) ? `name${string}` : string);
 
   let _resultName = "";
-  let index = 0;
 
-  const terms = [getName, getId, getText, getClass, getIndex];
+  const pickValue = () => {
+    let _baseName = "";
+    let _result = "";
 
-  do {
-    const newTerm = terms[index](_resultName);
-    _resultName = checkNumberFirst(_resultName.concat(size(_resultName) ? upperFirst(newTerm) : newTerm));
-    index++;
-  } while (!isUnique(_resultName) || isEmpty(_resultName));
+    let indexP = 0;
+    do {
+      const newTerm = pickingTerms[indexP]();
+      if (!size(_baseName)) _baseName = newTerm;
+      _result = newTerm;
+      indexP++;
+    } while (indexP !== pickingTerms.length && (!isUnique(_result) || isEmpty(_result)));
+
+    if (!isUnique(_result) || isEmpty(_result)) {
+      _result = _baseName;
+    }
+
+    return checkNumberFirst(_result);
+  };
+
+  _resultName = pickValue();
+
+  let indexC = 0;
+  while (!isUnique(_resultName) || isEmpty(_resultName)) {
+    const newTerm = concatenatingTerms[indexC](_resultName);
+    _resultName = checkNumberFirst(concat(_resultName)(newTerm));
+    indexC++;
+  }
 
   return _resultName;
 };

@@ -88,7 +88,8 @@ export const getGenerationAttributes = () => {
         const attrName = element.getAttribute("name");
         predictedElement.elemName = attrName ? camelCase(attrName) : "";
         predictedElement.elemId = element.id && typeof element.id === "string" ? camelCase(element.id) : "";
-        predictedElement.elemText = element.text;
+        predictedElement.elemText = element.textContent;
+        predictedElement.elemAriaLabel = element.getAttribute("aria-label");
         predictedElement.locator = {
           fullXpath: getElementTreeXPath(element),
         };

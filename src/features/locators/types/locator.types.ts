@@ -57,6 +57,7 @@ export interface Validity {
 export interface Locator extends PredictedEntity {
   children?: string[];
   deleted?: boolean;
+  elemAriaLabel?: string;
   elemId?: string;
   elemName?: string;
   elemText?: string;
