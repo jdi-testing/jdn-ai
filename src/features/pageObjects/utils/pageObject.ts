@@ -24,6 +24,7 @@ import javaReservedWords from "./javaReservedWords.json";
 import { pageObjectTemplate } from "./pageObjectTemplate";
 import { testFileTemplate } from "./testTemplate";
 import { getJDILabel } from "../../locators/utils/locatorTypesUtils";
+import { MAX_LOCATOR_NAME_LENGTH } from "./constants";
 
 export const isStringMatchesReservedWord = (string: string) => javaReservedWords.includes(string);
 
@@ -51,10 +52,10 @@ export const createElementName = (
     return index;
   };
 
-  const returnLatinCodepoints = (string: string) => (/[^\u0000-\u00ff]/.test(string) ? "" : string);
+  const returnLatinCodePoints = (string: string) => (/[^\u0000-\u00ff]/.test(string) ? "" : string);
 
   const normalizeString = (string: string) =>
-    chain(string).trim().camelCase().truncate({ length: 60, omission: "" }).value();
+    chain(string).trim().camelCase().truncate({ length: MAX_LOCATOR_NAME_LENGTH, omission: "" }).value();
 
   const isUnique = (_name: string) => uniqueNames.indexOf(_name) === -1;
 
@@ -66,8 +67,8 @@ export const createElementName = (
   };
 
   const getName = () => (elemName ? normalizeString(elemName) : "");
-  const getText = () => (elemText ? normalizeString(returnLatinCodepoints(elemText)) : "");
-  const getAriaLabel = () => (elemAriaLabel ? normalizeString(returnLatinCodepoints(elemAriaLabel)) : "");
+  const getText = () => (elemText ? normalizeString(returnLatinCodePoints(elemText)) : "");
+  const getAriaLabel = () => (elemAriaLabel ? normalizeString(returnLatinCodePoints(elemAriaLabel)) : "");
   const getId = () => (elemId ? normalizeString(elemId) : "");
   const getClass = () => (newType || getJDILabel(predicted_label as keyof ElementLabel, library)).toLowerCase();
   const getIndex = (string: string) => toString(uniqueIndex(string));
