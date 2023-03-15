@@ -18,7 +18,7 @@ import { RootState } from "../../../app/store/store";
 import { selectConfirmedLocators, selectPageObjects } from "../pageObject.selectors";
 import { connector } from "../../../pageServices/connector";
 import { ElementId, Locator } from "../../locators/types/locator.types";
-import { PageObject } from "../../pageObjects/types/pageObjectSlice.types";
+import { PageObject, PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
 import { ElementLabel, ElementLibrary } from "../../locators/types/generationClasses.types";
 import javaReservedWords from "./javaReservedWords.json";
 import { pageObjectTemplate } from "./pageObjectTemplate";
@@ -31,7 +31,7 @@ export const isStringMatchesReservedWord = (string: string) => javaReservedWords
 export const isNameUnique = (elements: Array<Locator>, element_id: ElementId, newName: string) =>
   !elements.find((elem) => elem.name === newName && elem.element_id !== element_id);
 
-export const isPONameUnique = (elements: Array<PageObject>, id: ElementId, newName: string) =>
+export const isPONameUnique = (elements: Array<PageObject>, id: PageObjectId, newName: string) =>
   !elements.find((elem) => toLower(elem.name) === toLower(newName) && elem.id !== id);
 
 export const createElementName = (

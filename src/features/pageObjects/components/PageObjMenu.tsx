@@ -17,7 +17,7 @@ import { generatePageObject } from "../../pageObjects/utils/pageObject";
 import { RenamePageObjectDialog } from "./RenamePageObjDialog";
 
 interface Props {
-  id: ElementId;
+  id: PageObjectId;
   name: string;
   locators?: ElementId[];
   elements: Locator[];

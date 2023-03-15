@@ -21,7 +21,7 @@ const { confirm } = Modal;
 interface Props {
   template?: Blob;
   toggleExpand: () => void;
-  setActivePanel: (pageObjectId: string[]) => void;
+  setActivePanel: (pageObjectId: string[] | undefined) => void;
   isExpanded: boolean;
 }
 
@@ -36,7 +36,7 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
 
   const handleAddPageObject = () => {
     if (newPOstub) {
-      setActivePanel([newPOstub.id]);
+      setActivePanel([newPOstub.id.toString()]);
       return;
     }
 
