@@ -35,7 +35,7 @@ interface Props {
   disabled?: boolean;
   searchState?: SearchState;
   depth?: number;
-  searchString: string;
+  searchString?: string;
 }
 
 // eslint-disable-next-line react/display-name
