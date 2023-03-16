@@ -22,7 +22,15 @@
 
     &_locators {
       display: flex;
-      gap: 12px;
+    }
+
+    &_checkbox_wrapper {
+      margin-right: 12px;
+    }
+
+    &_buttons {
+      display: flex;
+      height: 32px;
     }
 
     &_item {
@@ -35,6 +43,7 @@
       display: flex;
       width: calc(100% - 85px);
       gap: 12px;
+      flex-grow: 1;
 
       &-locator {
         color: @xpath-item-color-locator;
