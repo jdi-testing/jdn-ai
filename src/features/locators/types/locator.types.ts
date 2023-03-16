@@ -1,3 +1,4 @@
+import { LocatorType } from "../../../common/types/locatorType";
 import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
 import { ElementClass } from "./generationClasses.types";
 
@@ -48,6 +49,7 @@ export interface LocatorValue {
   robulaXpath?: string;
   taskStatus?: LocatorTaskStatus;
   errorMessage: string;
+  output: string;
 }
 
 export interface Validity {
@@ -68,6 +70,7 @@ export interface Locator extends PredictedEntity {
   active?: boolean;
   isCustomName?: boolean;
   isCustomLocator?: boolean;
+  locatorType?: LocatorType;
   pageObj: PageObjectId;
   parent_id: string;
   priority?: LocatorCalculationPriority;

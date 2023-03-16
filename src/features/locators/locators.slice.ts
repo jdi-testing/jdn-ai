@@ -18,6 +18,7 @@ import {
   LocatorCalculationPriority,
 } from "./types/locator.types";
 import { runXpathGenerationReducer } from "./reducers/runXpathGeneration.thunk";
+import { LocatorType } from "../../common/types/locatorType";
 
 const initialState: LocatorsState = {
   generationStatus: LocatorsGenerationStatus.noStatus,
@@ -34,6 +35,7 @@ export interface ChangeLocatorAttributesPayload {
   library: ElementLibrary;
   isCustomName?: boolean;
   isGeneratedName?: boolean;
+  locatorType?: LocatorType;
 }
 
 const locatorsSlice = createSlice({
@@ -44,7 +46,7 @@ const locatorsSlice = createSlice({
       locatorsAdapter.addMany(state, payload);
     },
     changeLocatorAttributes(state, { payload }: PayloadAction<ChangeLocatorAttributesPayload>) {
-      const { type, name, locator, element_id, validity, isCustomName } = payload;
+      const { type, name, locator, element_id, validity, isCustomName, locatorType } = payload;
       const _locator = simpleSelectLocatorById(state, element_id);
       if (!_locator) return;
       const { fullXpath, robulaXpath } = _locator.locator;
@@ -57,7 +59,7 @@ const locatorsSlice = createSlice({
         delete newValue.locator.customXpath;
         newValue.isCustomLocator = false;
       }
-      locatorsAdapter.upsertOne(state, newValue);
+      locatorsAdapter.upsertOne(state, {...newValue, ...(locatorType && { locatorType } )});
     },
     changeIdentificationStatus(state, { payload }: PayloadAction<IdentificationStatus>) {
       state.status = payload;
