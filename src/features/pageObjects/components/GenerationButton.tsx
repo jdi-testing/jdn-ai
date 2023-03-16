@@ -60,7 +60,7 @@ export const GenerationButton: React.FC<Props> = ({ pageObj, library }) => {
           <Col span={9}>
             <Select
               id="locatorType"
-              defaultValue={ currentPageObject?.locatorType || LocatorType.xPath }
+              defaultValue={currentPageObject?.locatorType || LocatorType.xPath}
               className="jdn__select"
               onChange={(_locatorType) => dispatch(setLocatorType({ id: pageObj, locatorType: _locatorType }))}
               options={[

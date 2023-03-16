@@ -59,7 +59,7 @@ const locatorsSlice = createSlice({
         delete newValue.locator.customXpath;
         newValue.isCustomLocator = false;
       }
-      locatorsAdapter.upsertOne(state, {...newValue, ...(locatorType && { locatorType } )});
+      locatorsAdapter.upsertOne(state, { ...newValue, ...(locatorType && { locatorType }) });
     },
     changeIdentificationStatus(state, { payload }: PayloadAction<IdentificationStatus>) {
       state.status = payload;
