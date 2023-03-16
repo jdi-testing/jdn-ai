@@ -61,8 +61,7 @@ export const state = (_pageObject: PageObject) => ({
           pageObj: 0,
           elemName: "",
           elemId: "",
-          elemText:
-            "\n                EPAM framework Wishes…\n\n                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod\n                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud\n                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat Duis aute irure dolor in\n                    reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.\n\t\t\t\tJDI Github\n                \n\t\t\t\t  <p>Your browser does not support iframes.</p>\n\t\t\t\t\n\t\t\t\t\n                    \n\t\t\t\t\t  <p>Your browser does not support iframes.</p>\n\t\t\t\t\t\n                    \n\t\t\t\t\t  <p>Your browser does not support iframes.</p>\n\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t  <p>Your browser does not support iframes.</p>\n\t\t\t\t\n                \n                    \n                        \n                            \n                                \n                            \n                            To include good practicesand ideas from successfulEPAM project\n                        \n                    \n                    \n                        \n                            \n                                \n                            \n                            To be flexible andcustomizable \n                        \n                    \n                    \n                        \n                            \n                                \n                            \n                            To be multiplatform \n                        \n                    \n                    \n                        \n                            \n                                \n                            \n                            Already have good base(about 20 internal andsome external projects),wish to get more…\n                        \n                    \n                \n            ",
+          elemText: "EPAM framework Wishes…",
           elemAriaLabel: null,
           locator: {
             fullXpath: "/html/body/div/div[2]/main/div[2]",
@@ -83,8 +82,7 @@ export const state = (_pageObject: PageObject) => ({
           pageObj: 0,
           elemName: "",
           elemId: "",
-          elemText:
-            "                                    Home                                                    Contact form                                                     Service                                                                                        Support                        Dates                        Search                        Complex Table                         Simple Table                         User Table                         Table with pages                        Different elements\t\t\t\t\t\tPerformance                                                                        Metals & Colors                            ",
+          elemText: "Home",
           elemAriaLabel: null,
           locator: {
             fullXpath: "/html/body/header/div/nav/ul[1]",
@@ -111,8 +109,7 @@ export const state = (_pageObject: PageObject) => ({
           pageObj: 0,
           elemName: "",
           elemId: "",
-          elemText:
-            "                                            HTML 5                                                                Mobile and HTML 5                                                                Bootstrap                                                                Bootstrap form                                                                Bootstrap forms                                                                React Ant                                                                Angular                                                                Material UI                                                                Vuetify                                    ",
+          elemText: "HTML 5",
           elemAriaLabel: null,
           locator: {
             fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[5]/ul",
@@ -140,8 +137,7 @@ export const result = (pageObject: PageObject) => [
     pageObj: 0,
     elemName: "",
     elemId: "",
-    elemText:
-      "\n                EPAM framework Wishes…\n\n                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod\n                    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud\n                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat Duis aute irure dolor in\n                    reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.\n\t\t\t\tJDI Github\n                \n\t\t\t\t  <p>Your browser does not support iframes.</p>\n\t\t\t\t\n\t\t\t\t\n                    \n\t\t\t\t\t  <p>Your browser does not support iframes.</p>\n\t\t\t\t\t\n                    \n\t\t\t\t\t  <p>Your browser does not support iframes.</p>\n\t\t\t\t\t\n\t\t\t\t\n\t\t\t\t\n\t\t\t\t  <p>Your browser does not support iframes.</p>\n\t\t\t\t\n                \n                    \n                        \n                            \n                                \n                            \n                            To include good practicesand ideas from successfulEPAM project\n                        \n                    \n                    \n                        \n                            \n                                \n                            \n                            To be flexible andcustomizable \n                        \n                    \n                    \n                        \n                            \n                                \n                            \n                            To be multiplatform \n                        \n                    \n                    \n                        \n                            \n                                \n                            \n                            Already have good base(about 20 internal andsome external projects),wish to get more…\n                        \n                    \n                \n            ",
+    elemText: "EPAM framework Wishes…",
     elemAriaLabel: null,
     locator: {
       fullXpath: "/html/body/div/div[2]/main/div[2]",
@@ -163,8 +159,7 @@ export const result = (pageObject: PageObject) => [
     pageObj: 0,
     elemName: "",
     elemId: "",
-    elemText:
-      "                                    Home                                                    Contact form                                                     Service                                                                                        Support                        Dates                        Search                        Complex Table                         Simple Table                         User Table                         Table with pages                        Different elements\t\t\t\t\t\tPerformance                                                                        Metals & Colors                            ",
+    elemText: "Home",
     elemAriaLabel: null,
     locator: {
       fullXpath: "/html/body/header/div/nav/ul[1]",
@@ -195,8 +190,7 @@ export const result = (pageObject: PageObject) => [
     pageObj: 0,
     elemName: "",
     elemId: "",
-    elemText:
-      "                                            HTML 5                                                                Mobile and HTML 5                                                                Bootstrap                                                                Bootstrap form                                                                Bootstrap forms                                                                React Ant                                                                Angular                                                                Material UI                                                                Vuetify                                    ",
+    elemText: "HTML 5",
     elemAriaLabel: null,
     locator: {
       fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[5]/ul",

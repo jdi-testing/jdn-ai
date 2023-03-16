@@ -93,11 +93,6 @@ export const LocatorEditDialog: React.FC<Props> = ({
     setIsEditedName(true);
   };
 
-  // const handleChangeLocatorType = (_locatorType: LocatorType) => {
-  //   const newLocator = getLocator(locator, _locatorType);
-  //   form.setFieldValue("locator", newLocator);
-  // };
-
   const handleOk = () => {
     form
       .validateFields()
