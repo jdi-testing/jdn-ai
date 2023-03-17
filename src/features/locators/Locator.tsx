@@ -124,9 +124,9 @@ export const Locator: React.FC<Props> = ({ element, currentPage, library, search
 
   return (
     <React.Fragment>
-      <LocatorMenu {...{ element, setIsEditModalOpen, trigger: ["contextMenu"] }}>
-        <div ref={ref} className="jdn__xpath_container" onClick={handleLocatorClick}>
-          {currentPage === pageType.locatorsList ? (
+      <div ref={ref} className="jdn__xpath_container" onClick={handleLocatorClick}>
+        {currentPage === pageType.locatorsList ? (
+          <LocatorMenu {...{ element, setIsEditModalOpen, trigger: ["contextMenu"] }}>
             <div className="jdn__xpath_locators">
               <div onContextMenu={(e) => e.stopPropagation()} className="jdn__xpath_checkbox_wrapper">
                 <Checkbox
@@ -156,11 +156,11 @@ export const Locator: React.FC<Props> = ({ element, currentPage, library, search
                 </div>
               ) : null}
             </div>
-          ) : (
-            <Text className="jdn__xpath_item">{renderColorizedString()}</Text>
-          )}
-        </div>
-      </LocatorMenu>
+          </LocatorMenu>
+        ) : (
+          <Text className="jdn__xpath_item">{renderColorizedString()}</Text>
+        )}
+      </div>
       {isEditModalOpen ? (
         <LocatorEditDialog
           {...{ library }}
