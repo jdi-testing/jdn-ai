@@ -11,7 +11,7 @@ export const Breadcrumbs = React.forwardRef((props, ref: ForwardedRef<HTMLDivEle
 
   return currentPage.page === PageType.LocatorsList ? (
     <div className="jdn__breadcrumbs" ref={ref}>
-      <Tooltip title={pageObject?.url} placement="bottomLeft" overlayStyle={{ maxWidth: "96%" }}>
+      <Tooltip title={pageObject?.url} placement="bottomLeft" getPopupContainer={(triggerNode) => triggerNode}>
         <Typography.Text type="secondary">{`${pageObject?.name} > `}</Typography.Text>
       </Tooltip>
       <span>{currentPage.alreadyGenerated ? "Editing" : "Creating"}</span>
