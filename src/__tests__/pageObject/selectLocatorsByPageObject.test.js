@@ -1,6 +1,6 @@
 import { selectLocatorsByPageObject } from "../../features/pageObjects/pageObject.selectors";
 import {
-  state,
+  getRootState,
   selectLocators,
   pageObject0,
   pageObjectXpath,
@@ -9,17 +9,17 @@ import {
 
 describe("selectLocatorsByPageObject", () => {
   test("for pageObject.locatorType set to undefined", () => {
-    const _result = selectLocatorsByPageObject(state(pageObject0));
+    const _result = selectLocatorsByPageObject(getRootState(pageObject0));
     expect(_result).toStrictEqual(selectLocators(pageObject0));
   });
 
   test("for pageObject.locatorType set to cssSelector", () => {
-    const _result = selectLocatorsByPageObject(state(pageObjectCssSelector));
+    const _result = selectLocatorsByPageObject(getRootState(pageObjectCssSelector));
     expect(_result).toStrictEqual(selectLocators(pageObjectCssSelector));
   });
 
   test("for pageObject.locatorType set to xPath", () => {
-    const _result = selectLocatorsByPageObject(state(pageObjectXpath));
+    const _result = selectLocatorsByPageObject(getRootState(pageObjectXpath));
     expect(_result).toStrictEqual(selectLocators(pageObjectXpath));
   });
 });

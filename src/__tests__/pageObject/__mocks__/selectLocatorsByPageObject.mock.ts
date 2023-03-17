@@ -39,7 +39,7 @@ export const pageObjectCssSelector = {
   locators: ["7524916072510597399809892823_0", "2075611903510597386448924232_0", "4138940493550098806301857686_0"],
 };
 
-export const state = (_pageObject: PageObject) => ({
+export const getRootState = (_pageObject: PageObject) => ({
   pageObject: {
     past: [],
     future: [],
