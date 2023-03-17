@@ -21,7 +21,7 @@ import WarningFilled from "../assets/warningFilled.svg";
 import { Footnote } from "../../../common/components/footnote/Footnote";
 import FormItem from "antd/es/form/FormItem";
 import { LocatorType } from "../../../common/types/locatorType";
-import { getLocator, getXPathbyPriority } from "../utils/locatorOutput";
+import { getLocator, getXPathByPriority } from "../utils/locatorOutput";
 
 interface Props extends Locator {
   isModalOpen: boolean;
@@ -135,7 +135,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
         initialValues: {
           type,
           name,
-          locator: getXPathbyPriority(locator),
+          locator: getXPathByPriority(locator),
           locatorType: locatorType || pageObjectLocatorType || LocatorType.xPath,
         },
       }}

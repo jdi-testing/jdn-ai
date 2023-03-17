@@ -3,7 +3,7 @@ import { convertToListWithChildren } from "../../../common/utils/helpers";
 import { Locator } from "../../locators/types/locator.types";
 import { SearchState } from "../components/LocatorsTree";
 
-export const includesSeacrSubstr = (strings: Array<string>, searchString: string) => {
+export const includesSearcSubstr = (strings: Array<string>, searchString: string) => {
   const includesSubstring = strings.filter((string) => {
     return string && string.toLowerCase().includes(searchString.toLowerCase());
   });
@@ -12,7 +12,7 @@ export const includesSeacrSubstr = (strings: Array<string>, searchString: string
 
 export const applySearch = (element: Locator, seacrhString: string): SearchState => {
   const { locator, type, name } = element;
-  if (includesSeacrSubstr([locator.output, type as string, name], seacrhString)) {
+  if (includesSearcSubstr([locator.output, type as string, name], seacrhString)) {
     return SearchState.None;
   } else return SearchState.Hidden;
 };
