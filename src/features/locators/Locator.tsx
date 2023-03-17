@@ -1,4 +1,5 @@
-import { Checkbox } from "antd";
+import { Checkbox, Button } from "antd";
+import { DotsThree } from "phosphor-react";
 import Text from "antd/lib/typography/Text";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,7 +19,7 @@ import { size } from "lodash";
 import { PageType } from "../../app/types/mainSlice.types";
 import { RootState } from "../../app/store/store";
 import { ElementLibrary } from "./types/generationClasses.types";
-import { Locator as LocatorInterface, LocatorMenuRef as LocatorMenuRefInterface } from "./types/locator.types";
+import { Locator as LocatorInterface } from "./types/locator.types";
 import { SearchState } from "./components/LocatorsTree";
 import { LocatorEditDialog } from "./components/LocatorEditDialog";
 import { LocatorCopyButton } from "./components/LocatorCopyButton";
@@ -35,19 +36,10 @@ interface Props {
   searchState?: SearchState;
   depth?: number;
   searchString?: string;
-  locatorMenuRef?: LocatorMenuRefInterface;
 }
 
 // eslint-disable-next-line react/display-name
-export const Locator: React.FC<Props> = ({
-  element,
-  currentPage,
-  library,
-  searchState,
-  depth,
-  searchString,
-  locatorMenuRef,
-}) => {
+export const Locator: React.FC<Props> = ({ element, currentPage, library, searchState, depth, searchString }) => {
   const dispatch = useDispatch();
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -131,28 +123,37 @@ export const Locator: React.FC<Props> = ({
     <React.Fragment>
       <div ref={ref} className="jdn__xpath_container" onClick={handleLocatorClick}>
         {currentPage === pageType.locatorsList ? (
-          <div className="jdn__xpath_locators">
-            <Checkbox
-              checked={generate}
-              indeterminate={indeterminate}
-              onClick={handleOnChange}
-              disabled={searchState === SearchState.Hidden}
-            ></Checkbox>
-            <Text
-              className={`jdn__xpath_item${deleted ? " jdn__xpath_item--deleted" : ""}${
-                searchState === SearchState.Hidden ? " jdn__xpath_item--disabled" : ""
-              }`}
-            >
-              <LocatorIcon {...{ validity, locator, deleted }} />
-              {renderColorizedString()}
-            </Text>
-            {searchState !== SearchState.Hidden ? (
-              <React.Fragment>
-                <LocatorCopyButton {...{ element }} />
-                <LocatorMenu {...{ element, setIsEditModalOpen, locatorMenuRef }} />
-              </React.Fragment>
-            ) : null}
-          </div>
+          <LocatorMenu {...{ element, setIsEditModalOpen, trigger: ["contextMenu"] }}>
+            <div className="jdn__xpath_locators">
+              <div onContextMenu={(e) => e.stopPropagation()} className="jdn__xpath_checkbox_wrapper">
+                <Checkbox
+                  checked={generate}
+                  indeterminate={indeterminate}
+                  onClick={handleOnChange}
+                  disabled={searchState === SearchState.Hidden}
+                />
+              </div>
+              <Text
+                className={`jdn__xpath_item${deleted ? " jdn__xpath_item--deleted" : ""}${
+                  searchState === SearchState.Hidden ? " jdn__xpath_item--disabled" : ""
+                }`}
+              >
+                <LocatorIcon {...{ validity, locator, deleted }} />
+                {renderColorizedString()}
+              </Text>
+              {searchState !== SearchState.Hidden ? (
+                <div onContextMenu={(e) => e.stopPropagation()} className="jdn__xpath_buttons">
+                  <LocatorCopyButton {...{ element }} />
+                  <LocatorMenu {...{ element, setIsEditModalOpen, trigger: ["click", "contextMenu"] }}>
+                    <Button
+                      className="jdn__locatorsList_button jdn__locatorsList_button-menu"
+                      icon={<DotsThree size={18} onClick={(e) => e.preventDefault()} />}
+                    />
+                  </LocatorMenu>
+                </div>
+              ) : null}
+            </div>
+          </LocatorMenu>
         ) : (
           <Text className="jdn__xpath_item">{renderColorizedString()}</Text>
         )}
