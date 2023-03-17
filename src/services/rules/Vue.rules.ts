@@ -472,6 +472,9 @@ export const VueRules: RulesMap[] = [
     rules: {
       classes: ["v-toolbar"],
     },
+    excludingRules: {
+      classes: ["v-app-bar"],
+    },
   },
   {
     jdnLabel: "tooltip",
