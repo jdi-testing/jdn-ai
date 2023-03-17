@@ -23,9 +23,9 @@ describe("locator presentation by getLocator()", () => {
   data.forEach((_data) => {
     test(`converts ${JSON.stringify(_data.input)} to ${_data.xpathOutput}`, () => {
       expect(getLocator(_data.input)).toBe(_data.xpathOutput);
-    }),
-      test(`converts ${JSON.stringify(_data.input)} to ${_data.cssOutput}`, () => {
-        expect(getLocator(_data.input, LocatorType.cssSelector)).toBe(_data.cssOutput);
-      });
+    });
+    test(`converts ${JSON.stringify(_data.input)} to ${_data.cssOutput}`, () => {
+      expect(getLocator(_data.input, LocatorType.cssSelector)).toBe(_data.cssOutput);
+    });
   });
 });
