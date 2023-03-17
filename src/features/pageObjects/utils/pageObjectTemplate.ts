@@ -34,7 +34,7 @@ import com.epam.jdi.light.elements.complex.table.*;
 import com.epam.jdi.light.ui.html.elements.complex.*;
 ${
   library === ElementLibrary.MUI
-      ? `
+    ? `
 import com.epam.jdi.light.material.elements.displaydata.*;
 import com.epam.jdi.light.material.elements.displaydata.table.*;
 import com.epam.jdi.light.material.elements.feedback.*;
@@ -47,8 +47,8 @@ import com.epam.jdi.light.material.elements.navigation.steppers.*;
 import com.epam.jdi.light.material.elements.surfaces.*;
 import com.epam.jdi.light.material.elements.utils.*;
 `
-      : ""
-  }${
+    : ""
+}${
     library === ElementLibrary.Vuetify
       ? `
 import com.epam.jdi.light.vuetify.elements.common.*;
