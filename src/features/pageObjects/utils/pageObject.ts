@@ -52,7 +52,7 @@ export const createElementName = (
     return index;
   };
 
-  const returnLatinCodePoints = (string: string) => (/[^\u0000-\u00ff]/.test(string) ? "" : string);
+  const returnLatinCodePoints = (string: string) => (string.replace(/[^\u0000-\u00ff]/gu,""));
 
   const normalizeString = (string: string) =>
     chain(string).trim().camelCase().truncate({ length: MAX_LOCATOR_NAME_LENGTH, omission: "" }).value();
