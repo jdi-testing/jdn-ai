@@ -37,12 +37,14 @@ export const DialogWithForm: React.FC<DialogFormProps> = ({ modalProps, formProp
   };
 
   return (
-    <Modal destroyOnClose style={{ top: "24px" }} onCancel={handleCancel} open={open} {...{ ...restModal }}>
-      {open ? (
-        <Form labelCol={{ span: 4 }} wrapperCol={{ span: 20 }} {...{ form }} {...{ ...restForm }}>
-          {children}
-        </Form>
-      ) : null}
-    </Modal>
+    <div onContextMenu={(e) => e.stopPropagation()}>
+      <Modal destroyOnClose style={{ top: "24px" }} onCancel={handleCancel} open={open} {...{ ...restModal }}>
+        {open ? (
+          <Form labelCol={{ span: 4 }} wrapperCol={{ span: 20 }} {...{ form }} {...{ ...restForm }}>
+            {children}
+          </Form>
+        ) : null}
+      </Modal>
+    </div>
   );
 };

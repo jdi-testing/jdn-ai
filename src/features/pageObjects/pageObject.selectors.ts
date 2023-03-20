@@ -2,10 +2,12 @@ import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
 import { chain, get, isNil, last, size } from "lodash";
 import { RootState } from "../../app/store/store";
 import { locatorTaskStatus } from "../../common/constants/constants";
+import { LocatorType } from "../../common/types/locatorType";
 import { selectClassFilterByPO } from "../filter/filter.selectors";
 import { selectLocators } from "../locators/locators.selectors";
 import { Locator } from "../locators/types/locator.types";
 import { isProgressStatus } from "../locators/utils/locatorGenerationController";
+import { getLocator } from "../locators/utils/locatorOutput";
 import { PageObject, PageObjectId } from "./types/pageObjectSlice.types";
 
 export const pageObjAdapter = createEntityAdapter<PageObject>({
@@ -44,8 +46,21 @@ export const getLocatorsIdsByPO = (state: RootState, pageObjId?: PageObjectId) =
 
 export const selectLocatorsByPageObject = createSelector(
   selectLocators,
-  getLocatorsIdsByPO,
-  (locByProbability, locByPageObj) => locByProbability.filter((loc) => locByPageObj.includes(loc.element_id))
+  (state: RootState, pageObjId?: PageObjectId) =>
+    isNil(pageObjId) ? selectCurrentPageObject(state) : selectPageObjById(state, pageObjId),
+  (locators, pageObject) => {
+    const locByPageObj = pageObject?.locators || [];
+    return locators
+      .filter((loc) => locByPageObj.includes(loc.element_id))
+      .map((loc) =>
+        !loc.locatorType && pageObject?.locatorType === LocatorType.cssSelector
+          ? {
+              ...loc,
+              locator: { ...loc.locator, output: getLocator(loc.locator, pageObject.locatorType) },
+            }
+          : loc
+      );
+  }
 );
 
 export const selectFilteredLocators = createSelector(
