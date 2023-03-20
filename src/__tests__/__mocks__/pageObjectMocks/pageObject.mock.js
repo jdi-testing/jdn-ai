@@ -7,6 +7,7 @@ export const locators = [
       fullXpath: "/html/body/header/div/nav/ul[1]",
       taskStatus: "SUCCESS",
       robulaXpath: "//*[@class='uui-navigation nav navbar-nav m-l8']",
+      output: "//*[@class='uui-navigation nav navbar-nav m-l8']",
     },
     name: "listUl",
     predictedAttrId: "",
@@ -27,6 +28,7 @@ export const locators = [
       fullXpath: "/html/body/footer/div/div/ul",
       taskStatus: "SUCCESS",
       robulaXpath: "//*[@class='footer-menu']",
+      output: "//*[@class='footer-menu']",
     },
     name: "listUl7",
     predictedAttrId: "",
@@ -45,6 +47,7 @@ export const locators = [
     height: 38.6666679382,
     locator: {
       fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[1]/a",
+      output: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[1]/a",
       taskStatus: "REVOKED",
     },
     name: "badge",
