@@ -25,7 +25,7 @@ import { LocatorEditDialog } from "./components/LocatorEditDialog";
 import { LocatorCopyButton } from "./components/LocatorCopyButton";
 import { LocatorIcon } from "./components/LocatorIcon";
 import { LocatorMenu } from "./components/LocatorMenu";
-import { getLocator, setIndents } from "./utils/utils";
+import { setIndents } from "./utils/utils";
 import { setScriptMessage } from "../../app/main.slice";
 
 interface Props {
@@ -110,10 +110,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, library, search
     return (
       <span onClick={handleClick}>
         @UI(
-        {/* remove when getLocator() migrate to TS */}
-        {/* eslint-disable-next-line */}
-        {/* @ts-ignore */}
-        <span className="jdn__xpath_item-locator">&quot;{getLocator(locator)}&quot;</span>)
+        <span className="jdn__xpath_item-locator">&quot;{locator.output}&quot;</span>)
         <br />
         <span className="jdn__xpath_item-type">public</span>
         <span>&nbsp;{type as string}&nbsp;</span>

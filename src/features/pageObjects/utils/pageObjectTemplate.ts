@@ -1,7 +1,6 @@
 import { ElementLibrary } from "../../locators/types/generationClasses.types";
 import { camelCase, upperFirst } from "lodash";
 import transliterate from "@sindresorhus/transliterate";
-import { getLocator } from "../../locators/utils/utils";
 import { Locator } from "../../locators/types/locator.types";
 
 export const getClassName = (title: string) => {
@@ -18,9 +17,7 @@ export const getClassName = (title: string) => {
 
 export const pageObjectTemplate = (locators: Locator[], title: string, library: ElementLibrary) => {
   const className = title;
-  const locatorsCode = locators.map(
-    (loc) => `    @UI("${getLocator(loc.locator)}")\n    public ${loc.type} ${loc.name};`
-  );
+  const locatorsCode = locators.map((loc) => `    @UI("${loc.locator.output}")\n    public ${loc.type} ${loc.name};`);
 
   const pageCode = `package site.pages;
 
