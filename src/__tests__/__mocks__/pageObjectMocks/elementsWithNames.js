@@ -106,4 +106,9 @@ export const elementsWithNames = [
     name: "unicorn",
     type: "RadioButtons",
   },
+  {
+    ...elementsWithoutNames[21],
+    name: "aStringWithNonLatinUnicodeCharacterWeExpectToExclude",
+    type: "RadioButtons",
+  },
 ];
