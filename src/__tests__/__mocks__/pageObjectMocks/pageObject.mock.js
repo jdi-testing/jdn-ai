@@ -63,17 +63,40 @@ export const locators = [
   },
 ];
 
-export const pageObject = `package site.pages;
+export const pageObjectHTML = `package site.pages;
 
 import com.epam.jdi.light.elements.pageobjects.annotations.locators.*;
 import com.epam.jdi.light.elements.composite.*;
 import com.epam.jdi.light.ui.html.elements.common.*;
-
 import com.epam.jdi.light.elements.complex.*;
 import com.epam.jdi.light.elements.common.*;
 import com.epam.jdi.light.elements.complex.dropdown.*;
 import com.epam.jdi.light.elements.complex.table.*;
 import com.epam.jdi.light.ui.html.elements.complex.*;
+
+public class HomePage extends WebPage {
+    @UI("//*[@class='uui-navigation nav navbar-nav m-l8']")
+    public list listUl;
+
+    @UI("//*[@class='footer-menu']")
+    public list listUl7;
+
+    @UI("/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[1]/a")
+    public badge badge;
+}
+`;
+
+export const pageObjectMUI = `package site.pages;
+
+import com.epam.jdi.light.elements.pageobjects.annotations.locators.*;
+import com.epam.jdi.light.elements.composite.*;
+import com.epam.jdi.light.ui.html.elements.common.*;
+import com.epam.jdi.light.elements.complex.*;
+import com.epam.jdi.light.elements.common.*;
+import com.epam.jdi.light.elements.complex.dropdown.*;
+import com.epam.jdi.light.elements.complex.table.*;
+import com.epam.jdi.light.ui.html.elements.complex.*;
+
 import com.epam.jdi.light.material.elements.displaydata.*;
 import com.epam.jdi.light.material.elements.displaydata.table.*;
 import com.epam.jdi.light.material.elements.feedback.*;
@@ -85,6 +108,40 @@ import com.epam.jdi.light.material.elements.navigation.*;
 import com.epam.jdi.light.material.elements.navigation.steppers.*;
 import com.epam.jdi.light.material.elements.surfaces.*;
 import com.epam.jdi.light.material.elements.utils.*;
+
+public class HomePage extends WebPage {
+    @UI("//*[@class='uui-navigation nav navbar-nav m-l8']")
+    public list listUl;
+
+    @UI("//*[@class='footer-menu']")
+    public list listUl7;
+
+    @UI("/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[1]/a")
+    public badge badge;
+}
+`;
+
+export const pageObjectVuetify = `package site.pages;
+
+import com.epam.jdi.light.elements.pageobjects.annotations.locators.*;
+import com.epam.jdi.light.elements.composite.*;
+import com.epam.jdi.light.ui.html.elements.common.*;
+import com.epam.jdi.light.elements.complex.*;
+import com.epam.jdi.light.elements.common.*;
+import com.epam.jdi.light.elements.complex.dropdown.*;
+import com.epam.jdi.light.elements.complex.table.*;
+import com.epam.jdi.light.ui.html.elements.complex.*;
+
+import com.epam.jdi.light.vuetify.elements.common.*;
+import com.epam.jdi.light.vuetify.elements.complex.*;
+import com.epam.jdi.light.vuetify.elements.complex.bars.*;
+import com.epam.jdi.light.vuetify.elements.complex.breadcrumbs.*;
+import com.epam.jdi.light.vuetify.elements.complex.panels.*;
+import com.epam.jdi.light.vuetify.elements.complex.radiobuttons.*;
+import com.epam.jdi.light.vuetify.elements.complex.stepper.*;
+import com.epam.jdi.light.vuetify.elements.complex.tables.*;
+import com.epam.jdi.light.vuetify.elements.complex.timelines.*;
+import com.epam.jdi.light.vuetify.elements.composite.*;
 
 public class HomePage extends WebPage {
     @UI("//*[@class='uui-navigation nav navbar-nav m-l8']")

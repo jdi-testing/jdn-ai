@@ -137,13 +137,13 @@ export const getPageAttributes = async () => {
   });
 };
 
-export const getPage = async (locators: Array<Locator>, title: string, libraries: Array<ElementLibrary>) => {
-  const pageObject = pageObjectTemplate(locators, title, libraries);
+export const getPage = async (locators: Array<Locator>, title: string, library: ElementLibrary) => {
+  const pageObject = pageObjectTemplate(locators, title, library);
   return pageObject;
 };
 
 export const generatePageObject = async (elements: Array<Locator>, title: string, library: ElementLibrary) => {
-  const page = await getPage(elements, title, [library]);
+  const page = await getPage(elements, title, library);
   const blob = new Blob([page.pageCode], {
     type: "text/plain;charset=utf-8",
   });
@@ -180,7 +180,7 @@ export const generateAndDownloadZip = async (state: RootState, template: Blob) =
       // create page object files
       const locators = selectConfirmedLocators(state, po.id);
       if (!size(locators)) continue;
-      const page = await getPage(locators, po.name, [po.library]);
+      const page = await getPage(locators, po.name, po.library);
 
       let instanceName = lowerFirst(po.name);
 

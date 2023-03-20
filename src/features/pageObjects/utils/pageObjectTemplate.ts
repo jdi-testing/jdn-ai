@@ -15,7 +15,7 @@ export const getClassName = (title: string) => {
   return className;
 };
 
-export const pageObjectTemplate = (locators: Locator[], title: string, libraries: ElementLibrary[]) => {
+export const pageObjectTemplate = (locators: Locator[], title: string, library: ElementLibrary) => {
   const className = title;
   const locatorsCode = locators.map((loc) => `    @UI("${loc.locator.output}")\n    public ${loc.type} ${loc.name};`);
 
@@ -24,18 +24,14 @@ export const pageObjectTemplate = (locators: Locator[], title: string, libraries
 import com.epam.jdi.light.elements.pageobjects.annotations.locators.*;
 import com.epam.jdi.light.elements.composite.*;
 import com.epam.jdi.light.ui.html.elements.common.*;
-${
-  libraries.includes(ElementLibrary.HTML5)
-    ? `
 import com.epam.jdi.light.elements.complex.*;
 import com.epam.jdi.light.elements.common.*;
 import com.epam.jdi.light.elements.complex.dropdown.*;
 import com.epam.jdi.light.elements.complex.table.*;
-import com.epam.jdi.light.ui.html.elements.complex.*;`
-    : ""
-}${
-    libraries.includes(ElementLibrary.MUI)
-      ? `
+import com.epam.jdi.light.ui.html.elements.complex.*;
+${
+  library === ElementLibrary.MUI
+    ? `
 import com.epam.jdi.light.material.elements.displaydata.*;
 import com.epam.jdi.light.material.elements.displaydata.table.*;
 import com.epam.jdi.light.material.elements.feedback.*;
@@ -46,10 +42,25 @@ import com.epam.jdi.light.material.elements.layout.*;
 import com.epam.jdi.light.material.elements.navigation.*;
 import com.epam.jdi.light.material.elements.navigation.steppers.*;
 import com.epam.jdi.light.material.elements.surfaces.*;
-import com.epam.jdi.light.material.elements.utils.*;`
+import com.epam.jdi.light.material.elements.utils.*;
+`
+    : ""
+}${
+    library === ElementLibrary.Vuetify
+      ? `
+import com.epam.jdi.light.vuetify.elements.common.*;
+import com.epam.jdi.light.vuetify.elements.complex.*;
+import com.epam.jdi.light.vuetify.elements.complex.bars.*;
+import com.epam.jdi.light.vuetify.elements.complex.breadcrumbs.*;
+import com.epam.jdi.light.vuetify.elements.complex.panels.*;
+import com.epam.jdi.light.vuetify.elements.complex.radiobuttons.*;
+import com.epam.jdi.light.vuetify.elements.complex.stepper.*;
+import com.epam.jdi.light.vuetify.elements.complex.tables.*;
+import com.epam.jdi.light.vuetify.elements.complex.timelines.*;
+import com.epam.jdi.light.vuetify.elements.composite.*;
+`
       : ""
   }
-
 public class ${className} extends WebPage {
 ${locatorsCode.join("\n\n")}
 }
