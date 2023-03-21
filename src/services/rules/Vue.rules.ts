@@ -98,7 +98,7 @@ export const VueRules: RulesMap[] = [
     jdnLabel: "chip",
     rules: {
       classes: ["v-chip"],
-    }
+    },
   },
   {
     jdnLabel: "chipgroup",
