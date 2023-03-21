@@ -87,7 +87,7 @@ export const createElementName = (
 
   let indexC = 0;
   while (!isUnique(_resultName) || isEmpty(_resultName)) {
-    const _index = indexC < concatenatingTerms.length ? indexC : (concatenatingTerms.length - 1);
+    const _index = indexC < concatenatingTerms.length ? indexC : concatenatingTerms.length - 1;
     const newTerm = concatenatingTerms[_index](_resultName);
     _resultName = checkNumberFirst(concat(_resultName)(newTerm));
     indexC++;
