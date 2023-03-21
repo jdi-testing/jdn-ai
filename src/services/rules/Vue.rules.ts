@@ -249,6 +249,7 @@ export const VueRules: RulesMap[] = [
     rules: {
       classes: ["v-list"],
     },
+    detectContent: true,
   },
   {
     jdnLabel: "listGroup",
