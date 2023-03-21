@@ -1,11 +1,7 @@
 import { saveAs } from "file-saver";
-import JSZip from "jszip";
 import {
   chain,
-  entries,
   isEmpty,
-  isNumber,
-  lowerFirst,
   size,
   subtract,
   toLower,
@@ -14,15 +10,12 @@ import {
   upperFirst,
 } from "lodash";
 
-import { RootState } from "../../../app/store/store";
-import { selectConfirmedLocators, selectPageObjects } from "../pageObject.selectors";
 import { connector } from "../../../pageServices/connector";
 import { ElementId, Locator } from "../../locators/types/locator.types";
 import { PageObject, PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
 import { ElementLabel, ElementLibrary } from "../../locators/types/generationClasses.types";
 import javaReservedWords from "./javaReservedWords.json";
 import { pageObjectTemplate } from "./pageObjectTemplate";
-import { testFileTemplate } from "./testTemplate";
 import { getJDILabel } from "../../locators/utils/locatorTypesUtils";
 import { MAX_LOCATOR_NAME_LENGTH } from "./constants";
 
@@ -148,71 +141,4 @@ export const generatePageObject = async (elements: Array<Locator>, title: string
     type: "text/plain;charset=utf-8",
   });
   saveAs(blob, `${page.title}.java`);
-};
-
-export const generateAndDownloadZip = async (state: RootState, template: Blob) => {
-  const pageObjects = selectPageObjects(state);
-
-  const zip = await JSZip.loadAsync(template, { createFolders: true });
-  const rootFolder = entries(zip.files)[0][0];
-
-  const newZip = new JSZip();
-
-  // remove root folder by changing files path
-  const filePromises: Array<Promise<JSZip.JSZipObject | void>> = [];
-  (zip.folder(rootFolder) || []).forEach(async (relativePath, file) => {
-    if (isNumber(file) || file.dir) return;
-
-    filePromises.push(
-      file.async("string").then((content) => {
-        newZip.file(relativePath, content, { binary: true });
-      })
-    );
-  });
-
-  Promise.all(filePromises).then(async () => {
-    const saveZip = async () => {
-      const blob = await newZip.generateAsync({ type: "blob" });
-      saveAs(blob, `${rootFolder.replace("/", "")}.zip`);
-    };
-
-    for (const po of pageObjects) {
-      // create page object files
-      const locators = selectConfirmedLocators(state, po.id);
-      if (!size(locators)) continue;
-      const page = await getPage(locators, po.name, po.library);
-
-      let instanceName = lowerFirst(po.name);
-
-      await newZip.file(`src/main/java/site/pages/${page.title}.java`, page.pageCode, { binary: false });
-
-      await newZip
-        .file("src/test/resources/test.properties")!
-        .async("string")
-        .then(function success(content) {
-          const testDomain = po.origin;
-          const newContent = content.replace("${domain}", `${testDomain}`);
-          return newZip.file(`src/test/resources/test.properties`, newContent, { binary: true });
-        });
-
-      await newZip
-        .file("src/main/java/site/MySite.java")!
-        .async("string")
-        .then((content) => {
-          if (content.includes(instanceName)) instanceName = `${instanceName}1`;
-          const urlSearchParams = po.search;
-          const testUrl = urlSearchParams.length ? po.pathname + urlSearchParams : po.pathname;
-          const newContent = content.replace(
-            "// ADD SITE PAGES WITH URLS",
-            `// ADD SITE PAGES WITH URLS\n    @Url("${testUrl}")\n    public static ${po.name} ${instanceName};
-                `
-          );
-          return newZip.file(`src/main/java/site/MySite.java`, newContent, { binary: true });
-        });
-
-      await newZip.file(`src/test/java/tests/${po.name}Tests.java`, testFileTemplate(instanceName, po.name));
-    }
-
-    saveZip();
-  });
 };
