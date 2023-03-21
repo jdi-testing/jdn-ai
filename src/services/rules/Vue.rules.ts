@@ -344,7 +344,7 @@ export const VueRules: RulesMap[] = [
   {
     jdnLabel: "rangeSlider",
     rules: {
-      classes: ["v-input--range-slider"],
+      selector: ".v-range-slider, .v-input--range-slider",
     },
   },
   {
@@ -391,9 +391,21 @@ export const VueRules: RulesMap[] = [
     },
   },
   {
-    jdnLabel: "slider",
+    jdnLabel: "sliderV2",
     rules: {
       classes: ["v-input__slider"],
+    },
+    excludingRules: {
+      classes: ["v-input--range-slider"],
+    },
+  },
+  {
+    jdnLabel: "sliderV3",
+    rules: {
+      classes: ["v-slider"],
+    },
+    excludingRules: {
+      classes: ["v-range-slider"],
     },
   },
   {
