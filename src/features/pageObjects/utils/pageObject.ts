@@ -1,14 +1,5 @@
 import { saveAs } from "file-saver";
-import {
-  chain,
-  isEmpty,
-  size,
-  subtract,
-  toLower,
-  toString,
-  truncate,
-  upperFirst,
-} from "lodash";
+import { chain, isEmpty, size, subtract, toLower, toString, truncate, upperFirst } from "lodash";
 
 import { connector } from "../../../pageServices/connector";
 import { ElementId, Locator } from "../../locators/types/locator.types";
