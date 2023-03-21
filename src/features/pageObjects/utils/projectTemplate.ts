@@ -1,7 +1,6 @@
 import { saveAs } from "file-saver";
 import { entries, isNumber, lowerFirst, size } from "lodash";
 import JSZip from "jszip";
-
 import { RootState } from "../../../app/store/store";
 import { selectConfirmedLocators, selectPageObjects } from "../pageObject.selectors";
 import { testFileTemplate } from "./testTemplate";
