@@ -4,7 +4,6 @@ import { Button, Modal, Row, Space, Tooltip } from "antd";
 import { CaretDown, DownloadSimple, Plus, Trash } from "phosphor-react";
 
 import { addPageObj } from "../../pageObjects/utils/addPageObject.thunk";
-import { generateAndDownloadZip } from "../../pageObjects/utils/pageObject";
 
 import { pushNotification } from "../../../app/main.slice";
 import { size } from "lodash";
@@ -15,6 +14,7 @@ import { removeAll as removeAllPageObjects } from "../pageObject.slice";
 import { removeAll as removeAllFilters } from "../../filter/filter.slice";
 import { RootState } from "../../../app/store/store";
 import { selectLocatorsToGenerate } from "../../locators/locators.selectors";
+import { generateAndDownloadZip } from "../utils/projectTemplate";
 
 const { confirm } = Modal;
 
