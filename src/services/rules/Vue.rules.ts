@@ -91,7 +91,7 @@ export const VueRules: RulesMap[] = [
   {
     jdnLabel: "checkbox",
     rules: {
-      classes: ["v-input--checkbox"],
+      selector: ".v-input--checkbox, .v-checkbox",
     },
   },
   {
