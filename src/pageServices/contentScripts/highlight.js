@@ -12,6 +12,11 @@ export const highlightOnPage = () => {
   let classFilter = {};
   let tooltip;
 
+  const sendMessage = (message) =>
+    chrome.runtime.sendMessage(message).catch((error) => {
+      if (error.message !== "The message port closed before a response was received.") throw new Error(error.message);
+    });
+
   const clearState = () => {
     nodes = null;
     predictedElements = null;
@@ -190,7 +195,7 @@ export const highlightOnPage = () => {
     div.className = getClassName(predictedElement);
     div.setAttribute("jdn-highlight", true);
     div.setAttribute("jdn-status", predictedElement.locator.taskStatus);
-    const labelContainer = document.createElement("div");
+
     const label = document.createElement("span");
     label.className = "jdn-label";
     label.innerHTML = `<span class="jdn-class">${predictedElement.name}</span>`;
@@ -207,8 +212,7 @@ export const highlightOnPage = () => {
     });
 
     Object.assign(div.style, getDivPosition(elementRect));
-    labelContainer.appendChild(label);
-    div.insertAdjacentElement("afterBegin", labelContainer);
+    div.insertAdjacentElement("afterBegin", label);
 
     document.body.appendChild(div);
   };
@@ -287,7 +291,9 @@ export const highlightOnPage = () => {
     events.forEach((eventName) => {
       document.removeEventListener(eventName, scrollListenerCallback, true);
     });
-    document.removeEventListener("click", clickListener);
+
+    document.removeEventListener("dblclick", onElementDblClick);
+
     listenersAreSet = false;
   };
 
@@ -295,8 +301,22 @@ export const highlightOnPage = () => {
     removeEventListeners(removeHighlightElements(callback));
   };
 
-  const clickListener = (event) => {
-    if (!event.clientX && !event.clientY) return;
+  const onElementDblClick = (evt) => {
+    const locatorId = evt.target.id || evt.target.offsetParent.id;
+    const element = predictedElements?.find((elem) => elem.jdnHash === locatorId);
+    const isElementAddedToPO = element.generate;
+
+    sendMessage({
+      message: "ELEMENT_UNSET_ACTIVE",
+      param: element.jdnHash,
+    });
+
+    if (!isElementAddedToPO) {
+      sendMessage({
+        message: "TOGGLE_ELEMENT",
+        param: [element],
+      });
+    }
   };
 
   const setDocumentListeners = () => {
@@ -304,7 +324,7 @@ export const highlightOnPage = () => {
       document.addEventListener(eventName, scrollListenerCallback, true);
     });
 
-    document.addEventListener("click", clickListener);
+    document.addEventListener("dblclick", onElementDblClick);
 
     listenersAreSet = true;
   };
