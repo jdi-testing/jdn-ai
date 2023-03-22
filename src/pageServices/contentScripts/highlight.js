@@ -12,6 +12,11 @@ export const highlightOnPage = () => {
   let classFilter = {};
   let tooltip;
 
+  const sendMessage = (message) =>
+    chrome.runtime.sendMessage(message).catch((error) => {
+      if (error.message !== "The message port closed before a response was received.") throw new Error(error.message);
+    });
+
   const clearState = () => {
     nodes = null;
     predictedElements = null;
@@ -299,12 +304,27 @@ export const highlightOnPage = () => {
     if (!event.clientX && !event.clientY) return;
   };
 
+  const addToPOListener = () => {
+    sendMessage({
+      message: "GET_ACTIVE_ELEMENTS",
+    }).then(({ elements }) => {
+      const notAddedToPO = () => elements.some(({ generate }) => !generate);
+      if (notAddedToPO()) {
+        sendMessage({
+          message: "TOGGLE_ELEMENT",
+          param: elements.filter((element) => !element.generate),
+        });
+      }
+    });
+  };
+
   const setDocumentListeners = () => {
     events.forEach((eventName) => {
       document.addEventListener(eventName, scrollListenerCallback, true);
     });
 
     document.addEventListener("click", clickListener);
+    document.addEventListener("dblclick", addToPOListener);
 
     listenersAreSet = true;
   };
