@@ -1,6 +1,6 @@
 import { AlertProps } from "antd";
 import { size } from "lodash";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Notification } from "../../../../app/types/mainSlice.types";
 import { messages } from "./messages";
 import { Action } from "../types/notification.types";
@@ -12,7 +12,14 @@ export const useNotificationController = (
   locators: Locator[],
   openNotification: (message: string, type: AlertProps["type"], action?: Action) => void
 ) => {
+  const isMounted = useRef(false);
+
   useEffect(() => {
+    if (!isMounted.current) {
+      isMounted.current = true;
+      return;
+    }
+
     if (!lastNotification) return;
 
     const { action, prevValue } = lastNotification;
