@@ -302,18 +302,19 @@ export const highlightOnPage = () => {
   };
 
   const onElementDblClick = (evt) => {
-    const elements = predictedElements?.filter((element) => element.jdnHash === evt.target.id);
-    const notAddedToPO = () => elements.some(({ generate }) => !generate);
+    const locatorId = evt.target.id || evt.target.offsetParent.id;
+    const element = predictedElements?.find((elem) => elem.jdnHash === locatorId);
+    const isElementAddedToPO = element.generate;
 
     sendMessage({
       message: "ELEMENT_UNSET_ACTIVE",
-      param: elements[0].jdnHash,
+      param: element.jdnHash,
     });
 
-    if (notAddedToPO()) {
+    if (!isElementAddedToPO) {
       sendMessage({
         message: "TOGGLE_ELEMENT",
-        param: elements.filter((element) => !element.generate),
+        param: [element],
       });
     }
   };
@@ -323,7 +324,7 @@ export const highlightOnPage = () => {
       document.addEventListener(eventName, scrollListenerCallback, true);
     });
 
-    document.addEventListener("dblclick", (evt) => onElementDblClick(evt));
+    document.addEventListener("dblclick", onElementDblClick);
 
     listenersAreSet = true;
   };
