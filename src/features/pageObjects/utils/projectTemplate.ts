@@ -41,7 +41,7 @@ const editTestsFile = (newZip: JSZip, po: PageObject, instanceName: string) =>
   newZip.file(`src/test/java/tests/${po.name}Tests.java`, testFileTemplate(instanceName, po.name));
 
 export const editPomFile = (newZip: JSZip, po: PageObject) => {
-  if (po.library !== ElementLibrary.MUI && po.library !== ElementLibrary.HTML5) return;
+  if (po.library === ElementLibrary.HTML5) return;
 
   return newZip
     .file("pom.xml")!
