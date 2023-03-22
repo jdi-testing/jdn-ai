@@ -155,11 +155,13 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
   useEffect(() => {
     if (scrollToLocator) {
       setTimeout(() => {
-        // bug in ant's typings, impossible to create correct ref type
-        // eslint-disable-next-line
-        // @ts-ignore
         // antd docs for scrollTo https://github.com/ant-design/ant-design/blob/master/components/tree/index.en-US.md#tree-methods
-        treeRef.current && treeRef.current.scrollTo({ key: scrollToLocator, align: "top", offset: containerHeight / 2 });
+        treeRef.current &&
+          containerHeight &&
+          // bug in ant's typings, impossible to create correct ref type
+          // eslint-disable-next-line
+          // @ts-ignore
+          treeRef.current.scrollTo({ key: scrollToLocator, align: "top", offset: containerHeight / 2 });
       }, 500);
     }
   }, [expandedKeys]);
