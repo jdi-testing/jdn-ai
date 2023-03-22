@@ -5,11 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../app/store/store";
 import { Footnote } from "../../../common/components/footnote/Footnote";
 import {
-  selectLocatorsByPageObject,
   selectCalculatedByPageObj,
   selectInProgressByPageObj,
   selectDeletedByPageObj,
   selectFailedByPageObject,
+  selectFilteredLocators,
 } from "../../pageObjects/pageObject.selectors";
 import { rerunGeneration } from "../reducers/rerunGeneration.thunk";
 import { LocatorsGenerationStatus } from "../types/locator.types";
@@ -21,7 +21,7 @@ export const LocatorsProgress = () => {
   const [isProgressActive, setIsProgressActive] = useState(false);
   const generationStatus = useSelector((state: RootState) => state.locators.present.generationStatus);
 
-  const byProbability = useSelector((_state: RootState) => selectLocatorsByPageObject(_state));
+  const locatorsAll = useSelector((_state: RootState) => selectFilteredLocators(_state));
   const generated = useSelector((_state: RootState) => selectCalculatedByPageObj(_state));
   const inProgress = useSelector((_state: RootState) => selectInProgressByPageObj(_state));
   const deleted = useSelector((_state: RootState) => selectDeletedByPageObj(_state));
@@ -29,7 +29,7 @@ export const LocatorsProgress = () => {
 
   const calculationReady = size(generated);
   const toBeCalculated = size(inProgress) + size(failed);
-  const total = size(byProbability) - size(deleted);
+  const total = size(locatorsAll) - size(deleted);
 
   const hideProgressInformation = () => setIsProgressActive(false);
 
@@ -45,7 +45,7 @@ export const LocatorsProgress = () => {
     }
     const result = calculationReady / total;
     return result * 100;
-  }, [byProbability, generated, failed]);
+  }, [locatorsAll, generated, failed]);
 
   useEffect(() => {
     if (toBeCalculated && calculationReady === 0) setIsProgressActive(true);
