@@ -292,7 +292,10 @@ export const highlightOnPage = () => {
     events.forEach((eventName) => {
       document.removeEventListener(eventName, scrollListenerCallback, true);
     });
+
     document.removeEventListener("click", clickListener);
+    document.removeEventListener("dblClick", addToPOListener);
+
     listenersAreSet = false;
   };
 
