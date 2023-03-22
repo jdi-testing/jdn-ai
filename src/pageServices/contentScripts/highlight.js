@@ -195,7 +195,7 @@ export const highlightOnPage = () => {
     div.className = getClassName(predictedElement);
     div.setAttribute("jdn-highlight", true);
     div.setAttribute("jdn-status", predictedElement.locator.taskStatus);
-    const labelContainer = document.createElement("div");
+
     const label = document.createElement("span");
     label.className = "jdn-label";
     label.innerHTML = `<span class="jdn-class">${predictedElement.name}</span>`;
@@ -212,8 +212,7 @@ export const highlightOnPage = () => {
     });
 
     Object.assign(div.style, getDivPosition(elementRect));
-    labelContainer.appendChild(label);
-    div.insertAdjacentElement("afterBegin", labelContainer);
+    div.insertAdjacentElement("afterBegin", label);
 
     document.body.appendChild(div);
   };
@@ -293,8 +292,7 @@ export const highlightOnPage = () => {
       document.removeEventListener(eventName, scrollListenerCallback, true);
     });
 
-    document.removeEventListener("click", clickListener);
-    document.removeEventListener("dblclick", addToPOListener);
+    document.removeEventListener("dblclick", onElementDblClick);
 
     listenersAreSet = false;
   };
@@ -303,22 +301,21 @@ export const highlightOnPage = () => {
     removeEventListeners(removeHighlightElements(callback));
   };
 
-  const clickListener = (event) => {
-    if (!event.clientX && !event.clientY) return;
-  };
+  const onElementDblClick = (evt) => {
+    const elements = predictedElements?.filter((element) => element.jdnHash === evt.target.id);
+    const notAddedToPO = () => elements.some(({ generate }) => !generate);
 
-  const addToPOListener = () => {
     sendMessage({
-      message: "GET_ACTIVE_ELEMENTS",
-    }).then(({ elements }) => {
-      const notAddedToPO = () => elements.some(({ generate }) => !generate);
-      if (notAddedToPO()) {
-        sendMessage({
-          message: "TOGGLE_ELEMENT",
-          param: elements.filter((element) => !element.generate),
-        });
-      }
+      message: "ELEMENT_UNSET_ACTIVE",
+      param: elements[0].jdnHash,
     });
+
+    if (notAddedToPO()) {
+      sendMessage({
+        message: "TOGGLE_ELEMENT",
+        param: elements.filter((element) => !element.generate),
+      });
+    }
   };
 
   const setDocumentListeners = () => {
@@ -326,8 +323,7 @@ export const highlightOnPage = () => {
       document.addEventListener(eventName, scrollListenerCallback, true);
     });
 
-    document.addEventListener("click", clickListener);
-    document.addEventListener("dblclick", addToPOListener);
+    document.addEventListener("dblclick", (evt) => onElementDblClick(evt));
 
     listenersAreSet = true;
   };
