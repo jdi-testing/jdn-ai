@@ -91,7 +91,13 @@ export const VueRules: RulesMap[] = [
   {
     jdnLabel: "checkbox",
     rules: {
-      classes: ["v-input--checkbox"],
+      selector: ".v-input--checkbox, .v-checkbox",
+    },
+  },
+  {
+    jdnLabel: "chip",
+    rules: {
+      classes: ["v-chip"],
     },
   },
   {
@@ -122,8 +128,9 @@ export const VueRules: RulesMap[] = [
     },
     detectContent: true,
   },
+  // for Vuetify 2
   {
-    jdnLabel: "dataTable",
+    jdnLabel: "dataTableV2",
     rules: {
       classes: ["v-data-table"],
       children: [
@@ -131,6 +138,13 @@ export const VueRules: RulesMap[] = [
           tag: "colgroup",
         },
       ],
+    },
+  },
+  // for Vuetify 3
+  {
+    jdnLabel: "dataTableV3",
+    rules: {
+      classes: ["v-table", "v-data-table"],
     },
   },
   {
@@ -235,6 +249,7 @@ export const VueRules: RulesMap[] = [
     rules: {
       classes: ["v-list"],
     },
+    detectContent: true,
   },
   {
     jdnLabel: "listGroup",
@@ -330,7 +345,7 @@ export const VueRules: RulesMap[] = [
   {
     jdnLabel: "rangeSlider",
     rules: {
-      classes: ["v-input--range-slider"],
+      selector: ".v-range-slider, .v-input--range-slider",
     },
   },
   {
@@ -348,6 +363,7 @@ export const VueRules: RulesMap[] = [
       classes: ["v-autocomplete", "v-overflow-btn"],
     },
   },
+  // for Vuetify 2
   {
     jdnLabel: "simpleTable",
     rules: {
@@ -359,6 +375,14 @@ export const VueRules: RulesMap[] = [
           tag: "colgroup",
         },
       ],
+      classes: ["v-table"],
+    },
+  },
+  // for Vuetify 3, Table component
+  {
+    jdnLabel: "table",
+    rules: {
+      selector: ".v-table:not(.v-data-table)",
     },
   },
   {
@@ -368,9 +392,21 @@ export const VueRules: RulesMap[] = [
     },
   },
   {
-    jdnLabel: "slider",
+    jdnLabel: "sliderV2",
     rules: {
       classes: ["v-input__slider"],
+    },
+    excludingRules: {
+      classes: ["v-input--range-slider"],
+    },
+  },
+  {
+    jdnLabel: "sliderV3",
+    rules: {
+      classes: ["v-slider"],
+    },
+    excludingRules: {
+      classes: ["v-range-slider"],
     },
   },
   {
