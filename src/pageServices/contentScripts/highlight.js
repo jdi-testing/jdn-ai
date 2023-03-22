@@ -294,7 +294,7 @@ export const highlightOnPage = () => {
     });
 
     document.removeEventListener("click", clickListener);
-    document.removeEventListener("dblClick", addToPOListener);
+    document.removeEventListener("dblclick", addToPOListener);
 
     listenersAreSet = false;
   };
