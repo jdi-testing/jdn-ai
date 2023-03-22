@@ -158,7 +158,8 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
         // bug in ant's typings, impossible to create correct ref type
         // eslint-disable-next-line
         // @ts-ignore
-        treeRef.current && treeRef.current.scrollTo({ key: scrollToLocator, align: "top" });
+        // antd docs for scrollTo https://github.com/ant-design/ant-design/blob/master/components/tree/index.en-US.md#tree-methods
+        treeRef.current && treeRef.current.scrollTo({ key: scrollToLocator, align: "top", offset: containerHeight / 2 });
       }, 500);
     }
   }, [expandedKeys]);
