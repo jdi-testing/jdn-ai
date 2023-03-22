@@ -52,10 +52,11 @@ export const useNotificationController = (
         break;
       case "locators/toggleDeletedGroup":
         const _prevValueGroup = prevValue as Array<Locator>;
+        const valueLength = size(_prevValueGroup);
         openNotification(
           _prevValueGroup[0].deleted
-            ? messages(size(_prevValueGroup).toString()).RESTORE_GROUP
-            : messages(size(_prevValueGroup).toString()).DELETE_GROUP,
+            ? messages(valueLength.toString())[valueLength === 1 ? "RESTORE" : "RESTORE_GROUP"]
+            : messages(valueLength.toString())[valueLength === 1 ? "DELETE" : "DELETE_GROUP"],
           _prevValueGroup[0].deleted ? "success" : "warning",
           locatorUndo({ type: action?.type, payload: _prevValueGroup })
         );
