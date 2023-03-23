@@ -17,6 +17,11 @@ const data = [
     xpathOutput: "//div/button",
     cssOutput: "div > button",
   },
+  {
+    input: { fullXpath: "/html/body/footer", robulaXpath: "//*[contains(text(), 'JDI Github')]" },
+    xpathOutput: "//*[contains(text(), 'JDI Github')]",
+    cssOutput: "html > body > footer",
+  },
 ];
 
 describe("locator presentation by getLocator()", () => {

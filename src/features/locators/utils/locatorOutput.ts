@@ -2,14 +2,34 @@ import xPathToCss from "xpath-to-css";
 import { LocatorType } from "../../../common/types/locatorType";
 import { LocatorValue } from "../types/locator.types";
 
-export const getLocatorByType = (xpath: string, locatorType?: LocatorType) =>
-  locatorType === LocatorType.cssSelector ? xPathToCss(xpath) : xpath;
+const getLocatorByType = (xpath: string[], locatorType?: LocatorType) => {
+  if (locatorType !== LocatorType.cssSelector) return xpath[0];
 
-export const getXPathByPriority = ({ fullXpath, robulaXpath, customXpath }: LocatorValue) => {
-  if (typeof customXpath === "string") return customXpath;
-  else return robulaXpath || fullXpath || "";
+  let _index = 0;
+  let cssSelector = "";
+
+  const convertXpathToCss = () => {
+    try {
+      cssSelector = xPathToCss(xpath[_index]);
+    } catch (error) {
+      _index++;
+      if (_index < xpath.length) convertXpathToCss();
+    }
+  };
+
+  convertXpathToCss();
+
+  return cssSelector;
 };
 
+const getPrioritizedXpathes = (locatorValue: LocatorValue): string[] => [
+  ...(locatorValue.customXpath || typeof locatorValue.customXpath === "string" ? [locatorValue.customXpath] : []),
+  ...(locatorValue.robulaXpath ? [locatorValue.robulaXpath] : []),
+  locatorValue.fullXpath,
+];
+
+export const getXPathByPriority = (locatorValue: LocatorValue) => getPrioritizedXpathes(locatorValue)[0] || "";
+
 export const getLocator = (locatorValue: LocatorValue, locatorType?: LocatorType) => {
-  return getLocatorByType(getXPathByPriority(locatorValue), locatorType);
+  return getLocatorByType(getPrioritizedXpathes(locatorValue), locatorType);
 };
