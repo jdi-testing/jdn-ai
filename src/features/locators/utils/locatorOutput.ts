@@ -2,18 +2,18 @@ import xPathToCss from "xpath-to-css";
 import { LocatorType } from "../../../common/types/locatorType";
 import { LocatorValue } from "../types/locator.types";
 
-const getLocatorByType = (xpath: string[], locatorType?: LocatorType) => {
-  if (locatorType !== LocatorType.cssSelector) return xpath[0];
+const getLocatorByType = (xpathes: string[], locatorType?: LocatorType) => {
+  if (locatorType !== LocatorType.cssSelector) return xpathes[0];
 
   let _index = 0;
   let cssSelector = "";
 
   const convertXpathToCss = () => {
     try {
-      cssSelector = xPathToCss(xpath[_index]);
+      cssSelector = xPathToCss(xpathes[_index]);
     } catch (error) {
       _index++;
-      if (_index < xpath.length) convertXpathToCss();
+      if (_index < xpathes.length) convertXpathToCss();
     }
   };
 
