@@ -105,6 +105,7 @@ export const VueRules: RulesMap[] = [
     rules: {
       classes: ["v-chip-group"],
     },
+    detectContent: true,
   },
   {
     jdnLabel: "colorpicker",
@@ -242,6 +243,7 @@ export const VueRules: RulesMap[] = [
     rules: {
       classes: ["v-item-group"],
     },
+    detectContent: true,
     priority: "low",
   },
   {
@@ -304,11 +306,11 @@ export const VueRules: RulesMap[] = [
     rules: {
       classes: ["v-pagination"],
     },
+    detectContent: true,
   },
   {
     jdnLabel: "paginationPage",
     rules: {
-      tag: "button",
       classes: ["v-pagination__item"],
     },
   },
@@ -414,6 +416,10 @@ export const VueRules: RulesMap[] = [
     rules: {
       classes: ["v-slide-group"],
     },
+    excludingRules: {
+      classes: ["v-chip-group"],
+    },
+    detectContent: true,
   },
   {
     jdnLabel: "sheet",
@@ -434,6 +440,7 @@ export const VueRules: RulesMap[] = [
     rules: {
       classes: ["v-stepper"],
     },
+    detectContent: true,
   },
   {
     jdnLabel: "step",
