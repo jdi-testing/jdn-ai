@@ -207,7 +207,13 @@ export const runContextMenu = () => {
         window.addEventListener("click", documentClick);
       }
 
+      menu.addEventListener("mouseleave", mouseLeaveListener);
+
       e.preventDefault();
+    };
+
+    const mouseLeaveListener = () => {
+      self && self.hide();
     };
 
     this.hide = function () {
@@ -542,13 +548,13 @@ export const runContextMenu = () => {
     }, 100);
   };
 
-  const mouseLeaveListener = () => {
-    elementMenu && elementMenu.hide();
-  };
+  // const mouseLeaveListener = () => {
+  //   elementMenu && elementMenu.hide();
+  // };
 
   const runDocumentListeners = () => {
     document.oncontextmenu = contextMenuListener;
-    document.addEventListener("mouseleave", mouseLeaveListener);
+    // document.addEventListener("mouseleave", mouseLeaveListener);
   };
 
   const messageHandler = ({ message, param }, sender, sendResponse) => {
