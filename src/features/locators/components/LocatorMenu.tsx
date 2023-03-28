@@ -63,7 +63,7 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, chil
 
   const handleMenuClick = ({ domEvent }: { domEvent: SyntheticEvent }) => {
     domEvent.stopPropagation();
-  }
+  };
 
   const renderMenu = () => {
     const getRerunGeneration = (time: MaxGenerationTime) => () =>
@@ -125,7 +125,7 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, chil
 
   return (
     <Dropdown
-      menu={{items: renderMenu(), onClick: handleMenuClick}}
+      menu={{ items: renderMenu(), onClick: handleMenuClick }}
       align={{ offset: [10, 0] }}
       trigger={trigger}
       getPopupContainer={(triggerNode) => triggerNode}
