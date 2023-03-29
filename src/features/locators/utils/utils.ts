@@ -10,7 +10,8 @@ import { LocatorType } from "../../../common/types/locatorType";
 
 export const getLocatorWithJDIAnnotation = (locator: LocatorValue): string => `@UI("${getXPathByPriority(locator)}")`;
 
-export const getLocatorWithSelenium = (locator: LocatorValue): string => `@FindBy(xpath = "${getXPathByPriority(locator)}")`;
+export const getLocatorWithSelenium = (locator: LocatorValue): string =>
+  `@FindBy(xpath = "${getXPathByPriority(locator)}")`;
 
 export const isValidJavaVariable = (value: string) => /^[a-zA-Z_$]([a-zA-Z0-9_])*$/.test(value);
 

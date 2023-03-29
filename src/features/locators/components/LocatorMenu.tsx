@@ -89,7 +89,7 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, chil
             [LocatorOption.XpathAndJDI]: copyLocator(selectedLocators, LocatorOption.XpathAndJDI),
             [LocatorOption.CSSSelector]: copyLocator(selectedLocators, LocatorOption.CSSSelector),
             [LocatorOption.FullCode]: copyLocator(selectedLocators),
-    }),
+          }),
         ],
         ...(isLocatorInProgress ? [pause(() => dispatch(stopGeneration(element_id)))] : []),
         ...(isLocatorInProgress && priority !== LocatorCalculationPriority.Increased
