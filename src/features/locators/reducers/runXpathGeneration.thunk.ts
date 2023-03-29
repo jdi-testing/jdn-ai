@@ -21,7 +21,11 @@ export const runXpathGeneration = createAsyncThunk("locators/scheduleGeneration"
     selectPageObjById(state, state.pageObject.present.currentPageObject);
   await runGenerationHandler(
     generationData,
-    { ...xpathConfig, maximum_generation_time: maxGenerationTime || xpathConfig.maximum_generation_time },
+    {
+      ...xpathConfig,
+      maximum_generation_time: maxGenerationTime || xpathConfig.maximum_generation_time,
+      ...(maxGenerationTime ? { advanced_calculation: true } : null),
+    },
     (el: Locator) => {
       const { element_id, jdnHash } = el;
       let foundId;
