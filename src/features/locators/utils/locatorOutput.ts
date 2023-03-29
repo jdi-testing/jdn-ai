@@ -22,7 +22,7 @@ const getLocatorByType = (xpathes: string[], locatorType?: LocatorType) => {
   return cssSelector;
 };
 
-const getPrioritizedXpathes = (locatorValue: LocatorValue): string[] => [
+export const getPrioritizedXpathes = (locatorValue: LocatorValue): string[] => [
   ...(locatorValue.customXpath || typeof locatorValue.customXpath === "string" ? [locatorValue.customXpath] : []),
   ...(locatorValue.robulaXpath ? [locatorValue.robulaXpath] : []),
   locatorValue.fullXpath,
