@@ -151,13 +151,13 @@ export const LocatorListHeader = ({ render }) => {
       ...(size(activeGenerate) ? [removeFromPO(() => dispatch(toggleElementGroupGeneration(activeGenerate)))] : []),
       ...(size(actualSelected) > 1
         ? [
-            copyLocatorOption([
-              copyLocator(actualSelected, LocatorOption.Xpath),
-              copyLocator(actualSelected, LocatorOption.XpathAndSelenium),
-              copyLocator(actualSelected, LocatorOption.XpathAndJDI),
-              () => "", // for CSS selector
-              copyLocator(actualSelected),
-            ]),
+            copyLocatorOption({
+              [LocatorOption.Xpath]: copyLocator(actualSelected, LocatorOption.Xpath),
+              [LocatorOption.XpathAndSelenium]: copyLocator(actualSelected, LocatorOption.XpathAndSelenium),
+              [LocatorOption.XpathAndJDI]: copyLocator(actualSelected, LocatorOption.XpathAndJDI),
+              [LocatorOption.CSSSelector]: copyLocator(actualSelected, LocatorOption.CSSSelector),
+              [LocatorOption.FullCode]: copyLocator(actualSelected),
+            }),
           ]
         : []),
       ...(size(deletedActive) ? [restore(() => dispatch(toggleDeletedGroup(deletedActive)))] : []),
