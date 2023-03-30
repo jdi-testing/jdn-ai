@@ -1,5 +1,5 @@
 import { Dropdown } from "antd";
-import React, { ReactNode } from "react";
+import React, { ReactNode, SyntheticEvent } from "react";
 import { useDispatch } from "react-redux";
 import { MaxGenerationTime } from "../../../app/types/mainSlice.types";
 import { MenuItem } from "../../../common/components/menu/Menu";
@@ -61,6 +61,10 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, chil
     locatorGenerationController.downPriority([jdnHash]);
   };
 
+  const handleMenuClick = ({ domEvent }: { domEvent: SyntheticEvent }) => {
+    domEvent.stopPropagation();
+  };
+
   const renderMenu = () => {
     const getRerunGeneration = (time: MaxGenerationTime) => () =>
       dispatch(
@@ -79,13 +83,13 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, chil
       items = [
         edit(handleEditClick),
         ...[
-          copyLocatorOption([
-            copyLocator(selectedLocators, LocatorOption.Xpath),
-            copyLocator(selectedLocators, LocatorOption.XpathAndSelenium),
-            copyLocator(selectedLocators, LocatorOption.XpathAndJDI),
-            () => "", // for CSS selector
-            copyLocator(selectedLocators),
-          ]),
+          copyLocatorOption({
+            [LocatorOption.Xpath]: copyLocator(selectedLocators, LocatorOption.Xpath),
+            [LocatorOption.XpathAndSelenium]: copyLocator(selectedLocators, LocatorOption.XpathAndSelenium),
+            [LocatorOption.XpathAndJDI]: copyLocator(selectedLocators, LocatorOption.XpathAndJDI),
+            [LocatorOption.CSSSelector]: copyLocator(selectedLocators, LocatorOption.CSSSelector),
+            [LocatorOption.FullCode]: copyLocator(selectedLocators),
+          }),
         ],
         ...(isLocatorInProgress ? [pause(() => dispatch(stopGeneration(element_id)))] : []),
         ...(isLocatorInProgress && priority !== LocatorCalculationPriority.Increased
@@ -116,12 +120,12 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, chil
       ];
     }
 
-    return { ...{ items } };
+    return items;
   };
 
   return (
     <Dropdown
-      menu={renderMenu()}
+      menu={{ items: renderMenu(), onClick: handleMenuClick }}
       align={{ offset: [10, 0] }}
       trigger={trigger}
       getPopupContainer={(triggerNode) => triggerNode}

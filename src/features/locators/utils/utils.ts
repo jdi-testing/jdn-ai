@@ -5,10 +5,13 @@ import { createElementName } from "../../pageObjects/utils/pageObject";
 import { Locator, LocatorValue } from "../types/locator.types";
 import { copyToClipboard, getLocatorString } from "../../../common/utils/helpers";
 import { LocatorOption } from "./constants";
+import { getXPathByPriority, getLocator } from "./locatorOutput";
+import { LocatorType } from "../../../common/types/locatorType";
 
-export const getLocatorWithJDIAnnotation = (locator: LocatorValue): string => `@UI("${locator.output}")`;
+export const getLocatorWithJDIAnnotation = (locator: LocatorValue): string => `@UI("${getXPathByPriority(locator)}")`;
 
-export const getLocatorWithSelenium = (locator: LocatorValue): string => `@FindBy(xpath = "${locator.output}")`;
+export const getLocatorWithSelenium = (locator: LocatorValue): string =>
+  `@FindBy(xpath = "${getXPathByPriority(locator)}")`;
 
 export const isValidJavaVariable = (value: string) => /^[a-zA-Z_$]([a-zA-Z0-9_])*$/.test(value);
 
@@ -66,18 +69,21 @@ export const setIndents = (ref: React.RefObject<HTMLDivElement>, depth: number) 
 
 export const copyLocator = (
   selectedLocators: Pick<Locator, "locator" | "type" | "name">[],
-  option?: string
+  option?: LocatorOption
 ) => (): void => {
   let xPath: string;
   switch (option) {
     case LocatorOption.Xpath:
-      xPath = selectedLocators.map(({ locator }) => `"${locator.output}"`).join("\n");
+      xPath = selectedLocators.map(({ locator }) => `"${getXPathByPriority(locator)}"`).join("\n");
       break;
     case LocatorOption.XpathAndSelenium:
       xPath = selectedLocators.map(({ locator }) => getLocatorWithSelenium(locator)).join("\n");
       break;
     case LocatorOption.XpathAndJDI:
       xPath = selectedLocators.map(({ locator }) => getLocatorWithJDIAnnotation(locator)).join("\n");
+      break;
+    case LocatorOption.CSSSelector:
+      xPath = selectedLocators.map(({ locator }) => `"${getLocator(locator, LocatorType.cssSelector)}"`).join("\n");
       break;
     default:
       xPath = selectedLocators.map(({ locator, type, name }) => getLocatorString(locator, type, name)).join("\n");
