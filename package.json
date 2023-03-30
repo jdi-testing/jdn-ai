@@ -50,7 +50,6 @@
     "@sindresorhus/transliterate": "1.6.0",
     "antd": "4.24.3",
     "axios": "0.27.2",
-    "jsdom": "21.0.0",
     "jszip": "3.7.1",
     "lodash": "4.17.21",
     "mversion": "2.0.1",
