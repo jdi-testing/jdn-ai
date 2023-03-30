@@ -1,5 +1,5 @@
-import { LocatorTaskStatus } from "../../features/locators/types/locator.types";
-import { MUIclasses } from "../../features/locators/types/muiClasses.types";
+import { LocatorTaskStatus } from "../../../../features/locators/types/locator.types";
+import { MUIclasses } from "../../../../features/locators/types/muiClasses.types";
 
 export const locatorsListMock = [
   {
@@ -104,7 +104,7 @@ export const locatorsListMock = [
       errorMessage: "",
       output: "",
     },
-    name: "breadcrumbsLi",
+    name: "anyName",
     predictedAttrId: "",
     predicted_label: "breadcrumbs",
     tagName: "li",
@@ -217,5 +217,25 @@ export const locatorsListMock = [
     predicted_label: "breadcrumbs",
     tagName: "ul",
     type: MUIclasses.breadcrumbs,
+  },
+  {
+    element_id: "796719024432235977136974900_0",
+    parent_id: "",
+    jdnHash: "796719024432235977136974900",
+    locator: {
+      fullXpath: "/html/body/header/div/nav/ul[1]",
+      taskStatus: LocatorTaskStatus.PENDING,
+      errorMessage: "",
+      output: "",
+    },
+    name: "radiobuttonsUl",
+    predictedAttrId: "",
+    elemText: "radioLi7",
+    predicted_label: "radiogroup",
+    pageObj: 0,
+    generate: true,
+    tagName: "ul",
+    type: MUIclasses.radiogroup,
+    children: [],
   },
 ];

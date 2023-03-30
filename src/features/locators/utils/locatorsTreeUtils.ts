@@ -36,8 +36,8 @@ export const includesSearcSubstr = (strings: Array<string>, searchString: string
 };
 
 export const applySearch = (element: Locator, seacrhString: string): SearchState => {
-  const { locator, type, name } = element;
-  if (includesSearcSubstr([locator.output, type as string, name], seacrhString)) {
+  const { locator, type, name, elemText } = element;
+  if (includesSearcSubstr([locator.output, type as string, name, ...(elemText ? [elemText] : [])], seacrhString)) {
     return SearchState.None;
   } else return SearchState.Hidden;
 };
@@ -65,9 +65,6 @@ export const convertListToTree = (_list: Array<Locator>, searchString = "") => {
 
       const getParent = (parent_id: string): LocatorTree => {
         const parent = list[map[parent_id]];
-        // console.log(parent_id);
-        // console.log(map);
-        // console.log(list);
         if (parent.depth === undefined) parent.depth = (list[map[parent.parent_id]]?.depth || 0) + 1;
         if (parent.searchState === SearchState.Hidden && parent.parent_id.length) return getParent(parent.parent_id);
         else return parent;
