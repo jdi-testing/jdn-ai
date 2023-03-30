@@ -32,5 +32,4 @@ export const vuetifyDefaultFilterOn: ElementClass[] = [
   VuetifyClasses.switch,
   VuetifyClasses.textfield,
   VuetifyClasses.timepicker,
-  VuetifyClasses.tooltip,
 ];
