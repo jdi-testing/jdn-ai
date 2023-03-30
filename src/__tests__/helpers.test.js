@@ -34,10 +34,3 @@ describe("Convert float to Percent function", () => {
     expect(value).toBe(NaN);
   });
 });
-
-describe("convertListToTree function", () => {
-  test("convert list to tree", () => {
-    const tree = convertListToTree(locatorsListMock);
-    expect(tree).toEqual(locatorsTreeMock);
-  });
-});

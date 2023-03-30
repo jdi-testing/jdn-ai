@@ -1,4 +1,3 @@
-import { JSDOM } from "jsdom";
 import { getLibrarySelectors } from "../../services/rules/createSelector";
 import { findBySelectors } from "../../pageServices/contentScripts/findBySelectors";
 import { card } from "./__mocks__/card.mock";
@@ -12,8 +11,7 @@ import { vuetifyTextField } from "./__mocks__/vuetifyTextField";
 import { vuetifyInput } from "./__mocks__/vuetifyInput";
 
 const runQuery = (domSource, callback) => {
-  const dom = new JSDOM(domSource);
-  global.document = dom.window.document;
+  document.body.innerHTML = domSource;
 
   // we can't use original VueRules with "children" property,
   // because test env doesn't work with selectors containing ':has' directive
