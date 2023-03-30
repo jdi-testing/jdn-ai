@@ -1,5 +1,4 @@
-import { cloneDeep } from "lodash";
-import { Locator, LocatorValue } from "../../features/locators/types/locator.types";
+import { LocatorValue } from "../../features/locators/types/locator.types";
 import { ElementLibrary, ElementClass } from "../../features/locators/types/generationClasses.types";
 import { VALIDATION_ERROR_TYPE } from "../constants/constants";
 
