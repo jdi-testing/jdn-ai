@@ -8,6 +8,7 @@ import mainSlice from "../main.slice";
 import { cancellableActions } from "../../common/components/notification/middlewares/cancellableActions";
 import { logger } from "./middlewares/logger";
 import { scriptNotifier } from "../../pageServices/scriptNotifier";
+import { changePageMiddleware } from "./middlewares/changePage.middleware";
 
 const rootReducer = {
   main: mainSlice,
@@ -23,7 +24,7 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: ["locators/setElementGroupGeneration", "locators/updateLocator", "locators/elementSetActive"],
       },
-    }).concat([logger, scriptNotifier, cancellableActions]),
+    }).concat([logger, scriptNotifier, cancellableActions, changePageMiddleware]),
 });
 
 store.subscribe(() => createListeners(store.dispatch, store.getState()));
