@@ -33,7 +33,7 @@ interface Props {
 export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, children, trigger }) => {
   const dispatch = useDispatch();
 
-  const { element_id, locator, deleted, priority, jdnHash, type, name } = element;
+  const { element_id, locator, deleted, priority, jdnHash, type, name, validity } = element;
 
   const isLocatorInProgress = isProgressStatus(locator.taskStatus);
 
@@ -75,7 +75,9 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, chil
       );
 
     let items: MenuItem[] = [];
-    const selectedLocators: Pick<Locator, "locator" | "type" | "name">[] = [{ locator, type, name }];
+    const selectedLocators: Pick<Locator, "locator" | "type" | "name" | "validity">[] = [
+      { locator, type, name, validity },
+    ];
 
     if (deleted) {
       items = [restore(() => dispatch(toggleDeleted(element_id)))];
@@ -106,14 +108,17 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, chil
           : []),
         ...(locator.taskStatus === LocatorTaskStatus.SUCCESS
           ? [
-              advanced([
-                getRerunGeneration(1),
-                getRerunGeneration(3),
-                getRerunGeneration(5),
-                getRerunGeneration(10),
-                getRerunGeneration(60),
-                getRerunGeneration(3600),
-              ]),
+              advanced(
+                [
+                  getRerunGeneration(1),
+                  getRerunGeneration(3),
+                  getRerunGeneration(5),
+                  getRerunGeneration(10),
+                  getRerunGeneration(60),
+                  getRerunGeneration(3600),
+                ],
+                Boolean(validity?.locator)
+              ),
             ]
           : []),
         deleteOption(() => dispatch(toggleDeleted(element_id))),

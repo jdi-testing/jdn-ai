@@ -2,6 +2,7 @@ import { cloneDeep } from "lodash";
 import { Locator, LocatorValue } from "../../features/locators/types/locator.types";
 import { ElementLibrary, ElementClass } from "../../features/locators/types/generationClasses.types";
 import { VALIDATION_ERROR_TYPE } from "../constants/constants";
+import { sendMessage } from "../../pageServices/connector";
 
 export const floatToPercent = (value: number) => {
   // wse need to show percents, but multiply float * 100 provides an unexpected result and leads to bugs
@@ -39,3 +40,26 @@ export const convertToListWithChildren = (_list: Array<Locator>) => {
 export const isErrorValidationType = (type: string) => VALIDATION_ERROR_TYPE.hasOwnProperty(type);
 
 export const isMacPlatform = (param: Window) => param.navigator?.userAgent.indexOf("Mac") != -1;
+
+export const generateId = (): string => {
+  return (
+    Math.random().toString().substring(2, 12) +
+    Date.now().toString().substring(5) +
+    Math.random().toString().substring(2, 12)
+  );
+};
+
+export const getElementFullXpath = (foundElement: string): string => {
+  let fullXpath = "";
+  const parser = new DOMParser();
+  const parsedElement = parser.parseFromString(foundElement, "text/html").body.firstChild;
+
+  sendMessage
+    .getElementXpath(parsedElement as Element)
+    .then((xPath: string) => {
+      if (xPath) fullXpath = xPath;
+    })
+    .catch((err: Error) => err);
+
+  return fullXpath;
+};

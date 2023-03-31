@@ -3,6 +3,7 @@ import { Locator, ValidationErrorType } from "../types/locator.types";
 import { evaluateXpath, equalHashes } from "./utils";
 
 export const createLocatorValidationRules = (
+  isCreatingForm: boolean,
   setLocatorValidity: React.Dispatch<React.SetStateAction<string>>,
   validationEnabled: boolean,
   locators: Locator[],
@@ -36,7 +37,9 @@ export const createLocatorValidationRules = (
           } else if (length === 1) {
             if (foundHash !== jdnHash) {
               if (equalHashes(foundHash, locators).length) setLocatorValidity(ValidationErrorType.DuplicatedLocator);
-              else setLocatorValidity(ValidationErrorType.NewElement);
+              else {
+                isCreatingForm ? setLocatorValidity("") : setLocatorValidity(ValidationErrorType.NewElement);
+              }
             } else {
               setLocatorValidity("");
             }

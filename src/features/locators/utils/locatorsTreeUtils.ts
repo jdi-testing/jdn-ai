@@ -3,16 +3,16 @@ import { convertToListWithChildren } from "../../../common/utils/helpers";
 import { Locator } from "../../locators/types/locator.types";
 import { SearchState } from "../components/LocatorsTree";
 
-export const includesSearcSubstr = (strings: Array<string>, searchString: string) => {
+export const includesSearchSubstr = (strings: Array<string | undefined>, searchString: string) => {
   const includesSubstring = strings.filter((string) => {
     return string && string.toLowerCase().includes(searchString.toLowerCase());
   });
   return !!size(includesSubstring);
 };
 
-export const applySearch = (element: Locator, seacrhString: string): SearchState => {
+export const applySearch = (element: Locator, searchString: string): SearchState => {
   const { locator, type, name } = element;
-  if (includesSearcSubstr([locator.output, type as string, name], seacrhString)) {
+  if (includesSearchSubstr([locator.output, type as string, name], searchString)) {
     return SearchState.None;
   } else return SearchState.Hidden;
 };

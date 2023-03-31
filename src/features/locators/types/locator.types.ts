@@ -48,8 +48,8 @@ export interface LocatorValue {
   fullXpath: string;
   robulaXpath?: string;
   taskStatus?: LocatorTaskStatus;
-  errorMessage: string;
-  output: string;
+  errorMessage?: string;
+  output?: string;
 }
 
 export interface Validity {

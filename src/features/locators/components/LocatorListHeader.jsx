@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Chip } from "../../../common/components/Chip";
 
 import { CaretDown, DotsThree } from "phosphor-react";
+import { PlusOutlined } from "@ant-design/icons";
 
 import {
   elementGroupUnsetActive,
@@ -47,6 +48,7 @@ import { LocatorOption } from "../../locators/utils/constants";
 import { LocatorsSearch } from "./LocatorsSearch";
 import { rerunGeneration } from "../reducers/rerunGeneration.thunk";
 import { stopGenerationGroup } from "../reducers/stopGenerationGroup.thunk";
+import { LocatorEditDialog } from "./LocatorEditDialog";
 
 export const EXPAND_STATE = {
   EXPANDED: "Expanded",
@@ -60,6 +62,7 @@ export const EXPAND_STATE = {
 export const LocatorListHeader = ({ render }) => {
   const dispatch = useDispatch();
   const [expandAll, setExpandAll] = useState(EXPAND_STATE.EXPANDED);
+  const [isCreateModalOpen, setCreateModalOpen] = useState(false);
   const [searchString, setSearchString] = useState("");
 
   const locators = useSelector(selectFilteredLocators);
@@ -192,8 +195,9 @@ export const LocatorListHeader = ({ render }) => {
 
   return (
     <React.Fragment>
-      <Row justify="space-between">
+      <Row justify="space-between" align="bottom">
         <LocatorsSearch value={searchString} onChange={setSearchString} />
+        <Button icon={<PlusOutlined size={14}/>} size="small" onClick={setCreateModalOpen}>Custom locator</Button>
       </Row>
       <Row className="jdn__locatorsList-header">
         <span className="jdn__locatorsList-header-title">
@@ -231,6 +235,13 @@ export const LocatorListHeader = ({ render }) => {
         ) : null}
       </Row>
       {render({ expandAll, setExpandAll, searchString })}
+      {isCreateModalOpen ? (
+        <LocatorEditDialog
+          isCreatingForm
+          isModalOpen={isCreateModalOpen}
+          setIsModalOpen={setCreateModalOpen}
+        />
+      ) : null}
     </React.Fragment>
   );
 };

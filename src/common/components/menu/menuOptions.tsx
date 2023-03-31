@@ -59,11 +59,12 @@ export const edit = (onClick: () => void, label?: string) => ({
   label: label || "Edit",
 });
 
-export const advanced = (onClick: Array<() => void>) => ({
+export const advanced = (onClick: Array<() => void>, disabled?: boolean) => ({
   key: "7",
   icon: <ArrowFatLinesDown size={14} />,
   onClick: undefined,
   label: "Advanced calculation",
+  disabled,
   children: [
     {
       key: "7-0",

@@ -26,7 +26,8 @@ export const LocatorIcon = ({ validity, locator, deleted }) => {
   const deletedIcon = <Trash size={14} color="#9a9da9" className="jdn__locatorsList-status" />;
 
   const failureIcon = (
-    <Tooltip title={locator.errorMessage}>
+    // how should it be if there is no errorMessage
+    <Tooltip title={locator.errorMessage ?? "Locator generation was failed"}>
       <WarningCircle size={14} color="#d81515" className="jdn__locatorsList-status" />
     </Tooltip>
   );

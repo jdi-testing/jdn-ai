@@ -185,6 +185,8 @@ export const sendMessage = {
   killHighlight: (payload?: {}, onResponse?: () => void) => connector.sendMessage("KILL_HIGHLIGHT", null, onResponse),
   generateAttributes: (payload: PredictedEntity, onResponse: () => void) =>
     connector.sendMessage("GENERATE_ATTRIBUTES", payload, onResponse),
+  getElementXpath: (payload: Element, onResponse?: () => void) =>
+    connector.sendMessage("GET_ELEMENT_XPATH", payload, onResponse),
   pingScript: (payload: { scriptName: string }, onResponse?: () => void) =>
     connector.sendMessage("PING_SCRIPT", payload, onResponse),
   openEditLocator: (payload: { value: Locator; types: string[] }, onResponse?: () => void) =>
