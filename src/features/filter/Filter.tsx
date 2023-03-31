@@ -16,13 +16,12 @@ export const Filter = () => {
   const pageObject = useSelector(selectCurrentPageObject);
   const dispatch = useDispatch();
 
-  if (!pageObject) throw new Error("empty page object");
-
   const classFilter = useSelector(selectDetectedClassesFilter);
   const areSelectedAll = useSelector(selectIfSelectedAll);
   const classFilterArr = useMemo(() => convertFilterToArr(classFilter, searchTerm), [classFilter, searchTerm]);
 
   const handleFilterChange = (key: string, oldValue: boolean) => () => {
+    if (!pageObject) return;
     dispatch(
       toggleClassFilter({
         pageObjectId: pageObject.id,
@@ -51,6 +50,7 @@ export const Filter = () => {
   };
 
   const handleSelectAllChange: SwitchChangeEventHandler = (checked) => {
+    if (!pageObject) return;
     dispatch(
       toggleClassFilterAll({
         pageObjectId: pageObject.id,
