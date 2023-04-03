@@ -1,4 +1,5 @@
 import { SearchState } from "../../../../features/locators/components/LocatorsTree";
+import { LocatorTaskStatus } from "../../../../features/locators/types/locator.types";
 
 export const locatorsTreeMockSearchTypesNames = [
   {
@@ -9,7 +10,7 @@ export const locatorsTreeMockSearchTypesNames = [
     jdnHash: "7967190244322359771369749968",
     locator: {
       fullXpath: "/html/body/header/div/nav/ul[1]",
-      taskStatus: "SUCCESS",
+      taskStatus: LocatorTaskStatus.SUCCESS,
       errorMessage: "",
       output: "",
     },
@@ -29,7 +30,7 @@ export const locatorsTreeMockSearchTypesNames = [
         jdnHash: "4829071593322359778594168519",
         locator: {
           fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[3]/ul/li[3]",
-          taskStatus: "PENDING",
+          taskStatus: LocatorTaskStatus.PENDING,
           errorMessage: "",
           output: "",
         },
@@ -49,7 +50,7 @@ export const locatorsTreeMockSearchTypesNames = [
             jdnHash: "9636042053322359773245578788",
             locator: {
               fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[5]/ul/li[5]",
-              taskStatus: "PENDING",
+              taskStatus: LocatorTaskStatus.PENDING,
               errorMessage: "",
               output: "",
             },
@@ -70,7 +71,7 @@ export const locatorsTreeMockSearchTypesNames = [
             jdnHash: "8381553594322359777170267551",
             locator: {
               fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[3]/ul",
-              taskStatus: "PENDING",
+              taskStatus: LocatorTaskStatus.PENDING,
               errorMessage: "",
               output: "",
             },
@@ -93,7 +94,7 @@ export const locatorsTreeMockSearchTypesNames = [
         jdnHash: "4829071593322359778594168522",
         locator: {
           fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[3]/ul/li[3]",
-          taskStatus: "PENDING",
+          taskStatus: LocatorTaskStatus.PENDING,
           errorMessage: "",
           output: "",
         },
@@ -113,7 +114,7 @@ export const locatorsTreeMockSearchTypesNames = [
             jdnHash: "9636042053322359773245578777",
             locator: {
               fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[5]/ul/li[5]",
-              taskStatus: "PENDING",
+              taskStatus: LocatorTaskStatus.PENDING,
               errorMessage: "",
               output: "",
             },
@@ -134,7 +135,7 @@ export const locatorsTreeMockSearchTypesNames = [
             jdnHash: "8381553594322359777170267550",
             locator: {
               fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[3]/ul",
-              taskStatus: "PENDING",
+              taskStatus: LocatorTaskStatus.PENDING,
               errorMessage: "",
               output: "",
             },

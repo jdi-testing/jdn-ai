@@ -1,3 +1,5 @@
+import { LocatorTaskStatus } from "../../../../features/locators/types/locator.types";
+
 export const locatorsTreeMockSearch = [
   {
     depth: 0,
@@ -7,7 +9,7 @@ export const locatorsTreeMockSearch = [
     jdnHash: "7967190244322359771369749968",
     locator: {
       fullXpath: "/html/body/header/div/nav/ul[1]",
-      taskStatus: "SUCCESS",
+      taskStatus: LocatorTaskStatus.SUCCESS,
       errorMessage: "",
       output: "",
     },
@@ -27,7 +29,7 @@ export const locatorsTreeMockSearch = [
         jdnHash: "9636042053322359773245578777",
         locator: {
           fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[5]/ul/li[5]",
-          taskStatus: "PENDING",
+          taskStatus: LocatorTaskStatus.PENDING,
           errorMessage: "",
           output: "",
         },
@@ -50,7 +52,7 @@ export const locatorsTreeMockSearch = [
     jdnHash: "796719024432235977136974900",
     locator: {
       fullXpath: "/html/body/header/div/nav/ul[1]",
-      taskStatus: "PENDING",
+      taskStatus: LocatorTaskStatus.PENDING,
       errorMessage: "",
       output: "",
     },
