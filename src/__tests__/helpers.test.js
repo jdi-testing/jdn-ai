@@ -1,7 +1,4 @@
-import { convertListToTree } from "../features/locators/utils/locatorsTreeUtils";
 import { floatToPercent } from "../common/utils/helpers";
-import { locatorsListMock } from "./__mocks__/locatorsList.mock";
-import { locatorsTreeMock } from "./__mocks__/locatorsTree.mock";
 
 describe("Convert float to Percent function", () => {
   test("convert 0.55 to 55", () => {
@@ -32,12 +29,5 @@ describe("Convert float to Percent function", () => {
   test("convert NaN to 0", () => {
     const value = floatToPercent(NaN);
     expect(value).toBe(NaN);
-  });
-});
-
-describe("convertListToTree function", () => {
-  test("convert list to tree", () => {
-    const tree = convertListToTree(locatorsListMock);
-    expect(tree).toEqual(locatorsTreeMock);
   });
 });

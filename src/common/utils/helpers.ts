@@ -1,5 +1,4 @@
-import { cloneDeep } from "lodash";
-import { Locator, LocatorValue } from "../../features/locators/types/locator.types";
+import { LocatorValue } from "../../features/locators/types/locator.types";
 import { ElementLibrary, ElementClass } from "../../features/locators/types/generationClasses.types";
 import { VALIDATION_ERROR_TYPE } from "../constants/constants";
 
@@ -15,26 +14,6 @@ export const copyToClipboard = (text: string) => {
 
 export const getLocatorString = (locator: LocatorValue, type: ElementLibrary | ElementClass, name: string): string =>
   `@UI("${locator.output}")\npublic ${type} ${name};`;
-
-export const convertToListWithChildren = (_list: Array<Locator>) => {
-  const list = cloneDeep(_list);
-  const map: Record<string, number> = {};
-
-  for (let i = 0; i < list.length; i++) {
-    map[list[i].jdnHash] = i;
-    list[i].children = [];
-  }
-
-  for (let i = 0; i < list.length; i++) {
-    const node = list[i];
-    if (node.parent_id !== "") {
-      const children = list[map[node.parent_id]]?.children;
-      children && children.push(node.element_id);
-    }
-  }
-
-  return list;
-};
 
 export const isErrorValidationType = (type: string) => VALIDATION_ERROR_TYPE.hasOwnProperty(type);
 

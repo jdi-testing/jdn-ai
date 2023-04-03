@@ -1,7 +1,6 @@
 import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
 
 import { RootState } from "../../../app/store/store";
-import { convertToListWithChildren } from "../../../common/utils/helpers";
 import { requestGenerationData, setParents } from "../../../pageServices/pageDataHandlers";
 import { selectLocators } from "../locators.selectors";
 import { Locator, LocatorsState, LocatorTaskStatus, PredictedEntity } from "../types/locator.types";
@@ -9,6 +8,7 @@ import { addLocators } from "../locators.slice";
 import { addLocatorsToPageObj } from "../../pageObjects/pageObject.slice";
 import { ElementLibrary } from "../types/generationClasses.types";
 import { runXpathGeneration } from "./runXpathGeneration.thunk";
+import { convertToListWithChildren } from "../utils/locatorsTreeUtils";
 
 interface Meta {
   predictedElements: PredictedEntity[];
