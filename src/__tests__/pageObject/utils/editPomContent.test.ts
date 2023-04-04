@@ -22,24 +22,21 @@ describe("editPomContent function", () => {
 
   const testData = [
     {
-      library: ElementLibrary.HTML5,
       output: html5Result,
       po: { ...pageObject0, library: ElementLibrary.HTML5 },
     },
     {
-      library: ElementLibrary.MUI,
       output: muiResult,
       po: { ...pageObject0, library: ElementLibrary.MUI },
     },
     {
-      library: ElementLibrary.Vuetify,
       output: vuetifyResult,
       po: { ...pageObject0, library: ElementLibrary.Vuetify },
     },
   ];
 
   testData.forEach((_testData) => {
-    test(`pom for ${_testData.library}`, () => {
+    test(`pom for ${_testData.po.library}`, () => {
       expect(editPomContent(content, _testData.po)).toBe(_testData.output);
     });
   });
