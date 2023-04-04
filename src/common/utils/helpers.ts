@@ -18,3 +18,28 @@ export const getLocatorString = (locator: LocatorValue, type: ElementLibrary | E
 export const isErrorValidationType = (type: string) => VALIDATION_ERROR_TYPE.hasOwnProperty(type);
 
 export const isMacPlatform = (param: Window) => param.navigator?.userAgent.indexOf("Mac") != -1;
+
+export const findSubstringWithinTerms = (
+  text: string,
+  startSubstring: string,
+  endSubstring: string | RegExp
+): string => {
+  let startIndex = text.indexOf(startSubstring);
+  if (startIndex !== -1) {
+    startIndex += startSubstring.length;
+    let endIndex;
+    if (endSubstring instanceof RegExp) {
+      endSubstring.lastIndex = startIndex;
+      const match = endSubstring.exec(text.slice(startIndex));
+      if (match) {
+        endIndex = match.index + match[0].length + startIndex;
+      }
+    } else {
+      endIndex = text.indexOf(endSubstring, startIndex);
+    }
+    if (endIndex !== -1) {
+      return text.substring(text.indexOf(startSubstring), endIndex);
+    }
+  }
+  return "";
+};
