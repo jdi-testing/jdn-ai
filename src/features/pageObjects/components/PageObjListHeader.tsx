@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button, Modal, Row, Space, Tooltip } from "antd";
 import { CaretDown, DownloadSimple, Plus, Trash } from "phosphor-react";
 
-import { addPageObj } from "../../pageObjects/utils/addPageObject.thunk";
+import { addPageObj } from "../reducers/addPageObject.thunk";
 
 import { pushNotification } from "../../../app/main.slice";
 import { size } from "lodash";

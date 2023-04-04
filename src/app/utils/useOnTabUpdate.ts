@@ -5,12 +5,15 @@ import { locatorGenerationController } from "../../features/locators/utils/locat
 import { connector } from "../../pageServices/connector";
 import { removeOverlay } from "../../pageServices/pageDataHandlers";
 import { clearAll } from "../main.slice";
+import { changeIdentificationStatus } from "../../features/locators/locators.slice";
+import { IdentificationStatus } from "../../features/locators/types/locator.types";
 
 export const useOnTabUpdate = (onScriptsInited: () => Promise<void>) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
     const disconnectHandler = () => {
+      dispatch(changeIdentificationStatus(IdentificationStatus.noStatus));
       dispatch(clearAll());
       locatorGenerationController.revokeAll();
       dispatch(removeEmptyPageObjects());
