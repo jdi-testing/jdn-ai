@@ -40,7 +40,11 @@ export const isErrorValidationType = (type: string) => VALIDATION_ERROR_TYPE.has
 
 export const isMacPlatform = (param: Window) => param.navigator?.userAgent.indexOf("Mac") != -1;
 
-export const findSubstringWithinTerms = (text: string, startSubstring: string, endSubstring: string | RegExp): string => {
+export const findSubstringWithinTerms = (
+  text: string,
+  startSubstring: string,
+  endSubstring: string | RegExp
+): string => {
   let startIndex = text.indexOf(startSubstring);
   if (startIndex !== -1) {
     startIndex += startSubstring.length;
