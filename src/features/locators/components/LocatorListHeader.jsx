@@ -197,7 +197,9 @@ export const LocatorListHeader = ({ render }) => {
     <React.Fragment>
       <Row justify="space-between" align="bottom">
         <LocatorsSearch value={searchString} onChange={setSearchString} />
-        <Button icon={<PlusOutlined size={14}/>} size="small" onClick={setCreateModalOpen}>Custom locator</Button>
+        <Button icon={<PlusOutlined size={14} />} size="small" onClick={setCreateModalOpen}>
+          Custom locator
+        </Button>
       </Row>
       <Row className="jdn__locatorsList-header">
         <span className="jdn__locatorsList-header-title">
@@ -236,11 +238,7 @@ export const LocatorListHeader = ({ render }) => {
       </Row>
       {render({ expandAll, setExpandAll, searchString })}
       {isCreateModalOpen ? (
-        <LocatorEditDialog
-          isCreatingForm
-          isModalOpen={isCreateModalOpen}
-          setIsModalOpen={setCreateModalOpen}
-        />
+        <LocatorEditDialog isCreatingForm isModalOpen={isCreateModalOpen} setIsModalOpen={setCreateModalOpen} />
       ) : null}
     </React.Fragment>
   );

@@ -64,7 +64,11 @@ export const LocatorEditDialog: React.FC<Props> = ({
   const library = useSelector(selectCurrentPageObject)?.library || defaultLibrary;
 
   const isValidationEnabled = useLocatorValidationEnabled();
-  const [{ message, validationStatus }, setLocatorValidity] = useState<Validity>(isValidationEnabled ? ({ message: validity?.message || "", validationStatus: ""}) : { message: "", validationStatus: ValidationStatus.WARNING});
+  const [{ message, validationStatus }, setLocatorValidity] = useState<Validity>(
+    isValidationEnabled
+      ? { message: validity?.message || "", validationStatus: "" }
+      : { message: "", validationStatus: ValidationStatus.WARNING }
+  );
 
   const [isEditedName, setIsEditedName] = useState<boolean>(isCustomName);
 
@@ -112,16 +116,28 @@ export const LocatorEditDialog: React.FC<Props> = ({
   };
 
   const handleCreateCustomLocator = async () => {
-    let newLocator: Locator = getNewLocatorStub(LocatorTaskStatus.SUCCESS, pageObjectId, message, isEditedName, formLocatorType);
+    let newLocator: Locator = getNewLocatorStub(
+      LocatorTaskStatus.SUCCESS,
+      pageObjectId,
+      message,
+      isEditedName,
+      formLocatorType
+    );
 
     // we need validation here in case if user didn't touch locator field
-    await form.validateFields().then(({ name, type, locator}) => newLocator = {
-      ...newLocator,
-      locator: { ...newLocator.locator, customXpath: locator },
-      predicted_label: type.toLowerCase(),
-      name,
-      type,
-    }).catch((err) => console.log(err));
+    await form
+      .validateFields()
+      .then(
+        ({ name, type, locator }) =>
+          (newLocator = {
+            ...newLocator,
+            locator: { ...newLocator.locator, customXpath: locator },
+            predicted_label: type.toLowerCase(),
+            name,
+            type,
+          })
+      )
+      .catch((err) => console.log(err));
 
     switch (validationStatus) {
       case ValidationStatus.WARNING:
@@ -131,15 +147,16 @@ export const LocatorEditDialog: React.FC<Props> = ({
         return;
       case ValidationStatus.SUCCESS:
         await evaluateXpath(newLocator.locator.customXpath!)
-        .then((response) => JSON.parse(response[0].result))
-        .then(({ foundHash, foundElement }) => {
-          newLocator = {
-            ...newLocator,
-            locator: { ...newLocator.locator, fullXpath: getElementFullXpath(foundElement) },
-            jdnHash: foundHash,
-            element_id: `${foundHash}_${pageObjectId}`,
-          };
-        }).catch((error: any) => console.log(error));
+          .then((response) => JSON.parse(response[0].result))
+          .then(({ foundHash, foundElement }) => {
+            newLocator = {
+              ...newLocator,
+              locator: { ...newLocator.locator, fullXpath: getElementFullXpath(foundElement) },
+              jdnHash: foundHash,
+              element_id: `${foundHash}_${pageObjectId}`,
+            };
+          })
+          .catch((error: any) => console.log(error));
         break;
       default:
         newLocator.element_id = `${generateId()}_${pageObjectId}`;
@@ -198,13 +215,14 @@ export const LocatorEditDialog: React.FC<Props> = ({
   };
 
   const computeIsOkButtonDisabled = () => {
-    const hasFormErrors = !!form.getFieldsError(["name", "type", "locator"]).filter(({ errors }) => errors.length).length;
+    const hasFormErrors = !!form.getFieldsError(["name", "type", "locator"]).filter(({ errors }) => errors.length)
+      .length;
     if (isCreatingForm) {
       return !form.isFieldsTouched(["type", "name"], true) || hasFormErrors;
     }
     const currentValues = form.getFieldsValue(true);
     return hasFormChanged(currentValues);
-  }
+  };
 
   const onFieldsChange = () => {
     setIsOkButtonDisabled(computeIsOkButtonDisabled());
@@ -219,7 +237,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
         enableOverlay: isModalOpen,
         setIsModalOpen,
         okButtonProps: {
-          disabled: isOkButtonDisabled
+          disabled: isOkButtonDisabled,
         },
       }}
       formProps={{
@@ -231,10 +249,16 @@ export const LocatorEditDialog: React.FC<Props> = ({
       <Form.Item name="name" label="Name" rules={nameValidationRules}>
         <Input onChange={handleNameChange} />
       </Form.Item>
-      <Form.Item name="type" label="Block type" rules={[{
-          required: true,
-          message: ValidationErrorType.EmptyValue,
-        }]}>
+      <Form.Item
+        name="type"
+        label="Block type"
+        rules={[
+          {
+            required: true,
+            message: ValidationErrorType.EmptyValue,
+          },
+        ]}
+      >
         <Select
           onChange={handleTypeChange}
           showSearch
@@ -260,9 +284,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
       </FormItem>
       <Col push={4}>
         {/* should be reworked to one form when we'll decide to enable css locators editing */}
-        <Form.Item
-          hidden={formLocatorType !== LocatorType.cssSelector}
-        >
+        <Form.Item hidden={formLocatorType !== LocatorType.cssSelector}>
           <TextArea
             disabled
             value={getLocator({ ...locator, customXpath: form.getFieldValue("locator") }, LocatorType.cssSelector)}

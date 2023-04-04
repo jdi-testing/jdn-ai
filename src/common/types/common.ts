@@ -4,6 +4,6 @@ export enum LocatorType {
 }
 
 export type SelectOption = {
-  value: string | null,
-  label: string | null,
+  value: string | null;
+  label: string | null;
 };

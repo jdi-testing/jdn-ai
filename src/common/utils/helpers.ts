@@ -63,4 +63,5 @@ export const getElementFullXpath = (foundElement: string): string => {
   return fullXpath;
 };
 
-export const isFilteredSelect = (input: string, option: any) => (option?.value?.toString() ?? "").toLowerCase().includes(input.toLowerCase());
+export const isFilteredSelect = (input: string, option: any) =>
+  (option?.value?.toString() ?? "").toLowerCase().includes(input.toLowerCase());

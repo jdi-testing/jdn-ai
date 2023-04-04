@@ -13,11 +13,11 @@ export const createLocatorValidationRules = (
     () => ({
       validator(_: RuleObject, value: string) {
         if (!validationEnabled) {
-          setLocatorValidity({ message: "", validationStatus: ValidationStatus.WARNING});
+          setLocatorValidity({ message: "", validationStatus: ValidationStatus.WARNING });
           return Promise.resolve();
         }
         if (!value.length) {
-          setLocatorValidity({ message: ValidationErrorType.EmptyValue, validationStatus: ValidationStatus.WARNING});
+          setLocatorValidity({ message: ValidationErrorType.EmptyValue, validationStatus: ValidationStatus.WARNING });
           return Promise.resolve();
         }
         return evaluateXpath(value).then((response): Promise<ValidationErrorType | void> | void => {
@@ -34,21 +34,31 @@ export const createLocatorValidationRules = (
             setLocatorValidity({ message: ValidationErrorType.NotFound, validationStatus: ValidationStatus.WARNING });
             return Promise.resolve();
           } else if (length > 1) {
-            setLocatorValidity({ message: `${length} ${ValidationErrorType.MultipleElements}` as ValidationErrorType, validationStatus: ValidationStatus.ERROR});
+            setLocatorValidity({
+              message: `${length} ${ValidationErrorType.MultipleElements}` as ValidationErrorType,
+              validationStatus: ValidationStatus.ERROR,
+            });
             return Promise.reject(new Error());
           } else if (length === 1) {
             if (foundHash !== jdnHash) {
               if (equalHashes(foundHash, locators).length) {
-                setLocatorValidity({ message: ValidationErrorType.DuplicatedLocator, validationStatus: ValidationStatus.ERROR});
+                setLocatorValidity({
+                  message: ValidationErrorType.DuplicatedLocator,
+                  validationStatus: ValidationStatus.ERROR,
+                });
                 return Promise.reject(new Error());
-              }
-              else {
+              } else {
                 //check condition during implementing 1147
-                isCreatingForm ? setLocatorValidity({ message: "", validationStatus: ValidationStatus.SUCCESS}) : setLocatorValidity({ message: ValidationErrorType.NewElement, validationStatus: ValidationStatus.WARNING});
+                isCreatingForm
+                  ? setLocatorValidity({ message: "", validationStatus: ValidationStatus.SUCCESS })
+                  : setLocatorValidity({
+                      message: ValidationErrorType.NewElement,
+                      validationStatus: ValidationStatus.WARNING,
+                    });
                 return Promise.resolve();
               }
             } else {
-              setLocatorValidity({ message: "", validationStatus: ValidationStatus.SUCCESS});
+              setLocatorValidity({ message: "", validationStatus: ValidationStatus.SUCCESS });
               return Promise.resolve();
             }
           }

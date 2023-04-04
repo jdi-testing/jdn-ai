@@ -98,27 +98,28 @@ export const getNewLocatorStub = (
   pageObj: PageObjectId,
   message: Validity["message"],
   isCustomName: boolean,
-  locatorType: LocatorType): Locator => {
+  locatorType: LocatorType
+): Locator => {
   return {
-      elemAriaLabel: "",
-      elemId: "",
-      elemName: "",
-      elemText: "",
-      element_id: "",
-      jdnHash: "",
-      parent_id: "",
-      locator: {
-        customXpath: "",
-        fullXpath: "",
-        taskStatus,
-      },
-      name: "",
-      pageObj,
-      predicted_label: "",
-      validity: { message },
-      isCustomName,
-      locatorType,
-      type: "UIElement",
-      generate: true,
-    };
-}
+    elemAriaLabel: "",
+    elemId: "",
+    elemName: "",
+    elemText: "",
+    element_id: "",
+    jdnHash: "",
+    parent_id: "",
+    locator: {
+      customXpath: "",
+      fullXpath: "",
+      taskStatus,
+    },
+    name: "",
+    pageObj,
+    predicted_label: "",
+    validity: { message },
+    isCustomName,
+    locatorType,
+    type: "UIElement",
+    generate: true,
+  };
+};

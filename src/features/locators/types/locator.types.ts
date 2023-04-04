@@ -39,8 +39,8 @@ export enum ValidationStatus {
   VALIDATING = "validating",
   SUCCESS = "success",
   WARNING = "warning",
-  ERROR = "error"
-};
+  ERROR = "error",
+}
 
 export interface LocatorsState {
   generationStatus: LocatorsGenerationStatus;
@@ -61,7 +61,7 @@ export interface LocatorValue {
 
 export interface Validity {
   message: ValidationErrorType | "";
-  validationStatus?: ValidationStatus | "",
+  validationStatus?: ValidationStatus | "";
 }
 
 export interface Locator extends PredictedEntity {
