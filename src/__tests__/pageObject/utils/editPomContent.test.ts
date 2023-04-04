@@ -35,9 +35,9 @@ describe("editPomContent function", () => {
     },
   ];
 
-  testData.forEach((_testData) => {
-    test(`pom for ${_testData.po.library}`, () => {
-      expect(editPomContent(content, _testData.po)).toBe(_testData.output);
+  testData.forEach((testDataItem) => {
+    test(`pom for ${testDataItem.po.library}`, () => {
+      expect(editPomContent(content, testDataItem.po)).toBe(testDataItem.output);
     });
   });
 });
