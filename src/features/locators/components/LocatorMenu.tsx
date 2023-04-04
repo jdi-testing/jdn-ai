@@ -117,7 +117,7 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, chil
                   getRerunGeneration(60),
                   getRerunGeneration(3600),
                 ],
-                Boolean(validity?.locator)
+                !!validity?.message.length
               ),
             ]
           : []),

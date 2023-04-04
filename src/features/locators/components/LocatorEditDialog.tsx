@@ -10,25 +10,22 @@ import { selectAvailableClasses } from "../../filter/filter.selectors";
 import { selectCurrentPageObject, selectLocatorsByPageObject } from "../../pageObjects/pageObject.selectors";
 import { ElementClass } from "../types/generationClasses.types";
 import { isNameUnique } from "../../pageObjects/utils/pageObject";
-import { Locator, LocatorTaskStatus } from "../types/locator.types";
+import { Locator, LocatorTaskStatus, ValidationErrorType, Validity, ValidationStatus } from "../types/locator.types";
 import { defaultLibrary } from "../types/generationClasses.types";
 import { changeLocatorAttributes, addLocators, setScrollToLocator } from "../locators.slice";
 import { addLocatorsToPageObj } from "../../pageObjects/pageObject.slice";
-import { createNewName } from "../utils/utils";
+import { createNewName, getNewLocatorStub } from "../utils/utils";
 import { useLocatorValidationEnabled } from "../utils/useLocatorValidationEnabled";
 import { createLocatorValidationRules } from "../utils/locatorValidationRules";
 import { createNameValidationRules } from "../utils/nameValidationRules";
-
 import WarningFilled from "../assets/warningFilled.svg";
 import { Footnote } from "../../../common/components/footnote/Footnote";
 import FormItem from "antd/es/form/FormItem";
-import { LocatorType } from "../../../common/types/locatorType";
+import { LocatorType, SelectOption } from "../../../common/types/common";
 import { getLocator, getXPathByPriority } from "../utils/locatorOutput";
-
 import { sendMessage } from "../../../pageServices/connector";
 import { evaluateXpath } from "../utils/utils";
-
-import { generateId, getElementFullXpath } from "../../../common/utils/helpers";
+import { generateId, getElementFullXpath, isFilteredSelect } from "../../../common/utils/helpers";
 
 interface Props extends Locator {
   isModalOpen: boolean;
@@ -59,30 +56,32 @@ export const LocatorEditDialog: React.FC<Props> = ({
   elemText,
   locatorType,
 }) => {
-  const isValidationEnabled = useLocatorValidationEnabled();
-  const [locatorValidity, setLocatorValidity] = useState<string>(isValidationEnabled ? validity?.locator || "" : "");
-  const [isEditedName, setIsEditedName] = useState<boolean>(Boolean(isCustomName));
-
+  const dispatch = useDispatch();
   const locators = useSelector(selectLocatorsByPageObject);
   const types = useSelector((_state: RootState) => selectAvailableClasses(_state));
   const pageObjectLocatorType = useSelector(selectCurrentPageObject)?.locatorType;
   const pageObjectId = useSelector(selectCurrentPageObject)!.id;
   const library = useSelector(selectCurrentPageObject)?.library || defaultLibrary;
+
+  const isValidationEnabled = useLocatorValidationEnabled();
+  const [{ message, validationStatus }, setLocatorValidity] = useState<Validity>(isValidationEnabled ? ({ message: validity?.message || "", validationStatus: ""}) : { message: "", validationStatus: ValidationStatus.WARNING});
+
+  const [isEditedName, setIsEditedName] = useState<boolean>(isCustomName);
+
   // should be reduced when we'll enable css locators creating
   const getFormLocatorType = () =>
     isCreatingForm ? LocatorType.xPath : locatorType || pageObjectLocatorType || LocatorType.xPath;
 
   const [formLocatorType, setLocatorType] = useState<LocatorType>(getFormLocatorType());
-
   const [form] = Form.useForm<FormValues>();
-  const dispatch = useDispatch();
-
-  const initialValues = {
+  const initialValues: FormValues = {
     type: type || "",
     name: name || "",
     locator: locator ? getXPathByPriority(locator) : "",
-    locatorType: getFormLocatorType(),
+    locatorType: formLocatorType,
   };
+
+  const [isOkButtonDisabled, setIsOkButtonDisabled] = useState<boolean>(true);
 
   const _isNameUnique = (value: string) => !isNameUnique(locators, element_id, value);
 
@@ -113,44 +112,25 @@ export const LocatorEditDialog: React.FC<Props> = ({
   };
 
   const handleCreateCustomLocator = async () => {
-    let newLocator: Locator = {
-      elemAriaLabel: "",
-      elemId: "",
-      elemName: "",
-      elemText: "",
-      element_id: "",
-      jdnHash: "",
-      parent_id: "",
-      locator: {
-        customXpath: "",
-        fullXpath: "",
-        taskStatus: LocatorTaskStatus.SUCCESS,
-      },
-      name: "",
-      pageObj: pageObjectId,
-      predicted_label: "",
-      validity: { locator: locatorValidity },
-      isCustomName: isEditedName,
-      // library, check me
-      type: "UIElement",
-      generate: true,
-    };
+    let newLocator: Locator = getNewLocatorStub(LocatorTaskStatus.SUCCESS, pageObjectId, message, isEditedName, formLocatorType);
 
-    await form.validateFields().then(({ name, type, locator }) => {
-      newLocator = {
-        ...newLocator,
-        locator: { ...newLocator.locator, customXpath: locator },
-        predicted_label: type.toLowerCase(),
-        name,
-        type,
-      };
-    });
+    // we need validation here in case if user didn't touch locator field
+    await form.validateFields().then(({ name, type, locator}) => newLocator = {
+      ...newLocator,
+      locator: { ...newLocator.locator, customXpath: locator },
+      predicted_label: type.toLowerCase(),
+      name,
+      type,
+    }).catch((err) => console.log(err));
 
-    if (locatorValidity) {
-      // another scenario if MultipleElements
-      newLocator.element_id = `${generateId()}_${pageObjectId}`;
-    } else {
-      await evaluateXpath(newLocator.locator.customXpath!)
+    switch (validationStatus) {
+      case ValidationStatus.WARNING:
+        newLocator.element_id = `${generateId()}_${pageObjectId}`;
+        break;
+      case ValidationStatus.ERROR:
+        return;
+      case ValidationStatus.SUCCESS:
+        await evaluateXpath(newLocator.locator.customXpath!)
         .then((response) => JSON.parse(response[0].result))
         .then(({ foundHash, foundElement }) => {
           newLocator = {
@@ -159,21 +139,24 @@ export const LocatorEditDialog: React.FC<Props> = ({
             jdnHash: foundHash,
             element_id: `${foundHash}_${pageObjectId}`,
           };
-        })
-        .catch((error: any) => console.log(error));
+        }).catch((error: any) => console.log(error));
+        break;
+      default:
+        newLocator.element_id = `${generateId()}_${pageObjectId}`;
+        break;
     }
 
     dispatch(addLocators([newLocator]));
     dispatch(addLocatorsToPageObj([newLocator.element_id]));
     dispatch(setScrollToLocator(newLocator.element_id));
 
-    !locatorValidity && sendMessage.addElement(newLocator);
+    !validationStatus && sendMessage.addElement(newLocator);
 
     form.resetFields();
     setIsModalOpen(false);
   };
 
-  const handleOk = () => {
+  const handleEditLocator = () => {
     form
       .validateFields()
       .then((values) => {
@@ -182,7 +165,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
             ...values,
             element_id,
             library,
-            validity: { locator: locatorValidity },
+            validity: { message },
             isCustomName: isEditedName,
           })
         );
@@ -195,21 +178,36 @@ export const LocatorEditDialog: React.FC<Props> = ({
   };
 
   const renderValidationWarning = () => {
-    if (isCreatingForm && isValidationEnabled) {
-      return (
-        <div className="jdn__locatorEdit-warning">
-          <Icon component={WarningFilled} className="ant-alert-icon" />
-          <Footnote>If you leave this field empty, the locator will be invalid</Footnote>
-        </div>
-      );
-    } else if (!isValidationEnabled) {
+    if (!isValidationEnabled) {
       return (
         <div className="jdn__locatorEdit-warning">
           <Icon component={WarningFilled} className="ant-alert-icon" />
           <Footnote>Validation is possible only on Page Object creation</Footnote>
         </div>
       );
-    } else return null;
+    }
+    return null;
+  };
+
+  const getBlockTypeOptions = (): SelectOption[] => types.map((_type) => ({ value: _type, label: _type }));
+
+  const hasFormChanged = (currentValues: FormValues) => {
+    return !Object.keys(initialValues).some(
+      (key) => initialValues[key as keyof FormValues] !== currentValues[key as keyof FormValues]
+    );
+  };
+
+  const computeIsOkButtonDisabled = () => {
+    const hasFormErrors = !!form.getFieldsError(["name", "type", "locator"]).filter(({ errors }) => errors.length).length;
+    if (isCreatingForm) {
+      return !form.isFieldsTouched(["type", "name"], true) || hasFormErrors;
+    }
+    const currentValues = form.getFieldsValue(true);
+    return hasFormChanged(currentValues);
+  }
+
+  const onFieldsChange = () => {
+    setIsOkButtonDisabled(computeIsOkButtonDisabled());
   };
 
   return (
@@ -217,29 +215,33 @@ export const LocatorEditDialog: React.FC<Props> = ({
       modalProps={{
         title: isCreatingForm ? "Create custom locator" : "Edit locator",
         open: isModalOpen,
-        onOk: isCreatingForm ? handleCreateCustomLocator : handleOk,
+        onOk: isCreatingForm ? handleCreateCustomLocator : handleEditLocator,
         enableOverlay: isModalOpen,
         setIsModalOpen,
+        okButtonProps: {
+          disabled: isOkButtonDisabled
+        },
       }}
       formProps={{
         form,
         initialValues,
+        onFieldsChange,
       }}
     >
       <Form.Item name="name" label="Name" rules={nameValidationRules}>
         <Input onChange={handleNameChange} />
       </Form.Item>
-      <Form.Item name="type" label="Block type" required={isCreatingForm}>
+      <Form.Item name="type" label="Block type" rules={[{
+          required: true,
+          message: ValidationErrorType.EmptyValue,
+        }]}>
         <Select
           onChange={handleTypeChange}
           showSearch
-          filterOption={(input, option) =>
-            (option?.value?.toString() ?? "").toLowerCase().includes(input.toLowerCase())
-          }
-          options={types.map((_type) => ({ value: _type, label: _type }))}
+          filterOption={(input, option) => isFilteredSelect(input, option)}
+          options={getBlockTypeOptions()}
         />
       </Form.Item>
-      {/* change margin to css */}
       <FormItem name="locatorType" label="Locator" style={{ marginBottom: "8px" }}>
         <Select
           onChange={setLocatorType}
@@ -259,13 +261,10 @@ export const LocatorEditDialog: React.FC<Props> = ({
       <Col push={4}>
         {/* should be reworked to one form when we'll decide to enable css locators editing */}
         <Form.Item
-          validateStatus={locatorValidity ? "warning" : ""}
-          help={locatorValidity}
           hidden={formLocatorType !== LocatorType.cssSelector}
         >
           <TextArea
             disabled
-            className={locatorValidity.length ? "ant-input-status-warning" : ""}
             value={getLocator({ ...locator, customXpath: form.getFieldValue("locator") }, LocatorType.cssSelector)}
           />
         </Form.Item>
@@ -273,12 +272,12 @@ export const LocatorEditDialog: React.FC<Props> = ({
           hidden={formLocatorType === LocatorType.cssSelector}
           name="locator"
           rules={locatorValidationRules}
-          validateStatus={locatorValidity ? "warning" : ""}
-          help={locatorValidity}
+          validateStatus={validationStatus}
+          help={message}
           extra={renderValidationWarning()}
         >
           {/* className: antd's bug with applying class to TextArea*/}
-          <TextArea className={locatorValidity.length ? "ant-input-status-warning" : ""} />
+          <TextArea className={validationStatus ? `ant-input-status-${validationStatus}` : ""} />
         </Form.Item>
       </Col>
     </DialogWithForm>

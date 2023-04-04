@@ -18,7 +18,7 @@ import {
   LocatorCalculationPriority,
 } from "./types/locator.types";
 import { runXpathGenerationReducer } from "./reducers/runXpathGeneration.thunk";
-import { LocatorType } from "../../common/types/locatorType";
+import { LocatorType } from "../../common/types/common";
 
 const initialState: LocatorsState = {
   generationStatus: LocatorsGenerationStatus.noStatus,

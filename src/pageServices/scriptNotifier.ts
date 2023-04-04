@@ -45,11 +45,11 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       if (prevValue.type !== elementType || prevValue.name !== name) {
         const locator = selectLocatorById(state, element_id);
         locator && sendMessage.changeElementName(locator);
-      } else if (prevValue?.validity?.locator.length) {
+      } else if (prevValue?.validity?.message.length) {
         // restore previously invalid locator
         const newValue = selectLocatorById(state, element_id);
         newValue && sendMessage.addElement(newValue);
-      } else if (validity?.locator.length) {
+      } else if (validity?.message.length) {
         // delete invalid locator
         sendMessage.removeElement(prevValue);
       }

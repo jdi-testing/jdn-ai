@@ -2,11 +2,12 @@ import { chain, filter } from "lodash";
 import { connector } from "../../../pageServices/connector";
 import { ElementLibrary } from "../types/generationClasses.types";
 import { createElementName } from "../../pageObjects/utils/pageObject";
-import { Locator, LocatorValue } from "../types/locator.types";
+import { Locator, LocatorValue, Validity, LocatorTaskStatus } from "../types/locator.types";
+import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
 import { copyToClipboard, getLocatorString } from "../../../common/utils/helpers";
 import { LocatorOption } from "./constants";
 import { getXPathByPriority, getLocator } from "./locatorOutput";
-import { LocatorType } from "../../../common/types/locatorType";
+import { LocatorType } from "../../../common/types/common";
 
 export const getLocatorWithJDIAnnotation = (locator: LocatorValue): string => `@UI("${getXPathByPriority(locator)}")`;
 
@@ -91,3 +92,33 @@ export const copyLocator = (
 
   copyToClipboard(xPath);
 };
+
+export const getNewLocatorStub = (
+  taskStatus: LocatorTaskStatus,
+  pageObj: PageObjectId,
+  message: Validity["message"],
+  isCustomName: boolean,
+  locatorType: LocatorType): Locator => {
+  return {
+      elemAriaLabel: "",
+      elemId: "",
+      elemName: "",
+      elemText: "",
+      element_id: "",
+      jdnHash: "",
+      parent_id: "",
+      locator: {
+        customXpath: "",
+        fullXpath: "",
+        taskStatus,
+      },
+      name: "",
+      pageObj,
+      predicted_label: "",
+      validity: { message },
+      isCustomName,
+      locatorType,
+      type: "UIElement",
+      generate: true,
+    };
+}

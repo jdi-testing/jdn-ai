@@ -2,7 +2,7 @@ import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
 import { chain, get, isNil, last, size } from "lodash";
 import { RootState } from "../../app/store/store";
 import { locatorTaskStatus } from "../../common/constants/constants";
-import { LocatorType } from "../../common/types/locatorType";
+import { LocatorType } from "../../common/types/common";
 import { selectClassFilterByPO } from "../filter/filter.selectors";
 import { selectLocators } from "../locators/locators.selectors";
 import { Locator } from "../locators/types/locator.types";

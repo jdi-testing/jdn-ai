@@ -1,10 +1,10 @@
 import { Rule, RuleObject } from "antd/lib/form";
-import { Locator, ValidationErrorType } from "../types/locator.types";
+import { Locator, ValidationErrorType, ValidationStatus, Validity } from "../types/locator.types";
 import { evaluateXpath, equalHashes } from "./utils";
 
 export const createLocatorValidationRules = (
   isCreatingForm: boolean,
-  setLocatorValidity: React.Dispatch<React.SetStateAction<string>>,
+  setLocatorValidity: React.Dispatch<React.SetStateAction<Validity>>,
   validationEnabled: boolean,
   locators: Locator[],
   jdnHash: string
@@ -13,14 +13,14 @@ export const createLocatorValidationRules = (
     () => ({
       validator(_: RuleObject, value: string) {
         if (!validationEnabled) {
-          setLocatorValidity("");
+          setLocatorValidity({ message: "", validationStatus: ValidationStatus.WARNING});
           return Promise.resolve();
         }
         if (!value.length) {
-          setLocatorValidity(ValidationErrorType.EmptyValue);
+          setLocatorValidity({ message: ValidationErrorType.EmptyValue, validationStatus: ValidationStatus.WARNING});
           return Promise.resolve();
         }
-        return evaluateXpath(value).then((response) => {
+        return evaluateXpath(value).then((response): Promise<ValidationErrorType | void> | void => {
           const result = response[0].result;
           let length;
           let foundHash;
@@ -31,17 +31,25 @@ export const createLocatorValidationRules = (
           }
 
           if (result === ValidationErrorType.NotFound || length === 0) {
-            setLocatorValidity(ValidationErrorType.NotFound);
+            setLocatorValidity({ message: ValidationErrorType.NotFound, validationStatus: ValidationStatus.WARNING });
+            return Promise.resolve();
           } else if (length > 1) {
-            setLocatorValidity(ValidationErrorType.MultipleElements);
+            setLocatorValidity({ message: `${length} ${ValidationErrorType.MultipleElements}` as ValidationErrorType, validationStatus: ValidationStatus.ERROR});
+            return Promise.reject(new Error());
           } else if (length === 1) {
             if (foundHash !== jdnHash) {
-              if (equalHashes(foundHash, locators).length) setLocatorValidity(ValidationErrorType.DuplicatedLocator);
+              if (equalHashes(foundHash, locators).length) {
+                setLocatorValidity({ message: ValidationErrorType.DuplicatedLocator, validationStatus: ValidationStatus.ERROR});
+                return Promise.reject(new Error());
+              }
               else {
-                isCreatingForm ? setLocatorValidity("") : setLocatorValidity(ValidationErrorType.NewElement);
+                //check condition during implementing 1147
+                isCreatingForm ? setLocatorValidity({ message: "", validationStatus: ValidationStatus.SUCCESS}) : setLocatorValidity({ message: ValidationErrorType.NewElement, validationStatus: ValidationStatus.WARNING});
+                return Promise.resolve();
               }
             } else {
-              setLocatorValidity("");
+              setLocatorValidity({ message: "", validationStatus: ValidationStatus.SUCCESS});
+              return Promise.resolve();
             }
           }
         });

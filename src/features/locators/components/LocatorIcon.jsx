@@ -6,6 +6,7 @@ import WarningEditedSvg from "../assets/warning-edited.svg";
 import { locatorTaskStatus, VALIDATION_ERROR_TYPE } from "../../../common/constants/constants";
 import { PauseCircle, Trash, WarningCircle } from "phosphor-react";
 
+//remove me
 export const VALIDATION_ERROR_MESSAGES = {
   [VALIDATION_ERROR_TYPE.DUPLICATED_LOCATOR]: "The locator for this element already exists.", // warn
   [VALIDATION_ERROR_TYPE.EMPTY_VALUE]: "The locator was not found on the page.",
@@ -16,17 +17,16 @@ export const VALIDATION_ERROR_MESSAGES = {
 
 export const isEdited = (locator) => locator.customXpath;
 const isValidLocator = (validity) =>
-  !validity?.locator.length || validity.locator === VALIDATION_ERROR_TYPE.NEW_ELEMENT;
+  !validity?.message.length || validity.message === VALIDATION_ERROR_TYPE.NEW_ELEMENT;
 
 export const LocatorIcon = ({ validity, locator, deleted }) => {
-  const getTooltipText = () => validity?.locator || "Edited";
+  const getTooltipText = () => validity?.message || "Edited";
 
   const startedIcon = <Spin size="small" />;
   const revokedIcon = <PauseCircle size={14} color="#d81515" className="jdn__locatorsList-status" />;
   const deletedIcon = <Trash size={14} color="#9a9da9" className="jdn__locatorsList-status" />;
 
   const failureIcon = (
-    // how should it be if there is no errorMessage
     <Tooltip title={locator.errorMessage ?? "Locator generation was failed"}>
       <WarningCircle size={14} color="#d81515" className="jdn__locatorsList-status" />
     </Tooltip>

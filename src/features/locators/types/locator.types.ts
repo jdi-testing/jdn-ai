@@ -1,4 +1,4 @@
-import { LocatorType } from "../../../common/types/locatorType";
+import { LocatorType } from "../../../common/types/common";
 import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
 import { ElementClass } from "./generationClasses.types";
 
@@ -35,6 +35,13 @@ export enum LocatorCalculationPriority {
   Decreased = "DECREASED",
 }
 
+export enum ValidationStatus {
+  VALIDATING = "validating",
+  SUCCESS = "success",
+  WARNING = "warning",
+  ERROR = "error"
+};
+
 export interface LocatorsState {
   generationStatus: LocatorsGenerationStatus;
   status: IdentificationStatus;
@@ -48,12 +55,13 @@ export interface LocatorValue {
   fullXpath: string;
   robulaXpath?: string;
   taskStatus?: LocatorTaskStatus;
-  errorMessage?: string;
+  errorMessage?: string; // is it the same with Validity.message?
   output?: string;
 }
 
 export interface Validity {
-  locator: string;
+  message: ValidationErrorType | "";
+  validationStatus?: ValidationStatus | "",
 }
 
 export interface Locator extends PredictedEntity {
@@ -86,12 +94,12 @@ export interface PredictedEntity {
 export enum ValidationErrorType {
   DuplicatedName = "This name already exists in the page object.",
   DuplicatedPageObjName = "This name already exists.",
-  DuplicatedLocator = "The locator for this element already exists.", // warn
+  DuplicatedLocator = "The locator for this element already exists.", // error
   InvalidName = "This name is not valid.",
   InvalidJavaClass = "This is not a valid Java class name.",
   EmptyValue = "Please fill out this field.",
   LongName = "Max name length is 60 characters.",
-  MultipleElements = "elements were found with this locator", // warn
+  MultipleElements = "elements were found with this locator", // error
   NewElement = "The locator leads to the new element.", // success
   NotFound = "The locator was not found on the page.", // warn
 }

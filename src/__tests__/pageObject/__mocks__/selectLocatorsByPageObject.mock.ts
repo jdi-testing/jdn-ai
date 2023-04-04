@@ -1,4 +1,4 @@
-import { LocatorType } from "../../../common/types/locatorType";
+import { LocatorType } from "../../../common/types/common";
 import { PageObject } from "../../../features/pageObjects/types/pageObjectSlice.types";
 
 export const pageObject0 = {
@@ -96,7 +96,7 @@ export const getRootState = (_pageObject: PageObject) => ({
           children: ["3365961729510597382209820079_0", "5642356970510597386143211636_0"],
           active: true,
           validity: {
-            locator: "The locator was not found on the page.",
+            message: "The locator was not found on the page.",
           },
           isCustomName: false,
           isCustomLocator: true,
@@ -177,7 +177,7 @@ export const selectLocators = (pageObject: PageObject) => [
     children: ["3365961729510597382209820079_0", "5642356970510597386143211636_0"],
     active: true,
     validity: {
-      locator: "The locator was not found on the page.",
+      message: "The locator was not found on the page.",
     },
     isCustomName: false,
     isCustomLocator: true,
