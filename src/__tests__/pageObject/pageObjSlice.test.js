@@ -15,8 +15,7 @@ describe("pageObject reducers", () => {
         { result: { title: "HomePage", url: "https://jdi-testing.github.io/jdi-light/contacts.html" } },
       ]);
 
-    store.dispatch(addPageObj
-      ());
+    store.dispatch(addPageObj());
     store.dispatch(addPageObj());
     store.dispatch(addPageObj());
   });
