@@ -1,11 +1,11 @@
-import { findSubstring } from "../../../common/utils/helpers";
+import { findSubstringWithinTerms } from "../../../common/utils/helpers";
 import { ElementLibrary } from "../../locators/types/generationClasses.types";
 import { PageObject } from "../types/pageObjectSlice.types";
 
 export const editPomContent = (content: string, po: PageObject): string => {
   let newContent = content;
   if (po.library === ElementLibrary.MUI && content.indexOf(`<!-- If you need Material UI library -->`) === -1) {
-    const muiBlock = findSubstring(
+    const muiBlock = findSubstringWithinTerms(
       newContent,
       "<!-- If you need Material UI library",
       /<\/dependency>[\n\s\ta-zA-Z]*-->/
@@ -20,7 +20,7 @@ export const editPomContent = (content: string, po: PageObject): string => {
     );
     newContent = newContent.replace(muiBlock, newMuiBlock);
   } else if (po.library === ElementLibrary.Vuetify) {
-    const vuetifyBlock = findSubstring(
+    const vuetifyBlock = findSubstringWithinTerms(
       newContent,
       "<!-- If you need Vuetify library",
       /<\/dependency>[\n\s\ta-zA-Z]*-->/
