@@ -119,24 +119,28 @@ export const LocatorEditDialog: React.FC<Props> = ({
     let newLocator: Locator = getNewLocatorStub(
       LocatorTaskStatus.SUCCESS,
       pageObjectId,
-      message,
+      { message, validationStatus },
       isEditedName,
       formLocatorType
     );
 
-    // we need validation here in case if user didn't touch locator field
+    const isLocatorFieldTouched = form.isFieldTouched("locator");
+
     await form
       .validateFields()
-      .then(
-        ({ name, type, locator }) =>
-          (newLocator = {
-            ...newLocator,
-            locator: { ...newLocator.locator, customXpath: locator },
-            predicted_label: type.toLowerCase(),
-            name,
-            type,
-          })
-      )
+      .then(({ name, type, locator }) => {
+        newLocator = {
+          ...newLocator,
+          locator: { ...newLocator.locator, customXpath: locator },
+          predicted_label: type.toLowerCase(),
+          // in case if user didn't touch locator field to avoid forceUpdate
+          validity: isLocatorFieldTouched
+            ? { message, validationStatus }
+            : { message: ValidationErrorType.NotFound, validationStatus: ValidationStatus.WARNING },
+          name,
+          type,
+        };
+      })
       .catch((err) => console.log(err));
 
     switch (validationStatus) {
@@ -167,7 +171,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
     dispatch(addLocatorsToPageObj([newLocator.element_id]));
     dispatch(setScrollToLocator(newLocator.element_id));
 
-    !validationStatus && sendMessage.addElement(newLocator);
+    isLocatorFieldTouched && sendMessage.addElement(newLocator);
 
     form.resetFields();
     setIsModalOpen(false);
@@ -182,7 +186,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
             ...values,
             element_id,
             library,
-            validity: { message },
+            validity: { message, validationStatus },
             isCustomName: isEditedName,
           })
         );

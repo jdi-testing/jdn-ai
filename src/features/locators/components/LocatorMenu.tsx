@@ -16,7 +16,7 @@ import {
   copyLocatorOption,
 } from "../../../common/components/menu/menuOptions";
 import { isProgressStatus, locatorGenerationController } from "../utils/locatorGenerationController";
-import { Locator, LocatorCalculationPriority, LocatorTaskStatus } from "../types/locator.types";
+import { Locator, LocatorCalculationPriority, LocatorTaskStatus, ValidationStatus } from "../types/locator.types";
 import { setCalculationPriority, toggleDeleted } from "../locators.slice";
 import { copyLocator } from "../utils/utils";
 import { LocatorOption } from "../utils/constants";
@@ -117,7 +117,7 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, chil
                   getRerunGeneration(60),
                   getRerunGeneration(3600),
                 ],
-                !!validity?.message.length
+                validity?.validationStatus === ValidationStatus.WARNING
               ),
             ]
           : []),

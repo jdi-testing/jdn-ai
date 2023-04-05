@@ -96,7 +96,7 @@ export const copyLocator = (
 export const getNewLocatorStub = (
   taskStatus: LocatorTaskStatus,
   pageObj: PageObjectId,
-  message: Validity["message"],
+  validity: Validity,
   isCustomName: boolean,
   locatorType: LocatorType
 ): Locator => {
@@ -116,8 +116,10 @@ export const getNewLocatorStub = (
     name: "",
     pageObj,
     predicted_label: "",
-    validity: { message },
+    validity,
     isCustomName,
+    isCustomLocator: true,
+    isCreatedByUser: true,
     locatorType,
     type: "UIElement",
     generate: true,

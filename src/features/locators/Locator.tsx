@@ -42,7 +42,18 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const { element_id, type, name, locator, generate, validity, deleted, active } = element;
+  const {
+    element_id,
+    type,
+    name,
+    locator,
+    generate,
+    validity,
+    deleted,
+    active,
+    isCustomLocator,
+    isCreatedByUser,
+  } = element;
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -136,7 +147,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
                   searchState === SearchState.Hidden ? " jdn__xpath_item--disabled" : ""
                 }`}
               >
-                <LocatorIcon {...{ validity, locator, deleted }} />
+                <LocatorIcon {...{ validity, locator, deleted, isCustomLocator, isCreatedByUser }} />
                 {renderColorizedString()}
               </Text>
               {searchState !== SearchState.Hidden ? (

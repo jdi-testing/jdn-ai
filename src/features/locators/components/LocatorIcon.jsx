@@ -15,11 +15,11 @@ export const VALIDATION_ERROR_MESSAGES = {
   [VALIDATION_ERROR_TYPE.NOT_FOUND]: "The locator was not found on the page.", // warn
 };
 
-export const isEdited = (locator) => locator.customXpath;
+//move to utils
 const isValidLocator = (validity) =>
   !validity?.message.length || validity.message === VALIDATION_ERROR_TYPE.NEW_ELEMENT;
 
-export const LocatorIcon = ({ validity, locator, deleted }) => {
+export const LocatorIcon = ({ validity, locator, deleted, isCustomLocator, isCreatedByUser }) => {
   const getTooltipText = () => validity?.message || "Edited";
 
   const startedIcon = <Spin size="small" />;
@@ -49,8 +49,11 @@ export const LocatorIcon = ({ validity, locator, deleted }) => {
 
     switch (locator.taskStatus) {
       case locatorTaskStatus.SUCCESS: {
-        if (isEdited(locator)) {
-          return isValidLocator(validity) ? successEditedIcon : warningEditedIcon;
+        if (isCustomLocator) {
+          if (isValidLocator(validity) && !isCreatedByUser) {
+            return successEditedIcon;
+          } else if (!isValidLocator(validity)) return warningEditedIcon;
+          return null;
         } else {
           return null;
         }
