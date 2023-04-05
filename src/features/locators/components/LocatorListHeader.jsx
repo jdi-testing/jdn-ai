@@ -42,9 +42,9 @@ import {
   copyLocatorOption,
   retry,
 } from "../../../common/components/menu/menuOptions";
-import { locatorGenerationController } from "../../locators/utils/locatorGenerationController";
-import { copyLocator } from "../../locators/utils/utils";
-import { LocatorOption } from "../../locators/utils/constants";
+import { locatorGenerationController } from "../utils/locatorGenerationController";
+import { copyLocator } from "../utils/utils";
+import { LocatorOption, newLocatorStub } from "../utils/constants";
 import { LocatorsSearch } from "./LocatorsSearch";
 import { rerunGeneration } from "../reducers/rerunGeneration.thunk";
 import { stopGenerationGroup } from "../reducers/stopGenerationGroup.thunk";
@@ -238,7 +238,7 @@ export const LocatorListHeader = ({ render }) => {
       </Row>
       {render({ expandAll, setExpandAll, searchString })}
       {isCreateModalOpen ? (
-        <LocatorEditDialog isCreatingForm isModalOpen={isCreateModalOpen} setIsModalOpen={setCreateModalOpen} />
+        <LocatorEditDialog isCreatingForm isModalOpen={isCreateModalOpen} setIsModalOpen={setCreateModalOpen} { ...newLocatorStub }/>
       ) : null}
     </React.Fragment>
   );

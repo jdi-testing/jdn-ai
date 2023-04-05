@@ -48,12 +48,12 @@ export const generateId = (): string => {
   );
 };
 
-export const getElementFullXpath = (foundElement: string): string => {
+export const getElementFullXpath = async(foundElement: string): Promise<string> => {
   let fullXpath = "";
   const parser = new DOMParser();
   const parsedElement = parser.parseFromString(foundElement, "text/html").body.firstChild;
 
-  sendMessage
+  await sendMessage
     .getElementXpath(parsedElement as Element)
     .then((xPath: string) => {
       if (xPath) fullXpath = xPath;

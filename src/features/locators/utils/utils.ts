@@ -2,8 +2,7 @@ import { chain, filter } from "lodash";
 import { connector } from "../../../pageServices/connector";
 import { ElementLibrary } from "../types/generationClasses.types";
 import { createElementName } from "../../pageObjects/utils/pageObject";
-import { Locator, LocatorValue, Validity, LocatorTaskStatus } from "../types/locator.types";
-import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
+import { Locator, LocatorValue } from "../types/locator.types";
 import { copyToClipboard, getLocatorString } from "../../../common/utils/helpers";
 import { LocatorOption } from "./constants";
 import { getXPathByPriority, getLocator } from "./locatorOutput";
@@ -91,37 +90,4 @@ export const copyLocator = (
   }
 
   copyToClipboard(xPath);
-};
-
-export const getNewLocatorStub = (
-  taskStatus: LocatorTaskStatus,
-  pageObj: PageObjectId,
-  validity: Validity,
-  isCustomName: boolean,
-  locatorType: LocatorType
-): Locator => {
-  return {
-    elemAriaLabel: "",
-    elemId: "",
-    elemName: "",
-    elemText: "",
-    element_id: "",
-    jdnHash: "",
-    parent_id: "",
-    locator: {
-      customXpath: "",
-      fullXpath: "",
-      taskStatus,
-    },
-    name: "",
-    pageObj,
-    predicted_label: "",
-    validity,
-    isCustomName,
-    isCustomLocator: true,
-    isCreatedByUser: true,
-    locatorType,
-    type: "UIElement",
-    generate: true,
-  };
 };
