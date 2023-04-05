@@ -151,7 +151,10 @@ export const LocatorEditDialog: React.FC<Props> = ({
       case ValidationStatus.SUCCESS:
         await evaluateXpath(newLocator.locator.customXpath!)
           .then((response) => JSON.parse(response[0].result))
-          .then(async ({ foundHash, foundElement }) => ({ fullXpath: await getElementFullXpath(foundElement), foundHash }))
+          .then(async ({ foundHash, foundElement }) => ({
+            fullXpath: await getElementFullXpath(foundElement),
+            foundHash,
+          }))
           .then(({ fullXpath, foundHash }) => {
             newLocator = {
               ...newLocator,

@@ -238,7 +238,12 @@ export const LocatorListHeader = ({ render }) => {
       </Row>
       {render({ expandAll, setExpandAll, searchString })}
       {isCreateModalOpen ? (
-        <LocatorEditDialog isCreatingForm isModalOpen={isCreateModalOpen} setIsModalOpen={setCreateModalOpen} { ...newLocatorStub }/>
+        <LocatorEditDialog
+          isCreatingForm
+          isModalOpen={isCreateModalOpen}
+          setIsModalOpen={setCreateModalOpen}
+          {...newLocatorStub}
+        />
       ) : null}
     </React.Fragment>
   );
