@@ -71,4 +71,4 @@ export const isFilteredSelect = (input: string, option: any) =>
 export const isStringContainsNumbers = (string: string) => {
   const regex = /\d/; // Regular expression to match any digit (0-9)
   return regex.test(string);
-}
+};

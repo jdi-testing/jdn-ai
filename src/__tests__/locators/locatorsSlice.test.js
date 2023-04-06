@@ -29,6 +29,7 @@ describe("changeLocatorAttributes reducer", () => {
         locator: "//*[@class='sidebar-menu left']",
         name: "myAwesomeLocator",
         type: "ProgressBar",
+        message: "",
         library: ElementLibrary.MUI,
       })
     );
@@ -39,13 +40,14 @@ describe("changeLocatorAttributes reducer", () => {
     expect(changeElementNameSpy).toHaveBeenCalledWith(locator);
   });
 
-  test("din't edit type and name", () => {
+  test("didn't edit type and name", () => {
     store.dispatch(
       changeLocatorAttributes({
         element_id: "8736312404689610766421832473",
         locator: "//*[@class='sidebar-menu left']",
         name: "myAwesomeLocator",
         type: "ProgressBar",
+        message: "",
         library: ElementLibrary.MUI,
       })
     );
@@ -62,6 +64,7 @@ describe("changeLocatorAttributes reducer", () => {
         element_id: "8736312404689610766421832473",
         locator: "//*[@class='sidebar-menu left']",
         name: "myAwesomeLocator",
+        message: "",
         type: "Dialog",
         library: ElementLibrary.MUI,
       })
@@ -81,6 +84,7 @@ describe("changeLocatorAttributes reducer", () => {
         name: "myAwesomeLocator",
         isCustomName: true,
         type: "Dialog",
+        message: "",
         library: ElementLibrary.MUI,
       })
     );
