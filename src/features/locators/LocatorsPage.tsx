@@ -8,7 +8,7 @@ import { selectCurrentPage } from "../../app/main.selectors";
 import { changePageBack, setScriptMessage } from "../../app/main.slice";
 import { Breadcrumbs } from "../../common/components/breadcrumbs/Breadcrumbs";
 import { customConfirm } from "../../common/components/CustomConfirm";
-import { PageType } from "../../app/types/mainSlice.types";
+import { pageType } from "../../common/constants/constants";
 import {
   selectDeletedGenerateByPageObj,
   selectCalculatedGenerateByPageObj,
@@ -106,7 +106,7 @@ export const LocatorsPage = () => {
 
     return (
       <React.Fragment>
-        {currentPage === PageType.LocatorsList ? (
+        {currentPage === pageType.locatorsList ? (
           <Button onClick={handleBack} className="jdn__buttons">
             Back
           </Button>
@@ -116,7 +116,7 @@ export const LocatorsPage = () => {
   };
 
   const renderConfirmButton = () => {
-    if (currentPage === PageType.LocatorsList) {
+    if (currentPage === pageType.locatorsList) {
       const checkedLocators = useSelector(selectCheckedLocators);
       const isDisabled = !size(inProgressGenerate) && !size(calculatedGenerate);
       return (

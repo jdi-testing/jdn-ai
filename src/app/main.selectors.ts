@@ -1,8 +1,8 @@
 import { last } from "lodash";
-import { PageType } from "../app/types/mainSlice.types";
+import { pageType } from "../common/constants/constants";
 import { Page } from "./types/mainSlice.types";
 import { RootState } from "./store/store";
 
 export const selectCurrentPage = (state: RootState) => {
-  return last(state.main.pageHistory) || ({ page: PageType.PageObject } as Page);
+  return last(state.main.pageHistory) || ({ page: pageType.pageObject } as Page);
 };

@@ -1,5 +1,6 @@
 import { Middleware } from "@reduxjs/toolkit";
 import { compact, isNil, pick, size } from "lodash";
+import { pageType } from "../common/constants/constants";
 import { selectLocatorById } from "../features/locators/locators.selectors";
 import { Locator, LocatorTaskStatus } from "../features/locators/types/locator.types";
 import { selectLocatorsByPageObject, selectValidLocators } from "../features/pageObjects/pageObject.selectors";
@@ -19,10 +20,10 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
   switch (type) {
     case "main/changePage":
       const page = selectCurrentPage(state);
-      if (page.page === PageType.PageObject) sendMessage.killHighlight();
+      if (page.page === pageType.pageObject) sendMessage.killHighlight();
       break;
     case "main/changePageBack":
-      if (selectCurrentPage(state).page === PageType.PageObject) sendMessage.killHighlight();
+      if (selectCurrentPage(state).page === pageType.pageObject) sendMessage.killHighlight();
       break;
   }
 

@@ -24,6 +24,11 @@ export const VALIDATION_ERROR_TYPE = {
   NOT_FOUND: "NOT_FOUND", // warn
 };
 
+export const pageType = {
+  pageObject: "pageObject",
+  locatorsList: "locatorsList",
+};
+
 export const copyTitle = {
   Copy: "Copy",
   Copied: "Copied",
