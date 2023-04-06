@@ -3,25 +3,27 @@ import { isNull, map, size, toLower } from "lodash";
 import {
   pageObjAdapter,
   selectLastElementLibrary,
+  selectLastLocatorType,
   selectMaxId,
   simpleSelectPageObjects,
 } from "../pageObject.selectors";
 import { defaultLibrary } from "../../locators/types/generationClasses.types";
-import { getPageAttributes, isPONameUnique } from "./pageObject";
-import { getClassName } from "./pageObjectTemplate";
+import { getPageAttributes, isPONameUnique } from "../utils/pageObject";
+import { getClassName } from "../utils/pageObjectTemplate";
 
 export const addPageObj = createAsyncThunk("pageObject/addPageObj", async (payload, thunkAPI) => {
   const res = await getPageAttributes();
   const { title, url } = res[0].result;
   const className = getClassName(title);
   const lastSelectedLibrary = selectLastElementLibrary(thunkAPI.getState());
-  return { className, url, lastSelectedLibrary };
+  const lastSelectedLocatorType = selectLastLocatorType(thunkAPI.getState());
+  return { className, url, lastSelectedLibrary, lastSelectedLocatorType };
 });
 
 export const addPageObjReducer = (builder) => {
   return builder
     .addCase(addPageObj.fulfilled, (state, { payload }) => {
-      const { className, url, lastSelectedLibrary } = payload;
+      const { className, url, lastSelectedLibrary, lastSelectedLocatorType } = payload;
 
       // create unique PO name
       let maxExistingId = selectMaxId(state);
@@ -50,6 +52,7 @@ export const addPageObjReducer = (builder) => {
         pathname,
         search,
         origin,
+        ...(lastSelectedLocatorType ? { locatorType: lastSelectedLocatorType } : {}),
       });
       state.currentPageObject = id;
     })

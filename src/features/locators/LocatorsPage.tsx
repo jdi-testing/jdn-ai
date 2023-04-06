@@ -19,13 +19,12 @@ import {
 } from "../pageObjects/pageObject.selectors";
 import { clearLocators } from "../pageObjects/pageObject.slice";
 import { locatorGenerationController } from "./utils/locatorGenerationController";
-import { changeIdentificationStatus, removeLocators, restoreLocators } from "./locators.slice";
+import { removeLocators, restoreLocators } from "./locators.slice";
 import { LocatorsTree, LocatorTreeProps } from "./components/LocatorsTree";
 import { LocatorListHeader } from "./components/LocatorListHeader";
 import { Filter } from "../filter/Filter";
 import { useCalculateHeaderSize } from "./utils/useCalculateHeaderSize";
 import { useOverlay } from "./utils/useOverlay";
-import { IdentificationStatus } from "./types/locator.types";
 
 interface Props {
   alreadyGenerated?: boolean;
@@ -50,7 +49,6 @@ export const LocatorsPage: React.FC<Props> = ({ alreadyGenerated }) => {
   useOverlay(alreadyGenerated || false);
 
   const pageBack = () => {
-    dispatch(changeIdentificationStatus(IdentificationStatus.noStatus));
     dispatch(setScriptMessage({}));
     dispatch(changePageBack());
   };

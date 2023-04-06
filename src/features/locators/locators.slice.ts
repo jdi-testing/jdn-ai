@@ -117,9 +117,6 @@ const locatorsSlice = createSlice({
         locatorsAdapter.upsertMany(state, newValue as Locator[]);
       }
     },
-    setGenerationStatus(state, { payload }) {
-      state.generationStatus = payload;
-    },
     setScrollToLocator(state, { payload: element_id }: PayloadAction<ElementId>) {
       state.scrollToLocator = element_id;
     },

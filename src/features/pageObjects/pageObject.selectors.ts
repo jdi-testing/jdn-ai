@@ -200,6 +200,8 @@ export const selectEmptyPageObjects = createSelector(
 
 export const selectLastElementLibrary = createSelector(selectPageObjects, (pageObjects) => last(pageObjects)?.library);
 
+export const selectLastLocatorType = createSelector(selectPageObjects, (pageObjects) => last(pageObjects)?.locatorType);
+
 export const selectActiveLocators = createSelector(selectFilteredLocators, (locators) =>
   locators.filter((_loc) => _loc.active)
 );

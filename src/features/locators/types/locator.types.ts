@@ -73,16 +73,17 @@ export enum LocatorValidationWarnings {
 }
 
 export type LocatorValidationErrorType = LocatorValidationErrors | LocatorValidationWarnings | "";
+export type JDNHash = string;
 
 export interface Locator extends PredictedEntity {
-  children?: string[];
+  children?: ElementId[];
   deleted?: boolean;
   elemAriaLabel?: string;
   elemId?: string;
   elemName?: string;
   elemText?: string;
   generate: boolean;
-  jdnHash: string;
+  jdnHash: JDNHash;
   locator: LocatorValue;
   name: string;
   active?: boolean;
@@ -91,7 +92,7 @@ export interface Locator extends PredictedEntity {
   isCreatedByUser?: boolean; // we need it to locator icon conditional render
   locatorType?: LocatorType;
   pageObj: PageObjectId;
-  parent_id: string;
+  parent_id: JDNHash;
   priority?: LocatorCalculationPriority;
   type: ElementClass;
   message: LocatorValidationErrorType;
