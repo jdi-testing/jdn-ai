@@ -101,15 +101,13 @@ describe("changeLocatorAttributes reducer", () => {
         locator: "//*[@class='any-class112']",
         name: "myAwesomeLocator",
         type: "Dialog",
-        validity: {
-          message: "NOT_FOUND",
-        },
+        message: "NOT_FOUND",
         library: ElementLibrary.MUI,
       })
     );
     const locator = selectLocatorById(store.getState(), "8736312404689610766421832473");
     expect(locator).toBeDefined();
-    expect(locator.validity.message).toBe("NOT_FOUND");
+    expect(locator.message).toBe("NOT_FOUND");
 
     expect(removeElementSpy).toHaveBeenCalled();
     expect(removeElementSpy).toHaveBeenCalledWith(oldLocator);

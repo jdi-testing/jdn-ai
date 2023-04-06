@@ -55,14 +55,24 @@ export interface LocatorValue {
   fullXpath: string;
   robulaXpath?: string;
   taskStatus?: LocatorTaskStatus;
-  errorMessage?: string; // is it the same with Validity.message?
+  errorMessage?: string; // comes during the locator generation
   output?: string;
 }
 
-export interface Validity {
-  message: ValidationErrorType | "";
-  validationStatus?: ValidationStatus | "";
+export enum LocatorValidationErrors {
+  DuplicatedName = "This name already exists in the page object.",
+  DuplicatedLocator = "The locator for this element already exists.",
+  InvalidName = "This name is not valid.",
+  MultipleElements = "elements were found with this locator",
 }
+
+export enum LocatorValidationWarnings {
+  EmptyValue = "Please fill out this field.",
+  NotFound = "The locator was not found on the page.",
+  NewElement = "The locator leads to the new element.",
+}
+
+export type LocatorValidationErrorType = LocatorValidationErrors | LocatorValidationWarnings | "";
 
 export interface Locator extends PredictedEntity {
   children?: string[];
@@ -84,23 +94,10 @@ export interface Locator extends PredictedEntity {
   parent_id: string;
   priority?: LocatorCalculationPriority;
   type: ElementClass;
-  validity?: Validity;
+  message: LocatorValidationErrorType;
 }
 
 export interface PredictedEntity {
   element_id: ElementId;
   predicted_label: string;
-}
-
-export enum ValidationErrorType {
-  DuplicatedName = "This name already exists in the page object.",
-  DuplicatedPageObjName = "This name already exists.",
-  DuplicatedLocator = "The locator for this element already exists.", // error
-  InvalidName = "This name is not valid.",
-  InvalidJavaClass = "This is not a valid Java class name.",
-  EmptyValue = "Please fill out this field.",
-  LongName = "Max name length is 60 characters.",
-  MultipleElements = "elements were found with this locator", // error
-  NewElement = "The locator leads to the new element.", // success
-  NotFound = "The locator was not found on the page.", // warn
 }

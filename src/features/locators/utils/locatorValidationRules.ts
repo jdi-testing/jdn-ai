@@ -1,10 +1,15 @@
 import { Rule, RuleObject } from "antd/lib/form";
-import { Locator, ValidationErrorType, ValidationStatus, Validity } from "../types/locator.types";
+import {
+  Locator,
+  LocatorValidationErrors,
+  LocatorValidationWarnings,
+  LocatorValidationErrorType,
+} from "../types/locator.types";
 import { evaluateXpath, equalHashes } from "./utils";
 
 export const createLocatorValidationRules = (
   isCreatingForm: boolean,
-  setLocatorValidity: React.Dispatch<React.SetStateAction<Validity>>,
+  setValidationMessage: React.Dispatch<React.SetStateAction<LocatorValidationErrorType>>,
   validationEnabled: boolean,
   locators: Locator[],
   jdnHash: string
@@ -13,52 +18,43 @@ export const createLocatorValidationRules = (
     () => ({
       validator(_: RuleObject, value: string) {
         if (!validationEnabled) {
-          setLocatorValidity({ message: "", validationStatus: ValidationStatus.WARNING });
+          setValidationMessage(""); //validationStatus: WARNING
           return Promise.resolve();
         }
         if (!value.length) {
-          setLocatorValidity({ message: ValidationErrorType.EmptyValue, validationStatus: ValidationStatus.WARNING });
+          setValidationMessage(LocatorValidationWarnings.EmptyValue); //validationStatus: WARNING
           return Promise.resolve();
         }
-        return evaluateXpath(value).then((response): Promise<ValidationErrorType | void> | void => {
+        return evaluateXpath(value).then((response): Promise<LocatorValidationErrorType | void> | void => {
           const result = response[0].result;
           let length;
           let foundHash;
 
-          if (result !== ValidationErrorType.NotFound) {
+          if (result !== LocatorValidationWarnings.NotFound) {
             length = JSON.parse(result).length;
             foundHash = JSON.parse(result).foundHash;
           }
 
-          if (result === ValidationErrorType.NotFound || length === 0) {
-            setLocatorValidity({ message: ValidationErrorType.NotFound, validationStatus: ValidationStatus.WARNING });
+          if (result === LocatorValidationWarnings.NotFound || length === 0) {
+            setValidationMessage(LocatorValidationWarnings.NotFound); //validationStatus: WARNING
             return Promise.resolve();
           } else if (length > 1) {
-            setLocatorValidity({
-              message: `${length} ${ValidationErrorType.MultipleElements}` as ValidationErrorType,
-              validationStatus: ValidationStatus.ERROR,
-            });
+            setValidationMessage(`${length} ${LocatorValidationErrors.MultipleElements}` as LocatorValidationErrorType); //validationStatus: ERROR;
             return Promise.reject(new Error());
           } else if (length === 1) {
             if (foundHash !== jdnHash) {
               if (equalHashes(foundHash, locators).length) {
-                setLocatorValidity({
-                  message: ValidationErrorType.DuplicatedLocator,
-                  validationStatus: ValidationStatus.ERROR,
-                });
+                setValidationMessage(LocatorValidationErrors.DuplicatedLocator); //validationStatus: ERROR
                 return Promise.reject(new Error());
               } else {
                 //check condition during implementing 1147
                 isCreatingForm
-                  ? setLocatorValidity({ message: "", validationStatus: ValidationStatus.SUCCESS })
-                  : setLocatorValidity({
-                      message: ValidationErrorType.NewElement,
-                      validationStatus: ValidationStatus.WARNING,
-                    });
+                  ? setValidationMessage("") //validationStatus: SUCCESS
+                  : setValidationMessage(LocatorValidationWarnings.NewElement); //validationStatus: WARNING
                 return Promise.resolve();
               }
             } else {
-              setLocatorValidity({ message: "", validationStatus: ValidationStatus.SUCCESS });
+              setValidationMessage(""); //validationStatus: SUCCESS
               return Promise.resolve();
             }
           }

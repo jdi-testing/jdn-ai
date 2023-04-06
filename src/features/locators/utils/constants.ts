@@ -27,6 +27,7 @@ export const newLocatorStub: Locator = {
     taskStatus: LocatorTaskStatus.SUCCESS,
   },
   name: "",
+  message: "",
   pageObj: 0,
   predicted_label: "",
   isCustomName: true,

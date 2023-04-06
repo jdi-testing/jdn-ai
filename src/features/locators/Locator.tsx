@@ -48,7 +48,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
     name,
     locator,
     generate,
-    validity,
+    message,
     deleted,
     active,
     isCustomLocator,
@@ -147,7 +147,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
                   searchState === SearchState.Hidden ? " jdn__xpath_item--disabled" : ""
                 }`}
               >
-                <LocatorIcon {...{ validity, locator, deleted, isCustomLocator, isCreatedByUser }} />
+                <LocatorIcon {...{ message, locator, deleted, isCustomLocator, isCreatedByUser }} />
                 {renderColorizedString()}
               </Text>
               {searchState !== SearchState.Hidden ? (

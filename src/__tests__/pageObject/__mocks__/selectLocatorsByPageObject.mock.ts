@@ -95,9 +95,7 @@ export const getRootState = (_pageObject: PageObject) => ({
           parent_id: "",
           children: ["3365961729510597382209820079_0", "5642356970510597386143211636_0"],
           active: true,
-          validity: {
-            message: "The locator was not found on the page.",
-          },
+          message: "The locator was not found on the page.",
           isCustomName: false,
           isCustomLocator: true,
           generate: true,
@@ -176,9 +174,7 @@ export const selectLocators = (pageObject: PageObject) => [
     parent_id: "",
     children: ["3365961729510597382209820079_0", "5642356970510597386143211636_0"],
     active: true,
-    validity: {
-      message: "The locator was not found on the page.",
-    },
+    message: "The locator was not found on the page.",
     isCustomName: false,
     isCustomLocator: true,
     generate: true,

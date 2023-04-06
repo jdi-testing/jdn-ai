@@ -1,5 +1,5 @@
 import { cloneDeep } from "lodash";
-import { Locator, LocatorValue, ValidationErrorType } from "../../features/locators/types/locator.types";
+import { Locator, LocatorValue } from "../../features/locators/types/locator.types";
 import { ElementLibrary, ElementClass } from "../../features/locators/types/generationClasses.types";
 import { sendMessage } from "../../pageServices/connector";
 
@@ -36,8 +36,6 @@ export const convertToListWithChildren = (_list: Array<Locator>) => {
   return list;
 };
 
-export const isErrorValidationType = (type: string) => ValidationErrorType.hasOwnProperty(type);
-
 export const isMacPlatform = (param: Window) => param.navigator?.userAgent.indexOf("Mac") != -1;
 
 export const generateId = (): string => {
@@ -65,3 +63,8 @@ export const getElementFullXpath = async (foundElement: string): Promise<string>
 
 export const isFilteredSelect = (input: string, option: any) =>
   (option?.value?.toString() ?? "").toLowerCase().includes(input.toLowerCase());
+
+export const isStringContainsNumbers = (string: string) => {
+  const regex = /\d/; // Regular expression to match any digit (0-9)
+  return regex.test(string);
+};

@@ -2,11 +2,19 @@ import { chain, filter } from "lodash";
 import { connector } from "../../../pageServices/connector";
 import { ElementLibrary } from "../types/generationClasses.types";
 import { createElementName } from "../../pageObjects/utils/pageObject";
-import { Locator, LocatorValue } from "../types/locator.types";
+import {
+  Locator,
+  LocatorValue,
+  LocatorValidationWarnings,
+  LocatorValidationErrors,
+  LocatorValidationErrorType,
+  ValidationStatus,
+} from "../types/locator.types";
 import { copyToClipboard, getLocatorString } from "../../../common/utils/helpers";
 import { LocatorOption } from "./constants";
 import { getXPathByPriority, getLocator } from "./locatorOutput";
 import { LocatorType } from "../../../common/types/common";
+import { isStringContainsNumbers } from "../../../common/utils/helpers";
 
 export const getLocatorWithJDIAnnotation = (locator: LocatorValue): string => `@UI("${getXPathByPriority(locator)}")`;
 
@@ -90,4 +98,18 @@ export const copyLocator = (
   }
 
   copyToClipboard(xPath);
+};
+
+export const getLocatorValidationStatus = (message: LocatorValidationErrorType): ValidationStatus | undefined => {
+  switch (true) {
+    case Object.values(LocatorValidationErrors).includes(message as LocatorValidationErrors) ||
+      isStringContainsNumbers(message):
+      return ValidationStatus.ERROR;
+    case Object.values(LocatorValidationWarnings).includes(message as LocatorValidationWarnings):
+      return ValidationStatus.WARNING;
+    case !"":
+      return ValidationStatus.SUCCESS;
+    default:
+      return;
+  }
 };

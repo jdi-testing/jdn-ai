@@ -16,11 +16,10 @@ export const VALIDATION_ERROR_MESSAGES = {
 };
 
 //move to utils
-const isValidLocator = (validity) =>
-  !validity?.message.length || validity.message === VALIDATION_ERROR_TYPE.NEW_ELEMENT;
+const isValidLocator = (message) => !message.length || message === VALIDATION_ERROR_TYPE.NEW_ELEMENT;
 
-export const LocatorIcon = ({ validity, locator, deleted, isCustomLocator, isCreatedByUser }) => {
-  const getTooltipText = () => validity?.message || "Edited";
+export const LocatorIcon = ({ message, locator, deleted, isCustomLocator, isCreatedByUser }) => {
+  const getTooltipText = () => message || "Edited";
 
   const startedIcon = <Spin size="small" />;
   const revokedIcon = <PauseCircle size={14} color="#d81515" className="jdn__locatorsList-status" />;
@@ -50,9 +49,9 @@ export const LocatorIcon = ({ validity, locator, deleted, isCustomLocator, isCre
     switch (locator.taskStatus) {
       case locatorTaskStatus.SUCCESS: {
         if (isCustomLocator) {
-          if (isValidLocator(validity) && !isCreatedByUser) {
+          if (isValidLocator(message) && !isCreatedByUser) {
             return successEditedIcon;
-          } else if (!isValidLocator(validity)) return warningEditedIcon;
+          } else if (!isValidLocator(message)) return warningEditedIcon;
           return null;
         } else {
           return null;

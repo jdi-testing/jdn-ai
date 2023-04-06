@@ -18,7 +18,7 @@ import {
 import { isProgressStatus, locatorGenerationController } from "../utils/locatorGenerationController";
 import { Locator, LocatorCalculationPriority, LocatorTaskStatus, ValidationStatus } from "../types/locator.types";
 import { setCalculationPriority, toggleDeleted } from "../locators.slice";
-import { copyLocator } from "../utils/utils";
+import { copyLocator, getLocatorValidationStatus } from "../utils/utils";
 import { LocatorOption } from "../utils/constants";
 import { rerunGeneration } from "../reducers/rerunGeneration.thunk";
 import { stopGeneration } from "../reducers/stopGeneration.thunk";
@@ -33,7 +33,7 @@ interface Props {
 export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, children, trigger }) => {
   const dispatch = useDispatch();
 
-  const { element_id, locator, deleted, priority, jdnHash, type, name, validity } = element;
+  const { element_id, locator, deleted, priority, jdnHash, type, name, message } = element;
 
   const isLocatorInProgress = isProgressStatus(locator.taskStatus);
 
@@ -75,8 +75,8 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, chil
       );
 
     let items: MenuItem[] = [];
-    const selectedLocators: Pick<Locator, "locator" | "type" | "name" | "validity">[] = [
-      { locator, type, name, validity },
+    const selectedLocators: Pick<Locator, "locator" | "type" | "name" | "message">[] = [
+      { locator, type, name, message },
     ];
 
     if (deleted) {
@@ -117,7 +117,7 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, chil
                   getRerunGeneration(60),
                   getRerunGeneration(3600),
                 ],
-                validity?.validationStatus === ValidationStatus.WARNING
+                getLocatorValidationStatus(message) === ValidationStatus.WARNING
               ),
             ]
           : []),
