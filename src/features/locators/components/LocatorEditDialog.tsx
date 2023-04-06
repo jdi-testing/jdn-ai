@@ -155,10 +155,12 @@ export const LocatorEditDialog: React.FC<Props> = ({
           .then(async ({ foundHash, foundElement }) => ({
             fullXpath: await getElementFullXpath(foundElement),
             foundHash,
+            foundElement,
           }))
-          .then(({ fullXpath, foundHash }) => {
+          .then(({ fullXpath, foundHash, foundElement }) => {
             newLocator = {
               ...newLocator,
+              elemText: foundElement.textContent,
               locator: { ...newLocator.locator, fullXpath },
               jdnHash: foundHash,
               element_id: `${foundHash}_${pageObjectId}`,
