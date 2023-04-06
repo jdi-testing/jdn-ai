@@ -48,12 +48,8 @@ const App = () => {
   }, [backendAvailable]);
 
   const renderPage = () => {
-    const { page, alreadyGenerated } = currentPage;
-    return page === PageType.PageObject ? (
-      <PageObjectPage {...{ template }} />
-    ) : (
-      <LocatorsPage {...{ alreadyGenerated }} />
-    );
+    const { page } = currentPage;
+    return page === PageType.PageObject ? <PageObjectPage {...{ template }} /> : <LocatorsPage />;
   };
 
   return (

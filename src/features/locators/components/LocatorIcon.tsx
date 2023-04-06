@@ -3,19 +3,18 @@ import { Spin, Tooltip } from "antd";
 import Icon from "@ant-design/icons";
 import CheckedEdited from "../assets/checked-edited.svg";
 import WarningEditedSvg from "../assets/warning-edited.svg";
-import { locatorTaskStatus, VALIDATION_ERROR_TYPE } from "../../../common/constants/constants";
+import { locatorTaskStatus } from "../../../common/constants/constants";
 import { PauseCircle, Trash, WarningCircle } from "phosphor-react";
 import { LocatorValue, ValidationErrorType, Validity } from "../types/locator.types";
-import { isNil } from "lodash";
 
 export const isEdited = (locator: LocatorValue) => locator.customXpath;
 export const isValidLocator = (validity?: Validity) =>
   !validity?.locator.length || validity?.locator === ValidationErrorType.NewElement;
 
 interface Props {
-  validity?: Validity,
-  locator: LocatorValue,
-  deleted?: boolean,
+  validity?: Validity;
+  locator: LocatorValue;
+  deleted?: boolean;
 }
 
 export const LocatorIcon: React.FC<Props> = ({ validity, locator, deleted }) => {
@@ -49,12 +48,10 @@ export const LocatorIcon: React.FC<Props> = ({ validity, locator, deleted }) => 
     switch (locator.taskStatus) {
       case locatorTaskStatus.SUCCESS: {
         if (!isValidLocator(validity)) {
-          return warningEditedIcon
-        }
-        else if (isEdited(locator)) {
+          return warningEditedIcon;
+        } else if (isEdited(locator)) {
           return successEditedIcon;
-        }
-        else return null;
+        } else return null;
       }
       case locatorTaskStatus.STARTED:
       case locatorTaskStatus.PENDING:

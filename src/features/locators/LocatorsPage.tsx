@@ -26,13 +26,9 @@ import { Filter } from "../filter/Filter";
 import { useCalculateHeaderSize } from "./utils/useCalculateHeaderSize";
 import { useOverlay } from "./utils/useOverlay";
 
-interface Props {
-  alreadyGenerated?: boolean;
-}
-
 const { confirm } = Modal;
 
-export const LocatorsPage: React.FC<Props> = ({ alreadyGenerated }) => {
+export const LocatorsPage = () => {
   const dispatch = useDispatch();
   const currentPage = useSelector(selectCurrentPage).page;
   const locators = useSelector(selectFilteredLocators);

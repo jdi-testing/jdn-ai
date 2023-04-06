@@ -231,13 +231,13 @@ export const highlightOnPage = () => {
   const findByXpath = (xPath, element_id) => {
     const result = document.evaluate(xPath, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
     if (result.snapshotLength === 1) return result.snapshotItem(0);
-    else throw new Error("invalid locator", { evaluationResult: result.snapshotLength, element_id});
-  }
+    else throw new Error("invalid locator", { evaluationResult: result.snapshotLength, element_id });
+  };
   const findBySelector = (selector, element_id) => {
     const result = document.querySelectorAll(selector);
     if (result.length === 1) return result[0];
-    else throw new Error("invalid locator", { evaluationResult: result.snapshotLength, element_id});
-  }
+    else throw new Error("invalid locator", { evaluationResult: result.snapshotLength, element_id });
+  };
 
   const findAndHighlight = (param) => {
     if (param) {
@@ -250,12 +250,15 @@ export const highlightOnPage = () => {
       let node = findByHash(jdnHash);
       if (!node) {
         try {
-          node = locatorType === "CSS selector" ? findBySelector(locator.output, element_id) : findByXpath(locator.output, element_id);
+          node =
+            locatorType === "CSS selector"
+              ? findBySelector(locator.output, element_id)
+              : findByXpath(locator.output, element_id);
           node.setAttribute("jdn-hash", jdnHash);
           nodes.push(node);
         } catch (error) {
           if (error.message === "invalid locator") {
-            sendMessage({message: "INVALID_LOCATOR", param: { element_id, numberOfNodes: error.options }})
+            sendMessage({ message: "INVALID_LOCATOR", param: { element_id, numberOfNodes: error.options } });
           }
         }
       } else nodes.push(node);

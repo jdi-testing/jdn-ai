@@ -1,8 +1,8 @@
 import { chain, filter } from "lodash";
-import { connector, sendMessage } from "../../../pageServices/connector";
+import { sendMessage } from "../../../pageServices/connector";
 import { ElementLibrary } from "../types/generationClasses.types";
 import { createElementName } from "../../pageObjects/utils/pageObject";
-import { Locator, LocatorValue, ValidationErrorType } from "../types/locator.types";
+import { Locator, LocatorValue } from "../types/locator.types";
 import { copyToClipboard, getLocatorString } from "../../../common/utils/helpers";
 import { LocatorOption } from "./constants";
 import { getXPathByPriority, getLocator } from "./locatorOutput";
@@ -19,24 +19,6 @@ export const evaluateXpath = (xPath: string, originJdnHash?: string) => {
   return sendMessage.evaluateXpath({ xPath, originJdnHash }).then((response) => {
     return response;
   });
-  // return chrome.storage.sync.set({ xPath, originJdnHash }).then(() => {
-  // return connector.attachContentScript(async () => {
-  //     // return await chrome.storage.sync.get(["xPath", "originJdnHash"]).then(({ xPath, originJdnHash }) => {
-  //     const evaluate = (xPath: string, originJdnHash: string) => {
-  //       try {
-  //         const nodeSnapshot = document.evaluate(xPath, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-  //         const length = nodeSnapshot.snapshotLength;
-  //         const foundElement = nodeSnapshot.snapshotItem(0) as Element;
-  //         const foundHash = foundElement && foundElement.getAttribute("jdn-hash");
-  //         return JSON.stringify({ length, foundHash, originJdnHash });
-  //       } catch (error) {
-  //         return "The locator was not found on the page.";
-  //       }
-  //     };
-
-  //     // });
-  //   });
-  // });
 };
 
 export const equalHashes = (jdnHash: string, locators: Locator[]) => filter(locators, { jdnHash });
