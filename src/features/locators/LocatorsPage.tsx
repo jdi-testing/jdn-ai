@@ -8,7 +8,7 @@ import { selectCurrentPage } from "../../app/main.selectors";
 import { changePageBack, setScriptMessage } from "../../app/main.slice";
 import { Breadcrumbs } from "../../common/components/breadcrumbs/Breadcrumbs";
 import { customConfirm } from "../../common/components/CustomConfirm";
-import { pageType } from "../../common/constants/constants";
+import { PageType } from "../../app/types/mainSlice.types";
 import {
   selectDeletedGenerateByPageObj,
   selectCalculatedGenerateByPageObj,
@@ -46,7 +46,7 @@ export const LocatorsPage: React.FC<Props> = ({ alreadyGenerated }) => {
   // For changing locatorsList-content height depends on header height
   const containerHeight = useCalculateHeaderSize(breadcrumbsRef);
   // overlay for web page
-  useOverlay(alreadyGenerated || false);
+  useOverlay();
 
   const pageBack = () => {
     dispatch(setScriptMessage({}));
@@ -110,7 +110,7 @@ export const LocatorsPage: React.FC<Props> = ({ alreadyGenerated }) => {
 
     return (
       <React.Fragment>
-        {currentPage === pageType.locatorsList ? (
+        {currentPage === PageType.LocatorsList ? (
           <Button onClick={handleBack} className="jdn__buttons">
             Back
           </Button>
@@ -120,7 +120,7 @@ export const LocatorsPage: React.FC<Props> = ({ alreadyGenerated }) => {
   };
 
   const renderConfirmButton = () => {
-    if (currentPage === pageType.locatorsList) {
+    if (currentPage === PageType.LocatorsList) {
       const checkedLocators = useSelector(selectCheckedLocators);
       const isDisabled = !size(inProgressGenerate) && !size(calculatedGenerate);
       return (

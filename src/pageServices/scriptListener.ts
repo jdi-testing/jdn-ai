@@ -2,13 +2,14 @@ import { AsyncThunkAction } from "@reduxjs/toolkit";
 import { Dispatch } from "react";
 import { setScriptMessage } from "../app/main.slice";
 import { RootState } from "../app/store/store";
-import { Locator } from "../features/locators/types/locator.types";
+import { Locator, ValidationErrorType } from "../features/locators/types/locator.types";
 import {
   elementGroupSetActive,
   elementGroupUnsetActive,
   elementSetActive,
   elementUnsetActive,
   setScrollToLocator,
+  setValidity,
   toggleDeletedGroup,
   toggleElementGeneration,
   toggleElementGroupGeneration,
@@ -52,6 +53,13 @@ export const createListeners = (
       sendResponse({
         elements,
       });
+    },
+    INVALID_LOCATOR: (payload) => {
+      const { element_id, numberOfNodes } = payload;
+      const message = numberOfNodes
+        ? ValidationErrorType.NotFound
+        : `${numberOfNodes} ${ValidationErrorType.MultipleElements}`;
+      dispatch(setValidity({ element_id, validity: { locator: message } }));
     },
     REMOVE_ELEMENT: (payload) => dispatch(toggleDeletedGroup(payload)),
     RESTORE_ELEMENT: (payload) => dispatch(toggleDeletedGroup(payload)),

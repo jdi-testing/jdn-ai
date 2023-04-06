@@ -7,7 +7,7 @@ import "antd/lib/style/themes/default.less";
 
 import Layout, { Content, Header } from "antd/lib/layout/layout";
 import { Backdrop } from "./components/Backdrop";
-import { pageType } from "../common/constants/constants";
+import { PageType } from "../app/types/mainSlice.types";
 import { StatusBar } from "./components/StatusBar";
 import { SeveralTabsWarning } from "./components/SeveralTabsWarning";
 import { HttpEndpoint, request } from "../services/backend";
@@ -49,7 +49,7 @@ const App = () => {
 
   const renderPage = () => {
     const { page, alreadyGenerated } = currentPage;
-    return page === pageType.pageObject ? (
+    return page === PageType.PageObject ? (
       <PageObjectPage {...{ template }} />
     ) : (
       <LocatorsPage {...{ alreadyGenerated }} />

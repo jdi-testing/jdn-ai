@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { CaretDown } from "phosphor-react";
 import { selectCurrentPage } from "../../../app/main.selectors";
 import { RootState } from "../../../app/store/store";
-import { pageType } from "../../../common/constants/constants";
+import { PageType } from "../../../app/types/mainSlice.types";
 import { ElementId, Locator as LocatorType } from "../types/locator.types";
 import {
   selectCurrentPageObject,
@@ -120,7 +120,7 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
         const node: TreeNode = {
           key: element_id,
           className: `${
-            locatorsMap[element_id].generate && currentPage === pageType.locatorsList ? "jdn__tree-item--selected" : ""
+            locatorsMap[element_id].generate && currentPage === PageType.LocatorsList ? "jdn__tree-item--selected" : ""
           }${locatorsMap[element_id].active ? " jdn__tree-item--active" : ""}`,
           title: (
             <Locator

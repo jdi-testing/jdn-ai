@@ -19,6 +19,7 @@ import {
 } from "./types/locator.types";
 import { runXpathGenerationReducer } from "./reducers/runXpathGeneration.thunk";
 import { LocatorType } from "../../common/types/locatorType";
+import { checkLocatorsValidityReducer } from "./reducers/checkLocatorValidity.thunk";
 
 const initialState: LocatorsState = {
   generationStatus: LocatorsGenerationStatus.noStatus,
@@ -124,6 +125,10 @@ const locatorsSlice = createSlice({
       const { locators, generate } = payload;
       locatorsAdapter.upsertMany(state, locators.map(({ element_id }) => ({ element_id, generate })) as Locator[]);
     },
+    setValidity(state, { payload }: PayloadAction<{ element_id: ElementId, validity: Validity }>) {
+      const { element_id, validity } = payload;
+      locatorsAdapter.upsertOne(state, { element_id, validity } as Locator);
+    },
     toggleElementGroupGeneration(state, { payload }: PayloadAction<Locator[]>) {
       const newValue: Partial<Locator>[] = [];
       payload.forEach(({ element_id, generate }) => {
@@ -190,7 +195,8 @@ const locatorsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    identifyElementsReducer(builder),
+    checkLocatorsValidityReducer(builder),
+      identifyElementsReducer(builder),
       generateLocatorsReducer(builder),
       rerunGenerationReducer(builder),
       stopGenerationReducer(builder),
@@ -212,6 +218,7 @@ export const {
   setCalculationPriority,
   setScrollToLocator,
   setElementGroupGeneration,
+  setValidity,
   toggleElementGroupGeneration,
   toggleDeleted,
   toggleDeletedGroup,

@@ -4,7 +4,6 @@ import Text from "antd/lib/typography/Text";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { pageType } from "../../common/constants/constants";
 import { areChildrenChecked, isLocatorIndeterminate } from "./locators.selectors";
 import { isMacPlatform } from "../../common/utils/helpers";
 import {
@@ -122,7 +121,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, library, search
   return (
     <React.Fragment>
       <div ref={ref} className="jdn__xpath_container" onClick={handleLocatorClick}>
-        {currentPage === pageType.locatorsList ? (
+        {currentPage === PageType.LocatorsList ? (
           <LocatorMenu {...{ element, setIsEditModalOpen, trigger: ["contextMenu"] }}>
             <div className="jdn__xpath_locators">
               <div onContextMenu={(e) => e.stopPropagation()} className="jdn__xpath_checkbox_wrapper">

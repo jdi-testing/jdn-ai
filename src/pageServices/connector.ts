@@ -11,6 +11,7 @@ import { selectable } from "./contentScripts/selectable";
 import { urlListener } from "./contentScripts/urlListener";
 import { ScriptMessagePayload } from "./scriptListener";
 import { ClassFilterValue } from "../features/filter/types/filter.types";
+import { utilityScript } from "./contentScripts/utils";
 
 export interface ScriptMessage {
   message: string;
@@ -89,9 +90,9 @@ class Connector {
 
   onTabUpdate(onInitHandler: () => Promise<void>, onDisconnectHandler: () => void) {
     const listener = (port: chrome.runtime.Port | undefined) => {
-        if (this.port) this.port = undefined;
-        if (typeof onDisconnectHandler === "function") onDisconnectHandler();
-        this.initScripts(onInitHandler, onDisconnectHandler);
+      if (this.port) this.port = undefined;
+      if (typeof onDisconnectHandler === "function") onDisconnectHandler();
+      this.initScripts(onInitHandler, onDisconnectHandler);
     };
 
     if (this.port && !this.port.onDisconnect.hasListener(listener)) {
@@ -150,6 +151,7 @@ class Connector {
         sendMessage.setClosedSession({ tabId: this.tabId, isClosed: false });
       }),
       this.attachContentScript(selectable, "selectable"),
+      this.attachContentScript(utilityScript, "utilityScript"),
       this.attachCSS("contentScripts.css"),
     ]);
   }
@@ -177,23 +179,24 @@ export const sendMessage = {
   checkSession: (payload: null, onResponse?: () => void): Promise<{ message: string; tabId: number }[]> =>
     connector.sendMessageToAllTabs("CHECK_SESSION", payload, onResponse),
   defineTabId: (payload: number) => connector.sendMessage("DEFINE_TAB_ID", payload),
+  evaluateXpath: (payload: { xPath: string; originJdnHash?: string }, onResponse?: () => void) =>
+    connector.sendMessage("EVALUATE_XPATH", payload, onResponse),
   findBySelectors: (payload: SelectorsMap) => connector.sendMessage("FIND_BY_SELECTORS", payload),
   setClosedSession: (payload: { tabId: number; isClosed: boolean }) =>
     connector.sendMessage("SET_CLOSED_SESSION", payload),
-  setHighlight: (payload: { elements?: Locator[]; filter?: ClassFilterValue }) =>
+  setHighlight: (payload: { elements?: Locator[]; filter?: ClassFilterValue; isAlreadyGenerated?: boolean }) =>
     connector.sendMessage("SET_HIGHLIGHT", payload),
   killHighlight: (payload?: {}, onResponse?: () => void) => connector.sendMessage("KILL_HIGHLIGHT", null, onResponse),
   generateAttributes: (payload: PredictedEntity, onResponse: () => void) =>
     connector.sendMessage("GENERATE_ATTRIBUTES", payload, onResponse),
   pingScript: (payload: { scriptName: string }, onResponse?: () => void) =>
     connector.sendMessage("PING_SCRIPT", payload, onResponse),
-  openEditLocator: (payload: { value: Locator; types: string[] }, onResponse?: () => void) =>
-    connector.sendMessage("OPEN_EDIT_LOCATOR", payload, onResponse),
   removeElement: (payload: Locator) => connector.sendMessage("REMOVE_ELEMENT", payload),
   setActive: (payload: Locator | Locator[]) => connector.sendMessage("SET_ACTIVE", payload),
   toggle: (payload: { element: Locator; skipScroll?: boolean }) => connector.sendMessage("HIGHLIGHT_TOGGLED", payload),
   toggleDeleted: (el: Locator) => connector.sendMessage("TOGGLE_DELETED", el),
-  toggleFilter: (payload: {jdiClass: ElementClass, value: boolean}) => connector.sendMessage("TOGGLE_FILTER", payload),
+  toggleFilter: (payload: { jdiClass: ElementClass; value: boolean }) =>
+    connector.sendMessage("TOGGLE_FILTER", payload),
   toggleActiveGroup: (payload: Locator[]) => connector.sendMessage("TOGGLE_ACTIVE_GROUP", payload),
   unsetActive: (payload: Locator | Locator[]) => connector.sendMessage("UNSET_ACTIVE", payload),
 };
