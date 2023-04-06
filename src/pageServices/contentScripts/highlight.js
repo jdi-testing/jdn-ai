@@ -65,6 +65,7 @@ export const highlightOnPage = () => {
 
   const scrollToElement = (jdnHash) => {
     const originDiv = document.querySelector(`[jdn-hash='${jdnHash}']`);
+    if (!originDiv) return;
     const originDivRect = originDiv.getBoundingClientRect();
     if (!isInViewport(originDivRect) || isHiddenByOverflow(originDiv, originDivRect)) {
       originDiv.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
