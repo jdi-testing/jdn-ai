@@ -10,7 +10,7 @@ import { changeElementLibrary, setLocatorType } from "../pageObject.slice";
 import { PageObjectId } from "../types/pageObjectSlice.types";
 import { ElementLibrary, libraryNames } from "../../locators/types/generationClasses.types";
 import { identifyElements } from "../../locators/reducers/identifyElements.thunk";
-import { LocatorType } from "../../../common/types/locatorType";
+import { LocatorType } from "../../../common/types/common";
 
 interface Props {
   pageObj: PageObjectId;

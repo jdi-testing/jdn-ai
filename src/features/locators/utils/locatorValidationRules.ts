@@ -1,22 +1,19 @@
 import { Rule, RuleObject } from "antd/lib/form";
-import { Locator } from "../types/locator.types";
 import { validateXpath } from "./locatorValidation";
+import { Locator, LocatorValidationErrorType } from "../types/locator.types";
 
 export const createLocatorValidationRules = (
-  setLocatorValidity: React.Dispatch<React.SetStateAction<string>>,
-  validationEnabled: boolean,
+  isCreatingForm: boolean,
+  setValidationMessage: React.Dispatch<React.SetStateAction<LocatorValidationErrorType>>,
   locators: Locator[],
   jdnHash: string
 ): Rule[] => {
   return [
     () => ({
       validator(_: RuleObject, value: string) {
-        if (!validationEnabled) {
-          setLocatorValidity("");
-          return Promise.resolve();
-        }
-
-        return validateXpath(value, jdnHash, locators).then((result) => setLocatorValidity(result));
+        return validateXpath(value, jdnHash, locators, isCreatingForm).then((result) =>
+          setValidationMessage(result as LocatorValidationErrorType)
+        );
       },
     }),
   ];

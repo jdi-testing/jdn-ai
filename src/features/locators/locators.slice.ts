@@ -12,14 +12,14 @@ import {
   LocatorsGenerationStatus,
   IdentificationStatus,
   ElementId,
-  Validity,
+  LocatorValidationErrorType,
   LocatorTaskStatus,
   Locator,
   LocatorCalculationPriority,
 } from "./types/locator.types";
 import { runXpathGenerationReducer } from "./reducers/runXpathGeneration.thunk";
-import { LocatorType } from "../../common/types/locatorType";
 import { checkLocatorsValidityReducer } from "./reducers/checkLocatorValidity.thunk";
+import { LocatorType } from "../../common/types/common";
 
 const initialState: LocatorsState = {
   generationStatus: LocatorsGenerationStatus.noStatus,
@@ -32,7 +32,7 @@ export interface ChangeLocatorAttributesPayload {
   type: ElementClass;
   name: string;
   locator: string;
-  validity: Validity;
+  message: LocatorValidationErrorType;
   library: ElementLibrary;
   isCustomName?: boolean;
   isGeneratedName?: boolean;
@@ -47,11 +47,11 @@ const locatorsSlice = createSlice({
       locatorsAdapter.addMany(state, payload);
     },
     changeLocatorAttributes(state, { payload }: PayloadAction<ChangeLocatorAttributesPayload>) {
-      const { type, name, locator, element_id, validity, isCustomName, locatorType } = payload;
+      const { type, name, locator, element_id, message, isCustomName, locatorType } = payload;
       const _locator = simpleSelectLocatorById(state, element_id);
       if (!_locator) return;
       const { fullXpath, robulaXpath } = _locator.locator;
-      const newValue = { ..._locator, locator: { ..._locator.locator }, validity, type, name, isCustomName };
+      const newValue = { ..._locator, locator: { ..._locator.locator }, message, type, name, isCustomName };
       if (fullXpath !== locator && robulaXpath !== locator) {
         newValue.locator.customXpath = locator;
         newValue.isCustomLocator = true;
@@ -125,9 +125,8 @@ const locatorsSlice = createSlice({
       const { locators, generate } = payload;
       locatorsAdapter.upsertMany(state, locators.map(({ element_id }) => ({ element_id, generate })) as Locator[]);
     },
-    setValidity(state, { payload }: PayloadAction<{ element_id: ElementId; validity: Validity }>) {
-      const { element_id, validity } = payload;
-      locatorsAdapter.upsertOne(state, { element_id, validity } as Locator);
+    setValidity(state, { payload }: PayloadAction<{ element_id: ElementId; message: Locator["message"] }>) {
+      locatorsAdapter.upsertOne(state, payload as Locator);
     },
     toggleElementGroupGeneration(state, { payload }: PayloadAction<Locator[]>) {
       const newValue: Partial<Locator>[] = [];

@@ -2,7 +2,7 @@ import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
 import { chain, get, isNil, last, size } from "lodash";
 import { RootState } from "../../app/store/store";
 import { locatorTaskStatus } from "../../common/constants/constants";
-import { LocatorType } from "../../common/types/locatorType";
+import { LocatorType } from "../../common/types/common";
 import { selectClassFilterByPO } from "../filter/filter.selectors";
 import { isValidLocator } from "../locators/components/LocatorIcon";
 import { selectLocators } from "../locators/locators.selectors";
@@ -212,5 +212,5 @@ export const selectCheckedLocators = createSelector(selectFilteredLocators, (loc
 );
 
 export const selectValidLocators = createSelector(selectLocatorsByPageObject, (locators) =>
-  locators.filter((loc) => isValidLocator(loc.validity))
+  locators.filter((loc) => isValidLocator(loc.message))
 );

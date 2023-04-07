@@ -1,6 +1,6 @@
 import { LocatorValue } from "../../features/locators/types/locator.types";
 import { ElementLibrary, ElementClass } from "../../features/locators/types/generationClasses.types";
-import { VALIDATION_ERROR_TYPE } from "../constants/constants";
+import { sendMessage } from "../../pageServices/connector";
 
 export const floatToPercent = (value: number) => {
   // wse need to show percents, but multiply float * 100 provides an unexpected result and leads to bugs
@@ -14,8 +14,6 @@ export const copyToClipboard = (text: string) => {
 
 export const getLocatorString = (locator: LocatorValue, type: ElementLibrary | ElementClass, name: string): string =>
   `@UI("${locator.output}")\npublic ${type} ${name};`;
-
-export const isErrorValidationType = (type: string) => VALIDATION_ERROR_TYPE.hasOwnProperty(type);
 
 export const isMacPlatform = (param: Window) => param.navigator?.userAgent.indexOf("Mac") != -1;
 
@@ -42,4 +40,35 @@ export const findSubstringWithinTerms = (
     }
   }
   return "";
+};
+
+export const generateId = (): string => {
+  return (
+    Math.random().toString().substring(2, 12) +
+    Date.now().toString().substring(5) +
+    Math.random().toString().substring(2, 12)
+  );
+};
+
+export const getElementFullXpath = async (foundElement: string): Promise<string> => {
+  let fullXpath = "";
+  const parser = new DOMParser();
+  const parsedElement = parser.parseFromString(foundElement, "text/html").body.firstChild;
+
+  await sendMessage
+    .getElementXpath(parsedElement as Element)
+    .then((xPath: string) => {
+      if (xPath) fullXpath = xPath;
+    })
+    .catch((err: Error) => err);
+
+  return fullXpath;
+};
+
+export const isFilteredSelect = (input: string, option: any) =>
+  (option?.value?.toString() ?? "").toLowerCase().includes(input.toLowerCase());
+
+export const isStringContainsNumbers = (string: string) => {
+  const regex = /\d/; // Regular expression to match any digit (0-9)
+  return regex.test(string);
 };

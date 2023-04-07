@@ -5,27 +5,29 @@ import CheckedEdited from "../assets/checked-edited.svg";
 import WarningEditedSvg from "../assets/warning-edited.svg";
 import { locatorTaskStatus } from "../../../common/constants/constants";
 import { PauseCircle, Trash, WarningCircle } from "phosphor-react";
-import { LocatorValue, ValidationErrorType, Validity } from "../types/locator.types";
+import { LocatorValidationErrorType, LocatorValidationWarnings, LocatorValue } from "../types/locator.types";
 
 export const isEdited = (locator: LocatorValue) => locator.customXpath;
-export const isValidLocator = (validity?: Validity) =>
-  !validity?.locator.length || validity?.locator === ValidationErrorType.NewElement;
+export const isValidLocator = (message?: string) =>
+  !message?.length || message === LocatorValidationWarnings.NewElement;
 
 interface Props {
-  validity?: Validity;
+  message?: LocatorValidationErrorType;
   locator: LocatorValue;
   deleted?: boolean;
+  isCustomLocator?: boolean;
+  isCreatedByUser?: boolean;
 }
 
-export const LocatorIcon: React.FC<Props> = ({ validity, locator, deleted }) => {
-  const getTooltipText = () => validity?.locator || "Edited";
+export const LocatorIcon: React.FC<Props> = ({ message, locator, deleted, isCustomLocator, isCreatedByUser }) => {
+  const getTooltipText = () => message || "Edited";
 
   const startedIcon = <Spin size="small" />;
   const revokedIcon = <PauseCircle size={14} color="#d81515" className="jdn__locatorsList-status" />;
   const deletedIcon = <Trash size={14} color="#9a9da9" className="jdn__locatorsList-status" />;
 
   const failureIcon = (
-    <Tooltip title={locator.errorMessage}>
+    <Tooltip title={locator.errorMessage ?? "Locator generation was failed"}>
       <WarningCircle size={14} color="#d81515" className="jdn__locatorsList-status" />
     </Tooltip>
   );
@@ -47,11 +49,10 @@ export const LocatorIcon: React.FC<Props> = ({ validity, locator, deleted }) => 
 
     switch (locator.taskStatus) {
       case locatorTaskStatus.SUCCESS: {
-        if (!isValidLocator(validity)) {
-          return warningEditedIcon;
-        } else if (isEdited(locator)) {
+        if (isValidLocator(message) && !isCreatedByUser && isCustomLocator) {
           return successEditedIcon;
-        } else return null;
+        } else if (!isValidLocator(message)) return warningEditedIcon;
+        return null;
       }
       case locatorTaskStatus.STARTED:
       case locatorTaskStatus.PENDING:

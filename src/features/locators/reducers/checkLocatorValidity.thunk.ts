@@ -3,7 +3,7 @@ import { RootState } from "../../../app/store/store";
 import { selectLocatorsByPageObject } from "../../pageObjects/pageObject.selectors";
 import { locatorsAdapter } from "../locators.selectors";
 import { Locator, LocatorsState } from "../types/locator.types";
-import { getPrioritizedXpathes } from "../utils/locatorOutput";
+import { getPrioritizedXPaths } from "../utils/locatorOutput";
 import { validateXpath } from "../utils/locatorValidation";
 
 export const checkLocatorsValidity = createAsyncThunk("locators/checkLocatorsValidity", async (payload, thunkAPI) => {
@@ -15,8 +15,8 @@ export const checkLocatorsValidity = createAsyncThunk("locators/checkLocatorsVal
 
   for (const locator of locators) {
     const { jdnHash, element_id, locator: locatorValue } = locator;
-    const validation = await validateXpath(getPrioritizedXpathes(locatorValue)[0], jdnHash, locators);
-    if (validation.length) invalidLocators.push({ element_id, validity: { locator: validation }, jdnHash });
+    const validation = await validateXpath(getPrioritizedXPaths(locatorValue)[0], jdnHash, locators);
+    if (validation.length) invalidLocators.push({ element_id, message: validation, jdnHash });
   }
 
   return { invalidLocators };

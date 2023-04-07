@@ -28,7 +28,7 @@ export const convertToListWithChildren = (_list: Array<Locator>) => {
   return list;
 };
 
-export const includesSearcSubstr = (strings: Array<string>, searchString: string) => {
+export const includesSearcSubstr = (strings: Array<string | undefined>, searchString: string) => {
   const includesSubstring = strings.filter((string) => {
     return string && string.toLowerCase().includes(searchString.toLowerCase());
   });

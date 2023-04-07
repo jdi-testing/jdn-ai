@@ -1,6 +1,6 @@
 import { ElementId } from "../../locators/types/locator.types";
 import { ElementLibrary } from "../../locators/types/generationClasses.types";
-import { LocatorType } from "../../../common/types/locatorType";
+import { LocatorType } from "../../../common/types/common";
 
 export type PageObjectId = number;
 

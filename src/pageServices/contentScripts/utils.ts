@@ -5,7 +5,7 @@ export const utilityScript = () => {
       const length = nodeSnapshot.snapshotLength;
       const foundElement = nodeSnapshot.snapshotItem(0) as Element;
       const foundHash = foundElement && foundElement.getAttribute("jdn-hash");
-      return JSON.stringify({ length, foundHash, originJdnHash });
+      return JSON.stringify({ length, foundHash, originJdnHash, foundElement: foundElement.outerHTML });
     } catch (error) {
       return "The locator was not found on the page.";
     }
