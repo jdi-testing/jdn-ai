@@ -119,6 +119,8 @@ export const LocatorEditDialog: React.FC<Props> = ({
     };
 
     const isLocatorFieldTouched = form.isFieldTouched("locator");
+    // in case if user didn't touch locator field to avoid forceUpdate
+    const locatorMessage = isLocatorFieldTouched ? validationMessage : LocatorValidationWarnings.NotFound;
 
     await form
       .validateFields()
@@ -127,23 +129,21 @@ export const LocatorEditDialog: React.FC<Props> = ({
           ...newLocator,
           locator: { ...newLocator.locator, customXpath: locator },
           predicted_label: type.toLowerCase(),
-          // in case if user didn't touch locator field to avoid forceUpdate
-          message: isLocatorFieldTouched ? validationMessage : LocatorValidationWarnings.NotFound,
+
+          message: locatorMessage,
           name,
           type,
         };
       })
       .catch((err) => console.log(err));
 
-    switch (getLocatorValidationStatus(validationMessage)) {
+    switch (getLocatorValidationStatus(locatorMessage)) {
       case ValidationStatus.WARNING:
         newLocator.element_id = `${generateId()}_${pageObjectId}`;
         break;
-      case ValidationStatus.ERROR:
-        return;
       case ValidationStatus.SUCCESS:
-        await evaluateXpath(newLocator.locator.customXpath!)
-          .then((response) => JSON.parse(response[0].result))
+        await evaluateXpath(newLocator.locator.customXpath!, jdnHash)
+          .then((response) => JSON.parse(response))
           .then(async ({ foundHash, foundElement }) => ({
             fullXpath: await getElementFullXpath(foundElement),
             foundHash,

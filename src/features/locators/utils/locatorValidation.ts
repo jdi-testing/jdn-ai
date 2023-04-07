@@ -3,18 +3,19 @@ import {
   LocatorValidationErrors,
   LocatorValidationErrorType,
   LocatorValidationWarnings,
+  JDNHash,
 } from "../types/locator.types";
 import { equalHashes, evaluateXpath } from "./utils";
 
 export const validateXpath = (
-  xpathValue: string,
-  jdnHash: string,
+  xPathValue: string,
+  jdnHash: JDNHash,
   locators: Locator[],
   isCreatingForm?: boolean
 ): Promise<LocatorValidationErrorType | string> => {
-  if (!xpathValue || !xpathValue.length) return Promise.resolve(LocatorValidationWarnings.EmptyValue);
+  if (!xPathValue || !xPathValue.length) return Promise.resolve(LocatorValidationWarnings.EmptyValue);
 
-  return evaluateXpath(xpathValue, jdnHash).then((result): LocatorValidationErrorType | string => {
+  return evaluateXpath(xPathValue, jdnHash).then((result): LocatorValidationErrorType | string => {
     let length;
     let foundHash;
     let _jdnHash;
