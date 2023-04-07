@@ -221,12 +221,13 @@ export const LocatorEditDialog: React.FC<Props> = ({
     setIsOkButtonDisabled(computeIsOkButtonDisabled());
   };
 
-  const renderValidationWarning = () => (
-    <div className="jdn__locatorEdit-warning">
-      <Icon component={WarningFilled} className="ant-alert-icon" />
-      <Footnote>If you leave this field empty, the locator will be invalid</Footnote>
-    </div>
-  );
+  const renderValidationWarning = () =>
+    isCreatingForm ? (
+      <div className="jdn__locatorEdit-warning">
+        <Icon component={WarningFilled} className="ant-alert-icon" />
+        <Footnote>If you leave this field empty, the locator will be invalid</Footnote>
+      </div>
+    ) : null;
 
   return (
     <DialogWithForm
@@ -239,6 +240,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
         okButtonProps: {
           disabled: isOkButtonDisabled,
         },
+        width: 580,
       }}
       formProps={{
         form,
