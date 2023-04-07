@@ -1,6 +1,6 @@
 import { Col, Form, Input, Select } from "antd";
 import Icon from "@ant-design/icons";
-import WarningFilled from "../assets/warningFilled.svg";
+import WarningFilled from "../assets/warning-filled.svg";
 import { Footnote } from "../../../common/components/footnote/Footnote";
 import { Rule } from "antd/lib/form";
 import React, { useState } from "react";
