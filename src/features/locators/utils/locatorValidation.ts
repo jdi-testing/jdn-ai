@@ -14,7 +14,7 @@ export const validateXpath = (
 ): Promise<LocatorValidationErrorType | string> => {
   if (!xpathValue || !xpathValue.length) return Promise.resolve(LocatorValidationWarnings.EmptyValue);
 
-  return evaluateXpath(xpathValue).then((result): LocatorValidationErrorType | string => {
+  return evaluateXpath(xpathValue, jdnHash).then((result): LocatorValidationErrorType | string => {
     let length;
     let foundHash;
     let _jdnHash;

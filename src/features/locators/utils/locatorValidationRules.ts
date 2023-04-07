@@ -13,7 +13,10 @@ export const createLocatorValidationRules = (
       validator(_: RuleObject, value: string) {
         return validateXpath(value, jdnHash, locators, isCreatingForm).then((result) =>
           setValidationMessage(result as LocatorValidationErrorType)
-        );
+        ).catch((err) => {
+          setValidationMessage(err.message);
+          return Promise.reject(err);
+        });
       },
     }),
   ];
