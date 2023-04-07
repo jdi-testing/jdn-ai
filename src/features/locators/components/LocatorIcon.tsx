@@ -5,7 +5,7 @@ import CheckedEdited from "../assets/checked-edited.svg";
 import WarningEditedSvg from "../assets/warning-edited.svg";
 import { locatorTaskStatus } from "../../../common/constants/constants";
 import { PauseCircle, Trash, WarningCircle } from "phosphor-react";
-import { LocatorValidationErrorType, LocatorValidationWarnings, LocatorValue } from "../types/locator.types";
+import { LocatorValidationErrorType, LocatorValue } from "../types/locator.types";
 import { isValidLocator } from "../utils/utils";
 
 interface Props {
