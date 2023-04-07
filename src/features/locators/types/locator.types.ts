@@ -72,7 +72,7 @@ export enum LocatorValidationWarnings {
   NewElement = "The locator leads to the new element.",
 }
 
-export type LocatorValidationErrorType = LocatorValidationErrors | LocatorValidationWarnings | string;
+export type LocatorValidationErrorType = LocatorValidationErrors | LocatorValidationWarnings | "";
 export type JDNHash = string;
 
 export interface Locator extends PredictedEntity {

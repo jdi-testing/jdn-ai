@@ -246,6 +246,7 @@ export const highlightOnPage = () => {
     }
     if (param?.filter) classFilter = param.filter;
 
+    nodes = [];
     predictedElements.forEach(({ deleted, type, jdnHash, locatorType, locator, element_id }) => {
       if (deleted || isFilteredOut(type)) return;
       let node = findByHash(jdnHash);
@@ -390,11 +391,13 @@ export const highlightOnPage = () => {
       filterElements = predictedElements.filter((elem) => elem.type === jdiClass);
     }
 
+    let needToDraw = false;
     filterElements.forEach((element) => {
       const div = document.getElementById(element.jdnHash);
       if (div) div.setAttribute("jdn-filtered", value ? "true" : false);
-      else findAndHighlight();
+      else value && (needToDraw = true);
     });
+    if (needToDraw) findAndHighlight();
   };
 
   const messageHandler = ({ message, param }, sender, sendResponse) => {
