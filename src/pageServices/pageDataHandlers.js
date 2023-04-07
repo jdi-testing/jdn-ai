@@ -28,9 +28,9 @@ export const removeOverlay = () => {
   }
 };
 
-const sendToModel = async (result, enpoint) => {
+const sendToModel = async (result, endpoint) => {
   const payload = result[0];
-  const response = await request.post(enpoint, payload);
+  const response = await request.post(endpoint, payload);
   return response;
 };
 

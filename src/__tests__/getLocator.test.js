@@ -1,4 +1,4 @@
-import { LocatorType } from "../common/types/locatorType";
+import { LocatorType } from "../common/types/common";
 import { getLocator } from "../features/locators/utils/locatorOutput";
 
 const data = [

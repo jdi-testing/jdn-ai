@@ -107,6 +107,10 @@ export const getGenerationAttributes = () => {
       sendResponse(mapElements(param));
     }
 
+    if (message === "GET_ELEMENT_XPATH") {
+      sendResponse(getElementTreeXPath(param));
+    }
+
     if (message === "PING_SCRIPT" && param.scriptName === "getGenerationAttributes") {
       sendResponse({ message: true });
     }

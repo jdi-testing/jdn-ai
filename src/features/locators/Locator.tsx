@@ -18,7 +18,6 @@ import {
 import { size } from "lodash";
 import { PageType } from "../../app/types/mainSlice.types";
 import { RootState } from "../../app/store/store";
-import { ElementLibrary } from "./types/generationClasses.types";
 import { Locator as LocatorInterface } from "./types/locator.types";
 import { SearchState } from "./components/LocatorsTree";
 import { LocatorEditDialog } from "./components/LocatorEditDialog";
@@ -31,7 +30,6 @@ import { setScriptMessage } from "../../app/main.slice";
 interface Props {
   element: LocatorInterface;
   currentPage: PageType;
-  library: ElementLibrary;
   disabled?: boolean;
   searchState?: SearchState;
   depth?: number;
@@ -39,12 +37,23 @@ interface Props {
 }
 
 // eslint-disable-next-line react/display-name
-export const Locator: React.FC<Props> = ({ element, currentPage, library, searchState, depth, searchString }) => {
+export const Locator: React.FC<Props> = ({ element, currentPage, searchState, depth, searchString }) => {
   const dispatch = useDispatch();
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const { element_id, type, name, locator, generate, validity, deleted, active } = element;
+  const {
+    element_id,
+    type,
+    name,
+    locator,
+    generate,
+    message,
+    deleted,
+    active,
+    isCustomLocator,
+    isCreatedByUser,
+  } = element;
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -138,7 +147,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, library, search
                   searchState === SearchState.Hidden ? " jdn__xpath_item--disabled" : ""
                 }`}
               >
-                <LocatorIcon {...{ validity, locator, deleted }} />
+                <LocatorIcon {...{ message, locator, deleted, isCustomLocator, isCreatedByUser }} />
                 {renderColorizedString()}
               </Text>
               {searchState !== SearchState.Hidden ? (
@@ -159,12 +168,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, library, search
         )}
       </div>
       {isEditModalOpen ? (
-        <LocatorEditDialog
-          {...{ library }}
-          {...element}
-          isModalOpen={isEditModalOpen}
-          setIsModalOpen={setIsEditModalOpen}
-        />
+        <LocatorEditDialog {...element} isModalOpen={isEditModalOpen} setIsModalOpen={setIsEditModalOpen} />
       ) : null}
     </React.Fragment>
   );

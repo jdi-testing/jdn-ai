@@ -15,6 +15,7 @@ import { PageObjectId } from "../types/pageObjectSlice.types";
 import { ElementLibrary } from "../../locators/types/generationClasses.types";
 import { generatePageObject } from "../../pageObjects/utils/pageObject";
 import { RenamePageObjectDialog } from "./RenamePageObjDialog";
+import { checkLocatorsValidity } from "../../locators/reducers/checkLocatorValidity.thunk";
 
 interface Props {
   id: PageObjectId;
@@ -51,6 +52,7 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, locators, elements, lib
 
     const handleEdit = () => {
       dispatch(setCurrentPageObj(id));
+      dispatch(checkLocatorsValidity()); // create thunk
       dispatch(
         changePage({
           page: PageType.LocatorsList,
