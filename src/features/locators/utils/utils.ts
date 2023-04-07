@@ -101,3 +101,6 @@ export const getLocatorValidationStatus = (message: LocatorValidationErrorType):
       return;
   }
 };
+
+export const isValidLocator = (message?: string) =>
+  !message?.length || message === LocatorValidationWarnings.NewElement;

@@ -4,7 +4,7 @@ import { RootState } from "../../app/store/store";
 import { locatorTaskStatus } from "../../common/constants/constants";
 import { LocatorType } from "../../common/types/common";
 import { selectClassFilterByPO } from "../filter/filter.selectors";
-import { isValidLocator } from "../locators/components/LocatorIcon";
+import { isValidLocator } from "../locators/utils/utils";
 import { selectLocators } from "../locators/locators.selectors";
 import { Locator } from "../locators/types/locator.types";
 import { isProgressStatus } from "../locators/utils/locatorGenerationController";

@@ -6,10 +6,7 @@ import WarningEditedSvg from "../assets/warning-edited.svg";
 import { locatorTaskStatus } from "../../../common/constants/constants";
 import { PauseCircle, Trash, WarningCircle } from "phosphor-react";
 import { LocatorValidationErrorType, LocatorValidationWarnings, LocatorValue } from "../types/locator.types";
-
-export const isEdited = (locator: LocatorValue) => locator.customXpath;
-export const isValidLocator = (message?: string) =>
-  !message?.length || message === LocatorValidationWarnings.NewElement;
+import { isValidLocator } from "../utils/utils";
 
 interface Props {
   message?: LocatorValidationErrorType;
