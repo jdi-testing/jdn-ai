@@ -26,13 +26,9 @@ import { Filter } from "../filter/Filter";
 import { useCalculateHeaderSize } from "./utils/useCalculateHeaderSize";
 import { useOverlay } from "./utils/useOverlay";
 
-interface Props {
-  alreadyGenerated?: boolean;
-}
-
 const { confirm } = Modal;
 
-export const LocatorsPage: React.FC<Props> = ({ alreadyGenerated }) => {
+export const LocatorsPage = () => {
   const dispatch = useDispatch();
   const currentPage = useSelector(selectCurrentPage).page;
   const locators = useSelector(selectFilteredLocators);
@@ -46,7 +42,7 @@ export const LocatorsPage: React.FC<Props> = ({ alreadyGenerated }) => {
   // For changing locatorsList-content height depends on header height
   const containerHeight = useCalculateHeaderSize(breadcrumbsRef);
   // overlay for web page
-  useOverlay(alreadyGenerated || false);
+  useOverlay();
 
   const pageBack = () => {
     dispatch(setScriptMessage({}));

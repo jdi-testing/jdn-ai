@@ -1,5 +1,5 @@
 import { chain, filter } from "lodash";
-import { connector } from "../../../pageServices/connector";
+import { sendMessage } from "../../../pageServices/connector";
 import { ElementLibrary } from "../types/generationClasses.types";
 import { createElementName } from "../../pageObjects/utils/pageObject";
 import {
@@ -23,21 +23,9 @@ export const getLocatorWithSelenium = (locator: LocatorValue): string =>
 
 export const isValidJavaVariable = (value: string) => /^[a-zA-Z_$]([a-zA-Z0-9_])*$/.test(value);
 
-export const evaluateXpath = (xPath: string) => {
-  return chrome.storage.sync.set({ xPath }).then(() => {
-    return connector.attachContentScript(async () => {
-      return await chrome.storage.sync.get(["xPath"]).then(({ xPath }) => {
-        try {
-          const nodeSnapshot = document.evaluate(xPath, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-          const length = nodeSnapshot.snapshotLength;
-          const foundElement = nodeSnapshot.snapshotItem(0) as Element;
-          const foundHash = foundElement && foundElement.getAttribute("jdn-hash");
-          return JSON.stringify({ length, foundHash, foundElement: foundElement.outerHTML });
-        } catch (error) {
-          return "The locator was not found on the page.";
-        }
-      });
-    });
+export const evaluateXpath = (xPath: string, originJdnHash?: string) => {
+  return sendMessage.evaluateXpath({ xPath, originJdnHash }).then((response) => {
+    return response;
   });
 };
 
@@ -113,3 +101,6 @@ export const getLocatorValidationStatus = (message: LocatorValidationErrorType):
       return;
   }
 };
+
+export const isValidLocator = (message?: string) =>
+  !message?.length || message === LocatorValidationWarnings.NewElement;

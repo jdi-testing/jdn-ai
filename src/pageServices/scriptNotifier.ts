@@ -3,7 +3,7 @@ import { compact, isNil, pick, size } from "lodash";
 import { pageType } from "../common/constants/constants";
 import { selectLocatorById } from "../features/locators/locators.selectors";
 import { Locator, LocatorTaskStatus } from "../features/locators/types/locator.types";
-import { selectLocatorsByPageObject } from "../features/pageObjects/pageObject.selectors";
+import { selectLocatorsByPageObject, selectValidLocators } from "../features/pageObjects/pageObject.selectors";
 import { sendMessage } from "./connector";
 import { selectCurrentPage } from "../app/main.selectors";
 import { RootState } from "../app/store/store";
@@ -19,15 +19,15 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
   }
   switch (type) {
     case "main/changePage":
-      if (selectCurrentPage(state).page === pageType.pageObject) sendMessage.killHighlight();
+      const page = selectCurrentPage(state);
+      if (page.page === pageType.pageObject) sendMessage.killHighlight();
       break;
     case "main/changePageBack":
       if (selectCurrentPage(state).page === pageType.pageObject) sendMessage.killHighlight();
       break;
   }
 
-  const noHighlight =
-    selectCurrentPage(state).alreadyGenerated || selectCurrentPage(state).page === PageType.PageObject;
+  const noHighlight = selectCurrentPage(state).page === PageType.PageObject;
   if (noHighlight) return;
 
   switch (type) {
@@ -36,6 +36,12 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       const locators = selectLocatorsByPageObject(state);
       const filter = selectClassFilterByPO(state);
       locators && sendMessage.setHighlight({ elements: locators as Locator[], filter });
+      break;
+    }
+    case "locators/checkLocatorsValidity/fulfilled": {
+      const locators = selectValidLocators(state);
+      const filter = selectClassFilterByPO(state);
+      locators && sendMessage.setHighlight({ elements: locators as Locator[], filter, isAlreadyGenerated: true });
       break;
     }
     case "locators/changeLocatorAttributes": {

@@ -5,7 +5,7 @@
 /* global chrome */
 export const highlightOnPage = () => {
   let port;
-  let nodes;
+  let nodes = [];
   let predictedElements;
   let listenersAreSet;
   let scrollableContainers = [];
@@ -18,7 +18,7 @@ export const highlightOnPage = () => {
     });
 
   const clearState = () => {
-    nodes = null;
+    nodes = [];
     predictedElements = null;
     scrollableContainers = [];
   };
@@ -65,6 +65,7 @@ export const highlightOnPage = () => {
 
   const scrollToElement = (jdnHash) => {
     const originDiv = document.querySelector(`[jdn-hash='${jdnHash}']`);
+    if (!originDiv) return;
     const originDivRect = originDiv.getBoundingClientRect();
     if (!isInViewport(originDivRect) || isHiddenByOverflow(originDiv, originDivRect)) {
       originDiv.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
@@ -227,17 +228,44 @@ export const highlightOnPage = () => {
     });
   };
 
+  const findByHash = (jdnHash) => document.querySelector(`[jdn-hash='${jdnHash}']`);
+  const findByXpath = (xPath, element_id) => {
+    const result = document.evaluate(xPath, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+    if (result.snapshotLength === 1) return result.snapshotItem(0);
+    else throw new Error("invalid locator", { evaluationResult: result.snapshotLength, element_id });
+  };
+  const findBySelector = (selector, element_id) => {
+    const result = document.querySelectorAll(selector);
+    if (result.length === 1) return result[0];
+    else throw new Error("invalid locator", { evaluationResult: result.snapshotLength, element_id });
+  };
+
   const findAndHighlight = (param) => {
     if (param) {
       if (!predictedElements) predictedElements = param.elements;
     }
     if (param?.filter) classFilter = param.filter;
-    let query = "";
-    predictedElements.forEach(({ deleted, type, jdnHash }) => {
+
+    nodes = [];
+    predictedElements.forEach(({ deleted, type, jdnHash, locatorType, locator, element_id }) => {
       if (deleted || isFilteredOut(type)) return;
-      query += `${!!query.length ? ", " : ""}[jdn-hash='${jdnHash}']`;
+      let node = findByHash(jdnHash);
+      if (!node) {
+        try {
+          node =
+            locatorType === "CSS selector"
+              ? findBySelector(locator.output, element_id)
+              : findByXpath(locator.output, element_id);
+          node.setAttribute("jdn-hash", jdnHash);
+          nodes.push(node);
+        } catch (error) {
+          if (error.message === "invalid locator") {
+            sendMessage({ message: "INVALID_LOCATOR", param: { element_id, numberOfNodes: error.options } });
+          }
+        }
+      } else nodes.push(node);
     });
-    nodes = query.length ? document.querySelectorAll(query) : [];
+
     nodes.forEach((element) => {
       const elementRect = element.getBoundingClientRect();
       if (isInViewport(elementRect) && !isHiddenByOverflow(element, elementRect)) {
@@ -363,11 +391,13 @@ export const highlightOnPage = () => {
       filterElements = predictedElements.filter((elem) => elem.type === jdiClass);
     }
 
+    let needToDraw = false;
     filterElements.forEach((element) => {
       const div = document.getElementById(element.jdnHash);
       if (div) div.setAttribute("jdn-filtered", value ? "true" : false);
-      else findAndHighlight();
+      else value && (needToDraw = true);
     });
+    if (needToDraw) findAndHighlight();
   };
 
   const messageHandler = ({ message, param }, sender, sendResponse) => {

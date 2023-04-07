@@ -14,17 +14,6 @@ export const locatorTaskStatus = {
   ...locatorProgressStatus,
 };
 
-//remove me
-export const VALIDATION_ERROR_TYPE = {
-  DUPLICATED_NAME: "DUPLICATED_NAME",
-  DUPLICATED_LOCATOR: "DUPLICATED_LOCATOR", // err
-  INVALID_NAME: "INVALID_NAME",
-  EMPTY_VALUE: "EMPTY_VALUE",
-  MULTIPLE_ELEMENTS: "MULTIPLE_ELEMENTS", // err
-  NEW_ELEMENT: "NEW_ELEMENT", // success
-  NOT_FOUND: "NOT_FOUND", // warn
-};
-
 export const pageType = {
   pageObject: "pageObject",
   locatorsList: "locatorsList",

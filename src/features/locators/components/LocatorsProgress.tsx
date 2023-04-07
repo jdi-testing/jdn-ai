@@ -60,11 +60,6 @@ export const LocatorsProgress = () => {
       {isProgressActive ? (
         <div className="jdn__locatorsList-progress">
           <div className="jdn__locatorsList-progress-text">
-            <Footnote>
-              {size(inProgress)
-                ? `${LocatorGenerationMessage.started} (${calculationReady}/${total})`
-                : LocatorGenerationMessage.complete}
-            </Footnote>
             {generationStatus === LocatorsGenerationStatus.failed ? (
               <React.Fragment>
                 <Footnote>{LocatorGenerationMessage.failed}</Footnote>
@@ -74,7 +69,13 @@ export const LocatorsProgress = () => {
                   </Button>
                 </span>
               </React.Fragment>
-            ) : null}
+            ) : (
+              <Footnote>
+                {size(inProgress)
+                  ? `${LocatorGenerationMessage.started} (${calculationReady}/${total})`
+                  : LocatorGenerationMessage.complete}
+              </Footnote>
+            )}
           </div>
           <Progress
             status={generationStatus === LocatorsGenerationStatus.failed ? "exception" : undefined}
