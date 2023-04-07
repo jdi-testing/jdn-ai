@@ -1,4 +1,7 @@
 import { Col, Form, Input, Select } from "antd";
+import Icon from "@ant-design/icons";
+import WarningFilled from "../assets/warningFilled.svg";
+import { Footnote } from "../../../common/components/footnote/Footnote";
 import { Rule } from "antd/lib/form";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -218,6 +221,13 @@ export const LocatorEditDialog: React.FC<Props> = ({
     setIsOkButtonDisabled(computeIsOkButtonDisabled());
   };
 
+  const renderValidationWarning = () => (
+    <div className="jdn__locatorEdit-warning">
+      <Icon component={WarningFilled} className="ant-alert-icon" />
+      <Footnote>If you leave this field empty, the locator will be invalid</Footnote>
+    </div>
+  );
+
   return (
     <DialogWithForm
       modalProps={{
@@ -286,6 +296,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
           rules={locatorValidationRules}
           validateStatus={getLocatorValidationStatus(validationMessage)}
           help={validationMessage}
+          extra={renderValidationWarning()}
         >
           <Input.TextArea />
         </Form.Item>
