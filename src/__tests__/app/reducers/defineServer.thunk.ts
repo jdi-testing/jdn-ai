@@ -10,13 +10,16 @@ describe("defineServer", () => {
 
   const cleanActions = (actions: any[]) =>
     actions.map((action) => {
+      // @ts-ignore
       const { meta, ...rest } = action;
       return rest;
     });
 
   const cleanErroredActions = (actions: any[]) =>
     actions.map((action) => {
+      // @ts-ignore
       const { meta, payload, error, ...rest } = action;
+      // @ts-ignore
       const { stack, name, ...restError } = error || {};
       return { ...rest, ...(error && Object.entries(error) ? { error: restError } : {}) };
     });
@@ -130,9 +133,7 @@ describe("defineServer", () => {
 
   test("dispatches network error when can't get any of versions", async () => {
     jest.spyOn(request, "get").mockImplementationOnce(() => Promise.reject({}));
-    jest
-      .spyOn(request, "get")
-      .mockImplementationOnce(() => Promise.reject({}));
+    jest.spyOn(request, "get").mockImplementationOnce(() => Promise.reject({}));
     const expectedActions = [
       { type: "main/defineServer/pending" },
       {
