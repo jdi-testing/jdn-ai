@@ -10,16 +10,16 @@ describe("defineServer", () => {
 
   const cleanActions = (actions: any[]) =>
     actions.map((action) => {
-      // @ts-ignore
+      // eslint-disable-next-line
       const { meta, ...rest } = action;
       return rest;
     });
 
   const cleanErroredActions = (actions: any[]) =>
     actions.map((action) => {
-      // @ts-ignore
+      // eslint-disable-next-line
       const { meta, payload, error, ...rest } = action;
-      // @ts-ignore
+      // eslint-disable-next-line
       const { stack, name, ...restError } = error || {};
       return { ...rest, ...(error && Object.entries(error) ? { error: restError } : {}) };
     });
