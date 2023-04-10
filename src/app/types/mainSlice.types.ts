@@ -49,7 +49,4 @@ export enum PageType {
   LocatorsList = "locatorsList",
 }
 
-export const LocalUrl = "http://localhost:5050";
-export const RemoteUrl = `http://10.253.219.156:${__DEV_ENVIRONMENT__ ? "5000" : "80"}` as BaseUrl;
-
 export type BaseUrl = "http://localhost:5050" | "http://10.253.219.156";
