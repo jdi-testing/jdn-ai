@@ -54,7 +54,9 @@ describe("defineServer", () => {
   test("dispatches the correct actions for ver. 0.2.31 with remote server", async () => {
     jest
       .spyOn(request, "get")
-      .mockImplementationOnce(() => Promise.resolve({ data: "0.2.31", config: { baseURL: "http://10.253.219.156:80" } }));
+      .mockImplementationOnce(() =>
+        Promise.resolve({ data: "0.2.31", config: { baseURL: "http://10.253.219.156:80" } })
+      );
     jest.spyOn(request, "get").mockImplementationOnce(() => Promise.reject({}));
 
     const expectedActions = [
@@ -77,7 +79,9 @@ describe("defineServer", () => {
   test("dispatches error when remote ver is 0.2.40 (higher than compatible)", async () => {
     jest
       .spyOn(request, "get")
-      .mockImplementationOnce(() => Promise.resolve({ data: "0.2.40", config: { baseURL: "http://10.253.219.156:80" } }));
+      .mockImplementationOnce(() =>
+        Promise.resolve({ data: "0.2.40", config: { baseURL: "http://10.253.219.156:80" } })
+      );
     jest.spyOn(request, "get").mockImplementationOnce(() => Promise.reject({}));
     const expectedActions = [
       { type: "main/defineServer/pending" },
