@@ -4,7 +4,8 @@ import { useSelector } from "react-redux";
 
 import { isNil } from "lodash";
 import { CloudCheck, CloudSlash, DesktopTower, Info } from "phosphor-react";
-import { BackendStatus, LocalUrl } from "../types/mainSlice.types";
+import { BackendStatus } from "../types/mainSlice.types";
+import { LocalUrl } from "../utils/constants";
 import { RootState } from "../store/store";
 import DesktopSlash from "../assets/desktopTowerSlash.svg";
 import { readmeLinkAddress } from "../../common/constants/constants";
