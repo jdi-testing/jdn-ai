@@ -14,7 +14,7 @@ export const defineServer = createAsyncThunk("main/defineServer", async () => {
         return JSON.parse(JSON.stringify(response));
       } else if (isRemote) {
         throw new Error(BackendStatus.IncompatibleVersionRemote);
-      } else if (major < compatibleMajorVer || minor < compatibleMinorVer) {
+      } else if (major < compatibleMajorVer || minor < compatibleMinorVer || build < compatibleBuildVer) {
         throw new Error(BackendStatus.OutdatedServerLocal);
       } else throw new Error(BackendStatus.OutdatedPluginLocal);
     });
