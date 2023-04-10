@@ -1,9 +1,34 @@
 import { cloneDeep, map as mapFunction, size } from "lodash";
-import { convertToListWithChildren } from "../../../common/utils/helpers";
-import { Locator } from "../../locators/types/locator.types";
+import { JDNHash, Locator } from "../../locators/types/locator.types";
 import { SearchState } from "../components/LocatorsTree";
 
-export const includesSearcSubstr = (strings: Array<string>, searchString: string) => {
+export interface LocatorTree extends Omit<Locator, "children"> {
+  children?: Array<LocatorTree>;
+  depth?: number;
+  searchState?: SearchState;
+}
+
+export const convertToListWithChildren = (_list: Array<Locator>) => {
+  const list = cloneDeep(_list);
+  const map: Record<string, number> = {};
+
+  for (let i = 0; i < list.length; i++) {
+    map[list[i].jdnHash] = i;
+    list[i].children = [];
+  }
+
+  for (let i = 0; i < list.length; i++) {
+    const node = list[i];
+    if (node.parent_id !== "") {
+      const children = list[map[node.parent_id]]?.children;
+      children && children.push(node.element_id);
+    }
+  }
+
+  return list;
+};
+
+export const includesSearcSubstr = (strings: Array<string | undefined>, searchString: string) => {
   const includesSubstring = strings.filter((string) => {
     return string && string.toLowerCase().includes(searchString.toLowerCase());
   });
@@ -11,17 +36,11 @@ export const includesSearcSubstr = (strings: Array<string>, searchString: string
 };
 
 export const applySearch = (element: Locator, seacrhString: string): SearchState => {
-  const { locator, type, name } = element;
-  if (includesSearcSubstr([locator.output, type as string, name], seacrhString)) {
+  const { locator, type, name, elemText } = element;
+  if (includesSearcSubstr([locator.output, type as string, name, ...(elemText ? [elemText] : [])], seacrhString)) {
     return SearchState.None;
   } else return SearchState.Hidden;
 };
-
-export interface LocatorTree extends Omit<Locator, "children"> {
-  children?: Array<LocatorTree>;
-  depth?: number;
-  searchState?: SearchState;
-}
 
 export const convertListToTree = (_list: Array<Locator>, searchString = "") => {
   const list: Array<LocatorTree> = mapFunction(cloneDeep(_list), (elem) => ({
@@ -30,7 +49,7 @@ export const convertListToTree = (_list: Array<Locator>, searchString = "") => {
     searchState: searchString.length ? applySearch(elem, searchString) : undefined,
     depth: !elem.parent_id.length ? 0 : undefined,
   }));
-  const map: Record<string, number> = {};
+  const map: Record<JDNHash, number> = {};
   const tree = [];
 
   for (let i = 0; i < list.length; i++) {

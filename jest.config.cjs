@@ -1,12 +1,9 @@
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { TestEnvironment } = require('jest-environment-jsdom');
-
 module.exports = {
   "globals": {
     "__REDUX_LOG_ENABLE__": false,
     "__DEV_ENVIRONMENT__": false,
   },
-  "testEnvironment": TestEnvironment,
+  "testEnvironment": "jest-environment-jsdom",
   "setupFilesAfterEnv": ['./jest.setup.js'],
   "transform": {
     "^.+\\.svg$": "jest-transform-stub",

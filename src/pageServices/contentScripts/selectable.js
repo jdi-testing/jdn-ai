@@ -233,7 +233,7 @@ export const selectable = () => {
         }
       };
       if (isPlainClick(a)) {
-        const highlightTarget = e.target.closest("[jdn-highlight=true]");
+        const highlightTarget = e.target.closest("[jdn-highlight=true]:not([id^='jdn-overlay'])");
 
         if (highlightTarget && !self.isContextForGroup(e)) { // simple click on any highlight
           if (!e[self.options.moreUsing]) self.removePreviousSelection();

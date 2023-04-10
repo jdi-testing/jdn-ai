@@ -10,7 +10,7 @@ import { changeElementLibrary, setLocatorType } from "../pageObject.slice";
 import { PageObjectId } from "../types/pageObjectSlice.types";
 import { ElementLibrary, libraryNames } from "../../locators/types/generationClasses.types";
 import { identifyElements } from "../../locators/reducers/identifyElements.thunk";
-import { LocatorType } from "../../../common/types/locatorType";
+import { LocatorType } from "../../../common/types/common";
 
 interface Props {
   pageObj: PageObjectId;
@@ -27,10 +27,10 @@ export const GenerationButton: React.FC<Props> = ({ pageObj, library }) => {
     <div className="jdn__generationButtons">
       <Space direction="vertical" size={16}>
         <Row>
-          <Col span={3}>
+          <Col flex="104px">
             <Typography.Text>Library:</Typography.Text>
           </Col>
-          <Col span={9}>
+          <Col flex="auto">
             <Select
               id="library"
               defaultValue={library}
@@ -54,10 +54,10 @@ export const GenerationButton: React.FC<Props> = ({ pageObj, library }) => {
           </Col>
         </Row>
         <Row>
-          <Col span={3}>
+          <Col flex="104px">
             <Typography.Text>Locators type:</Typography.Text>
           </Col>
-          <Col span={9}>
+          <Col flex="auto">
             <Select
               id="locatorType"
               defaultValue={currentPageObject?.locatorType || LocatorType.xPath}

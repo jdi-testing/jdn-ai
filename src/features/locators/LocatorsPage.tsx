@@ -19,21 +19,16 @@ import {
 } from "../pageObjects/pageObject.selectors";
 import { clearLocators } from "../pageObjects/pageObject.slice";
 import { locatorGenerationController } from "./utils/locatorGenerationController";
-import { changeIdentificationStatus, removeLocators, restoreLocators } from "./locators.slice";
+import { removeLocators, restoreLocators } from "./locators.slice";
 import { LocatorsTree, LocatorTreeProps } from "./components/LocatorsTree";
 import { LocatorListHeader } from "./components/LocatorListHeader";
 import { Filter } from "../filter/Filter";
 import { useCalculateHeaderSize } from "./utils/useCalculateHeaderSize";
 import { useOverlay } from "./utils/useOverlay";
-import { IdentificationStatus } from "./types/locator.types";
-
-interface Props {
-  alreadyGenerated?: boolean;
-}
 
 const { confirm } = Modal;
 
-export const LocatorsPage: React.FC<Props> = ({ alreadyGenerated }) => {
+export const LocatorsPage = () => {
   const dispatch = useDispatch();
   const currentPage = useSelector(selectCurrentPage).page;
   const locators = useSelector(selectFilteredLocators);
@@ -47,10 +42,9 @@ export const LocatorsPage: React.FC<Props> = ({ alreadyGenerated }) => {
   // For changing locatorsList-content height depends on header height
   const containerHeight = useCalculateHeaderSize(breadcrumbsRef);
   // overlay for web page
-  useOverlay(alreadyGenerated || false);
+  useOverlay();
 
   const pageBack = () => {
-    dispatch(changeIdentificationStatus(IdentificationStatus.noStatus));
     dispatch(setScriptMessage({}));
     dispatch(changePageBack());
   };

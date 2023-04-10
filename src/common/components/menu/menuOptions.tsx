@@ -59,11 +59,12 @@ export const edit = (onClick: () => void, label?: string) => ({
   label: label || "Edit",
 });
 
-export const advanced = (onClick: Array<() => void>) => ({
+export const advanced = (onClick: Array<() => void>, disabled?: boolean) => ({
   key: "7",
   icon: <ArrowFatLinesDown size={14} />,
   onClick: undefined,
   label: "Advanced calculation",
+  disabled,
   children: [
     {
       key: "7-0",
@@ -138,7 +139,7 @@ export const removeFromPO = (onClick: () => void) => ({
   label: <Typography.Text>Remove from Page Object</Typography.Text>,
 });
 
-export const copyLocatorOption = (onClick: Array<() => void>) => ({
+export const copyLocatorOption = (onClick: Record<LocatorOption, () => void>) => ({
   key: "6",
   icon: <CopySimple size={14} />,
   onClick: undefined,
@@ -146,28 +147,27 @@ export const copyLocatorOption = (onClick: Array<() => void>) => ({
   children: [
     {
       key: "6-0",
-      onClick: onClick[0],
+      onClick: onClick[LocatorOption.Xpath],
       label: LocatorOption.Xpath,
     },
     {
       key: "6-1",
-      onClick: onClick[1],
+      onClick: onClick[LocatorOption.XpathAndSelenium],
       label: LocatorOption.XpathAndSelenium,
     },
     {
       key: "6-2",
-      onClick: onClick[2],
+      onClick: onClick[LocatorOption.XpathAndJDI],
       label: LocatorOption.XpathAndJDI,
     },
     {
       key: "6-3",
-      onClick: onClick[3],
+      onClick: onClick[LocatorOption.CSSSelector],
       label: LocatorOption.CSSSelector,
-      disabled: true,
     },
     {
       key: "6-4",
-      onClick: onClick[4],
+      onClick: onClick[LocatorOption.FullCode],
       label: LocatorOption.FullCode,
     },
   ],

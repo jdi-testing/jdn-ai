@@ -7,6 +7,7 @@ import { testFileTemplate } from "./testTemplate";
 import { getPage } from "./pageObject";
 import { PageObject } from "../types/pageObjectSlice.types";
 import { ElementLibrary } from "../../locators/types/generationClasses.types";
+import { editPomContent } from "./templateFileContent";
 
 const generatePoFile = (newZip: JSZip, page: { pageCode: string; title: string }) =>
   newZip.file(`src/main/java/site/pages/${page.title}.java`, page.pageCode, { binary: false });
@@ -46,24 +47,7 @@ export const editPomFile = (newZip: JSZip, po: PageObject) => {
   return newZip
     .file("pom.xml")!
     .async("string")
-    .then((content) => {
-      let newContent = content;
-      if (po.library === ElementLibrary.MUI && content.indexOf(`<!-- If you need Material UI library -->`) === -1) {
-        newContent = newContent.replace(
-          `<!-- If you need Material UI library`,
-          `<!-- If you need Material UI library -->`
-        );
-        newContent = newContent.replace(`end for material ui -->`, `<!-- end for material ui -->`);
-      } else if (po.library === ElementLibrary.Vuetify) {
-        newContent = newContent.replace(`<!-- If you need Vuetify library`, `<!-- If you need Vuetify library -->`);
-        newContent = newContent.replace(
-          /<\/dependency>[\n\s\ta-zA-Z]*-->/,
-          `</dependency>\n        <!-- end for Vuetify -->`
-        );
-      }
-
-      return newZip.file("pom.xml", newContent, { binary: true });
-    });
+    .then((content) => newZip.file("pom.xml", editPomContent(content, po), { binary: true }));
 };
 
 export const generateAndDownloadZip = async (state: RootState, template: Blob) => {

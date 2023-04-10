@@ -17,7 +17,6 @@ import {
   MAX_COUNT_FILES,
   MAX_FILES_SIZE_MB,
 } from "../utils/reportProblem";
-import { ValidationErrorType } from "../../features/locators/types/locator.types";
 import { selectCurrentPageObject } from "../../features/pageObjects/pageObject.selectors";
 
 const { info } = Modal;
@@ -155,6 +154,7 @@ export const ReportProblem = () => {
     return e?.fileList;
   };
 
+  //create enum with errors messages
   const getTextForUploadButtonTooltip = () => {
     switch (true) {
       case fileList.length >= MAX_COUNT_FILES && filesSize >= MAX_FILES_SIZE_MB:
@@ -205,7 +205,7 @@ export const ReportProblem = () => {
             rules={[
               {
                 required: true,
-                message: ValidationErrorType.EmptyValue,
+                message: "Please fill out this field.",
               },
               {
                 // eslint-disable-next-line max-len

@@ -2,9 +2,9 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { isNil } from "lodash";
 import { pageObjAdapter, simpleSelectPageObjById } from "./pageObject.selectors";
 import { PageObjectState, PageObject, PageObjectId } from "./types/pageObjectSlice.types";
-import { addPageObjReducer } from "./utils/addPageObject.thunk";
+import { addPageObjReducer } from "./reducers/addPageObject.thunk";
 import { ElementLibrary } from "../locators/types/generationClasses.types";
-import { LocatorType } from "../../common/types/locatorType";
+import { LocatorType } from "../../common/types/common";
 
 const initialState: PageObjectState = {};
 
