@@ -27,7 +27,12 @@ import FormItem from "antd/es/form/FormItem";
 import { LocatorType, SelectOption } from "../../../common/types/common";
 import { getLocator } from "../utils/locatorOutput";
 import { evaluateXpath, getLocatorValidationStatus } from "../utils/utils";
-import { generateId, getElementFullXpath, isFilteredSelect, parseElementFromString } from "../../../common/utils/helpers";
+import {
+  generateId,
+  getElementFullXpath,
+  isFilteredSelect,
+  parseElementFromString,
+} from "../../../common/utils/helpers";
 import { newLocatorStub } from "../utils/constants";
 
 interface Props extends Locator {
@@ -123,7 +128,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
     // in case if user didn't touch locator field to avoid forceUpdate
     const locatorMessage = isLocatorFieldTouched ? validationMessage : LocatorValidationWarnings.NotFound;
 
-    const { name, type, locator, locatorType } = await form.validateFields()
+    const { name, type, locator, locatorType } = await form.validateFields();
     newLocator = {
       ...newLocator,
       locator: { ...newLocator.locator, customXpath: locator, output: locator },
@@ -150,7 +155,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
             jdnHash: foundHash,
             element_id: `${foundHash}_${pageObjectId}`,
           };
-        } catch(err) {
+        } catch (err) {
           console.log(err);
         }
         break;
@@ -167,39 +172,41 @@ export const LocatorEditDialog: React.FC<Props> = ({
     setIsModalOpen(false);
   };
 
-  const handleEditLocator = async() => {
+  const handleEditLocator = async () => {
     const { name, type, locator, locatorType } = await form.validateFields();
     if (validationMessage !== LocatorValidationWarnings.NewElement) {
       dispatch(
-      changeLocatorAttributes({
-        name,
-        type,
-        locator,
-        locatorType,
-        element_id,
-        library,
-        message: validationMessage,
-        isCustomName: isEditedName,
-      })
-    );
-    } else {
-      try {
-        const { foundHash, foundElement } = JSON.parse(await evaluateXpath(locator, jdnHash));
-        const fullXpath = await getElementFullXpath(foundElement);
-        const parsedElement = parseElementFromString(foundElement);
-        dispatch(changeLocatorAttributes({
+        changeLocatorAttributes({
           name,
           type,
           locator,
-          newElementXPath: fullXpath,
-          jdnHash: foundHash,
-          elemText: parsedElement?.textContent || "",
           locatorType,
           element_id,
           library,
           message: validationMessage,
           isCustomName: isEditedName,
-        }))
+        })
+      );
+    } else {
+      try {
+        const { foundHash, foundElement } = JSON.parse(await evaluateXpath(locator, jdnHash));
+        const fullXpath = await getElementFullXpath(foundElement);
+        const parsedElement = parseElementFromString(foundElement);
+        dispatch(
+          changeLocatorAttributes({
+            name,
+            type,
+            locator,
+            newElementXPath: fullXpath,
+            jdnHash: foundHash,
+            elemText: parsedElement?.textContent || "",
+            locatorType,
+            element_id,
+            library,
+            message: validationMessage,
+            isCustomName: isEditedName,
+          })
+        );
       } catch (err) {
         console.log(err);
       }

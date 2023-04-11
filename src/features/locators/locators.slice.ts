@@ -50,7 +50,18 @@ const locatorsSlice = createSlice({
       locatorsAdapter.addMany(state, payload);
     },
     changeLocatorAttributes(state, { payload }: PayloadAction<ChangeLocatorAttributesPayload>) {
-      const { type, name, locator, newElementXPath, element_id, jdnHash, elemText, message, isCustomName, locatorType } = payload;
+      const {
+        type,
+        name,
+        locator,
+        newElementXPath,
+        element_id,
+        jdnHash,
+        elemText,
+        message,
+        isCustomName,
+        locatorType,
+      } = payload;
       const _locator = simpleSelectLocatorById(state, element_id);
       if (!_locator) return;
 
@@ -60,8 +71,8 @@ const locatorsSlice = createSlice({
       if (fullXpath !== locator && robulaXpath !== locator) {
         newValue.locator.customXpath = locator;
 
-        if(newElementXPath && jdnHash) {
-          newValue.locator.fullXpath = newElementXPath ;
+        if (newElementXPath && jdnHash) {
+          newValue.locator.fullXpath = newElementXPath;
           newValue.jdnHash = jdnHash;
           newValue.elemText = elemText;
           newValue.locator.robulaXpath = ""; // we need to calc robulaXpath
