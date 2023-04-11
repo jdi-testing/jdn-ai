@@ -4,8 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { size } from "lodash";
 import { DotsThree } from "phosphor-react";
-import { changePage, pushNotification } from "../../../app/main.slice";
-import { PageType } from "../../../app/types/mainSlice.types";
+import { pushNotification } from "../../../app/main.slice";
 import { RootState } from "../../../app/store/store";
 import { deleteOption, download, edit, renameOption } from "../../../common/components/menu/menuOptions";
 import { ElementId, Locator } from "../../locators/types/locator.types";
@@ -29,7 +28,6 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, locators, elements, lib
   const dispatch = useDispatch();
 
   const [isRenameModalOpen, setIsRenameModalOpen] = useState(false);
-  const currentPageObject = useSelector((_state: RootState) => _state.pageObject.present.currentPageObject);
 
   const renderMenu = (
     id: PageObjectId,
@@ -53,13 +51,6 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, locators, elements, lib
     const handleEdit = () => {
       dispatch(setCurrentPageObj(id));
       dispatch(checkLocatorsValidity()); // create thunk
-      dispatch(
-        changePage({
-          page: PageType.LocatorsList,
-          pageObj: currentPageObject,
-          alreadyGenerated: true,
-        })
-      );
     };
 
     const items = [
