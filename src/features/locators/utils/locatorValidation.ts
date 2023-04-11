@@ -36,7 +36,6 @@ export const validateXpath = (
         if (equalHashes(foundHash, locators).length) {
           throw new Error(LocatorValidationErrors.DuplicatedLocator); //validationStatus: ERROR
         } else {
-          //check condition during implementing 1147
           const msg = isCreatingForm
             ? "" //validationStatus: SUCCESS
             : LocatorValidationWarnings.NewElement; //validationStatus: WARNING

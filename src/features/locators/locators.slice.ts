@@ -32,6 +32,9 @@ export interface ChangeLocatorAttributesPayload {
   type: ElementClass;
   name: string;
   locator: string;
+  newElementXPath?: string;
+  jdnHash?: string;
+  elemText?: string;
   message: LocatorValidationErrorType;
   library: ElementLibrary;
   isCustomName?: boolean;
@@ -47,13 +50,23 @@ const locatorsSlice = createSlice({
       locatorsAdapter.addMany(state, payload);
     },
     changeLocatorAttributes(state, { payload }: PayloadAction<ChangeLocatorAttributesPayload>) {
-      const { type, name, locator, element_id, message, isCustomName, locatorType } = payload;
+      const { type, name, locator, newElementXPath, element_id, jdnHash, elemText, message, isCustomName, locatorType } = payload;
       const _locator = simpleSelectLocatorById(state, element_id);
       if (!_locator) return;
+
       const { fullXpath, robulaXpath } = _locator.locator;
       const newValue = { ..._locator, locator: { ..._locator.locator }, message, type, name, isCustomName };
+
       if (fullXpath !== locator && robulaXpath !== locator) {
         newValue.locator.customXpath = locator;
+
+        if(newElementXPath && jdnHash) {
+          newValue.locator.fullXpath = newElementXPath ;
+          newValue.jdnHash = jdnHash;
+          newValue.elemText = elemText;
+          newValue.locator.robulaXpath = ""; // we need to calc robulaXpath
+        }
+
         newValue.isCustomLocator = true;
         newValue.locator.taskStatus = LocatorTaskStatus.SUCCESS;
       } else {

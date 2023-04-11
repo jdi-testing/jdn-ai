@@ -56,7 +56,7 @@ export const createListeners = (
     },
     INVALID_LOCATOR: (payload) => {
       const { element_id, numberOfNodes } = payload;
-      const message = numberOfNodes
+      const message = !numberOfNodes.length
         ? LocatorValidationWarnings.NotFound
         : (`${numberOfNodes} ${LocatorValidationErrors.MultipleElements}` as Locator["message"]);
       dispatch(setValidity({ element_id, message }));

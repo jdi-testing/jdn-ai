@@ -242,7 +242,7 @@ export const highlightOnPage = () => {
 
   const findAndHighlight = (param) => {
     if (param) {
-      if (!predictedElements) predictedElements = param.elements;
+      if (!predictedElements || predictedElements.length != param.elements.length) predictedElements = param.elements;
     }
     if (param?.filter) classFilter = param.filter;
 

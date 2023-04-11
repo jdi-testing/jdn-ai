@@ -50,13 +50,16 @@ export const generateId = (): string => {
   );
 };
 
+export const parseElementFromString = (elementStr: string) => {
+  const parser = new DOMParser();
+  return parser.parseFromString(elementStr, "text/html").body.firstElementChild;
+};
+
 export const getElementFullXpath = async (foundElement: string): Promise<string> => {
   let fullXpath = "";
-  const parser = new DOMParser();
-  const parsedElement = parser.parseFromString(foundElement, "text/html").body.firstChild;
 
   await sendMessage
-    .getElementXpath(parsedElement as Element)
+    .getElementXpath(foundElement)
     .then((xPath: string) => {
       if (xPath) fullXpath = xPath;
     })
