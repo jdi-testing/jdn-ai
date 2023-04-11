@@ -1,11 +1,10 @@
 import { Button, Dropdown } from "antd";
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 
 import { size } from "lodash";
 import { DotsThree } from "phosphor-react";
 import { pushNotification } from "../../../app/main.slice";
-import { RootState } from "../../../app/store/store";
 import { deleteOption, download, edit, renameOption } from "../../../common/components/menu/menuOptions";
 import { ElementId, Locator } from "../../locators/types/locator.types";
 import { removeLocators } from "../../locators/locators.slice";
