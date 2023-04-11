@@ -28,10 +28,10 @@ export const StatusBar = () => {
   const manifest = chrome.runtime.getManifest();
   const pluginVer = manifest.version;
 
-  const steps: TourProps['steps'] = [
+  const steps: TourProps["steps"] = [
     {
-      title: 'Upload File',
-      description: 'Put your files here.',
+      title: "Upload File",
+      description: "Put your files here.",
       cover: (
         <img
           alt="tour.png"
@@ -41,13 +41,13 @@ export const StatusBar = () => {
       target: () => ref1.current,
     },
     {
-      title: 'Save',
-      description: 'Save your changes.',
+      title: "Save",
+      description: "Save your changes.",
       target: () => ref2.current,
     },
     {
-      title: 'Other Actions',
-      description: 'Click to see other actions.',
+      title: "Other Actions",
+      description: "Click to see other actions.",
       target: () => ref3.current,
     },
   ];
@@ -92,7 +92,13 @@ export const StatusBar = () => {
       </div>
       <Space size={[10, 0]} className="header__space">
         <Tooltip title="Readme">
-          <Button ref={ref3} type="link" href={readmeLinkAddress} target="_blank" icon={<Info size={14} color="#8C8C8C" />} />
+          <Button
+            ref={ref3}
+            type="link"
+            href={readmeLinkAddress}
+            target="_blank"
+            icon={<Info size={14} color="#8C8C8C" />}
+          />
         </Tooltip>
         <ReportProblem />
         <span className="jdn_header-connection">{renderServerIndicator()}</span>
