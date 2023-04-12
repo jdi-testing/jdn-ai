@@ -65,8 +65,8 @@ export const convertListToTree = (_list: Array<Locator>, searchString = "") => {
 
       const getParent = (parent_id: string): LocatorTree => {
         const parent = list[map[parent_id]];
-        if (parent.depth === undefined) parent.depth = (list[map[parent.parent_id]]?.depth || 0) + 1;
-        if (parent.searchState === SearchState.Hidden && parent.parent_id.length) return getParent(parent.parent_id);
+        if (parent?.depth === undefined) parent.depth = (list[map[parent.parent_id]]?.depth || 0) + 1;
+        if (parent?.searchState === SearchState.Hidden && parent.parent_id.length) return getParent(parent.parent_id);
         else return parent;
       };
 
