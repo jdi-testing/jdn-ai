@@ -3,7 +3,8 @@ import { createDraftSafeSelector, createEntityAdapter, createSelector, EntitySta
 import { RootState } from "../../app/store/store";
 import { PageObjectId } from "../pageObjects/types/pageObjectSlice.types";
 import { ElementId, Locator } from "./types/locator.types";
-import { getLocator } from "./utils/locatorOutput";
+import { getCssSelector, getLocator, getXPathByPriority } from "./utils/locatorOutput";
+import { LocatorType } from "../../common/types/common";
 
 export const locatorsAdapter = createEntityAdapter<Locator>({
   selectId: (locator) => locator.element_id,
@@ -11,20 +12,33 @@ export const locatorsAdapter = createEntityAdapter<Locator>({
 
 const { selectAll, selectById } = locatorsAdapter.getSelectors<RootState>((state) => state.locators.present);
 
-export const selectLocatorById = createSelector(selectById, (_item?: Locator) =>
-  _item
-    ? {
-        ..._item,
-        locator: { ..._item.locator, output: getLocator(_item.locator, _item.locatorType) },
-      }
-    : undefined
-);
+export const selectLocatorById = createSelector(selectById, (_item?: Locator) => {
+  if (_item) {
+    const cssSelector = getCssSelector(_item.locator);
+    return {
+      ..._item,
+      locator: {
+        ..._item.locator,
+        cssSelector,
+        output: _item.locatorType === LocatorType.cssSelector ? cssSelector : getXPathByPriority(_item.locator),
+      },
+    };
+  }
+  return _item;
+});
 
 export const selectLocators = createSelector(selectAll, (items: Locator[]) =>
-  items.map((_item) => ({
-    ..._item,
-    locator: { ..._item.locator, output: getLocator(_item.locator, _item.locatorType) },
-  }))
+  items.map((_item) => {
+    const cssSelector = getCssSelector(_item.locator);
+    return {
+      ..._item,
+      locator: {
+        ..._item.locator,
+        cssSelector,
+        output: _item.locatorType === LocatorType.cssSelector ? cssSelector : getXPathByPriority(_item.locator),
+      },
+    };
+  })
 );
 
 export const selectLocatorsToGenerate = createSelector(selectLocators, (items: Locator[]) =>
