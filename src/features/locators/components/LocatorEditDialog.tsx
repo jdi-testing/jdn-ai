@@ -1,4 +1,4 @@
-import { Col, Form, Input, Select } from "antd";
+import { Form, Input, Select } from "antd";
 import Icon from "@ant-design/icons";
 import WarningFilled from "../assets/warning-filled.svg";
 import { Footnote } from "../../../common/components/footnote/Footnote";
@@ -301,25 +301,27 @@ export const LocatorEditDialog: React.FC<Props> = ({
           ]}
         />
       </FormItem>
-      <Col push={4}>
-        {/* should be reworked to one form when we'll decide to enable css locators editing */}
-        <Form.Item hidden={formLocatorType !== LocatorType.cssSelector}>
-          <Input.TextArea
-            disabled
-            value={getLocator({ ...locator, customXpath: form.getFieldValue("locator") }, LocatorType.cssSelector)}
-          />
-        </Form.Item>
-        <Form.Item
-          hidden={formLocatorType === LocatorType.cssSelector}
-          name="locator"
-          rules={locatorValidationRules}
-          validateStatus={getLocatorValidationStatus(validationMessage)}
-          help={validationMessage}
-          extra={renderValidationWarning()}
-        >
-          <Input.TextArea />
-        </Form.Item>
-      </Col>
+      {/* should be reworked to one form when we'll decide to enable css locators editing */}
+      <Form.Item
+        hidden={formLocatorType !== LocatorType.cssSelector}
+        wrapperCol={{ span: 24, xs: { offset: 0 }, sm: { offset: 4 } }}
+      >
+        <Input.TextArea
+          disabled
+          value={getLocator({ ...locator, customXpath: form.getFieldValue("locator") }, LocatorType.cssSelector)}
+        />
+      </Form.Item>
+      <Form.Item
+        wrapperCol={{ span: 24, xs: { offset: 0 }, sm: { offset: 4 } }}
+        hidden={formLocatorType === LocatorType.cssSelector}
+        name="locator"
+        rules={locatorValidationRules}
+        validateStatus={getLocatorValidationStatus(validationMessage)}
+        help={validationMessage}
+        extra={renderValidationWarning()}
+      >
+        <Input.TextArea />
+      </Form.Item>
     </DialogWithForm>
   );
 };
