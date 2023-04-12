@@ -132,7 +132,8 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       });
       break;
     case "locators/updateLocator":
-      sendMessage.changeStatus(payload);
+      const updatedLocator = selectLocatorById(state, payload.element_id);
+      sendMessage.changeStatus(updatedLocator as Locator);
       break;
     case "locators/failGeneration": {
       const _payload = payload.map((element_id: string) => {

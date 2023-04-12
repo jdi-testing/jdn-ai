@@ -143,6 +143,8 @@ div[jdn-highlight="true"] {
 .jdn-tooltip {
   all: revert;
 
+  max-width: 400px;
+  min-width: fit-content;
   position: absolute;
   display: inline-block;
   background-color: rgba(0, 0, 0, 0.8);
@@ -154,6 +156,7 @@ div[jdn-highlight="true"] {
   letter-spacing: 0;
   padding: 12px;
   margin-top: 13px;
+  margin-bottom: 13px;
 
   &::before,
   &::after,
@@ -175,7 +178,7 @@ div[jdn-highlight="true"] {
   &::after {
     content: "";
     position: absolute;
-    right: 10px;
+    left: 10px;
     top: -10px;
     border-width: 0px 9px 10px;
     border-style: solid;
@@ -184,8 +187,8 @@ div[jdn-highlight="true"] {
   }
 
   &-right::after {
-    left: 10px;
-    right: unset;
+    right: 10px;
+    left: unset;
   }
 
   &-top::after {
