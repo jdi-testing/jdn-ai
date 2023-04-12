@@ -38,6 +38,13 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       locators && sendMessage.setHighlight({ elements: locators as Locator[], filter });
       break;
     }
+    case "pageObject/addLocatorToPageObj": {
+      if (isNil(state.pageObject.present.currentPageObject)) return;
+      const { locatorId } = payload;
+      const locator = selectLocatorById(state, locatorId);
+      locator && !locator?.message && sendMessage.addElement(locator);
+      break;
+    }
     case "locators/checkLocatorsValidity/fulfilled": {
       const locators = selectValidLocators(state);
       const filter = selectClassFilterByPO(state);

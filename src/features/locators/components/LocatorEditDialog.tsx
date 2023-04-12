@@ -19,7 +19,7 @@ import {
 } from "../types/locator.types";
 import { defaultLibrary } from "../types/generationClasses.types";
 import { changeLocatorAttributes, moveLocatorToNewElement, addLocators, setScrollToLocator } from "../locators.slice";
-import { addLocatorsToPageObj } from "../../pageObjects/pageObject.slice";
+import { addLocatorToPageObj } from "../../pageObjects/pageObject.slice";
 import { createNewName } from "../utils/utils";
 import { createLocatorValidationRules } from "../utils/locatorValidationRules";
 import { createNameValidationRules } from "../utils/nameValidationRules";
@@ -165,7 +165,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
     }
 
     dispatch(addLocators([newLocator]));
-    dispatch(addLocatorsToPageObj([newLocator.element_id]));
+    dispatch(addLocatorToPageObj({ pageObjId: pageObjectId, locatorId: newLocator.element_id}));
     dispatch(setScrollToLocator(newLocator.element_id));
 
     form.resetFields();

@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { isNil } from "lodash";
 import { pageObjAdapter, simpleSelectPageObjById } from "./pageObject.selectors";
 import { PageObjectState, PageObject, PageObjectId } from "./types/pageObjectSlice.types";
+import { ElementId } from "../locators/types/locator.types";
 import { addPageObjReducer } from "./reducers/addPageObject.thunk";
 import { ElementLibrary } from "../locators/types/generationClasses.types";
 import { LocatorType } from "../../common/types/common";
@@ -12,7 +13,7 @@ const pageObjSlice = createSlice({
   name: "pageObject",
   initialState: pageObjAdapter.getInitialState(initialState),
   reducers: {
-    addLocatorToPageObj(state, { payload }) {
+    addLocatorToPageObj(state, { payload }: PayloadAction<{ pageObjId: PageObjectId, locatorId: ElementId}>) {
       const { pageObjId, locatorId } = payload;
       const pageObj = simpleSelectPageObjById(state, pageObjId);
       if (!pageObj) return;
