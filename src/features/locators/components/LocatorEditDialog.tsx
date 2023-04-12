@@ -165,7 +165,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
     }
 
     dispatch(addLocators([newLocator]));
-    dispatch(addLocatorToPageObj({ pageObjId: pageObjectId, locatorId: newLocator.element_id}));
+    dispatch(addLocatorToPageObj({ pageObjId: pageObjectId, locatorId: newLocator.element_id }));
     dispatch(setScrollToLocator(newLocator.element_id));
 
     form.resetFields();

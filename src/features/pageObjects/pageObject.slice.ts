@@ -13,7 +13,7 @@ const pageObjSlice = createSlice({
   name: "pageObject",
   initialState: pageObjAdapter.getInitialState(initialState),
   reducers: {
-    addLocatorToPageObj(state, { payload }: PayloadAction<{ pageObjId: PageObjectId, locatorId: ElementId}>) {
+    addLocatorToPageObj(state, { payload }: PayloadAction<{ pageObjId: PageObjectId; locatorId: ElementId }>) {
       const { pageObjId, locatorId } = payload;
       const pageObj = simpleSelectPageObjById(state, pageObjId);
       if (!pageObj) return;
