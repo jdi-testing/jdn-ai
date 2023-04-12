@@ -2,8 +2,6 @@
     avoid using any outer scope variables inside this function
  */
 
-import { unset } from "lodash";
-
 /* global chrome */
 export const highlightOnPage = () => {
   let port;
