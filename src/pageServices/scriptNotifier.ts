@@ -44,7 +44,8 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       locators && sendMessage.setHighlight({ elements: locators as Locator[], filter, isAlreadyGenerated: true });
       break;
     }
-    case "locators/changeLocatorAttributes": {
+    case "locators/changeLocatorAttributes":
+    case "locators/moveLocatorToNewElement": {
       const { element_id, message, type: elementType, name } = payload;
       const prevValue = selectLocatorById(prevState, element_id);
       const newValue = selectLocatorById(state, element_id);

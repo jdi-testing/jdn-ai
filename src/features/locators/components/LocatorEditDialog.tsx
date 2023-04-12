@@ -18,7 +18,7 @@ import {
   ValidationStatus,
 } from "../types/locator.types";
 import { defaultLibrary } from "../types/generationClasses.types";
-import { changeLocatorAttributes, addLocators, setScrollToLocator } from "../locators.slice";
+import { changeLocatorAttributes, moveLocatorToNewElement, addLocators, setScrollToLocator } from "../locators.slice";
 import { addLocatorsToPageObj } from "../../pageObjects/pageObject.slice";
 import { createNewName } from "../utils/utils";
 import { createLocatorValidationRules } from "../utils/locatorValidationRules";
@@ -193,7 +193,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
         const fullXpath = await getElementFullXpath(foundElement);
         const parsedElement = parseElementFromString(foundElement);
         dispatch(
-          changeLocatorAttributes({
+          moveLocatorToNewElement({
             name,
             type,
             locator,
