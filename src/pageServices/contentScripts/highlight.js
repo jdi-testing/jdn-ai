@@ -2,8 +2,6 @@
     avoid using any outer scope variables inside this function
  */
 
-import { unset } from "lodash";
-
 /* global chrome */
 export const highlightOnPage = () => {
   let port;
@@ -223,7 +221,7 @@ export const highlightOnPage = () => {
     div.className = getClassName(predictedElement);
     div.setAttribute("jdn-highlight", true);
     div.setAttribute("jdn-status", predictedElement.locator.taskStatus);
-    div.addEventListener("mouseover", (event) => {
+    div.addEventListener("mouseover", () => {
       tooltipTimer = setTimeout(() => {
         showTooltip(coordinates);
       }, 2000);
@@ -346,8 +344,8 @@ export const highlightOnPage = () => {
   };
 
   const onMouseMove = (event) => {
-    const {x, y} = event;
-    coordinates = {x, y};
+    const { x, y } = event;
+    coordinates = { x, y };
   };
 
   const events = ["scroll", "resize"];
