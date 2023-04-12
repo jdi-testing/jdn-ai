@@ -171,6 +171,9 @@ export const selectable = () => {
       return target.classList.contains(self.options.selectedClass) && e.button === 2;
     };
     this.rectOpen = function (e) {
+      const labelTarget = e.target.closest(".jdn-label");
+      if (labelTarget) return;
+
       self.options.start && self.options.start(e);
       if (self.options.key && !e[self.options.key]) return;
       self.options.onDeselect && self.selectedItems.size && self.options.onDeselect(Array.from(self.selectedItems));

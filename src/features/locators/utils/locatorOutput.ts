@@ -2,9 +2,7 @@ import xPathToCss from "xpath-to-css";
 import { LocatorType } from "../../../common/types/common";
 import { LocatorValue } from "../types/locator.types";
 
-const getLocatorByType = (xPaths: string[], locatorType?: LocatorType) => {
-  if (locatorType !== LocatorType.cssSelector) return xPaths[0];
-
+export const convertXpathToCss = (xPaths: string[]) => {
   let _index = 0;
   let cssSelector = "";
 
@@ -22,6 +20,12 @@ const getLocatorByType = (xPaths: string[], locatorType?: LocatorType) => {
   return cssSelector;
 };
 
+const getLocatorByType = (xPaths: string[], locatorType?: LocatorType) => {
+  if (locatorType !== LocatorType.cssSelector) return xPaths[0];
+
+  return convertXpathToCss(xPaths);
+};
+
 export const getPrioritizedXPaths = (locatorValue: LocatorValue): string[] => [
   ...(locatorValue.customXpath || typeof locatorValue.customXpath === "string" ? [locatorValue.customXpath] : []),
   ...(locatorValue.robulaXpath ? [locatorValue.robulaXpath] : []),
@@ -32,4 +36,8 @@ export const getXPathByPriority = (locatorValue: LocatorValue) => getPrioritized
 
 export const getLocator = (locatorValue: LocatorValue, locatorType?: LocatorType) => {
   return getLocatorByType(getPrioritizedXPaths(locatorValue), locatorType);
+};
+
+export const getCssSelector = (locatorValue: LocatorValue) => {
+  return getLocatorByType(getPrioritizedXPaths(locatorValue), LocatorType.cssSelector);
 };
