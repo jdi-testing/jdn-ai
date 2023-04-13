@@ -95,12 +95,11 @@ export const getLocatorValidationStatus = (message: LocatorValidationErrorType):
       return ValidationStatus.ERROR;
     case Object.values(LocatorValidationWarnings).includes(message as LocatorValidationWarnings):
       return ValidationStatus.WARNING;
-    case !"":
+    case !message?.length:
       return ValidationStatus.SUCCESS;
     default:
       return;
   }
 };
 
-export const isValidLocator = (message?: string) =>
-  !message?.length || message === LocatorValidationWarnings.NewElement;
+export const isValidLocator = (message?: string) => !message?.length;

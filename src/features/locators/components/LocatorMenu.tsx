@@ -16,7 +16,13 @@ import {
   copyLocatorOption,
 } from "../../../common/components/menu/menuOptions";
 import { isProgressStatus, locatorGenerationController } from "../utils/locatorGenerationController";
-import { Locator, LocatorCalculationPriority, LocatorTaskStatus, ValidationStatus } from "../types/locator.types";
+import {
+  Locator,
+  LocatorCalculationPriority,
+  LocatorTaskStatus,
+  ValidationStatus,
+  LocatorValidationWarnings,
+} from "../types/locator.types";
 import { setCalculationPriority, toggleDeleted } from "../locators.slice";
 import { copyLocator, getLocatorValidationStatus } from "../utils/utils";
 import { LocatorOption } from "../utils/constants";
@@ -34,6 +40,11 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, chil
   const dispatch = useDispatch();
 
   const { element_id, locator, deleted, priority, jdnHash, type, name, message } = element;
+
+  const isAdvancedCalculationDisabled =
+    message === LocatorValidationWarnings.NewElement
+      ? false
+      : getLocatorValidationStatus(message) === ValidationStatus.WARNING;
 
   const isLocatorInProgress = isProgressStatus(locator.taskStatus);
 
@@ -117,7 +128,7 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, chil
                   getRerunGeneration(60),
                   getRerunGeneration(3600),
                 ],
-                getLocatorValidationStatus(message) === ValidationStatus.WARNING
+                isAdvancedCalculationDisabled
               ),
             ]
           : []),

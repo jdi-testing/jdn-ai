@@ -27,7 +27,7 @@ const initialState: LocatorsState = {
   scrollToLocator: null,
 };
 
-export interface ChangeLocatorAttributesPayload {
+interface ChangeLocatorAttributesPayload {
   element_id: ElementId;
   type: ElementClass;
   name: string;
@@ -39,6 +39,12 @@ export interface ChangeLocatorAttributesPayload {
   locatorType?: LocatorType;
 }
 
+interface ChangeLocatorElementPayload extends ChangeLocatorAttributesPayload {
+  newElementXPath: string;
+  jdnHash: string;
+  elemText: string;
+}
+
 const locatorsSlice = createSlice({
   name: "locators",
   initialState: locatorsAdapter.getInitialState(initialState),
@@ -46,12 +52,34 @@ const locatorsSlice = createSlice({
     addLocators(state, { payload }) {
       locatorsAdapter.addMany(state, payload);
     },
+    changeLocatorElement(state, { payload }: PayloadAction<ChangeLocatorElementPayload>) {
+      const { locator, newElementXPath, element_id, ...rest } = payload;
+      const _locator = simpleSelectLocatorById(state, element_id);
+
+      if (!_locator) return;
+
+      const newValue = {
+        ..._locator,
+        ...rest,
+        isCustomLocator: true,
+        locator: {
+          fullXpath: newElementXPath,
+          customXpath: locator,
+          robulaXpath: "", // we need to calc robulaXpath
+          taskStatus: LocatorTaskStatus.SUCCESS,
+        },
+      };
+
+      locatorsAdapter.upsertOne(state, newValue);
+    },
     changeLocatorAttributes(state, { payload }: PayloadAction<ChangeLocatorAttributesPayload>) {
       const { type, name, locator, element_id, message, isCustomName, locatorType } = payload;
       const _locator = simpleSelectLocatorById(state, element_id);
       if (!_locator) return;
+
       const { fullXpath, robulaXpath } = _locator.locator;
       const newValue = { ..._locator, locator: { ..._locator.locator }, message, type, name, isCustomName };
+
       if (fullXpath !== locator && robulaXpath !== locator) {
         newValue.locator.customXpath = locator;
         newValue.isCustomLocator = true;
@@ -208,6 +236,7 @@ export default locatorsSlice.reducer;
 export const {
   addLocators,
   changeIdentificationStatus,
+  changeLocatorElement,
   changeLocatorAttributes,
   failGeneration,
   removeLocators,
