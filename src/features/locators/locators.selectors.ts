@@ -75,8 +75,8 @@ export const areChildrenChecked = createSelector(
   selectLocatorById,
   (locators, locator) =>
     locator &&
-    locator.children &&
-    locator.children.every((childId) => locators.some((loc) => loc.element_id === childId && loc.generate))
+    Boolean(locator.children?.length) &&
+    locator.children?.every((childId) => locators.some((loc) => loc.element_id === childId && loc.generate))
 );
 
 /* these selectors are for using inside reducers */
