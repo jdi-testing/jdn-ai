@@ -7,7 +7,7 @@ export const locator1 = {
     robulaXpath: "//*[@class='sidebar-menu left']",
     output: "//*[@class='sidebar-menu left']",
     taskStatus: "PENDING",
-    cssSelector: ".sidebar-menu.left", 
+    cssSelector: ".sidebar-menu.left",
   },
   name: "radiobuttonsUl",
   predictedAttrId: "",
