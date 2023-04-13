@@ -11,6 +11,8 @@ export const highlightOnPage = () => {
   let scrollableContainers = [];
   let classFilter = {};
   let tooltip;
+  let tooltipTimer;
+  let coordinates = { x: 0, y: 0 };
 
   const sendMessage = (message) =>
     chrome.runtime.sendMessage(message).catch((error) => {
@@ -62,6 +64,13 @@ export const highlightOnPage = () => {
   const getClassName = (element) => {
     return `jdn-highlight ${element.generate ? "jdn-primary" : "jdn-secondary"} ${element.active ? "jdn-active" : ""}`;
   };
+
+  const getXPathByPriority = (locatorValue) =>
+    [
+      ...(locatorValue.customXpath || typeof locatorValue.customXpath === "string" ? [locatorValue.customXpath] : []),
+      ...(locatorValue.robulaXpath ? [locatorValue.robulaXpath] : []),
+      locatorValue.fullXpath,
+    ][0];
 
   const scrollToElement = (jdnHash) => {
     const originDiv = document.querySelector(`[jdn-hash='${jdnHash}']`);
@@ -157,38 +166,54 @@ export const highlightOnPage = () => {
       tooltip.className = "jdn-tooltip jdn-tooltip-hidden";
       document.body.appendChild(tooltip);
     };
-    const tooltipDefaultStyle = (rect) => {
-      const { right, top, height, width } = rect;
-      return rect
-        ? {
-            right: `calc(100% - ${right + window.pageXOffset - width / 2}px)`,
-            top: `${top + window.pageYOffset + height}px`,
-          }
-        : {};
+
+    const tooltipDefaultStyle = ({ x, y }) => {
+      const maxTooltipWidth = 400;
+      const minTooltipHeight = 120;
+      const xTooltipOffset = 18;
+      const yTooltipOffset = 9;
+
+      const clientWidth = document.body.clientWidth;
+      const innerHeight = window.innerHeight;
+      let right, left, top, bottom;
+      let classNames = ["jdn-tooltip"];
+      if (x + window.pageXOffset + (maxTooltipWidth - xTooltipOffset) > clientWidth) {
+        right = `${clientWidth - x - window.pageXOffset - xTooltipOffset}px`;
+        left = "unset";
+        classNames.push("jdn-tooltip-right");
+      } else {
+        left = `${x + window.pageXOffset - xTooltipOffset}px`;
+        right = "unset";
+      }
+      if (y + minTooltipHeight > window.innerHeight) {
+        bottom = `${innerHeight - y - window.pageYOffset + yTooltipOffset}px`;
+        top = "unset";
+        classNames.push("jdn-tooltip-top");
+      } else {
+        top = `${y + window.pageYOffset + yTooltipOffset}px`;
+        bottom = "unset";
+      }
+      return {
+        style: { top, left, right, bottom },
+        classNames,
+      };
     };
+
     const tooltipInnerHTML = () => {
       const el = predictedElements.find((e) => e.element_id === element_id);
       return `
       <div class="jdn-tooltip-paragraph"><b>Name:</b> ${el.name}</div>
-      <div class="jdn-tooltip-paragraph"><b>Type:</b> ${el.type}</div>`;
+      <div class="jdn-tooltip-paragraph"><b>Type:</b> ${el.type}</div>
+      <div class="jdn-tooltip-paragraph"><b>xPath:</b> ${getXPathByPriority(el.locator)}</div>
+      <div class="jdn-tooltip-paragraph"><b>CSS selector:</b> ${el.locator.cssSelector}</div>`;
     };
 
-    const checkTooltipVisibility = (tooltip, label) => {
-      const { left: tooltipLeft, right: tooltipRight, width: tooltipWidth } = tooltip.getBoundingClientRect();
-      const { top: labelTop, height: labelHeight } = label.getBoundingClientRect();
-      if (tooltipLeft < 0) {
-        tooltip.style.right = `calc(100% - ${tooltipRight}px - ${tooltipWidth}px - ${window.pageXOffset}px)`;
-        tooltip.classList.add("jdn-tooltip-right");
-      }
-
-      const { bottom: bodyBottom } = document.body.getBoundingClientRect();
-      const { bottom: tooltipBottom } = tooltip.getBoundingClientRect();
-      if (bodyBottom < tooltipBottom) {
-        const { height: tooltipHeight } = tooltip.getBoundingClientRect();
-        const cornerHeight = 13;
-        tooltip.style.top = `${labelTop + window.pageYOffset - tooltipHeight - cornerHeight - labelHeight}px`;
-        tooltip.classList.add("jdn-tooltip-top");
-      }
+    const showTooltip = (event) => {
+      const { x, y } = event;
+      const { style, classNames } = tooltipDefaultStyle({ x, y });
+      Object.assign(tooltip.style, style);
+      tooltip.innerHTML = tooltipInnerHTML();
+      tooltip.className = classNames.join(" ");
     };
 
     const div = document.createElement("div");
@@ -196,20 +221,24 @@ export const highlightOnPage = () => {
     div.className = getClassName(predictedElement);
     div.setAttribute("jdn-highlight", true);
     div.setAttribute("jdn-status", predictedElement.locator.taskStatus);
+    div.addEventListener("mouseover", () => {
+      tooltipTimer = setTimeout(() => {
+        showTooltip(coordinates);
+      }, 2000);
+    });
+    div.addEventListener("mouseout", () => {
+      clearTimeout(tooltipTimer);
+      tooltip.className = "jdn-tooltip jdn-tooltip-hidden";
+    });
 
     const label = document.createElement("span");
     label.className = "jdn-label";
     label.innerHTML = `<span class="jdn-class">${predictedElement.name}</span>`;
 
     addTooltip();
-    label.addEventListener("mouseover", () => {
-      Object.assign(tooltip.style, tooltipDefaultStyle(label.getBoundingClientRect()));
-      tooltip.innerHTML = tooltipInnerHTML();
-      tooltip.classList.remove("jdn-tooltip-hidden");
-      checkTooltipVisibility(tooltip, label);
-    });
-    label.addEventListener("mouseout", () => {
-      tooltip.className = "jdn-tooltip jdn-tooltip-hidden";
+    label.addEventListener("click", (event) => {
+      event.stopPropagation();
+      showTooltip(event);
     });
 
     Object.assign(div.style, getDivPosition(elementRect));
@@ -314,6 +343,11 @@ export const highlightOnPage = () => {
     }
   };
 
+  const onMouseMove = (event) => {
+    const { x, y } = event;
+    coordinates = { x, y };
+  };
+
   const events = ["scroll", "resize"];
   const removeEventListeners = () => {
     events.forEach((eventName) => {
@@ -321,6 +355,8 @@ export const highlightOnPage = () => {
     });
 
     document.removeEventListener("dblclick", onElementDblClick);
+    document.removeEventListener("click", onDocumentClick);
+    document.removeEventListener("mousemove", onMouseMove);
 
     listenersAreSet = false;
   };
@@ -347,12 +383,23 @@ export const highlightOnPage = () => {
     }
   };
 
+  const onDocumentClick = (event) => {
+    const highlightTarget = event.target.closest(".jdn-label");
+    if (!highlightTarget) {
+      const tooltip = document.querySelector(".jdn-tooltip");
+      if (tooltip) tooltip.className = "jdn-tooltip jdn-tooltip-hidden";
+      return;
+    }
+  };
+
   const setDocumentListeners = () => {
     events.forEach((eventName) => {
       document.addEventListener(eventName, scrollListenerCallback, true);
     });
 
     document.addEventListener("dblclick", onElementDblClick);
+    document.addEventListener("click", onDocumentClick);
+    document.addEventListener("mousemove", onMouseMove);
 
     listenersAreSet = true;
   };

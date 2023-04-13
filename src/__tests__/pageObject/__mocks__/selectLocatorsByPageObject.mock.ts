@@ -142,6 +142,7 @@ export const selectLocators = (pageObject: PageObject) => [
       taskStatus: "SUCCESS",
       robulaXpath: "//*[@class='main-content']",
       output: ".main-content",
+      cssSelector: ".main-content",
     },
     locatorType: LocatorType.cssSelector,
     name: "dialog",
@@ -164,6 +165,7 @@ export const selectLocators = (pageObject: PageObject) => [
       taskStatus: "SUCCESS",
       robulaXpath: "//*[@class='uui-navigation nav navbar-nav m-l8']",
       customXpath: "//*[@class='uui-navigation nav navbar-nav m-l8 any']",
+      cssSelector: ".uui-navigation.nav.navbar-nav.m-l8.any",
       output:
         pageObject.locatorType === LocatorType.cssSelector
           ? ".uui-navigation.nav.navbar-nav.m-l8.any"
@@ -193,6 +195,7 @@ export const selectLocators = (pageObject: PageObject) => [
       taskStatus: "SUCCESS",
       robulaXpath: "//*[@index='5']/ul",
       output: "//*[@index='5']/ul",
+      cssSelector: '[index="5"] > ul',
     },
     locatorType: LocatorType.xPath,
     name: "html5MobileAndHtml5BootstrapBootstrapFormBootstrapFormsReact",
