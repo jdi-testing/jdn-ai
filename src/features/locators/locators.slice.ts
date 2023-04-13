@@ -39,7 +39,7 @@ interface ChangeLocatorAttributesPayload {
   locatorType?: LocatorType;
 }
 
-interface MoveLocatorToNewElementPayload extends ChangeLocatorAttributesPayload {
+interface ChangeLocatorElementPayload extends ChangeLocatorAttributesPayload {
   newElementXPath: string;
   jdnHash: string;
   elemText: string;
@@ -52,20 +52,15 @@ const locatorsSlice = createSlice({
     addLocators(state, { payload }) {
       locatorsAdapter.addMany(state, payload);
     },
-    moveLocatorToNewElement(state, { payload }: PayloadAction<MoveLocatorToNewElementPayload>) {
-      const { type, name, locator, newElementXPath, element_id, jdnHash, elemText, message, isCustomName } = payload;
+    changeLocatorElement(state, { payload }: PayloadAction<ChangeLocatorElementPayload>) {
+      const { locator, newElementXPath, element_id, ...rest } = payload;
       const _locator = simpleSelectLocatorById(state, element_id);
 
       if (!_locator) return;
 
       const newValue = {
         ..._locator,
-        message,
-        type,
-        name,
-        isCustomName,
-        jdnHash,
-        elemText,
+        ...rest,
         isCustomLocator: true,
         locator: {
           fullXpath: newElementXPath,
@@ -241,7 +236,7 @@ export default locatorsSlice.reducer;
 export const {
   addLocators,
   changeIdentificationStatus,
-  moveLocatorToNewElement,
+  changeLocatorElement,
   changeLocatorAttributes,
   failGeneration,
   removeLocators,

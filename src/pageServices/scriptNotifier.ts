@@ -52,7 +52,7 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       break;
     }
     case "locators/changeLocatorAttributes":
-    case "locators/moveLocatorToNewElement": {
+    case "locators/changeLocatorElement": {
       const { element_id, message, type: elementType, name } = payload;
       const prevValue = selectLocatorById(prevState, element_id);
       const newValue = selectLocatorById(state, element_id);
