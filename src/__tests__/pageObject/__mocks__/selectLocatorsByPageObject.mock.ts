@@ -195,7 +195,7 @@ export const selectLocators = (pageObject: PageObject) => [
       taskStatus: "SUCCESS",
       robulaXpath: "//*[@index='5']/ul",
       output: "//*[@index='5']/ul",
-      cssSelector: "[index=\"5\"] > ul",
+      cssSelector: '[index="5"] > ul',
     },
     locatorType: LocatorType.xPath,
     name: "html5MobileAndHtml5BootstrapBootstrapFormBootstrapFormsReact",
