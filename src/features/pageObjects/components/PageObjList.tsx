@@ -124,7 +124,7 @@ export const PageObjList: React.FC<Props> = (props) => {
                     extra={
                       <>
                         {isPageObjectNotEmpty && <PageObjCopyButton {...{ elements }} />}
-                        <PageObjMenu {...{ id, name, locators, elements, library }} />
+                        <PageObjMenu {...{ id, name, url, locators, elements, library }} />
                       </>
                     }
                   >
