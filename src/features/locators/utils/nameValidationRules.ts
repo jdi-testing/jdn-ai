@@ -1,6 +1,5 @@
 import { Rule, RuleObject } from "antd/lib/form";
-import { isStringMatchesReservedWord } from "../../pageObjects/utils/pageObject";
-import { isStringMatchesReservedWordPerfTest } from "../../pageObjects/utils/pageObjectPerfTest";
+import { isStringMatchesReservedWord, isStringMatchesReservedWordPerfTest } from "../../pageObjects/utils/pageObject";
 import { LocatorValidationErrors, LocatorValidationWarnings } from "../types/locator.types";
 import { isValidJavaVariable } from "./utils";
 

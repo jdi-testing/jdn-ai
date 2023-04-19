@@ -14,6 +14,7 @@ export const messages = (value?: string) => {
     REMOVE_ALL: "Page objects were deleted",
     EDIT_PO_NAME: "The page object name was edited",
     DOWNLOAD_FILE: "The Java file was downloaded",
+    DOWNLOAD_JS_FILE: "The JavaScript file was downloaded",
     DOWNLOAD_TEMPLATE: "The archive with template was downloaded",
     ACTION_CANCELLED: "The action was cancelled",
   };

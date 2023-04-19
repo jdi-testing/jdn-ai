@@ -113,18 +113,18 @@ export const retry = (onClick: () => void) => ({
   label: "Retry",
 });
 
-export const download = (onClick: () => void, label?: string) => ({
+export const download = (onClick: () => void) => ({
   key: "10",
   icon: <DownloadSimple size={14} />,
   onClick,
-  label: label || "Download",
+  label: "Download",
 });
 
-export const downloadPerfTest = (onClick: () => void, label?: string) => ({
+export const downloadPerfTest = (onClick: () => void) => ({
   key: "11",
   icon: <DownloadSimple size={14} />,
   onClick,
-  label: label || "Download js",
+  label: "Download js file",
 });
 
 export const deleteOption = (onClick: () => void) => ({

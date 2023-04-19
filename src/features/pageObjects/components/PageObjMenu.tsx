@@ -17,8 +17,7 @@ import { removeLocators } from "../../locators/locators.slice";
 import { removePageObject, setCurrentPageObj } from "../pageObject.slice";
 import { PageObjectId } from "../types/pageObjectSlice.types";
 import { ElementLibrary } from "../../locators/types/generationClasses.types";
-import { generatePageObject } from "../../pageObjects/utils/pageObject";
-import { generatePageObjectPerfTest } from "../../pageObjects/utils/pageObjectPerfTest";
+import { generatePageObject, generatePageObjectPerfTest } from "../../pageObjects/utils/pageObject";
 import { RenamePageObjectDialog } from "./RenamePageObjDialog";
 import { checkLocatorsValidity } from "../../locators/reducers/checkLocatorValidity.thunk";
 
@@ -58,7 +57,7 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, url, locators, elements
 
     const handleDownloadPerfTest = () => {
       generatePageObjectPerfTest(locatorObjects, name, url).then(() =>
-        dispatch(pushNotification({ action: { type: "downloadFile" } }))
+        dispatch(pushNotification({ action: { type: "downloadJSFile" } }))
       );
     };
 
@@ -71,7 +70,7 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, url, locators, elements
       renameOption(handleRename),
       ...(size(locatorIds) ? [edit(handleEdit, "Edit Page Object")] : []),
       ...(size(locatorIds) ? [download(handleDownload)] : []),
-      ...(size(locatorIds) ? [downloadPerfTest(handleDownloadPerfTest, "Download js file")] : []),
+      ...(size(locatorIds) ? [downloadPerfTest(handleDownloadPerfTest)] : []),
       deleteOption(handleRemove),
     ];
 

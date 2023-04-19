@@ -74,6 +74,9 @@ export const useNotificationController = (
       case "downloadFile":
         openNotification(messages().DOWNLOAD_FILE, "info");
         break;
+      case "downloadJSFile":
+        openNotification(messages().DOWNLOAD_JS_FILE, "info");
+        break;
       case "downloadTemplate":
         openNotification(messages().DOWNLOAD_TEMPLATE, "info");
         break;
