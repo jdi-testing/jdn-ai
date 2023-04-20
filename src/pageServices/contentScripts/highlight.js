@@ -23,6 +23,7 @@ export const highlightOnPage = () => {
     nodes = [];
     predictedElements = null;
     scrollableContainers = [];
+    tooltip = null;
   };
 
   const isInViewport = (elementRect) => {
