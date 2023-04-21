@@ -22,6 +22,7 @@ export const highlightOnPage = () => {
   const clearState = () => {
     nodes = [];
     predictedElements = null;
+    classFilter = null;
     scrollableContainers = [];
     tooltip = null;
   };
@@ -114,6 +115,7 @@ export const highlightOnPage = () => {
 
   const removeElement = (element) => {
     const j = predictedElements.findIndex((e) => e.element_id === element?.element_id);
+    if (j === -1) return;
     predictedElements.splice(j, 1);
 
     const div = document.getElementById(element?.jdnHash);
@@ -121,7 +123,8 @@ export const highlightOnPage = () => {
   };
 
   const addHighlightElement = (element) => {
-    predictedElements.push(element);
+    if (!predictedElements) predictedElements = [element];
+    else predictedElements.push(element);
     findAndHighlight();
   };
 
@@ -277,7 +280,7 @@ export const highlightOnPage = () => {
     if (param?.filter) classFilter = param.filter;
 
     nodes = [];
-    predictedElements.forEach(({ deleted, type, jdnHash, locatorType, locator, element_id }) => {
+    predictedElements.forEach(({ deleted, type, jdnHash, locatorType, locator, element_id }, i) => {
       if (deleted || isFilteredOut(type)) return;
       let node = findByHash(jdnHash);
       if (!node) {
@@ -286,7 +289,13 @@ export const highlightOnPage = () => {
             locatorType === "CSS selector"
               ? findBySelector(locator.output, element_id)
               : findByXpath(locator.output, element_id);
+          if (!jdnHash) {
+            jdnHash = element_id.split("_")[0];
+            predictedElements[i].jdnHash = jdnHash;
+            sendMessage({ message: "SET_JDN_HASH", param: { element_id, jdnHash } });
+          }
           node.setAttribute("jdn-hash", jdnHash);
+
           nodes.push(node);
         } catch (error) {
           if (error.message === "invalid locator") {

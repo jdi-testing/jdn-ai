@@ -16,7 +16,7 @@ export const checkLocatorsValidity = createAsyncThunk("locators/checkLocatorsVal
   for (const locator of locators) {
     const { jdnHash, element_id, locator: locatorValue } = locator;
     try {
-      const validation = await validateXpath(getPrioritizedXPaths(locatorValue)[0], jdnHash, locators);
+      const validation = await validateXpath(getPrioritizedXPaths(locatorValue)[0], jdnHash, locators, element_id);
       if (validation.length)
         invalidLocators.push({ element_id, message: validation as LocatorValidationErrorType, jdnHash });
     } catch (error) {

@@ -146,6 +146,10 @@ const locatorsSlice = createSlice({
         locatorsAdapter.upsertMany(state, newValue as Locator[]);
       }
     },
+    setJdnHash(state, { payload }: PayloadAction<{ element_id: ElementId; jdnHash: string }>) {
+      const { element_id, jdnHash } = payload;
+      locatorsAdapter.upsertOne(state, { element_id, jdnHash } as Locator);
+    },
     setScrollToLocator(state, { payload: element_id }: PayloadAction<ElementId>) {
       state.scrollToLocator = element_id;
     },
@@ -246,6 +250,7 @@ export const {
   setCalculationPriority,
   setScrollToLocator,
   setElementGroupGeneration,
+  setJdnHash,
   setValidity,
   toggleElementGroupGeneration,
   toggleDeleted,

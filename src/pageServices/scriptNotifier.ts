@@ -33,7 +33,7 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
   switch (type) {
     case "pageObject/addLocatorsToPageObj": {
       if (isNil(state.pageObject.present.currentPageObject)) return;
-      const locators = selectLocatorsByPageObject(state);
+      const locators = selectValidLocators(state);
       const filter = selectClassFilterByPO(state);
       locators && sendMessage.setHighlight({ elements: locators as Locator[], filter });
       break;

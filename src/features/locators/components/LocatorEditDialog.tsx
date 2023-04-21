@@ -98,7 +98,8 @@ export const LocatorEditDialog: React.FC<Props> = ({
     isCreatingForm,
     setValidationMessage,
     locators,
-    jdnHash
+    jdnHash,
+    element_id
   );
 
   const handleTypeChange = (value: string) => {
@@ -139,30 +140,23 @@ export const LocatorEditDialog: React.FC<Props> = ({
       type,
     };
 
-    switch (getLocatorValidationStatus(locatorMessage)) {
-      case ValidationStatus.WARNING:
-        newLocator.element_id = `${generateId()}_${pageObjectId}`;
-        break;
-      case ValidationStatus.SUCCESS:
-        try {
-          const { foundHash, foundElement } = JSON.parse(await evaluateXpath(locator, jdnHash));
-          const fullXpath = await getElementFullXpath(foundElement);
-          const parsedElement = parseElementFromString(foundElement);
-          newLocator = {
-            ...newLocator,
-            elemText: parsedElement?.textContent || "",
-            locator: { ...newLocator.locator, fullXpath },
-            jdnHash: foundHash,
-            element_id: `${foundHash}_${pageObjectId}`,
-          };
-        } catch (err) {
-          console.log(err);
-        }
-        break;
-      default:
-        newLocator.element_id = `${generateId()}_${pageObjectId}`;
-        break;
+    if (getLocatorValidationStatus(locatorMessage) === ValidationStatus.SUCCESS) {
+      try {
+        const { foundHash, foundElement } = JSON.parse(await evaluateXpath(locator, element_id));
+        const fullXpath = await getElementFullXpath(foundElement);
+        const parsedElement = parseElementFromString(foundElement);
+        newLocator = {
+          ...newLocator,
+          elemText: parsedElement?.textContent || "",
+          locator: { ...newLocator.locator, fullXpath },
+          jdnHash: foundHash,
+        };
+      } catch (err) {
+        console.log(err);
+      }
     }
+
+    newLocator.element_id = `${generateId()}_${pageObjectId}`;
 
     dispatch(addLocators([newLocator]));
     dispatch(addLocatorToPageObj({ pageObjId: pageObjectId, locatorId: newLocator.element_id }));
@@ -189,7 +183,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
       );
     } else {
       try {
-        const { foundHash, foundElement } = JSON.parse(await evaluateXpath(locator, jdnHash));
+        const { foundHash, foundElement } = JSON.parse(await evaluateXpath(locator, element_id));
         const fullXpath = await getElementFullXpath(foundElement);
         const parsedElement = parseElementFromString(foundElement);
         dispatch(

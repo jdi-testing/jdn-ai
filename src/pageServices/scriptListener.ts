@@ -8,6 +8,7 @@ import {
   elementGroupUnsetActive,
   elementSetActive,
   elementUnsetActive,
+  setJdnHash,
   setScrollToLocator,
   setValidity,
   toggleDeletedGroup,
@@ -68,6 +69,9 @@ export const createListeners = (
     },
     RERUN_GENERATION: (payload) => {
       dispatch(rerunGeneration({ generationData: payload }));
+    },
+    SET_JDN_HASH: (payload) => {
+      dispatch(setJdnHash(payload));
     },
     START_COLLECT_DATA: showOverlay,
     /* eslint-disable */

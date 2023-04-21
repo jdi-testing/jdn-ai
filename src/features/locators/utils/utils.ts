@@ -1,4 +1,4 @@
-import { chain, filter } from "lodash";
+import { chain } from "lodash";
 import { sendMessage } from "../../../pageServices/connector";
 import { ElementLibrary } from "../types/generationClasses.types";
 import { createElementName } from "../../pageObjects/utils/pageObject";
@@ -9,6 +9,7 @@ import {
   LocatorValidationErrors,
   LocatorValidationErrorType,
   ValidationStatus,
+  ElementId,
 } from "../types/locator.types";
 import { copyToClipboard, getLocatorString } from "../../../common/utils/helpers";
 import { LocatorOption } from "./constants";
@@ -23,13 +24,14 @@ export const getLocatorWithSelenium = (locator: LocatorValue): string =>
 
 export const isValidJavaVariable = (value: string) => /^[a-zA-Z_$]([a-zA-Z0-9_])*$/.test(value);
 
-export const evaluateXpath = (xPath: string, originJdnHash?: string) => {
-  return sendMessage.evaluateXpath({ xPath, originJdnHash }).then((response) => {
+export const evaluateXpath = (xPath: string, element_id?: ElementId) => {
+  return sendMessage.evaluateXpath({ xPath, element_id }).then((response) => {
     return response;
   });
 };
 
-export const equalHashes = (jdnHash: string, locators: Locator[]) => filter(locators, { jdnHash });
+export const equalHashes = (jdnHash: string, locators: Locator[]) =>
+  locators.filter(({ jdnHash: _jdnHash, message }) => _jdnHash === jdnHash && isValidLocator(message));
 
 export const createNewName = (
   element: Locator,
