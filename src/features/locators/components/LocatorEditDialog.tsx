@@ -11,29 +11,20 @@ import { selectAvailableClasses } from "../../filter/filter.selectors";
 import { selectCurrentPageObject, selectLocatorsByPageObject } from "../../pageObjects/pageObject.selectors";
 import { ElementClass } from "../types/generationClasses.types";
 import { isNameUnique } from "../../pageObjects/utils/pageObject";
-import {
-  Locator,
-  LocatorValidationWarnings,
-  LocatorValidationErrorType,
-  ValidationStatus,
-} from "../types/locator.types";
+import { Locator, LocatorValidationWarnings, LocatorValidationErrorType } from "../types/locator.types";
 import { defaultLibrary } from "../types/generationClasses.types";
-import { changeLocatorAttributes, changeLocatorElement, addLocators, setScrollToLocator } from "../locators.slice";
-import { addLocatorToPageObj } from "../../pageObjects/pageObject.slice";
+import { changeLocatorAttributes } from "../locators.slice";
 import { createNewName } from "../utils/utils";
 import { createLocatorValidationRules } from "../utils/locatorValidationRules";
 import { createNameValidationRules } from "../utils/nameValidationRules";
 import FormItem from "antd/es/form/FormItem";
 import { LocatorType, SelectOption } from "../../../common/types/common";
 import { getLocator } from "../utils/locatorOutput";
-import { evaluateXpath, getLocatorValidationStatus } from "../utils/utils";
-import {
-  generateId,
-  getElementFullXpath,
-  isFilteredSelect,
-  parseElementFromString,
-} from "../../../common/utils/helpers";
+import { getLocatorValidationStatus } from "../utils/utils";
+import { isFilteredSelect } from "../../../common/utils/helpers";
 import { newLocatorStub } from "../utils/constants";
+import { changeLocatorElement } from "../reducers/changeLocatorElement.thunk";
+import { addCustomLocator } from "../reducers/addCustomLocator.thunk";
 
 interface Props extends Locator {
   isModalOpen: boolean;
@@ -140,27 +131,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
       type,
     };
 
-    if (getLocatorValidationStatus(locatorMessage) === ValidationStatus.SUCCESS) {
-      try {
-        const { foundHash, foundElement } = JSON.parse(await evaluateXpath(locator, element_id));
-        const fullXpath = await getElementFullXpath(foundElement);
-        const parsedElement = parseElementFromString(foundElement);
-        newLocator = {
-          ...newLocator,
-          elemText: parsedElement?.textContent || "",
-          locator: { ...newLocator.locator, fullXpath },
-          jdnHash: foundHash,
-        };
-      } catch (err) {
-        console.log(err);
-      }
-    }
-
-    newLocator.element_id = `${generateId()}_${pageObjectId}`;
-
-    dispatch(addLocators([newLocator]));
-    dispatch(addLocatorToPageObj({ pageObjId: pageObjectId, locatorId: newLocator.element_id }));
-    dispatch(setScrollToLocator(newLocator.element_id));
+    dispatch(addCustomLocator({ newLocator, pageObjectId }));
 
     form.resetFields();
     setIsModalOpen(false);
@@ -182,28 +153,18 @@ export const LocatorEditDialog: React.FC<Props> = ({
         })
       );
     } else {
-      try {
-        const { foundHash, foundElement } = JSON.parse(await evaluateXpath(locator, element_id));
-        const fullXpath = await getElementFullXpath(foundElement);
-        const parsedElement = parseElementFromString(foundElement);
-        dispatch(
-          changeLocatorElement({
-            name,
-            type,
-            locator,
-            newElementXPath: fullXpath,
-            jdnHash: foundHash,
-            elemText: parsedElement?.textContent || "",
-            locatorType,
-            element_id,
-            library,
-            message: validationMessage,
-            isCustomName: isEditedName,
-          })
-        );
-      } catch (err) {
-        console.log(err);
-      }
+      dispatch(
+        changeLocatorElement({
+          name,
+          type,
+          locator,
+          locatorType,
+          element_id,
+          library,
+          message: validationMessage,
+          isCustomName: isEditedName,
+        })
+      );
     }
 
     form.resetFields();

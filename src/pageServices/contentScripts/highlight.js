@@ -262,16 +262,6 @@ export const highlightOnPage = () => {
   };
 
   const findByHash = (jdnHash) => document.querySelector(`[jdn-hash='${jdnHash}']`);
-  const findByXpath = (xPath, element_id) => {
-    const result = document.evaluate(xPath, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-    if (result.snapshotLength === 1) return result.snapshotItem(0);
-    else throw new Error("invalid locator", { evaluationResult: result.snapshotLength, element_id });
-  };
-  const findBySelector = (selector, element_id) => {
-    const result = document.querySelectorAll(selector);
-    if (result.length === 1) return result[0];
-    else throw new Error("invalid locator", { evaluationResult: result.snapshotLength, element_id });
-  };
 
   const findAndHighlight = (param) => {
     if (param) {
@@ -280,29 +270,10 @@ export const highlightOnPage = () => {
     if (param?.filter) classFilter = param.filter;
 
     nodes = [];
-    predictedElements.forEach(({ deleted, type, jdnHash, locatorType, locator, element_id }, i) => {
+    predictedElements.forEach(({ deleted, type, jdnHash }) => {
       if (deleted || isFilteredOut(type)) return;
       let node = findByHash(jdnHash);
-      if (!node) {
-        try {
-          node =
-            locatorType === "CSS selector"
-              ? findBySelector(locator.output, element_id)
-              : findByXpath(locator.output, element_id);
-          if (!jdnHash) {
-            jdnHash = element_id.split("_")[0];
-            predictedElements[i].jdnHash = jdnHash;
-            sendMessage({ message: "SET_JDN_HASH", param: { element_id, jdnHash } });
-          }
-          node.setAttribute("jdn-hash", jdnHash);
-
-          nodes.push(node);
-        } catch (error) {
-          if (error.message === "invalid locator") {
-            sendMessage({ message: "INVALID_LOCATOR", param: { element_id, numberOfNodes: error.options } });
-          }
-        }
-      } else nodes.push(node);
+      nodes.push(node);
     });
 
     nodes.forEach((element) => {

@@ -24,14 +24,17 @@ export const getLocatorWithSelenium = (locator: LocatorValue): string =>
 
 export const isValidJavaVariable = (value: string) => /^[a-zA-Z_$]([a-zA-Z0-9_])*$/.test(value);
 
-export const evaluateXpath = (xPath: string, element_id?: ElementId) => {
-  return sendMessage.evaluateXpath({ xPath, element_id }).then((response) => {
+export const evaluateXpath = (xPath: string, element_id?: ElementId, originJdnHash?: string) => {
+  return sendMessage.evaluateXpath({ xPath, element_id, originJdnHash }).then((response) => {
     return response;
   });
 };
 
-export const equalHashes = (jdnHash: string, locators: Locator[]) =>
-  locators.filter(({ jdnHash: _jdnHash, message }) => _jdnHash === jdnHash && isValidLocator(message));
+export const checkDuplicates = (jdnHash: string, locators: Locator[], element_id: ElementId) =>
+  locators.filter(
+    ({ jdnHash: _jdnHash, message, element_id: _element_id }) =>
+      _jdnHash === jdnHash && isValidLocator(message) && _element_id !== element_id
+  );
 
 export const createNewName = (
   element: Locator,

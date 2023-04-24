@@ -20,6 +20,8 @@ import {
 import { runXpathGenerationReducer } from "./reducers/runXpathGeneration.thunk";
 import { checkLocatorsValidityReducer } from "./reducers/checkLocatorValidity.thunk";
 import { LocatorType } from "../../common/types/common";
+import { addCustomLocatorReducer } from "./reducers/addCustomLocator.thunk";
+import { changeLocatorElementReducer } from "./reducers/changeLocatorElement.thunk";
 
 const initialState: LocatorsState = {
   generationStatus: LocatorsGenerationStatus.noStatus,
@@ -27,7 +29,7 @@ const initialState: LocatorsState = {
   scrollToLocator: null,
 };
 
-interface ChangeLocatorAttributesPayload {
+export interface ChangeLocatorAttributesPayload {
   element_id: ElementId;
   type: ElementClass;
   name: string;
@@ -39,38 +41,12 @@ interface ChangeLocatorAttributesPayload {
   locatorType?: LocatorType;
 }
 
-interface ChangeLocatorElementPayload extends ChangeLocatorAttributesPayload {
-  newElementXPath: string;
-  jdnHash: string;
-  elemText: string;
-}
-
 const locatorsSlice = createSlice({
   name: "locators",
   initialState: locatorsAdapter.getInitialState(initialState),
   reducers: {
     addLocators(state, { payload }) {
       locatorsAdapter.addMany(state, payload);
-    },
-    changeLocatorElement(state, { payload }: PayloadAction<ChangeLocatorElementPayload>) {
-      const { locator, newElementXPath, element_id, ...rest } = payload;
-      const _locator = simpleSelectLocatorById(state, element_id);
-
-      if (!_locator) return;
-
-      const newValue = {
-        ..._locator,
-        ...rest,
-        isCustomLocator: true,
-        locator: {
-          fullXpath: newElementXPath,
-          customXpath: locator,
-          robulaXpath: "", // we need to calc robulaXpath
-          taskStatus: LocatorTaskStatus.SUCCESS,
-        },
-      };
-
-      locatorsAdapter.upsertOne(state, newValue);
     },
     changeLocatorAttributes(state, { payload }: PayloadAction<ChangeLocatorAttributesPayload>) {
       const { type, name, locator, element_id, message, isCustomName, locatorType } = payload;
@@ -226,7 +202,9 @@ const locatorsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    checkLocatorsValidityReducer(builder),
+    addCustomLocatorReducer(builder),
+      changeLocatorElementReducer(builder),
+      checkLocatorsValidityReducer(builder),
       identifyElementsReducer(builder),
       generateLocatorsReducer(builder),
       rerunGenerationReducer(builder),
@@ -240,7 +218,6 @@ export default locatorsSlice.reducer;
 export const {
   addLocators,
   changeIdentificationStatus,
-  changeLocatorElement,
   changeLocatorAttributes,
   failGeneration,
   removeLocators,
