@@ -16,7 +16,7 @@ const pageObjSlice = createSlice({
     addLocatorToPageObj(state, { payload }: PayloadAction<{ pageObjId: PageObjectId; locatorId: ElementId }>) {
       const { pageObjId, locatorId } = payload;
       const pageObj = simpleSelectPageObjById(state, pageObjId);
-      if (!pageObj) return;
+      if (isNil(pageObj)) return;
       const locators = [...(pageObj.locators || []), locatorId];
       pageObjAdapter.upsertOne(state, { id: pageObjId, locators } as PageObject);
     },

@@ -26,7 +26,7 @@ export const useNotificationController = (
 
     switch (action?.type) {
       case "locators/changeLocatorAttributes":
-      case "locators/changeLocatorElement":
+      case "locators/changeLocatorElement/fulfilled":
         openNotification(messages().EDITED, "success", locatorUndo({ type: action?.type, payload: prevValue }));
         break;
       case "locators/rerunGeneration/fulfilled":
