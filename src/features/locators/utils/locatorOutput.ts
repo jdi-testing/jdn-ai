@@ -38,6 +38,7 @@ export const getLocator = (locatorValue: LocatorValue, locatorType?: LocatorType
   return getLocatorByType(getPrioritizedXPaths(locatorValue), locatorType);
 };
 
+//looks redundant, we can use getLocator anywhere
 export const getCssSelector = (locatorValue: LocatorValue) => {
   return getLocatorByType(getPrioritizedXPaths(locatorValue), LocatorType.cssSelector);
 };

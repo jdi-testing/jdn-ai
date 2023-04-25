@@ -30,6 +30,12 @@ export const evaluateXpath = (xPath: string, element_id?: ElementId, originJdnHa
   });
 };
 
+export const evaluateCssSelector = (selector: string, element_id?: ElementId, originJdnHash?: string) => {
+  return sendMessage.evaluateCssSelector({ selector, element_id, originJdnHash }).then((response) => {
+    return response;
+  });
+};
+
 export const checkDuplicates = (jdnHash: string, locators: Locator[], element_id: ElementId) =>
   locators.filter(
     ({ jdnHash: _jdnHash, message, element_id: _element_id }) =>

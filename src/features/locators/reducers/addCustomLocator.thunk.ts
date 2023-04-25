@@ -1,6 +1,6 @@
 import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
 import { Locator, LocatorsState, ValidationStatus } from "../types/locator.types";
-import { getElementFullXpath, parseElementFromString, generateId } from "../../../common/utils/helpers";
+import { getElementFullXpath, generateId } from "../../../common/utils/helpers";
 import { addLocatorToPageObj } from "../../pageObjects/pageObject.slice";
 import { addLocators, setScrollToLocator } from "../locators.slice";
 import { getLocatorValidationStatus, evaluateXpath } from "../utils/utils";
@@ -21,12 +21,12 @@ export const addCustomLocator = createAsyncThunk(
 
     if (getLocatorValidationStatus(message) === ValidationStatus.SUCCESS) {
       try {
+        const foundElementText = JSON.parse(await evaluateXpath(locator.customXpath!, element_id));
         let { foundHash } = JSON.parse(await evaluateXpath(locator.customXpath!, element_id));
-        const { foundElement } = JSON.parse(await evaluateXpath(locator.customXpath!, element_id));
         if (!foundHash) {
           foundHash = element_id.split("_")[0];
           await sendMessage
-            .assignJdnHash({ jdnHash: foundHash, xPath: locator.customXpath! })
+            .assignJdnHash({ jdnHash: foundHash, locator: locator.customXpath!, isCSSLocator: false })
             .then((res) => {
               if (res === "success") return res;
               else throw new Error("Failed to assign jdnHash");
@@ -35,12 +35,13 @@ export const addCustomLocator = createAsyncThunk(
               console.log(err);
             });
         }
-        const fullXpath = await getElementFullXpath(foundElement);
-        const parsedElement = parseElementFromString(foundElement);
+
+        const fullXpath = await getElementFullXpath(foundHash);
+
         newLocator = {
           ...newLocator,
           element_id,
-          elemText: parsedElement?.textContent || "",
+          elemText: foundElementText || "",
           locator: { ...newLocator.locator, fullXpath },
           jdnHash: foundHash,
         };
