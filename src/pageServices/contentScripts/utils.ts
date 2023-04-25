@@ -4,7 +4,6 @@ export const utilityScript = () => {
       const nodeSnapshot = document.evaluate(xPath, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
       const length = nodeSnapshot.snapshotLength;
       const foundElement = nodeSnapshot.snapshotItem(0) as Element;
-
       const foundHash = foundElement && foundElement.getAttribute("jdn-hash");
       const foundElementText = foundElement.textContent;
       return JSON.stringify({ length, foundHash, element_id, foundElementText, originJdnHash });
@@ -15,10 +14,8 @@ export const utilityScript = () => {
 
   const evaluateCssSelector = ({ selector, element_id, originJdnHash }: Record<string, string>) => {
     try {
-      //it works without validation now
       const foundElements = document.querySelectorAll(selector);
       const length = foundElements.length;
-
       const foundHash = foundElements && foundElements[0].getAttribute("jdn-hash");
       const foundElementText = foundElements[0].textContent;
       return JSON.stringify({ length, foundHash, element_id, foundElementText, originJdnHash });

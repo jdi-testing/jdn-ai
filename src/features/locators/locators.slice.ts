@@ -57,9 +57,9 @@ const locatorsSlice = createSlice({
       const newValue = { ..._locator, locator: { ..._locator.locator }, message, type, name, isCustomName };
 
       if (fullXpath !== locator && robulaXpath !== locator) {
-        if (locatorType !== LocatorType.cssSelector) {
-          newValue.locator.customXpath = locator;
-        }
+        locatorType !== LocatorType.cssSelector
+          ? (newValue.locator.customXpath = locator)
+          : (newValue.locator.cssSelector = locator);
         newValue.locator.cssSelector = locator;
         newValue.isCustomLocator = true;
         newValue.locator.taskStatus = LocatorTaskStatus.SUCCESS;
