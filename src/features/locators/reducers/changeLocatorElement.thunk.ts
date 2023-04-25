@@ -16,8 +16,6 @@ export const changeLocatorElement = createAsyncThunk(
 
     let { foundHash } = JSON.parse(await evaluateXpath(locator, element_id));
     const { foundElement } = JSON.parse(await evaluateXpath(locator, element_id));
-    const fullXpath = await getElementFullXpath(foundElement);
-    const parsedElement = parseElementFromString(foundElement);
 
     const state = thunkAPI.getState() as RootState;
 
@@ -37,6 +35,9 @@ export const changeLocatorElement = createAsyncThunk(
           console.log(err);
         });
     }
+
+    const fullXpath = await getElementFullXpath(foundElement);
+    const parsedElement = parseElementFromString(foundElement);
 
     const newValue = {
       ..._locator,
