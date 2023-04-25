@@ -1,6 +1,6 @@
 import { isUndefined } from "lodash";
 import { SCRIPT_ERROR } from "../common/constants/constants";
-import { Locator, PredictedEntity } from "../features/locators/types/locator.types";
+import { ElementId, Locator, PredictedEntity } from "../features/locators/types/locator.types";
 import { ElementClass } from "../features/locators/types/generationClasses.types";
 import { SelectorsMap } from "../services/rules/rules.types";
 import { assignDataLabels } from "./contentScripts/assignDataLabels";
@@ -172,6 +172,7 @@ export const connector = new Connector();
 export const sendMessage = {
   addElement: (el: Locator) => connector.sendMessage("ADD_ELEMENT", el),
   assignDataLabels: (payload: PredictedEntity[]) => connector.sendMessage("ASSIGN_DATA_LABEL", payload),
+  assignJdnHash: (payload: { jdnHash: string, xPath: string }) => connector.sendMessage("ASSIGN_JDN_HASH", payload),
   assignParents: (payload: Locator[]) => connector.sendMessage("ASSIGN_PARENTS", payload),
   changeElementName: (el: Locator) => connector.sendMessage("CHANGE_ELEMENT_NAME", el),
   changeElementType: (el: Locator) => connector.sendMessage("CHANGE_ELEMENT_TYPE", el),
@@ -179,7 +180,7 @@ export const sendMessage = {
   checkSession: (payload: null, onResponse?: () => void): Promise<{ message: string; tabId: number }[]> =>
     connector.sendMessageToAllTabs("CHECK_SESSION", payload, onResponse),
   defineTabId: (payload: number) => connector.sendMessage("DEFINE_TAB_ID", payload),
-  evaluateXpath: (payload: { xPath: string; originJdnHash?: string }, onResponse?: () => void) =>
+  evaluateXpath: (payload: { xPath: string; element_id?: ElementId, originJdnHash?: string }, onResponse?: () => void) =>
     connector.sendMessage("EVALUATE_XPATH", payload, onResponse),
   findBySelectors: (payload: SelectorsMap) => connector.sendMessage("FIND_BY_SELECTORS", payload),
   setClosedSession: (payload: { tabId: number; isClosed: boolean }) =>
