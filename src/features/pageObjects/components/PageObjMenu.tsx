@@ -70,7 +70,7 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, url, locators, elements
       renameOption(handleRename),
       ...(size(locatorIds) ? [edit(handleEdit, "Edit Page Object")] : []),
       ...(size(locatorIds) ? [download(handleDownload)] : []),
-      ...(size(locatorIds) ? [downloadPerfTest(handleDownloadPerfTest)] : []),
+      ...(size(locatorIds) && __DEV_ENVIRONMENT__ ? [downloadPerfTest(handleDownloadPerfTest)] : []),
       deleteOption(handleRemove),
     ];
 
