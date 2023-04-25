@@ -11,9 +11,9 @@ export const utilityScript = () => {
     }
   };
 
-  const assignJdnHash = ({ xpath, jdnHash }: Record<string, string>) => {
+  const assignJdnHash = ({ xPath, jdnHash }: Record<string, string>) => {
     try {
-      const nodeSnapshot = document.evaluate(xpath, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+      const nodeSnapshot = document.evaluate(xPath, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
       const length = nodeSnapshot.snapshotLength;
       const foundElement = nodeSnapshot.snapshotItem(0) as Element;
       if (length === 1) {

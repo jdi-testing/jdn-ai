@@ -26,7 +26,7 @@ export const addCustomLocator = createAsyncThunk(
         if (!foundHash) {
           foundHash = element_id.split("_")[0];
           await sendMessage
-            .assignJdnHash({ jdnHash: foundHash, xpath: locator.customXpath! })
+            .assignJdnHash({ jdnHash: foundHash, xPath: locator.customXpath! })
             .then((res) => {
               if (res === "success") return res;
               else throw new Error("Failed to assign jdnHash");

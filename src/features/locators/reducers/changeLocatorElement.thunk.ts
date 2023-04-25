@@ -26,7 +26,7 @@ export const changeLocatorElement = createAsyncThunk(
     if (!foundHash) {
       foundHash = generateId();
       await sendMessage
-        .assignJdnHash({ jdnHash: foundHash, xpath: locator })
+        .assignJdnHash({ jdnHash: foundHash, xPath: locator })
         .then((res) => {
           if (res === "success") return res;
           else throw new Error("Failed to assign jdnHash");
