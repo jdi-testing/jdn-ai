@@ -16,7 +16,7 @@ import {
   toggleElementGroupGeneration,
 } from "../features/locators/locators.slice";
 import { selectLocatorByJdnHash, selectActiveLocators } from "../features/pageObjects/pageObject.selectors";
-import { connector } from "./connector";
+import connector from "./connector";
 import { showOverlay } from "./pageDataHandlers";
 import { rerunGeneration } from "../features/locators/reducers/rerunGeneration.thunk";
 
@@ -26,7 +26,7 @@ type Response<T> = (payload: T, sender: chrome.runtime.MessageSender, sendRespon
 
 type Actions<P = any> = Record<string, Response<P>>;
 
-export const createListeners = (
+export const updateMessageHandler = (
   dispatch: Dispatch<{ payload?: any; type?: string } | AsyncThunkAction<any, any, any>>,
   state: RootState
 ) => {

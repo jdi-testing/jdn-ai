@@ -1,9 +1,9 @@
-import path from 'path';
-import { fileURLToPath } from 'url';
+import path from "path";
+import { fileURLToPath } from "url";
 import { join, resolve as _resolve } from "path";
-import pkg from 'webpack';
+import pkg from "webpack";
 import HtmlWebpackPlugin from "html-webpack-plugin";
-import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import process from "process";
 
 const reduxLogEnable = process.argv.includes("reduxlogenable");
@@ -16,7 +16,11 @@ const { loader: _loader } = MiniCssExtractPlugin;
 const mainConfig = {
   devtool: "inline-cheap-module-source-map",
   mode: "development",
-  entry: ["./src/app/App.tsx", "./manifest.json"],
+  entry: {
+    index: "./src/index.js",
+    app: "./src/app.js",
+    contentScript: "./src/pageServices/contentScripts/index.ts",
+  },
   output: {
     path: join(__dirname, "dist"),
     filename: "[name].bundle.js",
@@ -32,8 +36,8 @@ const mainConfig = {
     }),
     new HtmlWebpackPlugin({
       title: "JDN extension - panel",
-      template: "./src/panel.html",
-      filename: "panel.html",
+      template: "./src/app.html",
+      filename: "app.html",
     }),
     new MiniCssExtractPlugin({
       filename: "[name].css",
@@ -41,7 +45,7 @@ const mainConfig = {
     new pkg.DefinePlugin({
       __REDUX_LOG_ENABLE__: reduxLogEnable,
       __DEV_ENVIRONMENT__: devEnvironment,
-    })
+    }),
   ],
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".jsx"],
@@ -89,11 +93,9 @@ const mainConfig = {
             },
           },
           {
-            loader: 'style-resources-loader',
+            loader: "style-resources-loader",
             options: {
-              patterns: [
-                _resolve(__dirname, 'src/common/styles/variables.less')
-              ],
+              patterns: [_resolve(__dirname, "src/common/styles/variables.less")],
             },
           },
         ],
@@ -121,7 +123,7 @@ const mainConfig = {
             options: {
               esModule: false,
               name: "[name].[ext]",
-              outputPath: "./images/",
+              outputPath: "./",
             },
           },
         ],
@@ -133,8 +135,8 @@ const mainConfig = {
       {
         test: /\.m?js/,
         resolve: {
-          fullySpecified: false
-        }
+          fullySpecified: false,
+        },
       },
       {
         test: /\.md$/,
@@ -144,37 +146,30 @@ const mainConfig = {
   },
 };
 
-const indexConfig = {
-  entry: "./src/loadPanel.js",
-  mode: "production",
-  output: {
-    path: join(__dirname, "dist"),
-    filename: "loadPanel.js",
-    publicPath: "./",
-  },
-  module: {
-    rules:
-    [{
-      test: /\.(png|jpe?g|gif)$/i,
-      use: [
+const manifest = {
+    devtool: "inline-cheap-module-source-map",
+    mode: "development",
+    entry: "./src/manifest.json",
+    output: {
+      path: join(__dirname, "dist"),
+      // filename: "manifest.json",
+      publicPath: "./",
+      assetModuleFilename: '[name][ext]',
+    },
+    module: {
+      rules: [
         {
-          loader: "file-loader",
-          options: {
-            esModule: false,
-            name: "[name].[ext]",
-            outputPath: "./",
-          },
-        },
+          test: /\.json$/,
+          type: 'asset/resource'
+        }
       ],
-    }],
-  }
-};
+    },
+}
 
-const contentScripts = {
-  entry:
-    "./src/pageServices/contentScripts/css/contentScripts.less",
+const contentStyles = {
+  entry: "./src/pageServices/contentScripts/css/index.less",
   mode: "production",
-  plugins: [new MiniCssExtractPlugin({ filename: "contentScripts.css" })],
+  plugins: [new MiniCssExtractPlugin({ filename: "contentStyles.css" })],
   module: {
     rules: [
       {
@@ -189,11 +184,9 @@ const contentScripts = {
           "css-loader",
           "less-loader",
           {
-            loader: 'style-resources-loader',
+            loader: "style-resources-loader",
             options: {
-              patterns: [
-                _resolve(__dirname, 'src/pageServices/contentScripts/css/variables.less'),
-              ],
+              patterns: [_resolve(__dirname, "src/pageServices/contentScripts/css/variables.less")],
             },
           },
         ],
@@ -202,4 +195,4 @@ const contentScripts = {
   },
 };
 
-export default [mainConfig, indexConfig, contentScripts];
+export default [mainConfig, contentStyles, manifest];

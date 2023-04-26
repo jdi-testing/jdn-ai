@@ -29,9 +29,6 @@ export const utilityScript = () => {
 
   chrome.runtime.onMessage.addListener(({ message, param }, sender, sendResponse) => {
     switch (message) {
-      case "PING_SCRIPT":
-        if (param.scriptName === "utilityScript") sendResponse({ message: true });
-        break;
       case "EVALUATE_XPATH":
         sendResponse(evaluateXpath(param));
         break;

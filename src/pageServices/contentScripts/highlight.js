@@ -429,62 +429,51 @@ export const highlightOnPage = () => {
   };
 
   const messageHandler = ({ message, param }, sender, sendResponse) => {
-    if (message === "SET_HIGHLIGHT") {
-      if (!listenersAreSet) setDocumentListeners();
-      if (!scrollableContainers.length) detectScrollableContainers();
-      findAndHighlight(param);
-    }
-
-    if (message === "KILL_HIGHLIGHT") {
-      removeHighlight(sendResponse)();
-    }
-
-    if (message === "HIGHLIGHT_TOGGLED") {
-      toggleElement(param);
-    }
-
-    if (message === "TOGGLE_DELETED") {
-      toggleDeletedElement(param);
-    }
-
-    if (message === "ADD_ELEMENT") {
-      addHighlightElement(param);
-    }
-
-    if (message === "REMOVE_ELEMENT") {
-      removeElement(param);
-    }
-
-    if (message === "CHANGE_ELEMENT_TYPE") {
-      updateElement(param);
-    }
-
-    if (message === "CHANGE_ELEMENT_NAME") {
-      changeElementName(param);
-    }
-
-    if (message === "CHANGE_STATUS") {
-      changeGenerationStatus(param);
-    }
-
-    if (message === "TOGGLE_FILTER") {
-      applyFilter(param);
-    }
-
-    if (message === "SET_ACTIVE") {
-      setActiveElement(param, true);
-    }
-
-    if (message === "UNSET_ACTIVE") {
-      updateElement(param);
-    }
-
-    if (message === "TOGGLE_ACTIVE_GROUP") {
-      toggleActiveGroup(param);
-    }
-
-    if (message === "PING_SCRIPT" && param.scriptName === "highlightOnPage") {
-      sendResponse({ message: true });
+    // refact to switch
+    switch (message) {
+      case "SET_HIGHLIGHT":
+        if (!listenersAreSet) setDocumentListeners();
+        if (!scrollableContainers.length) detectScrollableContainers();
+        findAndHighlight(param);
+        break;
+      case "KILL_HIGHLIGHT":
+        removeHighlight(sendResponse)();
+        break;
+      case "HIGHLIGHT_TOGGLED":
+        toggleElement(param);
+        break;
+      case "TOGGLE_DELETED":
+        toggleDeletedElement(param);
+        break;
+      case "ADD_ELEMENT":
+        addHighlightElement(param);
+        break;
+      case "REMOVE_ELEMENT":
+        removeElement(param);
+        break;
+      case "CHANGE_ELEMENT_TYPE":
+        updateElement(param);
+        break;
+      case "CHANGE_ELEMENT_NAME":
+        changeElementName(param);
+        break;
+      case "CHANGE_STATUS":
+        changeGenerationStatus(param);
+        break;
+      case "TOGGLE_FILTER":
+        applyFilter(param);
+        break;
+      case "SET_ACTIVE":
+        setActiveElement(param, true);
+        break;
+      case "UNSET_ACTIVE":
+        updateElement(param);
+        break;
+      case "TOGGLE_ACTIVE_GROUP":
+        toggleActiveGroup(param);
+        break;
+      default:
+        break;
     }
   };
 

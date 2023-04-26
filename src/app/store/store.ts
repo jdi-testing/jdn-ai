@@ -3,7 +3,7 @@ import undoable from "redux-undo";
 import filterSlice from "../../features/filter/filter.slice";
 import locatorsSlice from "../../features/locators/locators.slice";
 import pageObjectSlice from "../../features/pageObjects/pageObject.slice";
-import { createListeners } from "../../pageServices/scriptListener";
+import { updateMessageHandler } from "../../pageServices/scriptMessageHandler";
 import mainSlice from "../main.slice";
 import { cancellableActions } from "../../common/components/notification/middlewares/cancellableActions";
 import { logger } from "./middlewares/logger";
@@ -27,7 +27,7 @@ export const store = configureStore({
     }).concat([logger, scriptNotifier, cancellableActions, changePageMiddleware]),
 });
 
-store.subscribe(() => createListeners(store.dispatch, store.getState()));
+store.subscribe(() => updateMessageHandler(store.dispatch, store.getState()));
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

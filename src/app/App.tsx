@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import ReactDOM from "react-dom";
 import { Provider as ReduxProvider, useDispatch, useSelector } from "react-redux";
 
 import "antd/dist/antd.less";
@@ -14,7 +13,7 @@ import { HttpEndpoint, request } from "../services/backend";
 import { checkSession, getSessionId } from "./utils/appUtils";
 import { selectCurrentPage } from "./main.selectors";
 import { RootState, store } from "./store/store";
-import { useOnTabUpdate } from "./utils/useOnTabUpdate";
+import { useOnDisconnect } from "./utils/useOnDisconnect";
 
 import { defineServer } from "./reducers/defineServer.thunk";
 import { Guide } from "./components/Guide";
@@ -30,9 +29,10 @@ const App = () => {
   const currentPage = useSelector(selectCurrentPage);
   const dispatch = useDispatch();
 
-  useOnTabUpdate(() => checkSession(setIsInvalidSession));
+  useOnDisconnect();
 
   useEffect(() => {
+    checkSession(setIsInvalidSession); // no need to refactor, we will get rid of it soon
     dispatch(defineServer());
   }, []);
 
@@ -77,14 +77,8 @@ const App = () => {
   );
 };
 
-const ReduxApp = () => (
+export const ReduxApp = () => (
   <ReduxProvider {...{ store }}>
     <App />
   </ReduxProvider>
 );
-
-const div = document.getElementById("chromeExtensionReactApp");
-
-if (div instanceof Element) {
-  ReactDOM.render(<ReduxApp />, div);
-}

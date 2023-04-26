@@ -546,12 +546,5 @@ export const runContextMenu = () => {
     document.oncontextmenu = contextMenuListener;
   };
 
-  const messageHandler = ({ message, param }, sender, sendResponse) => {
-    if (message === "PING_SCRIPT" && param.scriptName === "runContextMenu") {
-      sendResponse({ message: true });
-    }
-  };
-
   runDocumentListeners();
-  chrome.runtime.onMessage.addListener(messageHandler);
 };

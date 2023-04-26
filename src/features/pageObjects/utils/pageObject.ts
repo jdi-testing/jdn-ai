@@ -1,6 +1,6 @@
 import { saveAs } from "file-saver";
 import { chain, isEmpty, size, subtract, toLower, toString, truncate, upperFirst } from "lodash";
-import { connector } from "../../../pageServices/connector";
+import connector from "../../../pageServices/connector";
 import { ElementId, Locator } from "../../locators/types/locator.types";
 import { PageObject, PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
 import { ElementLabel, ElementLibrary } from "../../locators/types/generationClasses.types";

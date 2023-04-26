@@ -103,18 +103,17 @@ export const getGenerationAttributes = () => {
   };
 
   chrome.runtime.onMessage.addListener(({ message, param }, sender, sendResponse) => {
-    if (message === "GENERATE_ATTRIBUTES") {
-      sendResponse(mapElements(param));
-    }
-
-    if (message === "GET_ELEMENT_XPATH") {
-      const parser = new DOMParser();
-      const parsedElement = parser.parseFromString(param, "text/html").body.firstElementChild;
-      sendResponse(getElementTreeXPath(parsedElement));
-    }
-
-    if (message === "PING_SCRIPT" && param.scriptName === "getGenerationAttributes") {
-      sendResponse({ message: true });
+    switch (message) {
+      case "GENERATE_ATTRIBUTES":
+        sendResponse(mapElements(param));
+        break;
+      case "GET_ELEMENT_XPATH":
+        const parser = new DOMParser();
+        const parsedElement = parser.parseFromString(param, "text/html").body.firstElementChild;
+        sendResponse(getElementTreeXPath(parsedElement));
+        break;
+      default:
+        break;
     }
   });
 };
