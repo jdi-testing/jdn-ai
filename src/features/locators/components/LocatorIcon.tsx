@@ -12,7 +12,6 @@ interface Props {
   locator: LocatorValue;
   deleted?: boolean;
   isCustomLocator?: boolean;
-  isCreatedByUser?: boolean; // seems we won't need isCreatedByUser soon
 }
 
 export const LocatorIcon: React.FC<Props> = ({ message, locator, deleted }) => {
