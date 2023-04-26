@@ -90,7 +90,6 @@ export interface Locator extends PredictedEntity {
   active?: boolean;
   isCustomName?: boolean;
   isCustomLocator?: boolean;
-  isCreatedByUser?: boolean; // we need it to locator icon conditional render
   locatorType?: LocatorType;
   pageObj: PageObjectId;
   parent_id: JDNHash;

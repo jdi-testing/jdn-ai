@@ -1,22 +1,20 @@
 import React from "react";
 import { Spin, Tooltip } from "antd";
 import Icon from "@ant-design/icons";
-import CheckedEdited from "../assets/checked-edited.svg";
 import WarningEditedSvg from "../assets/warning-edited.svg";
 import { locatorTaskStatus } from "../../../common/constants/constants";
 import { PauseCircle, Trash, WarningCircle } from "phosphor-react";
-import { LocatorValidationErrorType, LocatorValue } from "../types/locator.types";
-import { isValidLocator } from "../utils/utils";
+import { LocatorValidationErrorType, LocatorValue, ValidationStatus } from "../types/locator.types";
+import { getLocatorValidationStatus } from "../utils/utils";
 
 interface Props {
-  message?: LocatorValidationErrorType;
+  message: LocatorValidationErrorType;
   locator: LocatorValue;
   deleted?: boolean;
   isCustomLocator?: boolean;
-  isCreatedByUser?: boolean;
 }
 
-export const LocatorIcon: React.FC<Props> = ({ message, locator, deleted, isCustomLocator, isCreatedByUser }) => {
+export const LocatorIcon: React.FC<Props> = ({ message, locator, deleted }) => {
   const getTooltipText = () => message || "Edited";
 
   const startedIcon = <Spin size="small" />;
@@ -26,12 +24,6 @@ export const LocatorIcon: React.FC<Props> = ({ message, locator, deleted, isCust
   const failureIcon = (
     <Tooltip title={locator.errorMessage ?? "Locator generation was failed"}>
       <WarningCircle size={14} color="#d81515" className="jdn__locatorsList-status" />
-    </Tooltip>
-  );
-
-  const successEditedIcon = (
-    <Tooltip title={getTooltipText()}>
-      <Icon component={CheckedEdited} className="jdn__locatorsList-status" />
     </Tooltip>
   );
 
@@ -46,10 +38,7 @@ export const LocatorIcon: React.FC<Props> = ({ message, locator, deleted, isCust
 
     switch (locator.taskStatus) {
       case locatorTaskStatus.SUCCESS: {
-        if (isValidLocator(message) && !isCreatedByUser && isCustomLocator) {
-          return successEditedIcon;
-        } else if (!isValidLocator(message)) return warningEditedIcon;
-        return null;
+        return getLocatorValidationStatus(message) === ValidationStatus.WARNING ? warningEditedIcon : null;
       }
       case locatorTaskStatus.STARTED:
       case locatorTaskStatus.PENDING:
