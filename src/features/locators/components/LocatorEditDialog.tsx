@@ -11,12 +11,7 @@ import { selectAvailableClasses } from "../../filter/filter.selectors";
 import { selectCurrentPageObject, selectLocatorsByPageObject } from "../../pageObjects/pageObject.selectors";
 import { ElementClass } from "../types/generationClasses.types";
 import { isNameUnique } from "../../pageObjects/utils/pageObject";
-import {
-  Locator,
-  LocatorValidationWarnings,
-  LocatorValidationErrorType,
-  ValidationStatus,
-} from "../types/locator.types";
+import { Locator, LocatorValidationWarnings, LocatorValidationErrorType } from "../types/locator.types";
 import { defaultLibrary } from "../types/generationClasses.types";
 import { changeLocatorAttributes } from "../locators.slice";
 import { createNewName, isValidLocator } from "../utils/utils";
@@ -293,7 +288,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
               value: LocatorType.cssSelector,
               label: LocatorType.cssSelector,
               // should be enable when we'll decide to enable css locators creating
-              disabled: isCreatingForm || getLocatorValidationStatus(validationMessage) === ValidationStatus.ERROR,
+              disabled: isCreatingForm,
             },
           ]}
         />
