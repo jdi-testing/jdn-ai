@@ -4,10 +4,11 @@ import Icon from "@ant-design/icons";
 import WarningEditedSvg from "../assets/warning-edited.svg";
 import { locatorTaskStatus } from "../../../common/constants/constants";
 import { PauseCircle, Trash, WarningCircle } from "phosphor-react";
-import { LocatorValidationErrorType, LocatorValue } from "../types/locator.types";
+import { LocatorValidationErrorType, LocatorValue, ValidationStatus } from "../types/locator.types";
+import { getLocatorValidationStatus } from "../utils/utils";
 
 interface Props {
-  message?: LocatorValidationErrorType;
+  message: LocatorValidationErrorType;
   locator: LocatorValue;
   deleted?: boolean;
   isCustomLocator?: boolean;
@@ -38,7 +39,7 @@ export const LocatorIcon: React.FC<Props> = ({ message, locator, deleted }) => {
 
     switch (locator.taskStatus) {
       case locatorTaskStatus.SUCCESS: {
-        return message?.length ? warningEditedIcon : null;
+        return getLocatorValidationStatus(message) === ValidationStatus.WARNING ? warningEditedIcon : null;
       }
       case locatorTaskStatus.STARTED:
       case locatorTaskStatus.PENDING:
