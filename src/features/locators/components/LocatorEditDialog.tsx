@@ -3,6 +3,7 @@ import Icon from "@ant-design/icons";
 import WarningFilled from "../assets/warning-filled.svg";
 import { Footnote } from "../../../common/components/footnote/Footnote";
 import { Rule } from "antd/lib/form";
+import { FieldData } from "rc-field-form/lib/interface";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../app/store/store";
@@ -200,41 +201,44 @@ export const LocatorEditDialog: React.FC<Props> = ({
       </div>
     ) : null;
 
-  const onLocatorTypeChange = (value: LocatorType) => {
-    setLocatorType(value);
+  const getLocatorValueOnTypeSwitch = (newLocatorType: LocatorType) => {
     const isPrevLocatorValid = isValidLocator(message);
     const isNewLocatorValid = isValidLocator(validationMessage);
-    const isCSSLocator = value === LocatorType.cssSelector;
+    const isCSSLocator = newLocatorType === LocatorType.cssSelector;
 
-    // check and rework this condition after css locator enabling
+    // check this condition after css locator enabling
     if (form.isFieldTouched("locator")) {
       if (isPrevLocatorValid) {
         if (isNewLocatorValid) {
           const customXpath = isCSSLocator ? form.getFieldValue("locator") : locatorField;
-          form.setFieldValue("locator", getLocator({ ...locator, customXpath }, value));
+          return getLocator({ ...locator, customXpath }, newLocatorType);
         } else {
-          form.setFieldValue(
-            "locator",
-            isCSSLocator ? getLocator(locator, value) : getLocator({ ...locator, customXpath: locatorField }, value)
-          );
+          return isCSSLocator
+            ? getLocator(locator, newLocatorType)
+            : getLocator({ ...locator, customXpath: locatorField }, newLocatorType);
         }
       } else {
-        form.setFieldValue(
-          "locator",
-          isNewLocatorValid ? getLocator({ ...locator, customXpath: form.getFieldValue("locator") }, value) : ""
-        );
+        return isNewLocatorValid
+          ? getLocator({ ...locator, customXpath: form.getFieldValue("locator") }, newLocatorType)
+          : "";
       }
     } else if (!isPrevLocatorValid) {
-      value === locatorType ? form.setFieldValue("locator", locatorField) : form.setFieldValue("locator", "");
+      return newLocatorType === locatorType ? locatorField : "";
     } else {
-      form.setFieldValue("locator", getLocator(locator, value));
+      return getLocator(locator, newLocatorType);
     }
   };
+  const onLocatorTypeChange = () => {
+    const newLocatorType = form.getFieldValue("locatorType");
+    setLocatorType(newLocatorType);
 
-  const onFieldsChange = async (changedValues: any) => {
-    const [changedValue] = changedValues;
-    const isLocatorTypeChanged = changedValue?.name[0] === "locatorType";
-    isLocatorTypeChanged && onLocatorTypeChange(changedValue.value);
+    const newLocatorValue = getLocatorValueOnTypeSwitch(newLocatorType);
+    form.setFieldValue("locator", newLocatorValue);
+  };
+
+  const onFieldsChange = async (changedValues: FieldData[]) => {
+    const isLocatorTypeChanged = changedValues.some((value) => value.name.toString().includes("locatorType"));
+    isLocatorTypeChanged && onLocatorTypeChange();
     setIsOkButtonDisabled(computeIsOkButtonDisabled());
   };
 
