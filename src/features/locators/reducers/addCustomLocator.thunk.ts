@@ -24,8 +24,10 @@ export const addCustomLocator = createAsyncThunk(
 
     if (getLocatorValidationStatus(message) === ValidationStatus.SUCCESS) {
       try {
-        const foundElementText = JSON.parse(await evaluateXpath(locator.customXpath!, element_id));
-        let { foundHash } = JSON.parse(await evaluateXpath(locator.customXpath!, element_id));
+        const result = JSON.parse(await evaluateXpath(locator.customXpath!, element_id));
+        const { foundElementText } = result;
+        let { foundHash } = result;
+
         if (!foundHash) {
           foundHash = element_id.split("_")[0];
           await sendMessage
