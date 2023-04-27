@@ -152,7 +152,6 @@ const manifest = {
     entry: "./src/manifest.json",
     output: {
       path: join(__dirname, "dist"),
-      // filename: "manifest.json",
       publicPath: "./",
       assetModuleFilename: '[name][ext]',
     },
@@ -173,7 +172,7 @@ const contentStyles = {
   module: {
     rules: [
       {
-        test: /contentScripts.less$/i,
+        test: /index.less$/i,
         use: [
           {
             loader: _loader,
@@ -195,4 +194,4 @@ const contentStyles = {
   },
 };
 
-export default [mainConfig, contentStyles, manifest];
+export default [mainConfig, manifest, contentStyles];
