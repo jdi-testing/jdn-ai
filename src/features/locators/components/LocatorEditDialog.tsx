@@ -143,7 +143,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
     const { name, type, locator, locatorType } = await form.validateFields();
     //check and revise after adding css validation
     const message = !isCSSLocator ? validationMessage : locator.length ? "" : LocatorValidationWarnings.EmptyValue;
-    if (validationMessage !== LocatorValidationWarnings.NewElement) {
+    if (validationMessage !== LocatorValidationWarnings.NewElement && jdnHash) {
       dispatch(
         changeLocatorAttributes({
           name,
