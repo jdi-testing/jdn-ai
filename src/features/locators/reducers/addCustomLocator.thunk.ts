@@ -13,11 +13,14 @@ export const addCustomLocator = createAsyncThunk(
   async (payload: { newLocator: Locator; pageObjectId: PageObjectId }, thunkAPI) => {
     let { newLocator } = payload;
     const { pageObjectId } = payload;
-
-    let { element_id } = newLocator;
     const { message, locator } = newLocator;
 
-    element_id = element_id || `${generateId()}_${pageObjectId}`;
+    const element_id = `${generateId()}_${pageObjectId}`;
+
+    newLocator = {
+      ...newLocator,
+      element_id,
+    };
 
     if (getLocatorValidationStatus(message) === ValidationStatus.SUCCESS) {
       try {
@@ -40,7 +43,6 @@ export const addCustomLocator = createAsyncThunk(
 
         newLocator = {
           ...newLocator,
-          element_id,
           elemText: foundElementText || "",
           locator: { ...newLocator.locator, fullXpath },
           jdnHash: foundHash,
