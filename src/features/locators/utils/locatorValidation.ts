@@ -41,9 +41,10 @@ export const validateXpath = (
         if (foundHash && duplicates.length) {
           throw new Error(LocatorValidationErrors.DuplicatedLocator); //validationStatus: ERROR
         } else {
-          const msg = isCreatingForm || !_jdnHash
-            ? "" //validationStatus: SUCCESS
-            : LocatorValidationWarnings.NewElement; //validationStatus: WARNING
+          const msg =
+            isCreatingForm || !_jdnHash
+              ? "" //validationStatus: SUCCESS
+              : LocatorValidationWarnings.NewElement; //validationStatus: WARNING
           return msg;
         }
       }
