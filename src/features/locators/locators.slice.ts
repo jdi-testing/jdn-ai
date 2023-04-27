@@ -168,6 +168,7 @@ const locatorsSlice = createSlice({
     updateLocator(state, { payload }) {
       const { element_id, locator } = payload;
       const existingLocator = simpleSelectLocatorById(state, element_id);
+      if (existingLocator?.locator.customXpath && locator.robulaXpath) locator.customXpath = locator.robulaXpath;
       existingLocator &&
         locatorsAdapter.upsertOne(state, {
           element_id,
