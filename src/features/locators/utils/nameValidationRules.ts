@@ -12,7 +12,11 @@ export const createNameValidationRules = (isNameUnique: (value: string) => boole
     () => ({
       validator(_: RuleObject, value: string) {
         if (!value.length) return Promise.resolve();
-        if (!isValidJavaVariable(value) || isStringMatchesReservedWord(value)) {
+        if (
+          !isValidJavaVariable(value) ||
+          isStringMatchesReservedWord(value)
+          // || isStringMatchesReservedWordPerfTest(value) TODO: uncomment with validation rework, see issue #1176
+        ) {
           return Promise.reject(new Error(LocatorValidationErrors.InvalidName));
         } else if (isNameUnique(value)) {
           return Promise.reject(new Error(LocatorValidationErrors.DuplicatedName));
