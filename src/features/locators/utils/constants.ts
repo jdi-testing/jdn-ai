@@ -32,7 +32,6 @@ export const newLocatorStub: Locator = {
   predicted_label: "",
   isCustomName: true,
   isCustomLocator: true,
-  isCreatedByUser: true,
   type: "" as ElementClass,
   generate: true,
 };

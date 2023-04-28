@@ -108,9 +108,8 @@ export const getGenerationAttributes = () => {
     }
 
     if (message === "GET_ELEMENT_XPATH") {
-      const parser = new DOMParser();
-      const parsedElement = parser.parseFromString(param, "text/html").body.firstElementChild;
-      sendResponse(getElementTreeXPath(parsedElement));
+      const foundElement = document.querySelector(`[jdn-hash='${param}']`);
+      sendResponse(getElementTreeXPath(foundElement));
     }
 
     if (message === "PING_SCRIPT" && param.scriptName === "getGenerationAttributes") {
