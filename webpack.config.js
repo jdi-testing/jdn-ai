@@ -149,7 +149,7 @@ const mainConfig = {
 const manifest = {
   devtool: "inline-cheap-module-source-map",
   mode: "development",
-  entry: "./src/manifest.json",
+  entry: "./manifest.json",
   output: {
     path: join(__dirname, "dist"),
     publicPath: "./",

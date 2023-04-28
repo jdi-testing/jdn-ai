@@ -108,9 +108,8 @@ export const getGenerationAttributes = () => {
         sendResponse(mapElements(param));
         break;
       case "GET_ELEMENT_XPATH":
-        const parser = new DOMParser();
-        const parsedElement = parser.parseFromString(param, "text/html").body.firstElementChild;
-        sendResponse(getElementTreeXPath(parsedElement));
+        const foundElement = document.querySelector(`[jdn-hash='${param}']`);
+        sendResponse(getElementTreeXPath(foundElement));
         break;
       default:
         break;
