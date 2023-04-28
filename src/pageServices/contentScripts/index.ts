@@ -1,5 +1,6 @@
 import { assignDataLabels } from "./assignDataLabels";
 import { runContextMenu } from "./contextmenu";
+import { getGenerationAttributes } from "./generationData";
 import { highlightOnPage } from "./highlight";
 import { highlightOrder } from "./highlightOrder";
 import { selectable } from "./selectable";
@@ -13,6 +14,7 @@ highlightOrder();
 urlListener();
 selectable();
 utilityScript();
+getGenerationAttributes();
 
 const messageHandler = (
   { message, param }: { message: string; param: any },
