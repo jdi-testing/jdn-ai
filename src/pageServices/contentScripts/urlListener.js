@@ -10,14 +10,20 @@ export const urlListener = () => {
   };
 
   const messageHandler = ({ message, param }, sender, sendResponse) => {
-    if (message === "PING_SCRIPT" && param.scriptName === "urlListener") {
-      sendResponse({ message: true });
-    } else if (message === "CHECK_SESSION") {
-      isClosedSession || sendResponse({ tabId });
-    } else if (message === "DEFINE_TAB_ID") {
-      tabId = param;
-    } else if (message === "SET_CLOSED_SESSION" && param.tabId === tabId) {
-      isClosedSession = param.isClosed;
+    switch (message) {
+      case "CHECK_SESSION":
+        isClosedSession || sendResponse({ tabId });
+        break;
+      case "DEFINE_TAB_ID":
+        tabId = param;
+        break;
+      case "SET_CLOSED_SESSION":
+        if (param.tabId === tabId) {
+          isClosedSession = param.isClosed;
+        }
+        break;
+      default:
+        break;
     }
   };
 

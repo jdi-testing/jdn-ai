@@ -103,17 +103,16 @@ export const getGenerationAttributes = () => {
   };
 
   chrome.runtime.onMessage.addListener(({ message, param }, sender, sendResponse) => {
-    if (message === "GENERATE_ATTRIBUTES") {
-      sendResponse(mapElements(param));
-    }
-
-    if (message === "GET_ELEMENT_XPATH") {
-      const foundElement = document.querySelector(`[jdn-hash='${param}']`);
-      sendResponse(getElementTreeXPath(foundElement));
-    }
-
-    if (message === "PING_SCRIPT" && param.scriptName === "getGenerationAttributes") {
-      sendResponse({ message: true });
+    switch (message) {
+      case "GENERATE_ATTRIBUTES":
+        sendResponse(mapElements(param));
+        break;
+      case "GET_ELEMENT_XPATH":
+        const foundElement = document.querySelector(`[jdn-hash='${param}']`);
+        sendResponse(getElementTreeXPath(foundElement));
+        break;
+      default:
+        break;
     }
   });
 };

@@ -3,15 +3,8 @@ import { SCRIPT_ERROR } from "../common/constants/constants";
 import { ElementId, Locator, PredictedEntity } from "../features/locators/types/locator.types";
 import { ElementClass } from "../features/locators/types/generationClasses.types";
 import { SelectorsMap } from "../services/rules/rules.types";
-import { assignDataLabels } from "./contentScripts/assignDataLabels";
-import { runContextMenu } from "./contentScripts/contextmenu";
-import { highlightOnPage } from "./contentScripts/highlight";
-import { highlightOrder } from "./contentScripts/highlightOrder";
-import { selectable } from "./contentScripts/selectable";
-import { urlListener } from "./contentScripts/urlListener";
-import { ScriptMessagePayload } from "./scriptListener";
+import { ScriptMessagePayload } from "./scriptMessageHandler";
 import { ClassFilterValue } from "../features/filter/types/filter.types";
-import { utilityScript } from "./contentScripts/utils";
 
 export interface ScriptMessage {
   message: string;
@@ -37,15 +30,8 @@ class Connector {
     this.getTab();
   }
 
-  async initScripts(onInitHandler: () => Promise<void>, onDisconnectHandler: () => void) {
-    await this.attachStaticScripts();
-    onInitHandler();
-    this.onTabUpdate(onInitHandler, onDisconnectHandler);
-  }
-
-  handleError(error: Error) {
-    if (typeof this.onerror === "function") this.onerror(error);
-    else throw error;
+  async initScripts() {
+    return await this.attachStaticScripts();
   }
 
   getTab() {
@@ -88,11 +74,11 @@ class Connector {
     chrome.runtime.onMessage.addListener(this.onmessage);
   }
 
-  onTabUpdate(onInitHandler: () => Promise<void>, onDisconnectHandler: () => void) {
+  updateDisconnectListener(callback: () => void) {
     const listener = (port: chrome.runtime.Port | undefined) => {
       if (this.port) this.port = undefined;
-      if (typeof onDisconnectHandler === "function") onDisconnectHandler();
-      this.initScripts(onInitHandler, onDisconnectHandler);
+      if (typeof callback === "function") callback();
+      this.initScripts();
     };
 
     if (this.port && !this.port.onDisconnect.hasListener(listener)) {
@@ -106,17 +92,18 @@ class Connector {
         name: `JDN_connect_${Date.now()}`,
       });
     }
-    // @ts-ignore
-    return { then: (cb) => cb(this.port) };
   }
 
-  attachContentScript(script: (...args: any[]) => void, scriptName = "") {
+  attachContentScript(script: string[] | ((...args: any[]) => void), scriptName = "") {
     return this.scriptExists(scriptName).then((result) => {
       if (result) return true;
+
+      const injection = typeof script === "function" ? { func: script } : { files: script };
+
       return chrome.scripting
         .executeScript({
           target: { tabId: this.tabId },
-          func: script,
+          ...injection,
         })
         .then((response) => response)
         .catch((error) => error);
@@ -139,20 +126,14 @@ class Connector {
 
   attachStaticScripts() {
     return Promise.all([
-      this.attachContentScript(highlightOnPage, "highlightOnPage").then(() => {
+      this.attachContentScript(["contentScript.bundle.js"], "index").then(() => {
         this.createPort();
         chrome.storage.sync.set({ IS_DISCONNECTED: false });
-      }),
-      this.attachContentScript(runContextMenu, "runContextMenu"),
-      this.attachContentScript(assignDataLabels, "assignDataLabels"),
-      this.attachContentScript(highlightOrder, "highlightOrder"),
-      this.attachContentScript(urlListener, "urlListener").then(() => {
         sendMessage.defineTabId(this.tabId);
         sendMessage.setClosedSession({ tabId: this.tabId, isClosed: false });
+        return "success";
       }),
-      this.attachContentScript(selectable, "selectable"),
-      this.attachContentScript(utilityScript, "utilityScript"),
-      this.attachCSS("contentScripts.css"),
+      this.attachCSS("contentStyles.css"),
     ]);
   }
 
@@ -166,7 +147,7 @@ class Connector {
   }
 }
 
-export const connector = new Connector();
+const connector = new Connector();
 
 // messages, are sent from plugin to content scripts
 export const sendMessage = {
@@ -206,4 +187,4 @@ export const sendMessage = {
   unsetActive: (payload: Locator | Locator[]) => connector.sendMessage("UNSET_ACTIVE", payload),
 };
 
-export default Connector;
+export default connector;
