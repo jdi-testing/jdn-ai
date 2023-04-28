@@ -72,14 +72,14 @@ export const getGenerationAttributes = () => {
   // this is a draft, parameters could be changed
   const generateSelectorByXpath = ({ element_id, xPath }) => {
     const element = document.evaluate(xPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-    return element ? { element_id, cssSelector: generateSelectorByElement(element)} : null;
-  }
+    return element ? { element_id, cssSelector: generateSelectorByElement(element) } : null;
+  };
 
   // this is a draft, parameters could be changed
   const generateSelectorByHash = ({ element_id, jdnHash }) => {
     const element = document.querySelector(`[jdn-hash='${jdnHash}']`);
-    return element ? { element_id, cssSelector: generateSelectorByElement(element)} : null;
-  }
+    return element ? { element_id, cssSelector: generateSelectorByElement(element) } : null;
+  };
 
   /*
     Make an 'ID' attribute to the camel notation. Rules:
