@@ -31,13 +31,7 @@ class Connector {
   }
 
   async initScripts() {
-    await this.attachStaticScripts();
-    return "success";
-  }
-
-  handleError(error: Error) {
-    if (typeof this.onerror === "function") this.onerror(error);
-    else throw error;
+    return await this.attachStaticScripts();
   }
 
   getTab() {

@@ -147,23 +147,23 @@ const mainConfig = {
 };
 
 const manifest = {
-    devtool: "inline-cheap-module-source-map",
-    mode: "development",
-    entry: "./src/manifest.json",
-    output: {
-      path: join(__dirname, "dist"),
-      publicPath: "./",
-      assetModuleFilename: '[name][ext]',
-    },
-    module: {
-      rules: [
-        {
-          test: /\.json$/,
-          type: 'asset/resource'
-        }
-      ],
-    },
-}
+  devtool: "inline-cheap-module-source-map",
+  mode: "development",
+  entry: "./src/manifest.json",
+  output: {
+    path: join(__dirname, "dist"),
+    publicPath: "./",
+    assetModuleFilename: "[name][ext]",
+  },
+  module: {
+    rules: [
+      {
+        test: /\.json$/,
+        type: "asset/resource",
+      },
+    ],
+  },
+};
 
 const contentStyles = {
   entry: "./src/pageServices/contentScripts/css/index.less",

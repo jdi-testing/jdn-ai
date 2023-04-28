@@ -429,7 +429,6 @@ export const highlightOnPage = () => {
   };
 
   const messageHandler = ({ message, param }, sender, sendResponse) => {
-    // refact to switch
     switch (message) {
       case "SET_HIGHLIGHT":
         if (!listenersAreSet) setDocumentListeners();
