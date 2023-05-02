@@ -142,7 +142,7 @@ describe("defineServer", () => {
       { type: "main/defineServer/pending" },
       {
         type: "main/defineServer/rejected",
-        error: { message: "AccessFailed" },
+        error: { message: "Access failed" },
       },
     ];
     const store = mockStore({});
