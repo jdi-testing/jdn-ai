@@ -109,7 +109,7 @@ export const getGenerationAttributes = () => {
         predictedElement.elemText = element.textContent;
         predictedElement.elemAriaLabel = element.getAttribute("aria-label");
         predictedElement.locator = {
-          fullXpath: getElementTreeXPath(element),
+          xPath: getElementTreeXPath(element),
           cssSelector: generateSelectorByElement(element),
         };
 

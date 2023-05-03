@@ -51,13 +51,11 @@ export interface LocatorsState {
 export type ElementId = string;
 
 export interface LocatorValue {
-  customXpath?: string;
-  fullXpath: string;
-  robulaXpath?: string;
-  cssSelector?: string;
+  xPath: string | null;
+  cssSelector: string | null;
   taskStatus?: LocatorTaskStatus;
   errorMessage?: string; // comes during the locator generation
-  output?: string;
+  output: string | null;
 }
 
 export enum LocatorValidationErrors {
@@ -90,7 +88,7 @@ export interface Locator extends PredictedEntity {
   active?: boolean;
   isCustomName?: boolean;
   isCustomLocator?: boolean;
-  locatorType?: LocatorType;
+  locatorType: LocatorType;
   pageObj: PageObjectId;
   parent_id: JDNHash;
   priority?: LocatorCalculationPriority;

@@ -59,7 +59,7 @@ class LocatorGenerationController {
           this.onStatusChange(
             this.scheduledTasks.get(payload.id),
             {
-              robulaXpath: payload.result,
+              xPath: payload.result,
               taskStatus: locatorTaskStatus.SUCCESS,
             },
             payload.id

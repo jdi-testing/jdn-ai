@@ -6,6 +6,7 @@ export const pageObject0 = {
   name: "HomePage",
   url: "https://jdi-testing.github.io/jdi-light/index.html",
   library: "MUI",
+  locatorType: LocatorType.xPath,
   pathname: "/jdi-light/index.html",
   search: "",
   origin: "https://jdi-testing.github.io",

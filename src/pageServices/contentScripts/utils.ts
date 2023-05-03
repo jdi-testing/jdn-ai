@@ -14,9 +14,10 @@ export const utilityScript = () => {
 
   const evaluateCssSelector = ({ selector, element_id, originJdnHash }: Record<string, string>) => {
     try {
-      const foundElement = document.querySelector(selector);
-      const foundHash = foundElement && foundElement.getAttribute("jdn-hash");
-      const foundElementText = foundElement && foundElement.textContent;
+      const foundElements = document.querySelectorAll(selector);
+      const length = foundElements.length;
+      const foundHash = foundElements && foundElements[0].getAttribute("jdn-hash");
+      const foundElementText = foundElements && foundElements[0].textContent;
       return JSON.stringify({ length, foundHash, element_id, foundElementText, originJdnHash });
     } catch (error) {
       return "The locator was not found on the page.";

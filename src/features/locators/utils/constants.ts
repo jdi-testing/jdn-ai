@@ -1,5 +1,6 @@
 import { LocatorTaskStatus, Locator } from "../types/locator.types";
 import { ElementClass } from "../types/generationClasses.types";
+import { LocatorType } from "../../../common/types/common";
 
 export const PLUGIN_HEADER_HEIGHT = 169;
 
@@ -22,10 +23,12 @@ export const newLocatorStub: Locator = {
   jdnHash: "",
   parent_id: "",
   locator: {
-    customXpath: "",
-    fullXpath: "",
+    xPath: "",
+    cssSelector: "",
     taskStatus: LocatorTaskStatus.SUCCESS,
+    output: null,
   },
+  locatorType: LocatorType.xPath,
   name: "",
   message: "",
   pageObj: 0,

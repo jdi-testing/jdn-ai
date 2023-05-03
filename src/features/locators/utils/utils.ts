@@ -13,18 +13,17 @@ import {
 } from "../types/locator.types";
 import { copyToClipboard, getLocatorString } from "../../../common/utils/helpers";
 import { LocatorOption } from "./constants";
-import { getXPathByPriority, getLocator } from "./locatorOutput";
+import { getLocator } from "./locatorOutput";
 import { LocatorType } from "../../../common/types/common";
 import { isStringContainsNumbers } from "../../../common/utils/helpers";
 
-export const getLocatorWithJDIAnnotation = (locator: LocatorValue): string => `@UI("${getXPathByPriority(locator)}")`;
+export const getLocatorWithJDIAnnotation = (locator: LocatorValue): string => `@UI("${locator.xPath}")`;
 
-export const getLocatorWithSelenium = (locator: LocatorValue): string =>
-  `@FindBy(xpath = "${getXPathByPriority(locator)}")`;
+export const getLocatorWithSelenium = (locator: LocatorValue): string => `@FindBy(xpath = "${locator.xPath}")`;
 
 export const isValidJavaVariable = (value: string) => /^[a-zA-Z_$]([a-zA-Z0-9_])*$/.test(value);
 
-export const evaluateXpath = (xPath: string, element_id?: ElementId, originJdnHash?: string) => {
+export const evaluateXpath = (xPath: string | null, element_id?: ElementId, originJdnHash?: string) => {
   return sendMessage.evaluateXpath({ xPath, element_id, originJdnHash }).then((response) => {
     return response;
   });
@@ -32,6 +31,11 @@ export const evaluateXpath = (xPath: string, element_id?: ElementId, originJdnHa
 
 export const evaluateCssSelector = (selector: string, element_id?: ElementId, originJdnHash?: string) => {
   return sendMessage.evaluateCssSelector({ selector, element_id, originJdnHash }).then((response) => {
+    return response;
+  });
+};
+export const generateSelectorByHash = (element_id: ElementId, jdnHash: string) => {
+  return sendMessage.generateSelectorByHash({ element_id, jdnHash }).then((response) => {
     return response;
   });
 };
@@ -81,7 +85,7 @@ export const copyLocator = (
   let xPath: string;
   switch (option) {
     case LocatorOption.Xpath:
-      xPath = selectedLocators.map(({ locator }) => `"${getXPathByPriority(locator)}"`).join("\n");
+      xPath = selectedLocators.map(({ locator }) => `"${locator.xPath}"`).join("\n");
       break;
     case LocatorOption.XpathAndSelenium:
       xPath = selectedLocators.map(({ locator }) => getLocatorWithSelenium(locator)).join("\n");
