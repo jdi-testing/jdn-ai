@@ -3,22 +3,31 @@ import { getLocator } from "../features/locators/utils/locatorOutput";
 
 const data = [
   {
-    input: { fullXpath: "/html/body/footer" },
+    input: { fullXpath: "/html/body/footer", cssSelector: "html > body > footer" },
     xpathOutput: "/html/body/footer",
     cssOutput: "html > body > footer",
   },
   {
-    input: { fullXpath: "/html/body/footer", robulaXpath: "//*[@class='footer-menu']" },
+    input: { fullXpath: "/html/body/footer", robulaXpath: "//*[@class='footer-menu']", cssSelector: ".footer-menu" },
     xpathOutput: "//*[@class='footer-menu']",
     cssOutput: ".footer-menu",
   },
   {
-    input: { fullXpath: "/html/body/footer", robulaXpath: "//*[@class='footer-menu']", customXpath: "//div/button" },
+    input: {
+      fullXpath: "/html/body/footer",
+      robulaXpath: "//*[@class='footer-menu']",
+      customXpath: "//div/button",
+      cssSelector: "div > button",
+    },
     xpathOutput: "//div/button",
     cssOutput: "div > button",
   },
   {
-    input: { fullXpath: "/html/body/footer", robulaXpath: "//*[contains(text(), 'JDI Github')]" },
+    input: {
+      fullXpath: "/html/body/footer",
+      robulaXpath: "//*[contains(text(), 'JDI Github')]",
+      cssSelector: "html > body > footer",
+    },
     xpathOutput: "//*[contains(text(), 'JDI Github')]",
     cssOutput: "html > body > footer",
   },

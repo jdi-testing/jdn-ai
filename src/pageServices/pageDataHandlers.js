@@ -4,7 +4,6 @@ import { createLocatorNames } from "../features/pageObjects/utils/pageObject";
 import { createOverlay } from "./contentScripts/createOverlay";
 import { assignParents } from "./contentScripts/assignParents";
 import { getPageData } from "./contentScripts/pageData";
-import { getGenerationAttributes } from "./contentScripts/generationData";
 /* global chrome*/
 
 let overlayID;
@@ -55,14 +54,12 @@ export const predictElements = (endpoint) => {
     );
 };
 const requestGenerationAttributes = (elements) =>
-  connector.attachContentScript(getGenerationAttributes).then(() =>
-    sendMessage.generateAttributes(elements).then((response) => {
-      if (chrome.runtime.lastError) return false;
+  sendMessage.generateAttributes(elements).then((response) => {
+    if (chrome.runtime.lastError) return false;
 
-      if (response) return response;
-      else return false;
-    })
-  );
+    if (response) return response;
+    else return false;
+  });
 
 export const requestGenerationData = async (elements, library) => {
   const generationTags = await requestGenerationAttributes(elements);

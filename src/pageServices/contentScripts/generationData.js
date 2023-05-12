@@ -1,3 +1,5 @@
+import getCssSelector from "css-selector-generator";
+
 export const getGenerationAttributes = () => {
   /*
         Software License Agreement (BSD License)
@@ -63,6 +65,25 @@ export const getGenerationAttributes = () => {
             */
   };
 
+  const generateSelectorByElement = (element) => {
+    const options = {
+      blacklist: [/jdn-hash/],
+    };
+    return getCssSelector(element, options);
+  };
+
+  // this is a draft, parameters could be changed
+  const generateSelectorByXpath = ({ element_id, xPath }) => {
+    const element = document.evaluate(xPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+    return element ? { element_id, cssSelector: generateSelectorByElement(element) } : null;
+  };
+
+  // this is a draft, parameters could be changed
+  const generateSelectorByHash = ({ element_id, jdnHash }) => {
+    const element = document.querySelector(`[jdn-hash='${jdnHash}']`);
+    return element ? { element_id, cssSelector: generateSelectorByElement(element) } : null;
+  };
+
   /*
     Make an 'ID' attribute to the camel notation. Rules:
     - Replace the dash just before the letters (search-button -> searchButton)
@@ -92,6 +113,7 @@ export const getGenerationAttributes = () => {
         predictedElement.elemAriaLabel = element.getAttribute("aria-label");
         predictedElement.locator = {
           fullXpath: getElementTreeXPath(element),
+          cssSelector: generateSelectorByElement(element),
         };
 
         return {
@@ -110,6 +132,12 @@ export const getGenerationAttributes = () => {
       case "GET_ELEMENT_XPATH":
         const foundElement = document.querySelector(`[jdn-hash='${param}']`);
         sendResponse(getElementTreeXPath(foundElement));
+        break;
+      case "GENERATE_SELECTOR_BY_XPATH":
+        sendResponse(generateSelectorByXpath(param));
+        break;
+      case "GENERATE_SELECTOR_BY_HASH":
+        sendResponse(generateSelectorByHash(param));
         break;
       default:
         break;

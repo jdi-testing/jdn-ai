@@ -1,6 +1,6 @@
 {
   "name": "jdn-ai-chrome-extension",
-  "version": "3.11.455",
+  "version": "3.11.456",
   "description": "jdn-ai chrome extension",
   "scripts": {
     "start": "webpack --watch --env devenv",
@@ -50,6 +50,7 @@
     "@sindresorhus/transliterate": "1.6.0",
     "antd": "4.24.3",
     "axios": "0.27.2",
+    "css-selector-generator": "^3.6.4",
     "jszip": "3.7.1",
     "lodash": "4.17.21",
     "mversion": "2.0.1",
@@ -63,8 +64,7 @@
     "redux-undo": "^1.0.1",
     "rehype-raw": "^6.1.1",
     "rehype-sanitize": "^5.0.1",
-    "remark-emoji": "^3.1.1",
-    "xpath-to-css": "^1.1.0"
+    "remark-emoji": "^3.1.1"
   },
   "devDependencies": {
     "@babel/core": "7.17.5",
