@@ -3,7 +3,7 @@ import { createDraftSafeSelector, createEntityAdapter, createSelector, EntitySta
 import { RootState } from "../../app/store/store";
 import { PageObjectId } from "../pageObjects/types/pageObjectSlice.types";
 import { ElementId, Locator } from "./types/locator.types";
-import { getCssSelector, getXPathByPriority } from "./utils/locatorOutput";
+import { getXPathByPriority } from "./utils/locatorOutput";
 import { LocatorType } from "../../common/types/common";
 
 export const locatorsAdapter = createEntityAdapter<Locator>({
