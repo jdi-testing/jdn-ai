@@ -36,7 +36,6 @@ class Connector {
 
   getTab() {
     this.tabId = chrome.devtools.inspectedWindow.tabId;
-    console.log(this.tabId);
   }
 
   // @ts-ignore

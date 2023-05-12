@@ -1,0 +1,21 @@
+diff --git a/node_modules/css-selector-generator/esm/utilities-selectors.js b/node_modules/css-selector-generator/esm/utilities-selectors.js
+index aacc672..ee7c6ef 100644
+--- a/node_modules/css-selector-generator/esm/utilities-selectors.js
++++ b/node_modules/css-selector-generator/esm/utilities-selectors.js
+@@ -11,6 +11,7 @@ import { CssSelectorType, } from './types.js';
+ import { isElement } from './utilities-iselement.js';
+ import { getPowerSet } from './utilities-powerset.js';
+ import { getCartesianProduct } from './utilities-cartesian.js';
++import { createNoSubstitutionTemplateLiteral } from 'typescript';
+ export const ESCAPED_COLON = ':'
+     .charCodeAt(0)
+     .toString(16)
+@@ -23,7 +24,7 @@ export const SPECIAL_CHARACTERS_RE = /[ !"#$%&'()\[\]{|}<>*+,./;=?@^`~\\]/;
+  */
+ export function sanitizeSelectorItem(input = '') {
+     var _a, _b;
+-    return (_b = (_a = CSS === null || CSS === void 0 ? void 0 : CSS.escape) === null || _a === void 0 ? void 0 : _a.call(CSS, input)) !== null && _b !== void 0 ? _b : legacySanitizeSelectorItem(input);
++    return (_b = (_a = CSS === null || CSS === void 0 ? void 0 : CSS.escape) === null || _a === void 0 ? void 0 : input) !== null && _b !== void 0 ? _b : legacySanitizeSelectorItem(input);
+ }
+ /**
+  * Legacy version of escaping utility, originally used for IE11-. Should
