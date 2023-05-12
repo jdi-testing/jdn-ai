@@ -22,7 +22,7 @@ export const useNotificationController = (
 
     if (!lastNotification) return;
 
-    const { action, prevValue } = lastNotification;
+    const { action, prevValue, message } = lastNotification;
 
     switch (action?.type) {
       case "locators/changeLocatorAttributes":
@@ -79,6 +79,9 @@ export const useNotificationController = (
         break;
       case "downloadTemplate":
         openNotification(messages().DOWNLOAD_TEMPLATE, "info");
+        break;
+      case "main/defineServer/rejected":
+        message && openNotification(message, "error");
         break;
       default:
         break;
