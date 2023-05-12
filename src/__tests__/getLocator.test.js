@@ -13,12 +13,21 @@ const data = [
     cssOutput: ".footer-menu",
   },
   {
-    input: { fullXpath: "/html/body/footer", robulaXpath: "//*[@class='footer-menu']", customXpath: "//div/button", cssSelector: "div > button" },
+    input: {
+      fullXpath: "/html/body/footer",
+      robulaXpath: "//*[@class='footer-menu']",
+      customXpath: "//div/button",
+      cssSelector: "div > button",
+    },
     xpathOutput: "//div/button",
     cssOutput: "div > button",
   },
   {
-    input: { fullXpath: "/html/body/footer", robulaXpath: "//*[contains(text(), 'JDI Github')]", cssSelector: "html > body > footer" },
+    input: {
+      fullXpath: "/html/body/footer",
+      robulaXpath: "//*[contains(text(), 'JDI Github')]",
+      cssSelector: "html > body > footer",
+    },
     xpathOutput: "//*[contains(text(), 'JDI Github')]",
     cssOutput: "html > body > footer",
   },

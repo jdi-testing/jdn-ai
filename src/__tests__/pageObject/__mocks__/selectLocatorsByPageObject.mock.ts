@@ -112,7 +112,7 @@ export const getRootState = (_pageObject: PageObject) => ({
           elemText: "HTML 5",
           elemAriaLabel: null,
           locator: {
-            cssSelector: "[index=\"5\"] > ul",
+            cssSelector: '[index="5"] > ul',
             fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[5]/ul",
             taskStatus: "SUCCESS",
             robulaXpath: "//*[@index='5']/ul",

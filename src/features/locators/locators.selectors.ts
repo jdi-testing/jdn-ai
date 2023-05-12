@@ -18,7 +18,8 @@ export const selectLocatorById = createSelector(selectById, (_item?: Locator) =>
       ..._item,
       locator: {
         ..._item.locator,
-        output: _item.locatorType === LocatorType.cssSelector ? _item.locator.cssSelector : getXPathByPriority(_item.locator),
+        output:
+          _item.locatorType === LocatorType.cssSelector ? _item.locator.cssSelector : getXPathByPriority(_item.locator),
       },
     };
   }
@@ -31,7 +32,8 @@ export const selectLocators = createSelector(selectAll, (items: Locator[]) =>
       ..._item,
       locator: {
         ..._item.locator,
-        output: _item.locatorType === LocatorType.cssSelector ? _item.locator.cssSelector : getXPathByPriority(_item.locator),
+        output:
+          _item.locatorType === LocatorType.cssSelector ? _item.locator.cssSelector : getXPathByPriority(_item.locator),
       },
     };
   })
