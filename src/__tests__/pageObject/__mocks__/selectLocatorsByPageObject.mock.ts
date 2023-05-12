@@ -64,6 +64,7 @@ export const getRootState = (_pageObject: PageObject) => ({
           elemText: "EPAM framework Wishes…",
           elemAriaLabel: null,
           locator: {
+            cssSelector: ".main-content",
             fullXpath: "/html/body/div/div[2]/main/div[2]",
             taskStatus: "SUCCESS",
             robulaXpath: "//*[@class='main-content']",
@@ -85,6 +86,7 @@ export const getRootState = (_pageObject: PageObject) => ({
           elemText: "Home",
           elemAriaLabel: null,
           locator: {
+            cssSelector: ".uui-navigation.nav.navbar-nav.m-l8.any",
             fullXpath: "/html/body/header/div/nav/ul[1]",
             taskStatus: "SUCCESS",
             robulaXpath: "//*[@class='uui-navigation nav navbar-nav m-l8']",
@@ -110,6 +112,7 @@ export const getRootState = (_pageObject: PageObject) => ({
           elemText: "HTML 5",
           elemAriaLabel: null,
           locator: {
+            cssSelector: "[index=\"5\"] > ul",
             fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[5]/ul",
             taskStatus: "SUCCESS",
             robulaXpath: "//*[@index='5']/ul",

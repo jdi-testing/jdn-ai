@@ -66,7 +66,10 @@ export const getGenerationAttributes = () => {
   };
 
   const generateSelectorByElement = (element) => {
-    return getCssSelector(element, { blacklist: [/jdn-hash/] });
+    const options = {
+      blacklist: [/jdn-hash/],
+    };
+    return getCssSelector(element, options);
   };
 
   // this is a draft, parameters could be changed

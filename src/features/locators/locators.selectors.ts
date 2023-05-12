@@ -14,13 +14,11 @@ const { selectAll, selectById } = locatorsAdapter.getSelectors<RootState>((state
 
 export const selectLocatorById = createSelector(selectById, (_item?: Locator) => {
   if (_item) {
-    const cssSelector = getCssSelector(_item.locator);
     return {
       ..._item,
       locator: {
         ..._item.locator,
-        cssSelector,
-        output: _item.locatorType === LocatorType.cssSelector ? cssSelector : getXPathByPriority(_item.locator),
+        output: _item.locatorType === LocatorType.cssSelector ? _item.locator.cssSelector : getXPathByPriority(_item.locator),
       },
     };
   }
@@ -29,13 +27,11 @@ export const selectLocatorById = createSelector(selectById, (_item?: Locator) =>
 
 export const selectLocators = createSelector(selectAll, (items: Locator[]) =>
   items.map((_item) => {
-    const cssSelector = getCssSelector(_item.locator);
     return {
       ..._item,
       locator: {
         ..._item.locator,
-        cssSelector,
-        output: _item.locatorType === LocatorType.cssSelector ? cssSelector : getXPathByPriority(_item.locator),
+        output: _item.locatorType === LocatorType.cssSelector ? _item.locator.cssSelector : getXPathByPriority(_item.locator),
       },
     };
   })
