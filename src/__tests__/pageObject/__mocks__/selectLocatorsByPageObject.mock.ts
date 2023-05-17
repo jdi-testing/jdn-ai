@@ -142,7 +142,7 @@ export const selectLocators = (pageObject: PageObject) => [
     locator: {
       taskStatus: "SUCCESS",
       xPath: "//*[@class='main-content']",
-      output: pageObject?.locatorType === LocatorType.xPath ? "//*[@class='main-content']" : ".main-content",
+      output: ".main-content",
       cssSelector: ".main-content",
     },
     locatorType: LocatorType.cssSelector,
@@ -166,7 +166,7 @@ export const selectLocators = (pageObject: PageObject) => [
       xPath: "//*[@class='uui-navigation nav navbar-nav m-l8 any']",
       cssSelector: ".uui-navigation.nav.navbar-nav.m-l8.any",
       output:
-        pageObject.locatorType === LocatorType.cssSelector && pageObject.locatorType
+        pageObject.locatorType === LocatorType.cssSelector
           ? ".uui-navigation.nav.navbar-nav.m-l8.any"
           : "//*[@class='uui-navigation nav navbar-nav m-l8 any']",
     },
@@ -192,10 +192,7 @@ export const selectLocators = (pageObject: PageObject) => [
     locator: {
       taskStatus: "SUCCESS",
       xPath: "//*[@index='5']/ul",
-      output:
-        pageObject.locatorType === LocatorType.cssSelector && pageObject.locatorType
-          ? '[index="5"] > ul'
-          : "//*[@index='5']/ul",
+      output: "//*[@index='5']/ul",
       cssSelector: '[index="5"] > ul',
     },
     locatorType: LocatorType.xPath,

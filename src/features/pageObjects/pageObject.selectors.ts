@@ -6,6 +6,7 @@ import { selectClassFilterByPO } from "../filter/filter.selectors";
 import { isValidLocator } from "../locators/utils/utils";
 import { selectLocators } from "../locators/locators.selectors";
 import { Locator } from "../locators/types/locator.types";
+import { LocatorType } from "../../common/types/common";
 import { isProgressStatus } from "../locators/utils/locatorGenerationController";
 import { getLocator } from "../locators/utils/locatorOutput";
 import { PageObject, PageObjectId } from "./types/pageObjectSlice.types";
@@ -52,10 +53,14 @@ export const selectLocatorsByPageObject = createSelector(
     const locByPageObj = pageObject?.locators || [];
     return locators
       .filter((loc) => locByPageObj.includes(loc.element_id))
-      .map((loc) => ({
-        ...loc,
-        locator: { ...loc.locator, output: getLocator(loc.locator, pageObject?.locatorType || loc.locatorType) },
-      }));
+      .map((loc) =>
+        !loc.locatorType && pageObject?.locatorType === LocatorType.cssSelector
+          ? {
+              ...loc,
+              locator: { ...loc.locator, output: getLocator(loc.locator, pageObject?.locatorType) },
+            }
+          : loc
+      );
   }
 );
 
