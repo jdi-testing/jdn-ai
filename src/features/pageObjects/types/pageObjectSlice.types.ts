@@ -12,7 +12,7 @@ export interface PageObject {
   id: PageObjectId;
   library: ElementLibrary;
   locators?: ElementId[];
-  locatorType: LocatorType;
+  locatorType?: LocatorType;
   name: string;
   origin: string;
   pathname: string;

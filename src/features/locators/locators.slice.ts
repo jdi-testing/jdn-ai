@@ -57,9 +57,9 @@ const locatorsSlice = createSlice({
 
       const newValue = { ..._locator, locator: { ..._locator.locator }, locatorType, ...rest };
 
-      if (_locator.locator.cssSelector !== locator && locatorType === LocatorType.cssSelector) {
+      if (locatorType === LocatorType.cssSelector) {
         newValue.locator.cssSelector = locator;
-      } else if (locatorType === LocatorType.xPath && _locator.locator.xPath !== locator) {
+      } else if (locatorType === LocatorType.xPath) {
         newValue.locator.xPath = locator;
       }
 

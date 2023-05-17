@@ -88,7 +88,7 @@ export interface Locator extends PredictedEntity {
   active?: boolean;
   isCustomName?: boolean;
   isCustomLocator?: boolean;
-  locatorType: LocatorType;
+  locatorType?: LocatorType;
   pageObj: PageObjectId;
   parent_id: JDNHash;
   priority?: LocatorCalculationPriority;

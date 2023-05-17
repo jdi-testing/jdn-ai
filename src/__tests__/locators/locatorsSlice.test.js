@@ -7,6 +7,7 @@ import { locatorTaskStatus } from "../../common/constants/constants";
 import { ElementLibrary } from "../../features/locators/types/generationClasses.types";
 import { changePage } from "../../app/main.slice";
 import { PageType } from "../../app/types/mainSlice.types";
+import { LocatorType } from "../../common/types/common";
 
 /* global jest*/
 
@@ -81,6 +82,7 @@ describe("changeLocatorAttributes reducer", () => {
       changeLocatorAttributes({
         element_id: "8736312404689610766421832473",
         locator: "//*[@class='any-class']",
+        locatorType: LocatorType.xPath,
         name: "myAwesomeLocator",
         isCustomName: true,
         type: "Dialog",
@@ -93,7 +95,7 @@ describe("changeLocatorAttributes reducer", () => {
     expect(locator.name).toBe("myAwesomeLocator");
     expect(locator.isCustomLocator).toBeTruthy();
     expect(locator.isCustomName).toBeTruthy();
-    expect(locator.locator.customXpath).toBe("//*[@class='any-class']");
+    expect(locator.locator.xPath).toBe("//*[@class='any-class']");
     expect(locator.locator.taskStatus).toBe(locatorTaskStatus.SUCCESS);
   });
 

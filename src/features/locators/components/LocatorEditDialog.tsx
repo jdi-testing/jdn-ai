@@ -146,6 +146,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
       library,
       message: validationMessage,
       isCustomName: isEditedName,
+      isCustomLocator: true,
     };
 
     validationMessage !== LocatorValidationWarnings.NewElement && jdnHash

@@ -52,14 +52,10 @@ export const selectLocatorsByPageObject = createSelector(
     const locByPageObj = pageObject?.locators || [];
     return locators
       .filter((loc) => locByPageObj.includes(loc.element_id))
-      .map((loc) =>
-        pageObject?.locatorType
-          ? {
-              ...loc,
-              locator: { ...loc.locator, output: getLocator(loc.locator, pageObject.locatorType) },
-            }
-          : loc
-      );
+      .map((loc) => ({
+        ...loc,
+        locator: { ...loc.locator, output: getLocator(loc.locator, pageObject?.locatorType || loc.locatorType) },
+      }));
   }
 );
 

@@ -55,7 +55,6 @@ export const changeLocatorElement = createAsyncThunk(
       locatorType,
       elemText: foundElementText || "",
       jdnHash: foundHash,
-      isCustomLocator: true,
       locator: {
         ...(isCSSLocator ? { cssSelector: locator, xPath: fullXpath } : { xPath: locator, cssSelector }),
         taskStatus: LocatorTaskStatus.SUCCESS,

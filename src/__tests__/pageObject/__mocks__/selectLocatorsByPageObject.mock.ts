@@ -6,7 +6,6 @@ export const pageObject0 = {
   name: "HomePage",
   url: "https://jdi-testing.github.io/jdi-light/index.html",
   library: "MUI",
-  locatorType: LocatorType.xPath,
   pathname: "/jdi-light/index.html",
   search: "",
   origin: "https://jdi-testing.github.io",
@@ -66,9 +65,9 @@ export const getRootState = (_pageObject: PageObject) => ({
           elemAriaLabel: null,
           locator: {
             cssSelector: ".main-content",
-            fullXpath: "/html/body/div/div[2]/main/div[2]",
+            output: ".main-content",
             taskStatus: "SUCCESS",
-            robulaXpath: "//*[@class='main-content']",
+            xPath: "//*[@class='main-content']",
           },
           locatorType: LocatorType.cssSelector,
           name: "dialog",
@@ -88,10 +87,9 @@ export const getRootState = (_pageObject: PageObject) => ({
           elemAriaLabel: null,
           locator: {
             cssSelector: ".uui-navigation.nav.navbar-nav.m-l8.any",
-            fullXpath: "/html/body/header/div/nav/ul[1]",
+            output: "//*[@class='uui-navigation nav navbar-nav m-l8 any']",
             taskStatus: "SUCCESS",
-            robulaXpath: "//*[@class='uui-navigation nav navbar-nav m-l8']",
-            customXpath: "//*[@class='uui-navigation nav navbar-nav m-l8 any']",
+            xPath: "//*[@class='uui-navigation nav navbar-nav m-l8 any']",
           },
           name: "homeContactFormServiceSupportDatesSearchComplexTableSimpleTa",
           type: "List",
@@ -114,9 +112,9 @@ export const getRootState = (_pageObject: PageObject) => ({
           elemAriaLabel: null,
           locator: {
             cssSelector: '[index="5"] > ul',
-            fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[5]/ul",
             taskStatus: "SUCCESS",
-            robulaXpath: "//*[@index='5']/ul",
+            xPath: "//*[@index='5']/ul",
+            output: "//*[@index='5']/ul",
           },
           locatorType: LocatorType.xPath,
           name: "html5MobileAndHtml5BootstrapBootstrapFormBootstrapFormsReact",
@@ -142,10 +140,9 @@ export const selectLocators = (pageObject: PageObject) => [
     elemText: "EPAM framework Wishes…",
     elemAriaLabel: null,
     locator: {
-      fullXpath: "/html/body/div/div[2]/main/div[2]",
       taskStatus: "SUCCESS",
-      robulaXpath: "//*[@class='main-content']",
-      output: ".main-content",
+      xPath: "//*[@class='main-content']",
+      output: pageObject?.locatorType === LocatorType.xPath ? "//*[@class='main-content']" : ".main-content",
       cssSelector: ".main-content",
     },
     locatorType: LocatorType.cssSelector,
@@ -165,13 +162,11 @@ export const selectLocators = (pageObject: PageObject) => [
     elemText: "Home",
     elemAriaLabel: null,
     locator: {
-      fullXpath: "/html/body/header/div/nav/ul[1]",
       taskStatus: "SUCCESS",
-      robulaXpath: "//*[@class='uui-navigation nav navbar-nav m-l8']",
-      customXpath: "//*[@class='uui-navigation nav navbar-nav m-l8 any']",
+      xPath: "//*[@class='uui-navigation nav navbar-nav m-l8 any']",
       cssSelector: ".uui-navigation.nav.navbar-nav.m-l8.any",
       output:
-        pageObject.locatorType === LocatorType.cssSelector
+        pageObject.locatorType === LocatorType.cssSelector && pageObject.locatorType
           ? ".uui-navigation.nav.navbar-nav.m-l8.any"
           : "//*[@class='uui-navigation nav navbar-nav m-l8 any']",
     },
@@ -195,10 +190,12 @@ export const selectLocators = (pageObject: PageObject) => [
     elemText: "HTML 5",
     elemAriaLabel: null,
     locator: {
-      fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[5]/ul",
       taskStatus: "SUCCESS",
-      robulaXpath: "//*[@index='5']/ul",
-      output: "//*[@index='5']/ul",
+      xPath: "//*[@index='5']/ul",
+      output:
+        pageObject.locatorType === LocatorType.cssSelector && pageObject.locatorType
+          ? '[index="5"] > ul'
+          : "//*[@index='5']/ul",
       cssSelector: '[index="5"] > ul',
     },
     locatorType: LocatorType.xPath,
