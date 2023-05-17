@@ -55,15 +55,13 @@ const locatorsSlice = createSlice({
 
       if (!_locator) return;
 
-      const newValue = { ..._locator, locator: { ..._locator.locator, output: locator }, locatorType, ...rest };
+      const newValue = { ..._locator, locator: { ..._locator.locator }, locatorType, ...rest };
 
       if (_locator.locator.cssSelector !== locator && locatorType === LocatorType.cssSelector) {
         newValue.locator.cssSelector = locator;
       } else if (locatorType === LocatorType.xPath && _locator.locator.xPath !== locator) {
         newValue.locator.xPath = locator;
       }
-
-      // newValue.locator.taskStatus = LocatorTaskStatus.SUCCESS; // do we need it?
 
       locatorsAdapter.upsertOne(state, newValue);
     },

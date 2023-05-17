@@ -26,7 +26,6 @@ export const newLocatorStub: Locator = {
     xPath: "",
     cssSelector: "",
     taskStatus: LocatorTaskStatus.SUCCESS,
-    output: null,
   },
   locatorType: LocatorType.xPath,
   name: "",

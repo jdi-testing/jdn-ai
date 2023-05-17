@@ -51,11 +51,11 @@ export interface LocatorsState {
 export type ElementId = string;
 
 export interface LocatorValue {
-  xPath: string | null;
-  cssSelector: string | null;
+  xPath: string;
+  cssSelector: string;
   taskStatus?: LocatorTaskStatus;
   errorMessage?: string; // comes during the locator generation
-  output: string | null;
+  output?: string;
 }
 
 export enum LocatorValidationErrors {

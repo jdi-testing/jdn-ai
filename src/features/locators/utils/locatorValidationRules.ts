@@ -14,13 +14,12 @@ export const createLocatorValidationRules = (
 ): Rule[] => {
   return [
     {
-      validator: (_: RuleObject, locatorValue: string) => {
-        if (!locatorValue.length) return Promise.resolve(LocatorValidationWarnings.EmptyValue);
-        return Promise.resolve();
-      },
-    },
-    {
       validator: async (_: RuleObject, locatorValue: string) => {
+        if (!locatorValue.length) {
+          setValidationMessage(LocatorValidationWarnings.EmptyValue); // validationStatus: WARNING
+          return Promise.resolve();
+        }
+
         try {
           const evaluatedLocator =
             locatorType === LocatorType.cssSelector

@@ -15,19 +15,12 @@ import { isNameUnique } from "../../pageObjects/utils/pageObject";
 import { Locator, LocatorValidationWarnings, LocatorValidationErrorType } from "../types/locator.types";
 import { defaultLibrary } from "../types/generationClasses.types";
 import { changeLocatorAttributes } from "../locators.slice";
-import {
-  createNewName,
-  isValidLocator,
-  getLocatorValidationStatus,
-  generateSelectorByHash,
-  evaluateCssSelector,
-  evaluateXpath,
-} from "../utils/utils";
+import { createNewName, isValidLocator, getLocatorValidationStatus, getLocatorValueOnTypeSwitch } from "../utils/utils";
 import { createLocatorValidationRules } from "../utils/locatorValidationRules";
 import { createNameValidationRules } from "../utils/nameValidationRules";
 import FormItem from "antd/es/form/FormItem";
 import { LocatorType, SelectOption } from "../../../common/types/common";
-import { isFilteredSelect, getElementFullXpath } from "../../../common/utils/helpers";
+import { isFilteredSelect } from "../../../common/utils/helpers";
 import { newLocatorStub } from "../utils/constants";
 import { changeLocatorElement } from "../reducers/changeLocatorElement.thunk";
 import { addCustomLocator } from "../reducers/addCustomLocator.thunk";
@@ -128,7 +121,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
     const { name, type, locator, locatorType } = await form.validateFields();
     newLocator = {
       ...newLocator,
-      locator: { ...newLocator.locator, xPath: locator, output: locator },
+      locator: { ...newLocator.locator, xPath: locator }, // revise when enable creating css locator
       predicted_label: type.toLowerCase(),
       locatorType,
       message: locatorMessage,
@@ -144,33 +137,20 @@ export const LocatorEditDialog: React.FC<Props> = ({
 
   const handleEditLocator = async () => {
     const { name, type, locator, locatorType } = await form.validateFields();
-    if (validationMessage !== LocatorValidationWarnings.NewElement && jdnHash) {
-      dispatch(
-        changeLocatorAttributes({
-          name,
-          type,
-          locator,
-          locatorType,
-          element_id,
-          library,
-          message: validationMessage,
-          isCustomName: isEditedName,
-        })
-      );
-    } else {
-      dispatch(
-        changeLocatorElement({
-          name,
-          type,
-          locator,
-          locatorType,
-          element_id,
-          library,
-          message: validationMessage,
-          isCustomName: isEditedName,
-        })
-      );
-    }
+    const updatedLocator = {
+      name,
+      type,
+      locator,
+      locatorType,
+      element_id,
+      library,
+      message: validationMessage,
+      isCustomName: isEditedName,
+    };
+
+    validationMessage !== LocatorValidationWarnings.NewElement && jdnHash
+      ? dispatch(changeLocatorAttributes(updatedLocator))
+      : dispatch(changeLocatorElement(updatedLocator));
 
     form.resetFields();
     setIsModalOpen(false);
@@ -202,43 +182,16 @@ export const LocatorEditDialog: React.FC<Props> = ({
       </div>
     ) : null;
 
-  const getLocatorValueOnTypeSwitch = async (newLocatorType: LocatorType) => {
-    const isLocatorLeadsToNewElement = validationMessage === LocatorValidationWarnings.NewElement;
-    const isCSSLocator = newLocatorType === LocatorType.cssSelector;
-
-    let newLocatorValue;
-
-    // should be refactored
-    if (isLocatorLeadsToNewElement || !isValidLocator(message)) {
-      if (isCSSLocator) {
-        if (!locator.cssSelector || !isValidLocator(message) || isLocatorLeadsToNewElement) {
-          const { foundHash } = JSON.parse(await evaluateXpath(form.getFieldValue("locator"), element_id, jdnHash));
-          ({ cssSelector: newLocatorValue } = await generateSelectorByHash(element_id, foundHash));
-        } else {
-          newLocatorValue = locator.cssSelector;
-        }
-      } else {
-        if (!locator.xPath || !isValidLocator(message) || isLocatorLeadsToNewElement) {
-          const { foundHash } = JSON.parse(await evaluateCssSelector(form.getFieldValue("locator"), element_id));
-          newLocatorValue = await getElementFullXpath(foundHash);
-        } else {
-          newLocatorValue = locator.xPath;
-        }
-      }
-    } else {
-      if (isCSSLocator) {
-        newLocatorValue = locator.cssSelector;
-      } else {
-        newLocatorValue = locator.xPath;
-      }
-    }
-
-    return newLocatorValue;
-  };
-
   const onLocatorTypeChange = async () => {
     const newLocatorType = form.getFieldValue("locatorType");
-    const newLocatorValue = await getLocatorValueOnTypeSwitch(newLocatorType);
+    const newLocatorValue = await getLocatorValueOnTypeSwitch(
+      newLocatorType,
+      validationMessage,
+      element_id,
+      jdnHash,
+      locator,
+      form
+    );
     form.setFieldValue("locator", newLocatorValue);
   };
 

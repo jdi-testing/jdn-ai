@@ -10,12 +10,14 @@ import {
   LocatorValidationErrorType,
   ValidationStatus,
   ElementId,
+  JDNHash,
 } from "../types/locator.types";
-import { copyToClipboard, getLocatorString } from "../../../common/utils/helpers";
+import { copyToClipboard, getLocatorString, getElementFullXpath } from "../../../common/utils/helpers";
 import { LocatorOption } from "./constants";
 import { getLocator } from "./locatorOutput";
 import { LocatorType } from "../../../common/types/common";
 import { isStringContainsNumbers } from "../../../common/utils/helpers";
+import { FormInstance } from "antd/es/form/Form";
 
 export const getLocatorWithJDIAnnotation = (locator: LocatorValue): string => `@UI("${locator.xPath}")`;
 
@@ -23,22 +25,14 @@ export const getLocatorWithSelenium = (locator: LocatorValue): string => `@FindB
 
 export const isValidJavaVariable = (value: string) => /^[a-zA-Z_$]([a-zA-Z0-9_])*$/.test(value);
 
-export const evaluateXpath = (xPath: string | null, element_id?: ElementId, originJdnHash?: string) => {
-  return sendMessage.evaluateXpath({ xPath, element_id, originJdnHash }).then((response) => {
-    return response;
-  });
-};
+export const evaluateXpath = (xPath: string, element_id?: ElementId, originJdnHash?: string) =>
+  sendMessage.evaluateXpath({ xPath, element_id, originJdnHash });
 
-export const evaluateCssSelector = (selector: string, element_id?: ElementId, originJdnHash?: string) => {
-  return sendMessage.evaluateCssSelector({ selector, element_id, originJdnHash }).then((response) => {
-    return response;
-  });
-};
-export const generateSelectorByHash = (element_id: ElementId, jdnHash: string) => {
-  return sendMessage.generateSelectorByHash({ element_id, jdnHash }).then((response) => {
-    return response;
-  });
-};
+export const evaluateCssSelector = (selector: string, element_id?: ElementId, originJdnHash?: string) =>
+  sendMessage.evaluateCssSelector({ selector, element_id, originJdnHash });
+
+export const generateSelectorByHash = (element_id: ElementId, jdnHash: string) =>
+  sendMessage.generateSelectorByHash({ element_id, jdnHash });
 
 export const checkDuplicates = (jdnHash: string, locators: Locator[], element_id: ElementId) =>
   locators.filter(
@@ -118,3 +112,35 @@ export const getLocatorValidationStatus = (message: LocatorValidationErrorType):
 };
 
 export const isValidLocator = (message?: string) => !message || message === LocatorValidationWarnings.NewElement;
+
+export const getLocatorValueOnTypeSwitch = async (
+  newLocatorType: LocatorType,
+  validationMessage: LocatorValidationErrorType,
+  element_id: ElementId,
+  jdnHash: JDNHash,
+  locator: LocatorValue,
+  form: FormInstance
+) => {
+  const isLocatorLeadsToNewElement = validationMessage === LocatorValidationWarnings.NewElement;
+  const isCSSLocator = newLocatorType === LocatorType.cssSelector;
+
+  let newLocatorValue;
+
+  if (isCSSLocator) {
+    if (isLocatorLeadsToNewElement) {
+      const { foundHash } = JSON.parse(await evaluateXpath(form.getFieldValue("locator"), element_id, jdnHash));
+      ({ cssSelector: newLocatorValue } = await generateSelectorByHash(element_id, foundHash));
+    } else {
+      newLocatorValue = locator.cssSelector;
+    }
+  } else {
+    if (isLocatorLeadsToNewElement) {
+      const { foundHash } = JSON.parse(await evaluateCssSelector(form.getFieldValue("locator"), element_id));
+      newLocatorValue = await getElementFullXpath(foundHash);
+    } else {
+      newLocatorValue = locator.xPath;
+    }
+  }
+
+  return newLocatorValue;
+};

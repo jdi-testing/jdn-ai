@@ -16,7 +16,7 @@ export const selectLocatorById = createSelector(selectById, (_item?: Locator) =>
       ..._item,
       locator: {
         ..._item.locator,
-        output: _item.locator.output ?? getLocator(_item.locator, _item.locatorType),
+        output: getLocator(_item.locator, _item.locatorType),
       },
     };
   }
@@ -29,7 +29,7 @@ export const selectLocators = createSelector(selectAll, (items: Locator[]) =>
       ..._item,
       locator: {
         ..._item.locator,
-        output: _item.locator.output ?? getLocator(_item.locator, _item.locatorType),
+        output: getLocator(_item.locator, _item.locatorType),
       },
     };
   })

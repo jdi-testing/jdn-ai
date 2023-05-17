@@ -9,7 +9,7 @@ import {
 import { checkDuplicates } from "./utils";
 
 export const validateLocator = (
-  locatorValue: string | null,
+  locatorValue: string,
   jdnHash: JDNHash,
   locators: Locator[],
   element_id: ElementId,
