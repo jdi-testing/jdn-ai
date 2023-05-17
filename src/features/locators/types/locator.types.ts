@@ -51,10 +51,8 @@ export interface LocatorsState {
 export type ElementId = string;
 
 export interface LocatorValue {
-  customXpath?: string;
-  fullXpath: string;
-  robulaXpath?: string;
-  cssSelector?: string;
+  xPath: string;
+  cssSelector: string;
   taskStatus?: LocatorTaskStatus;
   errorMessage?: string; // comes during the locator generation
   output?: string;

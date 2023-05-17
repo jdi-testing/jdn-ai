@@ -8,7 +8,8 @@ export const locatorsTreeMockSearch = [
     parent_id: "",
     jdnHash: "7967190244322359771369749968",
     locator: {
-      fullXpath: "/html/body/header/div/nav/ul[1]",
+      xPath: "/html/body/header/div/nav/ul[1]",
+      cssSelector: "",
       taskStatus: LocatorTaskStatus.SUCCESS,
       errorMessage: "",
       output: "",
@@ -29,7 +30,8 @@ export const locatorsTreeMockSearch = [
         parent_id: "4829071593322359778594168522",
         jdnHash: "9636042053322359773245578777",
         locator: {
-          fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[5]/ul/li[5]",
+          xPath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[5]/ul/li[5]",
+          cssSelector: "",
           taskStatus: LocatorTaskStatus.PENDING,
           errorMessage: "",
           output: "",
@@ -53,7 +55,8 @@ export const locatorsTreeMockSearch = [
     parent_id: "",
     jdnHash: "796719024432235977136974900",
     locator: {
-      fullXpath: "/html/body/header/div/nav/ul[1]",
+      xPath: "/html/body/header/div/nav/ul[1]",
+      cssSelector: "",
       taskStatus: LocatorTaskStatus.PENDING,
       errorMessage: "",
       output: "",

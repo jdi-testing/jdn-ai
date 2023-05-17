@@ -2,11 +2,11 @@ import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
 import { chain, get, isNil, last, size } from "lodash";
 import { RootState } from "../../app/store/store";
 import { locatorTaskStatus } from "../../common/constants/constants";
-import { LocatorType } from "../../common/types/common";
 import { selectClassFilterByPO } from "../filter/filter.selectors";
 import { isValidLocator } from "../locators/utils/utils";
 import { selectLocators } from "../locators/locators.selectors";
 import { Locator } from "../locators/types/locator.types";
+import { LocatorType } from "../../common/types/common";
 import { isProgressStatus } from "../locators/utils/locatorGenerationController";
 import { getLocator } from "../locators/utils/locatorOutput";
 import { PageObject, PageObjectId } from "./types/pageObjectSlice.types";
@@ -57,7 +57,7 @@ export const selectLocatorsByPageObject = createSelector(
         !loc.locatorType && pageObject?.locatorType === LocatorType.cssSelector
           ? {
               ...loc,
-              locator: { ...loc.locator, output: getLocator(loc.locator, pageObject.locatorType) },
+              locator: { ...loc.locator, output: getLocator(loc.locator, pageObject?.locatorType) },
             }
           : loc
       );

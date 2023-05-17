@@ -28,16 +28,16 @@ export const convertToListWithChildren = (_list: Array<Locator>) => {
   return list;
 };
 
-export const includesSearcSubstr = (strings: Array<string | undefined>, searchString: string) => {
+export const includesSearchSubstr = (strings: Array<string | undefined>, searchString: string) => {
   const includesSubstring = strings.filter((string) => {
     return string && string.toLowerCase().includes(searchString.toLowerCase());
   });
   return !!size(includesSubstring);
 };
 
-export const applySearch = (element: Locator, seacrhString: string): SearchState => {
+export const applySearch = (element: Locator, searchString: string): SearchState => {
   const { locator, type, name, elemText } = element;
-  if (includesSearcSubstr([locator.output, type as string, name, ...(elemText ? [elemText] : [])], seacrhString)) {
+  if (includesSearchSubstr([locator.output, type as string, name, ...(elemText ? [elemText] : [])], searchString)) {
     return SearchState.None;
   } else return SearchState.Hidden;
 };
