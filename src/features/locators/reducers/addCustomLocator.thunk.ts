@@ -1,19 +1,27 @@
 import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
 import { Locator, LocatorsState, ValidationStatus } from "../types/locator.types";
-import { generateId } from "../../../common/utils/helpers";
+import { generateId, getElementFullXpath } from "../../../common/utils/helpers";
 import { addLocatorToPageObj } from "../../pageObjects/pageObject.slice";
 import { addLocators, setScrollToLocator } from "../locators.slice";
-import { getLocatorValidationStatus, evaluateXpath, generateSelectorByHash } from "../utils/utils";
+import { getLocatorValidationStatus, evaluateXpath, evaluateCssSelector, generateSelectorByHash } from "../utils/utils";
 import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
 import { sendMessage } from "../../../pageServices/connector";
 import { locatorsAdapter } from "../locators.selectors";
+import { LocatorType } from "../../../common/types/common";
 
 export const addCustomLocator = createAsyncThunk(
   "locators/addCustomLocator",
   async (payload: { newLocator: Locator; pageObjectId: PageObjectId }, thunkAPI) => {
     let { newLocator } = payload;
     const { pageObjectId } = payload;
-    const { message, locator } = newLocator;
+    const { message, locator, locatorType } = newLocator;
+
+    const isCSSLocator = locatorType === LocatorType.cssSelector;
+
+    let foundHash;
+    let foundElementText;
+    let cssSelector = "";
+    let fullXpath = "";
 
     const element_id = `${generateId()}_${pageObjectId}`;
 
@@ -24,14 +32,20 @@ export const addCustomLocator = createAsyncThunk(
 
     if (getLocatorValidationStatus(message) === ValidationStatus.SUCCESS) {
       try {
-        const result = JSON.parse(await evaluateXpath(locator.xPath, element_id));
-        const { foundElementText } = result;
-        let { foundHash } = result;
+        if (!isCSSLocator) {
+          ({ foundHash, foundElementText } = JSON.parse(await evaluateXpath(locator.xPath, element_id)));
+        } else {
+          ({ foundHash, foundElementText } = JSON.parse(await evaluateCssSelector(locator.cssSelector, element_id)));
+        }
 
         if (!foundHash) {
           foundHash = element_id.split("_")[0];
           await sendMessage
-            .assignJdnHash({ jdnHash: foundHash, locator: locator.xPath, isCSSLocator: false })
+            .assignJdnHash({
+              jdnHash: foundHash,
+              ...(isCSSLocator ? { locator: locator.cssSelector } : { locator: locator.xPath }),
+              isCSSLocator,
+            })
             .then((res) => {
               if (res === "success") return res;
               else throw new Error("Failed to assign jdnHash");
@@ -41,11 +55,16 @@ export const addCustomLocator = createAsyncThunk(
             });
         }
 
-        const { cssSelector } = await generateSelectorByHash(element_id, foundHash);
+        isCSSLocator
+          ? (fullXpath = await getElementFullXpath(foundHash))
+          : ({ cssSelector } = await generateSelectorByHash(element_id, foundHash));
 
         newLocator = {
           ...newLocator,
-          locator: { ...newLocator.locator, cssSelector },
+          locator: {
+            ...newLocator.locator,
+            ...(isCSSLocator ? { xPath: fullXpath } : { cssSelector }),
+          },
           elemText: foundElementText || "",
           jdnHash: foundHash,
         };
