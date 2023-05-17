@@ -127,14 +127,14 @@ export const getLocatorValueOnTypeSwitch = async (
   let newLocatorValue;
 
   if (isCSSLocator) {
-    if (isLocatorLeadsToNewElement) {
+    if (isLocatorLeadsToNewElement || !locator.cssSelector) {
       const { foundHash } = JSON.parse(await evaluateXpath(form.getFieldValue("locator"), element_id, jdnHash));
       ({ cssSelector: newLocatorValue } = await generateSelectorByHash(element_id, foundHash));
     } else {
       newLocatorValue = locator.cssSelector;
     }
   } else {
-    if (isLocatorLeadsToNewElement) {
+    if (isLocatorLeadsToNewElement || !locator.xPath) {
       const { foundHash } = JSON.parse(await evaluateCssSelector(form.getFieldValue("locator"), element_id));
       newLocatorValue = await getElementFullXpath(foundHash);
     } else {
