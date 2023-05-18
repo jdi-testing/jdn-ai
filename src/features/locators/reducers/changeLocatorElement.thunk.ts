@@ -20,10 +20,10 @@ export const changeLocatorElement = createAsyncThunk(
     let cssSelector;
     let fullXpath;
 
-    if (!isCSSLocator) {
-      ({ foundHash, foundElementText } = JSON.parse(await evaluateXpath(locator, element_id)));
-    } else {
+    if (isCSSLocator) {
       ({ foundHash, foundElementText } = JSON.parse(await evaluateCssSelector(locator, element_id)));
+    } else {
+      ({ foundHash, foundElementText } = JSON.parse(await evaluateXpath(locator, element_id)));
     }
 
     const state = thunkAPI.getState() as RootState;

@@ -61,10 +61,6 @@ export const LocatorEditDialog: React.FC<Props> = ({
   const pageObjectId = useSelector(selectCurrentPageObject)!.id;
   const library = useSelector(selectCurrentPageObject)?.library || defaultLibrary;
 
-  // getFormLocatorType and useState<LocatorType> should be reduced when we'll enable css locators creating
-  const getFormLocatorType = () =>
-    isCreatingForm ? LocatorType.xPath : locatorType || pageObjectLocatorType || LocatorType.xPath;
-
   const [validationMessage, setValidationMessage] = useState<LocatorValidationErrorType>(message || "");
   const [isEditedName, setIsEditedName] = useState<boolean>(isCustomName);
 
@@ -73,7 +69,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
     type,
     name: name || "",
     locator: locator.output ?? "",
-    locatorType: getFormLocatorType(),
+    locatorType: locatorType || pageObjectLocatorType || LocatorType.xPath,
   };
 
   const [isOkButtonDisabled, setIsOkButtonDisabled] = useState<boolean>(true);
@@ -119,9 +115,10 @@ export const LocatorEditDialog: React.FC<Props> = ({
     const locatorMessage = isLocatorFieldTouched ? validationMessage : LocatorValidationWarnings.NotFound;
 
     const { name, type, locator, locatorType } = await form.validateFields();
+    const isCSSLocator = locatorType === LocatorType.cssSelector;
     newLocator = {
       ...newLocator,
-      locator: { ...newLocator.locator, xPath: locator }, // revise when enable creating css locator
+      locator: { ...newLocator.locator, ...{ [isCSSLocator ? "cssSelector" : "xPath"]: locator } },
       predicted_label: type.toLowerCase(),
       locatorType,
       message: locatorMessage,
@@ -243,8 +240,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
       </Form.Item>
       <FormItem name="locatorType" label="Locator" style={{ marginBottom: "8px" }}>
         <Select
-          // should be changed when we'll decide to enable css locators creating
-          disabled={isCreatingForm || !isValidLocator(validationMessage)}
+          disabled={!isValidLocator(validationMessage)}
           options={[
             {
               value: LocatorType.xPath,
