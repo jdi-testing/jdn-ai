@@ -118,7 +118,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
     const isCSSLocator = locatorType === LocatorType.cssSelector;
     newLocator = {
       ...newLocator,
-      locator: { ...newLocator.locator, ...(isCSSLocator ? { cssSelector: locator } : { xPath: locator }) },
+      locator: { ...newLocator.locator, ...{ [isCSSLocator ? "cssSelector" : "xPath"]: locator } },
       predicted_label: type.toLowerCase(),
       locatorType,
       message: locatorMessage,
