@@ -3,7 +3,7 @@ import { LocatorTaskStatus, LocatorsState } from "../types/locator.types";
 import { locatorsAdapter, selectLocatorById } from "../locators.selectors";
 import { RootState } from "../../../app/store/store";
 import { ChangeLocatorAttributesPayload } from "../locators.slice";
-import { evaluateXpath, evaluateCssSelector } from "../utils/utils";
+import { evaluateXpath, evaluateCssSelector, generateSelectorByHash } from "../utils/utils";
 import { generateId, getElementFullXpath } from "../../../common/utils/helpers";
 import { sendMessage } from "../../../pageServices/connector";
 import { LocatorType } from "../../../common/types/common";
@@ -17,6 +17,9 @@ export const changeLocatorElement = createAsyncThunk(
     const isCSSLocator = locatorType === LocatorType.cssSelector;
     let foundHash;
     let foundElementText;
+    let cssSelector;
+    let fullXpath;
+
     if (!isCSSLocator) {
       ({ foundHash, foundElementText } = JSON.parse(await evaluateXpath(locator, element_id)));
     } else {
@@ -42,7 +45,9 @@ export const changeLocatorElement = createAsyncThunk(
         });
     }
 
-    const fullXpath = await getElementFullXpath(foundHash);
+    isCSSLocator
+      ? (fullXpath = await getElementFullXpath(foundHash))
+      : ({ cssSelector } = await generateSelectorByHash(element_id, foundHash));
 
     const newValue = {
       ..._locator,
@@ -50,11 +55,8 @@ export const changeLocatorElement = createAsyncThunk(
       locatorType,
       elemText: foundElementText || "",
       jdnHash: foundHash,
-      isCustomLocator: true,
       locator: {
-        // we need to calc robulaXpath
-        fullXpath: fullXpath,
-        ...(isCSSLocator ? { cssSelector: locator, customXpath: null } : { customXpath: locator }),
+        ...(isCSSLocator ? { cssSelector: locator, xPath: fullXpath } : { xPath: locator, cssSelector }),
         taskStatus: LocatorTaskStatus.SUCCESS,
       },
     };

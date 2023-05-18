@@ -38,7 +38,7 @@ export interface ChangeLocatorAttributesPayload {
   library: ElementLibrary;
   isCustomName?: boolean;
   isGeneratedName?: boolean;
-  locatorType?: LocatorType;
+  locatorType: LocatorType;
 }
 
 const locatorsSlice = createSlice({
@@ -49,26 +49,21 @@ const locatorsSlice = createSlice({
       locatorsAdapter.addMany(state, payload);
     },
     changeLocatorAttributes(state, { payload }: PayloadAction<ChangeLocatorAttributesPayload>) {
-      const { type, name, locator, element_id, message, isCustomName, locatorType } = payload;
+      const { locator, element_id, locatorType, ...rest } = payload;
+
       const _locator = simpleSelectLocatorById(state, element_id);
+
       if (!_locator) return;
 
-      const { fullXpath, robulaXpath } = _locator.locator;
-      const newValue = { ..._locator, locator: { ..._locator.locator }, message, type, name, isCustomName };
+      const newValue = { ..._locator, locator: { ..._locator.locator }, locatorType, ...rest };
 
-      if (fullXpath !== locator && robulaXpath !== locator) {
-        if (locatorType !== LocatorType.cssSelector) {
-          newValue.locator.customXpath = locator;
-        } else {
-          newValue.locator.cssSelector = locator;
-        }
-        newValue.isCustomLocator = true;
-        newValue.locator.taskStatus = LocatorTaskStatus.SUCCESS;
-      } else {
-        delete newValue.locator.customXpath;
-        newValue.isCustomLocator = false;
+      if (locatorType === LocatorType.cssSelector) {
+        newValue.locator.cssSelector = locator;
+      } else if (locatorType === LocatorType.xPath) {
+        newValue.locator.xPath = locator;
       }
-      locatorsAdapter.upsertOne(state, { ...newValue, ...(locatorType && { locatorType }) });
+
+      locatorsAdapter.upsertOne(state, newValue);
     },
     changeIdentificationStatus(state, { payload }: PayloadAction<IdentificationStatus>) {
       state.status = payload;
@@ -168,7 +163,6 @@ const locatorsSlice = createSlice({
     updateLocator(state, { payload }) {
       const { element_id, locator } = payload;
       const existingLocator = simpleSelectLocatorById(state, element_id);
-      if (existingLocator?.locator.customXpath && locator.robulaXpath) locator.customXpath = locator.robulaXpath;
       existingLocator &&
         locatorsAdapter.upsertOne(state, {
           element_id,

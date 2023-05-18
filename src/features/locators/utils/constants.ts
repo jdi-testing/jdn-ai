@@ -22,8 +22,8 @@ export const newLocatorStub: Locator = {
   jdnHash: "",
   parent_id: "",
   locator: {
-    customXpath: "",
-    fullXpath: "",
+    xPath: "",
+    cssSelector: "",
     taskStatus: LocatorTaskStatus.SUCCESS,
   },
   name: "",

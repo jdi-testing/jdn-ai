@@ -1,10 +1,8 @@
 import { createDraftSafeSelector, createEntityAdapter, createSelector, EntityState } from "@reduxjs/toolkit";
-
 import { RootState } from "../../app/store/store";
 import { PageObjectId } from "../pageObjects/types/pageObjectSlice.types";
 import { ElementId, Locator } from "./types/locator.types";
-import { getXPathByPriority } from "./utils/locatorOutput";
-import { LocatorType } from "../../common/types/common";
+import { getLocator } from "./utils/locatorOutput";
 
 export const locatorsAdapter = createEntityAdapter<Locator>({
   selectId: (locator) => locator.element_id,
@@ -18,8 +16,7 @@ export const selectLocatorById = createSelector(selectById, (_item?: Locator) =>
       ..._item,
       locator: {
         ..._item.locator,
-        output:
-          _item.locatorType === LocatorType.cssSelector ? _item.locator.cssSelector : getXPathByPriority(_item.locator),
+        output: getLocator(_item.locator, _item.locatorType),
       },
     };
   }
@@ -32,8 +29,7 @@ export const selectLocators = createSelector(selectAll, (items: Locator[]) =>
       ..._item,
       locator: {
         ..._item.locator,
-        output:
-          _item.locatorType === LocatorType.cssSelector ? _item.locator.cssSelector : getXPathByPriority(_item.locator),
+        output: getLocator(_item.locator, _item.locatorType),
       },
     };
   })

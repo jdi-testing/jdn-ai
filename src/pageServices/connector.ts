@@ -165,6 +165,8 @@ export const sendMessage = {
     connector.sendMessage("EVALUATE_XPATH", payload, onResponse),
   evaluateCssSelector: (payload: { selector: string; element_id?: ElementId, originJdnHash?: string }, onResponse?: () => void) =>
     connector.sendMessage("EVALUATE_CSS_SELECTOR", payload, onResponse),
+  generateSelectorByHash: (payload: { element_id: string, jdnHash: string }, onResponse?: () => void) =>
+    connector.sendMessage("GENERATE_SELECTOR_BY_HASH", payload, onResponse),
   findBySelectors: (payload: SelectorsMap) => connector.sendMessage("FIND_BY_SELECTORS", payload),
   setClosedSession: (payload: { tabId: number; isClosed: boolean }) =>
     connector.sendMessage("SET_CLOSED_SESSION", payload),

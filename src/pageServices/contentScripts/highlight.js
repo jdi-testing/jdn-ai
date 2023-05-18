@@ -67,13 +67,6 @@ export const highlightOnPage = () => {
     return `jdn-highlight ${element.generate ? "jdn-primary" : "jdn-secondary"} ${element.active ? "jdn-active" : ""}`;
   };
 
-  const getXPathByPriority = (locatorValue) =>
-    [
-      ...(locatorValue.customXpath || typeof locatorValue.customXpath === "string" ? [locatorValue.customXpath] : []),
-      ...(locatorValue.robulaXpath ? [locatorValue.robulaXpath] : []),
-      locatorValue.fullXpath,
-    ][0];
-
   const scrollToElement = (jdnHash) => {
     const originDiv = document.querySelector(`[jdn-hash='${jdnHash}']`);
     if (!originDiv) return;
@@ -208,7 +201,7 @@ export const highlightOnPage = () => {
       return `
       <div class="jdn-tooltip-paragraph"><b>Name:</b> ${el.name}</div>
       <div class="jdn-tooltip-paragraph"><b>Type:</b> ${el.type}</div>
-      <div class="jdn-tooltip-paragraph"><b>xPath:</b> ${getXPathByPriority(el.locator)}</div>
+      <div class="jdn-tooltip-paragraph"><b>xPath:</b> ${el.locator.xPath}</div>
       <div class="jdn-tooltip-paragraph"><b>CSS selector:</b> ${el.locator.cssSelector}</div>`;
     };
 
