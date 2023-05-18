@@ -3,8 +3,8 @@ import { RootState } from "../../../app/store/store";
 import { selectLocatorsByPageObject } from "../../pageObjects/pageObject.selectors";
 import { locatorsAdapter } from "../locators.selectors";
 import { Locator, LocatorsState, LocatorValidationErrorType } from "../types/locator.types";
-import { getLocator } from "../utils/locatorOutput";
 import { validateLocator } from "../utils/locatorValidation";
+import { LocatorType } from "../../../common/types/common";
 
 export const checkLocatorsValidity = createAsyncThunk("locators/checkLocatorsValidity", async (payload, thunkAPI) => {
   const state = thunkAPI.getState();
@@ -16,7 +16,13 @@ export const checkLocatorsValidity = createAsyncThunk("locators/checkLocatorsVal
   for (const locator of locators) {
     const { jdnHash, element_id, locator: locatorValue, locatorType } = locator;
     try {
-      const validation = await validateLocator(getLocator(locatorValue, locatorType), jdnHash, locators, element_id);
+      const validation = await validateLocator(
+        locatorValue.output,
+        locatorType || LocatorType.xPath,
+        jdnHash,
+        locators,
+        element_id
+      );
       if (validation.length)
         invalidLocators.push({ element_id, message: validation as LocatorValidationErrorType, jdnHash });
     } catch (error) {

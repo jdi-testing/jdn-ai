@@ -1,3 +1,4 @@
+import { LocatorType } from "../../../common/types/common";
 import {
   Locator,
   LocatorValidationErrors,
@@ -6,20 +7,26 @@ import {
   JDNHash,
   ElementId,
 } from "../types/locator.types";
-import { checkDuplicates } from "./utils";
+import { checkDuplicates, evaluateCssSelector, evaluateXpath } from "./utils";
 
-export const validateLocator = (
-  locatorValue: string,
+export const validateLocator = async (
+  locatorString: string,
+  locatorType: LocatorType,
   jdnHash: JDNHash,
   locators: Locator[],
   element_id: ElementId,
   isCreatingForm?: boolean
-): LocatorValidationErrorType | string => {
+): Promise<LocatorValidationErrorType | string> => {
   let length;
   let foundHash;
   let _element_id: ElementId;
   let _jdnHash;
   let validationMessage = "";
+
+  const locatorValue =
+    locatorType === LocatorType.cssSelector
+      ? await evaluateCssSelector(locatorString, element_id, jdnHash)
+      : await evaluateXpath(locatorString, element_id, jdnHash);
 
   if (locatorValue === LocatorValidationWarnings.NotFound || !locatorValue) {
     validationMessage = LocatorValidationWarnings.NotFound; //validationStatus: WARNING

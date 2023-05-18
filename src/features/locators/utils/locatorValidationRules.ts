@@ -2,7 +2,6 @@ import { Rule, RuleObject } from "antd/lib/form";
 import { validateLocator } from "./locatorValidation";
 import { ElementId, Locator, LocatorValidationErrorType, LocatorValidationWarnings } from "../types/locator.types";
 import { LocatorType } from "../../../common/types/common";
-import { evaluateXpath, evaluateCssSelector } from "./utils";
 
 export const createLocatorValidationRules = (
   isCreatingForm: boolean,
@@ -21,11 +20,14 @@ export const createLocatorValidationRules = (
         }
 
         try {
-          const evaluatedLocator =
-            locatorType === LocatorType.cssSelector
-              ? await evaluateCssSelector(locatorValue, element_id, jdnHash)
-              : await evaluateXpath(locatorValue, element_id, jdnHash);
-          const validationMessage = validateLocator(evaluatedLocator, jdnHash, locators, element_id, isCreatingForm);
+          const validationMessage = await validateLocator(
+            locatorValue,
+            locatorType,
+            jdnHash,
+            locators,
+            element_id,
+            isCreatingForm
+          );
           setValidationMessage(validationMessage as LocatorValidationErrorType);
           return Promise.resolve();
         } catch (err) {
