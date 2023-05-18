@@ -38,7 +38,6 @@ export const LocatorIcon: React.FC<Props> = ({ message, locator, deleted }) => {
 
     switch (locator.taskStatus) {
       case locatorTaskStatus.SUCCESS: {
-        console.log(getLocatorValidationStatus(message));
         const validationStatus = getLocatorValidationStatus(message);
         return validationStatus === ValidationStatus.WARNING || validationStatus === ValidationStatus.ERROR
           ? warningEditedIcon
