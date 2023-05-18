@@ -32,10 +32,10 @@ export const addCustomLocator = createAsyncThunk(
 
     if (getLocatorValidationStatus(message) === ValidationStatus.SUCCESS) {
       try {
-        if (!isCSSLocator) {
-          ({ foundHash, foundElementText } = JSON.parse(await evaluateXpath(locator.xPath, element_id)));
-        } else {
+        if (isCSSLocator) {
           ({ foundHash, foundElementText } = JSON.parse(await evaluateCssSelector(locator.cssSelector, element_id)));
+        } else {
+          ({ foundHash, foundElementText } = JSON.parse(await evaluateXpath(locator.xPath, element_id)));
         }
 
         if (!foundHash) {
@@ -43,7 +43,7 @@ export const addCustomLocator = createAsyncThunk(
           await sendMessage
             .assignJdnHash({
               jdnHash: foundHash,
-              ...(isCSSLocator ? { locator: locator.cssSelector } : { locator: locator.xPath }),
+              ...{ locator: isCSSLocator ? locator.cssSelector : locator.xPath },
               isCSSLocator,
             })
             .then((res) => {
