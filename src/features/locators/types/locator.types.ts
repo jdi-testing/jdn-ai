@@ -13,7 +13,7 @@ export enum LocatorsGenerationStatus {
 export enum IdentificationStatus {
   noStatus = "",
   loading = "Loading...",
-  preparing = "Preparing...",
+  preparing = "Preparing locators...",
   success = "Successful!",
   removed = "Removed",
   error = "An error occurred",
