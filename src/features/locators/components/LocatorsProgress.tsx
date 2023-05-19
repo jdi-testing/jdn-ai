@@ -49,7 +49,7 @@ export const LocatorsProgress = () => {
 
   useEffect(() => {
     if (toBeCalculated && calculationReady === 0) setIsProgressActive(true);
-    if (calculationReady > 0 && toBeCalculated === 0) {
+    if (!size(inProgress)) {
       timer = setTimeout(hideProgressInformation, 2000);
     }
     return () => clearTimeout(timer);
@@ -73,7 +73,9 @@ export const LocatorsProgress = () => {
               <Footnote>
                 {size(inProgress)
                   ? `${LocatorGenerationMessage.started} (${calculationReady}/${total})`
-                  : LocatorGenerationMessage.complete}
+                  : size(failed)
+                  ? `${LocatorGenerationMessage.completeWithErrors} (${calculationReady}/${total})`
+                  : `${LocatorGenerationMessage.complete}`}
               </Footnote>
             )}
           </div>
