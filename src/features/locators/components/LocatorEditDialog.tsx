@@ -65,11 +65,12 @@ export const LocatorEditDialog: React.FC<Props> = ({
   const [isEditedName, setIsEditedName] = useState<boolean>(isCustomName);
 
   const [form] = Form.useForm<FormValues>();
+  const defaultLocatorType = locatorType || pageObjectLocatorType || LocatorType.xPath;
   const initialValues: FormValues = {
     type,
     name: name || "",
     locator: locator.output ?? "",
-    locatorType: locatorType || pageObjectLocatorType || LocatorType.xPath,
+    locatorType: defaultLocatorType,
   };
 
   const [isOkButtonDisabled, setIsOkButtonDisabled] = useState<boolean>(true);
@@ -78,14 +79,16 @@ export const LocatorEditDialog: React.FC<Props> = ({
 
   const nameValidationRules: Rule[] = createNameValidationRules(_isNameUnique);
 
-  const locatorValidationRules: Rule[] = createLocatorValidationRules(
-    isCreatingForm,
-    form.getFieldValue("locatorType"),
-    setValidationMessage,
-    locators,
-    jdnHash,
-    element_id
-  );
+  const _locatorValidationRules: () => Rule[] = () =>
+    createLocatorValidationRules(
+      isCreatingForm,
+      form.getFieldValue("locatorType") || defaultLocatorType,
+      setValidationMessage,
+      locators,
+      jdnHash,
+      element_id
+    );
+  const [locatorValidationRules, setLocatorValidationRules] = useState<Rule[]>(_locatorValidationRules());
 
   const handleTypeChange = (value: string) => {
     if (isEditedName) return;
@@ -181,16 +184,22 @@ export const LocatorEditDialog: React.FC<Props> = ({
     ) : null;
 
   const onLocatorTypeChange = async () => {
+    setLocatorValidationRules(_locatorValidationRules());
+
     const newLocatorType = form.getFieldValue("locatorType");
-    const newLocatorValue = await getLocatorValueOnTypeSwitch(
-      newLocatorType,
-      validationMessage,
-      element_id,
-      jdnHash,
-      locator,
-      form
-    );
-    form.setFieldValue("locator", newLocatorValue);
+    const newLocator = form.getFieldValue("locator");
+
+    if (newLocator !== "") {
+      const newLocatorValue = await getLocatorValueOnTypeSwitch(
+        newLocatorType,
+        validationMessage,
+        element_id,
+        jdnHash,
+        locator,
+        form
+      );
+      form.setFieldValue("locator", newLocatorValue);
+    }
   };
 
   const onFieldsChange = async (changedValues: FieldData[]) => {
