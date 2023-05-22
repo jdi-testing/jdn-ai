@@ -47,6 +47,7 @@ const locatorsSlice = createSlice({
   reducers: {
     addLocators(state, { payload }) {
       locatorsAdapter.addMany(state, payload);
+      state.status = IdentificationStatus.success;
     },
     changeLocatorAttributes(state, { payload }: PayloadAction<ChangeLocatorAttributesPayload>) {
       const { locator, element_id, locatorType, ...rest } = payload;
