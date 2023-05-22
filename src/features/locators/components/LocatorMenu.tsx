@@ -28,6 +28,9 @@ import { copyLocator, getLocatorValidationStatus } from "../utils/utils";
 import { LocatorOption } from "../utils/constants";
 import { rerunGeneration } from "../reducers/rerunGeneration.thunk";
 import { stopGeneration } from "../reducers/stopGeneration.thunk";
+import { LocatorType } from "../../../common/types/common";
+import { useSelector } from "react-redux";
+import { selectCurrentPageObject } from "../../../features/pageObjects/pageObject.selectors";
 
 interface Props {
   element: Locator;
@@ -39,10 +42,14 @@ interface Props {
 export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, children, trigger }) => {
   const dispatch = useDispatch();
 
-  const { element_id, locator, deleted, priority, jdnHash, type, name, message } = element;
+  const { element_id, locator, deleted, priority, jdnHash, type, name, message, locatorType } = element;
 
+  // should be revised after 1240 implementation
+  const pageObject = useSelector(selectCurrentPageObject);
   const isAdvancedCalculationDisabled =
-    message === LocatorValidationWarnings.NewElement
+    locatorType === LocatorType.cssSelector || (!locatorType && pageObject?.locatorType === LocatorType.cssSelector)
+      ? true
+      : message === LocatorValidationWarnings.NewElement
       ? false
       : getLocatorValidationStatus(message) === ValidationStatus.WARNING;
 
