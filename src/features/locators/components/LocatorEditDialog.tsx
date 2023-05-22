@@ -79,14 +79,15 @@ export const LocatorEditDialog: React.FC<Props> = ({
 
   const nameValidationRules: Rule[] = createNameValidationRules(_isNameUnique);
 
-  const _locatorValidationRules: () => Rule[] = () => createLocatorValidationRules(
-    isCreatingForm,
-    form.getFieldValue("locatorType") || defaultLocatorType,
-    setValidationMessage,
-    locators,
-    jdnHash,
-    element_id
-  );
+  const _locatorValidationRules: () => Rule[] = () =>
+    createLocatorValidationRules(
+      isCreatingForm,
+      form.getFieldValue("locatorType") || defaultLocatorType,
+      setValidationMessage,
+      locators,
+      jdnHash,
+      element_id
+    );
   const [locatorValidationRules, setLocatorValidationRules] = useState<Rule[]>(_locatorValidationRules());
 
   const handleTypeChange = (value: string) => {
