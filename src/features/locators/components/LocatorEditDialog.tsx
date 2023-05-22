@@ -270,7 +270,11 @@ export const LocatorEditDialog: React.FC<Props> = ({
         help={validationMessage}
         extra={renderValidationWarning()}
       >
-        <Input.TextArea />
+        <Input.TextArea
+          autoSize
+          // expands textarea to view port height
+          style={{ maxHeight: `calc(100vh - 396px)`, overflowY: "scroll" }}
+        />
       </Form.Item>
     </DialogWithForm>
   );
