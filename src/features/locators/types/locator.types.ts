@@ -15,8 +15,8 @@ export enum IdentificationStatus {
   loading = "Loading...",
   preparing = "Preparing locators...",
   success = "Successful!",
-  removed = "Removed",
   error = "An error occurred",
+  noElements = "No elements found",
 }
 
 export type LocatorProgressStatus = LocatorTaskStatus.PENDING | LocatorTaskStatus.STARTED;
