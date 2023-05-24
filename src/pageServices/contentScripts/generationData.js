@@ -1,4 +1,5 @@
 import getCssSelector from "css-selector-generator";
+import { finder } from "@medv/finder";
 
 export const getGenerationAttributes = () => {
   /*
@@ -67,9 +68,20 @@ export const getGenerationAttributes = () => {
 
   const generateSelectorByElement = (element) => {
     const options = {
-      blacklist: [/jdn-hash/],
+      blacklist: [/jdn-hash/, /href/],
     };
-    return getCssSelector(element, options);
+    // return getCssSelector(element, options);
+    console.log("css-selector-generator:   ", getCssSelector(element, options));
+    const s = finder(element, {
+      attr: (name, value) => {
+        if (name === "jdn-hash" || name === "href" || name === "class") {
+          return false;
+        }
+        return true;
+      },
+    });
+    console.log("finder:                   ", s);
+    return s;
   };
 
   // this is a draft, parameters could be changed
