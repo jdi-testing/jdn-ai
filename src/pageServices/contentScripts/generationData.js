@@ -70,18 +70,17 @@ export const getGenerationAttributes = () => {
     const options = {
       blacklist: [/jdn-hash/, /href/],
     };
-    // return getCssSelector(element, options);
-    console.log("css-selector-generator:   ", getCssSelector(element, options));
-    const s = finder(element, {
-      attr: (name, value) => {
+    const selectorByGenerator = getCssSelector(element, options);
+    const selectorByFinder = finder(element, {
+      attr: (name) => {
         if (name === "jdn-hash" || name === "href" || name === "class") {
           return false;
         }
         return true;
       },
     });
-    console.log("finder:                   ", s);
-    return s;
+
+    return selectorByGenerator.length < selectorByFinder.length ? selectorByGenerator : selectorByFinder;
   };
 
   // this is a draft, parameters could be changed
