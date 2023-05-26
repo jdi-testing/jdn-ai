@@ -67,17 +67,14 @@ export const getGenerationAttributes = () => {
   };
 
   const generateSelectorByElement = (element) => {
-    const options = {
+    const generatorOptions = {
       blacklist: [/jdn-hash/, /href/],
     };
-    const selectorByGenerator = getCssSelector(element, options);
+    const selectorByGenerator = getCssSelector(element, generatorOptions);
+
+    const finderForbiddenAttributes = ["jdn-hash", "href", "class", "xmlns", "xmlns:xlink", "xlink:href"];
     const selectorByFinder = finder(element, {
-      attr: (name) => {
-        if (name === "jdn-hash" || name === "href" || name === "class") {
-          return false;
-        }
-        return true;
-      },
+      attr: (name) => !finderForbiddenAttributes.includes(name),
     });
 
     return selectorByGenerator.length < selectorByFinder.length ? selectorByGenerator : selectorByFinder;
