@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Modal, Row, Space, Tooltip } from "antd";
-import { CaretDown, DownloadSimple, Plus, Trash } from "phosphor-react";
+import { CaretDown, Plus, Trash } from "phosphor-react";
 
 import { addPageObj } from "../reducers/addPageObject.thunk";
 
@@ -92,9 +92,9 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
           </Tooltip>
         ) : null}
         {enableDownload ? (
-          <Tooltip placement="bottom" title="Download all">
-            <Button size="small" onClick={handleDownload} icon={<DownloadSimple size={16} color="#595959" />} />
-          </Tooltip>
+          <Button size="small" onClick={handleDownload}>
+            Download all as .zip
+          </Button>
         ) : null}
         <Button
           type="primary"
