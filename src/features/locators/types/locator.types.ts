@@ -90,11 +90,11 @@ export interface Locator extends PredictedEntity {
   isCustomName?: boolean;
   isCustomLocator?: boolean;
   locatorType?: LocatorType;
+  message: LocatorValidationErrorType;
   pageObj: PageObjectId;
   parent_id: JDNHash;
   priority?: LocatorCalculationPriority;
   type: ElementClass;
-  message: LocatorValidationErrorType;
 }
 
 export interface PredictedEntity {

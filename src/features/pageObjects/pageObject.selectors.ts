@@ -10,6 +10,8 @@ import { LocatorType } from "../../common/types/common";
 import { isProgressStatus } from "../locators/utils/locatorGenerationController";
 import { getLocator } from "../locators/utils/locatorOutput";
 import { PageObject, PageObjectId } from "./types/pageObjectSlice.types";
+import { sortLocatorsWithChilds } from "../locators/utils/sortLocators";
+import { filterLocatorsByClassFilter } from "../locators/utils/filterLocators";
 
 export const pageObjAdapter = createEntityAdapter<PageObject>({
   selectId: (pageObj) => pageObj.id,
@@ -64,18 +66,22 @@ export const selectLocatorsByPageObject = createSelector(
   }
 );
 
+const selectSortedLocators = createSelector(selectLocatorsByPageObject, (locators) =>
+  sortLocatorsWithChilds(locators)
+);
+
 export const selectFilteredLocators = createSelector(
   selectLocatorsByPageObject,
   selectClassFilterByPO,
-  (locators, filter) => {
-    if (!filter) return locators;
-    const _locators = locators?.filter((loc) => {
-      const filterValue = filter;
-      return Object.hasOwn(filterValue, loc.type) ? get(filterValue, loc.type) : true;
-    });
-    return _locators;
-  }
+  filterLocatorsByClassFilter,
 );
+
+const selectSortedFilteredLocators = createSelector(
+  selectSortedLocators,
+  selectClassFilterByPO,
+  filterLocatorsByClassFilter,
+);
+
 
 export const selectGenerateByPageObject = createSelector(selectFilteredLocators, (elements: Array<Locator> = []) =>
   elements.filter((elem) => elem?.generate)
@@ -94,7 +100,7 @@ export const selectActiveNonGenerateByPO = createSelector(
   (elements: Array<Locator> = []) => elements.filter((elem) => elem?.active)
 );
 
-export const selectConfirmedLocators = createSelector(selectFilteredLocators, (elements: Array<Locator> = []) =>
+export const selectConfirmedLocators = createSelector(selectSortedFilteredLocators, (elements: Array<Locator> = []) =>
   elements.filter((elem) => elem?.generate && !elem.deleted)
 );
 
