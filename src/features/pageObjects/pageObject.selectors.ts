@@ -1,5 +1,5 @@
 import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
-import { chain, get, isNil, last, size } from "lodash";
+import { chain, isNil, last, size } from "lodash";
 import { RootState } from "../../app/store/store";
 import { locatorTaskStatus } from "../../common/constants/constants";
 import { selectClassFilterByPO } from "../filter/filter.selectors";
