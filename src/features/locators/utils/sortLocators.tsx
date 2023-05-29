@@ -16,8 +16,7 @@ export const sortLocatorsWithChilds = (locators: Array<Locator>) => {
       if (typeof locator === "string") {
         if (!childrenMap.has(locator)) continue;
         locator = childrenMap.get(locator) as Locator;
-      }
-      else if (locator.parent_id?.length && !childrenMap.has(locator.element_id)) continue;
+      } else if (locator.parent_id?.length && !childrenMap.has(locator.element_id)) continue;
 
       sorted.push(locator);
       childrenMap.delete(locator.element_id);

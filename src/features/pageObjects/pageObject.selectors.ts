@@ -66,22 +66,19 @@ export const selectLocatorsByPageObject = createSelector(
   }
 );
 
-const selectSortedLocators = createSelector(selectLocatorsByPageObject, (locators) =>
-  sortLocatorsWithChilds(locators)
-);
+const selectSortedLocators = createSelector(selectLocatorsByPageObject, (locators) => sortLocatorsWithChilds(locators));
 
 export const selectFilteredLocators = createSelector(
   selectLocatorsByPageObject,
   selectClassFilterByPO,
-  filterLocatorsByClassFilter,
+  filterLocatorsByClassFilter
 );
 
 const selectSortedFilteredLocators = createSelector(
   selectSortedLocators,
   selectClassFilterByPO,
-  filterLocatorsByClassFilter,
+  filterLocatorsByClassFilter
 );
-
 
 export const selectGenerateByPageObject = createSelector(selectFilteredLocators, (elements: Array<Locator> = []) =>
   elements.filter((elem) => elem?.generate)

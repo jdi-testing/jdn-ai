@@ -27,10 +27,10 @@ describe("sortLocatorsWithChilds", () => {
       parent_id: "1",
     },
     {
-        element_id: "6",
-        children: [],
-        parent_id: "7",
-    }
+      element_id: "6",
+      children: [],
+      parent_id: "7",
+    },
   ];
   const expectedOutput = [
     {
@@ -57,10 +57,10 @@ describe("sortLocatorsWithChilds", () => {
       children: [],
     },
     {
-        element_id: "6",
-        children: [],
-        parent_id: "7",
-    }
+      element_id: "6",
+      children: [],
+      parent_id: "7",
+    },
   ];
 
   test("should sort locators with childs", () => {
