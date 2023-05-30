@@ -1,6 +1,6 @@
 import { ElementId, Locator } from "../types/locator.types";
 
-export const sortLocatorsWithChilds = (locators: Array<Locator>) => {
+export const sortLocatorsWithChildren = (locators: Array<Locator>) => {
   const childrenMap: Map<string, Locator> = new Map();
 
   for (const locator of locators) {

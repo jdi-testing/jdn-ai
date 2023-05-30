@@ -10,8 +10,8 @@ import { LocatorType } from "../../common/types/common";
 import { isProgressStatus } from "../locators/utils/locatorGenerationController";
 import { getLocator } from "../locators/utils/locatorOutput";
 import { PageObject, PageObjectId } from "./types/pageObjectSlice.types";
-import { sortLocatorsWithChilds } from "../locators/utils/sortLocators";
 import { filterLocatorsByClassFilter } from "../locators/utils/filterLocators";
+import { sortLocatorsWithChildren } from "../locators/utils/sortLocators";
 
 export const pageObjAdapter = createEntityAdapter<PageObject>({
   selectId: (pageObj) => pageObj.id,
@@ -66,7 +66,9 @@ export const selectLocatorsByPageObject = createSelector(
   }
 );
 
-const selectSortedLocators = createSelector(selectLocatorsByPageObject, (locators) => sortLocatorsWithChilds(locators));
+const selectSortedLocators = createSelector(selectLocatorsByPageObject, (locators) =>
+  sortLocatorsWithChildren(locators)
+);
 
 export const selectFilteredLocators = createSelector(
   selectLocatorsByPageObject,
