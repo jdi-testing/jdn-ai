@@ -1,5 +1,5 @@
 import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
-import { chain, get, isNil, last, size } from "lodash";
+import { chain, isNil, last, size } from "lodash";
 import { RootState } from "../../app/store/store";
 import { locatorTaskStatus } from "../../common/constants/constants";
 import { selectClassFilterByPO } from "../filter/filter.selectors";
@@ -10,6 +10,8 @@ import { LocatorType } from "../../common/types/common";
 import { isProgressStatus } from "../locators/utils/locatorGenerationController";
 import { getLocator } from "../locators/utils/locatorOutput";
 import { PageObject, PageObjectId } from "./types/pageObjectSlice.types";
+import { filterLocatorsByClassFilter } from "../locators/utils/filterLocators";
+import { sortLocatorsWithChildren } from "../locators/utils/sortLocators";
 
 export const pageObjAdapter = createEntityAdapter<PageObject>({
   selectId: (pageObj) => pageObj.id,
@@ -64,17 +66,20 @@ export const selectLocatorsByPageObject = createSelector(
   }
 );
 
+const selectSortedLocators = createSelector(selectLocatorsByPageObject, (locators) =>
+  sortLocatorsWithChildren(locators)
+);
+
 export const selectFilteredLocators = createSelector(
   selectLocatorsByPageObject,
   selectClassFilterByPO,
-  (locators, filter) => {
-    if (!filter) return locators;
-    const _locators = locators?.filter((loc) => {
-      const filterValue = filter;
-      return Object.hasOwn(filterValue, loc.type) ? get(filterValue, loc.type) : true;
-    });
-    return _locators;
-  }
+  filterLocatorsByClassFilter
+);
+
+const selectSortedFilteredLocators = createSelector(
+  selectSortedLocators,
+  selectClassFilterByPO,
+  filterLocatorsByClassFilter
 );
 
 export const selectGenerateByPageObject = createSelector(selectFilteredLocators, (elements: Array<Locator> = []) =>
@@ -94,7 +99,7 @@ export const selectActiveNonGenerateByPO = createSelector(
   (elements: Array<Locator> = []) => elements.filter((elem) => elem?.active)
 );
 
-export const selectConfirmedLocators = createSelector(selectFilteredLocators, (elements: Array<Locator> = []) =>
+export const selectConfirmedLocators = createSelector(selectSortedFilteredLocators, (elements: Array<Locator> = []) =>
   elements.filter((elem) => elem?.generate && !elem.deleted)
 );
 
