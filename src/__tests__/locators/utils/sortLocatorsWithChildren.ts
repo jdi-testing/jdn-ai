@@ -1,7 +1,7 @@
 import { Locator } from "../../../features/locators/types/locator.types";
 import { sortLocatorsWithChildren } from "../../../features/locators/utils/sortLocators";
 
-describe("sortLocatorsWithChilds", () => {
+describe("sortLocatorsWithChildren", () => {
   const input = [
     {
       element_id: "1",
