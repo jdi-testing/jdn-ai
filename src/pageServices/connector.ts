@@ -25,6 +25,7 @@ class Connector {
     sender: chrome.runtime.MessageSender,
     sendResponse: (response: any) => void
   ) => void;
+  onDisconnectCallback: () => void;
 
   constructor() {
     this.getTab();
@@ -50,6 +51,9 @@ class Connector {
         .then((response) => response)
         .catch((error: Error) => {
           if (error.message === SCRIPT_ERROR.NO_RESPONSE && isUndefined(onResponse)) return null;
+          if (error.message === SCRIPT_ERROR.NO_CONNECTION && action !== "PING_SCRIPT" && action !== "CHECK_SESSION") {
+            return this.onDisconnectHandler(this.port, true).then(() => this.sendMessage(action, payload, onResponse, tabId));
+          }
           return error;
         })
     );
@@ -74,15 +78,17 @@ class Connector {
     chrome.runtime.onMessage.addListener(this.onmessage);
   }
 
-  updateDisconnectListener(callback: () => void) {
-    const listener = (port: chrome.runtime.Port | undefined) => {
-      if (this.port) this.port = undefined;
-      if (typeof callback === "function") callback();
-      this.initScripts();
-    };
+  onDisconnectHandler(port: any, forced?: boolean) {
+    if (this.port) this.port = undefined;
+    if (typeof this.onDisconnectCallback === "function" && !forced) this.onDisconnectCallback();
+    return this.initScripts().then(() => this.port?.onDisconnect.addListener(this.onDisconnectHandler.bind(this)));
+  }
 
-    if (this.port && !this.port.onDisconnect.hasListener(listener)) {
-      this.port.onDisconnect.addListener(listener);
+  updateDisconnectListener(callback: () => void) {
+    this.onDisconnectCallback = callback;
+
+    if (this.port && !this.port.onDisconnect.hasListener(this.onDisconnectHandler)) {
+      this.port.onDisconnect.addListener(this.onDisconnectHandler.bind(this));
     }
   }
 
