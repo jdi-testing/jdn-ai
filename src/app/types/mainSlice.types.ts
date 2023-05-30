@@ -31,17 +31,17 @@ export interface Notification {
   isHandled?: boolean;
   action: AnyAction;
   prevValue?: unknown;
+  message?: string;
 }
 
 export enum BackendStatus {
   TryToAccess = "Trying to access server...",
   Accessed = "Accessed",
-  AccessFailed = "AccessFailed",
+  AccessFailed = "Access failed",
   OutdatedServerLocal = "Local server version need to be updated.",
   OutdatedPluginLocal = "Plugin version need to be updated.",
   IncompatibleVersionRemote = "Remote server version is incompatible. Please, update plugin",
-  IncompatibleVersions = `Remote and local server versions are incompatible. 
-  Please, update plugin or local server, or try to connect the remote server.`,
+  IncompatibleVersions = "Remote and local server versions are incompatible. Please, update plugin or local server, or try to connect the remote server.",
 }
 
 export enum PageType {

@@ -16,12 +16,21 @@ import {
   copyLocatorOption,
 } from "../../../common/components/menu/menuOptions";
 import { isProgressStatus, locatorGenerationController } from "../utils/locatorGenerationController";
-import { Locator, LocatorCalculationPriority, LocatorTaskStatus, ValidationStatus } from "../types/locator.types";
+import {
+  Locator,
+  LocatorCalculationPriority,
+  LocatorTaskStatus,
+  ValidationStatus,
+  LocatorValidationWarnings,
+} from "../types/locator.types";
 import { setCalculationPriority, toggleDeleted } from "../locators.slice";
 import { copyLocator, getLocatorValidationStatus } from "../utils/utils";
 import { LocatorOption } from "../utils/constants";
 import { rerunGeneration } from "../reducers/rerunGeneration.thunk";
 import { stopGeneration } from "../reducers/stopGeneration.thunk";
+import { LocatorType } from "../../../common/types/common";
+import { useSelector } from "react-redux";
+import { selectCurrentPageObject } from "../../../features/pageObjects/pageObject.selectors";
 
 interface Props {
   element: Locator;
@@ -33,7 +42,16 @@ interface Props {
 export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, children, trigger }) => {
   const dispatch = useDispatch();
 
-  const { element_id, locator, deleted, priority, jdnHash, type, name, message } = element;
+  const { element_id, locator, deleted, priority, jdnHash, type, name, message, locatorType } = element;
+
+  // should be revised after 1240 implementation
+  const pageObject = useSelector(selectCurrentPageObject);
+  const isAdvancedCalculationDisabled =
+    locatorType === LocatorType.cssSelector || (!locatorType && pageObject?.locatorType === LocatorType.cssSelector)
+      ? true
+      : message === LocatorValidationWarnings.NewElement
+      ? false
+      : getLocatorValidationStatus(message) === ValidationStatus.WARNING;
 
   const isLocatorInProgress = isProgressStatus(locator.taskStatus);
 
@@ -117,7 +135,7 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, chil
                   getRerunGeneration(60),
                   getRerunGeneration(3600),
                 ],
-                getLocatorValidationStatus(message) === ValidationStatus.WARNING
+                isAdvancedCalculationDisabled
               ),
             ]
           : []),

@@ -1,17 +1,10 @@
 import { isUndefined } from "lodash";
 import { SCRIPT_ERROR } from "../common/constants/constants";
-import { Locator, PredictedEntity } from "../features/locators/types/locator.types";
+import { ElementId, Locator, PredictedEntity } from "../features/locators/types/locator.types";
 import { ElementClass } from "../features/locators/types/generationClasses.types";
 import { SelectorsMap } from "../services/rules/rules.types";
-import { assignDataLabels } from "./contentScripts/assignDataLabels";
-import { runContextMenu } from "./contentScripts/contextmenu";
-import { highlightOnPage } from "./contentScripts/highlight";
-import { highlightOrder } from "./contentScripts/highlightOrder";
-import { selectable } from "./contentScripts/selectable";
-import { urlListener } from "./contentScripts/urlListener";
-import { ScriptMessagePayload } from "./scriptListener";
+import { ScriptMessagePayload } from "./scriptMessageHandler";
 import { ClassFilterValue } from "../features/filter/types/filter.types";
-import { utilityScript } from "./contentScripts/utils";
 
 export interface ScriptMessage {
   message: string;
@@ -32,20 +25,14 @@ class Connector {
     sender: chrome.runtime.MessageSender,
     sendResponse: (response: any) => void
   ) => void;
+  onDisconnectCallback: () => void;
 
   constructor() {
     this.getTab();
   }
 
-  async initScripts(onInitHandler: () => Promise<void>, onDisconnectHandler: () => void) {
-    await this.attachStaticScripts();
-    onInitHandler();
-    this.onTabUpdate(onInitHandler, onDisconnectHandler);
-  }
-
-  handleError(error: Error) {
-    if (typeof this.onerror === "function") this.onerror(error);
-    else throw error;
+  async initScripts() {
+    return await this.attachStaticScripts();
   }
 
   getTab() {
@@ -64,6 +51,9 @@ class Connector {
         .then((response) => response)
         .catch((error: Error) => {
           if (error.message === SCRIPT_ERROR.NO_RESPONSE && isUndefined(onResponse)) return null;
+          if (error.message === SCRIPT_ERROR.NO_CONNECTION && action !== "PING_SCRIPT" && action !== "CHECK_SESSION") {
+            return this.onDisconnectHandler(this.port, true).then(() => this.sendMessage(action, payload, onResponse, tabId));
+          }
           return error;
         })
     );
@@ -88,15 +78,17 @@ class Connector {
     chrome.runtime.onMessage.addListener(this.onmessage);
   }
 
-  onTabUpdate(onInitHandler: () => Promise<void>, onDisconnectHandler: () => void) {
-    const listener = (port: chrome.runtime.Port | undefined) => {
-      if (this.port) this.port = undefined;
-      if (typeof onDisconnectHandler === "function") onDisconnectHandler();
-      this.initScripts(onInitHandler, onDisconnectHandler);
-    };
+  onDisconnectHandler(port: any, forced?: boolean) {
+    if (this.port) this.port = undefined;
+    if (typeof this.onDisconnectCallback === "function" && !forced) this.onDisconnectCallback();
+    return this.initScripts().then(() => this.port?.onDisconnect.addListener(this.onDisconnectHandler.bind(this)));
+  }
 
-    if (this.port && !this.port.onDisconnect.hasListener(listener)) {
-      this.port.onDisconnect.addListener(listener);
+  updateDisconnectListener(callback: () => void) {
+    this.onDisconnectCallback = callback;
+
+    if (this.port && !this.port.onDisconnect.hasListener(this.onDisconnectHandler)) {
+      this.port.onDisconnect.addListener(this.onDisconnectHandler.bind(this));
     }
   }
 
@@ -106,17 +98,18 @@ class Connector {
         name: `JDN_connect_${Date.now()}`,
       });
     }
-    // @ts-ignore
-    return { then: (cb) => cb(this.port) };
   }
 
-  attachContentScript(script: (...args: any[]) => void, scriptName = "") {
+  attachContentScript(script: string[] | ((...args: any[]) => void), scriptName = "") {
     return this.scriptExists(scriptName).then((result) => {
       if (result) return true;
+
+      const injection = typeof script === "function" ? { func: script } : { files: script };
+
       return chrome.scripting
         .executeScript({
           target: { tabId: this.tabId },
-          func: script,
+          ...injection,
         })
         .then((response) => response)
         .catch((error) => error);
@@ -139,20 +132,14 @@ class Connector {
 
   attachStaticScripts() {
     return Promise.all([
-      this.attachContentScript(highlightOnPage, "highlightOnPage").then(() => {
+      this.attachContentScript(["contentScript.bundle.js"], "index").then(() => {
         this.createPort();
         chrome.storage.sync.set({ IS_DISCONNECTED: false });
-      }),
-      this.attachContentScript(runContextMenu, "runContextMenu"),
-      this.attachContentScript(assignDataLabels, "assignDataLabels"),
-      this.attachContentScript(highlightOrder, "highlightOrder"),
-      this.attachContentScript(urlListener, "urlListener").then(() => {
         sendMessage.defineTabId(this.tabId);
         sendMessage.setClosedSession({ tabId: this.tabId, isClosed: false });
+        return "success";
       }),
-      this.attachContentScript(selectable, "selectable"),
-      this.attachContentScript(utilityScript, "utilityScript"),
-      this.attachCSS("contentScripts.css"),
+      this.attachCSS("contentStyles.css"),
     ]);
   }
 
@@ -166,12 +153,13 @@ class Connector {
   }
 }
 
-export const connector = new Connector();
+const connector = new Connector();
 
 // messages, are sent from plugin to content scripts
 export const sendMessage = {
   addElement: (el: Locator) => connector.sendMessage("ADD_ELEMENT", el),
   assignDataLabels: (payload: PredictedEntity[]) => connector.sendMessage("ASSIGN_DATA_LABEL", payload),
+  assignJdnHash: (payload: { jdnHash: string, locator: string, isCSSLocator: Boolean }) => connector.sendMessage("ASSIGN_JDN_HASH", payload),
   assignParents: (payload: Locator[]) => connector.sendMessage("ASSIGN_PARENTS", payload),
   changeElementName: (el: Locator) => connector.sendMessage("CHANGE_ELEMENT_NAME", el),
   changeElementType: (el: Locator) => connector.sendMessage("CHANGE_ELEMENT_TYPE", el),
@@ -179,8 +167,12 @@ export const sendMessage = {
   checkSession: (payload: null, onResponse?: () => void): Promise<{ message: string; tabId: number }[]> =>
     connector.sendMessageToAllTabs("CHECK_SESSION", payload, onResponse),
   defineTabId: (payload: number) => connector.sendMessage("DEFINE_TAB_ID", payload),
-  evaluateXpath: (payload: { xPath: string; originJdnHash?: string }, onResponse?: () => void) =>
+  evaluateXpath: (payload: { xPath: string; element_id?: ElementId, originJdnHash?: string }, onResponse?: () => void) =>
     connector.sendMessage("EVALUATE_XPATH", payload, onResponse),
+  evaluateCssSelector: (payload: { selector: string; element_id?: ElementId, originJdnHash?: string }, onResponse?: () => void) =>
+    connector.sendMessage("EVALUATE_CSS_SELECTOR", payload, onResponse),
+  generateSelectorByHash: (payload: { element_id: string, jdnHash: string }, onResponse?: () => void) =>
+    connector.sendMessage("GENERATE_SELECTOR_BY_HASH", payload, onResponse),
   findBySelectors: (payload: SelectorsMap) => connector.sendMessage("FIND_BY_SELECTORS", payload),
   setClosedSession: (payload: { tabId: number; isClosed: boolean }) =>
     connector.sendMessage("SET_CLOSED_SESSION", payload),
@@ -189,7 +181,7 @@ export const sendMessage = {
   killHighlight: (payload?: {}, onResponse?: () => void) => connector.sendMessage("KILL_HIGHLIGHT", null, onResponse),
   generateAttributes: (payload: PredictedEntity, onResponse: () => void) =>
     connector.sendMessage("GENERATE_ATTRIBUTES", payload, onResponse),
-  getElementXpath: (payload: Element, onResponse?: () => void) =>
+  getElementXpath: (payload: string, onResponse?: () => void) =>
     connector.sendMessage("GET_ELEMENT_XPATH", payload, onResponse),
   pingScript: (payload: { scriptName: string }, onResponse?: () => void) =>
     connector.sendMessage("PING_SCRIPT", payload, onResponse),
@@ -203,4 +195,4 @@ export const sendMessage = {
   unsetActive: (payload: Locator | Locator[]) => connector.sendMessage("UNSET_ACTIVE", payload),
 };
 
-export default Connector;
+export default connector;

@@ -20,6 +20,8 @@ import {
 import { runXpathGenerationReducer } from "./reducers/runXpathGeneration.thunk";
 import { checkLocatorsValidityReducer } from "./reducers/checkLocatorValidity.thunk";
 import { LocatorType } from "../../common/types/common";
+import { addCustomLocatorReducer } from "./reducers/addCustomLocator.thunk";
+import { changeLocatorElementReducer } from "./reducers/changeLocatorElement.thunk";
 
 const initialState: LocatorsState = {
   generationStatus: LocatorsGenerationStatus.noStatus,
@@ -36,7 +38,7 @@ export interface ChangeLocatorAttributesPayload {
   library: ElementLibrary;
   isCustomName?: boolean;
   isGeneratedName?: boolean;
-  locatorType?: LocatorType;
+  locatorType: LocatorType;
 }
 
 const locatorsSlice = createSlice({
@@ -45,22 +47,24 @@ const locatorsSlice = createSlice({
   reducers: {
     addLocators(state, { payload }) {
       locatorsAdapter.addMany(state, payload);
+      state.status = IdentificationStatus.success;
     },
     changeLocatorAttributes(state, { payload }: PayloadAction<ChangeLocatorAttributesPayload>) {
-      const { type, name, locator, element_id, message, isCustomName, locatorType } = payload;
+      const { locator, element_id, locatorType, ...rest } = payload;
+
       const _locator = simpleSelectLocatorById(state, element_id);
+
       if (!_locator) return;
-      const { fullXpath, robulaXpath } = _locator.locator;
-      const newValue = { ..._locator, locator: { ..._locator.locator }, message, type, name, isCustomName };
-      if (fullXpath !== locator && robulaXpath !== locator) {
-        newValue.locator.customXpath = locator;
-        newValue.isCustomLocator = true;
-        newValue.locator.taskStatus = LocatorTaskStatus.SUCCESS;
-      } else {
-        delete newValue.locator.customXpath;
-        newValue.isCustomLocator = false;
+
+      const newValue = { ..._locator, locator: { ..._locator.locator }, locatorType, ...rest };
+
+      if (locatorType === LocatorType.cssSelector) {
+        newValue.locator.cssSelector = locator;
+      } else if (locatorType === LocatorType.xPath) {
+        newValue.locator.xPath = locator;
       }
-      locatorsAdapter.upsertOne(state, { ...newValue, ...(locatorType && { locatorType }) });
+
+      locatorsAdapter.upsertOne(state, newValue);
     },
     changeIdentificationStatus(state, { payload }: PayloadAction<IdentificationStatus>) {
       state.status = payload;
@@ -117,6 +121,10 @@ const locatorsSlice = createSlice({
         const newValue: Partial<Locator>[] = ids.map((element_id) => ({ element_id, priority }));
         locatorsAdapter.upsertMany(state, newValue as Locator[]);
       }
+    },
+    setJdnHash(state, { payload }: PayloadAction<{ element_id: ElementId; jdnHash: string }>) {
+      const { element_id, jdnHash } = payload;
+      locatorsAdapter.upsertOne(state, { element_id, jdnHash } as Locator);
     },
     setScrollToLocator(state, { payload: element_id }: PayloadAction<ElementId>) {
       state.scrollToLocator = element_id;
@@ -194,7 +202,9 @@ const locatorsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    checkLocatorsValidityReducer(builder),
+    addCustomLocatorReducer(builder),
+      changeLocatorElementReducer(builder),
+      checkLocatorsValidityReducer(builder),
       identifyElementsReducer(builder),
       generateLocatorsReducer(builder),
       rerunGenerationReducer(builder),
@@ -217,6 +227,7 @@ export const {
   setCalculationPriority,
   setScrollToLocator,
   setElementGroupGeneration,
+  setJdnHash,
   setValidity,
   toggleElementGroupGeneration,
   toggleDeleted,

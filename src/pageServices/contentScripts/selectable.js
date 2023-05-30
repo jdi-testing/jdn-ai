@@ -65,7 +65,7 @@ export const selectable = () => {
 
   const setActive = (payload) => selectables.setSelect(payload);
 
-  const messageHandler = ({ message, param }, sender, sendResponse) => {
+  const messageHandler = ({ message, param }) => {
     switch (message) {
       case "UNSET_ACTIVE":
         unsetActive(param);
@@ -80,10 +80,8 @@ export const selectable = () => {
       case "KILL_HIGHLIGHT":
         if (selectables) selectables = selectables.disable();
         break;
-      case "PING_SCRIPT": {
-        if (param.scriptName === "selectable") sendResponse({ message: true });
+      default:
         break;
-      }
     }
   };
 
@@ -140,7 +138,7 @@ export const selectable = () => {
     };
     this.options = extend(defaults, opts || {});
     this.on = false;
-    this.selectedItems = new Set;
+    this.selectedItems = new Set();
     const self = this;
     this.enable = function () {
       if (this.on) {
@@ -171,6 +169,9 @@ export const selectable = () => {
       return target.classList.contains(self.options.selectedClass) && e.button === 2;
     };
     this.rectOpen = function (e) {
+      const labelTarget = e.target.closest(".jdn-label");
+      if (labelTarget) return;
+
       self.options.start && self.options.start(e);
       if (self.options.key && !e[self.options.key]) return;
       self.options.onDeselect && self.selectedItems.size && self.options.onDeselect(Array.from(self.selectedItems));
@@ -210,8 +211,8 @@ export const selectable = () => {
       );
     };
     this.select = function (e) {
-      const selected = new Set;
-      const deselected = new Set;
+      const selected = new Set();
+      const deselected = new Set();
       const a = rb();
       if (!a) {
         return;
@@ -235,13 +236,13 @@ export const selectable = () => {
       if (isPlainClick(a)) {
         const highlightTarget = e.target.closest("[jdn-highlight=true]:not([id^='jdn-overlay'])");
 
-        if (highlightTarget && !self.isContextForGroup(e)) { // simple click on any highlight
+        if (highlightTarget && !self.isContextForGroup(e)) {
+          // simple click on any highlight
           if (!e[self.options.moreUsing]) self.removePreviousSelection();
           toggleActiveClass(highlightTarget);
         } else if (!highlightTarget) self.removePreviousSelection(); // simple click outside highlight
-
       } else {
-        self.selectedItems = new Set;
+        self.selectedItems = new Set();
         self.foreach(self.items, function (el) {
           if (cross(a, el) === true) {
             toggleActiveClass(el);
@@ -261,16 +262,16 @@ export const selectable = () => {
     };
 
     this.removePreviousSelection = function () {
-      const deselected = new Set;
+      const deselected = new Set();
       self.foreach(self.items, function (el) {
-          const s = self.options.selectedClass;
-          if (el.classList.contains(s)) {
-            el.classList.remove(s);
-            deselected.add(el.id);
-          }
+        const s = self.options.selectedClass;
+        if (el.classList.contains(s)) {
+          el.classList.remove(s);
+          deselected.add(el.id);
+        }
       });
       if (self.options.onDeselect && deselected.size) self.options.onDeselect(Array.from(deselected));
-    }
+    };
 
     this.rectDraw = function (e) {
       const g = rb();

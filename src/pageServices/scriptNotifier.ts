@@ -2,7 +2,7 @@ import { Middleware } from "@reduxjs/toolkit";
 import { compact, isNil, pick, size } from "lodash";
 import { pageType } from "../common/constants/constants";
 import { selectLocatorById } from "../features/locators/locators.selectors";
-import { Locator, LocatorTaskStatus } from "../features/locators/types/locator.types";
+import { Locator, LocatorTaskStatus, LocatorValidationWarnings } from "../features/locators/types/locator.types";
 import { selectLocatorsByPageObject, selectValidLocators } from "../features/pageObjects/pageObject.selectors";
 import { sendMessage } from "./connector";
 import { selectCurrentPage } from "../app/main.selectors";
@@ -33,9 +33,16 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
   switch (type) {
     case "pageObject/addLocatorsToPageObj": {
       if (isNil(state.pageObject.present.currentPageObject)) return;
-      const locators = selectLocatorsByPageObject(state);
+      const locators = selectValidLocators(state);
       const filter = selectClassFilterByPO(state);
       locators && sendMessage.setHighlight({ elements: locators as Locator[], filter });
+      break;
+    }
+    case "pageObject/addLocatorToPageObj": {
+      if (isNil(state.pageObject.present.currentPageObject)) return;
+      const { locatorId } = payload;
+      const locator = selectLocatorById(state, locatorId);
+      locator && !locator?.message && sendMessage.addElement(locator);
       break;
     }
     case "locators/checkLocatorsValidity/fulfilled": {
@@ -44,20 +51,26 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       locators && sendMessage.setHighlight({ elements: locators as Locator[], filter, isAlreadyGenerated: true });
       break;
     }
-    case "locators/changeLocatorAttributes": {
+    case "locators/changeLocatorAttributes":
+    case "locators/changeLocatorElement/fulfilled": {
       const { element_id, message, type: elementType, name } = payload;
       const prevValue = selectLocatorById(prevState, element_id);
+      const newValue = selectLocatorById(state, element_id);
+
       if (!prevValue) return;
-      if (prevValue.type !== elementType || prevValue.name !== name) {
-        const locator = selectLocatorById(state, element_id);
-        locator && sendMessage.changeElementName(locator);
-      } else if (prevValue?.message.length) {
-        // restore previously invalid locator
-        const newValue = selectLocatorById(state, element_id);
-        newValue && sendMessage.addElement(newValue);
-      } else if (message.length) {
-        // delete invalid locator
+
+      if (message?.length && message !== LocatorValidationWarnings.NewElement) {
         sendMessage.removeElement(prevValue);
+      } else {
+        if (!prevValue?.message?.length || prevValue?.message === LocatorValidationWarnings.NewElement) {
+          sendMessage.removeElement(prevValue);
+        }
+
+        newValue && sendMessage.addElement(newValue);
+
+        if (prevValue.type !== elementType || prevValue.name !== name) {
+          newValue && sendMessage.changeElementName(newValue);
+        }
       }
       break;
     }
@@ -132,7 +145,8 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       });
       break;
     case "locators/updateLocator":
-      sendMessage.changeStatus(payload);
+      const updatedLocator = selectLocatorById(state, payload.element_id);
+      sendMessage.changeStatus(updatedLocator as Locator);
       break;
     case "locators/failGeneration": {
       const _payload = payload.map((element_id: string) => {

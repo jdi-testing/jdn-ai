@@ -3,22 +3,28 @@ import { getLocator } from "../features/locators/utils/locatorOutput";
 
 const data = [
   {
-    input: { fullXpath: "/html/body/footer" },
+    input: { xPath: "/html/body/footer", cssSelector: "html > body > footer" },
     xpathOutput: "/html/body/footer",
     cssOutput: "html > body > footer",
   },
   {
-    input: { fullXpath: "/html/body/footer", robulaXpath: "//*[@class='footer-menu']" },
+    input: { xPath: "//*[@class='footer-menu']", cssSelector: ".footer-menu" },
     xpathOutput: "//*[@class='footer-menu']",
     cssOutput: ".footer-menu",
   },
   {
-    input: { fullXpath: "/html/body/footer", robulaXpath: "//*[@class='footer-menu']", customXpath: "//div/button" },
+    input: {
+      xPath: "//div/button",
+      cssSelector: "div > button",
+    },
     xpathOutput: "//div/button",
     cssOutput: "div > button",
   },
   {
-    input: { fullXpath: "/html/body/footer", robulaXpath: "//*[contains(text(), 'JDI Github')]" },
+    input: {
+      xPath: "//*[contains(text(), 'JDI Github')]",
+      cssSelector: "html > body > footer",
+    },
     xpathOutput: "//*[contains(text(), 'JDI Github')]",
     cssOutput: "html > body > footer",
   },
@@ -26,10 +32,10 @@ const data = [
 
 describe("locator presentation by getLocator()", () => {
   data.forEach((_data) => {
-    test(`converts ${JSON.stringify(_data.input)} to ${_data.xpathOutput}`, () => {
+    test(`converts ${JSON.stringify(_data.input, LocatorType.xPath)} to ${_data.xpathOutput}`, () => {
       expect(getLocator(_data.input)).toBe(_data.xpathOutput);
     });
-    test(`converts ${JSON.stringify(_data.input)} to ${_data.cssOutput}`, () => {
+    test(`converts ${JSON.stringify(_data.input, LocatorType.cssSelector)} to ${_data.cssOutput}`, () => {
       expect(getLocator(_data.input, LocatorType.cssSelector)).toBe(_data.cssOutput);
     });
   });

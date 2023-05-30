@@ -1,15 +1,19 @@
 import { saveAs } from "file-saver";
 import { chain, isEmpty, size, subtract, toLower, toString, truncate, upperFirst } from "lodash";
-import { connector } from "../../../pageServices/connector";
+import connector from "../../../pageServices/connector";
 import { ElementId, Locator } from "../../locators/types/locator.types";
 import { PageObject, PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
 import { ElementLabel, ElementLibrary } from "../../locators/types/generationClasses.types";
 import javaReservedWords from "./javaReservedWords.json";
+import perfReservedWords from "./perfReservedWords.json";
 import { pageObjectTemplate } from "./pageObjectTemplate";
+import { pageObjectTemplatePerfTest } from "./pageObjectTemplatePerfTest";
 import { getJDILabel } from "../../locators/utils/locatorTypesUtils";
 import { MAX_LOCATOR_NAME_LENGTH } from "./constants";
 
 export const isStringMatchesReservedWord = (string: string) => javaReservedWords.includes(string);
+
+export const isStringMatchesReservedWordPerfTest = (string: string) => perfReservedWords.includes(string);
 
 export const isNameUnique = (elements: Array<Locator>, element_id: ElementId, newName: string) =>
   !elements.find((elem) => elem.name === newName && elem.element_id !== element_id);
@@ -126,10 +130,23 @@ export const getPage = async (locators: Array<Locator>, title: string, library: 
   return pageObject;
 };
 
+export const getPagePerfTest = async (locators: Array<Locator>, title: string, url: string) => {
+  const pageObject = pageObjectTemplatePerfTest(locators, title, url);
+  return pageObject;
+};
+
 export const generatePageObject = async (elements: Array<Locator>, title: string, library: ElementLibrary) => {
   const page = await getPage(elements, title, library);
   const blob = new Blob([page.pageCode], {
     type: "text/plain;charset=utf-8",
   });
   saveAs(blob, `${page.title}.java`);
+};
+
+export const generatePageObjectPerfTest = async (elements: Array<Locator>, title: string, url: string) => {
+  const page = await getPagePerfTest(elements, title, url);
+  const blob = new Blob([page.pageCode], {
+    type: "text/plain;charset=utf-8",
+  });
+  saveAs(blob, `${page.title}.js`);
 };

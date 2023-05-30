@@ -64,9 +64,10 @@ export const getRootState = (_pageObject: PageObject) => ({
           elemText: "EPAM framework Wishes…",
           elemAriaLabel: null,
           locator: {
-            fullXpath: "/html/body/div/div[2]/main/div[2]",
+            cssSelector: ".main-content",
+            output: ".main-content",
             taskStatus: "SUCCESS",
-            robulaXpath: "//*[@class='main-content']",
+            xPath: "//*[@class='main-content']",
           },
           locatorType: LocatorType.cssSelector,
           name: "dialog",
@@ -85,10 +86,10 @@ export const getRootState = (_pageObject: PageObject) => ({
           elemText: "Home",
           elemAriaLabel: null,
           locator: {
-            fullXpath: "/html/body/header/div/nav/ul[1]",
+            cssSelector: ".uui-navigation.nav.navbar-nav.m-l8.any",
+            output: "//*[@class='uui-navigation nav navbar-nav m-l8 any']",
             taskStatus: "SUCCESS",
-            robulaXpath: "//*[@class='uui-navigation nav navbar-nav m-l8']",
-            customXpath: "//*[@class='uui-navigation nav navbar-nav m-l8 any']",
+            xPath: "//*[@class='uui-navigation nav navbar-nav m-l8 any']",
           },
           name: "homeContactFormServiceSupportDatesSearchComplexTableSimpleTa",
           type: "List",
@@ -110,9 +111,10 @@ export const getRootState = (_pageObject: PageObject) => ({
           elemText: "HTML 5",
           elemAriaLabel: null,
           locator: {
-            fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[5]/ul",
+            cssSelector: '[index="5"] > ul',
             taskStatus: "SUCCESS",
-            robulaXpath: "//*[@index='5']/ul",
+            xPath: "//*[@index='5']/ul",
+            output: "//*[@index='5']/ul",
           },
           locatorType: LocatorType.xPath,
           name: "html5MobileAndHtml5BootstrapBootstrapFormBootstrapFormsReact",
@@ -138,10 +140,10 @@ export const selectLocators = (pageObject: PageObject) => [
     elemText: "EPAM framework Wishes…",
     elemAriaLabel: null,
     locator: {
-      fullXpath: "/html/body/div/div[2]/main/div[2]",
       taskStatus: "SUCCESS",
-      robulaXpath: "//*[@class='main-content']",
+      xPath: "//*[@class='main-content']",
       output: ".main-content",
+      cssSelector: ".main-content",
     },
     locatorType: LocatorType.cssSelector,
     name: "dialog",
@@ -160,10 +162,9 @@ export const selectLocators = (pageObject: PageObject) => [
     elemText: "Home",
     elemAriaLabel: null,
     locator: {
-      fullXpath: "/html/body/header/div/nav/ul[1]",
       taskStatus: "SUCCESS",
-      robulaXpath: "//*[@class='uui-navigation nav navbar-nav m-l8']",
-      customXpath: "//*[@class='uui-navigation nav navbar-nav m-l8 any']",
+      xPath: "//*[@class='uui-navigation nav navbar-nav m-l8 any']",
+      cssSelector: ".uui-navigation.nav.navbar-nav.m-l8.any",
       output:
         pageObject.locatorType === LocatorType.cssSelector
           ? ".uui-navigation.nav.navbar-nav.m-l8.any"
@@ -189,10 +190,10 @@ export const selectLocators = (pageObject: PageObject) => [
     elemText: "HTML 5",
     elemAriaLabel: null,
     locator: {
-      fullXpath: "/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[5]/ul",
       taskStatus: "SUCCESS",
-      robulaXpath: "//*[@index='5']/ul",
+      xPath: "//*[@index='5']/ul",
       output: "//*[@index='5']/ul",
+      cssSelector: '[index="5"] > ul',
     },
     locatorType: LocatorType.xPath,
     name: "html5MobileAndHtml5BootstrapBootstrapFormBootstrapFormsReact",

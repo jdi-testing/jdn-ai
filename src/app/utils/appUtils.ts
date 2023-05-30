@@ -1,6 +1,7 @@
 import { HttpEndpoint, request } from "../../services/backend";
-import { connector, sendMessage } from "../../pageServices/connector";
+import connector, { sendMessage } from "../../pageServices/connector";
 import { SCRIPT_ERROR } from "../../common/constants/constants";
+import { locatorGenerationController } from "../../features/locators/utils/locatorGenerationController";
 
 export const checkSession = async (setStateCallback: (val: boolean) => void) => {
   setStateCallback(false);
@@ -14,6 +15,6 @@ export const checkSession = async (setStateCallback: (val: boolean) => void) => 
 };
 
 export const getSessionId = async () => {
-  const session_id = await request.get(HttpEndpoint.SESSION_ID);
-  chrome.storage.sync.set({ JDN_SESSION_ID: session_id });
+  const sessionId = await request.get(HttpEndpoint.SESSION_ID);
+  locatorGenerationController.setSessionId(sessionId);
 };

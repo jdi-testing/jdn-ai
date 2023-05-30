@@ -3,8 +3,8 @@ import { RootState } from "../../../app/store/store";
 import { selectLocatorsByPageObject } from "../../pageObjects/pageObject.selectors";
 import { locatorsAdapter } from "../locators.selectors";
 import { Locator, LocatorsState, LocatorValidationErrorType } from "../types/locator.types";
-import { getPrioritizedXPaths } from "../utils/locatorOutput";
-import { validateXpath } from "../utils/locatorValidation";
+import { validateLocator } from "../utils/locatorValidation";
+import { LocatorType } from "../../../common/types/common";
 
 export const checkLocatorsValidity = createAsyncThunk("locators/checkLocatorsValidity", async (payload, thunkAPI) => {
   const state = thunkAPI.getState();
@@ -14,10 +14,20 @@ export const checkLocatorsValidity = createAsyncThunk("locators/checkLocatorsVal
   const invalidLocators: Partial<Locator>[] = [];
 
   for (const locator of locators) {
-    const { jdnHash, element_id, locator: locatorValue } = locator;
-    const validation = await validateXpath(getPrioritizedXPaths(locatorValue)[0], jdnHash, locators);
-    if (validation.length)
-      invalidLocators.push({ element_id, message: validation as LocatorValidationErrorType, jdnHash });
+    const { jdnHash, element_id, locator: locatorValue, locatorType } = locator;
+    try {
+      const validation = await validateLocator(
+        locatorValue.output,
+        locatorType || LocatorType.xPath,
+        jdnHash,
+        locators,
+        element_id
+      );
+      if (validation.length)
+        invalidLocators.push({ element_id, message: validation as LocatorValidationErrorType, jdnHash });
+    } catch (error) {
+      invalidLocators.push({ element_id, message: error.message as LocatorValidationErrorType, jdnHash });
+    }
   }
 
   return { invalidLocators };

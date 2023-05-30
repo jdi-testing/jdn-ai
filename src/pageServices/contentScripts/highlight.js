@@ -11,6 +11,8 @@ export const highlightOnPage = () => {
   let scrollableContainers = [];
   let classFilter = {};
   let tooltip;
+  let tooltipTimer;
+  let coordinates = { x: 0, y: 0 };
 
   const sendMessage = (message) =>
     chrome.runtime.sendMessage(message).catch((error) => {
@@ -20,7 +22,9 @@ export const highlightOnPage = () => {
   const clearState = () => {
     nodes = [];
     predictedElements = null;
+    classFilter = null;
     scrollableContainers = [];
+    tooltip = null;
   };
 
   const isInViewport = (elementRect) => {
@@ -104,6 +108,7 @@ export const highlightOnPage = () => {
 
   const removeElement = (element) => {
     const j = predictedElements.findIndex((e) => e.element_id === element?.element_id);
+    if (j === -1) return;
     predictedElements.splice(j, 1);
 
     const div = document.getElementById(element?.jdnHash);
@@ -111,7 +116,8 @@ export const highlightOnPage = () => {
   };
 
   const addHighlightElement = (element) => {
-    predictedElements.push(element);
+    if (!predictedElements) predictedElements = [element];
+    else predictedElements.push(element);
     findAndHighlight();
   };
 
@@ -157,38 +163,54 @@ export const highlightOnPage = () => {
       tooltip.className = "jdn-tooltip jdn-tooltip-hidden";
       document.body.appendChild(tooltip);
     };
-    const tooltipDefaultStyle = (rect) => {
-      const { right, top, height, width } = rect;
-      return rect
-        ? {
-            right: `calc(100% - ${right + window.pageXOffset - width / 2}px)`,
-            top: `${top + window.pageYOffset + height}px`,
-          }
-        : {};
+
+    const tooltipDefaultStyle = ({ x, y }) => {
+      const maxTooltipWidth = 400;
+      const minTooltipHeight = 120;
+      const xTooltipOffset = 18;
+      const yTooltipOffset = 9;
+
+      const clientWidth = document.body.clientWidth;
+      const innerHeight = window.innerHeight;
+      let right, left, top, bottom;
+      let classNames = ["jdn-tooltip"];
+      if (x + window.pageXOffset + (maxTooltipWidth - xTooltipOffset) > clientWidth) {
+        right = `${clientWidth - x - window.pageXOffset - xTooltipOffset}px`;
+        left = "unset";
+        classNames.push("jdn-tooltip-right");
+      } else {
+        left = `${x + window.pageXOffset - xTooltipOffset}px`;
+        right = "unset";
+      }
+      if (y + minTooltipHeight > window.innerHeight) {
+        bottom = `${innerHeight - y - window.pageYOffset + yTooltipOffset}px`;
+        top = "unset";
+        classNames.push("jdn-tooltip-top");
+      } else {
+        top = `${y + window.pageYOffset + yTooltipOffset}px`;
+        bottom = "unset";
+      }
+      return {
+        style: { top, left, right, bottom },
+        classNames,
+      };
     };
+
     const tooltipInnerHTML = () => {
       const el = predictedElements.find((e) => e.element_id === element_id);
       return `
       <div class="jdn-tooltip-paragraph"><b>Name:</b> ${el.name}</div>
-      <div class="jdn-tooltip-paragraph"><b>Type:</b> ${el.type}</div>`;
+      <div class="jdn-tooltip-paragraph"><b>Type:</b> ${el.type}</div>
+      <div class="jdn-tooltip-paragraph"><b>xPath:</b> ${el.locator.xPath}</div>
+      <div class="jdn-tooltip-paragraph"><b>CSS selector:</b> ${el.locator.cssSelector}</div>`;
     };
 
-    const checkTooltipVisibility = (tooltip, label) => {
-      const { left: tooltipLeft, right: tooltipRight, width: tooltipWidth } = tooltip.getBoundingClientRect();
-      const { top: labelTop, height: labelHeight } = label.getBoundingClientRect();
-      if (tooltipLeft < 0) {
-        tooltip.style.right = `calc(100% - ${tooltipRight}px - ${tooltipWidth}px - ${window.pageXOffset}px)`;
-        tooltip.classList.add("jdn-tooltip-right");
-      }
-
-      const { bottom: bodyBottom } = document.body.getBoundingClientRect();
-      const { bottom: tooltipBottom } = tooltip.getBoundingClientRect();
-      if (bodyBottom < tooltipBottom) {
-        const { height: tooltipHeight } = tooltip.getBoundingClientRect();
-        const cornerHeight = 13;
-        tooltip.style.top = `${labelTop + window.pageYOffset - tooltipHeight - cornerHeight - labelHeight}px`;
-        tooltip.classList.add("jdn-tooltip-top");
-      }
+    const showTooltip = (event) => {
+      const { x, y } = event;
+      const { style, classNames } = tooltipDefaultStyle({ x, y });
+      Object.assign(tooltip.style, style);
+      tooltip.innerHTML = tooltipInnerHTML();
+      tooltip.className = classNames.join(" ");
     };
 
     const div = document.createElement("div");
@@ -196,20 +218,24 @@ export const highlightOnPage = () => {
     div.className = getClassName(predictedElement);
     div.setAttribute("jdn-highlight", true);
     div.setAttribute("jdn-status", predictedElement.locator.taskStatus);
+    div.addEventListener("mouseover", () => {
+      tooltipTimer = setTimeout(() => {
+        showTooltip(coordinates);
+      }, 2000);
+    });
+    div.addEventListener("mouseout", () => {
+      clearTimeout(tooltipTimer);
+      tooltip.className = "jdn-tooltip jdn-tooltip-hidden";
+    });
 
     const label = document.createElement("span");
     label.className = "jdn-label";
     label.innerHTML = `<span class="jdn-class">${predictedElement.name}</span>`;
 
     addTooltip();
-    label.addEventListener("mouseover", () => {
-      Object.assign(tooltip.style, tooltipDefaultStyle(label.getBoundingClientRect()));
-      tooltip.innerHTML = tooltipInnerHTML();
-      tooltip.classList.remove("jdn-tooltip-hidden");
-      checkTooltipVisibility(tooltip, label);
-    });
-    label.addEventListener("mouseout", () => {
-      tooltip.className = "jdn-tooltip jdn-tooltip-hidden";
+    label.addEventListener("click", (event) => {
+      event.stopPropagation();
+      showTooltip(event);
     });
 
     Object.assign(div.style, getDivPosition(elementRect));
@@ -229,16 +255,6 @@ export const highlightOnPage = () => {
   };
 
   const findByHash = (jdnHash) => document.querySelector(`[jdn-hash='${jdnHash}']`);
-  const findByXpath = (xPath, element_id) => {
-    const result = document.evaluate(xPath, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
-    if (result.snapshotLength === 1) return result.snapshotItem(0);
-    else throw new Error("invalid locator", { evaluationResult: result.snapshotLength, element_id });
-  };
-  const findBySelector = (selector, element_id) => {
-    const result = document.querySelectorAll(selector);
-    if (result.length === 1) return result[0];
-    else throw new Error("invalid locator", { evaluationResult: result.snapshotLength, element_id });
-  };
 
   const findAndHighlight = (param) => {
     if (param) {
@@ -247,23 +263,10 @@ export const highlightOnPage = () => {
     if (param?.filter) classFilter = param.filter;
 
     nodes = [];
-    predictedElements.forEach(({ deleted, type, jdnHash, locatorType, locator, element_id }) => {
+    predictedElements.forEach(({ deleted, type, jdnHash }) => {
       if (deleted || isFilteredOut(type)) return;
       let node = findByHash(jdnHash);
-      if (!node) {
-        try {
-          node =
-            locatorType === "CSS selector"
-              ? findBySelector(locator.output, element_id)
-              : findByXpath(locator.output, element_id);
-          node.setAttribute("jdn-hash", jdnHash);
-          nodes.push(node);
-        } catch (error) {
-          if (error.message === "invalid locator") {
-            sendMessage({ message: "INVALID_LOCATOR", param: { element_id, numberOfNodes: error.options } });
-          }
-        }
-      } else nodes.push(node);
+      nodes.push(node);
     });
 
     nodes.forEach((element) => {
@@ -314,6 +317,11 @@ export const highlightOnPage = () => {
     }
   };
 
+  const onMouseMove = (event) => {
+    const { x, y } = event;
+    coordinates = { x, y };
+  };
+
   const events = ["scroll", "resize"];
   const removeEventListeners = () => {
     events.forEach((eventName) => {
@@ -321,6 +329,8 @@ export const highlightOnPage = () => {
     });
 
     document.removeEventListener("dblclick", onElementDblClick);
+    document.removeEventListener("click", onDocumentClick);
+    document.removeEventListener("mousemove", onMouseMove);
 
     listenersAreSet = false;
   };
@@ -347,12 +357,23 @@ export const highlightOnPage = () => {
     }
   };
 
+  const onDocumentClick = (event) => {
+    const highlightTarget = event.target.closest(".jdn-label");
+    if (!highlightTarget) {
+      const tooltip = document.querySelector(".jdn-tooltip");
+      if (tooltip) tooltip.className = "jdn-tooltip jdn-tooltip-hidden";
+      return;
+    }
+  };
+
   const setDocumentListeners = () => {
     events.forEach((eventName) => {
       document.addEventListener(eventName, scrollListenerCallback, true);
     });
 
     document.addEventListener("dblclick", onElementDblClick);
+    document.addEventListener("click", onDocumentClick);
+    document.addEventListener("mousemove", onMouseMove);
 
     listenersAreSet = true;
   };
@@ -401,62 +422,50 @@ export const highlightOnPage = () => {
   };
 
   const messageHandler = ({ message, param }, sender, sendResponse) => {
-    if (message === "SET_HIGHLIGHT") {
-      if (!listenersAreSet) setDocumentListeners();
-      if (!scrollableContainers.length) detectScrollableContainers();
-      findAndHighlight(param);
-    }
-
-    if (message === "KILL_HIGHLIGHT") {
-      removeHighlight(sendResponse)();
-    }
-
-    if (message === "HIGHLIGHT_TOGGLED") {
-      toggleElement(param);
-    }
-
-    if (message === "TOGGLE_DELETED") {
-      toggleDeletedElement(param);
-    }
-
-    if (message === "ADD_ELEMENT") {
-      addHighlightElement(param);
-    }
-
-    if (message === "REMOVE_ELEMENT") {
-      removeElement(param);
-    }
-
-    if (message === "CHANGE_ELEMENT_TYPE") {
-      updateElement(param);
-    }
-
-    if (message === "CHANGE_ELEMENT_NAME") {
-      changeElementName(param);
-    }
-
-    if (message === "CHANGE_STATUS") {
-      changeGenerationStatus(param);
-    }
-
-    if (message === "TOGGLE_FILTER") {
-      applyFilter(param);
-    }
-
-    if (message === "SET_ACTIVE") {
-      setActiveElement(param, true);
-    }
-
-    if (message === "UNSET_ACTIVE") {
-      updateElement(param);
-    }
-
-    if (message === "TOGGLE_ACTIVE_GROUP") {
-      toggleActiveGroup(param);
-    }
-
-    if (message === "PING_SCRIPT" && param.scriptName === "highlightOnPage") {
-      sendResponse({ message: true });
+    switch (message) {
+      case "SET_HIGHLIGHT":
+        if (!listenersAreSet) setDocumentListeners();
+        if (!scrollableContainers.length) detectScrollableContainers();
+        findAndHighlight(param);
+        break;
+      case "KILL_HIGHLIGHT":
+        removeHighlight(sendResponse)();
+        break;
+      case "HIGHLIGHT_TOGGLED":
+        toggleElement(param);
+        break;
+      case "TOGGLE_DELETED":
+        toggleDeletedElement(param);
+        break;
+      case "ADD_ELEMENT":
+        addHighlightElement(param);
+        break;
+      case "REMOVE_ELEMENT":
+        removeElement(param);
+        break;
+      case "CHANGE_ELEMENT_TYPE":
+        updateElement(param);
+        break;
+      case "CHANGE_ELEMENT_NAME":
+        changeElementName(param);
+        break;
+      case "CHANGE_STATUS":
+        changeGenerationStatus(param);
+        break;
+      case "TOGGLE_FILTER":
+        applyFilter(param);
+        break;
+      case "SET_ACTIVE":
+        setActiveElement(param, true);
+        break;
+      case "UNSET_ACTIVE":
+        updateElement(param);
+        break;
+      case "TOGGLE_ACTIVE_GROUP":
+        toggleActiveGroup(param);
+        break;
+      default:
+        break;
     }
   };
 

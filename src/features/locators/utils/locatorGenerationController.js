@@ -1,4 +1,4 @@
-import { connector } from "../../../pageServices/connector";
+import connector from "../../../pageServices/connector";
 import { WebSocketMessage } from "../../../services/backend";
 import { locatorProgressStatus, locatorTaskStatus } from "../../../common/constants/constants";
 import { webSocketController } from "../../../services/webSocketController";
@@ -28,6 +28,7 @@ class LocatorGenerationController {
     this.onGenerationFailed = null;
     this.pingInterval = null;
     this.pingTimeout = null;
+    this.sessionId = null;
 
     this.setMessageHandler();
   }
@@ -40,10 +41,8 @@ class LocatorGenerationController {
     return;
   }
 
-  getSessionId() {
-    return chrome.storage.sync.get("JDN_SESSION_ID").then((res) => {
-      return res.JDN_SESSION_ID;
-    });
+  setSessionId(sessionId) {
+    this.sessionId = sessionId;
   }
 
   setMessageHandler() {
@@ -60,7 +59,7 @@ class LocatorGenerationController {
           this.onStatusChange(
             this.scheduledTasks.get(payload.id),
             {
-              robulaXpath: payload.result,
+              xPath: payload.result,
               taskStatus: locatorTaskStatus.SUCCESS,
             },
             payload.id
@@ -98,8 +97,6 @@ class LocatorGenerationController {
       }
     });
 
-    const sessionId = await this.getSessionId();
-
     return webSocketController
       .sendSocket(
         JSON.stringify({
@@ -110,7 +107,7 @@ class LocatorGenerationController {
             config: this.queueSettings,
           },
           logging_info: {
-            session_id: sessionId,
+            session_id: this.sessionId,
             page_object_creation: pageObject.name,
             element_library: pageObject.library,
             website_url: pageObject.url,

@@ -42,8 +42,10 @@ export const identifyElementsReducer = (builder: ActionReducerMapBuilder<Locator
     .addCase(identifyElements.pending, (state) => {
       state.status = IdentificationStatus.loading;
     })
-    .addCase(identifyElements.fulfilled, (state) => {
-      state.status = IdentificationStatus.success;
+    .addCase(identifyElements.fulfilled, (state, { payload }) => {
+      // @ts-ignore
+      if (payload.length) state.status = IdentificationStatus.preparing;
+      else state.status = IdentificationStatus.noElements;
     })
     .addCase(identifyElements.rejected, (state) => {
       state.status = IdentificationStatus.error;

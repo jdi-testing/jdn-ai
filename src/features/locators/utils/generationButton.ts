@@ -1,4 +1,4 @@
-import { connector, sendMessage } from "../../../pageServices/connector";
+import connector, { sendMessage } from "../../../pageServices/connector";
 import { findBySelectors } from "../../../pageServices/contentScripts/findBySelectors";
 import { getLibrarySelectors } from "../../../services/rules/createSelector";
 import { VueRules } from "../../../services/rules/Vue.rules";

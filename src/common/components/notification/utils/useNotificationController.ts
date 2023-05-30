@@ -22,10 +22,11 @@ export const useNotificationController = (
 
     if (!lastNotification) return;
 
-    const { action, prevValue } = lastNotification;
+    const { action, prevValue, message } = lastNotification;
 
     switch (action?.type) {
       case "locators/changeLocatorAttributes":
+      case "locators/changeLocatorElement/fulfilled":
         openNotification(messages().EDITED, "success", locatorUndo({ type: action?.type, payload: prevValue }));
         break;
       case "locators/rerunGeneration/fulfilled":
@@ -73,8 +74,14 @@ export const useNotificationController = (
       case "downloadFile":
         openNotification(messages().DOWNLOAD_FILE, "info");
         break;
+      case "downloadJSFile":
+        openNotification(messages().DOWNLOAD_JS_FILE, "info");
+        break;
       case "downloadTemplate":
         openNotification(messages().DOWNLOAD_TEMPLATE, "info");
+        break;
+      case "main/defineServer/rejected":
+        message && openNotification(message, "error");
         break;
       default:
         break;

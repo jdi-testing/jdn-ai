@@ -22,8 +22,8 @@ export const newLocatorStub: Locator = {
   jdnHash: "",
   parent_id: "",
   locator: {
-    customXpath: "",
-    fullXpath: "",
+    xPath: "",
+    cssSelector: "",
     taskStatus: LocatorTaskStatus.SUCCESS,
   },
   name: "",
@@ -32,7 +32,6 @@ export const newLocatorStub: Locator = {
   predicted_label: "",
   isCustomName: true,
   isCustomLocator: true,
-  isCreatedByUser: true,
   type: "" as ElementClass,
   generate: true,
 };

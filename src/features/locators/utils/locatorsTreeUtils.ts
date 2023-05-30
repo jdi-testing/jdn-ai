@@ -28,16 +28,16 @@ export const convertToListWithChildren = (_list: Array<Locator>) => {
   return list;
 };
 
-export const includesSearcSubstr = (strings: Array<string | undefined>, searchString: string) => {
+export const includesSearchSubstr = (strings: Array<string | undefined>, searchString: string) => {
   const includesSubstring = strings.filter((string) => {
     return string && string.toLowerCase().includes(searchString.toLowerCase());
   });
   return !!size(includesSubstring);
 };
 
-export const applySearch = (element: Locator, seacrhString: string): SearchState => {
+export const applySearch = (element: Locator, searchString: string): SearchState => {
   const { locator, type, name, elemText } = element;
-  if (includesSearcSubstr([locator.output, type as string, name, ...(elemText ? [elemText] : [])], seacrhString)) {
+  if (includesSearchSubstr([locator.output, type as string, name, ...(elemText ? [elemText] : [])], searchString)) {
     return SearchState.None;
   } else return SearchState.Hidden;
 };
@@ -65,8 +65,8 @@ export const convertListToTree = (_list: Array<Locator>, searchString = "") => {
 
       const getParent = (parent_id: string): LocatorTree => {
         const parent = list[map[parent_id]];
-        if (parent.depth === undefined) parent.depth = (list[map[parent.parent_id]]?.depth || 0) + 1;
-        if (parent.searchState === SearchState.Hidden && parent.parent_id.length) return getParent(parent.parent_id);
+        if (parent?.depth === undefined) parent.depth = (list[map[parent?.parent_id]]?.depth || 0) + 1;
+        if (parent?.searchState === SearchState.Hidden && parent.parent_id.length) return getParent(parent.parent_id);
         else return parent;
       };
 

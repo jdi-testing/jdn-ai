@@ -8,6 +8,7 @@ import {
   elementGroupUnsetActive,
   elementSetActive,
   elementUnsetActive,
+  setJdnHash,
   setScrollToLocator,
   setValidity,
   toggleDeletedGroup,
@@ -15,7 +16,7 @@ import {
   toggleElementGroupGeneration,
 } from "../features/locators/locators.slice";
 import { selectLocatorByJdnHash, selectActiveLocators } from "../features/pageObjects/pageObject.selectors";
-import { connector } from "./connector";
+import connector from "./connector";
 import { showOverlay } from "./pageDataHandlers";
 import { rerunGeneration } from "../features/locators/reducers/rerunGeneration.thunk";
 
@@ -25,7 +26,7 @@ type Response<T> = (payload: T, sender: chrome.runtime.MessageSender, sendRespon
 
 type Actions<P = any> = Record<string, Response<P>>;
 
-export const createListeners = (
+export const updateMessageHandler = (
   dispatch: Dispatch<{ payload?: any; type?: string } | AsyncThunkAction<any, any, any>>,
   state: RootState
 ) => {
@@ -56,7 +57,7 @@ export const createListeners = (
     },
     INVALID_LOCATOR: (payload) => {
       const { element_id, numberOfNodes } = payload;
-      const message = numberOfNodes
+      const message = !numberOfNodes?.length
         ? LocatorValidationWarnings.NotFound
         : (`${numberOfNodes} ${LocatorValidationErrors.MultipleElements}` as Locator["message"]);
       dispatch(setValidity({ element_id, message }));
@@ -68,6 +69,9 @@ export const createListeners = (
     },
     RERUN_GENERATION: (payload) => {
       dispatch(rerunGeneration({ generationData: payload }));
+    },
+    SET_JDN_HASH: (payload) => {
+      dispatch(setJdnHash(payload));
     },
     START_COLLECT_DATA: showOverlay,
     /* eslint-disable */

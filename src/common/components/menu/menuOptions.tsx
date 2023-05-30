@@ -117,7 +117,14 @@ export const download = (onClick: () => void) => ({
   key: "10",
   icon: <DownloadSimple size={14} />,
   onClick,
-  label: "Download",
+  label: "Download as .java",
+});
+
+export const downloadPerfTest = (onClick: () => void) => ({
+  key: "11",
+  icon: <DownloadSimple size={14} />,
+  onClick,
+  label: "Download js file",
 });
 
 export const deleteOption = (onClick: () => void) => ({

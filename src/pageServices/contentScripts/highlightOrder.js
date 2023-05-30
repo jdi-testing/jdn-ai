@@ -43,13 +43,6 @@ export function highlightOrder() {
     });
   };
 
-  const messageHandler = ({ message, param }, sender, sendResponse) => {
-    if (message === "PING_SCRIPT" && param.scriptName === "highlightOrder") {
-      sendResponse({ message: true });
-    }
-  };
-
-  chrome.runtime.onMessage.addListener(messageHandler);
   chrome.storage.onChanged.addListener((event) => {
     if (event.hasOwnProperty("JDN_BRING_TO_FRONT")) bringToFront(event.JDN_BRING_TO_FRONT.newValue.predictedElements);
     if (event.hasOwnProperty("JDN_BRING_TO_BACKGROUND")) {

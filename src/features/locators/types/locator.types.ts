@@ -13,9 +13,10 @@ export enum LocatorsGenerationStatus {
 export enum IdentificationStatus {
   noStatus = "",
   loading = "Loading...",
+  preparing = "Preparing locators...",
   success = "Successful!",
-  removed = "Removed",
   error = "An error occurred",
+  noElements = "No elements found",
 }
 
 export type LocatorProgressStatus = LocatorTaskStatus.PENDING | LocatorTaskStatus.STARTED;
@@ -51,9 +52,8 @@ export interface LocatorsState {
 export type ElementId = string;
 
 export interface LocatorValue {
-  customXpath?: string;
-  fullXpath: string;
-  robulaXpath?: string;
+  xPath: string;
+  cssSelector: string;
   taskStatus?: LocatorTaskStatus;
   errorMessage?: string; // comes during the locator generation
   output?: string;
@@ -89,13 +89,12 @@ export interface Locator extends PredictedEntity {
   active?: boolean;
   isCustomName?: boolean;
   isCustomLocator?: boolean;
-  isCreatedByUser?: boolean; // we need it to locator icon conditional render
   locatorType?: LocatorType;
+  message: LocatorValidationErrorType;
   pageObj: PageObjectId;
   parent_id: JDNHash;
   priority?: LocatorCalculationPriority;
   type: ElementClass;
-  message: LocatorValidationErrorType;
 }
 
 export interface PredictedEntity {

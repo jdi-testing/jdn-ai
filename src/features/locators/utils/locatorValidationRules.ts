@@ -1,23 +1,40 @@
 import { Rule, RuleObject } from "antd/lib/form";
-import { validateXpath } from "./locatorValidation";
-import { Locator, LocatorValidationErrorType } from "../types/locator.types";
+import { validateLocator } from "./locatorValidation";
+import { ElementId, Locator, LocatorValidationErrorType, LocatorValidationWarnings } from "../types/locator.types";
+import { LocatorType } from "../../../common/types/common";
 
 export const createLocatorValidationRules = (
   isCreatingForm: boolean,
+  locatorType: LocatorType,
   setValidationMessage: React.Dispatch<React.SetStateAction<LocatorValidationErrorType>>,
   locators: Locator[],
-  jdnHash: string
+  jdnHash: string,
+  element_id: ElementId
 ): Rule[] => {
   return [
-    () => ({
-      validator(_: RuleObject, value: string) {
-        return validateXpath(value, jdnHash, locators, isCreatingForm)
-          .then((result) => setValidationMessage(result as LocatorValidationErrorType))
-          .catch((err) => {
-            setValidationMessage(err.message);
-            return Promise.reject(err);
-          });
+    {
+      validator: async (_: RuleObject, locatorValue: string) => {
+        if (!locatorValue.length) {
+          setValidationMessage(LocatorValidationWarnings.EmptyValue); // validationStatus: WARNING
+          return Promise.resolve();
+        }
+
+        try {
+          const validationMessage = await validateLocator(
+            locatorValue,
+            locatorType,
+            jdnHash,
+            locators,
+            element_id,
+            isCreatingForm
+          );
+          setValidationMessage(validationMessage as LocatorValidationErrorType);
+          return Promise.resolve();
+        } catch (err) {
+          setValidationMessage(err.message as LocatorValidationErrorType);
+          return Promise.reject(err);
+        }
       },
-    }),
+    },
   ];
 };

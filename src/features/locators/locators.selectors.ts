@@ -1,5 +1,4 @@
 import { createDraftSafeSelector, createEntityAdapter, createSelector, EntityState } from "@reduxjs/toolkit";
-
 import { RootState } from "../../app/store/store";
 import { PageObjectId } from "../pageObjects/types/pageObjectSlice.types";
 import { ElementId, Locator } from "./types/locator.types";
@@ -11,20 +10,29 @@ export const locatorsAdapter = createEntityAdapter<Locator>({
 
 const { selectAll, selectById } = locatorsAdapter.getSelectors<RootState>((state) => state.locators.present);
 
-export const selectLocatorById = createSelector(selectById, (_item?: Locator) =>
-  _item
-    ? {
-        ..._item,
-        locator: { ..._item.locator, output: getLocator(_item.locator, _item.locatorType) },
-      }
-    : undefined
-);
+export const selectLocatorById = createSelector(selectById, (_item?: Locator) => {
+  if (_item) {
+    return {
+      ..._item,
+      locator: {
+        ..._item.locator,
+        output: getLocator(_item.locator, _item.locatorType),
+      },
+    };
+  }
+  return _item;
+});
 
 export const selectLocators = createSelector(selectAll, (items: Locator[]) =>
-  items.map((_item) => ({
-    ..._item,
-    locator: { ..._item.locator, output: getLocator(_item.locator, _item.locatorType) },
-  }))
+  items.map((_item) => {
+    return {
+      ..._item,
+      locator: {
+        ..._item.locator,
+        output: getLocator(_item.locator, _item.locatorType),
+      },
+    };
+  })
 );
 
 export const selectLocatorsToGenerate = createSelector(selectLocators, (items: Locator[]) =>
@@ -61,8 +69,8 @@ export const areChildrenChecked = createSelector(
   selectLocatorById,
   (locators, locator) =>
     locator &&
-    locator.children &&
-    locator.children.every((childId) => locators.some((loc) => loc.element_id === childId && loc.generate))
+    Boolean(locator.children?.length) &&
+    locator.children?.every((childId) => locators.some((loc) => loc.element_id === childId && loc.generate))
 );
 
 /* these selectors are for using inside reducers */

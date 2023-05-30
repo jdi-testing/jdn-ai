@@ -42,18 +42,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
-  const {
-    element_id,
-    type,
-    name,
-    locator,
-    generate,
-    message,
-    deleted,
-    active,
-    isCustomLocator,
-    isCreatedByUser,
-  } = element;
+  const { element_id, type, name, locator, generate, message, deleted, active, isCustomLocator } = element;
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -83,15 +72,11 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
 
   const handleOnChange: React.MouseEventHandler<HTMLDivElement> = (event) => {
     event.stopPropagation();
-    if (!generate) {
-      dispatch(toggleElementGeneration(element_id));
+    dispatch(toggleElementGeneration(element_id));
+    if (allChildrenChecked && size(element.children)) {
+      dispatch(setChildrenGeneration({ locator: element, generate: false }));
     } else {
-      if (allChildrenChecked) {
-        dispatch(toggleElementGeneration(element_id));
-        size(element.children) && dispatch(setChildrenGeneration({ locator: element, generate: false }));
-      } else {
-        dispatch(setChildrenGeneration({ locator: element, generate: true }));
-      }
+      dispatch(setChildrenGeneration({ locator: element, generate: true }));
     }
   };
 
@@ -147,7 +132,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
                   searchState === SearchState.Hidden ? " jdn__xpath_item--disabled" : ""
                 }`}
               >
-                <LocatorIcon {...{ message, locator, deleted, isCustomLocator, isCreatedByUser }} />
+                <LocatorIcon {...{ message, locator, deleted, isCustomLocator }} />
                 {renderColorizedString()}
               </Text>
               {searchState !== SearchState.Hidden ? (

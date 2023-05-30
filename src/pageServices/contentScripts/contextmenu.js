@@ -464,15 +464,9 @@ export const runContextMenu = () => {
       return [
         {
           text: `<span>Rerun</span>`,
-          icon: `<svg width="14" height="14" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M10.6922 5.68125L3.94687 1.55625C3.89009 1.52122 3.82499 1.50198 3.75829 1.5005C3.69159 1.49903 3.6257
-         1.51537 3.56743 1.54786C3.50915 1.58034 3.4606 1.62778 3.42677 1.68529C3.39294 1.74279 3.37507 1.80828 3.375
-         1.875V10.125C3.37507 10.1917 3.39294 10.2572 3.42677 10.3147C3.4606 10.3722 3.50915 10.4197 3.56743 10.4521C3
-         .6257 10.4846 3.69159 10.501 3.75829 10.4995C3.82499 10.498 3.89009 10.4788 3.94687 10.4437L10.6922 6.31875C10
-         .7476 6.286 10.7935 6.23937 10.8254 6.18348C10.8572 6.12758 10.874 6.06435 10.874 6C10.874 5.93565 10.8572
-         5.87241 10.8254 5.81652C10.7935 5.76062 10.7476 5.714 10.6922 5.68125V5.68125Z" stroke="#5A5A5A" stroke-
-         linecap="round" stroke-linejoin="round"/>
-        </svg>`,
+          icon: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10.6922 5.68084L3.94687 1.55584C3.89009 1.52081 3.82499 1.50157 3.75829 1.50009C3.69159 1.49862 3.6257 1.51496 3.56743 1.54744C3.50915 1.57993 3.4606 1.62737 3.42677 1.68487C3.39294 1.74238 3.37507 1.80787 3.375 1.87459V10.1246C3.37507 10.1913 3.39294 10.2568 3.42677 10.3143C3.4606 10.3718 3.50915 10.4192 3.56743 10.4517C3.6257 10.4842 3.69159 10.5006 3.75829 10.4991C3.82499 10.4976 3.89009 10.4784 3.94687 10.4433L10.6922 6.31834C10.7476 6.28558 10.7935 6.23896 10.8254 6.18307C10.8572 6.12717 10.874 6.06394 10.874 5.99959C10.874 5.93524 10.8572 5.872 10.8254 5.81611C10.7935 5.76021 10.7476 5.71359 10.6922 5.68084V5.68084Z" stroke="#5A5A5A" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>`,
           events: {
             click: () =>
               sendMessage({
@@ -546,12 +540,13 @@ export const runContextMenu = () => {
     document.oncontextmenu = contextMenuListener;
   };
 
-  const messageHandler = ({ message, param }, sender, sendResponse) => {
-    if (message === "PING_SCRIPT" && param.scriptName === "runContextMenu") {
-      sendResponse({ message: true });
-    }
-  };
-
   runDocumentListeners();
-  chrome.runtime.onMessage.addListener(messageHandler);
+
+  chrome.runtime.onMessage.addListener(({ message }) => {
+    switch (message) {
+      case "KILL_HIGHLIGHT":
+        elementMenu && elementMenu.hide();
+        break;
+    }
+  });
 };

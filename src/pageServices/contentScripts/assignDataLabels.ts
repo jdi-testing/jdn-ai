@@ -8,17 +8,13 @@ export const assignDataLabels = () => {
     });
   };
 
-  const messageHandler = (
-    { message, param }: { message: any; param: any },
-    _: chrome.runtime.MessageSender,
-    sendResponse: (response: any) => void
-  ) => {
-    if (message === "ASSIGN_DATA_LABEL") {
-      assignDataLabel(param);
-    }
-
-    if (message === "PING_SCRIPT" && param.scriptName === "assignDataLabels") {
-      sendResponse({ message: true });
+  const messageHandler = ({ message, param }: { message: any; param: any }) => {
+    switch (message) {
+      case "ASSIGN_DATA_LABEL":
+        assignDataLabel(param);
+        break;
+      default:
+        break;
     }
   };
 

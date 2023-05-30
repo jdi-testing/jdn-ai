@@ -25,11 +25,17 @@ import { LocatorListHeader } from "./components/LocatorListHeader";
 import { Filter } from "../filter/Filter";
 import { useCalculateHeaderSize } from "./utils/useCalculateHeaderSize";
 import { useOverlay } from "./utils/useOverlay";
+import { RootState } from "../../app/store/store";
+import { IdentificationStatus } from "./types/locator.types";
+import { LocatorTreeSpinner } from "./components/LocatorTreeSpinner";
 
 const { confirm } = Modal;
 
 export const LocatorsPage = () => {
   const dispatch = useDispatch();
+  const showSpinner = useSelector(
+    (state: RootState) => state.locators.present.status === IdentificationStatus.preparing
+  );
   const currentPage = useSelector(selectCurrentPage).page;
   const locators = useSelector(selectFilteredLocators);
   const locatorIds = useSelector(getLocatorsIdsByPO);
@@ -148,7 +154,11 @@ export const LocatorsPage = () => {
         <LocatorListHeader
           render={(viewProps: LocatorTreeProps["viewProps"]) => (
             <div className="jdn__locatorsList-content" style={{ height: containerHeight }}>
-              {size(locators) ? <LocatorsTree {...{ viewProps, locatorIds }} /> : null}
+              {size(locators) ? (
+                <LocatorsTree {...{ viewProps, locatorIds }} />
+              ) : showSpinner ? (
+                <LocatorTreeSpinner />
+              ) : null}
             </div>
           )}
         />
