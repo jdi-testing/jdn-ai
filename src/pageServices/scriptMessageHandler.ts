@@ -79,7 +79,7 @@ export const updateMessageHandler = (
     STOP_GROUP_GENERATION: (payload) => dispatch(stopGenerationGroup(payload)),
     TOGGLE_ELEMENT: (payload) => {
       dispatch(toggleElementGeneration(payload[0]));
-      dispatch(setScrollToLocator(payload));
+      dispatch(setScrollToLocator(payload[0].element_id));
     },
     TOGGLE_ELEMENT_GROUP: (payload) => {
       dispatch(toggleElementGroupGeneration(payload));
