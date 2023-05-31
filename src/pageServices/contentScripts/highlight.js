@@ -342,19 +342,11 @@ export const highlightOnPage = () => {
   const onElementDblClick = (evt) => {
     const locatorId = evt.target.id || evt.target.offsetParent.id;
     const element = predictedElements?.find((elem) => elem.jdnHash === locatorId);
-    const isElementAddedToPO = element.generate;
 
     sendMessage({
-      message: "ELEMENT_UNSET_ACTIVE",
-      param: element.jdnHash,
+      message: "TOGGLE_ELEMENT",
+      param: [element],
     });
-
-    if (!isElementAddedToPO) {
-      sendMessage({
-        message: "TOGGLE_ELEMENT",
-        param: [element],
-      });
-    }
   };
 
   const onDocumentClick = (event) => {
