@@ -12,6 +12,8 @@ import {
   TextT,
   Trash,
   CopySimple,
+  MinusCircle,
+  PlusCircle,
 } from "phosphor-react";
 import React from "react";
 import { MenuItem } from "./Menu";
@@ -136,12 +138,14 @@ export const deleteOption = (onClick: () => void) => ({
 
 export const addToPO = (onClick: () => void) => ({
   key: "16",
+  icon: < PlusCircle size={14} />,
   onClick,
   label: <Typography.Text>Add to Page Object</Typography.Text>,
 });
 
 export const removeFromPO = (onClick: () => void) => ({
   key: "17",
+  icon: < MinusCircle />,
   onClick,
   label: <Typography.Text>Remove from Page Object</Typography.Text>,
 });
