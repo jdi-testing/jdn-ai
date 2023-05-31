@@ -46,6 +46,7 @@
   "dependencies": {
     "@ant-design/icons": "4.7.0",
     "@medv/finder": "^3.1.0",
+    "@phosphor-icons/web": "^2.0.3",
     "@react-hook/resize-observer": "^1.2.6",
     "@reduxjs/toolkit": "1.7.2",
     "@sindresorhus/transliterate": "1.6.0",
