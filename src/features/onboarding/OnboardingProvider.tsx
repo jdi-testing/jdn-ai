@@ -2,8 +2,8 @@ import React, { FC, MutableRefObject, ReactNode, createContext, useState } from 
 import { OnbrdControl } from "./types/constants";
 import { Onboarding } from "./Onboarding";
 import { OnboardingContext as ContextType } from "./types/context.types";
-import { useSelector } from "react-redux";
-import { selectPageObjects } from "../pageObjects/pageObject.selectors";
+// import { useSelector } from "react-redux";
+// import { selectPageObjects } from "../pageObjects/pageObject.selectors";
 
 interface Props {
   children: ReactNode;
