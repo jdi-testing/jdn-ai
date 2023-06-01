@@ -21,6 +21,7 @@ import "./styles/index.less";
 import { BackendStatus } from "./types/mainSlice.types";
 import { LocatorsPage } from "../features/locators/LocatorsPage";
 import { PageObjectPage } from "../features/pageObjects/PageObjectPage";
+import { OnboardingProvider } from "../features/onboarding/OnboardingProvider";
 
 const App = () => {
   const [isInvalidSession, setIsInvalidSession] = useState(false);
@@ -79,6 +80,8 @@ const App = () => {
 
 export const ReduxApp = () => (
   <ReduxProvider {...{ store }}>
-    <App />
+    <OnboardingProvider>
+      <App />
+    </OnboardingProvider>
   </ReduxProvider>
 );

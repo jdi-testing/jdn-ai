@@ -15,6 +15,8 @@ import { removeAll as removeAllFilters } from "../../filter/filter.slice";
 import { RootState } from "../../../app/store/store";
 import { selectLocatorsToGenerate } from "../../locators/locators.selectors";
 import { generateAndDownloadZip } from "../utils/projectTemplate";
+import { useOnBoardingRef } from "../../onboarding/utils/useOnboardingRef";
+import { OnbrdControl } from "../../onboarding/types/constants";
 
 const { confirm } = Modal;
 
@@ -68,6 +70,8 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
     });
   };
 
+  const ref = useOnBoardingRef(OnbrdControl.NewPageObject, handleAddPageObject);
+
   return (
     <Row className="jdn__locatorsList-header" justify="space-between">
       <CaretDown
@@ -97,6 +101,7 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
           </Button>
         ) : null}
         <Button
+          ref={ref}
           type="primary"
           size="small"
           onClick={handleAddPageObject}
