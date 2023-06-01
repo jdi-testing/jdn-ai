@@ -122,7 +122,6 @@ export const getGenerationAttributes = () => {
   };
 
   const mapElements = (elements) => {
-    debugger;
     const generationAttributes = elements
       .map((predictedElement) => {
         const element = document.querySelector(`[jdn-hash='${predictedElement.jdnHash}']`);
