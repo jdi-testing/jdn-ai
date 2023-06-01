@@ -32,7 +32,7 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
   };
 
   // selectors for step change
-  const pageObjectCreated = useSelector(selectPageObjects).length > 0;
+  // const pageObjectCreated = useSelector(selectPageObjects).length > 0;
 
   return (
     <OnboardingContext.Provider value={{ currentStep, isOpen, stepRefs, addRef, openOnboarding, closeOnboarding }}>
