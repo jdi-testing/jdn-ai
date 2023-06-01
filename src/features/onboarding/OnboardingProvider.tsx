@@ -15,7 +15,7 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
   const [stepRefs, setStepRefs] = useState<ContextType["stepRefs"]>({} as ContextType["stepRefs"]);
   const [isOpen, setIsOpen] = useState(false);
   // const [currentStep, setCurrentStep] = useState(0);
-  const [currentStep ] = useState(0);
+  const [currentStep] = useState(0);
 
   const openOnboarding = () => setIsOpen(true);
   const closeOnboarding = () => setIsOpen(false);
