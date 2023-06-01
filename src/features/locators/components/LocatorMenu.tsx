@@ -14,6 +14,7 @@ import {
   retry,
   upPriority,
   copyLocatorOption,
+  dividerItem,
 } from "../../../common/components/menu/menuOptions";
 import { isProgressStatus, locatorGenerationController } from "../utils/locatorGenerationController";
 import {
@@ -139,6 +140,7 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, chil
               ),
             ]
           : []),
+        dividerItem,
         deleteOption(() => dispatch(toggleDeleted(element_id))),
       ];
     }

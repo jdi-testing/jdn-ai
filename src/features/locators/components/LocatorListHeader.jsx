@@ -41,6 +41,7 @@ import {
   upPriority,
   copyLocatorOption,
   retry,
+  dividerItem,
 } from "../../../common/components/menu/menuOptions";
 import { locatorGenerationController } from "../utils/locatorGenerationController";
 import { copyLocator } from "../utils/utils";
@@ -185,6 +186,7 @@ export const LocatorListHeader = ({ render }) => {
           ]
         : []),
       ...(size(failedSelected) ? [retry(() => dispatch(rerunGeneration({ generationData: failedSelected })))] : []),
+      dividerItem,
       ...(size(actualSelected) ? [deleteOption(handleDelete)] : []),
     ];
 
