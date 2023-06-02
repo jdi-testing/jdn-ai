@@ -82,9 +82,7 @@ export const getGenerationAttributes = () => {
       const finderForbiddenAttributes = ["jdn-hash", "href", "class", "xmlns", "xmlns:xlink", "xlink:href"];
       const selectorByFinder = await finder(element, {
         attr: (name, value) => {
-          console.log(name);
-          console.log(value);
-          return value && !value.includes(".") && !finderForbiddenAttributes.includes(name);
+          return value && !finderForbiddenAttributes.includes(name);
         },
       });
       return selectorByGenerator.length < selectorByFinder.length ? selectorByGenerator : selectorByFinder;
