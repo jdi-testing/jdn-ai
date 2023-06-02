@@ -66,7 +66,7 @@ export const getGenerationAttributes = () => {
             */
   };
 
-  const generateSelectorByElement = async (element) => {
+  const generateSelectorByElement = (element) => {
     const generatorOptions = {
       blacklist: [/jdn-hash/, /href/],
     };
@@ -80,7 +80,7 @@ export const getGenerationAttributes = () => {
     // Reproduced on https://www.docker.com
     try {
       const finderForbiddenAttributes = ["jdn-hash", "href", "class", "xmlns", "xmlns:xlink", "xlink:href"];
-      const selectorByFinder = await finder(element, {
+      const selectorByFinder = finder(element, {
         attr: (name, value) => value && !finderForbiddenAttributes.includes(name),
       });
       return selectorByGenerator.length < selectorByFinder.length ? selectorByGenerator : selectorByFinder;
