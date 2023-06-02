@@ -23,13 +23,16 @@ export const GenerationButton: React.FC<Props> = ({ pageObj, library }) => {
   const status = useSelector((state: RootState) => state.locators.present.status);
   const currentPageObject = useSelector(selectCurrentPageObject);
 
-  const ref = useOnBoardingRef(OnbrdControl.POsettings);
+  const handleGenerate = () => dispatch(identifyElements({ library, pageObj }))
+
+  const refSettings = useOnBoardingRef(OnbrdControl.POsettings);
+  const refGenerate = useOnBoardingRef(OnbrdControl.Generate, handleGenerate);
 
   const dispatch = useDispatch();
 
   return (
     <div className="jdn__generationButtons">
-      <div ref={ref}>
+      <div ref={refSettings}>
         <Space direction="vertical" size={16}>
           <Row>
             <Col flex="104px">
@@ -84,10 +87,11 @@ export const GenerationButton: React.FC<Props> = ({ pageObj, library }) => {
         </Space>
       </div>
       <Button
+        ref={refGenerate}
         icon={<SearchOutlined />}
         type="primary"
         loading={status === IdentificationStatus.loading && currentPageObject?.id === pageObj}
-        onClick={() => dispatch(identifyElements({ library, pageObj }))}
+        onClick={handleGenerate}
         className="jdn__buttons jdn__generationButtons_generate"
       >
         Generate

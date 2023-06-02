@@ -1,15 +1,25 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Tour } from "antd5";
-import { getTourSteps } from "./utils/tourSteps";
+import { getPOPageSteps } from "./utils/tourSteps";
 import { OnboardingContext } from "./OnboardingProvider";
 
 export const Onboarding = () => {
-  const { isOpen, stepRefs, closeOnboarding } = useContext(OnboardingContext);
+  const { defaultStep, isOpen, stepRefs, closeOnboarding } = useContext(OnboardingContext);
+  const [currentStep, setCurrentStep] = React.useState<number | undefined>();
 
-  const tourSteps = getTourSteps(stepRefs);
+  const tourSteps = getPOPageSteps(stepRefs);
 
-  console.log(tourSteps);
-  console.log(stepRefs);
+  const handleOnChange = (current: number) => {
+    setCurrentStep(current);
+  };
 
-  return <Tour open={isOpen} steps={tourSteps} onClose={() => closeOnboarding()} />;
+  useEffect(() => {
+    if (defaultStep !== undefined) {
+      setCurrentStep(defaultStep);
+    } else if (defaultStep && defaultStep > tourSteps!.length) {
+      closeOnboarding();
+    }
+  }, [defaultStep]);
+
+  return <Tour open={isOpen} steps={tourSteps} current={currentStep} onClose={() => closeOnboarding()} onChange={handleOnChange} />;
 };

@@ -2,7 +2,7 @@ import { MutableRefObject } from "react";
 import { OnbrdControl } from "./constants";
 
 export interface OnboardingContext {
-  currentStep: number;
+  defaultStep?: number;
   isOpen: boolean;
   stepRefs: Record<OnbrdControl, StepRef>;
   addRef: (name: OnbrdControl, ref: MutableRefObject<any>, onClickNext?: (...args: any) => void) => void;
