@@ -49,6 +49,8 @@ import { LocatorsSearch } from "./LocatorsSearch";
 import { rerunGeneration } from "../reducers/rerunGeneration.thunk";
 import { stopGenerationGroup } from "../reducers/stopGenerationGroup.thunk";
 import { LocatorEditDialog } from "./LocatorEditDialog";
+import { useOnBoardingRef } from "../../onboarding/utils/useOnboardingRef";
+import { OnbrdStepName } from "../../onboarding/types/constants";
 
 export const EXPAND_STATE = {
   EXPANDED: "Expanded",
@@ -193,11 +195,13 @@ export const LocatorListHeader = ({ render }) => {
 
   const menu = useMemo(() => renderMenu(), [active]);
 
+  const ref = useOnBoardingRef(OnbrdStepName.CustomLocator);
+
   return (
     <React.Fragment>
       <Row justify="space-between" align="bottom">
         <LocatorsSearch value={searchString} onChange={setSearchString} />
-        <Button icon={<PlusOutlined size={14} />} size="small" onClick={setCreateModalOpen}>
+        <Button ref={ref} icon={<PlusOutlined size={14} />} size="small" onClick={setCreateModalOpen}>
           Custom locator
         </Button>
       </Row>

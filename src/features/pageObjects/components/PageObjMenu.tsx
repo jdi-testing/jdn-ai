@@ -20,6 +20,8 @@ import { ElementLibrary } from "../../locators/types/generationClasses.types";
 import { generatePageObject, generatePageObjectPerfTest } from "../../pageObjects/utils/pageObject";
 import { RenamePageObjectDialog } from "./RenamePageObjDialog";
 import { checkLocatorsValidity } from "../../locators/reducers/checkLocatorValidity.thunk";
+import { useOnBoardingRef } from "../../onboarding/utils/useOnboardingRef";
+import { OnbrdStepName } from "../../onboarding/types/constants";
 
 interface Props {
   id: PageObjectId;
@@ -77,6 +79,8 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, url, locators, elements
     return { ...{ items } };
   };
 
+  const menuRef = useOnBoardingRef(OnbrdStepName.EditPO);
+
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <Dropdown
@@ -87,6 +91,7 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, url, locators, elements
         destroyPopupOnHide
       >
         <Button
+          ref={menuRef}
           className="jdn__locatorsList_button jdn__pageObject_button-menu"
           data-testid="dropdown-button"
           icon={<DotsThree size={18} />}

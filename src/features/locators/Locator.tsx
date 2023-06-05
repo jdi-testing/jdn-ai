@@ -26,6 +26,8 @@ import { LocatorIcon } from "./components/LocatorIcon";
 import { LocatorMenu } from "./components/LocatorMenu";
 import { setIndents } from "./utils/utils";
 import { setScriptMessage } from "../../app/main.slice";
+import { useOnBoardingRef } from "../onboarding/utils/useOnboardingRef";
+import { OnbrdStepName } from "../onboarding/types/constants";
 
 interface Props {
   element: LocatorInterface;
@@ -45,6 +47,8 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
   const { element_id, type, name, locator, generate, message, deleted, active, isCustomLocator } = element;
 
   const ref = useRef<HTMLDivElement>(null);
+  const menuRef = useOnBoardingRef(OnbrdStepName.ContextMenu);
+  const addToPORef = useOnBoardingRef(OnbrdStepName.AddToPO);
 
   const indeterminate = useSelector((state: RootState) => isLocatorIndeterminate(state, element_id));
   const allChildrenChecked = useSelector((state: RootState) => areChildrenChecked(state, element_id));
@@ -119,7 +123,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
         {currentPage === pageType.locatorsList ? (
           <LocatorMenu {...{ element, setIsEditModalOpen, trigger: ["contextMenu"] }}>
             <div className="jdn__xpath_locators">
-              <div onContextMenu={(e) => e.stopPropagation()} className="jdn__xpath_checkbox_wrapper">
+              <div ref={addToPORef} onContextMenu={(e) => e.stopPropagation()} className="jdn__xpath_checkbox_wrapper">
                 <Checkbox
                   checked={generate}
                   indeterminate={indeterminate}
@@ -140,6 +144,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
                   <LocatorCopyButton {...{ element }} />
                   <LocatorMenu {...{ element, setIsEditModalOpen, trigger: ["click", "contextMenu"] }}>
                     <Button
+                      ref={menuRef}
                       className="jdn__locatorsList_button jdn__locatorsList_button-menu"
                       icon={<DotsThree size={18} onClick={(e) => e.preventDefault()} />}
                     />

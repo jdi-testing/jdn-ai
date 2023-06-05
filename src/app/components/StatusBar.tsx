@@ -12,6 +12,8 @@ import { readmeLinkAddress } from "../../common/constants/constants";
 import { ReportProblem } from "./ReportProblem";
 import { LocatorsGenerationStatus } from "../../features/locators/types/locator.types";
 import { OnboardingContext } from "../../features/onboarding/OnboardingProvider";
+import { useOnBoardingRef } from "../../features/onboarding/utils/useOnboardingRef";
+import { OnbrdStepName } from "../../features/onboarding/types/constants";
 
 export const StatusBar = () => {
   const backendVer = useSelector<RootState>((_state) => _state.main.serverVersion);
@@ -54,18 +56,35 @@ export const StatusBar = () => {
     ) : null;
   };
 
+  const onbrdRef = useOnBoardingRef(OnbrdStepName.Onboarding);
+  const readmedRef = useOnBoardingRef(OnbrdStepName.Readme);
+  const connectionRef = useOnBoardingRef(OnbrdStepName.Connection);
+
   return (
     <React.Fragment>
       <div className="jdn__header-version">
         <span>{`JDN v ${pluginVer} ${!isNil(backendVer) ? `Back-end v ${backendVer}` : ""}`}</span>
       </div>
       <Space size={[10, 0]} className="header__space">
-        <Button type="link" icon={<BookOpen size={14} color="#8C8C8C" />} onClick={() => openOnboarding()} />
+        <Button
+          ref={onbrdRef}
+          type="link"
+          icon={<BookOpen size={14} color="#8C8C8C" />}
+          onClick={() => openOnboarding()}
+        />
         <Tooltip title="Readme">
-          <Button type="link" href={readmeLinkAddress} target="_blank" icon={<Info size={14} color="#8C8C8C" />} />
+          <Button
+            ref={readmedRef}
+            type="link"
+            href={readmeLinkAddress}
+            target="_blank"
+            icon={<Info size={14} color="#8C8C8C" />}
+          />
         </Tooltip>
         <ReportProblem />
-        <span className="jdn_header-connection">{renderServerIndicator()}</span>
+        <span ref={connectionRef} className="jdn_header-connection">
+          {renderServerIndicator()}
+        </span>
       </Space>
     </React.Fragment>
   );

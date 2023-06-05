@@ -1,9 +1,33 @@
-export enum OnbrdControl {
+export enum OnbrdStepName {
   NewPageObject = "NewPageObject",
   POsettings = "POsettings",
   Generate = "Generate",
+  Generating = "Generating",
   CustomLocator = "CustomLocator",
   ContextMenu = "ContextMenu",
   AddToPO = "AddToPO",
   SaveLocators = "SaveLocators",
+  DownloadPO = "DownloadPO",
+  EditPO = "EditPO",
+  Onboarding = "Onboarding",
+  Readme = "Readme",
+  Report = "Report",
+  Connection = "Connection",
 }
+
+export const StepNumber: Record<OnbrdStepName, number> = {
+  [OnbrdStepName.NewPageObject]: 0,
+  [OnbrdStepName.POsettings]: 1,
+  [OnbrdStepName.Generate]: 2,
+  [OnbrdStepName.Generating]: 3,
+  [OnbrdStepName.CustomLocator]: 4,
+  [OnbrdStepName.ContextMenu]: 5,
+  [OnbrdStepName.AddToPO]: 6,
+  [OnbrdStepName.SaveLocators]: 7,
+  [OnbrdStepName.DownloadPO]: 8,
+  [OnbrdStepName.EditPO]: 9,
+  [OnbrdStepName.Onboarding]: 10,
+  [OnbrdStepName.Readme]: 11,
+  [OnbrdStepName.Report]: 12,
+  [OnbrdStepName.Connection]: 13,
+};

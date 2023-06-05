@@ -28,6 +28,8 @@ import { useOverlay } from "./utils/useOverlay";
 import { RootState } from "../../app/store/store";
 import { IdentificationStatus } from "./types/locator.types";
 import { LocatorTreeSpinner } from "./components/LocatorTreeSpinner";
+import { useOnBoardingRef } from "../onboarding/utils/useOnboardingRef";
+import { OnbrdStepName } from "../onboarding/types/constants";
 
 const { confirm } = Modal;
 
@@ -121,6 +123,8 @@ export const LocatorsPage = () => {
     );
   };
 
+  const saveLocatorsRef = useOnBoardingRef(OnbrdStepName.SaveLocators, pageBack);
+
   const renderConfirmButton = () => {
     if (currentPage === pageType.locatorsList) {
       const checkedLocators = useSelector(selectCheckedLocators);
@@ -131,7 +135,13 @@ export const LocatorsPage = () => {
             overlayClassName="jdn__button-tooltip"
             title={isDisabled ? "Please select locators for your current page object." : ""}
           >
-            <Button type="primary" onClick={handleConfirm} className="jdn__buttons" disabled={isDisabled}>
+            <Button
+              ref={saveLocatorsRef}
+              type="primary"
+              onClick={handleConfirm}
+              className="jdn__buttons"
+              disabled={isDisabled}
+            >
               {!size(checkedLocators)
                 ? "Save"
                 : size(checkedLocators) > 1

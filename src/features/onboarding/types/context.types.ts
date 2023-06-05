@@ -1,11 +1,12 @@
 import { MutableRefObject } from "react";
-import { OnbrdControl } from "./constants";
+import { OnbrdStepName } from "./constants";
+import { TourProps } from "antd5";
 
 export interface OnboardingContext {
   defaultStep?: number;
   isOpen: boolean;
-  stepRefs: Record<OnbrdControl, StepRef>;
-  addRef: (name: OnbrdControl, ref: MutableRefObject<any>, onClickNext?: (...args: any) => void) => void;
+  tourSteps: TourProps["steps"];
+  addRef: (name: OnbrdStepName, ref: MutableRefObject<any>, onClickNext?: (...args: any) => void) => void;
   openOnboarding: () => void;
   closeOnboarding: () => void;
 }
