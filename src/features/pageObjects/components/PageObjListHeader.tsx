@@ -16,7 +16,7 @@ import { RootState } from "../../../app/store/store";
 import { selectLocatorsToGenerate } from "../../locators/locators.selectors";
 import { generateAndDownloadZip } from "../utils/projectTemplate";
 import { useOnBoardingRef } from "../../onboarding/utils/useOnboardingRef";
-import { OnbrdStepName } from "../../onboarding/types/constants";
+import { OnbrdStep } from "../../onboarding/types/constants";
 
 const { confirm } = Modal;
 
@@ -70,8 +70,8 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
     });
   };
 
-  const newPoRef = useOnBoardingRef(OnbrdStepName.NewPageObject, handleAddPageObject);
-  const downloadRef = useOnBoardingRef(OnbrdStepName.DownloadPO);
+  const newPoRef = useOnBoardingRef(OnbrdStep.NewPageObject, handleAddPageObject);
+  const downloadRef = useOnBoardingRef(OnbrdStep.DownloadPO);
 
   return (
     <Row className="jdn__locatorsList-header" justify="space-between">

@@ -50,7 +50,7 @@ import { rerunGeneration } from "../reducers/rerunGeneration.thunk";
 import { stopGenerationGroup } from "../reducers/stopGenerationGroup.thunk";
 import { LocatorEditDialog } from "./LocatorEditDialog";
 import { useOnBoardingRef } from "../../onboarding/utils/useOnboardingRef";
-import { OnbrdStepName } from "../../onboarding/types/constants";
+import { OnbrdStep } from "../../onboarding/types/constants";
 
 export const EXPAND_STATE = {
   EXPANDED: "Expanded",
@@ -195,7 +195,7 @@ export const LocatorListHeader = ({ render }) => {
 
   const menu = useMemo(() => renderMenu(), [active]);
 
-  const ref = useOnBoardingRef(OnbrdStepName.CustomLocator);
+  const ref = useOnBoardingRef(OnbrdStep.CustomLocator);
 
   return (
     <React.Fragment>

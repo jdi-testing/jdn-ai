@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { Tour } from "antd5";
 import { OnboardingContext } from "./OnboardingProvider";
+import { StepIndicator } from "./components/stepIndicator";
 
 export const Onboarding = () => {
   const { defaultStep, isOpen, tourSteps, closeOnboarding } = useContext(OnboardingContext);
@@ -25,6 +26,7 @@ export const Onboarding = () => {
       current={currentStep}
       onClose={() => closeOnboarding()}
       onChange={handleOnChange}
+      indicatorsRender={(current, total) => <StepIndicator {...{ current, total }} />}
     />
   );
 };

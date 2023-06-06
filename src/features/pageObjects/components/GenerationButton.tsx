@@ -12,7 +12,7 @@ import { ElementLibrary, libraryNames } from "../../locators/types/generationCla
 import { identifyElements } from "../../locators/reducers/identifyElements.thunk";
 import { LocatorType } from "../../../common/types/common";
 import { useOnBoardingRef } from "../../onboarding/utils/useOnboardingRef";
-import { OnbrdStepName } from "../../onboarding/types/constants";
+import { OnbrdStep } from "../../onboarding/types/constants";
 
 interface Props {
   pageObj: PageObjectId;
@@ -25,8 +25,8 @@ export const GenerationButton: React.FC<Props> = ({ pageObj, library }) => {
 
   const handleGenerate = () => dispatch(identifyElements({ library, pageObj }));
 
-  const refSettings = useOnBoardingRef(OnbrdStepName.POsettings);
-  const refGenerate = useOnBoardingRef(OnbrdStepName.Generate, handleGenerate);
+  const refSettings = useOnBoardingRef(OnbrdStep.POsettings);
+  const refGenerate = useOnBoardingRef(OnbrdStep.Generate, handleGenerate);
 
   const dispatch = useDispatch();
 

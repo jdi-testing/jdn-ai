@@ -19,7 +19,7 @@ import {
 } from "../utils/reportProblem";
 import { selectCurrentPageObject } from "../../features/pageObjects/pageObject.selectors";
 import { useOnBoardingRef } from "../../features/onboarding/utils/useOnboardingRef";
-import { OnbrdStepName } from "../../features/onboarding/types/constants";
+import { OnbrdStep } from "../../features/onboarding/types/constants";
 
 const { info } = Modal;
 
@@ -170,7 +170,7 @@ export const ReportProblem = () => {
     }
   };
 
-  const reportRef = useOnBoardingRef(OnbrdStepName.Report);
+  const reportRef = useOnBoardingRef(OnbrdStep.Report);
 
   return (
     <div className="jdn__reportProblem">

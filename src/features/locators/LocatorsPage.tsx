@@ -29,7 +29,7 @@ import { RootState } from "../../app/store/store";
 import { IdentificationStatus } from "./types/locator.types";
 import { LocatorTreeSpinner } from "./components/LocatorTreeSpinner";
 import { useOnBoardingRef } from "../onboarding/utils/useOnboardingRef";
-import { OnbrdStepName } from "../onboarding/types/constants";
+import { OnbrdStep } from "../onboarding/types/constants";
 
 const { confirm } = Modal;
 
@@ -123,7 +123,7 @@ export const LocatorsPage = () => {
     );
   };
 
-  const saveLocatorsRef = useOnBoardingRef(OnbrdStepName.SaveLocators, pageBack);
+  const saveLocatorsRef = useOnBoardingRef(OnbrdStep.SaveLocators, pageBack);
 
   const renderConfirmButton = () => {
     if (currentPage === pageType.locatorsList) {

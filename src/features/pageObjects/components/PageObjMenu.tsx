@@ -21,7 +21,7 @@ import { generatePageObject, generatePageObjectPerfTest } from "../../pageObject
 import { RenamePageObjectDialog } from "./RenamePageObjDialog";
 import { checkLocatorsValidity } from "../../locators/reducers/checkLocatorValidity.thunk";
 import { useOnBoardingRef } from "../../onboarding/utils/useOnboardingRef";
-import { OnbrdStepName } from "../../onboarding/types/constants";
+import { OnbrdStep } from "../../onboarding/types/constants";
 
 interface Props {
   id: PageObjectId;
@@ -79,7 +79,7 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, url, locators, elements
     return { ...{ items } };
   };
 
-  const menuRef = useOnBoardingRef(OnbrdStepName.EditPO);
+  const menuRef = useOnBoardingRef(OnbrdStep.EditPO);
 
   return (
     <div onClick={(e) => e.stopPropagation()}>

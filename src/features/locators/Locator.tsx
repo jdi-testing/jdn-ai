@@ -27,7 +27,7 @@ import { LocatorMenu } from "./components/LocatorMenu";
 import { setIndents } from "./utils/utils";
 import { setScriptMessage } from "../../app/main.slice";
 import { useOnBoardingRef } from "../onboarding/utils/useOnboardingRef";
-import { OnbrdStepName } from "../onboarding/types/constants";
+import { OnbrdStep } from "../onboarding/types/constants";
 
 interface Props {
   element: LocatorInterface;
@@ -47,8 +47,8 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
   const { element_id, type, name, locator, generate, message, deleted, active, isCustomLocator } = element;
 
   const ref = useRef<HTMLDivElement>(null);
-  const menuRef = useOnBoardingRef(OnbrdStepName.ContextMenu);
-  const addToPORef = useOnBoardingRef(OnbrdStepName.AddToPO);
+  const menuRef = useOnBoardingRef(OnbrdStep.ContextMenu);
+  const addToPORef = useOnBoardingRef(OnbrdStep.AddToPO);
 
   const indeterminate = useSelector((state: RootState) => isLocatorIndeterminate(state, element_id));
   const allChildrenChecked = useSelector((state: RootState) => areChildrenChecked(state, element_id));

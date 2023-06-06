@@ -1,5 +1,5 @@
 import React, { FC, MutableRefObject, ReactNode, createContext, useState } from "react";
-import { OnbrdStepName, StepNumber } from "./types/constants";
+import { OnbrdStep } from "./types/constants";
 import { Onboarding } from "./Onboarding";
 import { OnboardingContext as ContextType, StepRef } from "./types/context.types";
 import { useSelector } from "react-redux";
@@ -17,12 +17,12 @@ interface Props {
 export const OnboardingContext = createContext({ isOpen: false } as ContextType);
 
 export const OnboardingProvider: FC<Props> = ({ children }) => {
-  const [stepRefs, setStepRefs] = useState<Record<OnbrdStepName, StepRef>>({} as Record<OnbrdStepName, StepRef>);
+  const [stepRefs, setStepRefs] = useState<Record<OnbrdStep, StepRef>>({} as Record<OnbrdStep, StepRef>);
   const [isOpen, setIsOpen] = useState(false);
 
   const openOnboarding = () => setIsOpen(true);
   const closeOnboarding = () => setIsOpen(false);
-  const addRef = (name: OnbrdStepName, ref: MutableRefObject<any>, onClickNext?: (...args: any) => void) => {
+  const addRef = (name: OnbrdStep, ref: MutableRefObject<any>, onClickNext?: (...args: any) => void) => {
     setStepRefs((prevRefs) => {
       return {
         ...prevRefs,
@@ -43,14 +43,14 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
 
   const defaultStep =
     isPoPage && poHasLocators
-      ? StepNumber.DownloadPO
+      ? OnbrdStep.DownloadPO
       : !isPoPage
-      ? StepNumber.CustomLocator
+      ? OnbrdStep.CustomLocator
       : isIdentificationInProgress
-      ? StepNumber.Generating
+      ? OnbrdStep.Generating
       : isNewPageObject
-      ? StepNumber.POsettings
-      : StepNumber.NewPageObject;
+      ? OnbrdStep.POsettings
+      : OnbrdStep.NewPageObject;
 
   const tourSteps = getPOPageSteps(stepRefs);
 

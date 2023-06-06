@@ -13,7 +13,7 @@ import { ReportProblem } from "./ReportProblem";
 import { LocatorsGenerationStatus } from "../../features/locators/types/locator.types";
 import { OnboardingContext } from "../../features/onboarding/OnboardingProvider";
 import { useOnBoardingRef } from "../../features/onboarding/utils/useOnboardingRef";
-import { OnbrdStepName } from "../../features/onboarding/types/constants";
+import { OnbrdStep } from "../../features/onboarding/types/constants";
 
 export const StatusBar = () => {
   const backendVer = useSelector<RootState>((_state) => _state.main.serverVersion);
@@ -56,9 +56,9 @@ export const StatusBar = () => {
     ) : null;
   };
 
-  const onbrdRef = useOnBoardingRef(OnbrdStepName.Onboarding);
-  const readmedRef = useOnBoardingRef(OnbrdStepName.Readme);
-  const connectionRef = useOnBoardingRef(OnbrdStepName.Connection);
+  const onbrdRef = useOnBoardingRef(OnbrdStep.Onboarding);
+  const readmedRef = useOnBoardingRef(OnbrdStep.Readme);
+  const connectionRef = useOnBoardingRef(OnbrdStep.Connection);
 
   return (
     <React.Fragment>
