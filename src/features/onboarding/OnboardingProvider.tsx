@@ -21,7 +21,10 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const openOnboarding = () => setIsOpen(true);
-  const closeOnboarding = () => setIsOpen(false);
+  const closeOnboarding = () => {
+    setIsOpen(false);
+    setStepRefs({} as Record<OnbrdStep, StepRef>);
+  };
   const addRef = (name: OnbrdStep, ref: MutableRefObject<any>, onClickNext?: (...args: any) => void) => {
     setStepRefs((prevRefs) => {
       return {

@@ -32,60 +32,59 @@ export const GenerationButton: React.FC<Props> = ({ pageObj, library }) => {
 
   return (
     <div className="jdn__generationButtons">
-      <div ref={refSettings}>
-        <Space direction="vertical" size={16}>
-          <Row>
-            <Col flex="104px">
-              <Typography.Text>Library:</Typography.Text>
-            </Col>
-            <Col flex="auto">
-              <Select
-                id="library"
-                defaultValue={library}
-                className="jdn__select"
-                onChange={(_library) => dispatch(changeElementLibrary({ id: pageObj, library: _library }))}
-                options={[
-                  {
-                    value: ElementLibrary.MUI,
-                    label: libraryNames.MUI,
-                  },
-                  {
-                    value: ElementLibrary.HTML5,
-                    label: libraryNames.HTML5,
-                  },
-                  {
-                    value: ElementLibrary.Vuetify,
-                    label: libraryNames.Vuetify,
-                  },
-                ]}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col flex="104px">
-              <Typography.Text>Locators type:</Typography.Text>
-            </Col>
-            <Col flex="auto">
-              <Select
-                id="locatorType"
-                defaultValue={currentPageObject?.locatorType || LocatorType.xPath}
-                className="jdn__select"
-                onChange={(_locatorType) => dispatch(setLocatorType({ id: pageObj, locatorType: _locatorType }))}
-                options={[
-                  {
-                    value: LocatorType.xPath,
-                    label: LocatorType.xPath,
-                  },
-                  {
-                    value: LocatorType.cssSelector,
-                    label: LocatorType.cssSelector,
-                  },
-                ]}
-              />
-            </Col>
-          </Row>
-        </Space>
-      </div>
+      <Space direction="vertical" size={16}>
+        <div ref={refSettings} className="jdn__generationButtons_onboardingMask"></div>
+        <Row>
+          <Col flex="104px">
+            <Typography.Text>Library:</Typography.Text>
+          </Col>
+          <Col flex="auto">
+            <Select
+              id="library"
+              defaultValue={library}
+              className="jdn__select"
+              onChange={(_library) => dispatch(changeElementLibrary({ id: pageObj, library: _library }))}
+              options={[
+                {
+                  value: ElementLibrary.MUI,
+                  label: libraryNames.MUI,
+                },
+                {
+                  value: ElementLibrary.HTML5,
+                  label: libraryNames.HTML5,
+                },
+                {
+                  value: ElementLibrary.Vuetify,
+                  label: libraryNames.Vuetify,
+                },
+              ]}
+            />
+          </Col>
+        </Row>
+        <Row>
+          <Col flex="104px">
+            <Typography.Text>Locators type:</Typography.Text>
+          </Col>
+          <Col flex="auto">
+            <Select
+              id="locatorType"
+              defaultValue={currentPageObject?.locatorType || LocatorType.xPath}
+              className="jdn__select"
+              onChange={(_locatorType) => dispatch(setLocatorType({ id: pageObj, locatorType: _locatorType }))}
+              options={[
+                {
+                  value: LocatorType.xPath,
+                  label: LocatorType.xPath,
+                },
+                {
+                  value: LocatorType.cssSelector,
+                  label: LocatorType.cssSelector,
+                },
+              ]}
+            />
+          </Col>
+        </Row>
+      </Space>
       <Button
         ref={refGenerate}
         icon={<SearchOutlined />}
