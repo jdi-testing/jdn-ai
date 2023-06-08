@@ -43,8 +43,8 @@ const CustomLocator = (refs: Record<OnbrdStep, StepRef>) => ({
     "If the JDN has not recognized all the necessary elements on the web page, you can create a custom locator.",
   target: () => refs[OnbrdStep.CustomLocator]?.target.current,
   prevButtonProps: {
-    style: { "display": "none" },
-  }
+    style: { display: "none" },
+  },
 });
 
 const ContextMenu = (refs: Record<OnbrdStep, StepRef>) => ({
@@ -78,7 +78,7 @@ const DownloadPO = (refs: Record<OnbrdStep, StepRef>) => ({
   target: () => refs[OnbrdStep.DownloadPO]?.target.current,
   prevButtonProps: {
     onClick: refs[OnbrdStep.DownloadPO]?.onClickPrev,
-  }
+  },
 });
 
 const EditPO = (refs: Record<OnbrdStep, StepRef>) => ({

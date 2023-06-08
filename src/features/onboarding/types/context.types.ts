@@ -10,7 +10,7 @@ export interface OnboardingContext {
     name: OnbrdStep,
     ref: MutableRefObject<any>,
     onClickNext?: (...args: any) => void,
-    onClickPrev?: (...args: any) => void,
+    onClickPrev?: (...args: any) => void
   ) => void;
   openOnboarding: () => void;
   closeOnboarding: () => void;
