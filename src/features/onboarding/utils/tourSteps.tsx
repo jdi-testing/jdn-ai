@@ -17,6 +17,9 @@ const POsettings = (refs: Record<OnbrdStep, StepRef>) => ({
   description:
     "At the start of the creation process, you can specify certain characteristics of the Page Object locators for your convenience. Later you can modify these characteristics.",
   target: () => refs[OnbrdStep.POsettings]?.target.current,
+  prevButtonProps: {
+    onClick: refs[OnbrdStep.POsettings]?.onClickPrev,
+  },
 });
 
 const Generate = (refs: Record<OnbrdStep, StepRef>) => ({
@@ -39,6 +42,9 @@ const CustomLocator = (refs: Record<OnbrdStep, StepRef>) => ({
   description:
     "If the JDN has not recognized all the necessary elements on the web page, you can create a custom locator.",
   target: () => refs[OnbrdStep.CustomLocator]?.target.current,
+  prevButtonProps: {
+    style: { "display": "none" },
+  }
 });
 
 const ContextMenu = (refs: Record<OnbrdStep, StepRef>) => ({
@@ -56,10 +62,13 @@ const AddToPO = (refs: Record<OnbrdStep, StepRef>) => ({
 });
 
 const SaveLocators = (refs: Record<OnbrdStep, StepRef>) => ({
-  title: "Save locators",
-  description:
-    "After adding the required locators, you can save them to the Page Object. \n You can also add locators to the Page Object later.",
+  title: "Finish creating the Page Object",
+  description: "Save your selections.",
   target: () => refs[OnbrdStep.SaveLocators]?.target.current,
+  nextButtonProps: {
+    children: "Save PO",
+    onClick: refs[OnbrdStep.SaveLocators]?.onClickNext,
+  },
 });
 
 const DownloadPO = (refs: Record<OnbrdStep, StepRef>) => ({
@@ -67,6 +76,9 @@ const DownloadPO = (refs: Record<OnbrdStep, StepRef>) => ({
   description:
     "After saving the required locators, the Page Object is ready. \n You can download all Page Objects as a .zip file.",
   target: () => refs[OnbrdStep.DownloadPO]?.target.current,
+  prevButtonProps: {
+    onClick: refs[OnbrdStep.DownloadPO]?.onClickPrev,
+  }
 });
 
 const EditPO = (refs: Record<OnbrdStep, StepRef>) => ({
@@ -126,5 +138,13 @@ export const finishSteps = (refs: Record<OnbrdStep, StepRef>) => [
 ];
 
 export const getPOPageSteps = (refs: Record<OnbrdStep, StepRef>): TourStepProps[] => {
-  return [...createPOSteps(refs), ...addLocatorsSteps(refs), ...finishSteps(refs)];
+  const addPrevButtonChilds = (step: TourStepProps) => ({
+    ...step,
+    prevButtonProps: {
+      children: "Back",
+      ...step.prevButtonProps,
+    },
+  });
+
+  return [...createPOSteps(refs), ...addLocatorsSteps(refs), ...finishSteps(refs)].map(addPrevButtonChilds);
 };

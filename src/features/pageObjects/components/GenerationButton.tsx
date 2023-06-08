@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../app/store/store";
 import { IdentificationStatus } from "../../locators/types/locator.types";
 import { selectCurrentPageObject } from "../pageObject.selectors";
-import { changeElementLibrary, setLocatorType } from "../pageObject.slice";
+import { changeElementLibrary, removePageObject, setLocatorType } from "../pageObject.slice";
 import { PageObjectId } from "../types/pageObjectSlice.types";
 import { ElementLibrary, libraryNames } from "../../locators/types/generationClasses.types";
 import { identifyElements } from "../../locators/reducers/identifyElements.thunk";
@@ -25,7 +25,7 @@ export const GenerationButton: React.FC<Props> = ({ pageObj, library }) => {
 
   const handleGenerate = () => dispatch(identifyElements({ library, pageObj }));
 
-  const refSettings = useOnBoardingRef(OnbrdStep.POsettings);
+  const refSettings = useOnBoardingRef(OnbrdStep.POsettings, undefined, () => dispatch(removePageObject(pageObj)));
   const refGenerate = useOnBoardingRef(OnbrdStep.Generate, handleGenerate);
 
   const dispatch = useDispatch();

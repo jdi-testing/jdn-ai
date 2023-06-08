@@ -10,13 +10,14 @@ import { size } from "lodash";
 import { selectPageObjects } from "../../pageObjects/pageObject.selectors";
 
 import { removeAll as removeAllLocators } from "../../locators/locators.slice";
-import { removeAll as removeAllPageObjects } from "../pageObject.slice";
+import { removeAll as removeAllPageObjects, setCurrentPageObj } from "../pageObject.slice";
 import { removeAll as removeAllFilters } from "../../filter/filter.slice";
 import { RootState } from "../../../app/store/store";
 import { selectLocatorsToGenerate } from "../../locators/locators.selectors";
 import { generateAndDownloadZip } from "../utils/projectTemplate";
 import { useOnBoardingRef } from "../../onboarding/utils/useOnboardingRef";
 import { OnbrdStep } from "../../onboarding/types/constants";
+import { checkLocatorsValidity } from "../../locators/reducers/checkLocatorValidity.thunk";
 
 const { confirm } = Modal;
 
@@ -71,7 +72,7 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
   };
 
   const newPoRef = useOnBoardingRef(OnbrdStep.NewPageObject, handleAddPageObject);
-  const downloadRef = useOnBoardingRef(OnbrdStep.DownloadPO);
+  const downloadRef = useOnBoardingRef(OnbrdStep.DownloadPO, undefined, () => dispatch(checkLocatorsValidity()));
 
   return (
     <Row className="jdn__locatorsList-header" justify="space-between">

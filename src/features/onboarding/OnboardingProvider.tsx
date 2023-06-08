@@ -3,7 +3,7 @@ import { OnbrdStep } from "./types/constants";
 import { Onboarding } from "./Onboarding";
 import { OnboardingContext as ContextType, StepRef } from "./types/context.types";
 import { useSelector } from "react-redux";
-import { selectCurrentPageObject, selectPageObjects } from "../pageObjects/pageObject.selectors";
+import { selectCheckedLocators, selectCurrentPageObject, selectPageObjects } from "../pageObjects/pageObject.selectors";
 import { RootState } from "../../app/store/store";
 import { IdentificationStatus } from "../locators/types/locator.types";
 import { getPOPageSteps } from "./utils/tourSteps";
@@ -25,13 +25,14 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
     setIsOpen(false);
     setStepRefs({} as Record<OnbrdStep, StepRef>);
   };
-  const addRef = (name: OnbrdStep, ref: MutableRefObject<any>, onClickNext?: (...args: any) => void) => {
+  const addRef = (name: OnbrdStep, ref: MutableRefObject<any>, onClickNext?: (...args: any) => void, onClickPrev?: (...args: any) => void) => {
     setStepRefs((prevRefs) => {
       return {
         ...prevRefs,
         [name]: {
           target: ref,
           onClickNext,
+          onClickPrev,
         },
       };
     });
@@ -43,10 +44,13 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
     useSelector((state: RootState) => state.locators.present.status) === IdentificationStatus.loading;
   const isPoPage = useSelector(selectCurrentPage).page === PageType.PageObject;
   const poHasLocators = useSelector(selectCurrentPageObject)?.locators;
+  const checkedLocators = useSelector(selectCheckedLocators);
 
   const defaultStep =
     isPoPage && poHasLocators
       ? OnbrdStep.DownloadPO
+      : !isPoPage && checkedLocators.length
+      ? OnbrdStep.SaveLocators
       : !isPoPage
       ? OnbrdStep.CustomLocator
       : isIdentificationInProgress
