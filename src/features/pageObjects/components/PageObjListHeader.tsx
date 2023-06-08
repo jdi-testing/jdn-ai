@@ -10,7 +10,7 @@ import { size } from "lodash";
 import { selectPageObjects } from "../../pageObjects/pageObject.selectors";
 
 import { removeAll as removeAllLocators } from "../../locators/locators.slice";
-import { removeAll as removeAllPageObjects, setCurrentPageObj } from "../pageObject.slice";
+import { removeAll as removeAllPageObjects } from "../pageObject.slice";
 import { removeAll as removeAllFilters } from "../../filter/filter.slice";
 import { RootState } from "../../../app/store/store";
 import { selectLocatorsToGenerate } from "../../locators/locators.selectors";
