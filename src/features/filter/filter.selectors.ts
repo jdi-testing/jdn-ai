@@ -22,7 +22,11 @@ export const { selectAll: selectFilters, selectById: selectFilterById } = filter
 export const selectClassFilterByPO = createSelector(
   (state: RootState, id?: PageObjectId) => {
     const pageObject = !isNil(id) ? selectPageObjById(state, id) : selectCurrentPageObject(state);
-    const filter = selectFilters(state).find(({ pageObjectId }: Filter) => pageObjectId === pageObject?.id);
+    const savedFilters = localStorage.getItem("filters");
+    const filter =
+      savedFilters && JSON.parse(savedFilters)[pageObject!.library]
+        ? { [FilterKey.JDIclassFilter]: JSON.parse(savedFilters)[pageObject!.library] }
+        : selectFilters(state).find(({ pageObjectId }: Filter) => pageObjectId === pageObject?.id);
     return { filter, library: pageObject?.library };
   },
   ({ filter, library }) => {
@@ -42,7 +46,7 @@ export const selectDetectedClassesFilter = createSelector(
       const locatorType = new Set(pageObj?.locators.map((locatorId) => selectLocatorById(state, locatorId)?.type));
       return Object.entries(classFilterPO).reduce((result: Record<ElementClass, boolean>, entry) => {
         const [key, value] = entry;
-        locatorType.has(key as ElementClass) ? (result[key as ElementClass] = value) : null;
+        locatorType.has(key as ElementClass) ? (result[key as ElementClass] = value as boolean) : null;
         return result;
       }, {} as Record<ElementClass, boolean>);
     }

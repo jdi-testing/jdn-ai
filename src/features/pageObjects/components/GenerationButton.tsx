@@ -2,7 +2,6 @@ import { SearchOutlined } from "@ant-design/icons";
 import { Button, Col, Row, Select, Space, Typography } from "antd";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import { RootState } from "../../../app/store/store";
 import { IdentificationStatus } from "../../locators/types/locator.types";
 import { selectCurrentPageObject } from "../pageObject.selectors";
@@ -35,7 +34,10 @@ export const GenerationButton: React.FC<Props> = ({ pageObj, library }) => {
               id="library"
               defaultValue={library}
               className="jdn__select"
-              onChange={(_library) => dispatch(changeElementLibrary({ id: pageObj, library: _library }))}
+              onChange={(_library) => {
+                dispatch(changeElementLibrary({ id: pageObj, library: _library }));
+                localStorage.setItem("library", _library);
+              }}
               options={[
                 {
                   value: ElementLibrary.MUI,
@@ -60,9 +62,12 @@ export const GenerationButton: React.FC<Props> = ({ pageObj, library }) => {
           <Col flex="auto">
             <Select
               id="locatorType"
-              defaultValue={currentPageObject?.locatorType || LocatorType.xPath}
+              defaultValue={currentPageObject?.locatorType}
               className="jdn__select"
-              onChange={(_locatorType) => dispatch(setLocatorType({ id: pageObj, locatorType: _locatorType }))}
+              onChange={(_locatorType) => {
+                dispatch(setLocatorType({ id: pageObj, locatorType: _locatorType }));
+                localStorage.setItem("locatorType", _locatorType);
+              }}
               options={[
                 {
                   value: LocatorType.xPath,

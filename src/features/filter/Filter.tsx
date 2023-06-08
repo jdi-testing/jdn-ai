@@ -7,7 +7,8 @@ import { selectCurrentPageObject } from "../pageObjects/pageObject.selectors";
 import { ElementClass } from "../locators/types/generationClasses.types";
 import { FilterHeader } from "./components/FilterHeader";
 import { selectDetectedClassesFilter, selectIfSelectedAll } from "./filter.selectors";
-import { toggleClassFilter, toggleClassFilterAll } from "./filter.slice";
+import { toggleClassFilter } from "./reducers/toggleClassFilter.thunk";
+import { toggleClassFilterAll } from "./reducers/toggleClassFilterAll.thunk";
 import { convertFilterToArr } from "./utils/filterSet";
 
 export const Filter = () => {

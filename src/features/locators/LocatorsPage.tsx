@@ -28,6 +28,7 @@ import { useOverlay } from "./utils/useOverlay";
 import { RootState } from "../../app/store/store";
 import { IdentificationStatus } from "./types/locator.types";
 import { LocatorTreeSpinner } from "./components/LocatorTreeSpinner";
+import { removeAll as removeAllFilters } from "../filter/filter.slice"; // looks extra
 
 const { confirm } = Modal;
 
@@ -53,6 +54,7 @@ export const LocatorsPage = () => {
   const pageBack = () => {
     dispatch(setScriptMessage({}));
     dispatch(changePageBack());
+    dispatch(removeAllFilters());
   };
 
   const handleConfirm = () => {

@@ -10,13 +10,30 @@ import {
 import { defaultLibrary } from "../../locators/types/generationClasses.types";
 import { getPageAttributes, isPONameUnique } from "../utils/pageObject";
 import { getClassName } from "../utils/pageObjectTemplate";
+import { LocatorType } from "../../../common/types/common";
 
 export const addPageObj = createAsyncThunk("pageObject/addPageObj", async (payload, thunkAPI) => {
   const res = await getPageAttributes();
   const { title, url } = res[0].result;
   const className = getClassName(title);
-  const lastSelectedLibrary = selectLastElementLibrary(thunkAPI.getState());
-  const lastSelectedLocatorType = selectLastLocatorType(thunkAPI.getState());
+
+  let lastSelectedLibrary;
+  let lastSelectedLocatorType;
+
+  if (localStorage.getItem("library")) {
+    lastSelectedLibrary = localStorage.getItem("library");
+  } else {
+    lastSelectedLibrary = selectLastElementLibrary(thunkAPI.getState()) || defaultLibrary;
+    localStorage.setItem("library", lastSelectedLibrary);
+  }
+
+  if (localStorage.getItem("locatorType")) {
+    lastSelectedLocatorType = localStorage.getItem("locatorType");
+  } else {
+    lastSelectedLocatorType = selectLastLocatorType(thunkAPI.getState()) || LocatorType.xPath;
+    localStorage.setItem("locatorType", lastSelectedLocatorType);
+  }
+
   return { className, url, lastSelectedLibrary, lastSelectedLocatorType };
 });
 
@@ -48,11 +65,11 @@ export const addPageObjReducer = (builder) => {
         id,
         name,
         url,
-        library: lastSelectedLibrary || defaultLibrary,
+        library: lastSelectedLibrary,
         pathname,
         search,
         origin,
-        ...(lastSelectedLocatorType ? { locatorType: lastSelectedLocatorType } : {}),
+        locatorType: lastSelectedLocatorType,
       });
       state.currentPageObject = id;
     })

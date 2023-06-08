@@ -165,8 +165,8 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       if (!payload.fromScript) sendMessage.unsetActive(payload);
       break;
     }
-    case "filter/toggleClassFilter":
-    case "filter/toggleClassFilterAll": {
+    case "filter/toggleClassFilter/fulfilled":
+    case "filter/toggleClassFilterAll/fulfilled": {
       sendMessage.toggleFilter(pick(payload, ["jdiClass", "value"]));
       break;
     }
