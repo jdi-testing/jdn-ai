@@ -1,6 +1,9 @@
-import { TourStepProps } from "antd5";
+import React from "react";
+import { Col, Row, TourStepProps } from "antd5";
 import { OnbrdStep } from "../types/constants";
 import { StepRef } from "../types/context.types";
+import Link from "antd/lib/typography/Link";
+import { CloudCheck, DesktopTower } from "phosphor-react";
 
 const NewPageObject = (refs: Record<OnbrdStep, StepRef>) => ({
   title: "Begin using JDN",
@@ -105,8 +108,15 @@ const Onboarding = (refs: Record<OnbrdStep, StepRef>) => ({
 
 const Readme = (refs: Record<OnbrdStep, StepRef>) => ({
   title: "ReadMe",
-  description:
-    "This section contains useful information about JDN and its features. Additionally, we have our own YouTube channel with instructional videos.",
+  description: (
+    <React.Fragment>
+      This section contains useful information about JDN and its features. Additionally, we have our own{" "}
+      <Link href="https://www.youtube.com/watch?v=b2o6R98icRU" target="_blank">
+        YouTube channel
+      </Link>{" "}
+      with instructional videos.
+    </React.Fragment>
+  ),
   target: () => refs[OnbrdStep.Readme]?.target.current,
 });
 
@@ -118,8 +128,19 @@ const Report = (refs: Record<OnbrdStep, StepRef>) => ({
 
 const Connection = (refs: Record<OnbrdStep, StepRef>) => ({
   title: "Connection to the server",
-  description:
-    "Displays the current type of connection being used by JDN, whether it's a local server or a cloud server.",
+  description: (
+    <React.Fragment>
+      Displays the current type of connection being used by JDN, whether it's a local server or a cloud server.
+      <Col>
+        <Row>
+          <CloudCheck size={16} color="#8C8C8C" /> — you are connected to a cloud server
+        </Row>
+        <Row>
+          <DesktopTower size={16} color="#8C8C8C" /> — you are connected to a local server
+        </Row>
+      </Col>
+    </React.Fragment>
+  ),
   target: () => refs[OnbrdStep.Connection]?.target.current,
 });
 
