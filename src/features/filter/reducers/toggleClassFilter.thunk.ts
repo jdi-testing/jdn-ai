@@ -31,13 +31,13 @@ export const toggleClassFilterReducer = (builder: any) => {
   return builder
     .addCase(
       toggleClassFilter.fulfilled,
-      (state: RootState, { payload }: { payload: toggleClassFilterReducerPayload }) => {
+      (state: any, { payload }: { payload: toggleClassFilterReducerPayload }) => {
         const { newValue, pageObjectId, library, jdiClass, value } = payload;
         const savedFilters = JSON.parse(localStorage.getItem("filters")!);
 
         if (newValue) {
           const newFilter = { ...newValue[FilterKey.JDIclassFilter], [jdiClass]: value };
-          filterAdapter.upsertOne(state.filters, { ...newValue, [jdiClass]: value });
+          filterAdapter.upsertOne(state, { ...newValue, [jdiClass]: value });
           localStorage.setItem("filters", JSON.stringify({ ...savedFilters, [library]: newFilter }));
         } else {
           const initialFilter = {
@@ -45,7 +45,7 @@ export const toggleClassFilterReducer = (builder: any) => {
             ...(savedFilters && savedFilters[library] && savedFilters[library]),
           };
           initialFilter[jdiClass] = value;
-          filterAdapter.addOne(state.filters, {
+          filterAdapter.addOne(state, {
             pageObjectId,
             [FilterKey.JDIclassFilter]: { ...initialFilter },
           });

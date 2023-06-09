@@ -30,12 +30,12 @@ export const toggleClassFilterAllReducer = (builder: any) => {
     .addCase(
       toggleClassFilterAll.fulfilled,
       (
-        state: RootState,
+        state: any,
         { payload }: { payload: { newValue: Filter; filter: ClassFilterValue; library: ElementLibrary } }
       ) => {
         const { newValue, filter, library } = payload;
 
-        filterAdapter.upsertOne(state.filters, { ...newValue, [FilterKey.JDIclassFilter]: filter });
+        filterAdapter.upsertOne(state, { ...newValue, [FilterKey.JDIclassFilter]: filter });
 
         if (!localStorage.getItem("filters")) {
           localStorage.setItem("filters", JSON.stringify({ [library]: filter }));
