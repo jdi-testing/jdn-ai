@@ -4,7 +4,7 @@ import { RootState } from "../../app/store/store";
 import { locatorTaskStatus } from "../../common/constants/constants";
 import { selectClassFilterByPO } from "../filter/filter.selectors";
 import { isValidLocator } from "../locators/utils/utils";
-import { selectLocators } from "../locators/locators.selectors";
+import { selectLocatorById, selectLocators } from "../locators/locators.selectors";
 import { Locator } from "../locators/types/locator.types";
 import { LocatorType } from "../../common/types/common";
 import { isProgressStatus } from "../locators/utils/locatorGenerationController";
@@ -46,6 +46,13 @@ export const getLocatorsIdsByPO = (state: RootState, pageObjId?: PageObjectId) =
   if (isNil(pageObjId)) return [];
   return selectPageObjById(state, pageObjId)?.locators || [];
 };
+
+export const selectFirstLocatorIdByPO = createSelector(getLocatorsIdsByPO, (locatorsIds) => locatorsIds[0]);
+
+export const selectFirstLocatorByPO = createSelector(
+  (state: RootState) => selectLocatorById(state, selectFirstLocatorIdByPO(state)),
+  (loc) => loc
+);
 
 export const selectLocatorsByPageObject = createSelector(
   selectLocators,

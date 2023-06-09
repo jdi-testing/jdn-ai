@@ -35,6 +35,12 @@ const Generate = (refs: Record<OnbrdStep, StepRef>) => ({
 
 const creating = () => ({
   title: "Creating locators...",
+  nextButtonProps: {
+    disabled: true,
+  },
+  prevButtonProps: {
+    disabled: true,
+  },
 });
 
 const CustomLocator = (refs: Record<OnbrdStep, StepRef>) => ({
@@ -59,6 +65,9 @@ const AddToPO = (refs: Record<OnbrdStep, StepRef>) => ({
   description:
     "Select the needed locators (or choose all of them) to create the final Page object. Note that only selected locators will be added to the final Locators List.",
   target: () => refs[OnbrdStep.AddToPO]?.target.current,
+  nextButtonProps: {
+    disabled: true,
+  },
 });
 
 const SaveLocators = (refs: Record<OnbrdStep, StepRef>) => ({
@@ -146,5 +155,8 @@ export const getPOPageSteps = (refs: Record<OnbrdStep, StepRef>): TourStepProps[
     },
   });
 
-  return [...createPOSteps(refs), ...addLocatorsSteps(refs), ...finishSteps(refs)].map(addPrevButtonChilds);
+  // use "as TourStepProps[]" because {nextButtonProps: { disabled: boolean }} is not a documented feature
+  return ([...createPOSteps(refs), ...addLocatorsSteps(refs), ...finishSteps(refs)] as TourStepProps[]).map(
+    addPrevButtonChilds
+  );
 };
