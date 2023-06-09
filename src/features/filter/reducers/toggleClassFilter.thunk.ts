@@ -1,4 +1,4 @@
-import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import { filterAdapter, simpleSelectFilterById } from "../filter.selectors";
 import { RootState } from "../../../app/store/store";
 import { FilterKey, Filter } from "../types/filter.types";
@@ -29,33 +29,36 @@ export const toggleClassFilter = createAsyncThunk(
 
 export const toggleClassFilterReducer = (builder: any) => {
   return builder
-    .addCase(toggleClassFilter.fulfilled, (state: RootState, { payload }: { payload: toggleClassFilterReducerPayload }) => {
-      const { newValue, pageObjectId, library, jdiClass, value } = payload;
-      const savedFilters = JSON.parse(localStorage.getItem("filters")!);
+    .addCase(
+      toggleClassFilter.fulfilled,
+      (state: RootState, { payload }: { payload: toggleClassFilterReducerPayload }) => {
+        const { newValue, pageObjectId, library, jdiClass, value } = payload;
+        const savedFilters = JSON.parse(localStorage.getItem("filters")!);
 
-      if (newValue) {
-        const newFilter = { ...newValue[FilterKey.JDIclassFilter], [jdiClass]: value };
-        filterAdapter.upsertOne(state.filters, { ...newValue, [jdiClass]: value });
-        localStorage.setItem("filters", JSON.stringify({ ...savedFilters, [library]: newFilter }));
-      } else {
-        const initialFilter = {
-          ...jdiClassFilterInit(library),
-          ...(savedFilters && savedFilters[library] && savedFilters[library]),
-        };
-        initialFilter[jdiClass] = value;
-        filterAdapter.addOne(state.filters, {
-          pageObjectId,
-          [FilterKey.JDIclassFilter]: { ...initialFilter },
-        });
-
-        if (!localStorage.getItem("filters")) {
-          localStorage.setItem("filters", JSON.stringify({ [library]: { ...initialFilter } }));
+        if (newValue) {
+          const newFilter = { ...newValue[FilterKey.JDIclassFilter], [jdiClass]: value };
+          filterAdapter.upsertOne(state.filters, { ...newValue, [jdiClass]: value });
+          localStorage.setItem("filters", JSON.stringify({ ...savedFilters, [library]: newFilter }));
         } else {
-          localStorage.setItem("filters", JSON.stringify({ ...savedFilters, [library]: initialFilter }));
+          const initialFilter = {
+            ...jdiClassFilterInit(library),
+            ...(savedFilters && savedFilters[library] && savedFilters[library]),
+          };
+          initialFilter[jdiClass] = value;
+          filterAdapter.addOne(state.filters, {
+            pageObjectId,
+            [FilterKey.JDIclassFilter]: { ...initialFilter },
+          });
+
+          if (!localStorage.getItem("filters")) {
+            localStorage.setItem("filters", JSON.stringify({ [library]: { ...initialFilter } }));
+          } else {
+            localStorage.setItem("filters", JSON.stringify({ ...savedFilters, [library]: initialFilter }));
+          }
         }
       }
-    })
-    .addCase(toggleClassFilter.rejected, (state: RootState, { error }: { error: Error}) => {
+    )
+    .addCase(toggleClassFilter.rejected, (state: RootState, { error }: { error: Error }) => {
       throw new Error(error.stack);
     });
 };

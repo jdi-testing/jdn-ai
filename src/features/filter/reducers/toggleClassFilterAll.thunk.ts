@@ -16,17 +16,23 @@ export const toggleClassFilterAll = createAsyncThunk(
       newValue = { pageObjectId, [FilterKey.JDIclassFilter]: jdiClassFilterInit(library) };
     }
     const filter = { ...newValue[FilterKey.JDIclassFilter] };
-    // don't know how to fix it
-    //@ts-ignore
-    Object.keys(filter).forEach((key: string) => {filter[key] = value});
+    Object.keys(filter).forEach((key: string) => {
+      // don't know how to fix it
+      //@ts-ignore
+      filter[key] = value;
+    });
     return { newValue, filter, library };
   }
 );
 
 export const toggleClassFilterAllReducer = (builder: any) => {
-  return (
-    builder
-      .addCase(toggleClassFilterAll.fulfilled, (state: RootState, { payload }: { payload: { newValue: Filter, filter: ClassFilterValue, library: ElementLibrary }}) => {
+  return builder
+    .addCase(
+      toggleClassFilterAll.fulfilled,
+      (
+        state: RootState,
+        { payload }: { payload: { newValue: Filter; filter: ClassFilterValue; library: ElementLibrary } }
+      ) => {
         const { newValue, filter, library } = payload;
 
         filterAdapter.upsertOne(state.filters, { ...newValue, [FilterKey.JDIclassFilter]: filter });
@@ -37,9 +43,9 @@ export const toggleClassFilterAllReducer = (builder: any) => {
           const savedFilters = JSON.parse(localStorage.getItem("filters")!);
           localStorage.setItem("filters", JSON.stringify({ ...savedFilters, [library]: filter }));
         }
-      })
-      .addCase(toggleClassFilterAll.rejected, (state: RootState, { error }: { error: Error }) => {
-        throw new Error(error.stack);
-      })
-  );
+      }
+    )
+    .addCase(toggleClassFilterAll.rejected, (state: RootState, { error }: { error: Error }) => {
+      throw new Error(error.stack);
+    });
 };
