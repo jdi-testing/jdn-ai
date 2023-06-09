@@ -29,35 +29,32 @@ export const toggleClassFilter = createAsyncThunk(
 
 export const toggleClassFilterReducer = (builder: any) => {
   return builder
-    .addCase(
-      toggleClassFilter.fulfilled,
-      (state: any, { payload }: { payload: toggleClassFilterReducerPayload }) => {
-        const { newValue, pageObjectId, library, jdiClass, value } = payload;
-        const savedFilters = JSON.parse(localStorage.getItem("filters")!);
+    .addCase(toggleClassFilter.fulfilled, (state: any, { payload }: { payload: toggleClassFilterReducerPayload }) => {
+      const { newValue, pageObjectId, library, jdiClass, value } = payload;
+      const savedFilters = JSON.parse(localStorage.getItem("filters")!);
 
-        if (newValue) {
-          const newFilter = { ...newValue[FilterKey.JDIclassFilter], [jdiClass]: value };
-          filterAdapter.upsertOne(state, { ...newValue, [jdiClass]: value });
-          localStorage.setItem("filters", JSON.stringify({ ...savedFilters, [library]: newFilter }));
+      if (newValue) {
+        const newFilter = { ...newValue[FilterKey.JDIclassFilter], [jdiClass]: value };
+        filterAdapter.upsertOne(state, { ...newValue, [jdiClass]: value });
+        localStorage.setItem("filters", JSON.stringify({ ...savedFilters, [library]: newFilter }));
+      } else {
+        const initialFilter = {
+          ...jdiClassFilterInit(library),
+          ...(savedFilters && savedFilters[library] && savedFilters[library]),
+        };
+        initialFilter[jdiClass] = value;
+        filterAdapter.addOne(state, {
+          pageObjectId,
+          [FilterKey.JDIclassFilter]: { ...initialFilter },
+        });
+
+        if (!localStorage.getItem("filters")) {
+          localStorage.setItem("filters", JSON.stringify({ [library]: { ...initialFilter } }));
         } else {
-          const initialFilter = {
-            ...jdiClassFilterInit(library),
-            ...(savedFilters && savedFilters[library] && savedFilters[library]),
-          };
-          initialFilter[jdiClass] = value;
-          filterAdapter.addOne(state, {
-            pageObjectId,
-            [FilterKey.JDIclassFilter]: { ...initialFilter },
-          });
-
-          if (!localStorage.getItem("filters")) {
-            localStorage.setItem("filters", JSON.stringify({ [library]: { ...initialFilter } }));
-          } else {
-            localStorage.setItem("filters", JSON.stringify({ ...savedFilters, [library]: initialFilter }));
-          }
+          localStorage.setItem("filters", JSON.stringify({ ...savedFilters, [library]: initialFilter }));
         }
       }
-    )
+    })
     .addCase(toggleClassFilter.rejected, (state: RootState, { error }: { error: Error }) => {
       throw new Error(error.stack);
     });
