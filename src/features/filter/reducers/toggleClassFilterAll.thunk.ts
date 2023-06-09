@@ -1,10 +1,10 @@
-import { ActionReducerMapBuilder, createAsyncThunk, EntityState, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 import { filterAdapter, simpleSelectFilterById } from "../filter.selectors";
 import { RootState } from "../../../app/store/store";
-import { FilterKey, ClassFilterValue } from "../types/filter.types";
+import { FilterKey, ClassFilterValue, Filter } from "../types/filter.types";
 import { jdiClassFilterInit } from "../utils/filterSet";
 import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
-import { ElementClass, ElementLibrary } from "../../locators/types/generationClasses.types";
+import { ElementLibrary } from "../../locators/types/generationClasses.types";
 
 export const toggleClassFilterAll = createAsyncThunk(
   "filter/toggleClassFilterAll",
@@ -23,14 +23,13 @@ export const toggleClassFilterAll = createAsyncThunk(
   }
 );
 
-//fix types
 export const toggleClassFilterAllReducer = (builder: any) => {
   return (
     builder
-      .addCase(toggleClassFilterAll.fulfilled, (state: any, { payload }: any) => {
+      .addCase(toggleClassFilterAll.fulfilled, (state: RootState, { payload }: { payload: { newValue: Filter, filter: ClassFilterValue, library: ElementLibrary }}) => {
         const { newValue, filter, library } = payload;
 
-        filterAdapter.upsertOne(state, { ...newValue, [FilterKey.JDIclassFilter]: filter });
+        filterAdapter.upsertOne(state.filters, { ...newValue, [FilterKey.JDIclassFilter]: filter });
 
         if (!localStorage.getItem("filters")) {
           localStorage.setItem("filters", JSON.stringify({ [library]: filter }));
@@ -39,8 +38,7 @@ export const toggleClassFilterAllReducer = (builder: any) => {
           localStorage.setItem("filters", JSON.stringify({ ...savedFilters, [library]: filter }));
         }
       })
-      // @ts-ignore
-      .addCase(toggleClassFilterAll.rejected, (state, { error }) => {
+      .addCase(toggleClassFilterAll.rejected, (state: RootState, { error }: { error: Error }) => {
         throw new Error(error.stack);
       })
   );

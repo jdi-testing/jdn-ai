@@ -1,4 +1,4 @@
-import { ActionReducerMapBuilder, createAsyncThunk, EntityState, PayloadAction } from "@reduxjs/toolkit";
+import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
 import { filterAdapter, simpleSelectFilterById } from "../filter.selectors";
 import { RootState } from "../../../app/store/store";
 import { FilterKey, Filter } from "../types/filter.types";
@@ -27,16 +27,15 @@ export const toggleClassFilter = createAsyncThunk(
   }
 );
 
-//fix types
 export const toggleClassFilterReducer = (builder: any) => {
   return builder
-    .addCase(toggleClassFilter.fulfilled, (state: any, { payload }: any) => {
+    .addCase(toggleClassFilter.fulfilled, (state: RootState, { payload }: { payload: toggleClassFilterReducerPayload }) => {
       const { newValue, pageObjectId, library, jdiClass, value } = payload;
       const savedFilters = JSON.parse(localStorage.getItem("filters")!);
 
       if (newValue) {
         const newFilter = { ...newValue[FilterKey.JDIclassFilter], [jdiClass]: value };
-        filterAdapter.upsertOne(state, { ...newValue, [jdiClass]: value });
+        filterAdapter.upsertOne(state.filters, { ...newValue, [jdiClass]: value });
         localStorage.setItem("filters", JSON.stringify({ ...savedFilters, [library]: newFilter }));
       } else {
         const initialFilter = {
@@ -44,7 +43,7 @@ export const toggleClassFilterReducer = (builder: any) => {
           ...(savedFilters && savedFilters[library] && savedFilters[library]),
         };
         initialFilter[jdiClass] = value;
-        filterAdapter.addOne(state, {
+        filterAdapter.addOne(state.filters, {
           pageObjectId,
           [FilterKey.JDIclassFilter]: { ...initialFilter },
         });
@@ -56,7 +55,7 @@ export const toggleClassFilterReducer = (builder: any) => {
         }
       }
     })
-    .addCase(toggleClassFilter.rejected, (state: any, { error }: any) => {
+    .addCase(toggleClassFilter.rejected, (state: RootState, { error }: { error: Error}) => {
       throw new Error(error.stack);
     });
 };
