@@ -130,7 +130,7 @@ const Connection = (refs: Record<OnbrdStep, StepRef>) => ({
   title: "Connection to the server",
   description: (
     <React.Fragment>
-      Displays the current type of connection being used by JDN, whether it's a local server or a cloud server.
+      Displays the current type of connection being used by JDN, whether it&apos;s a local server or a cloud server.
       <Col>
         <Row>
           <CloudCheck size={16} color="#8C8C8C" /> — you are connected to a cloud server

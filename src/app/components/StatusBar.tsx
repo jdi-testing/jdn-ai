@@ -1,4 +1,4 @@
-import { Button, Space, Tooltip, Typography } from "antd";
+import { Button, Popconfirm, Space, Tooltip, Typography } from "antd";
 import React, { useContext } from "react";
 import { useSelector } from "react-redux";
 
@@ -14,10 +14,13 @@ import { LocatorsGenerationStatus } from "../../features/locators/types/locator.
 import { OnboardingContext } from "../../features/onboarding/OnboardingProvider";
 import { useOnBoardingRef } from "../../features/onboarding/utils/useOnboardingRef";
 import { OnbrdStep } from "../../features/onboarding/types/constants";
+import { selectIsDefaultState } from "../main.selectors";
 
 export const StatusBar = () => {
   const backendVer = useSelector<RootState>((_state) => _state.main.serverVersion);
-  const backendAvailable = useSelector<RootState>((_state) => _state.main.backendAvailable);
+  const isBackendAvailable =
+    useSelector<RootState>((_state) => _state.main.backendAvailable) === BackendStatus.Accessed;
+  const isDefaultState = useSelector<RootState>(selectIsDefaultState);
   const serverLocation = useSelector<RootState>((_state) => _state.main.baseUrl);
   const generationStatus = useSelector<RootState>((_state) => _state.locators.present.generationStatus);
   const manifest = chrome.runtime.getManifest();
@@ -40,7 +43,7 @@ export const StatusBar = () => {
         ? "Local server"
         : "Remote server";
 
-    return backendAvailable === BackendStatus.Accessed ? (
+    return isBackendAvailable ? (
       <Tooltip placement="bottomRight" align={{ offset: [12, 0] }} title={title}>
         <Button
           type="link"
@@ -66,12 +69,25 @@ export const StatusBar = () => {
         <span>{`JDN v ${pluginVer} ${!isNil(backendVer) ? `Back-end v ${backendVer}` : ""}`}</span>
       </div>
       <Space size={[10, 0]} className="header__space">
-        <Button
-          ref={onbrdRef}
-          type="link"
-          icon={<BookOpen size={14} color="#8C8C8C" />}
-          onClick={() => openOnboarding()}
-        />
+        <Popconfirm
+          placement="bottomRight"
+          disabled={!isBackendAvailable}
+          title={
+            isDefaultState
+              ? "Would you like to start the onboarding?"
+              : "Your current progress will not be saved. Are you sure you want to start the onboarding?"
+          }
+          onConfirm={() => openOnboarding()}
+          okText="Start"
+          cancelText="No"
+        >
+          <Button
+            disabled={!isBackendAvailable}
+            ref={onbrdRef}
+            type="link"
+            icon={<BookOpen size={14} color="#8C8C8C" />}
+          />
+        </Popconfirm>
         <Tooltip title="Readme">
           <Button
             ref={readmedRef}

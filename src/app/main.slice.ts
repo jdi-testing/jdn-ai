@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { defineServerReducer } from "./reducers/defineServer.thunk";
 import { PageObjectId } from "../features/pageObjects/types/pageObjectSlice.types";
 import { BackendStatus, MainState, Notification, PageType } from "./types/mainSlice.types";
+import { removeAllReducer } from "./reducers/removeAll.thunk";
 
 const initialState: MainState = {
   backendAvailable: BackendStatus.TryToAccess,
@@ -57,7 +58,7 @@ const mainSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    defineServerReducer(builder);
+    defineServerReducer(builder), removeAllReducer(builder);
   },
 });
 
