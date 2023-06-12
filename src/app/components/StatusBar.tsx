@@ -1,9 +1,9 @@
-import { Button, Popconfirm, Space, Tooltip, Typography } from "antd";
-import React, { useContext } from "react";
+import { Button, Space, Tooltip, Typography } from "antd";
+import React from "react";
 import { useSelector } from "react-redux";
 
 import { isNil } from "lodash";
-import { BookOpen, CloudCheck, CloudSlash, DesktopTower, Info } from "phosphor-react";
+import { CloudCheck, CloudSlash, DesktopTower, Info } from "phosphor-react";
 import { BackendStatus } from "../types/mainSlice.types";
 import { LocalUrl } from "../utils/constants";
 import { RootState } from "../store/store";
@@ -11,21 +11,18 @@ import DesktopSlash from "../assets/desktopTowerSlash.svg";
 import { readmeLinkAddress } from "../../common/constants/constants";
 import { ReportProblem } from "./ReportProblem";
 import { LocatorsGenerationStatus } from "../../features/locators/types/locator.types";
-import { OnboardingContext } from "../../features/onboarding/OnboardingProvider";
 import { useOnBoardingRef } from "../../features/onboarding/utils/useOnboardingRef";
 import { OnbrdStep } from "../../features/onboarding/types/constants";
-import { selectIsDefaultState } from "../main.selectors";
+import { OnboardingButton } from "./OnboardingButton";
 
 export const StatusBar = () => {
   const backendVer = useSelector<RootState>((_state) => _state.main.serverVersion);
   const isBackendAvailable =
     useSelector<RootState>((_state) => _state.main.backendAvailable) === BackendStatus.Accessed;
-  const isDefaultState = useSelector<RootState>(selectIsDefaultState);
   const serverLocation = useSelector<RootState>((_state) => _state.main.baseUrl);
   const generationStatus = useSelector<RootState>((_state) => _state.locators.present.generationStatus);
   const manifest = chrome.runtime.getManifest();
   const pluginVer = manifest.version;
-  const { openOnboarding } = useContext(OnboardingContext);
 
   const renderServerIndicator = () => {
     const locationIcon =
@@ -59,7 +56,6 @@ export const StatusBar = () => {
     ) : null;
   };
 
-  const onbrdRef = useOnBoardingRef(OnbrdStep.Onboarding);
   const readmedRef = useOnBoardingRef(OnbrdStep.Readme);
   const connectionRef = useOnBoardingRef(OnbrdStep.Connection);
 
@@ -69,25 +65,7 @@ export const StatusBar = () => {
         <span>{`JDN v ${pluginVer} ${!isNil(backendVer) ? `Back-end v ${backendVer}` : ""}`}</span>
       </div>
       <Space size={[10, 0]} className="header__space">
-        <Popconfirm
-          placement="bottomRight"
-          disabled={!isBackendAvailable}
-          title={
-            isDefaultState
-              ? "Would you like to start the onboarding?"
-              : "Your current progress will not be saved. Are you sure you want to start the onboarding?"
-          }
-          onConfirm={() => openOnboarding()}
-          okText="Start"
-          cancelText="No"
-        >
-          <Button
-            disabled={!isBackendAvailable}
-            ref={onbrdRef}
-            type="link"
-            icon={<BookOpen size={14} color="#8C8C8C" />}
-          />
-        </Popconfirm>
+        <OnboardingButton />
         <Tooltip title="Readme">
           <Button
             ref={readmedRef}
