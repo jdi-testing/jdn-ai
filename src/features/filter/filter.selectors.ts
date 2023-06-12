@@ -63,3 +63,8 @@ export const selectIfSelectedAll = createSelector(selectDetectedClassesFilter, (
   const arr = Object.entries(classFilter);
   return !arr.some(([, value]) => !value);
 });
+
+export const selectIfUnselectedAll = createSelector(selectDetectedClassesFilter, (classFilter) => {
+  const arr = Object.entries(classFilter);
+  return arr.every(([, value]) => !value);
+});

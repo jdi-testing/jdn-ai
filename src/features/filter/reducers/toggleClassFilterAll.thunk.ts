@@ -13,6 +13,7 @@ export const toggleClassFilterAll = createAsyncThunk(
     const { pageObjectId, value, library } = payload;
     const state = getState() as RootState;
     let newFilterValue = simpleSelectFilterById(state.filters, pageObjectId);
+    const savedFilters = getLocalStorage(LocalStorageKey.Filter);
 
     if (!newFilterValue) {
       newFilterValue = { pageObjectId, [FilterKey.JDIclassFilter]: jdiClassFilterInit(library) };
@@ -24,13 +25,7 @@ export const toggleClassFilterAll = createAsyncThunk(
       newFilter[key] = value;
     });
 
-    if (!getLocalStorage(LocalStorageKey.Filter)) {
-      setLocalStorage(LocalStorageKey.Filter, { [library]: newFilter });
-    } else {
-      const savedFilters = getLocalStorage(LocalStorageKey.Filter);
-      setLocalStorage(LocalStorageKey.Filter, { ...savedFilters, [library]: newFilter });
-    }
-
+    setLocalStorage(LocalStorageKey.Filter, { ...(savedFilters ?? {}), [library]: newFilter });
     return { newFilterValue, newFilter };
   }
 );

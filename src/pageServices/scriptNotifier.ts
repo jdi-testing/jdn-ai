@@ -1,5 +1,5 @@
 import { Middleware } from "@reduxjs/toolkit";
-import { compact, isNil, pick, size } from "lodash";
+import { compact, isNil, size } from "lodash";
 import { pageType } from "../common/constants/constants";
 import { selectLocatorById } from "../features/locators/locators.selectors";
 import { Locator, LocatorTaskStatus, LocatorValidationWarnings } from "../features/locators/types/locator.types";
@@ -165,10 +165,14 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       if (!payload.fromScript) sendMessage.unsetActive(payload);
       break;
     }
-    case "filter/setFilters":
+    case "filter/setFilters": {
+      const newFilter = selectClassFilterByPO(state);
+      sendMessage.toggleFilter(newFilter);
+      break;
+    }
     case "filter/toggleClassFilter/fulfilled":
     case "filter/toggleClassFilterAll/fulfilled": {
-      sendMessage.toggleFilter(pick(payload, ["jdiClass", "value"]));
+      sendMessage.toggleFilter(payload.newFilter);
       break;
     }
   }

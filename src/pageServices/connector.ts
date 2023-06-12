@@ -1,7 +1,6 @@
 import { isUndefined } from "lodash";
 import { SCRIPT_ERROR } from "../common/constants/constants";
 import { ElementId, Locator, PredictedEntity } from "../features/locators/types/locator.types";
-import { ElementClass } from "../features/locators/types/generationClasses.types";
 import { SelectorsMap } from "../services/rules/rules.types";
 import { ScriptMessagePayload } from "./scriptMessageHandler";
 import { ClassFilterValue } from "../features/filter/types/filter.types";
@@ -189,7 +188,7 @@ export const sendMessage = {
   setActive: (payload: Locator | Locator[]) => connector.sendMessage("SET_ACTIVE", payload),
   toggle: (payload: { element: Locator; skipScroll?: boolean }) => connector.sendMessage("HIGHLIGHT_TOGGLED", payload),
   toggleDeleted: (el: Locator) => connector.sendMessage("TOGGLE_DELETED", el),
-  toggleFilter: (payload: { jdiClass: ElementClass; value: boolean }) =>
+  toggleFilter: (payload: ClassFilterValue) =>
     connector.sendMessage("TOGGLE_FILTER", payload),
   toggleActiveGroup: (payload: Locator[]) => connector.sendMessage("TOGGLE_ACTIVE_GROUP", payload),
   unsetActive: (payload: Locator | Locator[]) => connector.sendMessage("UNSET_ACTIVE", payload),

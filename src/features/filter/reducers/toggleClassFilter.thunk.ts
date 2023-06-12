@@ -41,14 +41,10 @@ export const toggleClassFilter = createAsyncThunk(
       setLocalStorage(LocalStorageKey.Filter, { ...savedFilters, [library]: newFilter });
     } else {
       initialFilter[jdiClass] = value;
-      if (!getLocalStorage(LocalStorageKey.Filter)) {
-        setLocalStorage(LocalStorageKey.Filter, { [library]: { ...initialFilter } });
-      } else {
-        setLocalStorage(LocalStorageKey.Filter, { ...savedFilters, [library]: initialFilter });
-      }
+      setLocalStorage(LocalStorageKey.Filter, { ...(savedFilters ?? {}), [library]: initialFilter });
     }
 
-    return { newFilterValue, newFilter, initialFilter, pageObjectId, jdiClass, value };
+    return { newFilterValue, newFilter, initialFilter, pageObjectId };
   }
 );
 
