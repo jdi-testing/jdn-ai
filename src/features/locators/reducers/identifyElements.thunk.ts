@@ -8,7 +8,7 @@ import { ElementLibrary, predictEndpoints } from "../types/generationClasses.typ
 
 import { generateLocators } from "./generateLocators.thunk";
 import { findByRules } from "../utils/generationButton";
-import { LocalStorageKey } from "../../../common/utils/const";
+import { LocalStorageKey, getLocalStorage } from "../../../common/utils/localStorage";
 
 interface Meta {
   library: ElementLibrary;
@@ -19,8 +19,7 @@ export const identifyElements = createAsyncThunk(
   "locators/identifyElements",
   async ({ library, pageObj }: Meta, thunkAPI) => {
     thunkAPI.dispatch(setCurrentPageObj(pageObj));
-
-    const savedFilters = JSON.parse(localStorage.getItem(LocalStorageKey.Filter)!);
+    const savedFilters = getLocalStorage(LocalStorageKey.Filter);
     if (savedFilters && savedFilters[library]) {
       thunkAPI.dispatch(setFilters({ pageObjectId: pageObj, JDIclassFilter: savedFilters[library] }));
     }

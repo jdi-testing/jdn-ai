@@ -5,7 +5,7 @@ import { FilterKey, ClassFilterValue, Filter } from "../types/filter.types";
 import { jdiClassFilterInit } from "../utils/filterSet";
 import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
 import { ElementLibrary } from "../../locators/types/generationClasses.types";
-import { LocalStorageKey } from "../../../common/utils/const";
+import { LocalStorageKey, setLocalStorage, getLocalStorage } from "../../../common/utils/localStorage";
 
 export const toggleClassFilterAll = createAsyncThunk(
   "filter/toggleClassFilterAll",
@@ -24,11 +24,11 @@ export const toggleClassFilterAll = createAsyncThunk(
       newFilter[key] = value;
     });
 
-    if (!localStorage.getItem(LocalStorageKey.Filter)) {
-      localStorage.setItem(LocalStorageKey.Filter, JSON.stringify({ [library]: newFilter }));
+    if (!getLocalStorage(LocalStorageKey.Filter)) {
+      setLocalStorage(LocalStorageKey.Filter, { [library]: newFilter });
     } else {
-      const savedFilters = JSON.parse(localStorage.getItem(LocalStorageKey.Filter)!);
-      localStorage.setItem(LocalStorageKey.Filter, JSON.stringify({ ...savedFilters, [library]: newFilter }));
+      const savedFilters = getLocalStorage(LocalStorageKey.Filter);
+      setLocalStorage(LocalStorageKey.Filter, { ...savedFilters, [library]: newFilter });
     }
 
     return { newFilterValue, newFilter };

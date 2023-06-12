@@ -10,8 +10,7 @@ import {
 import { defaultLibrary } from "../../locators/types/generationClasses.types";
 import { getPageAttributes, isPONameUnique } from "../utils/pageObject";
 import { getClassName } from "../utils/pageObjectTemplate";
-import { LocatorType } from "../../../common/types/common";
-import { LocalStorageKey } from "../../../common/utils/const";
+import { LocalStorageKey, getLocalStorage } from "../../../common/utils/localStorage";
 
 export const addPageObj = createAsyncThunk("pageObject/addPageObj", async (payload, { getState }) => {
   const res = await getPageAttributes();
@@ -20,22 +19,9 @@ export const addPageObj = createAsyncThunk("pageObject/addPageObj", async (paylo
 
   const state = getState();
 
-  let lastSelectedLibrary;
-  let lastSelectedLocatorType;
-
-  if (localStorage.getItem(LocalStorageKey.Library)) {
-    lastSelectedLibrary = localStorage.getItem(LocalStorageKey.Library);
-  } else {
-    lastSelectedLibrary = selectLastElementLibrary(state) || defaultLibrary;
-    localStorage.setItem(LocalStorageKey.Library, lastSelectedLibrary);
-  }
-
-  if (localStorage.getItem(LocalStorageKey.LocatorType)) {
-    lastSelectedLocatorType = localStorage.getItem(LocalStorageKey.LocatorType);
-  } else {
-    lastSelectedLocatorType = selectLastLocatorType(state);
-    localStorage.setItem(LocalStorageKey.LocatorType, lastSelectedLocatorType ?? LocatorType.xPath);
-  }
+  const lastSelectedLibrary =
+    getLocalStorage(LocalStorageKey.Library) || selectLastElementLibrary(state) || defaultLibrary;
+  const lastSelectedLocatorType = getLocalStorage(LocalStorageKey.LocatorType) || selectLastLocatorType(state);
 
   return { className, url, lastSelectedLibrary, lastSelectedLocatorType };
 });

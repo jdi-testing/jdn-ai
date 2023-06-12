@@ -5,7 +5,7 @@ import { FilterKey, Filter, ClassFilterValue } from "../types/filter.types";
 import { jdiClassFilterInit } from "../utils/filterSet";
 import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
 import { ElementClass, ElementLibrary } from "../../locators/types/generationClasses.types";
-import { LocalStorageKey } from "../../../common/utils/const";
+import { LocalStorageKey, setLocalStorage, getLocalStorage } from "../../../common/utils/localStorage";
 
 interface toggleClassFilterPayload {
   pageObjectId: PageObjectId;
@@ -29,22 +29,22 @@ export const toggleClassFilter = createAsyncThunk(
     const state = getState() as RootState;
     const newFilterValue = simpleSelectFilterById(state.filters, pageObjectId);
 
-    const savedFilters = JSON.parse(localStorage.getItem(LocalStorageKey.Filter)!);
+    const savedFilters = getLocalStorage(LocalStorageKey.Filter);
     let newFilter;
     const initialFilter = {
       ...jdiClassFilterInit(library),
-      ...(savedFilters && savedFilters[library] && savedFilters[library]),
+      ...(savedFilters?.[library] && savedFilters[library]),
     };
 
     if (newFilterValue) {
       newFilter = { ...newFilterValue[FilterKey.JDIclassFilter], [jdiClass]: value };
-      localStorage.setItem(LocalStorageKey.Filter, JSON.stringify({ ...savedFilters, [library]: newFilter }));
+      setLocalStorage(LocalStorageKey.Filter, { ...savedFilters, [library]: newFilter });
     } else {
       initialFilter[jdiClass] = value;
-      if (!localStorage.getItem(LocalStorageKey.Filter)) {
-        localStorage.setItem(LocalStorageKey.Filter, JSON.stringify({ [library]: { ...initialFilter } }));
+      if (!getLocalStorage(LocalStorageKey.Filter)) {
+        setLocalStorage(LocalStorageKey.Filter, { [library]: { ...initialFilter } });
       } else {
-        localStorage.setItem(LocalStorageKey.Filter, JSON.stringify({ ...savedFilters, [library]: initialFilter }));
+        setLocalStorage(LocalStorageKey.Filter, { ...savedFilters, [library]: initialFilter });
       }
     }
 
