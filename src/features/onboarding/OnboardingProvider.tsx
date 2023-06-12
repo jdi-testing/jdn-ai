@@ -9,7 +9,7 @@ import { IdentificationStatus } from "../locators/types/locator.types";
 import { getPOPageSteps } from "./utils/tourSteps";
 import { selectCurrentPage, selectIsDefaultState } from "../../app/main.selectors";
 import { BackendStatus, PageType } from "../../app/types/mainSlice.types";
-import { getLocalStorage, isOnboardingPassed, setLocalStorage } from "../../common/utils/localStorage";
+import { LocalStorageKey, getLocalStorage, setLocalStorage } from "../../common/utils/localStorage";
 import { Modal } from "antd";
 import { removeAll } from "../../app/reducers/removeAll.thunk";
 
@@ -24,7 +24,7 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
   const [isOnbrdOpen, setIsOnbrdOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const _isOnboardingPassed = getLocalStorage(isOnboardingPassed);
+  const _isOnboardingPassed = getLocalStorage(LocalStorageKey.IsOnboardingPassed);
   const isBackendAvailable = useSelector((state: RootState) => state.main.backendAvailable) === BackendStatus.Accessed;
   const isDefaultState = useSelector<RootState>(selectIsDefaultState);
 
@@ -44,7 +44,7 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
   const closeOnboarding = () => {
     setIsOnbrdOpen(false);
     setStepRefs({} as Record<OnbrdStep, StepRef>);
-    setLocalStorage(isOnboardingPassed, true);
+    setLocalStorage(LocalStorageKey.IsOnboardingPassed, true);
   };
   const addRef = (
     name: OnbrdStep,
@@ -77,6 +77,8 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
   const poHasLocators = useSelector(selectCurrentPageObject)?.locators;
   const checkedLocators = useSelector(selectCheckedLocators);
 
+  // for a case when by any user's actions state is changed 
+  // and Onboarding step should be changed programmatically
   const defaultStep =
     isPoPage && poHasLocators
       ? OnbrdStep.DownloadPO

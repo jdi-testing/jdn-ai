@@ -1,9 +1,11 @@
 // keys
-export const isOnboardingPassed = "jdnIsOnboardingPassed";
+
+export enum LocalStorageKey {
+  IsOnboardingPassed = "JDN_IS_ONBOARDING_PASSED",
+}
 
 export const setLocalStorage = (key: string, value: any) => {
-  const _value = typeof value === "string" ? value : JSON.stringify(value);
-  localStorage.setItem(key, JSON.stringify(_value));
+  localStorage.setItem(key, JSON.stringify(value));
 };
 
 export const getLocalStorage = (key: string) => {
