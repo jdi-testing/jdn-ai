@@ -17,8 +17,7 @@ import { OnboardingButton } from "./OnboardingButton";
 
 export const StatusBar = () => {
   const backendVer = useSelector<RootState>((_state) => _state.main.serverVersion);
-  const isBackendAvailable =
-    useSelector<RootState>((_state) => _state.main.backendAvailable) === BackendStatus.Accessed;
+  const backendAvailable = useSelector<RootState>((_state) => _state.main.backendAvailable);
   const serverLocation = useSelector<RootState>((_state) => _state.main.baseUrl);
   const generationStatus = useSelector<RootState>((_state) => _state.locators.present.generationStatus);
   const manifest = chrome.runtime.getManifest();
@@ -40,7 +39,7 @@ export const StatusBar = () => {
         ? "Local server"
         : "Remote server";
 
-    return isBackendAvailable ? (
+    return backendAvailable === BackendStatus.Accessed ? (
       <Tooltip placement="bottomRight" align={{ offset: [12, 0] }} title={title}>
         <Button
           type="link"

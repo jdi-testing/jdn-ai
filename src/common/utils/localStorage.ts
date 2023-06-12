@@ -2,7 +2,8 @@
 export const isOnboardingPassed = "jdnIsOnboardingPassed";
 
 export const setLocalStorage = (key: string, value: any) => {
-  localStorage.setItem(key, JSON.stringify(value));
+  const _value = typeof value === "string" ? value : JSON.stringify(value);
+  localStorage.setItem(key, JSON.stringify(_value));
 };
 
 export const getLocalStorage = (key: string) => {
