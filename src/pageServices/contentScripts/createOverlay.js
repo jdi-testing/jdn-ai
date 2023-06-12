@@ -15,5 +15,9 @@ export function createOverlay() {
   Object.assign(overlay.style, overlayStyle);
   document.body.appendChild(overlay);
 
+  chrome.storage.onChanged.addListener((event) => {
+    if (event.hasOwnProperty("IS_DISCONNECTED")) overlay.remove();
+  });
+
   return overlayID;
 }
