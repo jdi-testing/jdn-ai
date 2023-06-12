@@ -77,7 +77,7 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
   const poHasLocators = useSelector(selectCurrentPageObject)?.locators;
   const checkedLocators = useSelector(selectCheckedLocators);
 
-  // for a case when by any user's actions state is changed 
+  // for a case when by any user's actions state is changed
   // and Onboarding step should be changed programmatically
   const defaultStep =
     isPoPage && poHasLocators
