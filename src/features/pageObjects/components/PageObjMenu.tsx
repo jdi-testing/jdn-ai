@@ -11,6 +11,7 @@ import {
   downloadPerfTest,
   edit,
   renameOption,
+  dividerItem,
 } from "../../../common/components/menu/menuOptions";
 import { ElementId, Locator } from "../../locators/types/locator.types";
 import { removeLocators } from "../../locators/locators.slice";
@@ -73,6 +74,7 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, url, locators, elements
       ...(size(locatorIds) ? [edit(handleEdit, "Edit Page Object")] : []),
       ...(size(locatorIds) ? [download(handleDownload)] : []),
       ...(size(locatorIds) && __DEV_ENVIRONMENT__ ? [downloadPerfTest(handleDownloadPerfTest)] : []),
+      dividerItem,
       deleteOption(handleRemove),
     ];
 

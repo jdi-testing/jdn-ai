@@ -10,7 +10,7 @@ export const defineServer = createAsyncThunk("main/defineServer", async () => {
   const checkVersion = (request: Promise<AxiosResponse<BaseUrl>>, isRemote: boolean) =>
     request.then((response) => {
       const [major, minor, build] = response.data.split(".").map(toInteger);
-      if (compatibleMajorVer === major && compatibleMinorVer === minor && compatibleBuildVer === build) {
+      if (compatibleMajorVer === major && compatibleMinorVer === minor && compatibleBuildVer <= build) {
         return JSON.parse(JSON.stringify(response));
       } else if (isRemote) {
         throw new Error(BackendStatus.IncompatibleVersionRemote);
