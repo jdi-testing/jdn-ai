@@ -1,10 +1,11 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { filterAdapter, simpleSelectFilterById } from "../filter.selectors";
 import { RootState } from "../../../app/store/store";
-import { FilterKey, Filter } from "../types/filter.types";
+import { FilterKey, Filter, ClassFilterValue } from "../types/filter.types";
 import { jdiClassFilterInit } from "../utils/filterSet";
 import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
 import { ElementClass, ElementLibrary } from "../../locators/types/generationClasses.types";
+import { LocalStorageKey } from "../../../common/utils/const";
 
 interface toggleClassFilterPayload {
   pageObjectId: PageObjectId;
@@ -13,46 +14,56 @@ interface toggleClassFilterPayload {
   value: boolean;
 }
 
-interface toggleClassFilterReducerPayload extends toggleClassFilterPayload {
-  newValue: Filter;
+interface toggleClassFilterReducerPayload {
+  pageObjectId: PageObjectId;
+  newFilterValue: Filter;
+  initialFilter: ClassFilterValue;
+  newFilter: ClassFilterValue;
 }
 
 export const toggleClassFilter = createAsyncThunk(
   "filter/toggleClassFilter",
   async (payload: toggleClassFilterPayload, { getState }) => {
-    const { pageObjectId } = payload;
+    const { pageObjectId, jdiClass, value, library } = payload;
+
     const state = getState() as RootState;
-    const newValue = simpleSelectFilterById(state.filters, pageObjectId);
-    return { newValue, ...payload };
+    const newFilterValue = simpleSelectFilterById(state.filters, pageObjectId);
+
+    const savedFilters = JSON.parse(localStorage.getItem(LocalStorageKey.Filter)!);
+    let newFilter;
+    const initialFilter = {
+      ...jdiClassFilterInit(library),
+      ...(savedFilters && savedFilters[library] && savedFilters[library]),
+    };
+
+    if (newFilterValue) {
+      newFilter = { ...newFilterValue[FilterKey.JDIclassFilter], [jdiClass]: value };
+      localStorage.setItem(LocalStorageKey.Filter, JSON.stringify({ ...savedFilters, [library]: newFilter }));
+    } else {
+      initialFilter[jdiClass] = value;
+      if (!localStorage.getItem(LocalStorageKey.Filter)) {
+        localStorage.setItem(LocalStorageKey.Filter, JSON.stringify({ [library]: { ...initialFilter } }));
+      } else {
+        localStorage.setItem(LocalStorageKey.Filter, JSON.stringify({ ...savedFilters, [library]: initialFilter }));
+      }
+    }
+
+    return { newFilterValue, newFilter, initialFilter, pageObjectId, jdiClass, value };
   }
 );
 
 export const toggleClassFilterReducer = (builder: any) => {
   return builder
     .addCase(toggleClassFilter.fulfilled, (state: any, { payload }: { payload: toggleClassFilterReducerPayload }) => {
-      const { newValue, pageObjectId, library, jdiClass, value } = payload;
-      const savedFilters = JSON.parse(localStorage.getItem("filters")!);
+      const { newFilterValue, newFilter, pageObjectId, initialFilter } = payload;
 
-      if (newValue) {
-        const newFilter = { ...newValue[FilterKey.JDIclassFilter], [jdiClass]: value };
-        filterAdapter.upsertOne(state, { ...newValue, [jdiClass]: value });
-        localStorage.setItem("filters", JSON.stringify({ ...savedFilters, [library]: newFilter }));
+      if (newFilterValue) {
+        filterAdapter.upsertOne(state, { ...newFilterValue, [FilterKey.JDIclassFilter]: newFilter });
       } else {
-        const initialFilter = {
-          ...jdiClassFilterInit(library),
-          ...(savedFilters && savedFilters[library] && savedFilters[library]),
-        };
-        initialFilter[jdiClass] = value;
         filterAdapter.addOne(state, {
           pageObjectId,
           [FilterKey.JDIclassFilter]: { ...initialFilter },
         });
-
-        if (!localStorage.getItem("filters")) {
-          localStorage.setItem("filters", JSON.stringify({ [library]: { ...initialFilter } }));
-        } else {
-          localStorage.setItem("filters", JSON.stringify({ ...savedFilters, [library]: initialFilter }));
-        }
       }
     })
     .addCase(toggleClassFilter.rejected, (state: RootState, { error }: { error: Error }) => {

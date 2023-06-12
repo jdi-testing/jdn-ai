@@ -11,27 +11,30 @@ import { defaultLibrary } from "../../locators/types/generationClasses.types";
 import { getPageAttributes, isPONameUnique } from "../utils/pageObject";
 import { getClassName } from "../utils/pageObjectTemplate";
 import { LocatorType } from "../../../common/types/common";
+import { LocalStorageKey } from "../../../common/utils/const";
 
-export const addPageObj = createAsyncThunk("pageObject/addPageObj", async (payload, thunkAPI) => {
+export const addPageObj = createAsyncThunk("pageObject/addPageObj", async (payload, { getState }) => {
   const res = await getPageAttributes();
   const { title, url } = res[0].result;
   const className = getClassName(title);
 
+  const state = getState();
+
   let lastSelectedLibrary;
   let lastSelectedLocatorType;
 
-  if (localStorage.getItem("library")) {
-    lastSelectedLibrary = localStorage.getItem("library");
+  if (localStorage.getItem(LocalStorageKey.Library)) {
+    lastSelectedLibrary = localStorage.getItem(LocalStorageKey.Library);
   } else {
-    lastSelectedLibrary = selectLastElementLibrary(thunkAPI.getState()) || defaultLibrary;
-    localStorage.setItem("library", lastSelectedLibrary);
+    lastSelectedLibrary = selectLastElementLibrary(state) || defaultLibrary;
+    localStorage.setItem(LocalStorageKey.Library, lastSelectedLibrary);
   }
 
-  if (localStorage.getItem("locatorType")) {
-    lastSelectedLocatorType = localStorage.getItem("locatorType");
+  if (localStorage.getItem(LocalStorageKey.LocatorType)) {
+    lastSelectedLocatorType = localStorage.getItem(LocalStorageKey.LocatorType);
   } else {
-    lastSelectedLocatorType = selectLastLocatorType(thunkAPI.getState()) || LocatorType.xPath;
-    localStorage.setItem("locatorType", lastSelectedLocatorType);
+    lastSelectedLocatorType = selectLastLocatorType(state);
+    localStorage.setItem(LocalStorageKey.LocatorType, lastSelectedLocatorType ?? LocatorType.xPath);
   }
 
   return { className, url, lastSelectedLibrary, lastSelectedLocatorType };
@@ -69,7 +72,7 @@ export const addPageObjReducer = (builder) => {
         pathname,
         search,
         origin,
-        locatorType: lastSelectedLocatorType,
+        ...(lastSelectedLocatorType ? { locatorType: lastSelectedLocatorType } : {}),
       });
       state.currentPageObject = id;
     })

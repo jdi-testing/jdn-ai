@@ -10,6 +10,7 @@ import { PageObjectId } from "../types/pageObjectSlice.types";
 import { ElementLibrary, libraryNames } from "../../locators/types/generationClasses.types";
 import { identifyElements } from "../../locators/reducers/identifyElements.thunk";
 import { LocatorType } from "../../../common/types/common";
+import { LocalStorageKey } from "../../../common/utils/const";
 
 interface Props {
   pageObj: PageObjectId;
@@ -36,7 +37,7 @@ export const GenerationButton: React.FC<Props> = ({ pageObj, library }) => {
               className="jdn__select"
               onChange={(_library) => {
                 dispatch(changeElementLibrary({ id: pageObj, library: _library }));
-                localStorage.setItem("library", _library);
+                localStorage.setItem(LocalStorageKey.Library, _library);
               }}
               options={[
                 {
@@ -62,11 +63,11 @@ export const GenerationButton: React.FC<Props> = ({ pageObj, library }) => {
           <Col flex="auto">
             <Select
               id="locatorType"
-              defaultValue={currentPageObject?.locatorType}
+              defaultValue={currentPageObject?.locatorType || LocatorType.xPath}
               className="jdn__select"
               onChange={(_locatorType) => {
                 dispatch(setLocatorType({ id: pageObj, locatorType: _locatorType }));
-                localStorage.setItem("locatorType", _locatorType);
+                localStorage.setItem(LocalStorageKey.LocatorType, _locatorType);
               }}
               options={[
                 {

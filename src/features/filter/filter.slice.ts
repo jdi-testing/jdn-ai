@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { PageObjectId } from "../pageObjects/types/pageObjectSlice.types";
+import { Filter, FilterKey } from "./types/filter.types";
 import { filterAdapter } from "./filter.selectors";
 import { toggleClassFilterReducer } from "./reducers/toggleClassFilter.thunk";
 import { toggleClassFilterAllReducer } from "./reducers/toggleClassFilterAll.thunk";
@@ -15,6 +16,13 @@ const filterSlice = createSlice({
       const { pageObjectIds } = payload;
       filterAdapter.removeMany(state, pageObjectIds);
     },
+    setFilters(state, { payload }: PayloadAction<Filter>) {
+      const { pageObjectId, JDIclassFilter } = payload;
+      filterAdapter.addOne(state, {
+        pageObjectId,
+        [FilterKey.JDIclassFilter]: { ...JDIclassFilter },
+      });
+    },
   },
   extraReducers: (builder) => {
     toggleClassFilterReducer(builder), toggleClassFilterAllReducer(builder);
@@ -22,4 +30,4 @@ const filterSlice = createSlice({
 });
 
 export default filterSlice.reducer;
-export const { removeAll, removeFilters } = filterSlice.actions;
+export const { removeAll, removeFilters, setFilters } = filterSlice.actions;

@@ -5,23 +5,33 @@ import { FilterKey, ClassFilterValue, Filter } from "../types/filter.types";
 import { jdiClassFilterInit } from "../utils/filterSet";
 import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
 import { ElementLibrary } from "../../locators/types/generationClasses.types";
+import { LocalStorageKey } from "../../../common/utils/const";
 
 export const toggleClassFilterAll = createAsyncThunk(
   "filter/toggleClassFilterAll",
   async (payload: { pageObjectId: PageObjectId; library: ElementLibrary; value: boolean }, { getState }) => {
     const { pageObjectId, value, library } = payload;
     const state = getState() as RootState;
-    let newValue = simpleSelectFilterById(state.filters, pageObjectId);
-    if (!newValue) {
-      newValue = { pageObjectId, [FilterKey.JDIclassFilter]: jdiClassFilterInit(library) };
+    let newFilterValue = simpleSelectFilterById(state.filters, pageObjectId);
+
+    if (!newFilterValue) {
+      newFilterValue = { pageObjectId, [FilterKey.JDIclassFilter]: jdiClassFilterInit(library) };
     }
-    const filter = { ...newValue[FilterKey.JDIclassFilter] };
-    Object.keys(filter).forEach((key: string) => {
+    const newFilter = { ...newFilterValue[FilterKey.JDIclassFilter] };
+    Object.keys(newFilter).forEach((key: string) => {
       // don't know how to fix it
       //@ts-ignore
-      filter[key] = value;
+      newFilter[key] = value;
     });
-    return { newValue, filter, library };
+
+    if (!localStorage.getItem(LocalStorageKey.Filter)) {
+      localStorage.setItem(LocalStorageKey.Filter, JSON.stringify({ [library]: newFilter }));
+    } else {
+      const savedFilters = JSON.parse(localStorage.getItem(LocalStorageKey.Filter)!);
+      localStorage.setItem(LocalStorageKey.Filter, JSON.stringify({ ...savedFilters, [library]: newFilter }));
+    }
+
+    return { newFilterValue, newFilter };
   }
 );
 
@@ -29,20 +39,9 @@ export const toggleClassFilterAllReducer = (builder: any) => {
   return builder
     .addCase(
       toggleClassFilterAll.fulfilled,
-      (
-        state: any,
-        { payload }: { payload: { newValue: Filter; filter: ClassFilterValue; library: ElementLibrary } }
-      ) => {
-        const { newValue, filter, library } = payload;
-
-        filterAdapter.upsertOne(state, { ...newValue, [FilterKey.JDIclassFilter]: filter });
-
-        if (!localStorage.getItem("filters")) {
-          localStorage.setItem("filters", JSON.stringify({ [library]: filter }));
-        } else {
-          const savedFilters = JSON.parse(localStorage.getItem("filters")!);
-          localStorage.setItem("filters", JSON.stringify({ ...savedFilters, [library]: filter }));
-        }
+      (state: any, { payload }: { payload: { newFilterValue: Filter; newFilter: ClassFilterValue } }) => {
+        const { newFilterValue, newFilter } = payload;
+        filterAdapter.upsertOne(state, { ...newFilterValue, [FilterKey.JDIclassFilter]: newFilter });
       }
     )
     .addCase(toggleClassFilterAll.rejected, (state: RootState, { error }: { error: Error }) => {
