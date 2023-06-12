@@ -1,4 +1,4 @@
-import { Button, Popconfirm } from "antd";
+import { Button, Popconfirm, Tooltip } from "antd";
 import { BookOpen } from "phosphor-react";
 import React, { useContext } from "react";
 import { useSelector } from "react-redux";
@@ -10,8 +10,10 @@ import { useOnBoardingRef } from "../../features/onboarding/utils/useOnboardingR
 import { OnbrdStep } from "../../features/onboarding/types/constants";
 
 export const OnboardingButton = () => {
+  const [tooltipnVisible, setTooltipVisible] = React.useState(false);
+
   const isDefaultState = useSelector<RootState>(selectIsDefaultState);
-  const isBackendAvailable =
+  const isOnboardingAvailable =
     useSelector<RootState>((_state) => _state.main.backendAvailable) === BackendStatus.Accessed;
 
   const { openOnboarding } = useContext(OnboardingContext);
@@ -21,17 +23,28 @@ export const OnboardingButton = () => {
   return (
     <Popconfirm
       placement="bottomRight"
-      disabled={!isBackendAvailable}
+      align={{ offset: [18, 0] }}
+      disabled={!isOnboardingAvailable}
       title={
         isDefaultState
           ? "Would you like to start the onboarding?"
           : "Your current progress will not be saved. Are you sure you want to start the onboarding?"
       }
-      onConfirm={() => openOnboarding()}
+      onConfirm={openOnboarding}
       okText="Start"
       cancelText="No"
     >
-      <Button disabled={!isBackendAvailable} ref={onbrdRef} type="link" icon={<BookOpen size={14} color="#8C8C8C" />} />
+      <Tooltip placement="bottomRight" open={tooltipnVisible} align={{ offset: [16, 0] }} title="Onboarding tutorial">
+        <Button
+          disabled={!isOnboardingAvailable}
+          ref={onbrdRef}
+          type="link"
+          icon={<BookOpen size={14} color="#8C8C8C" />}
+          onClick={() => setTooltipVisible(false)}
+          onMouseEnter={() => setTooltipVisible(true)}
+          onMouseLeave={() => setTooltipVisible(false)}
+        />
+      </Tooltip>
     </Popconfirm>
   );
 };
