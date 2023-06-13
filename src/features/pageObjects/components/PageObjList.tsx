@@ -64,8 +64,14 @@ export const PageObjList: React.FC<Props> = (props) => {
     );
   };
 
-  const renderContent = (pageObjId: PageObjectId, url: string, elements: LocatorType[], library: ElementLibrary) => {
-    if (size(elements)) {
+  const renderContent = (
+    pageObjId: PageObjectId,
+    url: string,
+    elements: LocatorType[],
+    library: ElementLibrary,
+    isPageObjectNotEmpty: boolean
+  ) => {
+    if (isPageObjectNotEmpty) {
       return renderLocators(elements, library);
     } else {
       return renderPageObjGeneration(pageObjId, url, library);
@@ -106,7 +112,7 @@ export const PageObjList: React.FC<Props> = (props) => {
             >
               {pageObjects.map(({ id, name, url, locators, library }) => {
                 const elements = selectConfirmedLocators(state as RootState, id);
-                const isPageObjectNotEmpty = !!size(elements);
+                const isPageObjectNotEmpty = !!size(locators);
                 return (
                   <Collapse.Panel
                     key={id}
@@ -128,7 +134,7 @@ export const PageObjList: React.FC<Props> = (props) => {
                       </>
                     }
                   >
-                    {renderContent(id, url, elements, library)}
+                    {renderContent(id, url, elements, library, isPageObjectNotEmpty)}
                   </Collapse.Panel>
                 );
               })}
