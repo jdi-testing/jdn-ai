@@ -25,7 +25,6 @@ import { LocatorsTree, LocatorTreeProps } from "./components/LocatorsTree";
 import { LocatorListHeader } from "./components/LocatorListHeader";
 import { Filter } from "../filter/Filter";
 import { useCalculateHeaderSize } from "./utils/useCalculateHeaderSize";
-import { useOverlay } from "./utils/useOverlay";
 import { RootState } from "../../app/store/store";
 import { IdentificationStatus } from "./types/locator.types";
 import { LocatorTreeSpinner } from "./components/LocatorTreeSpinner";
@@ -54,8 +53,6 @@ export const LocatorsPage = () => {
   const [filterSnapshot] = useState(useSelector(selectClassFilterByPO));
   // For changing locatorsList-content height depends on header height
   const containerHeight = useCalculateHeaderSize(breadcrumbsRef);
-  // overlay for web page
-  useOverlay();
 
   const pageBack = () => {
     dispatch(setScriptMessage({}));
