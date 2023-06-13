@@ -389,26 +389,13 @@ export const highlightOnPage = () => {
   };
 
   const applyFilter = (classFilterValue) => {
-    const { jdiClass, value } = classFilterValue;
-    let filterElements = [];
-
-    if (!jdiClass) {
-      // in case of Select All
-      filterElements = [...predictedElements];
-      filterElements.forEach((element) => (classFilter[element.type] = value));
-    } else {
-      const classValue = Object.hasOwn(classFilter, jdiClass) ? classFilter[jdiClass] : true;
-      if (classValue === value) return;
-
-      classFilter[jdiClass] = value;
-      filterElements = predictedElements.filter((elem) => elem.type === jdiClass);
-    }
+    classFilter = classFilterValue;
 
     let needToDraw = false;
-    filterElements.forEach((element) => {
+    predictedElements?.forEach((element) => {
       const div = document.getElementById(element.jdnHash);
-      if (div) div.setAttribute("jdn-filtered", value ? "true" : false);
-      else value && (needToDraw = true);
+      if (div) div.setAttribute("jdn-filtered", classFilter[element.type] ? "true" : false);
+      else classFilter[element.type] && (needToDraw = true);
     });
     if (needToDraw) findAndHighlight();
   };
