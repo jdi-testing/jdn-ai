@@ -16,9 +16,9 @@ const filterSlice = createSlice({
       const { pageObjectIds } = payload;
       filterAdapter.removeMany(state, pageObjectIds);
     },
-    setFilters(state, { payload }: PayloadAction<Filter>) {
+    setFilter(state, { payload }: PayloadAction<Filter>) {
       const { pageObjectId, JDIclassFilter } = payload;
-      filterAdapter.addOne(state, {
+      filterAdapter.upsertOne(state, {
         pageObjectId,
         [FilterKey.JDIclassFilter]: { ...JDIclassFilter },
       });
@@ -30,4 +30,4 @@ const filterSlice = createSlice({
 });
 
 export default filterSlice.reducer;
-export const { removeAll, removeFilters, setFilters } = filterSlice.actions;
+export const { removeAll, removeFilters, setFilter } = filterSlice.actions;

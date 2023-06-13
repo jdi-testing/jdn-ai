@@ -16,6 +16,7 @@ import {
   selectFilteredLocators,
   getLocatorsIdsByPO,
   selectCheckedLocators,
+  selectLocatorsByPageObject,
 } from "../pageObjects/pageObject.selectors";
 import { clearLocators } from "../pageObjects/pageObject.slice";
 import { locatorGenerationController } from "./utils/locatorGenerationController";
@@ -24,14 +25,14 @@ import { LocatorsTree, LocatorTreeProps } from "./components/LocatorsTree";
 import { LocatorListHeader } from "./components/LocatorListHeader";
 import { Filter } from "../filter/Filter";
 import { useCalculateHeaderSize } from "./utils/useCalculateHeaderSize";
-import { useOverlay } from "./utils/useOverlay";
 import { RootState } from "../../app/store/store";
 import { IdentificationStatus } from "./types/locator.types";
 import { LocatorTreeSpinner } from "./components/LocatorTreeSpinner";
 import { useOnBoardingRef } from "../onboarding/utils/useOnboardingRef";
 import { OnbrdStep } from "../onboarding/types/constants";
-import { removeAll as removeAllFilters } from "../filter/filter.slice";
+import { removeAll as removeAllFilters, setFilter } from "../filter/filter.slice";
 import { selectIfUnselectedAll } from "../filter/filter.selectors";
+import { selectClassFilterByPO } from "../filter/filter.selectors";
 
 const { confirm } = Modal;
 
@@ -47,20 +48,17 @@ export const LocatorsPage = () => {
   const inProgressGenerate = useSelector(selectInProgressGenerateByPageObj);
   const calculatedGenerate = useSelector(selectCalculatedGenerateByPageObj);
   const deletedGenerate = useSelector(selectDeletedGenerateByPageObj);
+  const currentPOId = useSelector((state: RootState) => state.pageObject.present.currentPageObject);
 
   const breadcrumbsRef = useRef(null);
-  const [locatorsSnapshot] = useState(locators);
+  const [locatorsSnapshot] = useState(useSelector(selectLocatorsByPageObject));
+  const [filterSnapshot] = useState(useSelector(selectClassFilterByPO));
   // For changing locatorsList-content height depends on header height
   const containerHeight = useCalculateHeaderSize(breadcrumbsRef);
-  // overlay for web page
-  useOverlay();
 
   const pageBack = () => {
     dispatch(setScriptMessage({}));
     dispatch(changePageBack());
-    dispatch(removeAllFilters());
-    dispatch(removeLocators(locatorIds));
-    dispatch(clearLocators(undefined));
   };
 
   const handleConfirm = () => {
@@ -112,8 +110,10 @@ export const LocatorsPage = () => {
       if (!size(locatorsSnapshot)) {
         dispatch(removeLocators(locatorIds));
         dispatch(clearLocators(undefined));
+        dispatch(removeAllFilters());
       } else {
         dispatch(restoreLocators(locatorsSnapshot));
+        dispatch(setFilter({ pageObjectId: currentPOId!, JDIclassFilter: filterSnapshot }));
       }
       pageBack();
     };
