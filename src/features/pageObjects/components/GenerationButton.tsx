@@ -2,7 +2,6 @@ import { SearchOutlined } from "@ant-design/icons";
 import { Button, Col, Row, Select, Space, Typography } from "antd";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-
 import { RootState } from "../../../app/store/store";
 import { IdentificationStatus } from "../../locators/types/locator.types";
 import { selectCurrentPageObject } from "../pageObject.selectors";
@@ -11,6 +10,7 @@ import { PageObjectId } from "../types/pageObjectSlice.types";
 import { ElementLibrary, libraryNames } from "../../locators/types/generationClasses.types";
 import { identifyElements } from "../../locators/reducers/identifyElements.thunk";
 import { LocatorType } from "../../../common/types/common";
+import { LocalStorageKey, setLocalStorage } from "../../../common/utils/localStorage";
 
 interface Props {
   pageObj: PageObjectId;
@@ -22,6 +22,16 @@ export const GenerationButton: React.FC<Props> = ({ pageObj, library }) => {
   const currentPageObject = useSelector(selectCurrentPageObject);
 
   const dispatch = useDispatch();
+
+  const onLibraryChange = (library: ElementLibrary) => {
+    dispatch(changeElementLibrary({ id: pageObj, library }));
+    setLocalStorage(LocalStorageKey.Library, library);
+  };
+
+  const onLocatorTypeChange = (locatorType: LocatorType) => {
+    dispatch(setLocatorType({ id: pageObj, locatorType }));
+    setLocalStorage(LocalStorageKey.LocatorType, locatorType);
+  };
 
   return (
     <div className="jdn__generationButtons">
@@ -35,7 +45,7 @@ export const GenerationButton: React.FC<Props> = ({ pageObj, library }) => {
               id="library"
               defaultValue={library}
               className="jdn__select"
-              onChange={(_library) => dispatch(changeElementLibrary({ id: pageObj, library: _library }))}
+              onChange={onLibraryChange}
               options={[
                 {
                   value: ElementLibrary.MUI,
@@ -62,7 +72,7 @@ export const GenerationButton: React.FC<Props> = ({ pageObj, library }) => {
               id="locatorType"
               defaultValue={currentPageObject?.locatorType || LocatorType.xPath}
               className="jdn__select"
-              onChange={(_locatorType) => dispatch(setLocatorType({ id: pageObj, locatorType: _locatorType }))}
+              onChange={onLocatorTypeChange}
               options={[
                 {
                   value: LocatorType.xPath,

@@ -42,7 +42,7 @@ export const selectDetectedClassesFilter = createSelector(
       const locatorType = new Set(pageObj?.locators.map((locatorId) => selectLocatorById(state, locatorId)?.type));
       return Object.entries(classFilterPO).reduce((result: Record<ElementClass, boolean>, entry) => {
         const [key, value] = entry;
-        locatorType.has(key as ElementClass) ? (result[key as ElementClass] = value) : null;
+        locatorType.has(key as ElementClass) ? (result[key as ElementClass] = value as boolean) : null;
         return result;
       }, {} as Record<ElementClass, boolean>);
     }
@@ -62,4 +62,9 @@ export const selectAvailableClasses = createSelector(
 export const selectIfSelectedAll = createSelector(selectDetectedClassesFilter, (classFilter) => {
   const arr = Object.entries(classFilter);
   return !arr.some(([, value]) => !value);
+});
+
+export const selectIfUnselectedAll = createSelector(selectDetectedClassesFilter, (classFilter) => {
+  const arr = Object.entries(classFilter);
+  return arr.every(([, value]) => !value);
 });

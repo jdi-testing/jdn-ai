@@ -28,6 +28,8 @@ import { useOverlay } from "./utils/useOverlay";
 import { RootState } from "../../app/store/store";
 import { IdentificationStatus } from "./types/locator.types";
 import { LocatorTreeSpinner } from "./components/LocatorTreeSpinner";
+import { removeAll as removeAllFilters } from "../filter/filter.slice";
+import { selectIfUnselectedAll } from "../filter/filter.selectors";
 
 const { confirm } = Modal;
 
@@ -38,6 +40,7 @@ export const LocatorsPage = () => {
   );
   const currentPage = useSelector(selectCurrentPage).page;
   const locators = useSelector(selectFilteredLocators);
+  const areUnselectedAll = useSelector(selectIfUnselectedAll);
   const locatorIds = useSelector(getLocatorsIdsByPO);
   const inProgressGenerate = useSelector(selectInProgressGenerateByPageObj);
   const calculatedGenerate = useSelector(selectCalculatedGenerateByPageObj);
@@ -53,6 +56,9 @@ export const LocatorsPage = () => {
   const pageBack = () => {
     dispatch(setScriptMessage({}));
     dispatch(changePageBack());
+    dispatch(removeAllFilters());
+    dispatch(removeLocators(locatorIds));
+    dispatch(clearLocators(undefined));
   };
 
   const handleConfirm = () => {
@@ -154,7 +160,7 @@ export const LocatorsPage = () => {
         <LocatorListHeader
           render={(viewProps: LocatorTreeProps["viewProps"]) => (
             <div className="jdn__locatorsList-content" style={{ height: containerHeight }}>
-              {size(locators) ? (
+              {size(locators) || areUnselectedAll ? (
                 <LocatorsTree {...{ viewProps, locatorIds }} />
               ) : showSpinner ? (
                 <LocatorTreeSpinner />
