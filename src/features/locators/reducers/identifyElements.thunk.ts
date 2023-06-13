@@ -2,7 +2,7 @@ import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
 import { predictElements } from "../../../pageServices/pageDataHandlers";
 import { IdentificationStatus, LocatorsState, PredictedEntity } from "../../locators/types/locator.types";
 import { setCurrentPageObj, setPageData } from "../../pageObjects/pageObject.slice";
-import { setFilters } from "../../filter/filter.slice";
+import { setFilter } from "../../filter/filter.slice";
 import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
 import { ElementLibrary, predictEndpoints } from "../types/generationClasses.types";
 
@@ -21,7 +21,7 @@ export const identifyElements = createAsyncThunk(
     thunkAPI.dispatch(setCurrentPageObj(pageObj));
     const savedFilters = getLocalStorage(LocalStorageKey.Filter);
     if (savedFilters && savedFilters[library]) {
-      thunkAPI.dispatch(setFilters({ pageObjectId: pageObj, JDIclassFilter: savedFilters[library] }));
+      thunkAPI.dispatch(setFilter({ pageObjectId: pageObj, JDIclassFilter: savedFilters[library] }));
     }
 
     try {
