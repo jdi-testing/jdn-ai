@@ -64,7 +64,13 @@ export const PageObjList: React.FC<Props> = (props) => {
     );
   };
 
-  const renderContent = (pageObjId: PageObjectId, url: string, elements: LocatorType[], library: ElementLibrary, isPageObjectNotEmpty: boolean) => {
+  const renderContent = (
+    pageObjId: PageObjectId,
+    url: string,
+    elements: LocatorType[],
+    library: ElementLibrary,
+    isPageObjectNotEmpty: boolean
+  ) => {
     if (isPageObjectNotEmpty) {
       return renderLocators(elements, library);
     } else {
