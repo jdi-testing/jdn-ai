@@ -225,6 +225,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
         form,
         initialValues,
         onFieldsChange,
+        className: "jdn__locatorEdit"
       }}
     >
       <Form.Item name="name" label="Name" rules={nameValidationRules}>
