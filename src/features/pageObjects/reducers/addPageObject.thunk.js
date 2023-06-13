@@ -10,13 +10,19 @@ import {
 import { defaultLibrary } from "../../locators/types/generationClasses.types";
 import { getPageAttributes, isPONameUnique } from "../utils/pageObject";
 import { getClassName } from "../utils/pageObjectTemplate";
+import { LocalStorageKey, getLocalStorage } from "../../../common/utils/localStorage";
 
-export const addPageObj = createAsyncThunk("pageObject/addPageObj", async (payload, thunkAPI) => {
+export const addPageObj = createAsyncThunk("pageObject/addPageObj", async (payload, { getState }) => {
   const res = await getPageAttributes();
   const { title, url } = res[0].result;
   const className = getClassName(title);
-  const lastSelectedLibrary = selectLastElementLibrary(thunkAPI.getState());
-  const lastSelectedLocatorType = selectLastLocatorType(thunkAPI.getState());
+
+  const state = getState();
+
+  const lastSelectedLibrary =
+    getLocalStorage(LocalStorageKey.Library) || selectLastElementLibrary(state) || defaultLibrary;
+  const lastSelectedLocatorType = getLocalStorage(LocalStorageKey.LocatorType) || selectLastLocatorType(state);
+
   return { className, url, lastSelectedLibrary, lastSelectedLocatorType };
 });
 
@@ -48,7 +54,7 @@ export const addPageObjReducer = (builder) => {
         id,
         name,
         url,
-        library: lastSelectedLibrary || defaultLibrary,
+        library: lastSelectedLibrary,
         pathname,
         search,
         origin,
