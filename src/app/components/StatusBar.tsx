@@ -55,7 +55,7 @@ export const StatusBar = () => {
     ) : null;
   };
 
-  const readmedRef = useOnBoardingRef(OnbrdStep.Readme);
+  const readmeRef = useOnBoardingRef(OnbrdStep.Readme);
   const connectionRef = useOnBoardingRef(OnbrdStep.Connection);
 
   return (
@@ -67,7 +67,7 @@ export const StatusBar = () => {
         <OnboardingButton />
         <Tooltip title="Readme">
           <Button
-            ref={readmedRef}
+            ref={readmeRef}
             type="link"
             href={readmeLinkAddress}
             target="_blank"

@@ -10,7 +10,7 @@ import { useOnBoardingRef } from "../../features/onboarding/utils/useOnboardingR
 import { OnbrdStep } from "../../features/onboarding/types/constants";
 
 export const OnboardingButton = () => {
-  const [tooltipnVisible, setTooltipVisible] = React.useState(false);
+  const [tooltipVisible, setTooltipVisible] = React.useState(false);
 
   const isDefaultState = useSelector<RootState>(selectIsDefaultState);
   const isOnboardingAvailable =
@@ -34,7 +34,7 @@ export const OnboardingButton = () => {
       okText="Start"
       cancelText="No"
     >
-      <Tooltip placement="bottomRight" open={tooltipnVisible} align={{ offset: [16, 0] }} title="Onboarding tutorial">
+      <Tooltip placement="bottomRight" open={tooltipVisible} align={{ offset: [16, 0] }} title="Onboarding tutorial">
         <Button
           disabled={!isOnboardingAvailable}
           ref={onbrdRef}

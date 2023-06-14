@@ -3,7 +3,7 @@ import { OnbrdStep } from "./types/constants";
 import { Onboarding } from "./Onboarding";
 import { OnboardingContext as ContextType, StepRef } from "./types/context.types";
 import { useDispatch, useSelector } from "react-redux";
-import { selectCheckedLocators, selectCurrentPageObject, selectPageObjects } from "../pageObjects/pageObject.selectors";
+import { selectCurrentPageObject, selectPageObjects } from "../pageObjects/pageObject.selectors";
 import { RootState } from "../../app/store/store";
 import { IdentificationStatus } from "../locators/types/locator.types";
 import { getPOPageSteps } from "./utils/tourSteps";
@@ -43,7 +43,6 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
 
   const closeOnboarding = () => {
     setIsOnbrdOpen(false);
-    setStepRefs({} as Record<OnbrdStep, StepRef>);
     setLocalStorage(LocalStorageKey.IsOnboardingPassed, true);
   };
   const addRef = (
@@ -74,16 +73,13 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
   const isIdentificationInProgress =
     useSelector((state: RootState) => state.locators.present.status) === IdentificationStatus.loading;
   const isPoPage = useSelector(selectCurrentPage).page === PageType.PageObject;
-  const poHasLocators = useSelector(selectCurrentPageObject)?.locators;
-  const checkedLocators = useSelector(selectCheckedLocators);
+  const poHasLocators = !!useSelector(selectCurrentPageObject)?.locators?.length;
 
   // for a case when by any user's actions state is changed
   // and Onboarding step should be changed programmatically
   const defaultStep =
     isPoPage && poHasLocators
       ? OnbrdStep.DownloadPO
-      : !isPoPage && checkedLocators.length
-      ? OnbrdStep.SaveLocators
       : !isPoPage
       ? OnbrdStep.CustomLocator
       : isIdentificationInProgress

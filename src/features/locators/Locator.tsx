@@ -1,7 +1,7 @@
 import { Checkbox, Button } from "antd";
 import { DotsThree } from "phosphor-react";
 import Text from "antd/lib/typography/Text";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { pageType } from "../../common/constants/constants";
@@ -29,6 +29,8 @@ import { setScriptMessage } from "../../app/main.slice";
 import { useOnBoardingRef } from "../onboarding/utils/useOnboardingRef";
 import { OnbrdStep } from "../onboarding/types/constants";
 import { selectFirstLocatorIdByPO } from "../pageObjects/pageObject.selectors";
+import { OnbrdTooltip } from "../onboarding/components/OnbrdTooltip";
+import { OnboardingContext } from "../onboarding/OnboardingProvider";
 
 interface Props {
   element: LocatorInterface;
@@ -56,6 +58,8 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
   const indeterminate = useSelector((state: RootState) => isLocatorIndeterminate(state, element_id));
   const allChildrenChecked = useSelector((state: RootState) => areChildrenChecked(state, element_id));
   const scriptMessage = useSelector((_state: RootState) => _state.main.scriptMessage);
+
+  const { isOpen: isOnboardingOpen } = useContext(OnboardingContext);
 
   let timer: NodeJS.Timeout;
   useEffect(() => clearTimeout(timer), []);
@@ -146,11 +150,14 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
                 <div onContextMenu={(e) => e.stopPropagation()} className="jdn__xpath_buttons">
                   <LocatorCopyButton {...{ element }} />
                   <LocatorMenu {...{ element, setIsEditModalOpen, trigger: ["click", "contextMenu"] }}>
-                    <Button
-                      ref={menuRef}
-                      className="jdn__locatorsList_button jdn__locatorsList_button-menu"
-                      icon={<DotsThree size={18} onClick={(e) => e.preventDefault()} />}
-                    />
+                    <OnbrdTooltip>
+                      <Button
+                        disabled={isOnboardingOpen}
+                        ref={menuRef}
+                        className="jdn__locatorsList_button jdn__locatorsList_button-menu"
+                        icon={<DotsThree size={18} onClick={(e) => e.preventDefault()} />}
+                      />
+                    </OnbrdTooltip>
                   </LocatorMenu>
                 </div>
               ) : null}

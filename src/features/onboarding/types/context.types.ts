@@ -3,6 +3,8 @@ import { OnbrdStep } from "./constants";
 import { TourProps } from "antd5";
 
 export interface OnboardingContext {
+  // a step, that is set to Onboarding based on a state,
+  // when user makes action that changes state and onboarding step should be changed
   defaultStep?: number;
   isOpen: boolean;
   tourSteps: TourProps["steps"];
