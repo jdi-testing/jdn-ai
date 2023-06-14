@@ -10,7 +10,7 @@ import { useOnBoardingRef } from "../../features/onboarding/utils/useOnboardingR
 import { OnbrdStep } from "../../features/onboarding/types/constants";
 
 export const OnboardingButton = () => {
-  const [tooltipVisible, setTooltipVisible] = React.useState(false);
+  const [isTooltipVisible, setIsTooltipVisible] = React.useState(false);
 
   const isDefaultState = useSelector<RootState>(selectIsDefaultState);
   const isOnboardingAvailable =
@@ -34,15 +34,15 @@ export const OnboardingButton = () => {
       okText="Start"
       cancelText="No"
     >
-      <Tooltip placement="bottomRight" open={tooltipVisible} align={{ offset: [16, 0] }} title="Onboarding tutorial">
+      <Tooltip placement="bottomRight" open={isTooltipVisible} align={{ offset: [16, 0] }} title="Onboarding tutorial">
         <Button
           disabled={!isOnboardingAvailable}
           ref={onbrdRef}
           type="link"
           icon={<BookOpen size={14} color="#8C8C8C" />}
-          onClick={() => setTooltipVisible(false)}
-          onMouseEnter={() => setTooltipVisible(true)}
-          onMouseLeave={() => setTooltipVisible(false)}
+          onClick={() => setIsTooltipVisible(false)}
+          onMouseEnter={() => setIsTooltipVisible(true)}
+          onMouseLeave={() => setIsTooltipVisible(false)}
         />
       </Tooltip>
     </Popconfirm>
