@@ -23,6 +23,7 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
   const [stepRefs, setStepRefs] = useState<Record<OnbrdStep, StepRef>>({} as Record<OnbrdStep, StepRef>);
   const [isOnbrdOpen, setIsOnbrdOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCustomLocatorFlow, setIsCustomLocatorFlow] = useState(false);
 
   const _isOnboardingPassed = getLocalStorage(LocalStorageKey.IsOnboardingPassed);
   const isBackendAvailable = useSelector((state: RootState) => state.main.backendAvailable) === BackendStatus.Accessed;
@@ -47,7 +48,7 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
   };
   const addRef = (
     name: OnbrdStep,
-    ref: MutableRefObject<any>,
+    ref?: MutableRefObject<any>,
     onClickNext?: (...args: any) => void,
     onClickPrev?: (...args: any) => void
   ) => {
@@ -58,6 +59,25 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
           target: ref,
           onClickNext,
           onClickPrev,
+        },
+      };
+    });
+  };
+
+  const updateRef = (
+    name: OnbrdStep,
+    ref?: MutableRefObject<any>,
+    onClickNext?: (...args: any) => void,
+    onClickPrev?: (...args: any) => void
+  ) => {
+    setStepRefs((prevRefs) => {
+      const { target: currentTarget, onClickNext: currentNext, onClickPrev: currentPrev } = prevRefs[name];
+      return {
+        ...prevRefs,
+        [name]: {
+          target: ref || currentTarget,
+          onClickNext: onClickNext || currentNext,
+          onClickPrev: onClickPrev || currentPrev,
         },
       };
     });
@@ -74,12 +94,21 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
     useSelector((state: RootState) => state.locators.present.status) === IdentificationStatus.loading;
   const isPoPage = useSelector(selectCurrentPage).page === PageType.PageObject;
   const poHasLocators = !!useSelector(selectCurrentPageObject)?.locators?.length;
+  const locatorsGenerated = useSelector(
+    (state: RootState) =>
+      state.locators.present.status === IdentificationStatus.noStatus ||
+      state.locators.present.status === IdentificationStatus.noElements
+  );
 
   // for a case when by any user's actions state is changed
   // and Onboarding step should be changed programmatically
   const defaultStep =
     isPoPage && poHasLocators
       ? OnbrdStep.DownloadPO
+      : !isPoPage && isCustomLocatorFlow && poHasLocators
+      ? OnbrdStep.AddToPO
+      : !isPoPage && isCustomLocatorFlow && stepRefs[OnbrdStep.EditLocator].target?.current
+      ? OnbrdStep.EditLocator
       : !isPoPage
       ? OnbrdStep.CustomLocator
       : isIdentificationInProgress
@@ -88,11 +117,24 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
       ? OnbrdStep.POsettings
       : OnbrdStep.NewPageObject;
 
-  const tourSteps = getPOPageSteps(stepRefs);
+  const tourSteps = getPOPageSteps(stepRefs, isCustomLocatorFlow);
+
+  if (defaultStep === OnbrdStep.CustomLocator && locatorsGenerated && !poHasLocators && !isCustomLocatorFlow) {
+    setIsCustomLocatorFlow(true);
+  }
 
   return (
     <OnboardingContext.Provider
-      value={{ defaultStep, isOpen: isOnbrdOpen, tourSteps, addRef, openOnboarding, closeOnboarding }}
+      value={{
+        defaultStep,
+        isOpen: isOnbrdOpen,
+        tourSteps,
+        isCustomLocatorFlow,
+        addRef,
+        updateRef,
+        openOnboarding,
+        closeOnboarding,
+      }}
     >
       {children}
       <Onboarding />

@@ -129,10 +129,9 @@ export const LocatorsPage = () => {
     );
   };
 
-  const saveLocatorsRef = useOnBoardingRef(OnbrdStep.SaveLocators, pageBack);
-
   const renderConfirmButton = () => {
     if (currentPage === pageType.locatorsList) {
+      const saveLocatorsRef = useOnBoardingRef(OnbrdStep.SaveLocators, pageBack);
       const checkedLocators = useSelector(selectCheckedLocators);
       const isDisabled = !size(inProgressGenerate) && !size(calculatedGenerate);
       return (

@@ -4,7 +4,7 @@ import WarningFilled from "../assets/warning-filled.svg";
 import { Footnote } from "../../../common/components/footnote/Footnote";
 import { Rule } from "antd/lib/form";
 import { FieldData } from "rc-field-form/lib/interface";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../app/store/store";
 import { DialogWithForm } from "../../../common/components/DialogWithForm";
@@ -24,6 +24,8 @@ import { isFilteredSelect } from "../../../common/utils/helpers";
 import { newLocatorStub } from "../utils/constants";
 import { changeLocatorElement } from "../reducers/changeLocatorElement.thunk";
 import { addCustomLocator } from "../reducers/addCustomLocator.thunk";
+import { OnboardingContext } from "../../onboarding/OnboardingProvider";
+import { OnbrdStep } from "../../onboarding/types/constants";
 
 interface Props extends Locator {
   isModalOpen: boolean;
@@ -63,6 +65,8 @@ export const LocatorEditDialog: React.FC<Props> = ({
 
   const [validationMessage, setValidationMessage] = useState<LocatorValidationErrorType>(message || "");
   const [isEditedName, setIsEditedName] = useState<boolean>(isCustomName);
+
+  const { updateRef } = useContext(OnboardingContext);
 
   const [form] = Form.useForm<FormValues>();
   const defaultLocatorType = locatorType || pageObjectLocatorType || LocatorType.xPath;
@@ -205,7 +209,9 @@ export const LocatorEditDialog: React.FC<Props> = ({
   const onFieldsChange = async (changedValues: FieldData[]) => {
     const isLocatorTypeChanged = changedValues.some((value) => value.name.toString().includes("locatorType"));
     isLocatorTypeChanged && onLocatorTypeChange();
-    setIsOkButtonDisabled(computeIsOkButtonDisabled());
+    const isOkButtonDisabled = computeIsOkButtonDisabled();
+    setIsOkButtonDisabled(isOkButtonDisabled);
+    updateRef(OnbrdStep.EditLocator, undefined, isOkButtonDisabled ? undefined : handleCreateCustomLocator);
   };
 
   return (

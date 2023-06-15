@@ -6,11 +6,18 @@ export interface OnboardingContext {
   // a step, that is set to Onboarding based on a state,
   // when user makes action that changes state and onboarding step should be changed
   defaultStep?: number;
+  isCustomLocatorFlow: boolean;
   isOpen: boolean;
   tourSteps: TourProps["steps"];
   addRef: (
     name: OnbrdStep,
-    ref: MutableRefObject<any>,
+    ref?: MutableRefObject<any>,
+    onClickNext?: (...args: any) => void,
+    onClickPrev?: (...args: any) => void
+  ) => void;
+  updateRef: (
+    name: OnbrdStep,
+    ref?: MutableRefObject<any>,
     onClickNext?: (...args: any) => void,
     onClickPrev?: (...args: any) => void
   ) => void;

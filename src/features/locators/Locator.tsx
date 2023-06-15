@@ -46,20 +46,19 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
   const dispatch = useDispatch();
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const { isOpen: isOnboardingOpen, isCustomLocatorFlow } = useContext(OnboardingContext);
 
   const { element_id, type, name, locator, generate, message, deleted, active, isCustomLocator } = element;
 
   const ref = useRef<HTMLDivElement>(null);
 
   const isFirstLocator = useSelector(selectFirstLocatorIdByPO) === element_id;
-  const menuRef = isFirstLocator ? useOnBoardingRef(OnbrdStep.ContextMenu) : null;
+  const menuRef = isFirstLocator && !isCustomLocatorFlow ? useOnBoardingRef(OnbrdStep.EditLocator) : null;
   const addToPORef = isFirstLocator ? useOnBoardingRef(OnbrdStep.AddToPO) : null;
 
   const indeterminate = useSelector((state: RootState) => isLocatorIndeterminate(state, element_id));
   const allChildrenChecked = useSelector((state: RootState) => areChildrenChecked(state, element_id));
   const scriptMessage = useSelector((_state: RootState) => _state.main.scriptMessage);
-
-  const { isOpen: isOnboardingOpen } = useContext(OnboardingContext);
 
   let timer: NodeJS.Timeout;
   useEffect(() => clearTimeout(timer), []);

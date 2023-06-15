@@ -26,7 +26,7 @@ export const GenerationButton: React.FC<Props> = ({ pageObj, library }) => {
   const handleGenerate = () => dispatch(identifyElements({ library, pageObj }));
 
   const refSettings = useOnBoardingRef(OnbrdStep.POsettings, undefined, () => dispatch(removePageObject(pageObj)));
-  const refGenerate = useOnBoardingRef(OnbrdStep.Generate, handleGenerate);
+  const refGenerate = useOnBoardingRef(OnbrdStep.Generate, () => dispatch(identifyElements({ library, pageObj })));
 
   const dispatch = useDispatch();
 

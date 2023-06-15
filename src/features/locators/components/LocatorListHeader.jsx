@@ -80,7 +80,7 @@ export const LocatorListHeader = ({ render }) => {
   const deletedActive = useSelector(selectDeletedActiveByPageObj);
   const failedSelected = useSelector((_state) => selectFailedSelectedByPageObject(_state));
 
-  const { isOpen: isOnboardingOpen } = useContext(OnboardingContext);
+  const { isOpen: isOnboardingOpen, isCustomLocatorFlow } = useContext(OnboardingContext);
 
   const actualSelected = useMemo(() => [...calculatedActive, ...waitingActive], [calculatedActive, waitingActive]);
 
@@ -201,7 +201,7 @@ export const LocatorListHeader = ({ render }) => {
 
   const menu = useMemo(() => renderMenu(), [active]);
 
-  const ref = useOnBoardingRef(OnbrdStep.CustomLocator);
+  const ref = useOnBoardingRef(OnbrdStep.CustomLocator, isCustomLocatorFlow ? () => setCreateModalOpen(true) : undefined);
 
   return (
     <React.Fragment>
@@ -209,7 +209,7 @@ export const LocatorListHeader = ({ render }) => {
         <LocatorsSearch value={searchString} onChange={setSearchString} />
         <OnbrdTooltip>
           <Button
-            disabled={isOnboardingOpen}
+            disabled={isOnboardingOpen && size(locators)}
             ref={ref}
             icon={<PlusOutlined size={14} />}
             size="small"
