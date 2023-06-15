@@ -201,7 +201,10 @@ export const LocatorListHeader = ({ render }) => {
 
   const menu = useMemo(() => renderMenu(), [active]);
 
-  const ref = useOnBoardingRef(OnbrdStep.CustomLocator, isCustomLocatorFlow ? () => setCreateModalOpen(true) : undefined);
+  const ref = useOnBoardingRef(
+    OnbrdStep.CustomLocator,
+    isCustomLocatorFlow ? () => setCreateModalOpen(true) : undefined
+  );
 
   return (
     <React.Fragment>

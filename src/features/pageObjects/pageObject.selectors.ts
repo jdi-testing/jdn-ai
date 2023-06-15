@@ -66,6 +66,7 @@ export const selectLocatorsByPageObject = createSelector(
         !loc.locatorType && pageObject?.locatorType === LocatorType.cssSelector
           ? {
               ...loc,
+              locatorType: pageObject?.locatorType,
               locator: { ...loc.locator, output: getLocator(loc.locator, pageObject?.locatorType) },
             }
           : loc

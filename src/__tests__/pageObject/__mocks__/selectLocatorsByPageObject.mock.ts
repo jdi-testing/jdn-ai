@@ -161,6 +161,7 @@ export const selectLocators = (pageObject: PageObject) => [
     elemId: "",
     elemText: "Home",
     elemAriaLabel: null,
+    ...(pageObject.locatorType === LocatorType.cssSelector ? { locatorType: LocatorType.cssSelector } : null),
     locator: {
       taskStatus: "SUCCESS",
       xPath: "//*[@class='uui-navigation nav navbar-nav m-l8 any']",

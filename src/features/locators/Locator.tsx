@@ -53,8 +53,13 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
   const ref = useRef<HTMLDivElement>(null);
 
   const isFirstLocator = useSelector(selectFirstLocatorIdByPO) === element_id;
-  const menuRef = isFirstLocator && !isCustomLocatorFlow ? useOnBoardingRef(OnbrdStep.EditLocator) : null;
-  const addToPORef = isFirstLocator ? useOnBoardingRef(OnbrdStep.AddToPO) : null;
+  const menuRef = useOnBoardingRef(
+    OnbrdStep.EditLocator,
+    undefined,
+    undefined,
+    !(isFirstLocator && !isCustomLocatorFlow)
+  );
+  const addToPORef = useOnBoardingRef(OnbrdStep.AddToPO, undefined, undefined, !isFirstLocator);
 
   const indeterminate = useSelector((state: RootState) => isLocatorIndeterminate(state, element_id));
   const allChildrenChecked = useSelector((state: RootState) => areChildrenChecked(state, element_id));
