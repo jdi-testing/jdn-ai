@@ -89,14 +89,14 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, url, locators, elements
 
   return (
     <div onClick={(e) => e.stopPropagation()}>
-      <Dropdown
-        align={{ offset: [15, 0] }}
-        trigger={["click"]}
-        menu={renderMenu(id, locators, elements, name, url)}
-        getPopupContainer={(triggerNode) => triggerNode}
-        destroyPopupOnHide
-      >
-        <OnbrdTooltip>
+      <OnbrdTooltip>
+        <Dropdown
+          align={{ offset: [15, 0] }}
+          trigger={["click"]}
+          menu={renderMenu(id, locators, elements, name, url)}
+          getPopupContainer={(triggerNode) => triggerNode}
+          destroyPopupOnHide
+        >
           <Button
             disabled={isOnboardingOpen}
             ref={menuRef}
@@ -104,8 +104,8 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, url, locators, elements
             data-testid="dropdown-button"
             icon={<DotsThree size={18} />}
           ></Button>
-        </OnbrdTooltip>
-      </Dropdown>
+        </Dropdown>
+      </OnbrdTooltip>
       <RenamePageObjectDialog
         isModalOpen={isRenameModalOpen}
         setIsModalOpen={setIsRenameModalOpen}

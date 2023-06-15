@@ -7,7 +7,8 @@ import { selectFirstLocatorByPO } from "../../pageObjects/pageObject.selectors";
 export const useOnBoardingRef = (
   refName: OnbrdStep,
   onClickNext?: (...args: any) => void,
-  onClickPrev?: (...args: any) => void
+  onClickPrev?: (...args: any) => void,
+  isSkipHook?: boolean,
 ) => {
   const ref = useRef<HTMLDivElement>(null);
 
@@ -19,8 +20,8 @@ export const useOnBoardingRef = (
       refName === OnbrdStep.EditLocator && isCustomLocatorFlow && ref.current
         ? { current: ref.current.closest(".ant-modal-content") }
         : ref;
-    addRef(refName, _ref, onClickNext, onClickPrev);
+    !isSkipHook && addRef(refName, _ref, onClickNext, onClickPrev);
   }, [ref, isFirstLocatorChecked]);
 
-  return ref;
+  return !isSkipHook ? ref : null;
 };
