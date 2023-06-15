@@ -8,7 +8,7 @@ export const useOnBoardingRef = (
   refName: OnbrdStep,
   onClickNext?: (...args: any) => void,
   onClickPrev?: (...args: any) => void,
-  isSkipHook?: boolean,
+  isSkipHook?: boolean
 ) => {
   const ref = useRef<HTMLDivElement>(null);
 
