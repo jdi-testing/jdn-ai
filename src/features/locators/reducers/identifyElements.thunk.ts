@@ -4,7 +4,7 @@ import { IdentificationStatus, LocatorsState, PredictedEntity } from "../../loca
 import { setCurrentPageObj, setPageData } from "../../pageObjects/pageObject.slice";
 import { setFilter } from "../../filter/filter.slice";
 import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
-import { ElementLibrary, predictEndpoints } from "../types/generationClasses.types";
+import { ElementLibrary, defaultLibrary, predictEndpoints } from "../types/generationClasses.types";
 
 import { generateLocators } from "./generateLocators.thunk";
 import { findByRules } from "../utils/generationButton";
@@ -20,7 +20,7 @@ interface Meta {
 export const identifyElements = createAsyncThunk("locators/identifyElements", async ({ pageObj }: Meta, thunkAPI) => {
   thunkAPI.dispatch(setCurrentPageObj(pageObj));
   const state = thunkAPI.getState() as RootState;
-  const library = selectPageObjById(state, pageObj)?.library!;
+  const library = selectPageObjById(state, pageObj)?.library || defaultLibrary;
   const savedFilters = getLocalStorage(LocalStorageKey.Filter);
   if (savedFilters && savedFilters[library]) {
     thunkAPI.dispatch(setFilter({ pageObjectId: pageObj, JDIclassFilter: savedFilters[library] }));
