@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useContext, useMemo, useState } from "react";
 import { filter, isNil, size } from "lodash";
 import { Button, Checkbox, Dropdown, Row } from "antd";
 import { useDispatch, useSelector } from "react-redux";
@@ -50,6 +50,10 @@ import { LocatorsSearch } from "./LocatorsSearch";
 import { rerunGeneration } from "../reducers/rerunGeneration.thunk";
 import { stopGenerationGroup } from "../reducers/stopGenerationGroup.thunk";
 import { LocatorEditDialog } from "./LocatorEditDialog";
+import { useOnBoardingRef } from "../../onboarding/utils/useOnboardingRef";
+import { OnbrdStep } from "../../onboarding/types/constants";
+import { OnboardingContext } from "../../onboarding/OnboardingProvider";
+import { OnbrdTooltip } from "../../onboarding/components/OnbrdTooltip";
 
 export const EXPAND_STATE = {
   EXPANDED: "Expanded",
@@ -75,6 +79,8 @@ export const LocatorListHeader = ({ render }) => {
   const waitingActive = useSelector(selectWaitingActiveByPageObj);
   const deletedActive = useSelector(selectDeletedActiveByPageObj);
   const failedSelected = useSelector((_state) => selectFailedSelectedByPageObject(_state));
+
+  const { isOpen: isOnboardingOpen, isCustomLocatorFlow } = useContext(OnboardingContext);
 
   const actualSelected = useMemo(() => [...calculatedActive, ...waitingActive], [calculatedActive, waitingActive]);
 
@@ -195,13 +201,23 @@ export const LocatorListHeader = ({ render }) => {
 
   const menu = useMemo(() => renderMenu(), [active]);
 
+  const ref = useOnBoardingRef(OnbrdStep.CustomLocator, isCustomLocatorFlow ? () => setCreateModalOpen(true) : undefined);
+
   return (
     <React.Fragment>
       <Row justify="space-between" align="bottom">
         <LocatorsSearch value={searchString} onChange={setSearchString} />
-        <Button icon={<PlusOutlined size={14} />} size="small" onClick={setCreateModalOpen}>
-          Custom locator
-        </Button>
+        <OnbrdTooltip>
+          <Button
+            disabled={isOnboardingOpen && size(locators)}
+            ref={ref}
+            icon={<PlusOutlined size={14} />}
+            size="small"
+            onClick={setCreateModalOpen}
+          >
+            Custom locator
+          </Button>
+        </OnbrdTooltip>
       </Row>
       <Row className="jdn__locatorsList-header">
         <span className="jdn__locatorsList-header-title">

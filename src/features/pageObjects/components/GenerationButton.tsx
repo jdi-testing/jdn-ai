@@ -5,11 +5,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../app/store/store";
 import { IdentificationStatus } from "../../locators/types/locator.types";
 import { selectCurrentPageObject } from "../pageObject.selectors";
-import { changeElementLibrary, setLocatorType } from "../pageObject.slice";
+import { changeElementLibrary, removePageObject, setLocatorType } from "../pageObject.slice";
 import { PageObjectId } from "../types/pageObjectSlice.types";
 import { ElementLibrary, libraryNames } from "../../locators/types/generationClasses.types";
 import { identifyElements } from "../../locators/reducers/identifyElements.thunk";
 import { LocatorType } from "../../../common/types/common";
+import { useOnBoardingRef } from "../../onboarding/utils/useOnboardingRef";
+import { OnbrdStep } from "../../onboarding/types/constants";
 import { LocalStorageKey, setLocalStorage } from "../../../common/utils/localStorage";
 
 interface Props {
@@ -20,6 +22,11 @@ interface Props {
 export const GenerationButton: React.FC<Props> = ({ pageObj, library }) => {
   const status = useSelector((state: RootState) => state.locators.present.status);
   const currentPageObject = useSelector(selectCurrentPageObject);
+
+  const handleGenerate = () => dispatch(identifyElements({ library, pageObj }));
+
+  const refSettings = useOnBoardingRef(OnbrdStep.POsettings, undefined, () => dispatch(removePageObject(pageObj)));
+  const refGenerate = useOnBoardingRef(OnbrdStep.Generate, () => dispatch(identifyElements({ library, pageObj })));
 
   const dispatch = useDispatch();
 
@@ -36,6 +43,7 @@ export const GenerationButton: React.FC<Props> = ({ pageObj, library }) => {
   return (
     <div className="jdn__generationButtons">
       <Space direction="vertical" size={16}>
+        <div ref={refSettings} className="jdn__generationButtons_onboardingMask"></div>
         <Row>
           <Col flex="104px">
             <Typography.Text>Library:</Typography.Text>
@@ -86,16 +94,17 @@ export const GenerationButton: React.FC<Props> = ({ pageObj, library }) => {
             />
           </Col>
         </Row>
-        <Button
-          icon={<SearchOutlined />}
-          type="primary"
-          loading={status === IdentificationStatus.loading && currentPageObject?.id === pageObj}
-          onClick={() => dispatch(identifyElements({ library, pageObj }))}
-          className="jdn__buttons"
-        >
-          Generate
-        </Button>
       </Space>
+      <Button
+        ref={refGenerate}
+        icon={<SearchOutlined />}
+        type="primary"
+        loading={status === IdentificationStatus.loading && currentPageObject?.id === pageObj}
+        onClick={handleGenerate}
+        className="jdn__buttons jdn__generationButtons_generate"
+      >
+        Generate
+      </Button>
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import { Button, Dropdown } from "antd";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useDispatch } from "react-redux";
 
 import { size } from "lodash";
@@ -21,6 +21,10 @@ import { ElementLibrary } from "../../locators/types/generationClasses.types";
 import { generatePageObject, generatePageObjectPerfTest } from "../../pageObjects/utils/pageObject";
 import { RenamePageObjectDialog } from "./RenamePageObjDialog";
 import { checkLocatorsValidity } from "../../locators/reducers/checkLocatorValidity.thunk";
+import { useOnBoardingRef } from "../../onboarding/utils/useOnboardingRef";
+import { OnbrdStep } from "../../onboarding/types/constants";
+import { OnbrdTooltip } from "../../onboarding/components/OnbrdTooltip";
+import { OnboardingContext } from "../../onboarding/OnboardingProvider";
 
 interface Props {
   id: PageObjectId;
@@ -35,6 +39,8 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, url, locators, elements
   const dispatch = useDispatch();
 
   const [isRenameModalOpen, setIsRenameModalOpen] = useState(false);
+
+  const { isOpen: isOnboardingOpen } = useContext(OnboardingContext);
 
   const renderMenu = (
     id: PageObjectId,
@@ -79,6 +85,8 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, url, locators, elements
     return { ...{ items } };
   };
 
+  const menuRef = useOnBoardingRef(OnbrdStep.EditPO);
+
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <Dropdown
@@ -88,11 +96,15 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, url, locators, elements
         getPopupContainer={(triggerNode) => triggerNode}
         destroyPopupOnHide
       >
-        <Button
-          className="jdn__locatorsList_button jdn__pageObject_button-menu"
-          data-testid="dropdown-button"
-          icon={<DotsThree size={18} />}
-        ></Button>
+        <OnbrdTooltip>
+          <Button
+            disabled={isOnboardingOpen}
+            ref={menuRef}
+            className="jdn__locatorsList_button jdn__pageObject_button-menu"
+            data-testid="dropdown-button"
+            icon={<DotsThree size={18} />}
+          ></Button>
+        </OnbrdTooltip>
       </Dropdown>
       <RenamePageObjectDialog
         isModalOpen={isRenameModalOpen}

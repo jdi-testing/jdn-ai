@@ -2,12 +2,25 @@
   &__generationButtons {
     padding-top: 16px;
 
-    & > .ant-space-vertical {
+    & .ant-space-vertical {
       display: flex;
+      position: relative;
 
       .ant-typography {
         line-height: 32px;
       }
+    }
+
+    &_generate {
+      margin-top: 16px;
+    }
+
+    &_onboardingMask {
+      position: absolute;
+      top: 8px;
+      width: 275px;
+      height: 100%;
+      background: transparent;
     }
   }
 

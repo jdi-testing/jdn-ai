@@ -6,7 +6,6 @@ export enum LocatorsGenerationStatus {
   noStatus = "noStatus",
   starting = "starting",
   started = "started",
-  complete = "complete",
   failed = "failed",
 }
 

@@ -18,6 +18,8 @@ import {
   MAX_FILES_SIZE_MB,
 } from "../utils/reportProblem";
 import { selectCurrentPageObject } from "../../features/pageObjects/pageObject.selectors";
+import { useOnBoardingRef } from "../../features/onboarding/utils/useOnboardingRef";
+import { OnbrdStep } from "../../features/onboarding/types/constants";
 
 const { info } = Modal;
 
@@ -168,10 +170,13 @@ export const ReportProblem = () => {
     }
   };
 
+  const reportRef = useOnBoardingRef(OnbrdStep.Report);
+
   return (
     <div className="jdn__reportProblem">
       <Tooltip title="Report a problem" placement="bottomRight" align={{ offset: [12, 0] }}>
         <Button
+          ref={reportRef}
           onClick={showModal}
           type="link"
           loading={serverPingInProcess}

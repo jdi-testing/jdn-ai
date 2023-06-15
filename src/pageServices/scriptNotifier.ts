@@ -19,11 +19,10 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
   }
   switch (type) {
     case "main/changePage":
+    case "main/changePageBack":
+    case "main/clearAll":
       const page = selectCurrentPage(state);
       if (page.page === pageType.pageObject) sendMessage.killHighlight();
-      break;
-    case "main/changePageBack":
-      if (selectCurrentPage(state).page === pageType.pageObject) sendMessage.killHighlight();
       break;
   }
 

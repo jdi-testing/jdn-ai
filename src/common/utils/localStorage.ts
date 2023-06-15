@@ -1,4 +1,6 @@
+// keys
 export enum LocalStorageKey {
+  IsOnboardingPassed = "JDN_IS_ONBOARDING_PASSED",
   LocatorType = "JDN_LOCATOR_TYPE",
   Library = "JDN_LIBRARY",
   Filter = "JDN_FILTER",

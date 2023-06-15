@@ -1,7 +1,10 @@
 import { Form, FormProps, Modal, ModalProps } from "antd";
 import { FormInstance } from "antd/es/form/Form";
-import React, { ReactNode, useEffect } from "react";
+import React, { ReactNode, useContext, useEffect } from "react";
 import { showOverlay, removeOverlay } from "../../pageServices/pageDataHandlers";
+import { useOnBoardingRef } from "../../features/onboarding/utils/useOnboardingRef";
+import { OnbrdStep } from "../../features/onboarding/types/constants";
+import { OnboardingContext } from "../../features/onboarding/OnboardingProvider";
 
 interface JDNModalProps extends ModalProps {
   setIsModalOpen: (value: boolean) => void;
@@ -24,6 +27,7 @@ interface DialogFormProps {
 export const DialogWithForm: React.FC<DialogFormProps> = ({ modalProps, formProps, children }) => {
   const { form, ...restForm } = formProps;
   const { open, setIsModalOpen, cancelCallback, enableOverlay = false, ...restModal } = modalProps;
+  const { addRef } = useContext(OnboardingContext);
 
   useEffect(() => {
     if (enableOverlay) showOverlay();
@@ -34,15 +38,27 @@ export const DialogWithForm: React.FC<DialogFormProps> = ({ modalProps, formProp
     form.resetFields();
     setIsModalOpen(false);
     cancelCallback && cancelCallback();
+    setTimeout(() => {
+      addRef(OnbrdStep.EditLocator);
+    }, 100);
   };
+
+  const onbrdPrevHandler = () => {
+    setIsModalOpen(false);
+    handleCancel();
+  };
+
+  const modalRef = useOnBoardingRef(OnbrdStep.EditLocator, undefined, onbrdPrevHandler);
 
   return (
     <div onContextMenu={(e) => e.stopPropagation()}>
       <Modal destroyOnClose style={{ top: "24px" }} onCancel={handleCancel} open={open} {...{ ...restModal }}>
         {open ? (
-          <Form labelCol={{ span: 4 }} wrapperCol={{ span: 20 }} {...{ form }} {...{ ...restForm }}>
-            {children}
-          </Form>
+          <div className="jdn-test" ref={modalRef}>
+            <Form labelCol={{ span: 4 }} wrapperCol={{ span: 20 }} {...{ form }} {...{ ...restForm }}>
+              {children}
+            </Form>
+          </div>
         ) : null}
       </Modal>
     </div>
