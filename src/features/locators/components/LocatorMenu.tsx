@@ -95,9 +95,7 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, chil
       );
 
     let items: MenuItem[] = [];
-    const selectedLocators: Pick<Locator, "locator" | "type" | "name">[] = [
-      { locator, type, name },
-    ];
+    const selectedLocators: Pick<Locator, "locator" | "type" | "name">[] = [{ locator, type, name }];
 
     if (deleted) {
       items = [restore(() => dispatch(toggleDeleted(element_id)))];
