@@ -46,7 +46,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
   const dispatch = useDispatch();
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const { isOpen: isOnboardingOpen, isCustomLocatorFlow } = useContext(OnboardingContext);
+  const { isOpen: isCustomLocatorFlow } = useContext(OnboardingContext);
 
   const { element_id, type, name, locator, generate, message, deleted, active, isCustomLocator } = element;
 
@@ -153,16 +153,15 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
               {searchState !== SearchState.Hidden ? (
                 <div onContextMenu={(e) => e.stopPropagation()} className="jdn__xpath_buttons">
                   <LocatorCopyButton {...{ element }} />
-                  <LocatorMenu {...{ element, setIsEditModalOpen, trigger: ["click", "contextMenu"] }}>
-                    <OnbrdTooltip>
+                  <OnbrdTooltip>
+                    <LocatorMenu {...{ element, setIsEditModalOpen, trigger: ["click", "contextMenu"] }}>
                       <Button
-                        disabled={isOnboardingOpen}
                         ref={menuRef}
                         className="jdn__locatorsList_button jdn__locatorsList_button-menu"
                         icon={<DotsThree size={18} onClick={(e) => e.preventDefault()} />}
                       />
-                    </OnbrdTooltip>
-                  </LocatorMenu>
+                    </LocatorMenu>
+                  </OnbrdTooltip>
                 </div>
               ) : null}
             </div>
