@@ -370,6 +370,9 @@ export const runContextMenu = () => {
               text: "Select element",
               icon: handPointing,
               sub: [...getActiveElements()],
+              events: {
+                click: (evt) => evt.stopPropagation(),
+              },
             },
           ]
         : []),
@@ -475,11 +478,13 @@ export const runContextMenu = () => {
     const items = predictedElements.map((_element) => ({
       text: _element.name,
       events: {
-        click: () =>
-          sendMessage({
+        click: () => {
+          elementMenu.hide();
+          return sendMessage({
             message: "ELEMENT_SELECT",
             param: _element,
-          }),
+          });
+        },
       },
     }));
     return items;
