@@ -128,7 +128,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
     );
   };
 
-  const ContextMenuButton = () => (
+  const renderContextMenuButton = () => (
     <Button
       disabled={isOnboardingOpen}
       ref={menuRef}
@@ -163,7 +163,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
                 <div onContextMenu={(e) => e.stopPropagation()} className="jdn__xpath_buttons">
                   <LocatorCopyButton {...{ element }} />
                   <LocatorMenu {...{ element, setIsEditModalOpen, trigger: ["click", "contextMenu"] }}>
-                    {isOnboardingOpen ? <OnbrdTooltip>{ContextMenuButton()}</OnbrdTooltip> : ContextMenuButton()}
+                    {isOnboardingOpen ? <OnbrdTooltip>{renderContextMenuButton()}</OnbrdTooltip> : renderContextMenuButton()}
                   </LocatorMenu>
                 </div>
               ) : null}
