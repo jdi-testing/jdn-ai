@@ -163,7 +163,11 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
                 <div onContextMenu={(e) => e.stopPropagation()} className="jdn__xpath_buttons">
                   <LocatorCopyButton {...{ element }} />
                   <LocatorMenu {...{ element, setIsEditModalOpen, trigger: ["click", "contextMenu"] }}>
-                    {isOnboardingOpen ? <OnbrdTooltip>{renderContextMenuButton()}</OnbrdTooltip> : renderContextMenuButton()}
+                    {isOnboardingOpen ? (
+                      <OnbrdTooltip>{renderContextMenuButton()}</OnbrdTooltip>
+                    ) : (
+                      renderContextMenuButton()
+                    )}
                   </LocatorMenu>
                 </div>
               ) : null}
