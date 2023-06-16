@@ -19,6 +19,7 @@ import connector from "./connector";
 import { showOverlay } from "./pageDataHandlers";
 import { rerunGeneration } from "../features/locators/reducers/rerunGeneration.thunk";
 import { stopGenerationGroup } from "../features/locators/reducers/stopGenerationGroup.thunk";
+import { copyLocator } from "../features/locators/utils/utils";
 
 export type ScriptMessagePayload = { message: keyof Actions; param: Record<string, never> };
 
@@ -80,6 +81,9 @@ export const updateMessageHandler = (
     },
     TOGGLE_ELEMENT_GROUP: (payload) => {
       dispatch(toggleElementGroupGeneration(payload));
+    },
+    COPY_LOCATOR: ({ value, option }) => {
+      copyLocator([value], option)();
     },
   };
 

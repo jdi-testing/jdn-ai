@@ -11,7 +11,11 @@ import {
   play,
   arrowClockwise,
   caretRight,
+  copy,
 } from "./assets/icons";
+
+import { LocatorOption } from "../../features/locators/utils/constants";
+
 export const runContextMenu = () => {
   /*
   origin https://www.cssscript.com/multi-level-context-menu/
@@ -346,7 +350,7 @@ export const runContextMenu = () => {
       ...(!isGroup()
         ? [
             {
-              text: `<span>Edit</span>`,
+              text: "Edit",
               icon: pencil,
               events: {
                 click: () =>
@@ -354,6 +358,14 @@ export const runContextMenu = () => {
                     message: "OPEN_EDIT_LOCATOR",
                     param: { value: predictedElements[0] },
                   }),
+              },
+            },
+            {
+              text: "Copy",
+              icon: copy,
+              sub: [...getCopyOptions()],
+              events: {
+                click: (evt) => evt.stopPropagation(),
               },
             },
             {
@@ -488,6 +500,27 @@ export const runContextMenu = () => {
       },
     }));
     return items;
+  };
+
+  const getCopyOptions = () => {
+    const options = Object.values(LocatorOption).map((option) => ({
+      text: option,
+      events: {
+        click: () => {
+          const { locator, type, name } = predictedElements[0];
+          elementMenu.hide();
+          return sendMessage({
+            message: "COPY_LOCATOR",
+            param: { option, value: { locator, type, name } },
+          });
+        },
+      },
+    }));
+
+    options.splice(3, 0, { type: ContextMenu.DIVIDER });
+    options.splice(5, 0, { type: ContextMenu.DIVIDER });
+
+    return options;
   };
 
   const contextMenuListener = (event) => {

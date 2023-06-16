@@ -78,3 +78,9 @@ export const arrowClockwise = `<svg width="12" height="12" viewBox="0 0 12 12" f
 export const caretRight = `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
 		<path d="M9.39777 5.66281L3.36027 0.947181C3.34449 0.934761 3.32553 0.927042 3.30557 0.924912C3.2856 0.922781 3.26544 0.926325 3.2474 0.935136C3.22936 0.943947 3.21417 0.957668 3.20357 0.974724C3.19298 0.99178 3.18741 1.01148 3.1875 1.03156V2.06682C3.1875 2.13245 3.2183 2.1954 3.2692 2.23557L8.09063 6.00031L3.2692 9.76504C3.21697 9.80522 3.1875 9.86816 3.1875 9.93379V10.9691C3.1875 11.0588 3.29063 11.1083 3.36027 11.0534L9.39777 6.33781C9.44908 6.29778 9.4906 6.24658 9.51915 6.18809C9.5477 6.12961 9.56254 6.06539 9.56254 6.00031C9.56254 5.93523 9.5477 5.871 9.51915 5.81252C9.4906 5.75404 9.44908 5.70283 9.39777 5.66281Z" fill="black" fill-opacity="0.45"/>
 	</svg>`;
+
+export const copy = `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+		<rect width="12" height="12" fill="#F5F5F5"/>
+		<path d="M10.125 8.625V1.875H3.375" stroke="#5A5A5A" stroke-linecap="round" stroke-linejoin="round"/>
+		<path d="M8.625 3.375H1.875V10.125H8.625V3.375Z" stroke="#5A5A5A" stroke-linecap="round" stroke-linejoin="round"/>
+	</svg>`;
