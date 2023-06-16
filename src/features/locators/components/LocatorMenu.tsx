@@ -94,8 +94,8 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, chil
       );
 
     let items: MenuItem[] = [];
-    const selectedLocators: Pick<Locator, "locator" | "type" | "name" | "message">[] = [
-      { locator, type, name, message },
+    const selectedLocators: Pick<Locator, "locator" | "type" | "name">[] = [
+      { locator, type, name },
     ];
 
     if (deleted) {

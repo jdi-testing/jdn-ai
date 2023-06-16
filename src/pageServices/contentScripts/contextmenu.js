@@ -507,11 +507,11 @@ export const runContextMenu = () => {
       text: option,
       events: {
         click: () => {
-          const { locator, type, name, message } = predictedElements[0];
+          const { locator, type, name } = predictedElements[0];
           elementMenu.hide();
           return sendMessage({
             message: "COPY_LOCATOR",
-            param: { option, value: { locator, type, name, message } },
+            param: { option, value: { locator, type, name } },
           });
         },
       },
