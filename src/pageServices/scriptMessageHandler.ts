@@ -18,6 +18,7 @@ import { selectLocatorByJdnHash, selectActiveLocators } from "../features/pageOb
 import connector from "./connector";
 import { showOverlay } from "./pageDataHandlers";
 import { rerunGeneration } from "../features/locators/reducers/rerunGeneration.thunk";
+import { stopGenerationGroup } from "../features/locators/reducers/stopGenerationGroup.thunk";
 
 export type ScriptMessagePayload = { message: keyof Actions; param: Record<string, never> };
 
