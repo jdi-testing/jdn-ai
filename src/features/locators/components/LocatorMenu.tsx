@@ -1,5 +1,5 @@
 import { Dropdown } from "antd";
-import React, { ReactNode, SyntheticEvent } from "react";
+import React, { ReactNode, SyntheticEvent, useContext } from "react";
 import { useDispatch } from "react-redux";
 import { MaxGenerationTime } from "../../../app/types/mainSlice.types";
 import { MenuItem } from "../../../common/components/menu/Menu";
@@ -32,6 +32,7 @@ import { stopGeneration } from "../reducers/stopGeneration.thunk";
 import { LocatorType } from "../../../common/types/common";
 import { useSelector } from "react-redux";
 import { selectCurrentPageObject } from "../../../features/pageObjects/pageObject.selectors";
+import { OnboardingContext } from "../../onboarding/OnboardingProvider";
 
 interface Props {
   element: Locator;
@@ -148,8 +149,11 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, chil
     return items;
   };
 
+  const { isOpen: isOnboardingOpen } = useContext(OnboardingContext);
+
   return (
     <Dropdown
+      disabled={isOnboardingOpen}
       menu={{ items: renderMenu(), onClick: handleMenuClick }}
       align={{ offset: [10, 0] }}
       trigger={trigger}
