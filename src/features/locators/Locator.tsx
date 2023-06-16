@@ -46,7 +46,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
   const dispatch = useDispatch();
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const { isOpen: isOnboardingOpen, isCustomLocatorFlow } = useContext(OnboardingContext);
+  const { isOpen: isCustomLocatorFlow } = useContext(OnboardingContext);
 
   const { element_id, type, name, locator, generate, message, deleted, active, isCustomLocator } = element;
 
