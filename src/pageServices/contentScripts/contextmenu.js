@@ -144,7 +144,6 @@ export const runContextMenu = () => {
 
             if (typeof item.sub !== "undefined") {
               li.appendChild(renderLevel(item.sub));
-              li.dataset.hasSubmenu = "true";
             }
           }
         } else {
