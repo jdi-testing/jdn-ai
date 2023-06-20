@@ -1,6 +1,6 @@
 import { Button, Popconfirm, Tooltip } from "antd";
 import { BookOpen } from "phosphor-react";
-import React, { useContext, useRef } from "react";
+import React, { useContext } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { selectIsDefaultState } from "../main.selectors";
