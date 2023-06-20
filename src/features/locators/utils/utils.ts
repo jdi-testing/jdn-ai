@@ -20,10 +20,7 @@ import { FormInstance } from "antd/es/form/Form";
 
 export const getLocatorWithJDIAnnotation = (locator: string): string => `@UI("${locator}")`;
 
-export const getLocatorWithSelenium = (locator: string, option: LocatorOption): string => {
-  const seleniumLocator = option === LocatorOption.CSSAndSelenium ? "css" : "xpath";
-  return `@FindBy(${seleniumLocator} = "${locator}")`;
-};
+export const getLocatorWithSelenium = (locator: string, option: string): string => `@FindBy(${option} = "${locator}")`;
 
 export const isValidJavaVariable = (value: string) => /^[a-zA-Z_$]([a-zA-Z0-9_])*$/.test(value);
 
@@ -84,7 +81,7 @@ export const copyLocator = (
       value = selectedLocators.map(({ locator }) => `"${locator.xPath}"`).join("\n");
       break;
     case LocatorOption.XpathAndSelenium:
-      value = selectedLocators.map(({ locator }) => getLocatorWithSelenium(locator.xPath, option)).join("\n");
+      value = selectedLocators.map(({ locator }) => getLocatorWithSelenium(locator.xPath, "xpath")).join("\n");
       break;
     case LocatorOption.XpathAndJDI:
       value = selectedLocators.map(({ locator }) => getLocatorWithJDIAnnotation(locator.xPath)).join("\n");
@@ -93,7 +90,7 @@ export const copyLocator = (
       value = selectedLocators.map(({ locator }) => `"${locator.cssSelector}"`).join("\n");
       break;
     case LocatorOption.CSSAndSelenium:
-      value = selectedLocators.map(({ locator }) => getLocatorWithSelenium(locator.cssSelector, option)).join("\n");
+      value = selectedLocators.map(({ locator }) => getLocatorWithSelenium(locator.cssSelector, "css")).join("\n");
       break;
     case LocatorOption.CSSAndJDI:
       value = selectedLocators.map(({ locator }) => getLocatorWithJDIAnnotation(locator.cssSelector)).join("\n");
