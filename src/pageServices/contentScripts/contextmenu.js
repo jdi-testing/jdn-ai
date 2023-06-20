@@ -518,7 +518,7 @@ export const runContextMenu = () => {
     }));
 
     options.splice(3, 0, { type: ContextMenu.DIVIDER });
-    options.splice(5, 0, { type: ContextMenu.DIVIDER });
+    options.splice(7, 0, { type: ContextMenu.DIVIDER });
 
     return options;
   };

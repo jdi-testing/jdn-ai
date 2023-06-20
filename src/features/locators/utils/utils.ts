@@ -14,14 +14,14 @@ import {
 } from "../types/locator.types";
 import { copyToClipboard, getLocatorString, getElementFullXpath } from "../../../common/utils/helpers";
 import { LocatorOption } from "./constants";
-import { getLocator } from "./locatorOutput";
 import { LocatorType } from "../../../common/types/common";
 import { isStringContainsNumbers } from "../../../common/utils/helpers";
 import { FormInstance } from "antd/es/form/Form";
 
-export const getLocatorWithJDIAnnotation = (locator: LocatorValue): string => `@UI("${locator.xPath}")`;
+export const getLocatorWithJDIAnnotation = (locator: string): string => `@UI("${locator}")`;
 
-export const getLocatorWithSelenium = (locator: LocatorValue): string => `@FindBy(xpath = "${locator.xPath}")`;
+export const getLocatorWithSelenium = (locator: string, option: LocatorOption): string =>
+  option.includes("xPath") ? `@FindBy(xpath = "${locator}")` : `@FindBy(css = "${locator}")`;
 
 export const isValidJavaVariable = (value: string) => /^[a-zA-Z_$]([a-zA-Z0-9_])*$/.test(value);
 
@@ -76,25 +76,31 @@ export const copyLocator = (
   selectedLocators: Pick<Locator, "locator" | "type" | "name">[],
   option?: LocatorOption
 ) => (): void => {
-  let xPath: string;
+  let value: string;
   switch (option) {
     case LocatorOption.Xpath:
-      xPath = selectedLocators.map(({ locator }) => `"${locator.xPath}"`).join("\n");
+      value = selectedLocators.map(({ locator }) => `"${locator.xPath}"`).join("\n");
       break;
     case LocatorOption.XpathAndSelenium:
-      xPath = selectedLocators.map(({ locator }) => getLocatorWithSelenium(locator)).join("\n");
+      value = selectedLocators.map(({ locator }) => getLocatorWithSelenium(locator.xPath, option)).join("\n");
       break;
     case LocatorOption.XpathAndJDI:
-      xPath = selectedLocators.map(({ locator }) => getLocatorWithJDIAnnotation(locator)).join("\n");
+      value = selectedLocators.map(({ locator }) => getLocatorWithJDIAnnotation(locator.xPath)).join("\n");
       break;
     case LocatorOption.CSSSelector:
-      xPath = selectedLocators.map(({ locator }) => `"${getLocator(locator, LocatorType.cssSelector)}"`).join("\n");
+      value = selectedLocators.map(({ locator }) => `"${locator.cssSelector}"`).join("\n");
+      break;
+    case LocatorOption.CSSAndSelenium:
+      value = selectedLocators.map(({ locator }) => getLocatorWithSelenium(locator.cssSelector, option)).join("\n");
+      break;
+    case LocatorOption.CSSAndJDI:
+      value = selectedLocators.map(({ locator }) => getLocatorWithJDIAnnotation(locator.cssSelector)).join("\n");
       break;
     default:
-      xPath = selectedLocators.map(({ locator, type, name }) => getLocatorString(locator, type, name)).join("\n");
+      value = selectedLocators.map(({ locator, type, name }) => getLocatorString(locator, type, name)).join("\n");
   }
 
-  copyToClipboard(xPath);
+  copyToClipboard(value);
 };
 
 export const getLocatorValidationStatus = (message: LocatorValidationErrorType): ValidationStatus | undefined => {

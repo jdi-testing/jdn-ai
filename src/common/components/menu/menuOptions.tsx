@@ -177,9 +177,19 @@ export const copyLocatorOption = (onClick: Record<LocatorOption, () => void>) =>
       onClick: onClick[LocatorOption.CSSSelector],
       label: LocatorOption.CSSSelector,
     },
-    dividerItem,
     {
       key: "6-4",
+      onClick: onClick[LocatorOption.CSSAndSelenium],
+      label: LocatorOption.CSSAndSelenium,
+    },
+    {
+      key: "6-5",
+      onClick: onClick[LocatorOption.CSSAndJDI],
+      label: LocatorOption.CSSAndJDI,
+    },
+    dividerItem,
+    {
+      key: "6-6",
       onClick: onClick[LocatorOption.FullCode],
       label: LocatorOption.FullCode,
     },
