@@ -23,7 +23,7 @@ export const getLocatorWithJDIAnnotation = (locator: string): string => `@UI("${
 export const getLocatorWithSelenium = (locator: string, option: LocatorOption): string => {
   const seleniumLocator = option === LocatorOption.CSSAndSelenium ? "css" : "xpath";
   return `@FindBy(${seleniumLocator} = "${locator}")`;
-}
+};
 
 export const isValidJavaVariable = (value: string) => /^[a-zA-Z_$]([a-zA-Z0-9_])*$/.test(value);
 
