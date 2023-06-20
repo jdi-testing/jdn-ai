@@ -143,6 +143,7 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
         onOk={handleConfirmModal}
+        okText="Start"
       >
         Discover all the features and possibilities of the extension with the onboarding tutorial.
       </Modal>
