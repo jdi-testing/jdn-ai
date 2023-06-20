@@ -20,8 +20,10 @@ import { FormInstance } from "antd/es/form/Form";
 
 export const getLocatorWithJDIAnnotation = (locator: string): string => `@UI("${locator}")`;
 
-export const getLocatorWithSelenium = (locator: string, option: LocatorOption): string =>
-  option.includes("xPath") ? `@FindBy(xpath = "${locator}")` : `@FindBy(css = "${locator}")`;
+export const getLocatorWithSelenium = (locator: string, option: LocatorOption): string => {
+  const seleniumLocator = option === LocatorOption.CSSAndSelenium ? "css" : "xpath";
+  return `@FindBy(${seleniumLocator} = "${locator}")`;
+}
 
 export const isValidJavaVariable = (value: string) => /^[a-zA-Z_$]([a-zA-Z0-9_])*$/.test(value);
 
