@@ -1,6 +1,6 @@
 import { Button, Popconfirm, Tooltip } from "antd";
 import { BookOpen } from "phosphor-react";
-import React, { useContext } from "react";
+import React, { useContext, useRef } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
 import { selectIsDefaultState } from "../main.selectors";
@@ -22,6 +22,7 @@ export const OnboardingButton = () => {
 
   return (
     <Popconfirm
+      overlayClassName="jdn__header-onboarding-button"
       placement="bottomRight"
       align={{ offset: [18, 0] }}
       disabled={!isOnboardingAvailable}
