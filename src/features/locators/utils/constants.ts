@@ -11,7 +11,7 @@ export enum LocatorOption {
   XpathAndJDI = "xPath + JDI annotation",
   CSSSelector = "CSS selector",
   CSSAndSelenium = "CSS Selector + FindBy",
-  CSSAndJDI = "CSS Selector+ JDI Annotation",
+  CSSAndJDI = "CSS Selector + JDI Annotation",
   FullCode = "Full code",
 }
 
