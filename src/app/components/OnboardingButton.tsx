@@ -22,6 +22,7 @@ export const OnboardingButton = () => {
 
   return (
     <Popconfirm
+      overlayClassName="jdn__header-onboarding-button"
       placement="bottomRight"
       align={{ offset: [18, 0] }}
       disabled={!isOnboardingAvailable}
