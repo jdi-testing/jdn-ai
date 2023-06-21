@@ -266,6 +266,9 @@ export const highlightOnPage = () => {
     predictedElements.forEach(({ deleted, type, jdnHash }) => {
       if (deleted || isFilteredOut(type)) return;
       let node = findByHash(jdnHash);
+      if (!node) {
+        debugger;
+      }
       nodes.push(node);
     });
 
