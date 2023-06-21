@@ -2,6 +2,8 @@
     avoid using any outer scope variables inside this function
  */
 
+import { assignJdnHash } from "./utils";
+
 /* global chrome */
 export const highlightOnPage = () => {
   let port;
@@ -263,12 +265,14 @@ export const highlightOnPage = () => {
     if (param?.filter) classFilter = param.filter;
 
     nodes = [];
-    predictedElements.forEach(({ deleted, type, jdnHash }) => {
+    predictedElements.forEach(({ deleted, type, jdnHash, locator }) => {
       if (deleted || isFilteredOut(type)) return;
       let node = findByHash(jdnHash);
       if (!node) {
-        debugger;
+        const isHashAssigned = assignJdnHash({ locator: locator.xPath, jdnHash }) === "success";
+        if (isHashAssigned) node = findByHash(jdnHash);
       }
+      if (!node) return; // for now we don't know cases that would lead to this
       nodes.push(node);
     });
 
