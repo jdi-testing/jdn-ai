@@ -32,6 +32,9 @@ export const updateMessageHandler = (
   state: RootState
 ) => {
   const actions: Actions = {
+    COPY_LOCATOR: ({ value, option }) => {
+      copyLocator([value], option)();
+    },
     ELEMENT_SELECT: (payload) => {
       dispatch(elementSetActive(payload.element_id));
     },
@@ -81,9 +84,6 @@ export const updateMessageHandler = (
     },
     TOGGLE_ELEMENT_GROUP: (payload) => {
       dispatch(toggleElementGroupGeneration(payload));
-    },
-    COPY_LOCATOR: ({ value, option }) => {
-      copyLocator([value], option)();
     },
   };
 
