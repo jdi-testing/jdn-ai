@@ -69,6 +69,8 @@ export const getGenerationAttributes = () => {
   const generateSelectorByElement = (element) => {
     const generatorOptions = {
       blacklist: [/jdn-hash/, /href/],
+      maxCombinations: 30,
+      maxCandidates: 30,
     };
     const selectorByGenerator = getCssSelector(element, generatorOptions);
 
