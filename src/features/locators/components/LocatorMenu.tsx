@@ -1,5 +1,5 @@
 import { Dropdown } from "antd";
-import React, { ReactNode, SyntheticEvent, useContext } from "react";
+import React, { ReactNode, SyntheticEvent, useContext, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { MaxGenerationTime } from "../../../app/types/mainSlice.types";
 import { MenuItem } from "../../../common/components/menu/Menu";
@@ -31,7 +31,11 @@ import { rerunGeneration } from "../reducers/rerunGeneration.thunk";
 import { stopGeneration } from "../reducers/stopGeneration.thunk";
 import { LocatorType } from "../../../common/types/common";
 import { useSelector } from "react-redux";
-import { selectCurrentPageObject } from "../../../features/pageObjects/pageObject.selectors";
+import {
+  selectCalculatedActiveByPageObj,
+  selectCurrentPageObject,
+  selectWaitingActiveByPageObj,
+} from "../../../features/pageObjects/pageObject.selectors";
 import { OnboardingContext } from "../../onboarding/OnboardingProvider";
 
 interface Props {
@@ -44,7 +48,11 @@ interface Props {
 export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, children, trigger }) => {
   const dispatch = useDispatch();
 
-  const { element_id, locator, deleted, priority, jdnHash, type, name, message, locatorType } = element;
+  const { element_id, locator, deleted, priority, jdnHash, message, locatorType } = element;
+
+  const calculatedActive = useSelector((_state) => selectCalculatedActiveByPageObj(_state as any));
+  const waitingActive = useSelector(selectWaitingActiveByPageObj);
+  const actualSelected = useMemo(() => [...calculatedActive, ...waitingActive], [calculatedActive, waitingActive]);
 
   // should be revised after 1240 implementation
   const pageObject = useSelector(selectCurrentPageObject);
@@ -95,7 +103,9 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, chil
       );
 
     let items: MenuItem[] = [];
-    const selectedLocators: Pick<Locator, "locator" | "type" | "name">[] = [{ locator, type, name }];
+    const locatorsForCopy: Locator[] = actualSelected.some((el) => el.element_id === element_id)
+      ? actualSelected
+      : [element];
 
     if (deleted) {
       items = [restore(() => dispatch(toggleDeleted(element_id)))];
@@ -104,13 +114,13 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, chil
         edit(handleEditClick),
         ...[
           copyLocatorOption({
-            [LocatorOption.Xpath]: copyLocator(selectedLocators, LocatorOption.Xpath),
-            [LocatorOption.XpathAndSelenium]: copyLocator(selectedLocators, LocatorOption.XpathAndSelenium),
-            [LocatorOption.XpathAndJDI]: copyLocator(selectedLocators, LocatorOption.XpathAndJDI),
-            [LocatorOption.CSSSelector]: copyLocator(selectedLocators, LocatorOption.CSSSelector),
-            [LocatorOption.CSSAndSelenium]: copyLocator(selectedLocators, LocatorOption.CSSAndSelenium),
-            [LocatorOption.CSSAndJDI]: copyLocator(selectedLocators, LocatorOption.CSSAndJDI),
-            [LocatorOption.FullCode]: copyLocator(selectedLocators),
+            [LocatorOption.Xpath]: copyLocator(locatorsForCopy, LocatorOption.Xpath),
+            [LocatorOption.XpathAndSelenium]: copyLocator(locatorsForCopy, LocatorOption.XpathAndSelenium),
+            [LocatorOption.XpathAndJDI]: copyLocator(locatorsForCopy, LocatorOption.XpathAndJDI),
+            [LocatorOption.CSSSelector]: copyLocator(locatorsForCopy, LocatorOption.CSSSelector),
+            [LocatorOption.CSSAndSelenium]: copyLocator(locatorsForCopy, LocatorOption.CSSAndSelenium),
+            [LocatorOption.CSSAndJDI]: copyLocator(locatorsForCopy, LocatorOption.CSSAndJDI),
+            [LocatorOption.FullCode]: copyLocator(locatorsForCopy),
           }),
         ],
         ...(isLocatorInProgress ? [pause(() => dispatch(stopGeneration(element_id)))] : []),

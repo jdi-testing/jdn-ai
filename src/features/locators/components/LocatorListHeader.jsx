@@ -166,6 +166,8 @@ export const LocatorListHeader = ({ render }) => {
               [LocatorOption.XpathAndSelenium]: copyLocator(actualSelected, LocatorOption.XpathAndSelenium),
               [LocatorOption.XpathAndJDI]: copyLocator(actualSelected, LocatorOption.XpathAndJDI),
               [LocatorOption.CSSSelector]: copyLocator(actualSelected, LocatorOption.CSSSelector),
+              [LocatorOption.CSSAndSelenium]: copyLocator(actualSelected, LocatorOption.CSSAndSelenium),
+              [LocatorOption.CSSAndJDI]: copyLocator(actualSelected, LocatorOption.CSSAndJDI),
               [LocatorOption.FullCode]: copyLocator(actualSelected),
             }),
           ]
