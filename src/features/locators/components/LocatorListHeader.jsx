@@ -248,7 +248,7 @@ export const LocatorListHeader = ({ render }) => {
             onDelete={() => dispatch(elementGroupUnsetActive(active))}
           />
         </span>
-        {!size(active) ? (
+        {size(active) ? (
           <Dropdown menu={renderMenu()} trigger={["click"]} destroyPopupOnHide>
             <Button
               className="jdn__locatorsList_button jdn__locatorsList_button-menu"
