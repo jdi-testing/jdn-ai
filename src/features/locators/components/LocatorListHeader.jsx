@@ -1,5 +1,5 @@
 import React, { useContext, useMemo, useState } from "react";
-import { filter, isNil, size } from "lodash";
+import { filter, size } from "lodash";
 import { Button, Checkbox, Dropdown, Row } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -192,7 +192,7 @@ export const LocatorListHeader = ({ render }) => {
           ]
         : []),
       ...(size(failedSelected) ? [retry(() => dispatch(rerunGeneration({ generationData: failedSelected })))] : []),
-      dividerItem,
+      dividerItem("9-1"),
       ...(size(actualSelected) ? [deleteOption(handleDelete)] : []),
     ];
 
@@ -248,7 +248,7 @@ export const LocatorListHeader = ({ render }) => {
             onDelete={() => dispatch(elementGroupUnsetActive(active))}
           />
         </span>
-        {!isNil(menu) ? (
+        {!size(active) ? (
           <Dropdown menu={renderMenu()} trigger={["click"]} destroyPopupOnHide>
             <Button
               className="jdn__locatorsList_button jdn__locatorsList_button-menu"

@@ -42,7 +42,7 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, url, locators, elements
 
   const { isOpen: isOnboardingOpen } = useContext(OnboardingContext);
 
-  const renderMenu = (
+  const getMenuItems = (
     id: PageObjectId,
     locatorIds: ElementId[] | undefined,
     locatorObjects: Locator[],
@@ -78,7 +78,7 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, url, locators, elements
       ...(size(locatorIds) ? [edit(handleEdit, "Edit Page Object")] : []),
       ...(size(locatorIds) ? [download(handleDownload)] : []),
       ...(size(locatorIds) && __DEV_ENVIRONMENT__ ? [downloadPerfTest(handleDownloadPerfTest)] : []),
-      dividerItem,
+      dividerItem("11-1"),
       deleteOption(handleRemove),
     ];
 
@@ -93,7 +93,7 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, url, locators, elements
         <Dropdown
           align={{ offset: [15, 0] }}
           trigger={["click"]}
-          menu={renderMenu(id, locators, elements, name, url)}
+          menu={getMenuItems(id, locators, elements, name, url)}
           getPopupContainer={(triggerNode) => triggerNode}
           destroyPopupOnHide
         >

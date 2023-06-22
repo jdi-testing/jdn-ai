@@ -85,7 +85,7 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, chil
     domEvent.stopPropagation();
   };
 
-  const renderMenu = () => {
+  const getMenuItems = () => {
     const getRerunGeneration = (time: MaxGenerationTime) => () =>
       dispatch(
         rerunGeneration({
@@ -141,7 +141,7 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, chil
               ),
             ]
           : []),
-        dividerItem,
+        dividerItem("7-1"),
         deleteOption(() => dispatch(toggleDeleted(element_id))),
       ];
     }
@@ -154,7 +154,7 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, chil
   return (
     <Dropdown
       disabled={isOnboardingOpen}
-      menu={{ items: renderMenu(), onClick: handleMenuClick }}
+      menu={{ items: getMenuItems(), onClick: handleMenuClick }}
       align={{ offset: [10, 0] }}
       trigger={trigger}
       getPopupContainer={(triggerNode) => triggerNode}
