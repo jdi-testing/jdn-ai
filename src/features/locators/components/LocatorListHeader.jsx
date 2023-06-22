@@ -1,5 +1,5 @@
 import React, { useContext, useMemo, useState } from "react";
-import { filter, isNil, size } from "lodash";
+import { filter, size } from "lodash";
 import { Button, Checkbox, Dropdown, Row } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 
