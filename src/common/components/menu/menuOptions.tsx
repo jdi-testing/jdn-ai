@@ -171,7 +171,7 @@ export const copyLocatorOption = (onClick: Record<LocatorOption, () => void>) =>
       onClick: onClick[LocatorOption.XpathAndJDI],
       label: LocatorOption.XpathAndJDI,
     },
-    dividerItem,
+    dividerItem("6-7"),
     {
       key: "6-3",
       onClick: onClick[LocatorOption.CSSSelector],
@@ -187,7 +187,7 @@ export const copyLocatorOption = (onClick: Record<LocatorOption, () => void>) =>
       onClick: onClick[LocatorOption.CSSAndJDI],
       label: LocatorOption.CSSAndJDI,
     },
-    dividerItem,
+    dividerItem("6-8"),
     {
       key: "6-6",
       onClick: onClick[LocatorOption.FullCode],
@@ -196,8 +196,8 @@ export const copyLocatorOption = (onClick: Record<LocatorOption, () => void>) =>
   ],
 });
 
-export const dividerItem = {
-  key: "12",
+export const dividerItem = (key: string) => ({
+  key,
   type: "divider",
   label: null,
-};
+});

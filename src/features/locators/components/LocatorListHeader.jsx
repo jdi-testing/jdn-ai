@@ -192,7 +192,7 @@ export const LocatorListHeader = ({ render }) => {
           ]
         : []),
       ...(size(failedSelected) ? [retry(() => dispatch(rerunGeneration({ generationData: failedSelected })))] : []),
-      dividerItem,
+      dividerItem("9-1"),
       ...(size(actualSelected) ? [deleteOption(handleDelete)] : []),
     ];
 
@@ -249,7 +249,7 @@ export const LocatorListHeader = ({ render }) => {
           />
         </span>
         {!isNil(menu) ? (
-          <Dropdown menu={renderMenu()} trigger={["click"]} destroyPopupOnHide>
+          <Dropdown disabled={!size(active)} menu={renderMenu()} trigger={["click"]} destroyPopupOnHide>
             <Button
               className="jdn__locatorsList_button jdn__locatorsList_button-menu"
               icon={<DotsThree size={18} onClick={(e) => e.preventDefault()} />}
