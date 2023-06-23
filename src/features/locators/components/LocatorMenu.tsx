@@ -102,16 +102,13 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, chil
       );
 
     let items: MenuItem[] = [];
-    const locatorsForCopy: Locator[] = actualSelected.some((el) => el.element_id === element_id)
-      ? actualSelected
-      : [element];
 
     if (deleted) {
       items = [restore(() => dispatch(toggleDeleted(element_id)))];
     } else {
       items = [
         edit(handleEditClick),
-        ...[copyLocatorOption(getCopyOptions(locatorsForCopy))],
+        ...[copyLocatorOption(getCopyOptions(actualSelected))],
         ...(isLocatorInProgress ? [pause(() => dispatch(stopGeneration(element_id)))] : []),
         ...(isLocatorInProgress && priority !== LocatorCalculationPriority.Increased
           ? [upPriority(handleUpPriority)]
