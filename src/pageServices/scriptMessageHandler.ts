@@ -33,7 +33,7 @@ export const updateMessageHandler = (
 ) => {
   const actions: Actions = {
     COPY_LOCATOR: ({ value, option }) => {
-      copyLocator([value], option)();
+      copyLocator(value, option)();
     },
     ELEMENT_SELECT: (payload) => {
       dispatch(elementSetActive(payload.element_id));

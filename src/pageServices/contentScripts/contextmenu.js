@@ -360,17 +360,6 @@ export const runContextMenu = () => {
                   }),
               },
             },
-            {
-              text: "Copy",
-              icon: copy,
-              sub: [...getCopyOptions()],
-              events: {
-                click: (evt) => evt.stopPropagation(),
-              },
-            },
-            {
-              type: ContextMenu.DIVIDER,
-            },
           ]
         : []),
       ...(isGroup()
@@ -388,6 +377,17 @@ export const runContextMenu = () => {
             },
           ]
         : []),
+      {
+        text: "Copy",
+        icon: copy,
+        sub: [...getCopyOptions()],
+        events: {
+          click: (evt) => evt.stopPropagation(),
+        },
+      },
+      {
+        type: ContextMenu.DIVIDER,
+      },
       {
         text: "Bring to front",
         icon: bringToFrontIcon,
@@ -507,11 +507,10 @@ export const runContextMenu = () => {
       text: option,
       events: {
         click: () => {
-          const { locator, type, name } = predictedElements[0];
           elementMenu.hide();
           return sendMessage({
             message: "COPY_LOCATOR",
-            param: { option, value: { locator, type, name } },
+            param: { option, value: predictedElements },
           });
         },
       },

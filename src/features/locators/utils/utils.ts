@@ -71,35 +71,39 @@ export const setIndents = (ref: React.RefObject<HTMLDivElement>, depth: number) 
   }
 };
 
-export const copyLocator = (
-  selectedLocators: Pick<Locator, "locator" | "type" | "name">[],
-  option?: LocatorOption
-) => (): void => {
+export const copyLocator = (locatorsForCopy: Locator[], option?: LocatorOption) => (): void => {
   let value: string;
   switch (option) {
     case LocatorOption.Xpath:
-      value = selectedLocators.map(({ locator }) => `"${locator.xPath}"`).join("\n");
+      value = locatorsForCopy.map(({ locator }) => `"${locator.xPath}"`).join("\n");
       break;
     case LocatorOption.XpathAndSelenium:
-      value = selectedLocators.map(({ locator }) => getLocatorWithSelenium(locator.xPath, "xpath")).join("\n");
+      value = locatorsForCopy.map(({ locator }) => getLocatorWithSelenium(locator.xPath, "xpath")).join("\n");
       break;
     case LocatorOption.XpathAndJDI:
-      value = selectedLocators.map(({ locator }) => getLocatorWithJDIAnnotation(locator.xPath)).join("\n");
+      value = locatorsForCopy.map(({ locator }) => getLocatorWithJDIAnnotation(locator.xPath)).join("\n");
       break;
     case LocatorOption.CSSSelector:
-      value = selectedLocators.map(({ locator }) => `"${locator.cssSelector}"`).join("\n");
+      value = locatorsForCopy.map(({ locator }) => `"${locator.cssSelector}"`).join("\n");
       break;
     case LocatorOption.CSSAndSelenium:
-      value = selectedLocators.map(({ locator }) => getLocatorWithSelenium(locator.cssSelector, "css")).join("\n");
+      value = locatorsForCopy.map(({ locator }) => getLocatorWithSelenium(locator.cssSelector, "css")).join("\n");
       break;
     case LocatorOption.CSSAndJDI:
-      value = selectedLocators.map(({ locator }) => getLocatorWithJDIAnnotation(locator.cssSelector)).join("\n");
+      value = locatorsForCopy.map(({ locator }) => getLocatorWithJDIAnnotation(locator.cssSelector)).join("\n");
       break;
     default:
-      value = selectedLocators.map(({ locator, type, name }) => getLocatorString(locator, type, name)).join("\n");
+      value = locatorsForCopy.map(({ locator, type, name }) => getLocatorString(locator, type, name)).join("\n");
   }
 
   copyToClipboard(value);
+};
+
+export const getCopyOptions = (selectedLocators: Locator[]) => {
+  return Object.values(LocatorOption).reduce((options, option) => {
+    options[option as LocatorOption] = copyLocator(selectedLocators, option);
+    return options;
+  }, {} as Record<LocatorOption, () => void>);
 };
 
 export const getLocatorValidationStatus = (message: LocatorValidationErrorType): ValidationStatus | undefined => {
