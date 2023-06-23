@@ -37,6 +37,7 @@ import {
   selectWaitingActiveByPageObj,
 } from "../../../features/pageObjects/pageObject.selectors";
 import { OnboardingContext } from "../../onboarding/OnboardingProvider";
+import { RootState } from "../../../app/store/store";
 
 interface Props {
   element: Locator;
@@ -50,7 +51,7 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, chil
 
   const { element_id, locator, deleted, priority, jdnHash, message, locatorType } = element;
 
-  const calculatedActive = useSelector((_state) => selectCalculatedActiveByPageObj(_state as any));
+  const calculatedActive = useSelector((_state) => selectCalculatedActiveByPageObj(_state as RootState));
   const waitingActive = useSelector(selectWaitingActiveByPageObj);
   const actualSelected = useMemo(() => [...calculatedActive, ...waitingActive], [calculatedActive, waitingActive]);
 
