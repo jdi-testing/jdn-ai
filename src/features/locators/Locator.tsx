@@ -1,7 +1,7 @@
 import { Checkbox, Button } from "antd";
 import { DotsThree } from "phosphor-react";
 import Text from "antd/lib/typography/Text";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { pageType } from "../../common/constants/constants";
@@ -10,6 +10,7 @@ import { isMacPlatform } from "../../common/utils/helpers";
 import {
   elementSetActive,
   elementUnsetActive,
+  elementGroupUnsetActive,
   setActiveSingle,
   setChildrenGeneration,
   toggleElementGeneration,
@@ -28,7 +29,11 @@ import { setIndents } from "./utils/utils";
 import { setScriptMessage } from "../../app/main.slice";
 import { useOnBoardingRef } from "../onboarding/utils/useOnboardingRef";
 import { OnbrdStep } from "../onboarding/types/constants";
-import { selectFirstLocatorIdByPO } from "../pageObjects/pageObject.selectors";
+import {
+  selectFirstLocatorIdByPO,
+  selectCalculatedActiveByPageObj,
+  selectWaitingActiveByPageObj,
+} from "../pageObjects/pageObject.selectors";
 import { OnbrdTooltip } from "../onboarding/components/OnbrdTooltip";
 import { OnboardingContext } from "../onboarding/OnboardingProvider";
 
@@ -64,6 +69,11 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
   const indeterminate = useSelector((state: RootState) => isLocatorIndeterminate(state, element_id));
   const allChildrenChecked = useSelector((state: RootState) => areChildrenChecked(state, element_id));
   const scriptMessage = useSelector((_state: RootState) => _state.main.scriptMessage);
+  const calculatedActive: LocatorInterface[] = useSelector((_state) =>
+    selectCalculatedActiveByPageObj(_state as RootState)
+  );
+  const waitingActive = useSelector(selectWaitingActiveByPageObj);
+  const actualSelected = useMemo(() => [...calculatedActive, ...waitingActive], [calculatedActive, waitingActive]);
 
   let timer: NodeJS.Timeout;
   useEffect(() => clearTimeout(timer), []);
@@ -85,8 +95,8 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
     }
   }, [scriptMessage]);
 
-  const handleOnChange: React.MouseEventHandler<HTMLDivElement> = (event) => {
-    event.stopPropagation();
+  const handleOnChange: React.MouseEventHandler<HTMLDivElement> = (evt) => {
+    evt.stopPropagation();
     dispatch(toggleElementGeneration(element_id));
     if (allChildrenChecked && size(element.children)) {
       dispatch(setChildrenGeneration({ locator: element, generate: false }));
@@ -95,12 +105,20 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
     }
   };
 
-  const handleLocatorClick: React.MouseEventHandler<HTMLDivElement> = (event) => {
-    const keyForMultiSelect = isMacPlatform(window) ? event.metaKey : event.ctrlKey;
+  const handleLocatorClick: React.MouseEventHandler<HTMLDivElement> = (evt) => {
+    const keyForMultiSelect = isMacPlatform(window) ? evt.metaKey : evt.ctrlKey;
     if (keyForMultiSelect) {
       if (active) dispatch(elementUnsetActive(element_id));
       else dispatch(elementSetActive(element_id));
     } else dispatch(setActiveSingle(element));
+  };
+
+  const handleLocatorRightClick: React.MouseEventHandler<HTMLDivElement> = (evt) => {
+    evt.stopPropagation();
+    if (!active) {
+      dispatch(elementGroupUnsetActive(actualSelected));
+      dispatch(setActiveSingle(element));
+    }
   };
 
   const renderColorizedString = () => {
@@ -130,7 +148,12 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
 
   return (
     <React.Fragment>
-      <div ref={ref} className="jdn__xpath_container" onClick={handleLocatorClick}>
+      <div
+        ref={ref}
+        className="jdn__xpath_container"
+        onClick={handleLocatorClick}
+        onContextMenu={handleLocatorRightClick}
+      >
         {currentPage === pageType.locatorsList ? (
           <LocatorMenu {...{ element, setIsEditModalOpen, trigger: ["contextMenu"] }}>
             <div className="jdn__xpath_locators">
@@ -151,7 +174,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
                 {renderColorizedString()}
               </Text>
               {searchState !== SearchState.Hidden ? (
-                <div onContextMenu={(e) => e.stopPropagation()} className="jdn__xpath_buttons">
+                <div onContextMenu={handleLocatorRightClick} className="jdn__xpath_buttons">
                   <LocatorCopyButton {...{ element }} />
                   <OnbrdTooltip>
                     <LocatorMenu {...{ element, setIsEditModalOpen, trigger: ["click", "contextMenu"] }}>

@@ -103,9 +103,6 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, chil
       );
 
     let items: MenuItem[] = [];
-    const locatorsForCopy: Locator[] = actualSelected.some((el) => el.element_id === element_id)
-      ? actualSelected
-      : [element];
 
     if (deleted) {
       items = [restore(() => dispatch(toggleDeleted(element_id)))];
@@ -114,13 +111,13 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, chil
         edit(handleEditClick),
         ...[
           copyLocatorOption({
-            [LocatorOption.Xpath]: copyLocator(locatorsForCopy, LocatorOption.Xpath),
-            [LocatorOption.XpathAndSelenium]: copyLocator(locatorsForCopy, LocatorOption.XpathAndSelenium),
-            [LocatorOption.XpathAndJDI]: copyLocator(locatorsForCopy, LocatorOption.XpathAndJDI),
-            [LocatorOption.CSSSelector]: copyLocator(locatorsForCopy, LocatorOption.CSSSelector),
-            [LocatorOption.CSSAndSelenium]: copyLocator(locatorsForCopy, LocatorOption.CSSAndSelenium),
-            [LocatorOption.CSSAndJDI]: copyLocator(locatorsForCopy, LocatorOption.CSSAndJDI),
-            [LocatorOption.FullCode]: copyLocator(locatorsForCopy),
+            [LocatorOption.Xpath]: copyLocator(actualSelected, LocatorOption.Xpath),
+            [LocatorOption.XpathAndSelenium]: copyLocator(actualSelected, LocatorOption.XpathAndSelenium),
+            [LocatorOption.XpathAndJDI]: copyLocator(actualSelected, LocatorOption.XpathAndJDI),
+            [LocatorOption.CSSSelector]: copyLocator(actualSelected, LocatorOption.CSSSelector),
+            [LocatorOption.CSSAndSelenium]: copyLocator(actualSelected, LocatorOption.CSSAndSelenium),
+            [LocatorOption.CSSAndJDI]: copyLocator(actualSelected, LocatorOption.CSSAndJDI),
+            [LocatorOption.FullCode]: copyLocator(actualSelected),
           }),
         ],
         ...(isLocatorInProgress ? [pause(() => dispatch(stopGeneration(element_id)))] : []),
