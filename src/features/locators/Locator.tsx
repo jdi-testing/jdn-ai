@@ -69,9 +69,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
   const indeterminate = useSelector((state: RootState) => isLocatorIndeterminate(state, element_id));
   const allChildrenChecked = useSelector((state: RootState) => areChildrenChecked(state, element_id));
   const scriptMessage = useSelector((_state: RootState) => _state.main.scriptMessage);
-  const calculatedActive: LocatorInterface[] = useSelector((_state) =>
-    selectCalculatedActiveByPageObj(_state as RootState)
-  );
+  const calculatedActive: LocatorInterface[] = useSelector(selectCalculatedActiveByPageObj);
   const waitingActive = useSelector(selectWaitingActiveByPageObj);
   const actualSelected = useMemo(() => [...calculatedActive, ...waitingActive], [calculatedActive, waitingActive]);
 
