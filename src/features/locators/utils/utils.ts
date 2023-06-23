@@ -99,6 +99,13 @@ export const copyLocator = (locatorsForCopy: Locator[], option?: LocatorOption) 
   copyToClipboard(value);
 };
 
+export const getCopyOptions = (selectedLocators: Locator[]) => {
+  return Object.values(LocatorOption).reduce((options, option) => {
+    options[option as LocatorOption] = copyLocator(selectedLocators, option);
+    return options;
+  }, {} as Record<LocatorOption, () => void>);
+};
+
 export const getLocatorValidationStatus = (message: LocatorValidationErrorType): ValidationStatus | undefined => {
   switch (true) {
     case Object.values(LocatorValidationErrors).includes(message as LocatorValidationErrors) ||

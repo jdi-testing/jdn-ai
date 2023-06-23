@@ -25,8 +25,7 @@ import {
   LocatorValidationWarnings,
 } from "../types/locator.types";
 import { setCalculationPriority, toggleDeleted } from "../locators.slice";
-import { copyLocator, getLocatorValidationStatus } from "../utils/utils";
-import { LocatorOption } from "../utils/constants";
+import { getCopyOptions, getLocatorValidationStatus } from "../utils/utils";
 import { rerunGeneration } from "../reducers/rerunGeneration.thunk";
 import { stopGeneration } from "../reducers/stopGeneration.thunk";
 import { LocatorType } from "../../../common/types/common";
@@ -50,7 +49,7 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, chil
 
   const { element_id, locator, deleted, priority, jdnHash, message, locatorType } = element;
 
-  const calculatedActive = useSelector((_state) => selectCalculatedActiveByPageObj(_state as any));
+  const calculatedActive = useSelector(selectCalculatedActiveByPageObj);
   const waitingActive = useSelector(selectWaitingActiveByPageObj);
   const actualSelected = useMemo(() => [...calculatedActive, ...waitingActive], [calculatedActive, waitingActive]);
 
@@ -109,17 +108,7 @@ export const LocatorMenu: React.FC<Props> = ({ element, setIsEditModalOpen, chil
     } else {
       items = [
         edit(handleEditClick),
-        ...[
-          copyLocatorOption({
-            [LocatorOption.Xpath]: copyLocator(actualSelected, LocatorOption.Xpath),
-            [LocatorOption.XpathAndSelenium]: copyLocator(actualSelected, LocatorOption.XpathAndSelenium),
-            [LocatorOption.XpathAndJDI]: copyLocator(actualSelected, LocatorOption.XpathAndJDI),
-            [LocatorOption.CSSSelector]: copyLocator(actualSelected, LocatorOption.CSSSelector),
-            [LocatorOption.CSSAndSelenium]: copyLocator(actualSelected, LocatorOption.CSSAndSelenium),
-            [LocatorOption.CSSAndJDI]: copyLocator(actualSelected, LocatorOption.CSSAndJDI),
-            [LocatorOption.FullCode]: copyLocator(actualSelected),
-          }),
-        ],
+        ...[copyLocatorOption(getCopyOptions(actualSelected))],
         ...(isLocatorInProgress ? [pause(() => dispatch(stopGeneration(element_id)))] : []),
         ...(isLocatorInProgress && priority !== LocatorCalculationPriority.Increased
           ? [upPriority(handleUpPriority)]

@@ -44,8 +44,8 @@ import {
   dividerItem,
 } from "../../../common/components/menu/menuOptions";
 import { locatorGenerationController } from "../utils/locatorGenerationController";
-import { copyLocator } from "../utils/utils";
-import { LocatorOption, newLocatorStub } from "../utils/constants";
+import { getCopyOptions } from "../utils/utils";
+import { newLocatorStub } from "../utils/constants";
 import { LocatorsSearch } from "./LocatorsSearch";
 import { rerunGeneration } from "../reducers/rerunGeneration.thunk";
 import { stopGenerationGroup } from "../reducers/stopGenerationGroup.thunk";
@@ -159,19 +159,7 @@ export const LocatorListHeader = ({ render }) => {
     const items = [
       ...(size(activeNonGenerate) ? [addToPO(() => dispatch(toggleElementGroupGeneration(activeNonGenerate)))] : []),
       ...(size(activeGenerate) ? [removeFromPO(() => dispatch(toggleElementGroupGeneration(activeGenerate)))] : []),
-      ...(size(actualSelected) > 1
-        ? [
-            copyLocatorOption({
-              [LocatorOption.Xpath]: copyLocator(actualSelected, LocatorOption.Xpath),
-              [LocatorOption.XpathAndSelenium]: copyLocator(actualSelected, LocatorOption.XpathAndSelenium),
-              [LocatorOption.XpathAndJDI]: copyLocator(actualSelected, LocatorOption.XpathAndJDI),
-              [LocatorOption.CSSSelector]: copyLocator(actualSelected, LocatorOption.CSSSelector),
-              [LocatorOption.CSSAndSelenium]: copyLocator(actualSelected, LocatorOption.CSSAndSelenium),
-              [LocatorOption.CSSAndJDI]: copyLocator(actualSelected, LocatorOption.CSSAndJDI),
-              [LocatorOption.FullCode]: copyLocator(actualSelected),
-            }),
-          ]
-        : []),
+      ...(size(actualSelected) > 1 ? [copyLocatorOption(getCopyOptions(actualSelected))] : []),
       ...(size(deletedActive) ? [restore(() => dispatch(toggleDeletedGroup(deletedActive)))] : []),
       ...(size(stoppedSelected) ? [rerun(() => dispatch(rerunGeneration({ generationData: stoppedSelected })))] : []),
       ...(size(inProgressSelected) ? [pause(() => dispatch(stopGenerationGroup(inProgressSelected)))] : []),
