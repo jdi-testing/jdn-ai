@@ -37,3 +37,5 @@ export const newLocatorStub: Locator = {
   type: "" as ElementClass,
   generate: true,
 };
+
+export const NO_ELEMENT_IN_DOCUMENT = "Document does not contain given element!";

@@ -2,6 +2,7 @@ import connector from "../../../pageServices/connector";
 import { WebSocketMessage } from "../../../services/backend";
 import { locatorProgressStatus, locatorTaskStatus } from "../../../common/constants/constants";
 import { webSocketController } from "../../../services/webSocketController";
+import { NO_ELEMENT_IN_DOCUMENT } from "./constants";
 
 export const isProgressStatus = (taskStatus) => locatorProgressStatus.hasOwnProperty(taskStatus);
 export const isGeneratedStatus = (taskStatus) => taskStatus === locatorTaskStatus.SUCCESS;
@@ -10,7 +11,7 @@ export const runGenerationHandler = async (elements, settings, onStatusChange, o
   return locatorGenerationController.scheduleTaskGroup(
     elements,
     settings,
-    (element_id, locator, jdnHash) => onStatusChange({ element_id, locator, jdnHash }),
+    onStatusChange ? (element_id, locator, jdnHash) => onStatusChange({ element_id, locator, jdnHash }) : undefined,
     onGenerationFailed,
     pageObject
   );
@@ -47,9 +48,15 @@ class LocatorGenerationController {
 
   setMessageHandler() {
     webSocketController.addSubscriber((event) => {
-      const { payload, action, result, pong } = JSON.parse(event.data);
+      const { payload, action, result, pong, error_message: errorMessage } = JSON.parse(event.data);
       switch (action || result) {
         case "status_changed":
+          if (errorMessage === NO_ELEMENT_IN_DOCUMENT && !this.repeatSchedule.has(payload.id)) {
+            this.onGenerationFailed([this.scheduledTasks.get(payload.id)], errorMessage);
+            this.scheduledTasks.delete(payload.id);
+            break;
+          }
+
           if (payload.status === locatorTaskStatus.REVOKED || payload.status === locatorTaskStatus.FAILURE) {
             this.onStatusChange(this.scheduledTasks.get(payload.id), { taskStatus: payload.status });
             this.scheduledTasks.delete(payload.id);
@@ -115,6 +122,7 @@ class LocatorGenerationController {
         })
       )
       .then(() => {
+        clearInterval(this.pingInterval);
         this.pingInterval = setInterval(() => {
           if (!this.pingTimeout) {
             this.pingSocket();
