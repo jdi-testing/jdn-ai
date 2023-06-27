@@ -22,6 +22,7 @@ import { checkLocatorsValidityReducer } from "./reducers/checkLocatorValidity.th
 import { LocatorType } from "../../common/types/common";
 import { addCustomLocatorReducer } from "./reducers/addCustomLocator.thunk";
 import { changeLocatorElementReducer } from "./reducers/changeLocatorElement.thunk";
+import { DEFAULT_ERROR, NETWORK_ERROR } from "./utils/constants";
 
 const initialState: LocatorsState = {
   generationStatus: LocatorsGenerationStatus.noStatus,
@@ -69,9 +70,10 @@ const locatorsSlice = createSlice({
     changeIdentificationStatus(state, { payload }: PayloadAction<IdentificationStatus>) {
       state.status = payload;
     },
-    failGeneration(state, { payload }: PayloadAction<string[]>) {
-      state.generationStatus = LocatorsGenerationStatus.failed;
-      payload.forEach((element_id) => {
+    failGeneration(state, { payload }: PayloadAction<{ ids: string[]; errorMessage?: string }>) {
+      const { ids, errorMessage } = payload;
+      if (errorMessage === NETWORK_ERROR) state.generationStatus = LocatorsGenerationStatus.failed;
+      ids.forEach((element_id) => {
         const existingLocator = simpleSelectLocatorById(state, element_id);
         if (existingLocator) {
           locatorsAdapter.upsertOne(state, {
@@ -79,7 +81,7 @@ const locatorsSlice = createSlice({
             locator: {
               ...existingLocator.locator,
               taskStatus: LocatorTaskStatus.FAILURE,
-              errorMessage: "Network Error has been encountered.",
+              errorMessage: errorMessage || DEFAULT_ERROR,
             },
           } as Locator);
         }

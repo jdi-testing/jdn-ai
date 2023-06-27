@@ -2,7 +2,7 @@ import connector from "../../../pageServices/connector";
 import { WebSocketMessage } from "../../../services/backend";
 import { locatorProgressStatus, locatorTaskStatus } from "../../../common/constants/constants";
 import { webSocketController } from "../../../services/webSocketController";
-import { NO_ELEMENT_IN_DOCUMENT } from "./constants";
+import { NETWORK_ERROR, NO_ELEMENT_IN_DOCUMENT } from "./constants";
 
 export const isProgressStatus = (taskStatus) => locatorProgressStatus.hasOwnProperty(taskStatus);
 export const isGeneratedStatus = (taskStatus) => taskStatus === locatorTaskStatus.SUCCESS;
@@ -30,6 +30,7 @@ class LocatorGenerationController {
     this.pingInterval = null;
     this.pingTimeout = null;
     this.sessionId = null;
+    this.pageObject = null;
 
     this.setMessageHandler();
   }
@@ -51,7 +52,7 @@ class LocatorGenerationController {
       const { payload, action, result, pong, error_message: errorMessage } = JSON.parse(event.data);
       switch (action || result) {
         case "status_changed":
-          if (errorMessage === NO_ELEMENT_IN_DOCUMENT && !this.repeatSchedule.has(payload.id)) {
+          if (errorMessage === NO_ELEMENT_IN_DOCUMENT) {
             this.onGenerationFailed([this.scheduledTasks.get(payload.id)], errorMessage);
             this.scheduledTasks.delete(payload.id);
             break;
@@ -90,6 +91,7 @@ class LocatorGenerationController {
     if (settings) this.queueSettings = settings;
     if (onStatusChange) this.onStatusChange = onStatusChange;
     if (onGenerationFailed) this.onGenerationFailed = onGenerationFailed;
+    if (pageObject) this.pageObject = pageObject;
     await this.getDocument();
 
     const hashes = [];
@@ -115,14 +117,14 @@ class LocatorGenerationController {
           },
           logging_info: {
             session_id: this.sessionId,
-            page_object_creation: pageObject.name,
-            element_library: pageObject.library,
-            website_url: pageObject.url,
+            page_object_creation: this.pageObject.name,
+            element_library: this.pageObject.library,
+            website_url: this.pageObject.url,
           },
         })
       )
       .then(() => {
-        clearInterval(this.pingInterval);
+        if (!this.pingInterval) return;
         this.pingInterval = setInterval(() => {
           if (!this.pingTimeout) {
             this.pingSocket();
@@ -147,7 +149,7 @@ class LocatorGenerationController {
   }
 
   noResponseHandler() {
-    this.onGenerationFailed([...this.scheduledTasks.values()]);
+    this.onGenerationFailed([...this.scheduledTasks.values()], NETWORK_ERROR);
     this.scheduledTasks.clear();
   }
 

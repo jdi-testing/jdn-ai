@@ -148,12 +148,12 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       sendMessage.changeStatus(updatedLocator as Locator);
       break;
     case "locators/failGeneration": {
-      const _payload = payload.map((element_id: string) => {
+      const { ids } = payload;
+      const elements = ids.map((element_id: string) => {
         const jdnHash = selectLocatorById(state, element_id)?.jdnHash;
         return { element_id, jdnHash, locator: { taskStatus: LocatorTaskStatus.FAILURE } };
       });
-      _payload.forEach((element: Locator) => sendMessage.changeStatus(element));
-      sendMessage.changeStatus(_payload);
+      elements.forEach((element: Locator) => sendMessage.changeStatus(element));
       break;
     }
     case "locators/elementUnsetActive":
