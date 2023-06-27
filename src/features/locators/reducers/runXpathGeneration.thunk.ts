@@ -30,14 +30,14 @@ export const runXpathGeneration = createAsyncThunk("locators/scheduleGeneration"
       const id = ids[0];
       if (reScheduledTasks.has(id)) {
         reScheduledTasks.delete(id);
-        thunkAPI.dispatch(failGeneration(ids));
+        thunkAPI.dispatch(failGeneration({ ids, errorMessage }));
       } else {
         reScheduledTasks.add(id);
         const element = selectLocatorById(state, id)!;
         await sendMessage.assignJdnHash({ jdnHash: element.jdnHash, locator: element.locator.xPath });
         await runGenerationHandler([element]);
       }
-    } else thunkAPI.dispatch(failGeneration(ids));
+    } else thunkAPI.dispatch(failGeneration({ ids, errorMessage }));
   };
 
   await runGenerationHandler(
