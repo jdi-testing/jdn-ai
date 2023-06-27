@@ -22,7 +22,7 @@ import { checkLocatorsValidityReducer } from "./reducers/checkLocatorValidity.th
 import { LocatorType } from "../../common/types/common";
 import { addCustomLocatorReducer } from "./reducers/addCustomLocator.thunk";
 import { changeLocatorElementReducer } from "./reducers/changeLocatorElement.thunk";
-import { NETWORK_ERROR } from "./utils/constants";
+import { DEFAULT_ERROR, NETWORK_ERROR } from "./utils/constants";
 
 const initialState: LocatorsState = {
   generationStatus: LocatorsGenerationStatus.noStatus,
@@ -81,7 +81,7 @@ const locatorsSlice = createSlice({
             locator: {
               ...existingLocator.locator,
               taskStatus: LocatorTaskStatus.FAILURE,
-              errorMessage: errorMessage || NETWORK_ERROR,
+              errorMessage: errorMessage || DEFAULT_ERROR,
             },
           } as Locator);
         }
