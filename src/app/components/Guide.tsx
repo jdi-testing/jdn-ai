@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 // since webpack works fine with it
 import readme from "../../../README.md";
 import { BackendStatus } from "../types/mainSlice.types";
-import { pushNotification } from "../main.slice";
+// import { pushNotification } from "../main.slice";
 import { RootState } from "../store/store";
 import { defineServer } from "../reducers/defineServer.thunk";
 import { useGuideRehype } from "../utils/useGuideRehype";
@@ -70,7 +70,8 @@ export const Guide = () => {
     setSettingsChecking(true);
     await dispatch(defineServer());
     if (backendStatus !== BackendStatus.Accessed) {
-      dispatch(pushNotification({ action: { type: "main/defineServer/rejected" }, message: backendStatus }));
+      // TODO: uncomment with #997. now it's not available on Guide page
+      // dispatch(pushNotification({ action: { type: "main/defineServer/rejected" }, message: backendStatus }));
     }
     setSettingsChecking(false);
   };

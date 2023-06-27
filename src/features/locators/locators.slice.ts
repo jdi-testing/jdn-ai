@@ -70,7 +70,7 @@ const locatorsSlice = createSlice({
     changeIdentificationStatus(state, { payload }: PayloadAction<IdentificationStatus>) {
       state.status = payload;
     },
-    failGeneration(state, { payload }: PayloadAction<{ ids: string[], errorMessage?: string}>) {
+    failGeneration(state, { payload }: PayloadAction<{ ids: string[]; errorMessage?: string }>) {
       const { ids, errorMessage } = payload;
       if (errorMessage === NETWORK_ERROR) state.generationStatus = LocatorsGenerationStatus.failed;
       ids.forEach((element_id) => {
