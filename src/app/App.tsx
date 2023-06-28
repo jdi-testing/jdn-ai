@@ -5,6 +5,7 @@ import "antd/dist/antd.less";
 import "antd/lib/style/themes/default.less";
 
 import Layout, { Content, Header } from "antd/lib/layout/layout";
+import { Alert, Button } from "antd";
 import { Backdrop } from "./components/Backdrop";
 import { pageType } from "../common/constants/constants";
 import { StatusBar } from "./components/StatusBar";
@@ -22,6 +23,26 @@ import { BackendStatus } from "./types/mainSlice.types";
 import { LocatorsPage } from "../features/locators/LocatorsPage";
 import { PageObjectPage } from "../features/pageObjects/PageObjectPage";
 import { OnboardingProvider } from "../features/onboarding/OnboardingProvider";
+import { ErrorBoundary } from "react-error-boundary";
+// import ErrorBoundary from "antd/lib/alert/ErrorBoundary";
+
+// const { ErrorBoundary } = Alert;
+
+const ThrowError: React.FC = () => {
+  const [error, setError] = useState<Error>();
+  const onClick = () => {
+    setError(new Error("An Uncaught Error"));
+  };
+
+  if (error) {
+    throw error;
+  }
+  return (
+    <Button danger onClick={onClick}>
+      Click me to throw a error
+    </Button>
+  );
+};
 
 const App = () => {
   const [isInvalidSession, setIsInvalidSession] = useState(false);
@@ -55,25 +76,37 @@ const App = () => {
 
   return (
     <div>
-      <Backdrop />
-      <Layout className="jdn__app">
-        <Header className="jdn__header">
-          <StatusBar />
-        </Header>
-        <Content className="jdn__content">
-          {backendAvailable === BackendStatus.Accessed ? (
-            isInvalidSession ? (
-              <SeveralTabsWarning {...{ checkSession: () => checkSession(setIsInvalidSession) }} />
+      <ErrorBoundary
+        fallback={
+          <Alert
+            message="Error"
+            description="Something went wrong. Try to reload plugin or contact the developer."
+            type="error"
+            showIcon
+          />
+        }
+      >
+        <ThrowError />
+        <Backdrop />
+        <Layout className="jdn__app">
+          <Header className="jdn__header">
+            <StatusBar />
+          </Header>
+          <Content className="jdn__content">
+            {backendAvailable === BackendStatus.Accessed ? (
+              isInvalidSession ? (
+                <SeveralTabsWarning {...{ checkSession: () => checkSession(setIsInvalidSession) }} />
+              ) : (
+                renderPage()
+              )
+            ) : backendAvailable === BackendStatus.TryToAccess ? (
+              BackendStatus.TryToAccess
             ) : (
-              renderPage()
-            )
-          ) : backendAvailable === BackendStatus.TryToAccess ? (
-            BackendStatus.TryToAccess
-          ) : (
-            <Guide />
-          )}
-        </Content>
-      </Layout>
+              <Guide />
+            )}
+          </Content>
+        </Layout>
+      </ErrorBoundary>
     </div>
   );
 };
