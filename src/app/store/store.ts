@@ -22,7 +22,14 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: ["locators/setElementGroupGeneration", "locators/updateLocator", "locators/elementSetActive"],
+        ignoredActions: [
+          "locators/setElementGroupGeneration",
+          "locators/updateLocator",
+          "locators/elementSetActive",
+          "locators/elementGroupSetActive",
+          "locators/setActiveSingle",
+          "main/setScriptMessage",
+        ],
       },
     }).concat([logger, scriptNotifier, cancellableActions, changePageMiddleware]),
 });
