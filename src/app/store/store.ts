@@ -24,10 +24,10 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [
           "locators/setElementGroupGeneration",
-          "locators/updateLocator",
           "locators/elementSetActive",
           "locators/elementGroupSetActive",
           "locators/setActiveSingle",
+          "locators/updateLocatorGroup",
           "main/setScriptMessage",
         ],
       },

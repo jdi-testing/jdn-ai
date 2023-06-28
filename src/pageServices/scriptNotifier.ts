@@ -143,10 +143,6 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
         locator && sendMessage.toggleDeleted(locator);
       });
       break;
-    case "locators/updateLocator":
-      const updatedLocator = selectLocatorById(state, payload.element_id);
-      sendMessage.changeStatus(updatedLocator as Locator);
-      break;
     case "locators/updateLocatorGroup":
       payload.forEach((element: Locator) => {
         const locator = selectLocatorById(state, element.element_id);
