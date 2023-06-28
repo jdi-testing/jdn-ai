@@ -70,6 +70,27 @@ const locatorsSlice = createSlice({
     changeIdentificationStatus(state, { payload }: PayloadAction<IdentificationStatus>) {
       state.status = payload;
     },
+    elementGroupSetActive(
+      state,
+      { payload }: PayloadAction<Locator[] | { locators: Array<Locator>; fromScript: boolean }>
+    ) {
+      const locators = Array.isArray(payload) ? payload : payload.locators;
+      locatorsAdapter.upsertMany(state, locators.map((_locator) => ({ ..._locator, active: true })) as Locator[]);
+    },
+    elementGroupUnsetActive(
+      state,
+      { payload }: PayloadAction<Array<Locator> | { locators: Array<Locator>; fromScript: boolean }>
+    ) {
+      const locators = Array.isArray(payload) ? payload : payload.locators;
+      const newValue = locators.map((_locator) => ({ ..._locator, active: false }));
+      locatorsAdapter.upsertMany(state, newValue);
+    },
+    elementSetActive(state, { payload }: PayloadAction<ElementId>) {
+      locatorsAdapter.upsertOne(state, { element_id: payload, active: true } as Locator);
+    },
+    elementUnsetActive(state, { payload }: PayloadAction<ElementId>) {
+      locatorsAdapter.upsertOne(state, { element_id: payload, active: false } as Locator);
+    },
     failGeneration(state, { payload }: PayloadAction<{ ids: string[]; errorMessage?: string }>) {
       const { ids, errorMessage } = payload;
       if (errorMessage === NETWORK_ERROR) state.generationStatus = LocatorsGenerationStatus.failed;
@@ -93,11 +114,25 @@ const locatorsSlice = createSlice({
     removeLocators(state, { payload: ids }) {
       if (ids) locatorsAdapter.removeMany(state, ids);
     },
-    toggleElementGeneration(state, { payload }: PayloadAction<string | Locator>) {
-      const locator = typeof payload === "string" ? simpleSelectLocatorById(state, payload) : payload;
-      if (!locator) return;
-      const { generate, element_id } = locator;
-      locatorsAdapter.upsertOne(state, { element_id, generate: !generate } as Locator);
+    restoreLocators(state, { payload: locators }) {
+      locatorsAdapter.setMany(state, locators);
+    },
+    setActiveSingle(state, { payload: locator }: PayloadAction<Locator>) {
+      const newValue = simpleSelectLocatorsByPageObject(state, locator.pageObj).map((_loc) =>
+        _loc.element_id === locator.element_id ? { ..._loc, active: true } : { ..._loc, active: false }
+      );
+      locatorsAdapter.upsertMany(state, newValue);
+    },
+    setCalculationPriority(
+      state,
+      { payload }: PayloadAction<{ element_id: ElementId; priority: LocatorCalculationPriority; ids?: ElementId[] }>
+    ) {
+      const { element_id, ids, priority } = payload;
+      if (element_id) locatorsAdapter.upsertOne(state, { element_id, priority } as Locator);
+      if (ids) {
+        const newValue: Partial<Locator>[] = ids.map((element_id) => ({ element_id, priority }));
+        locatorsAdapter.upsertMany(state, newValue as Locator[]);
+      }
     },
     setChildrenGeneration(state, { payload }: PayloadAction<{ locator: Locator; generate: boolean }>) {
       const { locator, generate } = payload;
@@ -113,16 +148,9 @@ const locatorsSlice = createSlice({
       toggleGenerate(locator);
       locatorsAdapter.upsertMany(state, newValue as Locator[]);
     },
-    setCalculationPriority(
-      state,
-      { payload }: PayloadAction<{ element_id: ElementId; priority: LocatorCalculationPriority; ids?: ElementId[] }>
-    ) {
-      const { element_id, ids, priority } = payload;
-      if (element_id) locatorsAdapter.upsertOne(state, { element_id, priority } as Locator);
-      if (ids) {
-        const newValue: Partial<Locator>[] = ids.map((element_id) => ({ element_id, priority }));
-        locatorsAdapter.upsertMany(state, newValue as Locator[]);
-      }
+    setElementGroupGeneration(state, { payload }: PayloadAction<{ locators: Locator[]; generate: boolean }>) {
+      const { locators, generate } = payload;
+      locatorsAdapter.upsertMany(state, locators.map(({ element_id }) => ({ element_id, generate })) as Locator[]);
     },
     setJdnHash(state, { payload }: PayloadAction<{ element_id: ElementId; jdnHash: string }>) {
       const { element_id, jdnHash } = payload;
@@ -131,19 +159,8 @@ const locatorsSlice = createSlice({
     setScrollToLocator(state, { payload: element_id }: PayloadAction<ElementId>) {
       state.scrollToLocator = element_id;
     },
-    setElementGroupGeneration(state, { payload }: PayloadAction<{ locators: Locator[]; generate: boolean }>) {
-      const { locators, generate } = payload;
-      locatorsAdapter.upsertMany(state, locators.map(({ element_id }) => ({ element_id, generate })) as Locator[]);
-    },
     setValidity(state, { payload }: PayloadAction<{ element_id: ElementId; message: Locator["message"] }>) {
       locatorsAdapter.upsertOne(state, payload as Locator);
-    },
-    toggleElementGroupGeneration(state, { payload }: PayloadAction<Locator[]>) {
-      const newValue: Partial<Locator>[] = [];
-      payload.forEach(({ element_id, generate }) => {
-        newValue.push({ element_id, generate: !generate });
-      });
-      locatorsAdapter.upsertMany(state, newValue as Locator[]);
     },
     toggleDeleted(state, { payload }: PayloadAction<string>) {
       const locator = simpleSelectLocatorById(state, payload);
@@ -163,6 +180,19 @@ const locatorsSlice = createSlice({
       });
       locatorsAdapter.upsertMany(state, newValue as Locator[]);
     },
+    toggleElementGeneration(state, { payload }: PayloadAction<string | Locator>) {
+      const locator = typeof payload === "string" ? simpleSelectLocatorById(state, payload) : payload;
+      if (!locator) return;
+      const { generate, element_id } = locator;
+      locatorsAdapter.upsertOne(state, { element_id, generate: !generate } as Locator);
+    },
+    toggleElementGroupGeneration(state, { payload }: PayloadAction<Locator[]>) {
+      const newValue: Partial<Locator>[] = [];
+      payload.forEach(({ element_id, generate }) => {
+        newValue.push({ element_id, generate: !generate });
+      });
+      locatorsAdapter.upsertMany(state, newValue as Locator[]);
+    },
     updateLocator(state, { payload }) {
       const { element_id, locator } = payload;
       const existingLocator = simpleSelectLocatorById(state, element_id);
@@ -171,36 +201,6 @@ const locatorsSlice = createSlice({
           element_id,
           locator: { ...existingLocator.locator, ...locator },
         } as Locator);
-    },
-    restoreLocators(state, { payload: locators }) {
-      locatorsAdapter.setMany(state, locators);
-    },
-    elementSetActive(state, { payload }: PayloadAction<ElementId>) {
-      locatorsAdapter.upsertOne(state, { element_id: payload, active: true } as Locator);
-    },
-    elementGroupSetActive(
-      state,
-      { payload }: PayloadAction<Locator[] | { locators: Array<Locator>; fromScript: boolean }>
-    ) {
-      const locators = Array.isArray(payload) ? payload : payload.locators;
-      locatorsAdapter.upsertMany(state, locators.map((_locator) => ({ ..._locator, active: true })) as Locator[]);
-    },
-    setActiveSingle(state, { payload: locator }: PayloadAction<Locator>) {
-      const newValue = simpleSelectLocatorsByPageObject(state, locator.pageObj).map((_loc) =>
-        _loc.element_id === locator.element_id ? { ..._loc, active: true } : { ..._loc, active: false }
-      );
-      locatorsAdapter.upsertMany(state, newValue);
-    },
-    elementUnsetActive(state, { payload }: PayloadAction<ElementId>) {
-      locatorsAdapter.upsertOne(state, { element_id: payload, active: false } as Locator);
-    },
-    elementGroupUnsetActive(
-      state,
-      { payload }: PayloadAction<Array<Locator> | { locators: Array<Locator>; fromScript: boolean }>
-    ) {
-      const locators = Array.isArray(payload) ? payload : payload.locators;
-      const newValue = locators.map((_locator) => ({ ..._locator, active: false }));
-      locatorsAdapter.upsertMany(state, newValue);
     },
   },
   extraReducers: (builder) => {
@@ -221,24 +221,24 @@ export const {
   addLocators,
   changeIdentificationStatus,
   changeLocatorAttributes,
-  failGeneration,
-  removeLocators,
-  removeAll,
-  toggleElementGeneration,
-  setChildrenGeneration,
-  setCalculationPriority,
-  setScrollToLocator,
-  setElementGroupGeneration,
-  setJdnHash,
-  setValidity,
-  toggleElementGroupGeneration,
-  toggleDeleted,
-  toggleDeletedGroup,
-  updateLocator,
-  restoreLocators,
-  elementSetActive,
-  setActiveSingle,
-  elementUnsetActive,
   elementGroupSetActive,
   elementGroupUnsetActive,
+  elementSetActive,
+  elementUnsetActive,
+  failGeneration,
+  removeAll,
+  removeLocators,
+  restoreLocators,
+  setActiveSingle,
+  setChildrenGeneration,
+  setCalculationPriority,
+  setElementGroupGeneration,
+  setJdnHash,
+  setScrollToLocator,
+  setValidity,
+  toggleDeleted,
+  toggleDeletedGroup,
+  toggleElementGeneration,
+  toggleElementGroupGeneration,
+  updateLocator,
 } = locatorsSlice.actions;
