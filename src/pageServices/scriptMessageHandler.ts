@@ -32,6 +32,14 @@ export const updateMessageHandler = (
   state: RootState
 ) => {
   const actions: Actions = {
+    ADVANCED_CALCULATION: ({ locators, time }) => {
+      dispatch(
+        rerunGeneration({
+          generationData: locators,
+          maxGenerationTime: time,
+        })
+      );
+    },
     COPY_LOCATOR: ({ value, option }) => {
       copyLocator(value, option)();
     },

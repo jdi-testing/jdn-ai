@@ -3,7 +3,7 @@ import { addLocators, changeLocatorAttributes } from "../../features/locators/lo
 import { selectLocatorById } from "../../features/locators/locators.selectors";
 import { store } from "../../app/store/store";
 import { locator1 } from "../__mocks__/locator.mock";
-import { locatorTaskStatus } from "../../common/constants/constants";
+import { LocatorTaskStatus } from "../../features/locators/types/locator.types";
 import { ElementLibrary } from "../../features/locators/types/generationClasses.types";
 import { changePage } from "../../app/main.slice";
 import { PageType } from "../../app/types/mainSlice.types";
@@ -96,7 +96,7 @@ describe("changeLocatorAttributes reducer", () => {
     expect(locator.isCustomLocator).toBeTruthy();
     expect(locator.isCustomName).toBeTruthy();
     expect(locator.locator.xPath).toBe("//*[@class='any-class']");
-    expect(locator.locator.taskStatus).toBe(locatorTaskStatus.SUCCESS);
+    expect(locator.locator.taskStatus).toBe(LocatorTaskStatus.SUCCESS);
   });
 
   test("warned validation", () => {

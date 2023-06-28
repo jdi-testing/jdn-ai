@@ -153,7 +153,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
         onContextMenu={handleLocatorRightClick}
       >
         {currentPage === pageType.locatorsList ? (
-          <LocatorMenu {...{ element, setIsEditModalOpen, trigger: ["contextMenu"] }}>
+          <LocatorMenu {...{ setIsEditModalOpen, trigger: ["contextMenu"] }}>
             <div className="jdn__xpath_locators">
               <div ref={addToPORef} onContextMenu={(e) => e.stopPropagation()} className="jdn__xpath_checkbox_wrapper">
                 <Checkbox
@@ -175,7 +175,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
                 <div onContextMenu={handleLocatorRightClick} className="jdn__xpath_buttons">
                   <LocatorCopyButton {...{ element }} />
                   <OnbrdTooltip>
-                    <LocatorMenu {...{ element, setIsEditModalOpen, trigger: ["click", "contextMenu"] }}>
+                    <LocatorMenu {...{ setIsEditModalOpen, trigger: ["click", "contextMenu"] }}>
                       <Button
                         ref={menuRef}
                         className="jdn__locatorsList_button jdn__locatorsList_button-menu"

@@ -1,11 +1,10 @@
 import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
 import { chain, isNil, last, size } from "lodash";
 import { RootState } from "../../app/store/store";
-import { locatorTaskStatus } from "../../common/constants/constants";
 import { selectClassFilterByPO } from "../filter/filter.selectors";
 import { isValidLocator } from "../locators/utils/utils";
 import { selectLocatorById, selectLocators } from "../locators/locators.selectors";
-import { Locator } from "../locators/types/locator.types";
+import { Locator, LocatorTaskStatus } from "../locators/types/locator.types";
 import { LocatorType } from "../../common/types/common";
 import { isProgressStatus } from "../locators/utils/locatorGenerationController";
 import { getLocator } from "../locators/utils/locatorOutput";
@@ -114,7 +113,7 @@ export const selectConfirmedLocators = createSelector(selectSortedFilteredLocato
 // move to loc
 export const selectCalculatedByPageObj = createSelector(selectFilteredLocators, (locators: Locator[]) =>
   locators.filter(
-    (_loc) => (_loc.locator.taskStatus === locatorTaskStatus.SUCCESS || _loc.isCustomLocator) && !_loc.deleted
+    (_loc) => (_loc.locator.taskStatus === LocatorTaskStatus.SUCCESS || _loc.isCustomLocator) && !_loc.deleted
   )
 );
 
@@ -150,8 +149,8 @@ export const selectWaitingByPageObj = createSelector(selectFilteredLocators, (el
     .filter(
       (el) =>
         (isProgressStatus(el.locator.taskStatus) ||
-          el.locator.taskStatus === locatorTaskStatus.REVOKED ||
-          el.locator.taskStatus === locatorTaskStatus.FAILURE) &&
+          el.locator.taskStatus === LocatorTaskStatus.REVOKED ||
+          el.locator.taskStatus === LocatorTaskStatus.FAILURE) &&
         !el.deleted
     )
     .value()
@@ -170,8 +169,8 @@ export const selectInProgressByPageObj = createSelector(selectFilteredLocators, 
 );
 
 // move to loc
-export const selectInProgressSelectedByPageObject = createSelector(selectInProgressByPageObj, (items) =>
-  items.filter((item) => item.generate)
+export const selectInProgressActiveByPageObject = createSelector(selectInProgressByPageObj, (items) =>
+  items.filter((item) => item.active)
 );
 
 // move to loc
@@ -181,7 +180,7 @@ export const selectInProgressGenerateByPageObj = createSelector(selectWaitingByP
 
 // move to loc
 export const selectFailedByPageObject = createSelector(selectFilteredLocators, (elements) =>
-  elements.filter((element) => element.locator.taskStatus === locatorTaskStatus.FAILURE)
+  elements.filter((element) => element.locator.taskStatus === LocatorTaskStatus.FAILURE)
 );
 
 export const selectFailedSelectedByPageObject = createSelector(selectFailedByPageObject, (elements) =>
