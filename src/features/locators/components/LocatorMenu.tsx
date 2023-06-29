@@ -162,11 +162,11 @@ export const LocatorMenu: React.FC<Props> = ({ setIsEditModalOpen, children, tri
     );
 
   const handleAddToPO = () => {
-    setTimeout(() => dispatch(toggleElementGroupGeneration(activeNonGenerate)), 10);
+    setTimeout(() => dispatch(toggleElementGroupGeneration(activeNonGenerate)), 100);
   };
 
   const handleRemoveFromPO = () => {
-    setTimeout(() => dispatch(toggleElementGroupGeneration(activeGenerate)), 10);
+    setTimeout(() => dispatch(toggleElementGroupGeneration(activeGenerate)), 100);
   };
 
   const getMenuItems = () => {
