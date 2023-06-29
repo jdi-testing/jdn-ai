@@ -39,8 +39,13 @@ import { stopGeneration } from "../reducers/stopGeneration.thunk";
 import { LocatorType } from "../../../common/types/common";
 import { useSelector } from "react-redux";
 import { OnboardingContext } from "../../onboarding/OnboardingProvider";
-import { selectCurrentPageObject } from "../../pageObjects/selectors/pageObjects.selectors";
-import { selectCalculatedActiveByPageObj, selectWaitingActiveByPageObj } from "../selectors/locatorsFiltered.selectors";
+import { selectCalculatedActiveByPageObj, selectActiveNonGenerateByPO, selectActiveGenerateByPO, selectDeletedActiveByPageObj, selectFailedSelectedByPageObject, selectInProgressActiveByPageObject,
+selectActualActiveByPageObject,
+selectStoppedActiveByPageObject,
+selectInProgressActiveNoPriorityByPageObject,
+selectInProgressActiveIncPriorityByPageObject,
+selectInProgressActiveDecPriorityByPageObject,
+} from "../selectors/locatorsFiltered.selectors";
 
 interface Props {
   setIsEditModalOpen: (val: boolean) => void;

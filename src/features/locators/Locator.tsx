@@ -150,7 +150,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
         onContextMenu={handleLocatorRightClick}
       >
         {isLocatorListPage(currentPage) ? (
-          <LocatorMenu {...{ element, setIsEditModalOpen, trigger: ["contextMenu"] }}>
+          <LocatorMenu {...{ setIsEditModalOpen, trigger: ["contextMenu"] }}>
             <div className="jdn__xpath_locators">
               <div ref={addToPORef} onContextMenu={(e) => e.stopPropagation()} className="jdn__xpath_checkbox_wrapper">
                 <Checkbox

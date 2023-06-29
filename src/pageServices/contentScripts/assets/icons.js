@@ -86,7 +86,7 @@ export const copy = `<svg width="12" height="12" viewBox="0 0 12 12" fill="none"
 	</svg>`;
 
 export const arrowFatLinesDown = `<svg width="12" height="12" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M4 17L16 29L28 17H22V13H10V17H4Z" stroke="#5A5A5A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M22 5H10" stroke="#5A5A5A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M22 9H10" stroke="#5A5A5A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-</svg>`;
+		<path d="M4 17L16 29L28 17H22V13H10V17H4Z" stroke="#5A5A5A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+		<path d="M22 5H10" stroke="#5A5A5A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+		<path d="M22 9H10" stroke="#5A5A5A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+	</svg>`;
