@@ -3,7 +3,7 @@ import { OnbrdStep } from "./types/constants";
 import { Onboarding } from "./Onboarding";
 import { OnboardingContext as ContextType, StepRef } from "./types/context.types";
 import { useDispatch, useSelector } from "react-redux";
-import { selectCurrentPageObject, selectPageObjects } from "../pageObjects/pageObject.selectors";
+import { selectCurrentPageObject, selectPageObjects } from "../pageObjects/selectors/pageObjects.selectors";
 import { RootState } from "../../app/store/store";
 import { IdentificationStatus } from "../locators/types/locator.types";
 import { getPOPageSteps } from "./utils/tourSteps";

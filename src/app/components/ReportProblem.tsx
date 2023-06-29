@@ -17,7 +17,7 @@ import {
   MAX_COUNT_FILES,
   MAX_FILES_SIZE_MB,
 } from "../utils/reportProblem";
-import { selectCurrentPageObject } from "../../features/pageObjects/pageObject.selectors";
+import { selectCurrentPageObject } from "../../features/pageObjects/selectors/pageObjects.selectors";
 import { useOnBoardingRef } from "../../features/onboarding/utils/useOnboardingRef";
 import { OnbrdStep } from "../../features/onboarding/types/constants";
 

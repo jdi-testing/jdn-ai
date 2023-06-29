@@ -6,7 +6,7 @@ import { addLocators, setScrollToLocator } from "../locators.slice";
 import { getLocatorValidationStatus, evaluateXpath, evaluateCssSelector, generateSelectorByHash } from "../utils/utils";
 import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
 import { sendMessage } from "../../../pageServices/connector";
-import { locatorsAdapter } from "../locators.selectors";
+import { locatorsAdapter } from "../selectors/locators.selectors";
 import { LocatorType } from "../../../common/types/common";
 
 export const addCustomLocator = createAsyncThunk(

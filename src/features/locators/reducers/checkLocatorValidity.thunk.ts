@@ -1,10 +1,10 @@
 import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "../../../app/store/store";
-import { selectLocatorsByPageObject } from "../../pageObjects/pageObject.selectors";
-import { locatorsAdapter } from "../locators.selectors";
+import { locatorsAdapter } from "../selectors/locators.selectors";
 import { Locator, LocatorsState, LocatorValidationErrorType } from "../types/locator.types";
 import { validateLocator } from "../utils/locatorValidation";
 import { LocatorType } from "../../../common/types/common";
+import { selectLocatorsByPageObject } from "../selectors/locatorsByPO.selectors";
 
 export const checkLocatorsValidity = createAsyncThunk("locators/checkLocatorsValidity", async (payload, thunkAPI) => {
   const state = thunkAPI.getState();

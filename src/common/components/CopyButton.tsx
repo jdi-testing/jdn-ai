@@ -1,8 +1,8 @@
 import { Button, Tooltip } from "antd";
 import { Copy } from "phosphor-react";
 import React, { useState } from "react";
-import { copyTitle } from "../constants/constants";
 import { copyToClipboard } from "../utils/helpers";
+import { CopyTitle } from "../types/common";
 
 interface Props {
   copyText: string;
@@ -10,15 +10,15 @@ interface Props {
 }
 
 export const CopyButton: React.FC<Props> = ({ copyText, buttonClassName }) => {
-  const [copyTooltipTitle, setTooltipTitle] = useState(copyTitle.Copy);
+  const [copyTooltipTitle, setTooltipTitle] = useState(CopyTitle.Copy);
 
   const handleCopy = () => {
     copyToClipboard(copyText);
-    setTooltipTitle(copyTitle.Copied);
+    setTooltipTitle(CopyTitle.Copied);
   };
 
   const handleMouseEnter = () => {
-    if (copyTooltipTitle === copyTitle.Copied) setTooltipTitle(copyTitle.Copy);
+    if (copyTooltipTitle === CopyTitle.Copied) setTooltipTitle(CopyTitle.Copy);
   };
 
   return (

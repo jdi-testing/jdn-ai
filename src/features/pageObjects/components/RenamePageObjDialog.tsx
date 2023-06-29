@@ -5,7 +5,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { DialogWithForm } from "../../../common/components/DialogWithForm";
 import { PageObjValidationErrorType } from "../utils/constants";
-import { selectPageObjects } from "../../pageObjects/pageObject.selectors";
+import { selectPageObjects } from "../selectors/pageObjects.selectors";
 import { changeName } from "../pageObject.slice";
 import { PageObjectId } from "../types/pageObjectSlice.types";
 import { isPONameUnique } from "../../pageObjects/utils/pageObject";

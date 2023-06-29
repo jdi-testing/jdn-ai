@@ -1,6 +1,6 @@
 import { sendMessage } from "../../pageServices/connector";
 import { addLocators, changeLocatorAttributes } from "../../features/locators/locators.slice";
-import { selectLocatorById } from "../../features/locators/locators.selectors";
+import { selectLocatorById } from "../../features/locators/selectors/locators.selectors";
 import { store } from "../../app/store/store";
 import { locator1 } from "../__mocks__/locator.mock";
 import { LocatorTaskStatus } from "../../features/locators/types/locator.types";

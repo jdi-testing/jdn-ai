@@ -1,13 +1,17 @@
 export const readmeLinkAddress = "https://github.com/jdi-testing/jdn-ai#readme";
 
-export const pageType = {
-  pageObject: "pageObject",
-  locatorsList: "locatorsList",
+export const locatorProgressStatus = {
+  PENDING: "PENDING",
+  STARTED: "STARTED",
 };
 
-export const copyTitle = {
-  Copy: "Copy",
-  Copied: "Copied",
+export const locatorTaskStatus = {
+  FAILURE: "FAILURE",
+  RECEIVED: "RECEIVED",
+  REVOKED: "REVOKED",
+  RETRY: "RETRY",
+  SUCCESS: "SUCCESS",
+  ...locatorProgressStatus,
 };
 
 export const SCRIPT_ERROR = {

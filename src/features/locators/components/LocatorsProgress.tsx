@@ -4,16 +4,16 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../app/store/store";
 import { Footnote } from "../../../common/components/footnote/Footnote";
+import { rerunGeneration } from "../reducers/rerunGeneration.thunk";
+import { LocatorsGenerationStatus } from "../types/locator.types";
+import { LocatorGenerationMessage } from "../types/locatorStatus.types";
 import {
+  selectFilteredLocators,
   selectCalculatedByPageObj,
   selectInProgressByPageObj,
   selectDeletedByPageObj,
   selectFailedByPageObject,
-  selectFilteredLocators,
-} from "../../pageObjects/pageObject.selectors";
-import { rerunGeneration } from "../reducers/rerunGeneration.thunk";
-import { LocatorsGenerationStatus } from "../types/locator.types";
-import { LocatorGenerationMessage } from "../types/locatorStatus.types";
+} from "../selectors/locatorsFiltered.selectors";
 
 let timer: NodeJS.Timeout;
 

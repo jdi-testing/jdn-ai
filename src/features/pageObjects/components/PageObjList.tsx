@@ -6,9 +6,8 @@ import { useSelector } from "react-redux";
 
 import { CaretDown } from "phosphor-react";
 import PageSvg from "../assets/page.svg";
-import { Footnote } from "../../../common/components/footnote/Footnote";
-import { selectConfirmedLocators, selectPageObjects } from "../pageObject.selectors";
-import { GenerationButton } from "./GenerationButton";
+import { selectPageObjects } from "../selectors/pageObjects.selectors";
+import { PageObjGenerationBar } from "./PageObjGenerationBar";
 import { PageObjectPlaceholder } from "./PageObjectPlaceholder";
 import { PageObjCopyButton } from "./PageObjCopyButton";
 import { Locator } from "../../locators/Locator";
@@ -20,6 +19,7 @@ import { Locator as LocatorType } from "../../locators/types/locator.types";
 import { PageObjectId } from "../types/pageObjectSlice.types";
 import { ElementLibrary } from "../../locators/types/generationClasses.types";
 import { PageType } from "../../../app/types/mainSlice.types";
+import { selectConfirmedLocators } from "../../locators/selectors/locatorsFiltered.selectors";
 
 interface Props {
   template?: Blob;
@@ -55,15 +55,6 @@ export const PageObjList: React.FC<Props> = (props) => {
     }
   };
 
-  const renderPageObjGeneration = (pageObjId: PageObjectId, url: string, library: ElementLibrary) => {
-    return (
-      <div className="jdn__pageObject__settings">
-        <Footnote className="jdn__pageObject__settings-url">{url}</Footnote>
-        <GenerationButton pageObj={pageObjId} {...{ library }} />
-      </div>
-    );
-  };
-
   const renderContent = (
     pageObjId: PageObjectId,
     url: string,
@@ -74,7 +65,7 @@ export const PageObjList: React.FC<Props> = (props) => {
     if (isPageObjectNotEmpty) {
       return renderLocators(elements, library);
     } else {
-      return renderPageObjGeneration(pageObjId, url, library);
+      return <PageObjGenerationBar pageObj={pageObjId} {...{ library, url }} />;
     }
   };
 

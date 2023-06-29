@@ -129,7 +129,7 @@ export const getRootState = (_pageObject: PageObject) => ({
   },
 });
 
-export const selectLocators = (pageObject: PageObject) => [
+export const selectMockedLocators = (pageObject: PageObject) => [
   {
     element_id: "7524916072510597399809892823_0",
     predicted_label: "dialog",

@@ -4,8 +4,7 @@ import Text from "antd/lib/typography/Text";
 import React, { useContext, useEffect, useRef, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { pageType } from "../../common/constants/constants";
-import { areChildrenChecked, isLocatorIndeterminate } from "./locators.selectors";
+import { areChildrenChecked, isLocatorIndeterminate } from "./selectors/locators.selectors";
 import { isMacPlatform } from "../../common/utils/helpers";
 import {
   elementSetActive,
@@ -29,13 +28,11 @@ import { setIndents } from "./utils/utils";
 import { setScriptMessage } from "../../app/main.slice";
 import { useOnBoardingRef } from "../onboarding/utils/useOnboardingRef";
 import { OnbrdStep } from "../onboarding/types/constants";
-import {
-  selectFirstLocatorIdByPO,
-  selectCalculatedActiveByPageObj,
-  selectWaitingActiveByPageObj,
-} from "../pageObjects/pageObject.selectors";
 import { OnbrdTooltip } from "../onboarding/components/OnbrdTooltip";
 import { OnboardingContext } from "../onboarding/OnboardingProvider";
+import { selectFirstLocatorIdByPO } from "./selectors/locatorsByPO.selectors";
+import { selectCalculatedActiveByPageObj, selectWaitingActiveByPageObj } from "./selectors/locatorsFiltered.selectors";
+import { isLocatorListPage } from "../../app/utils/heplers";
 
 interface Props {
   element: LocatorInterface;
@@ -152,8 +149,8 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
         onClick={handleLocatorClick}
         onContextMenu={handleLocatorRightClick}
       >
-        {currentPage === pageType.locatorsList ? (
-          <LocatorMenu {...{ setIsEditModalOpen, trigger: ["contextMenu"] }}>
+        {isLocatorListPage(currentPage) ? (
+          <LocatorMenu {...{ element, setIsEditModalOpen, trigger: ["contextMenu"] }}>
             <div className="jdn__xpath_locators">
               <div ref={addToPORef} onContextMenu={(e) => e.stopPropagation()} className="jdn__xpath_checkbox_wrapper">
                 <Checkbox
