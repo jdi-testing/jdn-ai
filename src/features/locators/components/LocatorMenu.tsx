@@ -1,6 +1,6 @@
 import { Dropdown } from "antd";
-import { size, filter, get } from "lodash";
-import React, { ReactNode, SyntheticEvent, useContext, useEffect, useState, useMemo } from "react";
+import { size, filter } from "lodash";
+import React, { ReactNode, SyntheticEvent, useContext, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { MaxGenerationTime } from "../../../app/types/mainSlice.types";
 import { MenuItem } from "../../../common/components/menu/Menu";
@@ -93,11 +93,6 @@ export const LocatorMenu: React.FC<Props> = ({ setIsEditModalOpen, children, tri
       }),
     [inProgressSelected]
   );
-
-  // useEffect(() => {
-  //   setItems(getMenuItems());
-
-  // }, [actualSelected, activeNonGenerate, activeGenerate, stoppedSelected, deletedActive, inProgressSelected, calculatedActive, failedSelected]);
 
   // should be revised after 1240 implementation
   const isAdvancedCalculationDisabled = (element: Locator) => {
