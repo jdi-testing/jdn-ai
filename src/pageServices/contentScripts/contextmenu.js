@@ -12,9 +12,11 @@ import {
   arrowClockwise,
   caretRight,
   copy,
+  arrowFatLinesDown,
 } from "./assets/icons";
 
 import { LocatorOption } from "../../features/locators/utils/constants";
+import { LocatorType } from "../../common/types/common";
 
 export const runContextMenu = () => {
   /*
@@ -386,6 +388,15 @@ export const runContextMenu = () => {
         },
       },
       {
+        text: "Advanced calculation",
+        icon: arrowFatLinesDown,
+        enabled: !predictedElements.every((element) => element.locatorType === LocatorType.cssSelector),
+        sub: [...getAdvancedCalculationOptions()],
+        events: {
+          click: (evt) => evt.stopPropagation(),
+        },
+      },
+      {
         type: ContextMenu.DIVIDER,
       },
       {
@@ -518,6 +529,35 @@ export const runContextMenu = () => {
 
     options.splice(3, 0, { type: ContextMenu.DIVIDER });
     options.splice(7, 0, { type: ContextMenu.DIVIDER });
+
+    return options;
+  };
+
+  const getAdvancedCalculationOptions = () => {
+    const MaxGenerationTime = {
+      "1s": 1000,
+      "3s": 3000,
+      "5s": 5000,
+      "10s": 10000,
+      "1m": 60000,
+      Unlimited: 3600000,
+    };
+
+    const options = Object.keys(MaxGenerationTime).map((label) => ({
+      text: label,
+      events: {
+        click: () => {
+          elementMenu.hide();
+          return sendMessage({
+            message: "ADVANCED_CALCULATION",
+            param: {
+              time: MaxGenerationTime[label],
+              locators: predictedElements.filter((element) => element.locatorType !== LocatorType.cssSelector),
+            },
+          });
+        },
+      },
+    }));
 
     return options;
   };

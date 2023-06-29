@@ -2,13 +2,11 @@ import { Tree } from "antd";
 import { size } from "lodash";
 import React, { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { useSelector } from "react-redux";
-
 import { CaretDown } from "phosphor-react";
 import { selectCurrentPage } from "../../../app/main.selectors";
 import { RootState } from "../../../app/store/store";
 import { ElementId, Locator as LocatorType } from "../types/locator.types";
 import { defaultLibrary } from "../types/generationClasses.types";
-import { EXPAND_STATE } from "./LocatorListHeader";
 import { LocatorsProgress } from "./LocatorsProgress";
 import { useSize } from "../utils/useSize";
 import { convertListToTree, LocatorTree, setNewParents } from "../utils/locatorsTreeUtils";
@@ -25,7 +23,7 @@ export enum SearchState {
   Hidden = "hidden",
 }
 
-enum ExpandState {
+export enum ExpandState {
   Expanded = "Expanded",
   Collapsed = "Collapsed",
   Custom = "Custom",
@@ -69,8 +67,8 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
   const library = useSelector(selectCurrentPageObject)?.library || defaultLibrary;
 
   useEffect(() => {
-    if (expandAll === EXPAND_STATE.EXPANDED) setExpandedKeys(locatorIds);
-    else if (expandAll === EXPAND_STATE.COLLAPSED) setExpandedKeys([]);
+    if (expandAll === ExpandState.Expanded) setExpandedKeys(locatorIds);
+    else if (expandAll === ExpandState.Collapsed) setExpandedKeys([]);
   }, [expandAll]);
 
   useEffect(() => {

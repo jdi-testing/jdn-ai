@@ -1,11 +1,12 @@
 import connector from "../../../pageServices/connector";
 import { WebSocketMessage } from "../../../services/backend";
-import { locatorProgressStatus, locatorTaskStatus } from "../../../common/constants/constants";
+import { LocatorTaskStatus } from "../types/locator.types";
 import { webSocketController } from "../../../services/webSocketController";
 import { NETWORK_ERROR, NO_ELEMENT_IN_DOCUMENT } from "./constants";
 
-export const isProgressStatus = (taskStatus) => locatorProgressStatus.hasOwnProperty(taskStatus);
-export const isGeneratedStatus = (taskStatus) => taskStatus === locatorTaskStatus.SUCCESS;
+export const isProgressStatus = (taskStatus) =>
+  LocatorTaskStatus.PENDING === taskStatus || taskStatus === LocatorTaskStatus.STARTED;
+export const isGeneratedStatus = (taskStatus) => taskStatus === LocatorTaskStatus.SUCCESS;
 
 export const runGenerationHandler = async (elements, settings, onStatusChange, onGenerationFailed, pageObject) => {
   return locatorGenerationController.scheduleTaskGroup(
@@ -58,7 +59,7 @@ class LocatorGenerationController {
             break;
           }
 
-          if (payload.status === locatorTaskStatus.REVOKED || payload.status === locatorTaskStatus.FAILURE) {
+          if (payload.status === LocatorTaskStatus.REVOKED || payload.status === LocatorTaskStatus.FAILURE) {
             this.onStatusChange(this.scheduledTasks.get(payload.id), { taskStatus: payload.status });
             this.scheduledTasks.delete(payload.id);
           }
@@ -68,7 +69,7 @@ class LocatorGenerationController {
             this.scheduledTasks.get(payload.id),
             {
               xPath: payload.result,
-              taskStatus: locatorTaskStatus.SUCCESS,
+              taskStatus: LocatorTaskStatus.SUCCESS,
             },
             payload.id
           );
@@ -99,9 +100,9 @@ class LocatorGenerationController {
       const { element_id, jdnHash } = element;
       hashes.push(jdnHash);
       this.scheduledTasks.set(jdnHash, element_id);
-      if (element.locator.taskStatus !== locatorTaskStatus.PENDING) {
+      if (element.locator.taskStatus !== LocatorTaskStatus.PENDING) {
         setTimeout(() => {
-          this.onStatusChange(element_id, { taskStatus: locatorTaskStatus.PENDING });
+          this.onStatusChange(element_id, { taskStatus: LocatorTaskStatus.PENDING });
         }, 0);
       }
     });

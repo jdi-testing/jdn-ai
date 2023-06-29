@@ -1,6 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { chain } from "lodash";
-import { locatorTaskStatus } from "../../../common/constants/constants";
+import { LocatorCalculationPriority, LocatorTaskStatus } from "../types/locator.types";
 import { selectClassFilterByPO } from "../../filter/filter.selectors";
 import { Locator } from "../types/locator.types";
 import { filterLocatorsByClassFilter } from "../utils/filterLocators";
@@ -34,7 +34,7 @@ export const selectNonGenerateByPageObject = createSelector(selectFilteredLocato
 
 export const selectActiveNonGenerateByPO = createSelector(
   selectNonGenerateByPageObject,
-  (elements: Array<Locator> = []) => elements.filter((elem) => elem?.active)
+  (elements: Array<Locator> = []) => elements.filter((elem) => elem?.active && !elem.deleted)
 );
 
 export const selectConfirmedLocators = createSelector(selectSortedFilteredLocators, (elements: Array<Locator> = []) =>
@@ -44,8 +44,14 @@ export const selectConfirmedLocators = createSelector(selectSortedFilteredLocato
 // move to loc
 export const selectCalculatedByPageObj = createSelector(selectFilteredLocators, (locators: Locator[]) =>
   locators.filter(
-    (_loc) => (_loc.locator.taskStatus === locatorTaskStatus.SUCCESS || _loc.isCustomLocator) && !_loc.deleted
+    (_loc) => (_loc.locator.taskStatus === LocatorTaskStatus.SUCCESS || _loc.isCustomLocator) && !_loc.deleted
   )
+);
+
+export const selectStoppedActiveByPageObject = createSelector(selectFilteredLocators, (elements) =>
+  chain(elements)
+    .filter((el) => el.locator.taskStatus === LocatorTaskStatus.REVOKED && !!el.active && !el.deleted)
+    .value()
 );
 
 // move to loc
@@ -80,8 +86,8 @@ export const selectWaitingByPageObj = createSelector(selectFilteredLocators, (el
     .filter(
       (el) =>
         (isProgressStatus(el.locator.taskStatus) ||
-          el.locator.taskStatus === locatorTaskStatus.REVOKED ||
-          el.locator.taskStatus === locatorTaskStatus.FAILURE) &&
+          el.locator.taskStatus === LocatorTaskStatus.REVOKED ||
+          el.locator.taskStatus === LocatorTaskStatus.FAILURE) &&
         !el.deleted
     )
     .value()
@@ -92,6 +98,12 @@ export const selectWaitingActiveByPageObj = createSelector(selectWaitingByPageOb
   locators.filter((_loc) => _loc.active)
 );
 
+export const selectActualActiveByPageObject = createSelector(
+  selectCalculatedActiveByPageObj,
+  selectWaitingActiveByPageObj,
+  (locators) => locators
+);
+
 // move to loc
 export const selectInProgressByPageObj = createSelector(selectFilteredLocators, (elements) =>
   chain(elements)
@@ -100,8 +112,23 @@ export const selectInProgressByPageObj = createSelector(selectFilteredLocators, 
 );
 
 // move to loc
-export const selectInProgressSelectedByPageObject = createSelector(selectInProgressByPageObj, (items) =>
-  items.filter((item) => item.generate)
+export const selectInProgressActiveByPageObject = createSelector(selectInProgressByPageObj, (items) =>
+  items.filter((item) => item.active)
+);
+
+export const selectInProgressActiveNoPriorityByPageObject = createSelector(
+  selectInProgressActiveByPageObject,
+  (items) => items.filter((item) => !item.priority)
+);
+
+export const selectInProgressActiveIncPriorityByPageObject = createSelector(
+  selectInProgressActiveByPageObject,
+  (items) => items.filter((item) => item.priority === LocatorCalculationPriority.Increased)
+);
+
+export const selectInProgressActiveDecPriorityByPageObject = createSelector(
+  selectInProgressActiveByPageObject,
+  (items) => items.filter((item) => item.priority === LocatorCalculationPriority.Decreased)
 );
 
 // move to loc
@@ -111,7 +138,7 @@ export const selectInProgressGenerateByPageObj = createSelector(selectWaitingByP
 
 // move to loc
 export const selectFailedByPageObject = createSelector(selectFilteredLocators, (elements) =>
-  elements.filter((element) => element.locator.taskStatus === locatorTaskStatus.FAILURE)
+  elements.filter((element) => element.locator.taskStatus === LocatorTaskStatus.FAILURE)
 );
 
 export const selectFailedSelectedByPageObject = createSelector(selectFailedByPageObject, (elements) =>
