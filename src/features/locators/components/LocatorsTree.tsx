@@ -6,7 +6,6 @@ import { useSelector } from "react-redux";
 import { CaretDown } from "phosphor-react";
 import { selectCurrentPage } from "../../../app/main.selectors";
 import { RootState } from "../../../app/store/store";
-import { pageType } from "../../../common/constants/constants";
 import { ElementId, Locator as LocatorType } from "../types/locator.types";
 import { defaultLibrary } from "../types/generationClasses.types";
 import { EXPAND_STATE } from "./LocatorListHeader";
@@ -18,6 +17,7 @@ import { Notifications } from "../../../common/components/notification/Notificat
 import { selectCurrentPageObject } from "../../pageObjects/selectors/pageObjects.selectors";
 import { selectLocatorsByPageObject } from "../selectors/locatorsByPO.selectors";
 import { selectFilteredLocators } from "../selectors/locatorsFiltered.selectors";
+import { isLocatorListPage } from "../../../app/utils/heplers";
 
 export enum SearchState {
   None = "none",
@@ -118,7 +118,7 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
         const node: TreeNode = {
           key: element_id,
           className: `${
-            locatorsMap[element_id].generate && currentPage === pageType.locatorsList ? "jdn__tree-item--selected" : ""
+            locatorsMap[element_id].generate && isLocatorListPage(currentPage) ? "jdn__tree-item--selected" : ""
           }${locatorsMap[element_id].active ? " jdn__tree-item--active" : ""}`,
           title: (
             <Locator

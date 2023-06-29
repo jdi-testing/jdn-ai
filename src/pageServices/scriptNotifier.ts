@@ -1,6 +1,5 @@
 import { Middleware } from "@reduxjs/toolkit";
 import { compact, isNil, size } from "lodash";
-import { pageType } from "../common/constants/constants";
 import { selectLocatorById } from "../features/locators/selectors/locators.selectors";
 import { Locator, LocatorTaskStatus, LocatorValidationWarnings } from "../features/locators/types/locator.types";
 import { sendMessage } from "./connector";
@@ -10,6 +9,7 @@ import { PageType } from "../app/types/mainSlice.types";
 import { selectClassFilterByPO } from "../features/filter/filter.selectors";
 import { selectLocatorsByPageObject } from "../features/locators/selectors/locatorsByPO.selectors";
 import { selectValidLocators } from "../features/locators/selectors/locatorsFiltered.selectors";
+import { isPageObjectPage } from "../app/utils/heplers";
 
 const notify = (state: RootState, action: any, prevState: RootState) => {
   let { type, payload } = action;
@@ -23,7 +23,7 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
     case "main/changePageBack":
     case "main/clearAll":
       const page = selectCurrentPage(state);
-      if (page.page === pageType.pageObject) sendMessage.killHighlight();
+      if (isPageObjectPage(page.page)) sendMessage.killHighlight();
       break;
   }
 

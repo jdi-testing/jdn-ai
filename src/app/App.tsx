@@ -6,7 +6,6 @@ import "antd/lib/style/themes/default.less";
 
 import Layout, { Content, Header } from "antd/lib/layout/layout";
 import { Backdrop } from "./components/Backdrop";
-import { pageType } from "../common/constants/constants";
 import { StatusBar } from "./components/StatusBar";
 import { SeveralTabsWarning } from "./components/SeveralTabsWarning";
 import { HttpEndpoint, request } from "../services/backend";
@@ -22,6 +21,7 @@ import { BackendStatus } from "./types/mainSlice.types";
 import { LocatorsPage } from "../features/locators/LocatorsPage";
 import { PageObjectPage } from "../features/pageObjects/PageObjectPage";
 import { OnboardingProvider } from "../features/onboarding/OnboardingProvider";
+import { isPageObjectPage } from "./utils/heplers";
 
 const App = () => {
   const [isInvalidSession, setIsInvalidSession] = useState(false);
@@ -50,7 +50,7 @@ const App = () => {
 
   const renderPage = () => {
     const { page } = currentPage;
-    return page === pageType.pageObject ? <PageObjectPage {...{ template }} /> : <LocatorsPage />;
+    return isPageObjectPage(page) ? <PageObjectPage {...{ template }} /> : <LocatorsPage />;
   };
 
   return (
