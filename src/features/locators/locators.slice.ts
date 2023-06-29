@@ -73,19 +73,21 @@ const locatorsSlice = createSlice({
     failGeneration(state, { payload }: PayloadAction<{ ids: string[]; errorMessage?: string }>) {
       const { ids, errorMessage } = payload;
       if (errorMessage === NETWORK_ERROR) state.generationStatus = LocatorsGenerationStatus.failed;
-      ids.forEach((element_id) => {
+      const newValues = ids.map((element_id) => {
         const existingLocator = simpleSelectLocatorById(state, element_id);
         if (existingLocator) {
-          locatorsAdapter.upsertOne(state, {
+          return {
             element_id,
             locator: {
               ...existingLocator.locator,
               taskStatus: LocatorTaskStatus.FAILURE,
               errorMessage: errorMessage || DEFAULT_ERROR,
             },
-          } as Locator);
+          } as Locator;
         }
+        return null;
       });
+      locatorsAdapter.upsertMany(state, newValues.filter((value) => value) as Locator[]);
     },
     removeAll(state) {
       locatorsAdapter.removeAll(state);
@@ -163,14 +165,17 @@ const locatorsSlice = createSlice({
       });
       locatorsAdapter.upsertMany(state, newValue as Locator[]);
     },
-    updateLocator(state, { payload }) {
-      const { element_id, locator } = payload;
-      const existingLocator = simpleSelectLocatorById(state, element_id);
-      existingLocator &&
-        locatorsAdapter.upsertOne(state, {
-          element_id,
-          locator: { ...existingLocator.locator, ...locator },
-        } as Locator);
+    updateLocatorGroup(state, { payload }: PayloadAction<Locator[]>) {
+      const newValue = payload.map(({ element_id, locator }) => {
+        const existingLocator = simpleSelectLocatorById(state, element_id);
+        return (
+          existingLocator && {
+            element_id,
+            locator: { ...existingLocator.locator, ...locator },
+          }
+        );
+      });
+      locatorsAdapter.upsertMany(state, newValue as Locator[]);
     },
     restoreLocators(state, { payload: locators }) {
       locatorsAdapter.setMany(state, locators);
@@ -234,7 +239,7 @@ export const {
   toggleElementGroupGeneration,
   toggleDeleted,
   toggleDeletedGroup,
-  updateLocator,
+  updateLocatorGroup,
   restoreLocators,
   elementSetActive,
   setActiveSingle,

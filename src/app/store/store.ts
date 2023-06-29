@@ -24,9 +24,11 @@ export const store = configureStore({
       serializableCheck: {
         ignoredActions: [
           "locators/setElementGroupGeneration",
-          "locators/updateLocator",
           "locators/elementSetActive",
-          "locators/toggleElementGroupGeneration",
+          "locators/elementGroupSetActive",
+          "locators/setActiveSingle",
+          "locators/updateLocatorGroup",
+          "main/setScriptMessage",
         ],
       },
     }).concat([logger, scriptNotifier, cancellableActions, changePageMiddleware]),

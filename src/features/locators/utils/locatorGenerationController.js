@@ -12,7 +12,7 @@ export const runGenerationHandler = async (elements, settings, onStatusChange, o
   return locatorGenerationController.scheduleTaskGroup(
     elements,
     settings,
-    onStatusChange ? (element_id, locator, jdnHash) => onStatusChange({ element_id, locator, jdnHash }) : undefined,
+    onStatusChange ? (element_id, locator, jdnHash) => onStatusChange([{ element_id, locator, jdnHash }]) : undefined,
     onGenerationFailed,
     pageObject
   );
@@ -125,12 +125,12 @@ class LocatorGenerationController {
         })
       )
       .then(() => {
-        if (!this.pingInterval) return;
+        if (this.pingInterval) return;
         this.pingInterval = setInterval(() => {
           if (!this.pingTimeout) {
             this.pingSocket();
           }
-        }, 5000);
+        }, 15000);
       })
       .catch(() => {
         this.noResponseHandler();
@@ -146,7 +146,7 @@ class LocatorGenerationController {
     );
     this.pingTimeout = setTimeout(() => {
       this.noResponseHandler();
-    }, 5000);
+    }, 15000);
   }
 
   noResponseHandler() {
