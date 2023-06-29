@@ -1,6 +1,6 @@
 import { Dropdown } from "antd";
-import { size, filter } from "lodash";
-import React, { ReactNode, SyntheticEvent, useContext, useMemo } from "react";
+import { size } from "lodash";
+import React, { ReactNode, SyntheticEvent, useContext } from "react";
 import { useDispatch } from "react-redux";
 import { MaxGenerationTime } from "../../../app/types/mainSlice.types";
 import { MenuItem } from "../../../common/components/menu/Menu";
@@ -23,7 +23,6 @@ import { locatorGenerationController } from "../utils/locatorGenerationControlle
 import {
   Locator,
   LocatorCalculationPriority,
-  LocatorTaskStatus,
   ValidationStatus,
   LocatorValidationWarnings,
 } from "../types/locator.types";
@@ -41,17 +40,20 @@ import { LocatorType } from "../../../common/types/common";
 import { useSelector } from "react-redux";
 import {
   selectCalculatedActiveByPageObj,
-  selectWaitingActiveByPageObj,
   selectActiveGenerateByPO,
   selectActiveNonGenerateByPO,
   selectDeletedActiveByPageObj,
   selectFailedSelectedByPageObject,
   selectInProgressActiveByPageObject,
+  selectActualActiveByPageObject,
+  selectStoppedActiveByPageObject,
+  selectInProgressActiveNoPriorityByPageObject,
+  selectInProgressActiveIncPriorityByPageObject,
+  selectInProgressActiveDecPriorityByPageObject,
 } from "../../../features/pageObjects/pageObject.selectors";
 import { OnboardingContext } from "../../onboarding/OnboardingProvider";
 
 interface Props {
-  element?: Locator;
   setIsEditModalOpen: (val: boolean) => void;
   children?: ReactNode;
   trigger: Array<"click" | "hover" | "contextMenu">;
@@ -65,32 +67,12 @@ export const LocatorMenu: React.FC<Props> = ({ setIsEditModalOpen, children, tri
   const deletedActive = useSelector(selectDeletedActiveByPageObj);
   const failedSelected = useSelector(selectFailedSelectedByPageObject);
   const calculatedActive = useSelector(selectCalculatedActiveByPageObj);
-  const waitingActive = useSelector(selectWaitingActiveByPageObj);
   const inProgressSelected = useSelector(selectInProgressActiveByPageObject);
-
-  const actualSelected = useMemo(() => [...calculatedActive, ...waitingActive], [calculatedActive, waitingActive]);
-  const stoppedSelected = useMemo(
-    () => filter(waitingActive, (el) => el.locator.taskStatus === LocatorTaskStatus.REVOKED),
-    [waitingActive]
-  );
-
-  const noPrioritySelected = useMemo(() => filter(inProgressSelected, (_locator) => !_locator.priority), [
-    inProgressSelected,
-  ]);
-  const increasedPrioritySelected = useMemo(
-    () =>
-      filter(inProgressSelected, {
-        priority: LocatorCalculationPriority.Increased,
-      }),
-    [inProgressSelected]
-  );
-  const decreasedPrioritySelected = useMemo(
-    () =>
-      filter(inProgressSelected, {
-        priority: LocatorCalculationPriority.Decreased,
-      }),
-    [inProgressSelected]
-  );
+  const actualSelected = useSelector(selectActualActiveByPageObject);
+  const stoppedSelected = useSelector(selectStoppedActiveByPageObject);
+  const noPrioritySelected = useSelector(selectInProgressActiveNoPriorityByPageObject);
+  const increasedPrioritySelected = useSelector(selectInProgressActiveIncPriorityByPageObject);
+  const decreasedPrioritySelected = useSelector(selectInProgressActiveDecPriorityByPageObject);
 
   // should be revised after 1240 implementation
   const isAdvancedCalculationDisabled = (element: Locator) => {

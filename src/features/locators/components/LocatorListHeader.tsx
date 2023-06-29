@@ -1,4 +1,4 @@
-import React, { ReactNode, useContext, useMemo, useState } from "react";
+import React, { ReactNode, useContext, useState } from "react";
 import { size } from "lodash";
 import { Button, Checkbox, Row } from "antd";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,8 +10,7 @@ import {
   selectActiveLocators,
   selectFilteredLocators,
   selectGenerateByPageObject,
-  selectCalculatedActiveByPageObj,
-  selectWaitingActiveByPageObj,
+  selectActualActiveByPageObject,
 } from "../../pageObjects/pageObject.selectors";
 import { newLocatorStub } from "../utils/constants";
 import { LocatorsSearch } from "./LocatorsSearch";
@@ -33,9 +32,7 @@ export const LocatorListHeader = ({ render }: { render: (viewProps: LocatorTreeP
   const locators = useSelector(selectFilteredLocators);
   const locatorsGenerate = useSelector(selectGenerateByPageObject);
   const active = useSelector(selectActiveLocators);
-  const calculatedActive = useSelector(selectCalculatedActiveByPageObj);
-  const waitingActive = useSelector(selectWaitingActiveByPageObj);
-  const actualSelected = useMemo(() => [...calculatedActive, ...waitingActive], [calculatedActive, waitingActive]);
+  const actualSelected = useSelector(selectActualActiveByPageObject);
 
   const { isOpen: isOnboardingOpen, isCustomLocatorFlow } = useContext(OnboardingContext);
 

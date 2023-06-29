@@ -4,7 +4,7 @@ import { RootState } from "../../app/store/store";
 import { selectClassFilterByPO } from "../filter/filter.selectors";
 import { isValidLocator } from "../locators/utils/utils";
 import { selectLocatorById, selectLocators } from "../locators/locators.selectors";
-import { Locator, LocatorTaskStatus } from "../locators/types/locator.types";
+import { Locator, LocatorCalculationPriority, LocatorTaskStatus } from "../locators/types/locator.types";
 import { LocatorType } from "../../common/types/common";
 import { isProgressStatus } from "../locators/utils/locatorGenerationController";
 import { getLocator } from "../locators/utils/locatorOutput";
@@ -161,6 +161,18 @@ export const selectWaitingActiveByPageObj = createSelector(selectWaitingByPageOb
   locators.filter((_loc) => _loc.active)
 );
 
+export const selectStoppedActiveByPageObject = createSelector(selectFilteredLocators, (elements) =>
+  chain(elements)
+    .filter((el) => el.locator.taskStatus === LocatorTaskStatus.REVOKED && !!el.active && !el.deleted)
+    .value()
+);
+
+export const selectActualActiveByPageObject = createSelector(
+  selectCalculatedActiveByPageObj,
+  selectWaitingActiveByPageObj,
+  (locators) => locators
+);
+
 // move to loc
 export const selectInProgressByPageObj = createSelector(selectFilteredLocators, (elements) =>
   chain(elements)
@@ -171,6 +183,21 @@ export const selectInProgressByPageObj = createSelector(selectFilteredLocators, 
 // move to loc
 export const selectInProgressActiveByPageObject = createSelector(selectInProgressByPageObj, (items) =>
   items.filter((item) => item.active)
+);
+
+export const selectInProgressActiveNoPriorityByPageObject = createSelector(
+  selectInProgressActiveByPageObject,
+  (items) => items.filter((item) => !item.priority)
+);
+
+export const selectInProgressActiveIncPriorityByPageObject = createSelector(
+  selectInProgressActiveByPageObject,
+  (items) => items.filter((item) => item.priority === LocatorCalculationPriority.Increased)
+);
+
+export const selectInProgressActiveDecPriorityByPageObject = createSelector(
+  selectInProgressActiveByPageObject,
+  (items) => items.filter((item) => item.priority === LocatorCalculationPriority.Decreased)
 );
 
 // move to loc
