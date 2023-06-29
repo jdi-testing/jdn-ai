@@ -3,7 +3,7 @@ import React, { ForwardedRef, ReactElement } from "react";
 import { useSelector } from "react-redux";
 import { selectCurrentPage } from "../../../app/main.selectors";
 import { PageType } from "../../../app/types/mainSlice.types";
-import { selectCurrentPageObject } from "../../../features/pageObjects/pageObject.selectors";
+import { selectCurrentPageObject } from "../../../features/pageObjects/selectors/pageObjects.selectors";
 
 export const Breadcrumbs = React.forwardRef((props, ref: ForwardedRef<HTMLDivElement>): ReactElement | null => {
   const currentPage = useSelector(selectCurrentPage);

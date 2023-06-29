@@ -3,8 +3,8 @@ import { Tour, TourStepProps } from "antd5";
 import { OnboardingContext } from "./OnboardingProvider";
 import { StepIndicator } from "./components/stepIndicator";
 import { useSelector } from "react-redux";
-import { selectFirstLocatorByPO } from "../pageObjects/pageObject.selectors";
 import { OnbrdStep } from "./types/constants";
+import { selectFirstLocatorByPO } from "../locators/selectors/locatorsByPO.selectors";
 
 export const Onboarding = () => {
   const { defaultStep, isOpen, tourSteps, closeOnboarding } = useContext(OnboardingContext);

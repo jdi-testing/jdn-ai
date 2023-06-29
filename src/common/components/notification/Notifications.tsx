@@ -3,7 +3,7 @@ import { last } from "lodash";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../app/store/store";
-import { selectLocators } from "../../../features/locators/locators.selectors";
+import { selectLocators } from "../../../features/locators/selectors/locators.selectors";
 
 import { Action } from "./types/notification.types";
 import { messages } from "./utils/messages";

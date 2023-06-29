@@ -9,7 +9,7 @@ import { ElementLibrary, defaultLibrary, predictEndpoints } from "../types/gener
 import { generateLocators } from "./generateLocators.thunk";
 import { findByRules } from "../utils/generationButton";
 import { LocalStorageKey, getLocalStorage } from "../../../common/utils/localStorage";
-import { selectPageObjById } from "../../pageObjects/pageObject.selectors";
+import { selectPageObjById } from "../../pageObjects/selectors/pageObjects.selectors";
 import { RootState } from "../../../app/store/store";
 
 interface Meta {

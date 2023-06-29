@@ -18,18 +18,6 @@ import {
 } from "../locators.slice";
 import { locatorTaskStatus, LOCATOR_CALCULATION_PRIORITY } from "../../../common/constants/constants";
 import {
-  selectActiveGenerateByPO,
-  selectActiveLocators,
-  selectActiveNonGenerateByPO,
-  selectCalculatedActiveByPageObj,
-  selectDeletedActiveByPageObj,
-  selectFailedSelectedByPageObject,
-  selectFilteredLocators,
-  selectGenerateByPageObject,
-  selectInProgressSelectedByPageObject,
-  selectWaitingActiveByPageObj,
-} from "../../pageObjects/pageObject.selectors";
-import {
   addToPO,
   advanced,
   deleteOption,
@@ -54,6 +42,18 @@ import { useOnBoardingRef } from "../../onboarding/utils/useOnboardingRef";
 import { OnbrdStep } from "../../onboarding/types/constants";
 import { OnboardingContext } from "../../onboarding/OnboardingProvider";
 import { OnbrdTooltip } from "../../onboarding/components/OnbrdTooltip";
+import {
+  selectActiveGenerateByPO,
+  selectActiveLocators,
+  selectActiveNonGenerateByPO,
+  selectCalculatedActiveByPageObj,
+  selectDeletedActiveByPageObj,
+  selectFailedSelectedByPageObject,
+  selectFilteredLocators,
+  selectGenerateByPageObject,
+  selectInProgressSelectedByPageObject,
+  selectWaitingActiveByPageObj,
+} from "../selectors/locatorsFiltered.selectors";
 
 export const EXPAND_STATE = {
   EXPANDED: "Expanded",

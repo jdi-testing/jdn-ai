@@ -9,15 +9,6 @@ import { changePageBack, setScriptMessage } from "../../app/main.slice";
 import { Breadcrumbs } from "../../common/components/breadcrumbs/Breadcrumbs";
 import { customConfirm } from "../../common/components/CustomConfirm";
 import { pageType } from "../../common/constants/constants";
-import {
-  selectDeletedGenerateByPageObj,
-  selectCalculatedGenerateByPageObj,
-  selectInProgressGenerateByPageObj,
-  selectFilteredLocators,
-  getLocatorsIdsByPO,
-  selectCheckedLocators,
-  selectLocatorsByPageObject,
-} from "../pageObjects/pageObject.selectors";
 import { clearLocators } from "../pageObjects/pageObject.slice";
 import { locatorGenerationController } from "./utils/locatorGenerationController";
 import { removeLocators, restoreLocators } from "./locators.slice";
@@ -33,6 +24,14 @@ import { OnbrdStep } from "../onboarding/types/constants";
 import { removeAll as removeAllFilters, setFilter } from "../filter/filter.slice";
 import { selectIfUnselectedAll } from "../filter/filter.selectors";
 import { selectClassFilterByPO } from "../filter/filter.selectors";
+import { getLocatorsIdsByPO, selectLocatorsByPageObject } from "./selectors/locatorsByPO.selectors";
+import {
+  selectFilteredLocators,
+  selectInProgressGenerateByPageObj,
+  selectCalculatedGenerateByPageObj,
+  selectDeletedGenerateByPageObj,
+  selectCheckedLocators,
+} from "./selectors/locatorsFiltered.selectors";
 
 const { confirm } = Modal;
 

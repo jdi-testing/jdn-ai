@@ -9,7 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../app/store/store";
 import { DialogWithForm } from "../../../common/components/DialogWithForm";
 import { selectAvailableClasses } from "../../filter/filter.selectors";
-import { selectCurrentPageObject, selectLocatorsByPageObject } from "../../pageObjects/pageObject.selectors";
+import { selectCurrentPageObject } from "../../pageObjects/selectors/pageObjects.selectors";
 import { ElementClass } from "../types/generationClasses.types";
 import { isNameUnique } from "../../pageObjects/utils/pageObject";
 import { Locator, LocatorValidationWarnings, LocatorValidationErrorType } from "../types/locator.types";
@@ -26,6 +26,7 @@ import { changeLocatorElement } from "../reducers/changeLocatorElement.thunk";
 import { addCustomLocator } from "../reducers/addCustomLocator.thunk";
 import { OnboardingContext } from "../../onboarding/OnboardingProvider";
 import { OnbrdStep } from "../../onboarding/types/constants";
+import { selectLocatorsByPageObject } from "../selectors/locatorsByPO.selectors";
 
 interface Props extends Locator {
   isModalOpen: boolean;

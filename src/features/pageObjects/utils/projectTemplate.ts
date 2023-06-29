@@ -2,12 +2,13 @@ import { saveAs } from "file-saver";
 import { entries, isNumber, lowerFirst, size } from "lodash";
 import JSZip from "jszip";
 import { RootState } from "../../../app/store/store";
-import { selectConfirmedLocators, selectPageObjects } from "../pageObject.selectors";
+import { selectPageObjects } from "../selectors/pageObjects.selectors";
 import { testFileTemplate } from "./testTemplate";
 import { getPage } from "./pageObject";
 import { PageObject } from "../types/pageObjectSlice.types";
 import { ElementLibrary } from "../../locators/types/generationClasses.types";
 import { editPomContent } from "./templateFileContent";
+import { selectConfirmedLocators } from "../../locators/selectors/locatorsFiltered.selectors";
 
 const generatePoFile = (newZip: JSZip, page: { pageCode: string; title: string }) =>
   newZip.file(`src/main/java/site/pages/${page.title}.java`, page.pageCode, { binary: false });

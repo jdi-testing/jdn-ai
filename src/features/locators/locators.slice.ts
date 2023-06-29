@@ -1,7 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { size } from "lodash";
 import { ElementClass, ElementLibrary } from "./types/generationClasses.types";
-import { locatorsAdapter, simpleSelectLocatorById, simpleSelectLocatorsByPageObject } from "./locators.selectors";
+import {
+  locatorsAdapter,
+  simpleSelectLocatorById,
+  simpleSelectLocatorsByPageObject,
+} from "./selectors/locators.selectors";
 import { generateLocatorsReducer } from "./reducers/generateLocators.thunk";
 import { identifyElementsReducer } from "./reducers/identifyElements.thunk";
 import { rerunGenerationReducer } from "./reducers/rerunGeneration.thunk";

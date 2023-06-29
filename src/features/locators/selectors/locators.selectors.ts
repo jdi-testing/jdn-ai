@@ -1,8 +1,9 @@
 import { createDraftSafeSelector, createEntityAdapter, createSelector, EntityState } from "@reduxjs/toolkit";
-import { RootState } from "../../app/store/store";
-import { PageObjectId } from "../pageObjects/types/pageObjectSlice.types";
-import { ElementId, Locator } from "./types/locator.types";
-import { getLocator } from "./utils/locatorOutput";
+import { RootState } from "../../../app/store/store";
+import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
+import { ElementId, Locator } from "../types/locator.types";
+import { getLocator } from "../utils/locatorOutput";
+import { selectCurrentPageObject } from "../../pageObjects/selectors/pageObjects.selectors";
 
 export const locatorsAdapter = createEntityAdapter<Locator>({
   selectId: (locator) => locator.element_id,
@@ -86,3 +87,12 @@ export const simpleSelectLocatorsByPageObject = createDraftSafeSelector(
   (_: EntityState<Locator>, pageObj: PageObjectId) => pageObj,
   (locators: Locator[], pageObj: PageObjectId) => locators.filter((_loc) => _loc.pageObj === pageObj)
 );
+
+  // move to loc
+  export const selectLocatorByJdnHash = createSelector(
+    (state: RootState, jdnHash: string) => selectLocators(state).filter((loc) => loc.jdnHash === jdnHash),
+    (state: RootState) => selectCurrentPageObject(state)?.locators,
+    (locators, pageObjLocators) => {
+      return locators.find(({ element_id }) => pageObjLocators?.includes(element_id));
+    }
+  );

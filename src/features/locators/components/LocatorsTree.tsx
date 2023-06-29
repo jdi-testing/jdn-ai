@@ -8,11 +8,6 @@ import { selectCurrentPage } from "../../../app/main.selectors";
 import { RootState } from "../../../app/store/store";
 import { pageType } from "../../../common/constants/constants";
 import { ElementId, Locator as LocatorType } from "../types/locator.types";
-import {
-  selectCurrentPageObject,
-  selectFilteredLocators,
-  selectLocatorsByPageObject,
-} from "../../pageObjects/pageObject.selectors";
 import { defaultLibrary } from "../types/generationClasses.types";
 import { EXPAND_STATE } from "./LocatorListHeader";
 import { LocatorsProgress } from "./LocatorsProgress";
@@ -20,6 +15,9 @@ import { useSize } from "../utils/useSize";
 import { convertListToTree, LocatorTree, setNewParents } from "../utils/locatorsTreeUtils";
 import { Locator } from "../Locator";
 import { Notifications } from "../../../common/components/notification/Notifications";
+import { selectCurrentPageObject } from "../../pageObjects/selectors/pageObjects.selectors";
+import { selectLocatorsByPageObject } from "../selectors/locatorsByPO.selectors";
+import { selectFilteredLocators } from "../selectors/locatorsFiltered.selectors";
 
 export enum SearchState {
   None = "none",

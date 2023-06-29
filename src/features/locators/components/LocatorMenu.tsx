@@ -30,12 +30,9 @@ import { rerunGeneration } from "../reducers/rerunGeneration.thunk";
 import { stopGeneration } from "../reducers/stopGeneration.thunk";
 import { LocatorType } from "../../../common/types/common";
 import { useSelector } from "react-redux";
-import {
-  selectCalculatedActiveByPageObj,
-  selectCurrentPageObject,
-  selectWaitingActiveByPageObj,
-} from "../../../features/pageObjects/pageObject.selectors";
 import { OnboardingContext } from "../../onboarding/OnboardingProvider";
+import { selectCurrentPageObject } from "../../pageObjects/selectors/pageObjects.selectors";
+import { selectCalculatedActiveByPageObj, selectWaitingActiveByPageObj } from "../selectors/locatorsFiltered.selectors";
 
 interface Props {
   element: Locator;

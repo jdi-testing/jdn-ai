@@ -1,14 +1,15 @@
 import { Middleware } from "@reduxjs/toolkit";
 import { compact, isNil, size } from "lodash";
 import { pageType } from "../common/constants/constants";
-import { selectLocatorById } from "../features/locators/locators.selectors";
+import { selectLocatorById } from "../features/locators/selectors/locators.selectors";
 import { Locator, LocatorTaskStatus, LocatorValidationWarnings } from "../features/locators/types/locator.types";
-import { selectLocatorsByPageObject, selectValidLocators } from "../features/pageObjects/pageObject.selectors";
 import { sendMessage } from "./connector";
 import { selectCurrentPage } from "../app/main.selectors";
 import { RootState } from "../app/store/store";
 import { PageType } from "../app/types/mainSlice.types";
 import { selectClassFilterByPO } from "../features/filter/filter.selectors";
+import { selectLocatorsByPageObject } from "../features/locators/selectors/locatorsByPO.selectors";
+import { selectValidLocators } from "../features/locators/selectors/locatorsFiltered.selectors";
 
 const notify = (state: RootState, action: any, prevState: RootState) => {
   let { type, payload } = action;

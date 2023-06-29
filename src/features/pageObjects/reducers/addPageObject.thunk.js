@@ -6,7 +6,7 @@ import {
   selectLastLocatorType,
   selectMaxId,
   simpleSelectPageObjects,
-} from "../pageObject.selectors";
+} from "../selectors/pageObjects.selectors";
 import { defaultLibrary } from "../../locators/types/generationClasses.types";
 import { getPageAttributes, isPONameUnique } from "../utils/pageObject";
 import { getClassName } from "../utils/pageObjectTemplate";

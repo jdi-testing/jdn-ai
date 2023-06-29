@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import { CaretDown } from "phosphor-react";
 import PageSvg from "../assets/page.svg";
 import { Footnote } from "../../../common/components/footnote/Footnote";
-import { selectConfirmedLocators, selectPageObjects } from "../pageObject.selectors";
+import { selectPageObjects } from "../selectors/pageObjects.selectors";
 import { GenerationButton } from "./GenerationButton";
 import { PageObjectPlaceholder } from "./PageObjectPlaceholder";
 import { PageObjCopyButton } from "./PageObjCopyButton";
@@ -20,6 +20,7 @@ import { Locator as LocatorType } from "../../locators/types/locator.types";
 import { PageObjectId } from "../types/pageObjectSlice.types";
 import { ElementLibrary } from "../../locators/types/generationClasses.types";
 import { PageType } from "../../../app/types/mainSlice.types";
+import { selectConfirmedLocators } from "../../locators/selectors/locatorsFiltered.selectors";
 
 interface Props {
   template?: Blob;

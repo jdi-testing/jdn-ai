@@ -2,13 +2,13 @@ import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
 import { isNil } from "lodash";
 import { RootState } from "../../../app/store/store";
 import { MaxGenerationTime } from "../../../app/types/mainSlice.types";
-import { selectPageObjById, selectLocatorByJdnHash } from "../../pageObjects/pageObject.selectors";
+import { selectPageObjById } from "../../pageObjects/selectors/pageObjects.selectors";
 import { updateLocator, failGeneration } from "../locators.slice";
 import { IdentificationStatus, Locator, LocatorsGenerationStatus, LocatorsState } from "../types/locator.types";
 import { runGenerationHandler } from "../utils/locatorGenerationController";
 import { NO_ELEMENT_IN_DOCUMENT } from "../utils/constants";
 import { sendMessage } from "../../../pageServices/connector";
-import { selectLocatorById } from "../locators.selectors";
+import { selectLocatorById, selectLocatorByJdnHash } from "../selectors/locators.selectors";
 
 interface Meta {
   generationData: Locator[];
