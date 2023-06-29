@@ -19,7 +19,7 @@ interface Props {
   library: ElementLibrary;
 }
 
-export const GenerationButton: React.FC<Props> = ({ pageObj, library }) => {
+export const PageObjGenerationBar: React.FC<Props> = ({ pageObj, library }) => {
   const status = useSelector((state: RootState) => state.locators.present.status);
   const currentPageObject = useSelector(selectCurrentPageObject);
 
