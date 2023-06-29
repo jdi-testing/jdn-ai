@@ -1,5 +1,5 @@
 import { addLocatorsToPageObj, addLocatorToPageObj } from "../../features/pageObjects/pageObject.slice";
-import { selectPageObjById, selectPageObjects } from "../../features/pageObjects/pageObject.selectors";
+import { selectPageObjById, selectPageObjects } from "../../features/pageObjects/selectors/pageObjects.selectors";
 import { store } from "../../app/store/store";
 import { addPageObj } from "../../features/pageObjects/reducers/addPageObject.thunk";
 import { clearAll } from "../../app/main.slice";

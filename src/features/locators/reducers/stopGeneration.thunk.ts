@@ -1,6 +1,6 @@
 import { ActionReducerMapBuilder, createAsyncThunk, EntityState } from "@reduxjs/toolkit";
 import { RootState } from "../../../app/store/store";
-import { locatorsAdapter, selectLocatorById, simpleSelectLocatorById } from "../locators.selectors";
+import { locatorsAdapter, selectLocatorById, simpleSelectLocatorById } from "../selectors/locators.selectors";
 import { ElementId, Locator, LocatorsState, LocatorTaskStatus } from "../types/locator.types";
 import { stopGenerationHandler } from "../utils/locatorGenerationController";
 

@@ -7,13 +7,13 @@ import { addPageObj } from "../reducers/addPageObject.thunk";
 
 import { pushNotification } from "../../../app/main.slice";
 import { size } from "lodash";
-import { selectPageObjects } from "../../pageObjects/pageObject.selectors";
+import { selectPageObjects } from "../selectors/pageObjects.selectors";
 
 import { removeAll as removeAllLocators } from "../../locators/locators.slice";
 import { removeAll as removeAllPageObjects } from "../pageObject.slice";
 import { removeAll as removeAllFilters } from "../../filter/filter.slice";
 import { RootState } from "../../../app/store/store";
-import { selectLocatorsToGenerate } from "../../locators/locators.selectors";
+import { selectLocatorsToGenerate } from "../../locators/selectors/locators.selectors";
 import { generateAndDownloadZip } from "../utils/projectTemplate";
 import { useOnBoardingRef } from "../../onboarding/utils/useOnboardingRef";
 import { OnbrdStep } from "../../onboarding/types/constants";

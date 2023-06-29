@@ -2,7 +2,7 @@ import { useContext, useLayoutEffect, useRef } from "react";
 import { OnboardingContext } from "../OnboardingProvider";
 import { OnbrdStep } from "../types/constants";
 import { useSelector } from "react-redux";
-import { selectFirstLocatorByPO } from "../../pageObjects/pageObject.selectors";
+import { selectFirstLocatorByPO } from "../../locators/selectors/locatorsByPO.selectors";
 
 export const useOnBoardingRef = (
   refName: OnbrdStep,

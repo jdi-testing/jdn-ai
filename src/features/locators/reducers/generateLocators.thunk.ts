@@ -2,7 +2,7 @@ import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
 
 import { RootState } from "../../../app/store/store";
 import { requestGenerationData, setParents } from "../../../pageServices/pageDataHandlers";
-import { selectLocators } from "../locators.selectors";
+import { selectLocators } from "../selectors/locators.selectors";
 import { Locator, LocatorsState, LocatorTaskStatus, PredictedEntity } from "../types/locator.types";
 import { addLocators } from "../locators.slice";
 import { addLocatorsToPageObj } from "../../pageObjects/pageObject.slice";
