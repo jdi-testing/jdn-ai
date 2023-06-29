@@ -15,7 +15,12 @@ import { OnboardingContext } from "../../onboarding/OnboardingProvider";
 import { OnbrdTooltip } from "../../onboarding/components/OnbrdTooltip";
 import { LocatorMenu } from "./LocatorMenu";
 import { LocatorTreeProps, ExpandState } from "./LocatorsTree";
-import { selectActiveLocators, selectFilteredLocators, selectGenerateByPageObject, selectActualActiveByPageObject } from "../selectors/locatorsFiltered.selectors";
+import {
+  selectActiveLocators,
+  selectFilteredLocators,
+  selectGenerateByPageObject,
+  selectActualActiveByPageObject,
+} from "../selectors/locatorsFiltered.selectors";
 
 export const LocatorListHeader = ({ render }: { render: (viewProps: LocatorTreeProps["viewProps"]) => ReactNode }) => {
   const dispatch = useDispatch();

@@ -39,12 +39,18 @@ import { stopGeneration } from "../reducers/stopGeneration.thunk";
 import { LocatorType } from "../../../common/types/common";
 import { useSelector } from "react-redux";
 import { OnboardingContext } from "../../onboarding/OnboardingProvider";
-import { selectCalculatedActiveByPageObj, selectActiveNonGenerateByPO, selectActiveGenerateByPO, selectDeletedActiveByPageObj, selectFailedSelectedByPageObject, selectInProgressActiveByPageObject,
-selectActualActiveByPageObject,
-selectStoppedActiveByPageObject,
-selectInProgressActiveNoPriorityByPageObject,
-selectInProgressActiveIncPriorityByPageObject,
-selectInProgressActiveDecPriorityByPageObject,
+import {
+  selectCalculatedActiveByPageObj,
+  selectActiveNonGenerateByPO,
+  selectActiveGenerateByPO,
+  selectDeletedActiveByPageObj,
+  selectFailedSelectedByPageObject,
+  selectInProgressActiveByPageObject,
+  selectActualActiveByPageObject,
+  selectStoppedActiveByPageObject,
+  selectInProgressActiveNoPriorityByPageObject,
+  selectInProgressActiveIncPriorityByPageObject,
+  selectInProgressActiveDecPriorityByPageObject,
 } from "../selectors/locatorsFiltered.selectors";
 
 interface Props {
