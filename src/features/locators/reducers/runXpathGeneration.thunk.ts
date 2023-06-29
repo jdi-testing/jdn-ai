@@ -3,12 +3,13 @@ import { isNil } from "lodash";
 import { RootState } from "../../../app/store/store";
 import { MaxGenerationTime } from "../../../app/types/mainSlice.types";
 import { selectPageObjById } from "../../pageObjects/selectors/pageObjects.selectors";
-import { updateLocator, failGeneration } from "../locators.slice";
+import { updateLocatorGroup, failGeneration } from "../locators.slice";
 import { IdentificationStatus, Locator, LocatorsGenerationStatus, LocatorsState } from "../types/locator.types";
 import { runGenerationHandler } from "../utils/locatorGenerationController";
 import { NO_ELEMENT_IN_DOCUMENT } from "../utils/constants";
 import { sendMessage } from "../../../pageServices/connector";
 import { selectLocatorById, selectLocatorByJdnHash } from "../selectors/locators.selectors";
+import { accumulateAndDenounce } from "../../../common/utils/debouncer";
 
 interface Meta {
   generationData: Locator[];
@@ -40,6 +41,18 @@ export const runXpathGeneration = createAsyncThunk("locators/scheduleGeneration"
     } else thunkAPI.dispatch(failGeneration({ ids, errorMessage }));
   };
 
+  const onStatusChange = (elements: Locator[]) => {
+    const newValue = elements.map((el) => {
+      const { element_id, jdnHash } = el;
+      let foundId;
+      if (!element_id) {
+        foundId = selectLocatorByJdnHash(state, jdnHash)?.element_id;
+      }
+      return { ...el, element_id: element_id || foundId } as Locator;
+    });
+    thunkAPI.dispatch(updateLocatorGroup(newValue));
+  };
+
   await runGenerationHandler(
     generationData,
     {
@@ -47,14 +60,7 @@ export const runXpathGeneration = createAsyncThunk("locators/scheduleGeneration"
       maximum_generation_time: maxGenerationTime || xpathConfig.maximum_generation_time,
       ...(maxGenerationTime ? { advanced_calculation: true } : null),
     },
-    (el: Locator) => {
-      const { element_id, jdnHash } = el;
-      let foundId;
-      if (!element_id) {
-        foundId = selectLocatorByJdnHash(state, jdnHash)?.element_id;
-      }
-      thunkAPI.dispatch(updateLocator({ ...el, element_id: element_id || foundId }));
-    },
+    accumulateAndDenounce(onStatusChange),
     failHandler,
     pageObject
   );
