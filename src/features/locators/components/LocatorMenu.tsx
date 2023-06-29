@@ -68,8 +68,6 @@ export const LocatorMenu: React.FC<Props> = ({ setIsEditModalOpen, children, tri
   const waitingActive = useSelector(selectWaitingActiveByPageObj);
   const inProgressSelected = useSelector(selectInProgressActiveByPageObject);
 
-  // const [items, setItems] = useState<MenuItem[]>([]);
-
   const actualSelected = useMemo(() => [...calculatedActive, ...waitingActive], [calculatedActive, waitingActive]);
   const stoppedSelected = useMemo(
     () => filter(waitingActive, (el) => el.locator.taskStatus === LocatorTaskStatus.REVOKED),
