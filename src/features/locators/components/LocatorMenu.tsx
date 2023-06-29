@@ -1,6 +1,6 @@
 import { Dropdown } from "antd";
-import { size, filter } from "lodash";
-import React, { ReactNode, SyntheticEvent, useContext, useMemo } from "react";
+import { size, filter, get } from "lodash";
+import React, { ReactNode, SyntheticEvent, useContext, useEffect, useState, useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { MaxGenerationTime } from "../../../app/types/mainSlice.types";
 import { MenuItem } from "../../../common/components/menu/Menu";
@@ -60,19 +60,22 @@ interface Props {
 export const LocatorMenu: React.FC<Props> = ({ setIsEditModalOpen, children, trigger }) => {
   const dispatch = useDispatch();
 
-  const activeNonGenerate = useSelector(selectActiveNonGenerateByPO); // memo it
-  const activeGenerate = useSelector(selectActiveGenerateByPO); // memo it
+  const activeNonGenerate = useSelector(selectActiveNonGenerateByPO);
+  const activeGenerate = useSelector(selectActiveGenerateByPO);
   const deletedActive = useSelector(selectDeletedActiveByPageObj);
   const failedSelected = useSelector(selectFailedSelectedByPageObject);
   const calculatedActive = useSelector(selectCalculatedActiveByPageObj);
   const waitingActive = useSelector(selectWaitingActiveByPageObj);
   const inProgressSelected = useSelector(selectInProgressActiveByPageObject);
 
+  // const [items, setItems] = useState<MenuItem[]>([]);
+
   const actualSelected = useMemo(() => [...calculatedActive, ...waitingActive], [calculatedActive, waitingActive]);
   const stoppedSelected = useMemo(
     () => filter(waitingActive, (el) => el.locator.taskStatus === LocatorTaskStatus.REVOKED),
     [waitingActive]
   );
+
   const noPrioritySelected = useMemo(() => filter(inProgressSelected, (_locator) => !_locator.priority), [
     inProgressSelected,
   ]);
@@ -90,6 +93,11 @@ export const LocatorMenu: React.FC<Props> = ({ setIsEditModalOpen, children, tri
       }),
     [inProgressSelected]
   );
+
+  // useEffect(() => {
+  //   setItems(getMenuItems());
+
+  // }, [actualSelected, activeNonGenerate, activeGenerate, stoppedSelected, deletedActive, inProgressSelected, calculatedActive, failedSelected]);
 
   // should be revised after 1240 implementation
   const isAdvancedCalculationDisabled = (element: Locator) => {
@@ -158,13 +166,21 @@ export const LocatorMenu: React.FC<Props> = ({ setIsEditModalOpen, children, tri
       })
     );
 
+  const handleAddToPO = () => {
+    setTimeout(() => dispatch(toggleElementGroupGeneration(activeNonGenerate)), 10);
+  };
+
+  const handleRemoveFromPO = () => {
+    setTimeout(() => dispatch(toggleElementGroupGeneration(activeGenerate)), 10);
+  };
+
   const getMenuItems = () => {
     let items: MenuItem[] = [];
 
     items = [
       ...(size(actualSelected) === 1 ? [edit(handleEditClick)] : []),
-      ...(size(activeNonGenerate) ? [addToPO(() => dispatch(toggleElementGroupGeneration(activeNonGenerate)))] : []),
-      ...(size(activeGenerate) ? [removeFromPO(() => dispatch(toggleElementGroupGeneration(activeGenerate)))] : []),
+      ...(size(activeNonGenerate) ? [addToPO(handleAddToPO)] : []),
+      ...(size(activeGenerate) ? [removeFromPO(handleRemoveFromPO)] : []),
       ...(size(actualSelected) ? [copyLocatorOption(getCopyOptions(actualSelected))] : []),
       ...(size(stoppedSelected) ? [rerun(() => dispatch(rerunGeneration({ generationData: stoppedSelected })))] : []),
       ...(size(deletedActive) ? [restore(handleRestore)] : []),
@@ -191,7 +207,7 @@ export const LocatorMenu: React.FC<Props> = ({ setIsEditModalOpen, children, tri
           ]
         : []),
       ...(size(failedSelected) ? [retry(() => dispatch(rerunGeneration({ generationData: failedSelected })))] : []),
-      dividerItem("9-1"),
+      ...(size(actualSelected) ? [dividerItem("9-1")] : []),
       ...(size(actualSelected) ? [deleteOption(handleDelete)] : []),
     ];
 
