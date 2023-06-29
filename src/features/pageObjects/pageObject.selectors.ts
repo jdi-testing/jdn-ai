@@ -103,7 +103,7 @@ export const selectNonGenerateByPageObject = createSelector(selectFilteredLocato
 
 export const selectActiveNonGenerateByPO = createSelector(
   selectNonGenerateByPageObject,
-  (elements: Array<Locator> = []) => elements.filter((elem) => elem?.active)
+  (elements: Array<Locator> = []) => elements.filter((elem) => elem?.active && !elem.deleted)
 );
 
 export const selectConfirmedLocators = createSelector(selectSortedFilteredLocators, (elements: Array<Locator> = []) =>
