@@ -199,18 +199,18 @@ const locatorsSlice = createSlice({
       });
       locatorsAdapter.upsertMany(state, newValue as Locator[]);
     },
-      updateLocatorGroup(state, { payload }: PayloadAction<Locator[]>) {
-        const newValue = payload.map(({ element_id, locator }) => {
-          const existingLocator = simpleSelectLocatorById(state, element_id);
-          return (
-            existingLocator && {
-              element_id,
-              locator: { ...existingLocator.locator, ...locator },
-            }
-          );
-        });
-        locatorsAdapter.upsertMany(state, newValue as Locator[]);
-      },
+    updateLocatorGroup(state, { payload }: PayloadAction<Locator[]>) {
+      const newValue = payload.map(({ element_id, locator }) => {
+        const existingLocator = simpleSelectLocatorById(state, element_id);
+        return (
+          existingLocator && {
+            element_id,
+            locator: { ...existingLocator.locator, ...locator },
+          }
+        );
+      });
+      locatorsAdapter.upsertMany(state, newValue as Locator[]);
+    },
   },
   extraReducers: (builder) => {
     addCustomLocatorReducer(builder),
