@@ -7,6 +7,7 @@ import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
 import { getLocator } from "../utils/locatorOutput";
 import { sortLocatorsWithChildren } from "../utils/sortLocators";
 import { selectLocatorById, selectLocators } from "./locators.selectors";
+import { isValidLocator } from "../utils/utils";
 
 export const getLocatorsIdsByPO = (state: RootState, pageObjId?: PageObjectId) => {
   pageObjId = isNil(pageObjId) ? selectCurrentPageObject(state)?.id : pageObjId;
@@ -21,7 +22,8 @@ export const selectFirstLocatorByPO = createSelector(
   (loc) => loc
 );
 
-export const selectLocatorsByPageObject = createSelector(
+// for highlight purposes use selectors based on this one
+export const selectPresentLocatorsByPO = createSelector(
   selectLocators,
   (state: RootState, pageObjId?: PageObjectId) =>
     isNil(pageObjId) ? selectCurrentPageObject(state) : selectPageObjById(state, pageObjId),
@@ -41,6 +43,24 @@ export const selectLocatorsByPageObject = createSelector(
   }
 );
 
+export const selectLocatorsByPageObject = createSelector(
+  selectPresentLocatorsByPO,
+  (state: RootState, pageObjId?: PageObjectId) =>
+    isNil(pageObjId) ? selectCurrentPageObject(state) : selectPageObjById(state, pageObjId),
+  (locators, pageObj) => {
+    const hideUnadded = pageObj?.hideUnadded;
+    return hideUnadded ? locators.filter((loc) => loc.generate || loc.active) : locators;
+  }
+);
+
 export const selectSortedLocators = createSelector(selectLocatorsByPageObject, (locators) =>
   sortLocatorsWithChildren(locators)
+);
+
+export const selectValidLocators = createSelector(selectPresentLocatorsByPO, (locators) =>
+  locators.filter((loc) => isValidLocator(loc.message))
+);
+
+export const selectPresentActiveLocators = createSelector(selectPresentLocatorsByPO, (locators) =>
+  locators.filter((loc) => loc.active)
 );

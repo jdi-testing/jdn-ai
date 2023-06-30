@@ -20,7 +20,7 @@ import { rerunGeneration } from "../features/locators/reducers/rerunGeneration.t
 import { stopGenerationGroup } from "../features/locators/reducers/stopGenerationGroup.thunk";
 import { copyLocator } from "../features/locators/utils/utils";
 import { selectLocatorByJdnHash } from "../features/locators/selectors/locators.selectors";
-import { selectActiveLocators } from "../features/locators/selectors/locatorsFiltered.selectors";
+import { selectPresentActiveLocators } from "../features/locators/selectors/locatorsByPO.selectors";
 
 export type ScriptMessagePayload = { message: keyof Actions; param: Record<string, never> };
 
@@ -60,7 +60,7 @@ export const updateMessageHandler = (
       dispatch(elementGroupUnsetActive({ locators, fromScript: true }));
     },
     GET_ACTIVE_ELEMENTS: (_, sender, sendResponse) => {
-      const elements = selectActiveLocators(state);
+      const elements = selectPresentActiveLocators(state);
       sendResponse({
         elements,
       });
@@ -103,6 +103,7 @@ export const updateMessageHandler = (
     _actions: Actions
   ) => {
     if (_actions[message]) {
+      console.log("messageHandler", message, param);
       _actions[message](param, sender, sendResponse);
       dispatch(setScriptMessage({ message, param }));
     }

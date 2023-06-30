@@ -7,8 +7,7 @@ import { selectCurrentPage } from "../app/main.selectors";
 import { RootState } from "../app/store/store";
 import { PageType } from "../app/types/mainSlice.types";
 import { selectClassFilterByPO } from "../features/filter/filter.selectors";
-import { selectLocatorsByPageObject } from "../features/locators/selectors/locatorsByPO.selectors";
-import { selectValidLocators } from "../features/locators/selectors/locatorsFiltered.selectors";
+import { selectPresentLocatorsByPO, selectValidLocators } from "../features/locators/selectors/locatorsByPO.selectors";
 import { isPageObjectPage } from "../app/utils/heplers";
 
 const notify = (state: RootState, action: any, prevState: RootState) => {
@@ -74,14 +73,10 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       }
       break;
     }
+    case "locators/elementSetActive":
     case "locators/setActiveSingle": {
-      const locators = selectLocatorsByPageObject(state);
+      const locators = selectPresentLocatorsByPO(state);
       locators && sendMessage.toggleActiveGroup(locators);
-      break;
-    }
-    case "locators/elementSetActive": {
-      const locator = selectLocatorById(state, payload);
-      locator && sendMessage.setActive(locator);
       break;
     }
     case "locators/generateLocators/pending": {
