@@ -4,7 +4,7 @@ import WarningFilled from "../assets/warning-filled.svg";
 import { Footnote } from "../../../common/components/footnote/Footnote";
 import { Rule } from "antd/lib/form";
 import { FieldData } from "rc-field-form/lib/interface";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, MouseEvent } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../app/store/store";
 import { DialogWithForm } from "../../../common/components/DialogWithForm";
@@ -12,10 +12,23 @@ import { selectAvailableClasses } from "../../filter/filter.selectors";
 import { selectCurrentPageObject } from "../../pageObjects/selectors/pageObjects.selectors";
 import { ElementClass } from "../types/generationClasses.types";
 import { isNameUnique } from "../../pageObjects/utils/pageObject";
-import { Locator, LocatorValidationWarnings, LocatorValidationErrorType } from "../types/locator.types";
+import {
+  Locator,
+  LocatorValidationWarnings,
+  LocatorValidationErrors,
+  LocatorValidationErrorType,
+} from "../types/locator.types";
 import { defaultLibrary } from "../types/generationClasses.types";
-import { changeLocatorAttributes } from "../locators.slice";
-import { createNewName, isValidLocator, getLocatorValidationStatus, getLocatorValueOnTypeSwitch } from "../utils/utils";
+import { changeLocatorAttributes, setActiveSingle, setScrollToLocator } from "../locators.slice";
+import {
+  createNewName,
+  isValidLocator,
+  getLocatorValidationStatus,
+  getLocatorValueOnTypeSwitch,
+  evaluateCssSelector,
+  evaluateXpath,
+  checkDuplicates,
+} from "../utils/utils";
 import { createLocatorValidationRules } from "../utils/locatorValidationRules";
 import { createNameValidationRules } from "../utils/nameValidationRules";
 import FormItem from "antd/es/form/FormItem";
@@ -215,6 +228,33 @@ export const LocatorEditDialog: React.FC<Props> = ({
     updateRef(OnbrdStep.EditLocator, undefined, isOkButtonDisabled ? undefined : handleCreateCustomLocator);
   };
 
+  const navigateToOriginalLocator = async (event: MouseEvent<HTMLSpanElement>) => {
+    event.stopPropagation();
+    const _locator = form.getFieldValue("locator");
+    form.resetFields();
+    setIsModalOpen(false);
+
+    let locatorValue;
+    locatorType === LocatorType.cssSelector
+      ? (locatorValue = await evaluateCssSelector(_locator, element_id, jdnHash))
+      : (locatorValue = await evaluateXpath(_locator, element_id, jdnHash));
+
+    const { element_id: _element_id, foundHash } = JSON.parse(locatorValue);
+    const duplicates = checkDuplicates(foundHash, locators, _element_id);
+    dispatch(setActiveSingle(duplicates[0]));
+    dispatch(setScrollToLocator(duplicates[0].element_id));
+  };
+
+  const getMessageForDuplicate = () => (
+    <span>
+      Duplicate locator detected. Please, edit or{" "}
+      <span className="jdn__locatorEdit-navigation" onClick={navigateToOriginalLocator}>
+        refer to the original locator
+      </span>{" "}
+      for further actions.
+    </span>
+  );
+
   return (
     <DialogWithForm
       modalProps={{
@@ -275,7 +315,9 @@ export const LocatorEditDialog: React.FC<Props> = ({
         name="locator"
         rules={locatorValidationRules}
         validateStatus={getLocatorValidationStatus(validationMessage)}
-        help={validationMessage}
+        help={
+          validationMessage === LocatorValidationErrors.DuplicatedLocator ? getMessageForDuplicate() : validationMessage
+        }
         extra={renderValidationWarning()}
       >
         <Input.TextArea
