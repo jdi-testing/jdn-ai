@@ -13,7 +13,7 @@ import { convertListToTree, LocatorTree, setNewParents } from "../utils/locators
 import { Locator } from "../Locator";
 import { Notifications } from "../../../common/components/notification/Notifications";
 import { selectCurrentPageObject } from "../../pageObjects/selectors/pageObjects.selectors";
-import { selectLocatorsByPageObject } from "../selectors/locatorsByPO.selectors";
+import { selectPresentLocatorsByPO } from "../selectors/locatorsByPO.selectors";
 import { selectFilteredLocators } from "../selectors/locatorsFiltered.selectors";
 import { isLocatorListPage } from "../../../app/utils/heplers";
 
@@ -59,7 +59,7 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
   const { expandAll, setExpandAll, searchString } = viewProps;
 
   const currentPage = useSelector(selectCurrentPage).page;
-  const origLocators = useSelector(selectLocatorsByPageObject);
+  const origLocators = useSelector(selectPresentLocatorsByPO);
   const filteredLocators = useSelector(selectFilteredLocators);
   const locators =
     size(origLocators) !== size(filteredLocators) ? setNewParents(origLocators, filteredLocators || []) : origLocators;

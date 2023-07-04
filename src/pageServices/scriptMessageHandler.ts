@@ -103,7 +103,6 @@ export const updateMessageHandler = (
     _actions: Actions
   ) => {
     if (_actions[message]) {
-      console.log("messageHandler", message, param);
       _actions[message](param, sender, sendResponse);
       dispatch(setScriptMessage({ message, param }));
     }

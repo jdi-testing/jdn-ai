@@ -1,5 +1,5 @@
 import { Col, Row, Select, Space, Typography } from "antd";
-import React, { useRef } from "react";
+import React, { useContext, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../app/store/store";
 import { selectCurrentPageObject } from "../selectors/pageObjects.selectors";
@@ -14,6 +14,7 @@ import { LocalStorageKey, setLocalStorage } from "../../../common/utils/localSto
 import { Footnote } from "../../../common/components/footnote/Footnote";
 import { isIdentificationLoading } from "../../locators/utils/helpers";
 import { PageObjGenerationButton } from "./PageObjGenerationButton";
+import { OnboardingContext } from "../../onboarding/OnboardingProvider";
 
 interface Props {
   pageObj: PageObjectId;
@@ -50,6 +51,7 @@ const locatorTypeOptions = [
 export const PageObjGenerationBar: React.FC<Props> = ({ pageObj, library, url }) => {
   const status = useSelector((state: RootState) => state.locators.present.status);
   const currentPageObject = useSelector(selectCurrentPageObject);
+  const { isOpen: isOnboardingOpen } = useContext(OnboardingContext);
 
   const handleGenerate = () => {
     dispatch(setHideUnadded({ id: pageObj, hideUnadded: false }));
@@ -127,6 +129,7 @@ export const PageObjGenerationBar: React.FC<Props> = ({ pageObj, library, url })
             refFn={() => useRef<HTMLDivElement>(null)} // TODO: change with onboarding step when design is ready
             loading={isGenerateEmptyLoading()}
             onClick={handleEmptyPO}
+            disabled={isOnboardingOpen}
           >
             Empty Page Object
           </PageObjGenerationButton>
