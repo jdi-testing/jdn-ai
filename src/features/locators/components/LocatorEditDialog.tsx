@@ -241,8 +241,10 @@ export const LocatorEditDialog: React.FC<Props> = ({
 
     const { element_id: _element_id, foundHash } = JSON.parse(locatorValue);
     const duplicates = checkDuplicates(foundHash, locators, _element_id);
-    dispatch(setActiveSingle(duplicates[0]));
-    dispatch(setScrollToLocator(duplicates[0].element_id));
+    if (duplicates.length) {
+      dispatch(setActiveSingle(duplicates[0]));
+      dispatch(setScrollToLocator(duplicates[0].element_id));
+    }
   };
 
   const getMessageForDuplicate = () => (
