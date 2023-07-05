@@ -6,17 +6,17 @@ import { LocatorType } from "../../../common/types/common";
 import { setActiveSingle, setScrollToLocator } from "../locators.slice";
 import { JDNHash, ElementId } from "../types/locator.types";
 
-interface MessageForDuplicateProps {
+interface LocatorMessageForDuplicateProps {
   locator: string;
-  resetAndCloseDialog: () => void;
+  closeDialog: () => void;
   locatorType: LocatorType;
   elementId: ElementId;
   jdnHash: JDNHash;
 }
 
-export const MessageForDuplicate: React.FC<MessageForDuplicateProps> = ({
+export const LocatorMessageForDuplicate: React.FC<LocatorMessageForDuplicateProps> = ({
   locator,
-  resetAndCloseDialog,
+  closeDialog,
   locatorType,
   elementId,
   jdnHash,
@@ -26,7 +26,7 @@ export const MessageForDuplicate: React.FC<MessageForDuplicateProps> = ({
 
   const handleOnMessageClick = async (event: MouseEvent<HTMLSpanElement>) => {
     event.stopPropagation();
-    resetAndCloseDialog();
+    closeDialog();
 
     let locatorValue;
     locatorType === LocatorType.cssSelector
@@ -36,8 +36,8 @@ export const MessageForDuplicate: React.FC<MessageForDuplicateProps> = ({
     const { element_id: _elementId, foundHash } = JSON.parse(locatorValue);
     const duplicates = checkDuplicates(foundHash, locators, _elementId);
     if (duplicates.length) {
-      dispatch(setScrollToLocator(duplicates[0].element_id));
       dispatch(setActiveSingle(duplicates[0]));
+      dispatch(setScrollToLocator(duplicates[0].element_id));
     }
   };
 

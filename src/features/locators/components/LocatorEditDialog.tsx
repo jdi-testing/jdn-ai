@@ -4,7 +4,7 @@ import WarningFilled from "../assets/warning-filled.svg";
 import { Footnote } from "../../../common/components/footnote/Footnote";
 import { Rule } from "antd/lib/form";
 import { FieldData } from "rc-field-form/lib/interface";
-import React, { useCallback, useContext, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../app/store/store";
 import { DialogWithForm } from "../../../common/components/DialogWithForm";
@@ -32,7 +32,7 @@ import { addCustomLocator } from "../reducers/addCustomLocator.thunk";
 import { OnboardingContext } from "../../onboarding/OnboardingProvider";
 import { OnbrdStep } from "../../onboarding/types/constants";
 import { selectLocatorsByPageObject } from "../selectors/locatorsByPO.selectors";
-import { MessageForDuplicate } from "./MessageForDuplicate";
+import { LocatorMessageForDuplicate } from "./LocatorMessageForDuplicate";
 
 interface Props extends Locator {
   isModalOpen: boolean;
@@ -90,10 +90,10 @@ export const LocatorEditDialog: React.FC<Props> = ({
 
   const nameValidationRules: Rule[] = createNameValidationRules(_isNameUnique);
 
-  const resetAndCloseDialog = useCallback(() => {
+  const closeDialog = () => {
     form.resetFields();
     setIsModalOpen(false);
-  }, [form, setIsModalOpen]);
+  };
 
   const _locatorValidationRules: () => Rule[] = () =>
     createLocatorValidationRules(
@@ -146,7 +146,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
     };
 
     dispatch(addCustomLocator({ newLocator, pageObjectId }));
-    resetAndCloseDialog();
+    closeDialog();
   };
 
   const handleEditLocator = async () => {
@@ -167,7 +167,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
       ? dispatch(changeLocatorAttributes(updatedLocator))
       : dispatch(changeLocatorElement(updatedLocator));
 
-    resetAndCloseDialog();
+    closeDialog();
   };
 
   const getBlockTypeOptions = (): SelectOption[] => types.map((_type) => ({ value: _type, label: _type }));
@@ -225,9 +225,9 @@ export const LocatorEditDialog: React.FC<Props> = ({
 
   const renderValidationMessage = () => {
     return validationMessage === LocatorValidationErrors.DuplicatedLocator ? (
-      <MessageForDuplicate
+      <LocatorMessageForDuplicate
         locator={form.getFieldValue("locator")}
-        resetAndCloseDialog={resetAndCloseDialog}
+        closeDialog={closeDialog}
         locatorType={form.getFieldValue("locatorType") || defaultLocatorType}
         elementId={element_id}
         jdnHash={jdnHash}
