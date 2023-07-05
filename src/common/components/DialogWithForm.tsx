@@ -12,7 +12,6 @@ interface JDNModalProps extends ModalProps {
   onOk: () => void;
   cancelCallback?: () => void;
   enableOverlay?: boolean;
-  isEnterKeyEnabled?: boolean;
 }
 
 interface JDNFormProps extends FormProps {
@@ -27,16 +26,7 @@ interface DialogFormProps {
 
 export const DialogWithForm: React.FC<DialogFormProps> = ({ modalProps, formProps, children }) => {
   const { form, ...restForm } = formProps;
-  const {
-    open,
-    setIsModalOpen,
-    cancelCallback,
-    enableOverlay = false,
-    onOk,
-    isEnterKeyEnabled,
-    okButtonProps,
-    ...restModal
-  } = modalProps;
+  const { open, setIsModalOpen, cancelCallback, enableOverlay = false, onOk, okButtonProps, ...restModal } = modalProps;
   const { addRef } = useContext(OnboardingContext);
 
   useEffect(() => {
@@ -61,7 +51,8 @@ export const DialogWithForm: React.FC<DialogFormProps> = ({ modalProps, formProp
   const modalRef = useOnBoardingRef(OnbrdStep.EditLocator, undefined, onbrdPrevHandler);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === "Enter" && isEnterKeyEnabled && !okButtonProps?.disabled) {
+    e.stopPropagation();
+    if (e.key === "Enter" && !okButtonProps?.disabled) {
       onOk();
     }
   };
