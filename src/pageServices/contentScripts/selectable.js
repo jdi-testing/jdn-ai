@@ -1,3 +1,5 @@
+import { ScriptMsg } from "../scriptMsg.constants";
+
 export const selectable = () => {
   let selectables;
 
@@ -67,17 +69,17 @@ export const selectable = () => {
 
   const messageHandler = ({ message, param }) => {
     switch (message) {
-      case "UNSET_ACTIVE":
+      case ScriptMsg.UnsetActive:
         unsetActive(param);
         break;
-      case "SET_ACTIVE":
+      case ScriptMsg.SetActive:
         setActive(param);
         break;
-      case "TOGGLE_ACTIVE_GROUP": {
+      case ScriptMsg.ToggleActiveGroup: {
         param.forEach((_loc) => (_loc.active ? setActive(_loc) : unsetActive(_loc)));
         break;
       }
-      case "KILL_HIGHLIGHT":
+      case ScriptMsg.KillHighlight:
         if (selectables) selectables = selectables.disable();
         break;
       default:
