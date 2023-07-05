@@ -12,6 +12,7 @@ interface JDNModalProps extends ModalProps {
   onOk: () => void;
   cancelCallback?: () => void;
   enableOverlay?: boolean;
+  isEnterKeyEnabled?: boolean;
 }
 
 interface JDNFormProps extends FormProps {
@@ -26,7 +27,16 @@ interface DialogFormProps {
 
 export const DialogWithForm: React.FC<DialogFormProps> = ({ modalProps, formProps, children }) => {
   const { form, ...restForm } = formProps;
-  const { open, setIsModalOpen, cancelCallback, enableOverlay = false, ...restModal } = modalProps;
+  const {
+    open,
+    setIsModalOpen,
+    cancelCallback,
+    enableOverlay = false,
+    onOk,
+    isEnterKeyEnabled,
+    okButtonProps,
+    ...restModal
+  } = modalProps;
   const { addRef } = useContext(OnboardingContext);
 
   useEffect(() => {
@@ -50,9 +60,23 @@ export const DialogWithForm: React.FC<DialogFormProps> = ({ modalProps, formProp
 
   const modalRef = useOnBoardingRef(OnbrdStep.EditLocator, undefined, onbrdPrevHandler);
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Enter" && isEnterKeyEnabled && !okButtonProps?.disabled) {
+      onOk();
+    }
+  };
+
   return (
-    <div onContextMenu={(e) => e.stopPropagation()}>
-      <Modal destroyOnClose style={{ top: "24px" }} onCancel={handleCancel} open={open} {...{ ...restModal }}>
+    <div onContextMenu={(e) => e.stopPropagation()} onKeyDown={handleKeyDown}>
+      <Modal
+        destroyOnClose
+        style={{ top: "24px" }}
+        onCancel={handleCancel}
+        onOk={onOk}
+        open={open}
+        okButtonProps={okButtonProps}
+        {...{ ...restModal }}
+      >
         {open ? (
           <div className="jdn-test" ref={modalRef}>
             <Form labelCol={{ span: 4 }} wrapperCol={{ span: 20 }} {...{ form }} {...{ ...restForm }}>

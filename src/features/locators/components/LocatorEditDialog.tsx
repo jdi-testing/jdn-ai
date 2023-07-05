@@ -249,6 +249,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
           disabled: isOkButtonDisabled,
         },
         width: 580,
+        isEnterKeyEnabled: true,
       }}
       formProps={{
         form,
