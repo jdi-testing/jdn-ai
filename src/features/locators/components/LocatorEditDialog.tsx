@@ -227,10 +227,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
 
   const renderValidationMessage = () => {
     return validationMessage === LocatorValidationErrors.DuplicatedLocator ? (
-      <LocatorMessageForDuplicate
-        closeDialog={closeDialog}
-        duplicates={validationErrorOptions?.duplicates}
-      />
+      <LocatorMessageForDuplicate closeDialog={closeDialog} duplicates={validationErrorOptions?.duplicates} />
     ) : (
       validationMessage
     );

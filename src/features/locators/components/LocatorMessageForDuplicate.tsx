@@ -1,18 +1,14 @@
 import React, { MouseEvent } from "react";
 import { useDispatch } from "react-redux";
-import { LocatorType } from "../../../common/types/common";
 import { setActiveSingle, setScrollToLocator } from "../locators.slice";
-import { JDNHash, ElementId, Locator } from "../types/locator.types";
+import { Locator } from "../types/locator.types";
 
 interface LocatorMessageForDuplicateProps {
   closeDialog: () => void;
   duplicates: Locator[] | undefined;
 }
 
-export const LocatorMessageForDuplicate: React.FC<LocatorMessageForDuplicateProps> = ({
-  closeDialog,
-  duplicates,
-}) => {
+export const LocatorMessageForDuplicate: React.FC<LocatorMessageForDuplicateProps> = ({ closeDialog, duplicates }) => {
   const dispatch = useDispatch();
 
   const handleOnMessageClick = async (event: MouseEvent<HTMLSpanElement>) => {
