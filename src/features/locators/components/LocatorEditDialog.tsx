@@ -26,7 +26,7 @@ import { changeLocatorElement } from "../reducers/changeLocatorElement.thunk";
 import { addCustomLocator } from "../reducers/addCustomLocator.thunk";
 import { OnboardingContext } from "../../onboarding/OnboardingProvider";
 import { OnbrdStep } from "../../onboarding/types/constants";
-import { selectLocatorsByPageObject } from "../selectors/locatorsByPO.selectors";
+import { selectPresentLocatorsByPO } from "../selectors/locatorsByPO.selectors";
 
 interface Props extends Locator {
   isModalOpen: boolean;
@@ -58,7 +58,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
   locatorType,
 }) => {
   const dispatch = useDispatch();
-  const locators = useSelector(selectLocatorsByPageObject);
+  const locators = useSelector(selectPresentLocatorsByPO);
   const types = useSelector((_state: RootState) => selectAvailableClasses(_state));
   const pageObjectLocatorType = useSelector(selectCurrentPageObject)?.locatorType;
   const pageObjectId = useSelector(selectCurrentPageObject)!.id;

@@ -1,7 +1,6 @@
 import React, { FC } from "react";
 import Icon from "@ant-design/icons";
 
-// import PageBigSvg from "../assets/page-big.svg";
 import PageBigSvg from "./page-big.svg";
 import { Footnote } from "../footnote/Footnote";
 
