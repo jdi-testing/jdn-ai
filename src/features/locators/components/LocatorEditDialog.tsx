@@ -71,6 +71,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
   const library = useSelector(selectCurrentPageObject)?.library || defaultLibrary;
 
   const [validationMessage, setValidationMessage] = useState<LocatorValidationErrorType>(message || "");
+  const [validationErrorOptions, setValidationErrorOptions] = useState<{ duplicates?: Locator[] }>({});
   const [isEditedName, setIsEditedName] = useState<boolean>(isCustomName);
 
   const { updateRef } = useContext(OnboardingContext);
@@ -100,6 +101,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
       isCreatingForm,
       form.getFieldValue("locatorType") || defaultLocatorType,
       setValidationMessage,
+      setValidationErrorOptions,
       locators,
       jdnHash,
       element_id
@@ -226,11 +228,8 @@ export const LocatorEditDialog: React.FC<Props> = ({
   const renderValidationMessage = () => {
     return validationMessage === LocatorValidationErrors.DuplicatedLocator ? (
       <LocatorMessageForDuplicate
-        locator={form.getFieldValue("locator")}
         closeDialog={closeDialog}
-        locatorType={form.getFieldValue("locatorType") || defaultLocatorType}
-        elementId={element_id}
-        jdnHash={jdnHash}
+        duplicates={validationErrorOptions?.duplicates}
       />
     ) : (
       validationMessage
