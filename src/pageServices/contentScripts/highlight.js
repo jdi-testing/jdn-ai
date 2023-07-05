@@ -352,7 +352,7 @@ export const highlightOnPage = () => {
     const element = predictedElements?.find((elem) => elem.jdnHash === locatorId);
 
     sendMessage({
-      message:  ScriptMsg.ToggleElement,
+      message: ScriptMsg.ToggleElement,
       param: [element],
     });
   };
