@@ -50,7 +50,7 @@ class Connector {
         .then((response) => response)
         .catch((error: Error) => {
           if (error.message === SCRIPT_ERROR.NO_RESPONSE && isUndefined(onResponse)) return null;
-          if (error.message === SCRIPT_ERROR.NO_CONNECTION && action !== "PING_SCRIPT" && action !== "CHECK_SESSION") {
+          if (error.message === SCRIPT_ERROR.NO_CONNECTION && action !== "PING_SCRIPT" && action !== "CHECK_SESSION" && action !== "KILL_HIGHLIGHT") {
             return this.onDisconnectHandler(this.port, true).then(() => this.sendMessage(action, payload, onResponse, tabId));
           }
           return error;

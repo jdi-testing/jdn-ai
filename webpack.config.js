@@ -38,6 +38,7 @@ const mainConfig = {
       title: "JDN extension - panel",
       template: "./src/app.html",
       filename: "app.html",
+      chunks: ["app"],
     }),
     new MiniCssExtractPlugin({
       filename: "[name].css",
