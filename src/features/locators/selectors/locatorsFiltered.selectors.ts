@@ -5,7 +5,6 @@ import { selectClassFilterByPO } from "../../filter/filter.selectors";
 import { Locator } from "../types/locator.types";
 import { filterLocatorsByClassFilter } from "../utils/filterLocators";
 import { isProgressStatus } from "../utils/locatorGenerationController";
-import { isValidLocator } from "../utils/utils";
 import { selectLocatorsByPageObject, selectSortedLocators } from "./locatorsByPO.selectors";
 
 export const selectFilteredLocators = createSelector(
@@ -41,7 +40,6 @@ export const selectConfirmedLocators = createSelector(selectSortedFilteredLocato
   elements.filter((elem) => elem?.generate && !elem.deleted)
 );
 
-// move to loc
 export const selectCalculatedByPageObj = createSelector(selectFilteredLocators, (locators: Locator[]) =>
   locators.filter(
     (_loc) => (_loc.locator.taskStatus === LocatorTaskStatus.SUCCESS || _loc.isCustomLocator) && !_loc.deleted
@@ -54,29 +52,24 @@ export const selectStoppedActiveByPageObject = createSelector(selectFilteredLoca
     .value()
 );
 
-// move to loc
 export const selectCalculatedActiveByPageObj = createSelector(selectCalculatedByPageObj, (locators) =>
   locators.filter((_loc) => _loc.active)
 );
 
-// move to loc
 export const selectCalculatedGenerateByPageObj = createSelector(selectCalculatedByPageObj, (items) =>
   items.filter((item) => item.generate)
 );
 
-// move to loc
 export const selectDeletedByPageObj = createSelector(selectFilteredLocators, (items) =>
   chain(items)
     .filter((el) => el.deleted || false)
     .value()
 );
 
-// move to loc
 export const selectDeletedGenerateByPageObj = createSelector(selectDeletedByPageObj, (items) =>
   items.filter((item) => item.generate)
 );
 
-// move to loc
 export const selectDeletedActiveByPageObj = createSelector(selectDeletedByPageObj, (locators) =>
   locators.filter((_loc) => _loc.active)
 );
@@ -93,7 +86,6 @@ export const selectWaitingByPageObj = createSelector(selectFilteredLocators, (el
     .value()
 );
 
-// move to loc
 export const selectWaitingActiveByPageObj = createSelector(selectWaitingByPageObj, (locators) =>
   locators.filter((_loc) => _loc.active)
 );
@@ -104,14 +96,12 @@ export const selectActualActiveByPageObject = createSelector(
   (locators) => locators
 );
 
-// move to loc
 export const selectInProgressByPageObj = createSelector(selectFilteredLocators, (elements) =>
   chain(elements)
     .filter((el) => isProgressStatus(el.locator.taskStatus) && !el.deleted)
     .value()
 );
 
-// move to loc
 export const selectInProgressActiveByPageObject = createSelector(selectInProgressByPageObj, (items) =>
   items.filter((item) => item.active)
 );
@@ -131,12 +121,10 @@ export const selectInProgressActiveDecPriorityByPageObject = createSelector(
   (items) => items.filter((item) => item.priority === LocatorCalculationPriority.Decreased)
 );
 
-// move to loc
 export const selectInProgressGenerateByPageObj = createSelector(selectWaitingByPageObj, (items) =>
   items.filter((item) => item.generate)
 );
 
-// move to loc
 export const selectFailedByPageObject = createSelector(selectFilteredLocators, (elements) =>
   elements.filter((element) => element.locator.taskStatus === LocatorTaskStatus.FAILURE)
 );
@@ -151,8 +139,4 @@ export const selectActiveLocators = createSelector(selectFilteredLocators, (loca
 
 export const selectCheckedLocators = createSelector(selectFilteredLocators, (locators) =>
   locators.filter((_loc) => _loc.generate)
-);
-
-export const selectValidLocators = createSelector(selectLocatorsByPageObject, (locators) =>
-  locators.filter((loc) => isValidLocator(loc.message))
 );
