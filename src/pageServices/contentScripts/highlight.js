@@ -128,10 +128,17 @@ export const highlightOnPage = () => {
     div.querySelector(".jdn-class").textContent = element.name;
   };
 
+  const updateTooltipXpath = (element) => {
+    if (element.locator.taskStatus === "SUCCESS" && tooltip.getAttribute("jdn-element-id") === element.element_id) {
+      tooltip.querySelector(".jdn-tooltip-xpath").innerHTML = element.locator.xPath;
+    }
+  };
+
   const changeGenerationStatus = (element) => {
     const div = updateElement(element);
     if (!div) return;
     div.setAttribute("jdn-status", element.locator.taskStatus);
+    updateTooltipXpath(element);
   };
 
   const setActiveElement = (element, toScroll) => {
@@ -203,7 +210,7 @@ export const highlightOnPage = () => {
       return `
       <div class="jdn-tooltip-paragraph"><b>Name:</b> ${el.name}</div>
       <div class="jdn-tooltip-paragraph"><b>Type:</b> ${el.type}</div>
-      <div class="jdn-tooltip-paragraph"><b>xPath:</b> ${el.locator.xPath}</div>
+      <div class="jdn-tooltip-paragraph"><b>xPath:</b> <span class="jdn-tooltip-xpath">${el.locator.xPath}</span></div>
       <div class="jdn-tooltip-paragraph"><b>CSS selector:</b> ${el.locator.cssSelector}</div>`;
     };
 
@@ -213,6 +220,7 @@ export const highlightOnPage = () => {
       Object.assign(tooltip.style, style);
       tooltip.innerHTML = tooltipInnerHTML();
       tooltip.className = classNames.join(" ");
+      tooltip.setAttribute("jdn-element-hash", el.element_id);
     };
 
     const div = document.createElement("div");
