@@ -11,6 +11,8 @@ interface LocatorMessageForDuplicateProps {
 export const LocatorMessageForDuplicate: React.FC<LocatorMessageForDuplicateProps> = ({ closeDialog, duplicates }) => {
   const dispatch = useDispatch();
 
+  dispatch(setScrollToLocator(""));
+
   const handleOnMessageClick = async (event: MouseEvent<HTMLSpanElement>) => {
     event.stopPropagation();
     closeDialog();
