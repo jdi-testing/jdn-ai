@@ -85,7 +85,8 @@ export const getGenerationAttributes = () => {
       const selectorByFinder = finder(element, {
         attr: (name, value) => value && !finderForbiddenAttributes.includes(name),
       });
-      return selectorByGenerator.length < selectorByFinder.length ? selectorByGenerator : selectorByFinder;
+      const selector = selectorByGenerator.length < selectorByFinder.length ? selectorByGenerator : selectorByFinder;
+      return selector.replace(/"/g, "'");
     } catch (err) {
       __DEV_ENVIRONMENT__ && console.log(err);
       return selectorByGenerator;
