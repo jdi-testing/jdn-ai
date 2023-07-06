@@ -3,6 +3,7 @@
  */
 
 import { assignJdnHash } from "./utils";
+import { LocatorTaskStatus } from "../../features/locators/types/locator.types";
 
 /* global chrome */
 export const highlightOnPage = () => {
@@ -129,7 +130,10 @@ export const highlightOnPage = () => {
   };
 
   const updateTooltipXpath = (element) => {
-    if (element.locator.taskStatus === "SUCCESS" && tooltip.getAttribute("jdn-element-id") === element.element_id) {
+    if (
+      element.locator.taskStatus === LocatorTaskStatus.SUCCESS &&
+      tooltip.getAttribute("jdn-element-hash") === element.element_id
+    ) {
       tooltip.querySelector(".jdn-tooltip-xpath").innerHTML = element.locator.xPath;
     }
   };
@@ -205,8 +209,7 @@ export const highlightOnPage = () => {
       };
     };
 
-    const tooltipInnerHTML = () => {
-      const el = predictedElements.find((e) => e.element_id === element_id);
+    const tooltipInnerHTML = (el) => {
       return `
       <div class="jdn-tooltip-paragraph"><b>Name:</b> ${el.name}</div>
       <div class="jdn-tooltip-paragraph"><b>Type:</b> ${el.type}</div>
@@ -218,7 +221,8 @@ export const highlightOnPage = () => {
       const { x, y } = event;
       const { style, classNames } = tooltipDefaultStyle({ x, y });
       Object.assign(tooltip.style, style);
-      tooltip.innerHTML = tooltipInnerHTML();
+      const el = predictedElements.find((e) => e.element_id === element_id);
+      tooltip.innerHTML = tooltipInnerHTML(el);
       tooltip.className = classNames.join(" ");
       tooltip.setAttribute("jdn-element-hash", el.element_id);
     };
