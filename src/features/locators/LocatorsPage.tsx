@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { isEqual, size } from "lodash";
 
-import { selectCurrentPage } from "../../app/main.selectors";
 import { changePageBack, setScriptMessage } from "../../app/main.slice";
 import { Breadcrumbs } from "../../common/components/breadcrumbs/Breadcrumbs";
 import { customConfirm } from "../../common/components/CustomConfirm";
@@ -31,8 +30,9 @@ import {
   selectDeletedGenerateByPageObj,
   selectCheckedLocators,
 } from "./selectors/locatorsFiltered.selectors";
-import { isLocatorListPage } from "../../app/utils/heplers";
 import { useNotifications } from "../../common/components/notification/useNotifications";
+import { selectCurrentPageObject } from "../pageObjects/selectors/pageObjects.selectors";
+import { EmptyListInfo } from "../../common/components/emptyListInfo/EmptyListInfo";
 
 const { confirm } = Modal;
 
@@ -41,14 +41,13 @@ export const LocatorsPage = () => {
   const showSpinner = useSelector(
     (state: RootState) => state.locators.present.status === IdentificationStatus.preparing
   );
-  const currentPage = useSelector(selectCurrentPage).page;
   const locators = useSelector(selectFilteredLocators);
   const areUnselectedAll = useSelector(selectIfUnselectedAll);
   const locatorIds = useSelector(getLocatorsIdsByPO);
   const inProgressGenerate = useSelector(selectInProgressGenerateByPageObj);
   const calculatedGenerate = useSelector(selectCalculatedGenerateByPageObj);
   const deletedGenerate = useSelector(selectDeletedGenerateByPageObj);
-  const currentPOId = useSelector((state: RootState) => state.pageObject.present.currentPageObject);
+  const { id: currentPOId } = useSelector(selectCurrentPageObject) ?? {};
 
   const breadcrumbsRef = useRef(null);
   const [locatorsSnapshot] = useState(useSelector(selectLocatorsByPageObject));
@@ -89,6 +88,7 @@ export const LocatorsPage = () => {
 
   const renderBackButton = () => {
     const handleBack = () => {
+      if (!locators.length && !locatorsSnapshot.length) handleDiscard();
       if (isEqual(locators, locatorsSnapshot)) pageBack();
       else {
         const enableOk = !!(size(inProgressGenerate) || size(calculatedGenerate));
@@ -122,44 +122,38 @@ export const LocatorsPage = () => {
     };
 
     return (
-      <React.Fragment>
-        {isLocatorListPage(currentPage) ? (
-          <Button onClick={handleBack} className="jdn__buttons">
-            Back
-          </Button>
-        ) : null}
-      </React.Fragment>
+      <Button onClick={handleBack} className="jdn__buttons">
+        Back
+      </Button>
     );
   };
 
   const renderConfirmButton = () => {
-    if (isLocatorListPage(currentPage)) {
-      const saveLocatorsRef = useOnBoardingRef(OnbrdStep.SaveLocators, pageBack);
-      const checkedLocators = useSelector(selectCheckedLocators);
-      const isDisabled = !size(inProgressGenerate) && !size(calculatedGenerate);
-      return (
-        <React.Fragment>
-          <Tooltip
-            overlayClassName="jdn__button-tooltip"
-            title={isDisabled ? "Please select locators for your current page object." : ""}
+    const saveLocatorsRef = useOnBoardingRef(OnbrdStep.SaveLocators, pageBack);
+    const checkedLocators = useSelector(selectCheckedLocators);
+    const isDisabled = !size(inProgressGenerate) && !size(calculatedGenerate);
+    return (
+      <React.Fragment>
+        <Tooltip
+          overlayClassName="jdn__button-tooltip"
+          title={isDisabled ? "Please select locators for your current page object." : ""}
+        >
+          <Button
+            ref={saveLocatorsRef}
+            type="primary"
+            onClick={handleConfirm}
+            className="jdn__buttons"
+            disabled={isDisabled}
           >
-            <Button
-              ref={saveLocatorsRef}
-              type="primary"
-              onClick={handleConfirm}
-              className="jdn__buttons"
-              disabled={isDisabled}
-            >
-              {!size(checkedLocators)
-                ? "Save"
-                : size(checkedLocators) > 1
-                ? `Save ${size(checkedLocators)} locators`
-                : "Save 1 locator"}
-            </Button>
-          </Tooltip>
-        </React.Fragment>
-      );
-    } else return null;
+            {!size(checkedLocators)
+              ? "Save"
+              : size(checkedLocators) > 1
+              ? `Save ${size(checkedLocators)} locators`
+              : "Save 1 locator"}
+          </Button>
+        </Tooltip>
+      </React.Fragment>
+    );
   };
 
   return (
@@ -180,7 +174,12 @@ export const LocatorsPage = () => {
                 <LocatorsTree {...{ viewProps, locatorIds }} />
               ) : showSpinner ? (
                 <LocatorTreeSpinner />
-              ) : null}
+              ) : (
+                <EmptyListInfo>
+                  Select the elements you need on the web page coverage and add them to the PO via a double-click or
+                  through the context menu
+                </EmptyListInfo>
+              )}
             </div>
           )}
         />

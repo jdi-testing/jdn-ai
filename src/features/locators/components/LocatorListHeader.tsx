@@ -58,7 +58,7 @@ export const LocatorListHeader = ({ render }: { render: (viewProps: LocatorTreeP
             ref={ref}
             icon={<PlusOutlined size={14} />}
             size="small"
-            onClick={() => (setIsEditModalOpen(true), setIsCreatingForm(true))}
+            onClick={() => (setIsCreatingForm(true), setIsEditModalOpen(true))}
           >
             Custom locator
           </Button>
