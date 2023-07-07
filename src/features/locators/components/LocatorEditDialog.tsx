@@ -165,9 +165,11 @@ export const LocatorEditDialog: React.FC<Props> = ({
       isCustomLocator: true,
     };
 
-    validationMessage !== LocatorValidationWarnings.NewElement && jdnHash
-      ? dispatch(changeLocatorAttributes(updatedLocator))
-      : dispatch(changeLocatorElement(updatedLocator));
+    if ((!validationMessage.length && !jdnHash) || validationMessage === LocatorValidationWarnings.NewElement) {
+      dispatch(changeLocatorElement(updatedLocator));
+    } else {
+      dispatch(changeLocatorAttributes(updatedLocator));
+    }
 
     closeDialog();
   };
