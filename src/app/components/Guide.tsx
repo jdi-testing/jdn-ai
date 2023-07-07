@@ -6,11 +6,9 @@ import { useDispatch, useSelector } from "react-redux";
 // since webpack works fine with it
 import readme from "../../../README.md";
 import { BackendStatus } from "../types/mainSlice.types";
-// import { pushNotification } from "../main.slice";
 import { RootState } from "../store/store";
 import { defineServer } from "../reducers/defineServer.thunk";
 import { useGuideRehype } from "../utils/useGuideRehype";
-import { Notifications } from "../../common/components/notification/Notifications";
 
 const splitMD = (source: string) => source.match(/^#+ [^#]*/gm);
 
@@ -68,12 +66,7 @@ export const Guide = () => {
 
   const onCheckButtonClick = async () => {
     setSettingsChecking(true);
-    await dispatch(defineServer());
-    if (backendStatus !== BackendStatus.Accessed) {
-      // TODO: uncomment with #997. now it's not available on Guide page
-      // dispatch(pushNotification({ action: { type: "main/defineServer/rejected" }, message: backendStatus }));
-    }
-    setSettingsChecking(false);
+    dispatch(defineServer());
   };
 
   return (
@@ -83,7 +76,6 @@ export const Guide = () => {
         <Steps current={currentStep} items={steps} />
         <div className="steps-content">{steps[currentStep].content}</div>
       </div>
-      <Notifications />
       <div className="jdn__navigation">
         {currentStep > 0 && <Button onClick={onPrevStepClick}>Back</Button>}
         {currentStep < steps.length - 1 && (

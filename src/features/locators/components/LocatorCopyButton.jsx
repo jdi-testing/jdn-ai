@@ -25,7 +25,7 @@ export const LocatorCopyButton = ({ element }) => {
         <Button
           onClick={handleCopy}
           onMouseEnter={handleMouseEnter}
-          className="jdn__locatorsList_button jdn__locatorsList_button-copy"
+          className="jdn__itemsList-button jdn__locatorsList_button-copy"
           icon={<CopySimple size={18} color="currentColor" />}
         />
       </Tooltip>

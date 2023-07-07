@@ -1,7 +1,7 @@
 import Icon from "@ant-design/icons";
 import { Collapse, Tooltip, Typography } from "antd";
 import { isNil, size } from "lodash";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
 import { CaretDown } from "phosphor-react";
@@ -13,7 +13,7 @@ import { PageObjCopyButton } from "./PageObjCopyButton";
 import { Locator } from "../../locators/Locator";
 import { PageObjMenu } from "./PageObjMenu";
 import { PageObjListHeader } from "./PageObjListHeader";
-import { Notifications } from "../../../common/components/notification/Notifications";
+import { useNotifications } from "../../../common/components/notification/useNotifications";
 import { RootState } from "../../../app/store/store";
 import { Locator as LocatorType } from "../../locators/types/locator.types";
 import { PageObjectId } from "../types/pageObjectSlice.types";
@@ -34,6 +34,9 @@ export const PageObjList: React.FC<Props> = (props) => {
   );
   const pageObjects = useSelector(selectPageObjects);
   const [activePanel, setActivePanel] = useState<string[] | undefined>([DEFAULT_ACTIVE_KEY]);
+
+  const contentRef = useRef<HTMLDivElement>(null);
+  useNotifications(contentRef?.current);
 
   const isExpanded = !!size(activePanel);
 
@@ -81,9 +84,9 @@ export const PageObjList: React.FC<Props> = (props) => {
   };
 
   return (
-    <div className="jdn__locatorsList">
+    <div>
       <PageObjListHeader {...{ ...props, toggleExpand, isExpanded, setActivePanel }} />
-      <div className="jdn__locatorsList-content jdn__pageObject-content">
+      <div ref={contentRef} className="jdn__itemsList-content jdn__pageObject-content">
         {size(pageObjects) ? (
           <React.Fragment>
             <Collapse
@@ -114,7 +117,7 @@ export const PageObjList: React.FC<Props> = (props) => {
                         getPopupContainer={(triggerNode) => triggerNode}
                         align={{ offset: [-28, 0] }}
                       >
-                        <Icon component={PageSvg} className="jdn__locatorsList-status" />
+                        <Icon component={PageSvg} className="jdn__itemsList-status" />
                         <Typography.Text className="jdn__pageObject-content-text">{name}</Typography.Text>
                       </Tooltip>
                     }
@@ -134,7 +137,7 @@ export const PageObjList: React.FC<Props> = (props) => {
         ) : (
           <PageObjectPlaceholder />
         )}
-        <Notifications />
+        {/* <Notifications /> */}
       </div>
     </div>
   );
