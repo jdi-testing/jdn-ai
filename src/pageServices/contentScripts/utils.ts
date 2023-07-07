@@ -4,7 +4,7 @@ export const evaluateXpath = ({ xPath, element_id, originJdnHash }: Record<strin
     const length = nodeSnapshot.snapshotLength;
     const foundElement = nodeSnapshot.snapshotItem(0) as Element;
     const foundHash = foundElement && foundElement.getAttribute("jdn-hash");
-    const foundElementText = foundElement.textContent;
+    const foundElementText = foundElement && foundElement.textContent;
     return JSON.stringify({ length, foundHash, element_id, foundElementText, originJdnHash });
   } catch (error) {
     return "The locator was not found on the page.";
