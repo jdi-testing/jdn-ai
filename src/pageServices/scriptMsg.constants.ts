@@ -41,5 +41,4 @@ export enum ScriptMsg {
   StartCollectData = "StartCollectData",
   StopGroupGeneration = "StopGroupGeneration",
   ToggleElementGroup = "ToggleElementGroup",
-
 }
