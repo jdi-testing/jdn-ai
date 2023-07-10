@@ -2,14 +2,12 @@ import { AsyncThunkAction } from "@reduxjs/toolkit";
 import { Dispatch } from "react";
 import { setScriptMessage } from "../app/main.slice";
 import { RootState } from "../app/store/store";
-import { Locator, LocatorValidationErrors, LocatorValidationWarnings } from "../features/locators/types/locator.types";
+import { Locator } from "../features/locators/types/locator.types";
 import {
   elementGroupSetActive,
   elementGroupUnsetActive,
   elementSetActive,
-  setJdnHash,
   setScrollToLocator,
-  setValidity,
   toggleDeletedGroup,
   toggleElementGeneration,
   toggleElementGroupGeneration,
