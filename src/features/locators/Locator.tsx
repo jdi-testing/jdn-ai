@@ -175,7 +175,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
                     <LocatorMenu {...{ setIsEditModalOpen, trigger: ["click", "contextMenu"] }}>
                       <Button
                         ref={menuRef}
-                        className="jdn__locatorsList_button jdn__locatorsList_button-menu"
+                        className="jdn__itemsList-button jdn__locatorsList_button-menu"
                         icon={<DotsThree size={18} onClick={(e) => e.preventDefault()} />}
                       />
                     </LocatorMenu>

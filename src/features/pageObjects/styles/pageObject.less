@@ -3,6 +3,8 @@
 .jdn {
   &__pageObject {
     &-content {
+      height: calc(100vh - 94px);
+
       &-text {
         word-break: break-all;
         margin-left: 8px;
@@ -21,12 +23,6 @@
         -webkit-line-clamp: 15;
         -webkit-box-orient: vertical;
       }
-    }
-
-    .jdn__notification {
-      position: absolute;
-      width: 100%;
-      bottom: 0;
     }
 
     &__settings {
@@ -109,7 +105,23 @@
       }
     }
 
-    .jdn__locatorsList-status {
+    &_placeholder {
+      display: flex;
+      flex-direction: column;
+
+      .anticon svg {
+        height: 50px;
+        width: 50px;
+        margin-top: 40px;
+        margin-bottom: 24px;
+      }
+
+      .ant-typography {
+        text-align: center;
+      }
+    }
+
+    .jdn__itemsList-status {
       top: 0px;
     }
 

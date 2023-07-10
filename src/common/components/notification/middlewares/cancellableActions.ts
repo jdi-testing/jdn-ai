@@ -15,6 +15,7 @@ export const cancellableActions: Middleware = (store) => (next) => (action) => {
 
   const { type, payload, meta } = action;
   switch (type) {
+    case "locators/stopGeneration/fulfilled":
     case "pageObject/removeAll":
     case "pageObject/removePageObject":
     case "pageObject/changeName": {
@@ -22,7 +23,6 @@ export const cancellableActions: Middleware = (store) => (next) => (action) => {
       break;
     }
     case "locators/rerunGeneration/fulfilled":
-    case "locators/stopGeneration/fulfilled":
       pushNotificationHandler(meta.arg);
       break;
     case "locators/stopGenerationGroup/fulfilled": {

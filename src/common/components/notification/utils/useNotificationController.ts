@@ -1,4 +1,3 @@
-import { AlertProps } from "antd";
 import { size } from "lodash";
 import { useEffect, useRef } from "react";
 import { Notification } from "../../../../app/types/mainSlice.types";
@@ -6,11 +5,11 @@ import { messages } from "./messages";
 import { Action } from "../types/notification.types";
 import { locatorUndo, pageobjectUndo } from "./undoActions";
 import { Locator } from "../../../../features/locators/types/locator.types";
+import { NotificationInstance } from "antd/lib/notification";
 
 export const useNotificationController = (
   lastNotification: Notification | undefined,
-  locators: Locator[],
-  openNotification: (message: string, type: AlertProps["type"], action?: Action) => void
+  openNotification: (message: string, type: keyof NotificationInstance, action?: Action) => void
 ) => {
   const isMounted = useRef(false);
 
@@ -22,7 +21,7 @@ export const useNotificationController = (
 
     if (!lastNotification) return;
 
-    const { action, prevValue, message } = lastNotification;
+    const { action, prevValue } = lastNotification;
 
     switch (action?.type) {
       case "locators/changeLocatorAttributes":
@@ -38,10 +37,10 @@ export const useNotificationController = (
         }
         break;
       case "locators/stopGeneration/fulfilled":
-        openNotification(messages().STOP_GENERATION, "warning");
+        openNotification(messages().STOP_GENERATION, "info");
         break;
       case "locators/stopGenerationGroup/fulfilled":
-        openNotification(messages(size(action.meta.arg).toString()).STOP_GENERATION_GROUP, "warning");
+        openNotification(messages(size(action.meta.arg).toString()).STOP_GENERATION_GROUP, "info");
         break;
       case "locators/toggleDeleted":
         const _prevValueLocator = prevValue as Locator;
@@ -72,16 +71,13 @@ export const useNotificationController = (
         openNotification(messages().EDIT_PO_NAME, "success", pageobjectUndo);
         break;
       case "downloadFile":
-        openNotification(messages().DOWNLOAD_FILE, "info");
+        openNotification(messages().DOWNLOAD_FILE, "success");
         break;
       case "downloadJSFile":
-        openNotification(messages().DOWNLOAD_JS_FILE, "info");
+        openNotification(messages().DOWNLOAD_JS_FILE, "success");
         break;
       case "downloadTemplate":
-        openNotification(messages().DOWNLOAD_TEMPLATE, "info");
-        break;
-      case "main/defineServer/rejected":
-        message && openNotification(message, "error");
+        openNotification(messages().DOWNLOAD_TEMPLATE, "success");
         break;
       default:
         break;
