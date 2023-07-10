@@ -1,4 +1,5 @@
 export enum ScriptMsg {
+  // app -> page messages
   AddElement = "AddElement",
   AssignDataLabel = "AssignDataLabel",
   AssignJdnHash = "AssignJdnHash",
@@ -26,4 +27,19 @@ export enum ScriptMsg {
   ToggleDeleted = "ToggleDeleted",
   ToggleFilter = "ToggleFilter",
   UnsetActive = "UnsetActive",
+
+  // page -> app messages
+  AdvancedCalculation = "AdvancedCalculation",
+  CopyLocator = "CopyLocator",
+  GetActiveElements = "GetActiveElements",
+  ElementSelect = "ElementSelect",
+  ElementGroupSetActive = "ElementGroupSetActive",
+  ElementGroupUnsetActive = "ElementGroupUnsetActive",
+  OpenEditLocator = "OpenEditLocator",
+  RestoreElement = "RestoreElement",
+  RerunGeneration = "RerunGeneration",
+  StartCollectData = "StartCollectData",
+  StopGroupGeneration = "StopGroupGeneration",
+  ToggleElementGroup = "ToggleElementGroup",
+
 }

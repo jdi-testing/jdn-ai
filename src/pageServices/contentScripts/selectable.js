@@ -21,10 +21,10 @@ export const selectable = () => {
       zone: "body",
       selectedClass: "jdn-active",
       onSelect: (payload) => {
-        sendMessage({ message: "ELEMENT_GROUP_SET_ACTIVE", param: payload });
+        sendMessage({ message: ScriptMsg.ElementGroupSetActive, param: payload });
       },
       onDeselect: (payload) => {
-        sendMessage({ message: "ELEMENT_GROUP_UNSET_ACTIVE", param: payload });
+        sendMessage({ message: ScriptMsg.ElementGroupUnsetActive, param: payload });
       },
     });
 

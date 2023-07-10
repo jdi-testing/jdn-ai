@@ -17,6 +17,7 @@ import {
 
 import { LocatorOption } from "../../features/locators/utils/constants";
 import { LocatorType } from "../../common/types/common";
+import { ScriptMsg } from "../scriptMsg.constants";
 
 export const runContextMenu = () => {
   /*
@@ -327,7 +328,7 @@ export const runContextMenu = () => {
               events: {
                 click: () =>
                   sendMessage({
-                    message: isGroup() ? "TOGGLE_ELEMENT_GROUP" : "TOGGLE_ELEMENT",
+                    message: isGroup() ? ScriptMsg.ToggleElementGroup : ScriptMsg.ToggleElement,
                     param: predictedElements.filter((element) => !element.generate),
                   }),
               },
@@ -342,7 +343,7 @@ export const runContextMenu = () => {
               events: {
                 click: () =>
                   sendMessage({
-                    message: isGroup() ? "TOGGLE_ELEMENT_GROUP" : "TOGGLE_ELEMENT",
+                    message: isGroup() ? ScriptMsg.ToggleElementGroup : ScriptMsg.ToggleElement,
                     param: predictedElements.filter((element) => element.generate),
                   }),
               },
@@ -357,7 +358,7 @@ export const runContextMenu = () => {
               events: {
                 click: () =>
                   sendMessage({
-                    message: "OPEN_EDIT_LOCATOR",
+                    message: ScriptMsg.OpenEditLocator,
                     param: { value: predictedElements[0] },
                   }),
               },
@@ -425,7 +426,7 @@ export const runContextMenu = () => {
               events: {
                 click: () =>
                   sendMessage({
-                    message: "REMOVE_ELEMENT",
+                    message: ScriptMsg.RemoveElement,
                     param: predictedElements,
                   }),
               },
@@ -438,7 +439,7 @@ export const runContextMenu = () => {
               events: {
                 click: () =>
                   sendMessage({
-                    message: "RESTORE_ELEMENT",
+                    message: ScriptMsg.RestoreElement,
                     param: predictedElements,
                   }),
               },
@@ -457,7 +458,7 @@ export const runContextMenu = () => {
           events: {
             click: () =>
               sendMessage({
-                message: "STOP_GROUP_GENERATION",
+                message: ScriptMsg.StopGroupGeneration,
                 param: predictedElements,
               }),
           },
@@ -472,7 +473,7 @@ export const runContextMenu = () => {
           events: {
             click: () =>
               sendMessage({
-                message: "RERUN_GENERATION",
+                message: ScriptMsg.RerunGeneration,
                 param: predictedElements,
               }),
           },
@@ -487,7 +488,7 @@ export const runContextMenu = () => {
           events: {
             click: () =>
               sendMessage({
-                message: "RERUN_GENERATION",
+                message: ScriptMsg.RerunGeneration,
                 param: predictedElements,
               }),
           },
@@ -504,7 +505,7 @@ export const runContextMenu = () => {
         click: () => {
           elementMenu.hide();
           return sendMessage({
-            message: "ELEMENT_SELECT",
+            message: ScriptMsg.ElementSelect,
             param: _element,
           });
         },
@@ -520,7 +521,7 @@ export const runContextMenu = () => {
         click: () => {
           elementMenu.hide();
           return sendMessage({
-            message: "COPY_LOCATOR",
+            message: ScriptMsg.CopyLocator,
             param: { option, value: predictedElements },
           });
         },
@@ -549,7 +550,7 @@ export const runContextMenu = () => {
         click: () => {
           elementMenu.hide();
           return sendMessage({
-            message: "ADVANCED_CALCULATION",
+            message: ScriptMsg.AdvancedCalculation,
             param: {
               time: MaxGenerationTime[label],
               locators: predictedElements.filter((element) => element.locatorType !== LocatorType.cssSelector),
@@ -575,7 +576,7 @@ export const runContextMenu = () => {
       contextEvent = event;
 
       sendMessage({
-        message: "GET_ACTIVE_ELEMENTS",
+        message: ScriptMsg.GetActiveElements,
       }).then(({ elements }) => {
         if (!elements || !elements.length) return;
         predictedElements = elements;
@@ -594,7 +595,7 @@ export const runContextMenu = () => {
 
   chrome.runtime.onMessage.addListener(({ message }) => {
     switch (message) {
-      case "KILL_HIGHLIGHT":
+      case ScriptMsg.KillHighlight:
         elementMenu && elementMenu.hide();
         break;
     }
