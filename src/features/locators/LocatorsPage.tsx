@@ -30,6 +30,7 @@ import {
   selectDeletedGenerateByPageObj,
   selectCheckedLocators,
 } from "./selectors/locatorsFiltered.selectors";
+import { useNotifications } from "../../common/components/notification/useNotifications";
 import { selectCurrentPageObject } from "../pageObjects/selectors/pageObjects.selectors";
 import { EmptyListInfo } from "../../common/components/emptyListInfo/EmptyListInfo";
 
@@ -53,6 +54,9 @@ export const LocatorsPage = () => {
   const [filterSnapshot] = useState(useSelector(selectClassFilterByPO));
   // For changing locatorsList-content height depends on header height
   const containerHeight = useCalculateHeaderSize(breadcrumbsRef);
+
+  const containerRef = useRef(null);
+  useNotifications(containerRef?.current);
 
   const pageBack = () => {
     dispatch(setScriptMessage({}));
@@ -161,7 +165,11 @@ export const LocatorsPage = () => {
         </Row>
         <LocatorListHeader
           render={(viewProps: LocatorTreeProps["viewProps"]) => (
-            <div className="jdn__locatorsList-content" style={{ height: containerHeight }}>
+            <div
+              ref={containerRef}
+              className="jdn__locatorsList-content jdn__itemsList-content"
+              style={{ height: containerHeight }}
+            >
               {size(locators) || areUnselectedAll ? (
                 <LocatorsTree {...{ viewProps, locatorIds }} />
               ) : showSpinner ? (

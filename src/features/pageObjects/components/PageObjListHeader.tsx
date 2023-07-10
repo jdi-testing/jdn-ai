@@ -66,12 +66,12 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
   const downloadRef = useOnBoardingRef(OnbrdStep.DownloadPO, undefined, () => dispatch(checkLocatorsValidity()));
 
   return (
-    <Row className="jdn__locatorsList-header" justify="space-between">
+    <Row className="jdn__itemsList-header" justify="space-between">
       <CaretDown
         style={{
           transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)",
         }}
-        className="jdn__locatorsList-header-collapse"
+        className="jdn__itemsList-header-collapse"
         color="#00000073"
         size={14}
         onClick={toggleExpand}

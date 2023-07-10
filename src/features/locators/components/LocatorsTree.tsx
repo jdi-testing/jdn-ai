@@ -11,7 +11,6 @@ import { LocatorsProgress } from "./LocatorsProgress";
 import { useSize } from "../utils/useSize";
 import { convertListToTree, LocatorTree, setNewParents } from "../utils/locatorsTreeUtils";
 import { Locator } from "../Locator";
-import { Notifications } from "../../../common/components/notification/Notifications";
 import { selectCurrentPageObject } from "../../pageObjects/selectors/pageObjects.selectors";
 import { selectPresentLocatorsByPO } from "../selectors/locatorsByPO.selectors";
 import { selectFilteredLocators } from "../selectors/locatorsFiltered.selectors";
@@ -176,7 +175,6 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
           height={containerHeight || 0}
         />
       </div>
-      <Notifications />
       <LocatorsProgress />
     </React.Fragment>
   );

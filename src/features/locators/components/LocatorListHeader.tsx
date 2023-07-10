@@ -58,19 +58,19 @@ export const LocatorListHeader = ({ render }: { render: (viewProps: LocatorTreeP
             ref={ref}
             icon={<PlusOutlined size={14} />}
             size="small"
-            onClick={() => (setIsEditModalOpen(true), setIsCreatingForm(true))}
+            onClick={() => (setIsCreatingForm(true), setIsEditModalOpen(true))}
           >
             Custom locator
           </Button>
         </OnbrdTooltip>
       </Row>
-      <Row className="jdn__locatorsList-header">
-        <span className="jdn__locatorsList-header-title">
+      <Row className="jdn__itemsList-header">
+        <span className="jdn__itemsList-header-title">
           <CaretDown
             style={{
               transform: expandAll === ExpandState.Expanded ? "rotate(180deg)" : "rotate(0deg)",
             }}
-            className="jdn__locatorsList-header-collapse"
+            className="jdn__itemsList-header-collapse"
             color="#878A9C"
             size={14}
             onClick={() =>
@@ -93,7 +93,7 @@ export const LocatorListHeader = ({ render }: { render: (viewProps: LocatorTreeP
         {size(active) ? (
           <LocatorMenu {...{ trigger: ["click"], setIsEditModalOpen }}>
             <Button
-              className="jdn__locatorsList_button jdn__locatorsList_button-menu"
+              className="jdn__itemsList-button jdn__locatorsList_button-menu"
               icon={<DotsThree size={18} onClick={(e) => e.preventDefault()} />}
             />
           </LocatorMenu>

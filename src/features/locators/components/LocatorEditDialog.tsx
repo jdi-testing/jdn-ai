@@ -165,9 +165,12 @@ export const LocatorEditDialog: React.FC<Props> = ({
       isCustomLocator: true,
     };
 
-    validationMessage !== LocatorValidationWarnings.NewElement && jdnHash
-      ? dispatch(changeLocatorAttributes(updatedLocator))
-      : dispatch(changeLocatorElement(updatedLocator));
+    // we need this check for the case when user edits custom invalid locator, that doesn't have jdnHash
+    if ((!validationMessage.length && !jdnHash) || validationMessage === LocatorValidationWarnings.NewElement) {
+      dispatch(changeLocatorElement(updatedLocator));
+    } else {
+      dispatch(changeLocatorAttributes(updatedLocator));
+    }
 
     closeDialog();
   };

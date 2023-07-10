@@ -1,10 +1,12 @@
+import { ScriptMsg } from "../scriptMsg.constants";
+
 export const evaluateXpath = ({ xPath, element_id, originJdnHash }: Record<string, string>) => {
   try {
     const nodeSnapshot = document.evaluate(xPath, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
     const length = nodeSnapshot.snapshotLength;
     const foundElement = nodeSnapshot.snapshotItem(0) as Element;
     const foundHash = foundElement && foundElement.getAttribute("jdn-hash");
-    const foundElementText = foundElement.textContent;
+    const foundElementText = foundElement && foundElement.textContent;
     return JSON.stringify({ length, foundHash, element_id, foundElementText, originJdnHash });
   } catch (error) {
     return "The locator was not found on the page.";
@@ -57,13 +59,13 @@ export const assignJdnHash = ({
 export const utilityScript = () => {
   chrome.runtime.onMessage.addListener(({ message, param }, sender, sendResponse) => {
     switch (message) {
-      case "EVALUATE_XPATH":
+      case ScriptMsg.EvaluateXpath:
         sendResponse(evaluateXpath(param));
         break;
-      case "EVALUATE_CSS_SELECTOR":
+      case ScriptMsg.EvaluateCssSelector:
         sendResponse(evaluateCssSelector(param));
         break;
-      case "ASSIGN_JDN_HASH":
+      case ScriptMsg.AssignJdnHash:
         sendResponse(assignJdnHash(param));
         break;
       default:
