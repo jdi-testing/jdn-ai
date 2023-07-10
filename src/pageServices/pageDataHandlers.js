@@ -2,8 +2,6 @@ import connector, { sendMessage } from "./connector";
 import { request } from "../services/backend";
 import { createLocatorNames } from "../features/pageObjects/utils/pageObject";
 import { createOverlay } from "./contentScripts/createOverlay";
-import { assignParents } from "./contentScripts/assignParents";
-import { getPageData } from "./contentScripts/pageData";
 /* global chrome*/
 
 let overlayID;
@@ -27,20 +25,18 @@ export const removeOverlay = () => {
   }
 };
 
-const sendToModel = async (result, endpoint) => {
-  const payload = result[0];
+const sendToModel = async (payload, endpoint) => {
   const response = await request.post(endpoint, payload);
   return response;
 };
 
 export const predictElements = (endpoint) => {
   let pageData;
-  return connector
-    .attachContentScript(getPageData)
+  return sendMessage
+    .getPageData()
     .then((data) => {
-      const { result } = data[0];
-      pageData = result[0];
-      return sendToModel(result, endpoint);
+      pageData = data[0];
+      return sendToModel(pageData, endpoint);
     })
     .then(
       (response) => {
@@ -68,8 +64,5 @@ export const requestGenerationData = async (elements, library) => {
 };
 
 export const setParents = async (elements) => {
-  return connector
-    .attachContentScript(assignParents)
-    .then(() => sendMessage.assignParents(elements))
-    .then((response) => response);
+  return sendMessage.assignParents(elements).then((response) => response);
 };

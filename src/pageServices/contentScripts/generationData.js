@@ -1,5 +1,6 @@
 import getCssSelector from "css-selector-generator";
 import { finder } from "@medv/finder";
+import { ScriptMsg } from "../scriptMsg.constants";
 
 export const getGenerationAttributes = () => {
   /*
@@ -94,12 +95,6 @@ export const getGenerationAttributes = () => {
   };
 
   // this is a draft, parameters could be changed
-  const generateSelectorByXpath = ({ element_id, xPath }) => {
-    const element = document.evaluate(xPath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-    return element ? { element_id, cssSelector: generateSelectorByElement(element) } : null;
-  };
-
-  // this is a draft, parameters could be changed
   const generateSelectorByHash = ({ element_id, jdnHash }) => {
     const element = document.querySelector(`[jdn-hash='${jdnHash}']`);
     return element ? { element_id, cssSelector: generateSelectorByElement(element) } : null;
@@ -147,17 +142,14 @@ export const getGenerationAttributes = () => {
 
   chrome.runtime.onMessage.addListener(({ message, param }, sender, sendResponse) => {
     switch (message) {
-      case "GENERATE_ATTRIBUTES":
+      case ScriptMsg.GenerateAttributes:
         sendResponse(mapElements(param));
         break;
-      case "GET_ELEMENT_XPATH":
+      case ScriptMsg.GetElementXpath:
         const foundElement = document.querySelector(`[jdn-hash='${param}']`);
         sendResponse(getElementTreeXPath(foundElement));
         break;
-      case "GENERATE_SELECTOR_BY_XPATH":
-        sendResponse(generateSelectorByXpath(param));
-        break;
-      case "GENERATE_SELECTOR_BY_HASH":
+      case ScriptMsg.GenerateSelectorByHash:
         sendResponse(generateSelectorByHash(param));
         break;
       default:
