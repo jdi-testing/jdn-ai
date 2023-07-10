@@ -7,7 +7,7 @@ import { selectIsDefaultState } from "../main.selectors";
 import { BackendStatus } from "../types/mainSlice.types";
 import { OnboardingContext } from "../../features/onboarding/OnboardingProvider";
 import { useOnBoardingRef } from "../../features/onboarding/utils/useOnboardingRef";
-import { OnbrdStep } from "../../features/onboarding/types/constants";
+import { OnbrdStep, OnboardingPopupText, OnboardingPopupButtons } from "../../features/onboarding/types/constants";
 
 export const OnboardingButton = () => {
   const [isTooltipVisible, setIsTooltipVisible] = React.useState(false);
@@ -26,14 +26,10 @@ export const OnboardingButton = () => {
       placement="bottomRight"
       align={{ offset: [18, 0] }}
       disabled={!isOnboardingAvailable}
-      title={
-        isDefaultState
-          ? "Would you like to start the onboarding?"
-          : "Your current progress will not be saved. Are you sure you want to start the onboarding?"
-      }
+      title={isDefaultState ? OnboardingPopupText.Default : OnboardingPopupText.InProgress}
       onConfirm={openOnboarding}
-      okText="Start"
-      cancelText="No"
+      okText={OnboardingPopupButtons.Ok}
+      cancelText={OnboardingPopupButtons.Cancel}
     >
       <Tooltip placement="bottomRight" open={isTooltipVisible} align={{ offset: [16, 0] }} title="Onboarding tutorial">
         <Button
