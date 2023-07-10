@@ -171,6 +171,7 @@ export const sendMessage = {
     connector.sendMessage(ScriptMsg.EvaluateXpath, payload, onResponse),
   evaluateCssSelector: (payload: { selector: string; element_id?: ElementId, originJdnHash?: string }, onResponse?: () => void) =>
     connector.sendMessage(ScriptMsg.EvaluateCssSelector, payload, onResponse),
+  getPageData: (payload?: {}, onResponse?: () => void) => connector.sendMessage(ScriptMsg.GetPageData, payload, onResponse),
   generateSelectorByHash: (payload: { element_id: string, jdnHash: string }, onResponse?: () => void) =>
     connector.sendMessage(ScriptMsg.GenerateSelectorByHash, payload, onResponse),
   findBySelectors: (payload: SelectorsMap) => connector.sendMessage(ScriptMsg.FindBySelectors, payload),

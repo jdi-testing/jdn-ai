@@ -1,3 +1,5 @@
+import { ScriptMsg } from "../scriptMsg.constants";
+
 export const evaluateXpath = ({ xPath, element_id, originJdnHash }: Record<string, string>) => {
   try {
     const nodeSnapshot = document.evaluate(xPath, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
@@ -57,13 +59,13 @@ export const assignJdnHash = ({
 export const utilityScript = () => {
   chrome.runtime.onMessage.addListener(({ message, param }, sender, sendResponse) => {
     switch (message) {
-      case "EVALUATE_XPATH":
+      case ScriptMsg.EvaluateXpath:
         sendResponse(evaluateXpath(param));
         break;
-      case "EVALUATE_CSS_SELECTOR":
+      case ScriptMsg.EvaluateCssSelector:
         sendResponse(evaluateCssSelector(param));
         break;
-      case "ASSIGN_JDN_HASH":
+      case ScriptMsg.AssignJdnHash:
         sendResponse(assignJdnHash(param));
         break;
       default:
