@@ -1,3 +1,5 @@
+import { ScriptMsg } from "../scriptMsg.constants";
+
 export const assignParents = () => {
   const findParents = (elements) => {
     elements.forEach((element) => {
@@ -21,7 +23,7 @@ export const assignParents = () => {
   };
 
   chrome.runtime.onMessage.addListener(({ message, param }, sender, sendResponse) => {
-    if (message === "ASSIGN_PARENTS") {
+    if (message === ScriptMsg.AssignParents) {
       sendResponse(findParents(param));
     }
   });

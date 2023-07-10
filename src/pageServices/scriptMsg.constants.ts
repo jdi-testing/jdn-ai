@@ -32,6 +32,7 @@ export enum ScriptMsg {
   AdvancedCalculation = "AdvancedCalculation",
   CopyLocator = "CopyLocator",
   GetActiveElements = "GetActiveElements",
+  GetPageData = "GetPageData",
   ElementSelect = "ElementSelect",
   ElementGroupSetActive = "ElementGroupSetActive",
   ElementGroupUnsetActive = "ElementGroupUnsetActive",
