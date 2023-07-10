@@ -4,6 +4,7 @@ import { ElementId, Locator, PredictedEntity } from "../features/locators/types/
 import { SelectorsMap } from "../services/rules/rules.types";
 import { ScriptMessagePayload } from "./scriptMessageHandler";
 import { ClassFilterValue } from "../features/filter/types/filter.types";
+import { ScriptMsg } from "./scriptMsg.constants";
 
 export interface ScriptMessage {
   message: string;
@@ -50,7 +51,7 @@ class Connector {
         .then((response) => response)
         .catch((error: Error) => {
           if (error.message === SCRIPT_ERROR.NO_RESPONSE && isUndefined(onResponse)) return null;
-          if (error.message === SCRIPT_ERROR.NO_CONNECTION && action !== "PING_SCRIPT" && action !== "CHECK_SESSION" && action !== "KILL_HIGHLIGHT") {
+          if (error.message === SCRIPT_ERROR.NO_CONNECTION && action !== ScriptMsg.PingScript && action !== ScriptMsg.CheckSession && action !== ScriptMsg.KillHighlight) {
             return this.onDisconnectHandler(this.port, true).then(() => this.sendMessage(action, payload, onResponse, tabId));
           }
           return error;
@@ -156,42 +157,42 @@ const connector = new Connector();
 
 // messages, are sent from plugin to content scripts
 export const sendMessage = {
-  addElement: (el: Locator) => connector.sendMessage("ADD_ELEMENT", el),
-  assignDataLabels: (payload: PredictedEntity[]) => connector.sendMessage("ASSIGN_DATA_LABEL", payload),
-  assignJdnHash: (payload: { jdnHash: string, locator: string, isCSSLocator?: Boolean }) => connector.sendMessage("ASSIGN_JDN_HASH", payload),
-  assignParents: (payload: Locator[]) => connector.sendMessage("ASSIGN_PARENTS", payload),
-  changeElementName: (el: Locator) => connector.sendMessage("CHANGE_ELEMENT_NAME", el),
-  changeElementType: (el: Locator) => connector.sendMessage("CHANGE_ELEMENT_TYPE", el),
-  changeStatus: (el: Locator) => connector.sendMessage("CHANGE_STATUS", el),
+  addElement: (el: Locator) => connector.sendMessage(ScriptMsg.AddElement, el),
+  assignDataLabels: (payload: PredictedEntity[]) => connector.sendMessage(ScriptMsg.AssignDataLabel, payload),
+  assignJdnHash: (payload: { jdnHash: string, locator: string, isCSSLocator?: Boolean }) => connector.sendMessage(ScriptMsg.AssignJdnHash, payload),
+  assignParents: (payload: Locator[]) => connector.sendMessage(ScriptMsg.AssignParents, payload),
+  changeElementName: (el: Locator) => connector.sendMessage(ScriptMsg.ChangeElementName, el),
+  changeElementType: (el: Locator) => connector.sendMessage(ScriptMsg.ChangeElementType, el),
+  changeStatus: (el: Locator) => connector.sendMessage(ScriptMsg.ChangeStatus, el),
   checkSession: (payload: null, onResponse?: () => void): Promise<{ message: string; tabId: number }[]> =>
-    connector.sendMessageToAllTabs("CHECK_SESSION", payload, onResponse),
-  defineTabId: (payload: number) => connector.sendMessage("DEFINE_TAB_ID", payload),
+    connector.sendMessageToAllTabs(ScriptMsg.CheckSession, payload, onResponse),
+  defineTabId: (payload: number) => connector.sendMessage(ScriptMsg.DefineTabId, payload),
   evaluateXpath: (payload: { xPath: string; element_id?: ElementId, originJdnHash?: string }, onResponse?: () => void) =>
-    connector.sendMessage("EVALUATE_XPATH", payload, onResponse),
+    connector.sendMessage(ScriptMsg.EvaluateXpath, payload, onResponse),
   evaluateCssSelector: (payload: { selector: string; element_id?: ElementId, originJdnHash?: string }, onResponse?: () => void) =>
-    connector.sendMessage("EVALUATE_CSS_SELECTOR", payload, onResponse),
+    connector.sendMessage(ScriptMsg.EvaluateCssSelector, payload, onResponse),
   generateSelectorByHash: (payload: { element_id: string, jdnHash: string }, onResponse?: () => void) =>
-    connector.sendMessage("GENERATE_SELECTOR_BY_HASH", payload, onResponse),
-  findBySelectors: (payload: SelectorsMap) => connector.sendMessage("FIND_BY_SELECTORS", payload),
+    connector.sendMessage(ScriptMsg.GenerateSelectorByHash, payload, onResponse),
+  findBySelectors: (payload: SelectorsMap) => connector.sendMessage(ScriptMsg.FindBySelectors, payload),
   setClosedSession: (payload: { tabId: number; isClosed: boolean }) =>
-    connector.sendMessage("SET_CLOSED_SESSION", payload),
+    connector.sendMessage(ScriptMsg.SetClosedSession, payload),
   setHighlight: (payload: { elements?: Locator[]; filter?: ClassFilterValue; isAlreadyGenerated?: boolean }) =>
-    connector.sendMessage("SET_HIGHLIGHT", payload),
-  killHighlight: (payload?: {}, onResponse?: () => void) => connector.sendMessage("KILL_HIGHLIGHT", null, onResponse),
+    connector.sendMessage(ScriptMsg.SetHighlight, payload),
+  killHighlight: (payload?: {}, onResponse?: () => void) => connector.sendMessage(ScriptMsg.KillHighlight, null, onResponse),
   generateAttributes: (payload: PredictedEntity, onResponse: () => void) =>
-    connector.sendMessage("GENERATE_ATTRIBUTES", payload, onResponse),
+    connector.sendMessage(ScriptMsg.GenerateAttributes, payload, onResponse),
   getElementXpath: (payload: string, onResponse?: () => void) =>
-    connector.sendMessage("GET_ELEMENT_XPATH", payload, onResponse),
+    connector.sendMessage(ScriptMsg.GetElementXpath, payload, onResponse),
   pingScript: (payload: { scriptName: string }, onResponse?: () => void) =>
-    connector.sendMessage("PING_SCRIPT", payload, onResponse),
-  removeElement: (payload: Locator) => connector.sendMessage("REMOVE_ELEMENT", payload),
-  setActive: (payload: Locator | Locator[]) => connector.sendMessage("SET_ACTIVE", payload),
-  toggle: (payload: { element: Locator; skipScroll?: boolean }) => connector.sendMessage("HIGHLIGHT_TOGGLED", payload),
-  toggleDeleted: (el: Locator) => connector.sendMessage("TOGGLE_DELETED", el),
+    connector.sendMessage(ScriptMsg.PingScript, payload, onResponse),
+  removeElement: (payload: Locator) => connector.sendMessage(ScriptMsg.RemoveElement, payload),
+  setActive: (payload: Locator | Locator[]) => connector.sendMessage(ScriptMsg.SetActive, payload),
+  toggle: (payload: { element: Locator; skipScroll?: boolean }) => connector.sendMessage(ScriptMsg.HighlightToggled, payload),
+  toggleDeleted: (el: Locator) => connector.sendMessage(ScriptMsg.ToggleDeleted, el),
   toggleFilter: (payload: ClassFilterValue) =>
-    connector.sendMessage("TOGGLE_FILTER", payload),
-  toggleActiveGroup: (payload: Locator[]) => connector.sendMessage("TOGGLE_ACTIVE_GROUP", payload),
-  unsetActive: (payload: Locator | Locator[]) => connector.sendMessage("UNSET_ACTIVE", payload),
+    connector.sendMessage(ScriptMsg.ToggleFilter, payload),
+  toggleActiveGroup: (payload: Locator[]) => connector.sendMessage(ScriptMsg.ToggleActiveGroup, payload),
+  unsetActive: (payload: Locator | Locator[]) => connector.sendMessage(ScriptMsg.UnsetActive, payload),
 };
 
 export default connector;

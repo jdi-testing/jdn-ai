@@ -2,14 +2,12 @@ import { AsyncThunkAction } from "@reduxjs/toolkit";
 import { Dispatch } from "react";
 import { setScriptMessage } from "../app/main.slice";
 import { RootState } from "../app/store/store";
-import { Locator, LocatorValidationErrors, LocatorValidationWarnings } from "../features/locators/types/locator.types";
+import { Locator } from "../features/locators/types/locator.types";
 import {
   elementGroupSetActive,
   elementGroupUnsetActive,
   elementSetActive,
-  setJdnHash,
   setScrollToLocator,
-  setValidity,
   toggleDeletedGroup,
   toggleElementGeneration,
   toggleElementGroupGeneration,
@@ -20,6 +18,7 @@ import { rerunGeneration } from "../features/locators/reducers/rerunGeneration.t
 import { stopGenerationGroup } from "../features/locators/reducers/stopGenerationGroup.thunk";
 import { copyLocator } from "../features/locators/utils/utils";
 import { selectLocatorByJdnHash } from "../features/locators/selectors/locators.selectors";
+import { ScriptMsg } from "./scriptMsg.constants";
 import { selectPresentActiveLocators } from "../features/locators/selectors/locatorsByPO.selectors";
 
 export type ScriptMessagePayload = { message: keyof Actions; param: Record<string, never> };
@@ -33,7 +32,7 @@ export const updateMessageHandler = (
   state: RootState
 ) => {
   const actions: Actions = {
-    ADVANCED_CALCULATION: ({ locators, time }) => {
+    [ScriptMsg.AdvancedCalculation]: ({ locators, time }) => {
       dispatch(
         rerunGeneration({
           generationData: locators,
@@ -41,57 +40,44 @@ export const updateMessageHandler = (
         })
       );
     },
-    COPY_LOCATOR: ({ value, option }) => {
+    [ScriptMsg.CopyLocator]: ({ value, option }) => {
       copyLocator(value, option)();
     },
-    ELEMENT_SELECT: (payload) => {
+    [ScriptMsg.ElementSelect]: (payload) => {
       dispatch(elementSetActive(payload.element_id));
     },
-    ELEMENT_SET_ACTIVE: (payload) => {
-      dispatch(elementSetActive(selectLocatorByJdnHash(state, payload)!.element_id));
-    },
-    ELEMENT_GROUP_SET_ACTIVE: (payload) => {
+    [ScriptMsg.ElementGroupSetActive]: (payload) => {
       const locators = payload.map((jdnHash: string) => selectLocatorByJdnHash(state, jdnHash));
       dispatch(elementGroupSetActive({ locators, fromScript: true }));
       dispatch(setScrollToLocator(locators[0].element_id));
     },
-    ELEMENT_GROUP_UNSET_ACTIVE: (payload) => {
+    [ScriptMsg.ElementGroupUnsetActive]: (payload) => {
       const locators = payload.map((jdnHash: string) => selectLocatorByJdnHash(state, jdnHash)) as Locator[];
       dispatch(elementGroupUnsetActive({ locators, fromScript: true }));
     },
-    GET_ACTIVE_ELEMENTS: (_, sender, sendResponse) => {
+    [ScriptMsg.GetActiveElements]: (_, sender, sendResponse) => {
       const elements = selectPresentActiveLocators(state);
       sendResponse({
         elements,
       });
     },
-    INVALID_LOCATOR: (payload) => {
-      const { element_id, numberOfNodes } = payload;
-      const message = !numberOfNodes?.length
-        ? LocatorValidationWarnings.NotFound
-        : (`${numberOfNodes} ${LocatorValidationErrors.MultipleElements}` as Locator["message"]);
-      dispatch(setValidity({ element_id, message }));
-    },
-    REMOVE_ELEMENT: (payload) => dispatch(toggleDeletedGroup(payload)),
-    RESTORE_ELEMENT: (payload) => dispatch(toggleDeletedGroup(payload)),
-    OPEN_EDIT_LOCATOR: () => {
+    [ScriptMsg.RemoveElement]: (payload) => dispatch(toggleDeletedGroup(payload)),
+    [ScriptMsg.RestoreElement]: (payload) => dispatch(toggleDeletedGroup(payload)),
+    [ScriptMsg.OpenEditLocator]: () => {
       // handled in Locator
     },
-    RERUN_GENERATION: (payload) => {
+    [ScriptMsg.RerunGeneration]: (payload) => {
       dispatch(rerunGeneration({ generationData: payload }));
     },
-    SET_JDN_HASH: (payload) => {
-      dispatch(setJdnHash(payload));
-    },
-    START_COLLECT_DATA: showOverlay,
+    [ScriptMsg.StartCollectData]: showOverlay,
     /* eslint-disable */
     // @ts-ignore
-    STOP_GROUP_GENERATION: (payload) => dispatch(stopGenerationGroup(payload)),
-    TOGGLE_ELEMENT: (payload) => {
+    [ScriptMsg.StopGroupGeneration]: (payload) => dispatch(stopGenerationGroup(payload)),
+    [ScriptMsg.ToggleElement]: (payload) => {
       dispatch(toggleElementGeneration(payload[0]));
       dispatch(setScrollToLocator(payload[0].element_id));
     },
-    TOGGLE_ELEMENT_GROUP: (payload) => {
+    [ScriptMsg.ToggleElementGroup]: (payload) => {
       dispatch(toggleElementGroupGeneration(payload));
     },
   };

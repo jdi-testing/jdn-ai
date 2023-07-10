@@ -2,6 +2,7 @@
     avoid using any outer scope variables inside this function
  */
 
+import { ScriptMsg } from "../scriptMsg.constants";
 import { assignJdnHash } from "./utils";
 import { LocatorTaskStatus } from "../../features/locators/types/locator.types";
 
@@ -363,7 +364,7 @@ export const highlightOnPage = () => {
     const element = predictedElements?.find((elem) => elem.jdnHash === locatorId);
 
     sendMessage({
-      message: "TOGGLE_ELEMENT",
+      message: ScriptMsg.ToggleElement,
       param: [element],
     });
   };
@@ -421,45 +422,45 @@ export const highlightOnPage = () => {
 
   const messageHandler = ({ message, param }, sender, sendResponse) => {
     switch (message) {
-      case "SET_HIGHLIGHT":
+      case ScriptMsg.SetHighlight:
         if (!listenersAreSet) setDocumentListeners();
         if (!scrollableContainers.length) detectScrollableContainers();
         findAndHighlight(param);
         break;
-      case "KILL_HIGHLIGHT":
+      case ScriptMsg.KillHighlight:
         removeHighlight(sendResponse)();
         break;
-      case "HIGHLIGHT_TOGGLED":
+      case ScriptMsg.HighlightToggled:
         toggleElement(param);
         break;
-      case "TOGGLE_DELETED":
+      case ScriptMsg.ToggleDeleted:
         toggleDeletedElement(param);
         break;
-      case "ADD_ELEMENT":
+      case ScriptMsg.AddElement:
         addHighlightElement(param);
         break;
-      case "REMOVE_ELEMENT":
+      case ScriptMsg.RemoveElement:
         removeElement(param);
         break;
-      case "CHANGE_ELEMENT_TYPE":
+      case ScriptMsg.ChangeElementType:
         updateElement(param);
         break;
-      case "CHANGE_ELEMENT_NAME":
+      case ScriptMsg.ChangeElementName:
         changeElementName(param);
         break;
-      case "CHANGE_STATUS":
+      case ScriptMsg.ChangeStatus:
         changeGenerationStatus(param);
         break;
-      case "TOGGLE_FILTER":
+      case ScriptMsg.ToggleFilter:
         applyFilter(param);
         break;
-      case "SET_ACTIVE":
+      case ScriptMsg.SetActive:
         setActiveElement(param, true);
         break;
-      case "UNSET_ACTIVE":
+      case ScriptMsg.UnsetActive:
         updateElement(param);
         break;
-      case "TOGGLE_ACTIVE_GROUP":
+      case ScriptMsg.ToggleActiveGroup:
         toggleActiveGroup(param);
         break;
       default:

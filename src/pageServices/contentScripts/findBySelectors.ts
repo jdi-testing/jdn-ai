@@ -1,5 +1,6 @@
 import { defaultClass } from "../../features/locators/types/generationClasses.types";
 import { JDNLabel, RulesMap, SelectorsMap } from "../../services/rules/rules.types";
+import { ScriptMsg } from "../scriptMsg.constants";
 
 export const findBySelectors = () => {
   const JDN_HASH = "jdn-hash";
@@ -82,7 +83,7 @@ export const findBySelectors = () => {
     sendResponse: (response: any) => void
   ) => {
     switch (message) {
-      case "FIND_BY_SELECTORS":
+      case ScriptMsg.FindBySelectors:
         findElements(param, sendResponse);
         break;
 
