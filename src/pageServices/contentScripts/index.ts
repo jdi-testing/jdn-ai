@@ -1,3 +1,4 @@
+import { ScriptMsg } from "../scriptMsg.constants";
 import { assignDataLabels } from "./assignDataLabels";
 import { runContextMenu } from "./contextmenu";
 import { getGenerationAttributes } from "./generationData";
@@ -21,7 +22,7 @@ const messageHandler = (
   sender: chrome.runtime.MessageSender,
   sendResponse: (response: any) => void
 ) => {
-  if (message === "PING_SCRIPT" && param.scriptName === "index") {
+  if (message === ScriptMsg.PingScript && param.scriptName === "index") {
     sendResponse({ message: true });
   }
 };

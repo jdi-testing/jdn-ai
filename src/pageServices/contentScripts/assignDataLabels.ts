@@ -1,4 +1,5 @@
 import { Locator } from "../../features/locators/types/locator.types";
+import { ScriptMsg } from "../scriptMsg.constants";
 
 export const assignDataLabels = () => {
   const assignDataLabel = (hashes: Array<Locator>) => {
@@ -10,7 +11,7 @@ export const assignDataLabels = () => {
 
   const messageHandler = ({ message, param }: { message: any; param: any }) => {
     switch (message) {
-      case "ASSIGN_DATA_LABEL":
+      case ScriptMsg.AssignDataLabel:
         assignDataLabel(param);
         break;
       default:

@@ -1,3 +1,5 @@
+import { ScriptMsg } from "../scriptMsg.constants";
+
 export const urlListener = () => {
   let tabId;
   let isClosedSession;
@@ -11,13 +13,13 @@ export const urlListener = () => {
 
   const messageHandler = ({ message, param }, sender, sendResponse) => {
     switch (message) {
-      case "CHECK_SESSION":
+      case ScriptMsg.CheckSession:
         isClosedSession || sendResponse({ tabId });
         break;
-      case "DEFINE_TAB_ID":
+      case ScriptMsg.DefineTabId:
         tabId = param;
         break;
-      case "SET_CLOSED_SESSION":
+      case ScriptMsg.SetClosedSession:
         if (param.tabId === tabId) {
           isClosedSession = param.isClosed;
         }

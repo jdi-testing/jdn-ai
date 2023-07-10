@@ -1,5 +1,7 @@
+import { ScriptMsg } from "../scriptMsg.constants";
+
 export const getPageData = () => {
-  chrome.runtime.sendMessage({ message: "START_COLLECT_DATA" }).catch((error) => {
+  chrome.runtime.sendMessage({ message: ScriptMsg.StartCollectData }).catch((error) => {
     if (error.message !== "The message port closed before a response was received.") throw new Error(error.message);
   });
 

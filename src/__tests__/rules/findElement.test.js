@@ -9,6 +9,7 @@ import { vuetifySelect } from "./__mocks__/vuetifySelect";
 import { vuetifyOverflowBtn } from "./__mocks__/vuetifyOverflowBtn";
 import { vuetifyTextField } from "./__mocks__/vuetifyTextField";
 import { vuetifyInput } from "./__mocks__/vuetifyInput";
+import { ScriptMsg } from "../../pageServices/scriptMsg.constants";
 
 const runQuery = (domSource, callback) => {
   document.body.innerHTML = domSource;
@@ -17,7 +18,7 @@ const runQuery = (domSource, callback) => {
   // because test env doesn't work with selectors containing ':has' directive
   const selectors = getLibrarySelectors(vueRulesMock());
   findBySelectors();
-  chrome.runtime.sendMessage({ message: "FIND_BY_SELECTORS", param: selectors }, callback);
+  chrome.runtime.sendMessage({ message: ScriptMsg.FindBySelectors, param: selectors }, callback);
 };
 
 test("finds simple Vuetify elements by rules", () => {
