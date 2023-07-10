@@ -7,6 +7,7 @@ export const createLocatorValidationRules = (
   isCreatingForm: boolean,
   locatorType: LocatorType,
   setValidationMessage: React.Dispatch<React.SetStateAction<LocatorValidationErrorType>>,
+  setValidationErrorOptions: React.Dispatch<React.SetStateAction<any>>,
   locators: Locator[],
   jdnHash: string,
   element_id: ElementId
@@ -32,6 +33,7 @@ export const createLocatorValidationRules = (
           return Promise.resolve();
         } catch (err) {
           setValidationMessage(err.message as LocatorValidationErrorType);
+          setValidationErrorOptions(err.options);
           return Promise.reject(err);
         }
       },

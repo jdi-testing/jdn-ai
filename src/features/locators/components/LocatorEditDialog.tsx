@@ -12,7 +12,12 @@ import { selectAvailableClasses } from "../../filter/filter.selectors";
 import { selectCurrentPageObject } from "../../pageObjects/selectors/pageObjects.selectors";
 import { ElementClass } from "../types/generationClasses.types";
 import { isNameUnique } from "../../pageObjects/utils/pageObject";
-import { Locator, LocatorValidationWarnings, LocatorValidationErrorType } from "../types/locator.types";
+import {
+  Locator,
+  LocatorValidationWarnings,
+  LocatorValidationErrors,
+  LocatorValidationErrorType,
+} from "../types/locator.types";
 import { defaultLibrary } from "../types/generationClasses.types";
 import { changeLocatorAttributes } from "../locators.slice";
 import { createNewName, isValidLocator, getLocatorValidationStatus, getLocatorValueOnTypeSwitch } from "../utils/utils";
@@ -26,7 +31,8 @@ import { changeLocatorElement } from "../reducers/changeLocatorElement.thunk";
 import { addCustomLocator } from "../reducers/addCustomLocator.thunk";
 import { OnboardingContext } from "../../onboarding/OnboardingProvider";
 import { OnbrdStep } from "../../onboarding/types/constants";
-import { selectLocatorsByPageObject } from "../selectors/locatorsByPO.selectors";
+import { selectPresentLocatorsByPO } from "../selectors/locatorsByPO.selectors";
+import { LocatorMessageForDuplicate } from "./LocatorMessageForDuplicate";
 
 interface Props extends Locator {
   isModalOpen: boolean;
@@ -58,13 +64,14 @@ export const LocatorEditDialog: React.FC<Props> = ({
   locatorType,
 }) => {
   const dispatch = useDispatch();
-  const locators = useSelector(selectLocatorsByPageObject);
+  const locators = useSelector(selectPresentLocatorsByPO);
   const types = useSelector((_state: RootState) => selectAvailableClasses(_state));
   const pageObjectLocatorType = useSelector(selectCurrentPageObject)?.locatorType;
   const pageObjectId = useSelector(selectCurrentPageObject)!.id;
   const library = useSelector(selectCurrentPageObject)?.library || defaultLibrary;
 
   const [validationMessage, setValidationMessage] = useState<LocatorValidationErrorType>(message || "");
+  const [validationErrorOptions, setValidationErrorOptions] = useState<{ duplicates?: Locator[] }>({});
   const [isEditedName, setIsEditedName] = useState<boolean>(isCustomName);
 
   const { updateRef } = useContext(OnboardingContext);
@@ -84,11 +91,17 @@ export const LocatorEditDialog: React.FC<Props> = ({
 
   const nameValidationRules: Rule[] = createNameValidationRules(_isNameUnique);
 
+  const closeDialog = () => {
+    form.resetFields();
+    setIsModalOpen(false);
+  };
+
   const _locatorValidationRules: () => Rule[] = () =>
     createLocatorValidationRules(
       isCreatingForm,
       form.getFieldValue("locatorType") || defaultLocatorType,
       setValidationMessage,
+      setValidationErrorOptions,
       locators,
       jdnHash,
       element_id
@@ -135,9 +148,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
     };
 
     dispatch(addCustomLocator({ newLocator, pageObjectId }));
-
-    form.resetFields();
-    setIsModalOpen(false);
+    closeDialog();
   };
 
   const handleEditLocator = async () => {
@@ -154,12 +165,14 @@ export const LocatorEditDialog: React.FC<Props> = ({
       isCustomLocator: true,
     };
 
-    validationMessage !== LocatorValidationWarnings.NewElement && jdnHash
-      ? dispatch(changeLocatorAttributes(updatedLocator))
-      : dispatch(changeLocatorElement(updatedLocator));
+    // we need this check for the case when user edits custom invalid locator, that doesn't have jdnHash
+    if ((!validationMessage.length && !jdnHash) || validationMessage === LocatorValidationWarnings.NewElement) {
+      dispatch(changeLocatorElement(updatedLocator));
+    } else {
+      dispatch(changeLocatorAttributes(updatedLocator));
+    }
 
-    form.resetFields();
-    setIsModalOpen(false);
+    closeDialog();
   };
 
   const getBlockTypeOptions = (): SelectOption[] => types.map((_type) => ({ value: _type, label: _type }));
@@ -213,6 +226,14 @@ export const LocatorEditDialog: React.FC<Props> = ({
     const isOkButtonDisabled = computeIsOkButtonDisabled();
     setIsOkButtonDisabled(isOkButtonDisabled);
     updateRef(OnbrdStep.EditLocator, undefined, isOkButtonDisabled ? undefined : handleCreateCustomLocator);
+  };
+
+  const renderValidationMessage = () => {
+    return validationMessage === LocatorValidationErrors.DuplicatedLocator ? (
+      <LocatorMessageForDuplicate closeDialog={closeDialog} duplicates={validationErrorOptions?.duplicates} />
+    ) : (
+      validationMessage
+    );
   };
 
   return (
@@ -275,7 +296,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
         name="locator"
         rules={locatorValidationRules}
         validateStatus={getLocatorValidationStatus(validationMessage)}
-        help={validationMessage}
+        help={renderValidationMessage()}
         extra={renderValidationWarning()}
       >
         <Input.TextArea

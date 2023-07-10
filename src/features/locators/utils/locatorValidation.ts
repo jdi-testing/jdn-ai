@@ -1,4 +1,5 @@
 import { LocatorType } from "../../../common/types/common";
+import { CustomError } from "../../../common/utils/customError";
 import {
   Locator,
   LocatorValidationErrors,
@@ -42,7 +43,7 @@ export const validateLocator = async (
     } else if (length === 1 && _jdnHash !== foundHash) {
       const duplicates = checkDuplicates(foundHash, locators, _element_id);
       if (foundHash && duplicates.length) {
-        throw new Error(LocatorValidationErrors.DuplicatedLocator); //validationStatus: ERROR
+        throw new CustomError(LocatorValidationErrors.DuplicatedLocator, { duplicates }); //validationStatus: ERROR
       } else {
         validationMessage =
           isCreatingForm || !_jdnHash

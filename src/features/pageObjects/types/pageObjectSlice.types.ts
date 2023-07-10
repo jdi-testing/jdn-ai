@@ -9,6 +9,7 @@ export interface PageObjectState {
 }
 
 export interface PageObject {
+  hideUnadded?: boolean; // whether to show in list Locators with "generate" set to false
   id: PageObjectId;
   library: ElementLibrary;
   locators?: ElementId[];

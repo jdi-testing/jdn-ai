@@ -1,11 +1,9 @@
-import { SearchOutlined } from "@ant-design/icons";
-import { Button, Col, Row, Select, Space, Typography } from "antd";
-import React from "react";
+import { Col, Row, Select, Space, Typography } from "antd";
+import React, { useContext, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../app/store/store";
-import { IdentificationStatus } from "../../locators/types/locator.types";
 import { selectCurrentPageObject } from "../selectors/pageObjects.selectors";
-import { changeElementLibrary, removePageObject, setLocatorType } from "../pageObject.slice";
+import { changeElementLibrary, removePageObject, setHideUnadded, setLocatorType } from "../pageObject.slice";
 import { PageObjectId } from "../types/pageObjectSlice.types";
 import { ElementLibrary, libraryNames } from "../../locators/types/generationClasses.types";
 import { identifyElements } from "../../locators/reducers/identifyElements.thunk";
@@ -14,6 +12,9 @@ import { useOnBoardingRef } from "../../onboarding/utils/useOnboardingRef";
 import { OnbrdStep } from "../../onboarding/types/constants";
 import { LocalStorageKey, setLocalStorage } from "../../../common/utils/localStorage";
 import { Footnote } from "../../../common/components/footnote/Footnote";
+import { isIdentificationLoading } from "../../locators/utils/helpers";
+import { PageObjGenerationButton } from "./PageObjGenerationButton";
+import { OnboardingContext } from "../../onboarding/OnboardingProvider";
 
 interface Props {
   pageObj: PageObjectId;
@@ -50,11 +51,14 @@ const locatorTypeOptions = [
 export const PageObjGenerationBar: React.FC<Props> = ({ pageObj, library, url }) => {
   const status = useSelector((state: RootState) => state.locators.present.status);
   const currentPageObject = useSelector(selectCurrentPageObject);
+  const { isOpen: isOnboardingOpen } = useContext(OnboardingContext);
 
-  const handleGenerate = () => dispatch(identifyElements({ library, pageObj }));
+  const handleGenerate = () => {
+    dispatch(setHideUnadded({ id: pageObj, hideUnadded: false }));
+    dispatch(identifyElements({ library, pageObj }));
+  };
 
   const refSettings = useOnBoardingRef(OnbrdStep.POsettings, undefined, () => dispatch(removePageObject(pageObj)));
-  const refGenerate = useOnBoardingRef(OnbrdStep.Generate, () => dispatch(identifyElements({ library, pageObj })));
 
   const dispatch = useDispatch();
 
@@ -67,6 +71,15 @@ export const PageObjGenerationBar: React.FC<Props> = ({ pageObj, library, url })
     dispatch(setLocatorType({ id: pageObj, locatorType }));
     setLocalStorage(LocalStorageKey.LocatorType, locatorType);
   };
+
+  const handleEmptyPO = () => {
+    dispatch(setHideUnadded({ id: pageObj, hideUnadded: true }));
+    dispatch(identifyElements({ library, pageObj }));
+  };
+
+  const isLoading = () => isIdentificationLoading(status) && currentPageObject?.id === pageObj;
+  const isGenerateAllLoading = () => isLoading() && !currentPageObject?.hideUnadded;
+  const isGenerateEmptyLoading = () => isLoading() && currentPageObject?.hideUnadded;
 
   return (
     <div className="jdn__pageObject__settings">
@@ -103,16 +116,24 @@ export const PageObjGenerationBar: React.FC<Props> = ({ pageObj, library, url })
             </Col>
           </Row>
         </Space>
-        <Button
-          ref={refGenerate}
-          icon={<SearchOutlined />}
-          type="primary"
-          loading={status === IdentificationStatus.loading && currentPageObject?.id === pageObj}
-          onClick={handleGenerate}
-          className="jdn__buttons jdn__generationButtons_generate"
-        >
-          Generate
-        </Button>
+        <Space>
+          <PageObjGenerationButton
+            refFn={() => useOnBoardingRef(OnbrdStep.Generate, () => dispatch(identifyElements({ library, pageObj })))}
+            type="primary"
+            loading={isGenerateAllLoading()}
+            onClick={handleGenerate}
+          >
+            Generate All
+          </PageObjGenerationButton>
+          <PageObjGenerationButton
+            refFn={() => useRef<HTMLDivElement>(null)} // TODO: change with onboarding step when design is ready
+            loading={isGenerateEmptyLoading()}
+            onClick={handleEmptyPO}
+            disabled={isOnboardingOpen}
+          >
+            Empty Page Object
+          </PageObjGenerationButton>
+        </Space>
       </div>
     </div>
   );

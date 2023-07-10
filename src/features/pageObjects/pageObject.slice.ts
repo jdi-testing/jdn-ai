@@ -52,6 +52,9 @@ const pageObjSlice = createSlice({
     setCurrentPageObj(state, { payload }) {
       state.currentPageObject = payload;
     },
+    setHideUnadded(state, { payload }: PayloadAction<{ id: PageObjectId; hideUnadded: boolean }>) {
+      pageObjAdapter.upsertOne(state, payload as PageObject);
+    },
     setLocatorType(state, { payload }: PayloadAction<{ id: PageObjectId; locatorType: LocatorType }>) {
       pageObjAdapter.upsertOne(state, payload as PageObject);
     },
@@ -75,6 +78,7 @@ export const {
   removePageObjects,
   removePageObject,
   setCurrentPageObj,
+  setHideUnadded,
   setLocatorType,
   setPageData,
 } = pageObjSlice.actions;

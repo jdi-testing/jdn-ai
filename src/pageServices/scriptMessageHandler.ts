@@ -18,8 +18,8 @@ import { rerunGeneration } from "../features/locators/reducers/rerunGeneration.t
 import { stopGenerationGroup } from "../features/locators/reducers/stopGenerationGroup.thunk";
 import { copyLocator } from "../features/locators/utils/utils";
 import { selectLocatorByJdnHash } from "../features/locators/selectors/locators.selectors";
-import { selectActiveLocators } from "../features/locators/selectors/locatorsFiltered.selectors";
 import { ScriptMsg } from "./scriptMsg.constants";
+import { selectPresentActiveLocators } from "../features/locators/selectors/locatorsByPO.selectors";
 
 export type ScriptMessagePayload = { message: keyof Actions; param: Record<string, never> };
 
@@ -56,7 +56,7 @@ export const updateMessageHandler = (
       dispatch(elementGroupUnsetActive({ locators, fromScript: true }));
     },
     [ScriptMsg.GetActiveElements]: (_, sender, sendResponse) => {
-      const elements = selectActiveLocators(state);
+      const elements = selectPresentActiveLocators(state);
       sendResponse({
         elements,
       });
