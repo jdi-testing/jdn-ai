@@ -4,7 +4,7 @@
 
 import { ScriptMsg } from "../scriptMsg.constants";
 import { assignJdnHash } from "./utils";
-import { LocatorTaskStatus } from "../../features/locators/types/locator.types";
+import { LocatorTaskStatus, LocatorElementStatus } from "../../features/locators/types/locator.types";
 
 /* global chrome */
 export const highlightOnPage = () => {
@@ -101,13 +101,13 @@ export const highlightOnPage = () => {
 
     if (element.deleted) {
       if (div) {
-        div.setAttribute("jdn-status", "DELETED");
-        toggleElement({ element, skipScroll: true }); // not sure if it's needed
+        div.setAttribute("jdn-status", LocatorElementStatus.DELETED);
       }
     } else {
       div.setAttribute("jdn-status", element.locator.taskStatus);
       findAndHighlight();
     }
+    toggleElement({ element, skipScroll: true });
   };
 
   const removeElement = (element) => {

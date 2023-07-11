@@ -68,7 +68,6 @@ export const pageData = () => {
   };
 
   chrome.runtime.onMessage.addListener(({ message }, sender, sendResponse) => {
-    console.log("message", message);
     switch (message) {
       case ScriptMsg.GetPageData:
         sendResponse(getPageData());
