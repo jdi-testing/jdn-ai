@@ -3,8 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button, Modal, Row, Space, Tooltip } from "antd";
 import { CaretDown, Plus, Trash } from "phosphor-react";
 
-import { addPageObj } from "../reducers/addPageObject.thunk";
-
 import { pushNotification } from "../../../app/main.slice";
 import { size } from "lodash";
 import { selectPageObjects } from "../selectors/pageObjects.selectors";
@@ -18,6 +16,7 @@ import { generateAndDownloadZip } from "../utils/projectTemplate";
 import { useOnBoardingRef } from "../../onboarding/utils/useOnboardingRef";
 import { OnbrdStep } from "../../onboarding/types/constants";
 import { checkLocatorsValidity } from "../../locators/reducers/checkLocatorValidity.thunk";
+import { useAddPageObject } from "../utils/useAddPageObject";
 
 const { confirm } = Modal;
 
@@ -36,15 +35,7 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
   const newPOstub = pageObjects.find((pageObject) => !pageObject.locators?.length);
 
   const dispatch = useDispatch();
-
-  const handleAddPageObject = () => {
-    if (newPOstub) {
-      setActivePanel([newPOstub.id.toString()]);
-      return;
-    }
-
-    dispatch(addPageObj());
-  };
+  const handleAddPageObject = useAddPageObject(setActivePanel);
 
   const handleDownload = () => {
     dispatch(pushNotification({ action: { type: "downloadTemplate" } }));
@@ -110,7 +101,7 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
           disabled={!!newPOstub}
           icon={<Plus size={16} color={newPOstub ? "#00000040" : "#fff"} />}
         >
-          Page object
+          Page Object
         </Button>
       </Space>
     </Row>

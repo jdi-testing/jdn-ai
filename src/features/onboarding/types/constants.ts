@@ -14,3 +14,13 @@ export enum OnbrdStep {
   Report, //12
   Connection, //13
 }
+
+export enum OnboardingPopupText {
+  Default = "Would you like to start the onboarding?",
+  InProgress = "Your current progress will not be saved. Are you sure you want to start the onboarding?",
+}
+
+export enum OnboardingPopupButtons {
+  Ok = "Start",
+  Cancel = "No",
+}
