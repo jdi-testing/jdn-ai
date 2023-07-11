@@ -19,7 +19,7 @@ export const PageObjectPlaceholder: React.FC<Props> = ({ setActivePanel }) => {
       No page objects created.
       <br />
       Open a needed web-page and click the{" "}
-      <Button type="link" size="small" className="jdn__footnote-button" onClick={handleAddPageObject}>
+      <Button type="link" size="small" onClick={handleAddPageObject}>
         + Page Object
       </Button>{" "}
       button to start.
@@ -34,7 +34,7 @@ export const PageObjectPlaceholder: React.FC<Props> = ({ setActivePanel }) => {
         okText={OnboardingPopupButtons.Ok}
         cancelText={OnboardingPopupButtons.Cancel}
       >
-        <Button type="link" size="small" className="jdn__footnote-button">
+        <Button type="link" size="small">
           Onboarding tutorial
         </Button>
         .
