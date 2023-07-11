@@ -1,10 +1,9 @@
-import React, { useContext } from "react";
+import React from "react";
 
 import { EmptyListInfo } from "../../../common/components/emptyListInfo/EmptyListInfo";
 import { useAddPageObject } from "../utils/useAddPageObject";
-import { Button, Popconfirm } from "antd";
-import { OnboardingContext } from "../../../features/onboarding/OnboardingProvider";
-import { OnboardingPopupText, OnboardingPopupButtons } from "../../../features/onboarding/types/constants";
+import { Button } from "antd";
+import { OnboardingPopup } from "../../onboarding/components/OnboardingPopup";
 
 interface Props {
   setActivePanel: (pageObjectId: string[] | undefined) => void;
@@ -12,7 +11,6 @@ interface Props {
 
 export const PageObjectPlaceholder: React.FC<Props> = ({ setActivePanel }) => {
   const handleAddPageObject = useAddPageObject(setActivePanel);
-  const { openOnboarding } = useContext(OnboardingContext);
 
   return (
     <EmptyListInfo>
@@ -25,20 +23,12 @@ export const PageObjectPlaceholder: React.FC<Props> = ({ setActivePanel }) => {
       button to start.
       <br />
       And you can get started quickly with our{" "}
-      <Popconfirm
-        overlayClassName="jdn__header-onboarding-button"
-        placement="bottomRight"
-        align={{ offset: [18, 0] }}
-        title={OnboardingPopupText.Default}
-        onConfirm={openOnboarding}
-        okText={OnboardingPopupButtons.Ok}
-        cancelText={OnboardingPopupButtons.Cancel}
-      >
+      <OnboardingPopup>
         <Button type="link" size="small">
           Onboarding tutorial
         </Button>
         .
-      </Popconfirm>
+      </OnboardingPopup>
     </EmptyListInfo>
   );
 };

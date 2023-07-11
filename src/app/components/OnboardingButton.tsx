@@ -1,36 +1,23 @@
-import { Button, Popconfirm, Tooltip } from "antd";
+import { Button, Tooltip } from "antd";
 import { BookOpen } from "phosphor-react";
-import React, { useContext } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../store/store";
-import { selectIsDefaultState } from "../main.selectors";
 import { BackendStatus } from "../types/mainSlice.types";
-import { OnboardingContext } from "../../features/onboarding/OnboardingProvider";
 import { useOnBoardingRef } from "../../features/onboarding/utils/useOnboardingRef";
-import { OnbrdStep, OnboardingPopupText, OnboardingPopupButtons } from "../../features/onboarding/types/constants";
+import { OnbrdStep } from "../../features/onboarding/types/constants";
+import { OnboardingPopup } from "../../features/onboarding/components/OnboardingPopup";
 
 export const OnboardingButton = () => {
   const [isTooltipVisible, setIsTooltipVisible] = React.useState(false);
 
-  const isDefaultState = useSelector<RootState>(selectIsDefaultState);
   const isOnboardingAvailable =
     useSelector<RootState>((_state) => _state.main.backendAvailable) === BackendStatus.Accessed;
-
-  const { openOnboarding } = useContext(OnboardingContext);
 
   const onbrdRef = useOnBoardingRef(OnbrdStep.Onboarding);
 
   return (
-    <Popconfirm
-      overlayClassName="jdn__header-onboarding-button"
-      placement="bottomRight"
-      align={{ offset: [18, 0] }}
-      disabled={!isOnboardingAvailable}
-      title={isDefaultState ? OnboardingPopupText.Default : OnboardingPopupText.InProgress}
-      onConfirm={openOnboarding}
-      okText={OnboardingPopupButtons.Ok}
-      cancelText={OnboardingPopupButtons.Cancel}
-    >
+    <OnboardingPopup>
       <Tooltip placement="bottomRight" open={isTooltipVisible} align={{ offset: [16, 0] }} title="Onboarding tutorial">
         <Button
           disabled={!isOnboardingAvailable}
@@ -42,6 +29,6 @@ export const OnboardingButton = () => {
           onMouseLeave={() => setIsTooltipVisible(false)}
         />
       </Tooltip>
-    </Popconfirm>
+    </OnboardingPopup>
   );
 };
