@@ -30,6 +30,10 @@ export enum LocatorTaskStatus {
   STARTED = "STARTED",
 }
 
+export enum LocatorElementStatus {
+  DELETED = "DELETED",
+}
+
 export enum LocatorCalculationPriority {
   Increased = "INCREASED",
   Decreased = "DECREASED",
