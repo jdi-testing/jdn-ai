@@ -7,7 +7,7 @@ import { changeElementLibrary, removePageObject, setHideUnadded, setLocatorType 
 import { PageObjectId } from "../types/pageObjectSlice.types";
 import { ElementLibrary, libraryNames } from "../../locators/types/generationClasses.types";
 import { identifyElements } from "../../locators/reducers/identifyElements.thunk";
-import { LocatorType } from "../../../common/types/common";
+import { LocatorType, FrameworkType } from "../../../common/types/common";
 import { useOnBoardingRef } from "../../onboarding/utils/useOnboardingRef";
 import { OnbrdStep } from "../../onboarding/types/constants";
 import { LocalStorageKey, setLocalStorage } from "../../../common/utils/localStorage";
@@ -15,6 +15,7 @@ import { Footnote } from "../../../common/components/footnote/Footnote";
 import { isIdentificationLoading } from "../../locators/utils/helpers";
 import { PageObjGenerationButton } from "./PageObjGenerationButton";
 import { OnboardingContext } from "../../onboarding/OnboardingProvider";
+import { IN_DEVELOPMENT_TITLE } from "../../../common/constants/constants";
 
 interface Props {
   pageObj: PageObjectId;
@@ -34,6 +35,32 @@ const libraryOptions = [
   {
     value: ElementLibrary.Vuetify,
     label: libraryNames.Vuetify,
+  },
+];
+
+const frameworkTypeOptions = [
+  {
+    value: FrameworkType.JdiLight,
+    label: FrameworkType.JdiLight,
+    disabled: false,
+  },
+  {
+    value: FrameworkType.Selenium,
+    label: FrameworkType.Selenium,
+    title: IN_DEVELOPMENT_TITLE,
+    disabled: true,
+  },
+  {
+    value: FrameworkType.Selenide,
+    label: FrameworkType.Selenide,
+    title: IN_DEVELOPMENT_TITLE,
+    disabled: true,
+  },
+  {
+    value: FrameworkType.Vividus,
+    label: FrameworkType.Vividus,
+    title: IN_DEVELOPMENT_TITLE,
+    disabled: true,
   },
 ];
 
@@ -98,6 +125,19 @@ export const PageObjGenerationBar: React.FC<Props> = ({ pageObj, library, url })
                 className="jdn__select"
                 onChange={onLibraryChange}
                 options={libraryOptions}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col flex="104px">
+              <Typography.Text>Framework:</Typography.Text>
+            </Col>
+            <Col flex="auto">
+              <Select
+                id="frameworkType"
+                defaultValue={FrameworkType.JdiLight}
+                className="jdn__select"
+                options={frameworkTypeOptions}
               />
             </Col>
           </Row>
