@@ -2,6 +2,7 @@ import { ScriptMsg } from "../scriptMsg.constants";
 import { assignDataLabels } from "./assignDataLabels";
 import { assignParents } from "./assignParents";
 import { runContextMenu } from "./contextmenu";
+import { findBySelectors } from "./findBySelectors";
 import { getGenerationAttributes } from "./generationData";
 import { highlightOnPage } from "./highlight";
 import { highlightOrder } from "./highlightOrder";
@@ -20,6 +21,7 @@ utilityScript();
 getGenerationAttributes();
 pageData();
 assignParents();
+findBySelectors();
 
 const messageHandler = (
   { message, param }: { message: string; param: any },
