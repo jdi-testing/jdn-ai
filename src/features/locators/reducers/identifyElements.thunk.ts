@@ -11,8 +11,6 @@ import { findByRules } from "../utils/generationButton";
 import { LocalStorageKey, getLocalStorage } from "../../../common/utils/localStorage";
 import { selectAutoGeneratingLocatorTypes, selectPageObjById } from "../../pageObjects/selectors/pageObjects.selectors";
 import { RootState } from "../../../app/store/store";
-import { LocatorType } from "../../../common/types/common";
-import { runXpathGeneration } from "./runXpathGeneration";
 import { runLocatorsGeneration } from "./runLocatorsGeneration.thunk";
 
 interface Meta {

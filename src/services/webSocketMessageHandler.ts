@@ -14,7 +14,7 @@ export const updateSocketMessageHandler = (dispatch: any, state: any) => {
   const messageHandler = (event: any) => {
     if (event === NETWORK_ERROR) {
       const inProgress = selectInProgressByPageObj(state);
-      const failedIds = inProgress.map(({ element_id }: Locator) => (element_id));
+      const failedIds = inProgress.map(({ element_id }: Locator) => element_id);
       dispatch(failGeneration({ ids: failedIds, errorMessage: NETWORK_ERROR }));
       return;
     }

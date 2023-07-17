@@ -3,7 +3,6 @@ import { size } from "lodash";
 import { ElementClass, ElementLibrary } from "./types/generationClasses.types";
 import {
   locatorsAdapter,
-  selectLocatorByJdnHash,
   simpleSelectLocatorById,
   simpleSelectLocatorsByPageObject,
 } from "./selectors/locators.selectors";

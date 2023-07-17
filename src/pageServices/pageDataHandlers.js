@@ -1,6 +1,5 @@
 import connector, { sendMessage } from "./connector";
 import { request } from "../services/backend";
-import { createLocatorNames } from "../features/pageObjects/utils/pageObject";
 import { createOverlay } from "./contentScripts/createOverlay";
 /* global chrome*/
 

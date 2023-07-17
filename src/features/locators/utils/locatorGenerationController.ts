@@ -1,12 +1,9 @@
-import connector from "../../../pageServices/connector";
 import { WebSocketMessage } from "../../../services/backend";
-import { JDNHash, Locator, LocatorTaskStatus, PredictedEntity } from "../types/locator.types";
+import { JDNHash, Locator, LocatorTaskStatus } from "../types/locator.types";
 import { webSocketController } from "../../../services/webSocketController";
-import { NETWORK_ERROR, NO_ELEMENT_IN_DOCUMENT } from "./constants";
 import { getDocument } from "../../../common/utils/getDocument";
 import { MainState, MaxGenerationTime } from "../../../app/types/mainSlice.types";
 import { PageObject } from "../../pageObjects/types/pageObjectSlice.types";
-import { EntityId } from "@reduxjs/toolkit";
 
 export const isProgressStatus = (taskStatus?: LocatorTaskStatus) =>
   LocatorTaskStatus.PENDING === taskStatus || taskStatus === LocatorTaskStatus.STARTED;

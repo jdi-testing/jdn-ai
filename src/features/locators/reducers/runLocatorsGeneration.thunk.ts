@@ -1,17 +1,14 @@
-import { ActionReducerMapBuilder, EntityState, createAsyncThunk } from "@reduxjs/toolkit";
+import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
 import {
   IdentificationStatus,
   Locator,
   LocatorTaskStatus,
   LocatorsGenerationStatus,
   LocatorsState,
-  PredictedEntity,
 } from "../types/locator.types";
 import { runXpathGeneration } from "./runXpathGeneration";
 import { MaxGenerationTime } from "../../../app/types/mainSlice.types";
 import { RootState } from "../../../app/store/store";
-import { selectAutoGeneratingLocatorTypes } from "../../pageObjects/selectors/pageObjects.selectors";
-import { LocatorType } from "../../../common/types/common";
 import { locatorsAdapter } from "../selectors/locators.selectors";
 
 interface Meta {
@@ -24,11 +21,10 @@ interface Meta {
 export const runLocatorsGeneration = createAsyncThunk(
   "locators/runLocatorsGeneration",
   async (meta: Meta, thunkAPI) => {
-    const { locators, maxGenerationTime, generateXpath, generateCssSelector } = meta;
-    const state = thunkAPI.getState() as RootState;
+    const { locators, maxGenerationTime } = meta;
 
     return Promise.all([
-      runXpathGeneration(thunkAPI.getState() as RootState, thunkAPI.dispatch, locators, maxGenerationTime),
+      runXpathGeneration(thunkAPI.getState() as RootState, locators, maxGenerationTime),
       // (runCssSelectorGeneration)
     ]);
   }

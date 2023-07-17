@@ -8,7 +8,6 @@ class Debouncer {
   }
 
   accumulateAndDebounce(fn: (arg: any[]) => any) {
-
     const debouncedFn = (args: any[]) => {
       this.accumulatedArgs.push(...args);
     };
@@ -32,7 +31,7 @@ class Debouncer {
     return (args: any) => {
       debouncedFn(args);
     };
-  };
+  }
 }
 
 export const debouncer = new Debouncer();

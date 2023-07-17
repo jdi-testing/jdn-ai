@@ -4,7 +4,6 @@ import { RootState } from "../../../app/store/store";
 import { PageObject } from "../types/pageObjectSlice.types";
 import { AUTO_GENERATION_TRESHOLD } from "../../locators/utils/constants";
 import { LocatorType } from "../../../common/types/common";
-import { PredictedEntity } from "../../locators/types/locator.types";
 
 export const pageObjAdapter = createEntityAdapter<PageObject>({
   selectId: (pageObj) => pageObj.id,
@@ -53,8 +52,7 @@ export const selectAutoGeneratingLocatorTypes = createSelector(
     const isLowerTreshold = (locators?.length || 0) <= AUTO_GENERATION_TRESHOLD;
 
     return {
-      generateCssSelector:
-        isLowerTreshold || (!pageObj.hideUnadded && pageObj.locatorType === LocatorType.cssSelector),
+      generateCssSelector: isLowerTreshold || (!pageObj.hideUnadded && pageObj.locatorType === LocatorType.cssSelector),
       generateXpath: isLowerTreshold || (!pageObj.hideUnadded && pageObj.locatorType === LocatorType.xPath),
     };
   }
