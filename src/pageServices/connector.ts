@@ -180,7 +180,7 @@ export const sendMessage = {
   setHighlight: (payload: { elements?: Locator[]; filter?: ClassFilterValue; isAlreadyGenerated?: boolean }) =>
     connector.sendMessage(ScriptMsg.SetHighlight, payload),
   killHighlight: (payload?: {}, onResponse?: () => void) => connector.sendMessage(ScriptMsg.KillHighlight, null, onResponse),
-  generateAttributes: (payload: PredictedEntity, onResponse: () => void) =>
+  generateAttributes: (payload: {elements: PredictedEntity[], generateCss: boolean}, onResponse?: () => void) =>
     connector.sendMessage(ScriptMsg.GenerateAttributes, payload, onResponse),
   getElementXpath: (payload: string, onResponse?: () => void) =>
     connector.sendMessage(ScriptMsg.GetElementXpath, payload, onResponse),

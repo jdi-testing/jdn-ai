@@ -3,10 +3,11 @@ import { size } from "lodash";
 import { ElementClass, ElementLibrary } from "./types/generationClasses.types";
 import {
   locatorsAdapter,
+  selectLocatorByJdnHash,
   simpleSelectLocatorById,
   simpleSelectLocatorsByPageObject,
 } from "./selectors/locators.selectors";
-import { generateLocatorsReducer } from "./reducers/generateLocators.thunk";
+import { createLocatorsReducer } from "./reducers/createLocators.thunk";
 import { identifyElementsReducer } from "./reducers/identifyElements.thunk";
 import { rerunGenerationReducer } from "./reducers/rerunGeneration.thunk";
 import { stopGenerationReducer } from "./reducers/stopGeneration.thunk";
@@ -21,12 +22,12 @@ import {
   Locator,
   LocatorCalculationPriority,
 } from "./types/locator.types";
-import { runXpathGenerationReducer } from "./reducers/runXpathGeneration.thunk";
 import { checkLocatorsValidityReducer } from "./reducers/checkLocatorValidity.thunk";
 import { LocatorType } from "../../common/types/common";
 import { addCustomLocatorReducer } from "./reducers/addCustomLocator.thunk";
 import { changeLocatorElementReducer } from "./reducers/changeLocatorElement.thunk";
 import { DEFAULT_ERROR, NETWORK_ERROR } from "./utils/constants";
+import { runLocatorsGenerationReducer } from "./reducers/runLocatorsGeneration.thunk";
 
 const initialState: LocatorsState = {
   generationStatus: LocatorsGenerationStatus.noStatus,
@@ -200,16 +201,7 @@ const locatorsSlice = createSlice({
       locatorsAdapter.upsertMany(state, newValue as Locator[]);
     },
     updateLocatorGroup(state, { payload }: PayloadAction<Locator[]>) {
-      const newValue = payload.map(({ element_id, locator }) => {
-        const existingLocator = simpleSelectLocatorById(state, element_id);
-        return (
-          existingLocator && {
-            element_id,
-            locator: { ...existingLocator.locator, ...locator },
-          }
-        );
-      });
-      locatorsAdapter.upsertMany(state, newValue as Locator[]);
+      locatorsAdapter.upsertMany(state, payload);
     },
   },
   extraReducers: (builder) => {
@@ -217,11 +209,11 @@ const locatorsSlice = createSlice({
       changeLocatorElementReducer(builder),
       checkLocatorsValidityReducer(builder),
       identifyElementsReducer(builder),
-      generateLocatorsReducer(builder),
+      createLocatorsReducer(builder),
       rerunGenerationReducer(builder),
       stopGenerationReducer(builder),
       stopGenerationGroupReducer(builder),
-      runXpathGenerationReducer(builder);
+      runLocatorsGenerationReducer(builder);
   },
 });
 

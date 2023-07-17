@@ -94,7 +94,6 @@ export const getGenerationAttributes = () => {
     }
   };
 
-  // this is a draft, parameters could be changed
   const generateSelectorByHash = ({ element_id, jdnHash }) => {
     const element = document.querySelector(`[jdn-hash='${jdnHash}']`);
     return element ? { element_id, cssSelector: generateSelectorByElement(element) } : null;
@@ -115,7 +114,7 @@ export const getGenerationAttributes = () => {
     return string.toLowerCase().replace(regex, toCamelCase).replaceAll("-", "_");
   };
 
-  const mapElements = (elements) => {
+  const mapElements = (elements, generateCss) => {
     const generationAttributes = elements
       .map((predictedElement) => {
         const element = document.querySelector(`[jdn-hash='${predictedElement.jdnHash}']`);
@@ -129,7 +128,7 @@ export const getGenerationAttributes = () => {
         predictedElement.elemAriaLabel = element.getAttribute("aria-label");
         predictedElement.locator = {
           xPath: getElementTreeXPath(element),
-          cssSelector: generateSelectorByElement(element),
+          ...(generateCss ? { cssSelector: generateSelectorByElement(element) } : {}),
         };
 
         return {
@@ -141,9 +140,11 @@ export const getGenerationAttributes = () => {
   };
 
   chrome.runtime.onMessage.addListener(({ message, param }, sender, sendResponse) => {
+    console.log("message", message);
     switch (message) {
       case ScriptMsg.GenerateAttributes:
-        sendResponse(mapElements(param));
+        const { elements, generateCss } = param;
+        sendResponse(mapElements(elements, generateCss));
         break;
       case ScriptMsg.GetElementXpath:
         const foundElement = document.querySelector(`[jdn-hash='${param}']`);

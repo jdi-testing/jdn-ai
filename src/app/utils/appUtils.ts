@@ -14,7 +14,7 @@ export const checkSession = async (setStateCallback: (val: boolean) => void) => 
   });
 };
 
-export const getSessionId = async () => {
+export const initLocatorSocketController = async (xpathConfig: any) => {
   const sessionId = await request.get(HttpEndpoint.SESSION_ID);
-  locatorGenerationController.setSessionId(sessionId);
+  locatorGenerationController.init(sessionId, xpathConfig);
 };

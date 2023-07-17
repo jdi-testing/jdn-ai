@@ -7,6 +7,7 @@ import { stopGenerationHandler } from "../utils/locatorGenerationController";
 export const stopGeneration = createAsyncThunk("locators/stopGeneration", async (element_id: ElementId, thunkAPI) => {
   const state = thunkAPI.getState() as RootState;
   const jdnHash = selectLocatorById(state, element_id)?.jdnHash;
+  if (!jdnHash) return;
   return stopGenerationHandler([jdnHash]);
 });
 

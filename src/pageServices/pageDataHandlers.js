@@ -49,19 +49,6 @@ export const predictElements = (endpoint) => {
       }
     );
 };
-const requestGenerationAttributes = (elements) =>
-  sendMessage.generateAttributes(elements).then((response) => {
-    if (chrome.runtime.lastError) return false;
-
-    if (response) return response;
-    else return false;
-  });
-
-export const requestGenerationData = async (elements, library) => {
-  const generationTags = await requestGenerationAttributes(elements);
-  const generationData = createLocatorNames(generationTags, library);
-  return { generationData };
-};
 
 export const setParents = async (elements) => {
   return sendMessage.assignParents(elements).then((response) => response);

@@ -9,6 +9,7 @@ import { cancellableActions } from "../../common/components/notification/middlew
 import { logger } from "./middlewares/logger";
 import { scriptNotifier } from "../../pageServices/scriptNotifier";
 import { changePageMiddleware } from "./middlewares/changePage.middleware";
+import { updateSocketMessageHandler } from "../../services/webSocketMessageHandler";
 
 const rootReducer = {
   main: mainSlice,
@@ -35,6 +36,7 @@ export const store = configureStore({
 });
 
 store.subscribe(() => updateMessageHandler(store.dispatch, store.getState()));
+store.subscribe(() => updateSocketMessageHandler(store.dispatch, store.getState()));
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

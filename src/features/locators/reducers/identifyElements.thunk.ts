@@ -6,11 +6,14 @@ import { setFilter } from "../../filter/filter.slice";
 import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
 import { ElementLibrary, defaultLibrary, predictEndpoints } from "../types/generationClasses.types";
 
-import { generateLocators } from "./generateLocators.thunk";
+import { createLocators } from "./createLocators.thunk";
 import { findByRules } from "../utils/generationButton";
 import { LocalStorageKey, getLocalStorage } from "../../../common/utils/localStorage";
-import { selectPageObjById } from "../../pageObjects/selectors/pageObjects.selectors";
+import { selectAutoGeneratingLocatorTypes, selectPageObjById } from "../../pageObjects/selectors/pageObjects.selectors";
 import { RootState } from "../../../app/store/store";
+import { LocatorType } from "../../../common/types/common";
+import { runXpathGeneration } from "./runXpathGeneration";
+import { runLocatorsGeneration } from "./runLocatorsGeneration.thunk";
 
 interface Meta {
   library: ElementLibrary;
@@ -22,6 +25,7 @@ export const identifyElements = createAsyncThunk("locators/identifyElements", as
   const state = thunkAPI.getState() as RootState;
   const library = selectPageObjById(state, pageObj)?.library || defaultLibrary;
   const savedFilters = getLocalStorage(LocalStorageKey.Filter);
+
   if (savedFilters && savedFilters[library]) {
     thunkAPI.dispatch(setFilter({ pageObjectId: pageObj, JDIclassFilter: savedFilters[library] }));
   }
@@ -30,15 +34,20 @@ export const identifyElements = createAsyncThunk("locators/identifyElements", as
     const endpoint = predictEndpoints[library];
     const { data: res, pageData } =
       library !== ElementLibrary.Vuetify ? await predictElements(endpoint) : await findByRules();
-    const byPageObject = res.map((el: PredictedEntity) => ({
+    const locators = res.map((el: PredictedEntity) => ({
       ...el,
       element_id: `${el.element_id}_${pageObj}`,
       jdnHash: el.element_id,
       pageObj: pageObj,
     }));
-    thunkAPI.dispatch(generateLocators({ predictedElements: byPageObject, library }));
+
     thunkAPI.dispatch(setPageData({ id: pageObj, pageData }));
-    return thunkAPI.fulfillWithValue(byPageObject);
+    thunkAPI.dispatch(createLocators({ predictedElements: locators, library }));
+
+    const isAutogenerating = selectAutoGeneratingLocatorTypes(state as RootState, locators);
+    thunkAPI.dispatch(runLocatorsGeneration({ locators, ...isAutogenerating }));
+
+    return thunkAPI.fulfillWithValue(locators);
   } catch (error) {
     return thunkAPI.rejectWithValue(null);
   }
