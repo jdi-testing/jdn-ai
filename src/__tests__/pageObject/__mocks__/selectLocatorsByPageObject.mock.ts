@@ -66,7 +66,8 @@ export const getRootState = (_pageObject: PageObject) => ({
           locator: {
             cssSelector: ".main-content",
             output: ".main-content",
-            taskStatus: "SUCCESS",
+            xPathStatus: "SUCCESS",
+            cssSelectorStatus: "SUCCESS",
             xPath: "//*[@class='main-content']",
           },
           locatorType: LocatorType.cssSelector,
@@ -88,7 +89,8 @@ export const getRootState = (_pageObject: PageObject) => ({
           locator: {
             cssSelector: ".uui-navigation.nav.navbar-nav.m-l8.any",
             output: "//*[@class='uui-navigation nav navbar-nav m-l8 any']",
-            taskStatus: "SUCCESS",
+            xPathStatus: "SUCCESS",
+            cssSelectorStatus: "PENDING",
             xPath: "//*[@class='uui-navigation nav navbar-nav m-l8 any']",
           },
           name: "homeContactFormServiceSupportDatesSearchComplexTableSimpleTa",
@@ -112,7 +114,8 @@ export const getRootState = (_pageObject: PageObject) => ({
           elemAriaLabel: null,
           locator: {
             cssSelector: '[index="5"] > ul',
-            taskStatus: "SUCCESS",
+            xPathStatus: "SUCCESS",
+            cssSelectorStatus: "FAILURE",
             xPath: "//*[@index='5']/ul",
             output: "//*[@index='5']/ul",
           },
@@ -141,6 +144,8 @@ export const selectMockedLocators = (pageObject: PageObject) => [
     elemAriaLabel: null,
     locator: {
       taskStatus: "SUCCESS",
+      cssSelectorStatus: "SUCCESS",
+      xPathStatus: "SUCCESS",
       xPath: "//*[@class='main-content']",
       output: ".main-content",
       cssSelector: ".main-content",
@@ -163,7 +168,9 @@ export const selectMockedLocators = (pageObject: PageObject) => [
     elemAriaLabel: null,
     ...(pageObject.locatorType === LocatorType.cssSelector ? { locatorType: LocatorType.cssSelector } : null),
     locator: {
-      taskStatus: "SUCCESS",
+      taskStatus: "PENDING",
+      xPathStatus: "SUCCESS",
+      cssSelectorStatus: "PENDING",
       xPath: "//*[@class='uui-navigation nav navbar-nav m-l8 any']",
       cssSelector: ".uui-navigation.nav.navbar-nav.m-l8.any",
       output:
@@ -191,7 +198,9 @@ export const selectMockedLocators = (pageObject: PageObject) => [
     elemText: "HTML 5",
     elemAriaLabel: null,
     locator: {
-      taskStatus: "SUCCESS",
+      taskStatus: "FAILURE",
+      xPathStatus: "SUCCESS",
+      cssSelectorStatus: "FAILURE",
       xPath: "//*[@index='5']/ul",
       output: "//*[@index='5']/ul",
       cssSelector: '[index="5"] > ul',
