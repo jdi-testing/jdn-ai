@@ -1,6 +1,5 @@
 import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
 import {
-  IdentificationStatus,
   Locator,
   LocatorTaskStatus,
   LocatorsGenerationStatus,
