@@ -135,7 +135,7 @@ export const PageObjList: React.FC<Props> = (props) => {
             </Collapse>
           </React.Fragment>
         ) : (
-          <PageObjectPlaceholder />
+          <PageObjectPlaceholder {...{ setActivePanel }} />
         )}
         {/* <Notifications /> */}
       </div>

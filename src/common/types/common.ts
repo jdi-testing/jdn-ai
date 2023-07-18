@@ -1,3 +1,10 @@
+export enum FrameworkType {
+  JdiLight = "JDI Light",
+  Selenium = "Selenium",
+  Selenide = "Selenide",
+  Vividus = "Vividus",
+}
+
 export enum LocatorType {
   cssSelector = "CSS selector",
   xPath = "xPath",
