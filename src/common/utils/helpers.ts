@@ -7,14 +7,35 @@ export const floatToPercent = (value: number) => {
   return Math.trunc(value * 100);
 };
 
+const escapeLocator = (locator: string) => {
+  let transformedText = locator.replace(/[\\'\n]/g, (match: string) => {
+    switch (match) {
+      case "\\":
+        return "\\\\\\\\";
+      case "'":
+        return "\\'";
+      case "\n":
+        return "\\n";
+      default:
+        return match;
+    }
+  });
+  const lastDoubleQuote = transformedText.lastIndexOf('"');
+  const firstDoubleQuote = transformedText.indexOf('"');
+  const beforeFirstDoubleQuote = transformedText.slice(0, firstDoubleQuote + 1);
+  const afterLastDoubleQuote = transformedText.slice(lastDoubleQuote);
+  let insideOfDoubleQuotes = transformedText.slice(firstDoubleQuote + 1, lastDoubleQuote);
+
+  if (insideOfDoubleQuotes.includes('"')) {
+    insideOfDoubleQuotes = insideOfDoubleQuotes.replace(/"/g, '\\\\"');
+    transformedText = beforeFirstDoubleQuote + insideOfDoubleQuotes + afterLastDoubleQuote;
+  }
+
+  return transformedText;
+};
+
 export const copyToClipboard = (text: string) => {
-  // "\\\\3" - needed to get "\3" in 'eval()'
-  const transformedText = text
-    .replace(/\'/g, "\\\\'")
-    .replace(/\n/g, "\\n")
-    .replace(/#\\3/g, "#\\\\3")
-    .replace(/=\\'\\3/g, "=\\'\\\\3") // two different cases for \\3 to avoid affecting something else...
-    .replace(/\"/g, '\\\\"');
+  const transformedText = escapeLocator(text);
   chrome.devtools.inspectedWindow.eval(`copy('${transformedText}')`);
 };
 
