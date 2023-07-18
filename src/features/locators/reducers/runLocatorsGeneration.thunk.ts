@@ -1,10 +1,5 @@
 import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
-import {
-  Locator,
-  LocatorTaskStatus,
-  LocatorsGenerationStatus,
-  LocatorsState,
-} from "../types/locator.types";
+import { Locator, LocatorTaskStatus, LocatorsGenerationStatus, LocatorsState } from "../types/locator.types";
 import { runXpathGeneration } from "../utils/runXpathGeneration";
 import { MaxGenerationTime } from "../../../app/types/mainSlice.types";
 import { RootState } from "../../../app/store/store";
