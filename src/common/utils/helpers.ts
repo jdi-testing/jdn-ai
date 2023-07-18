@@ -1,6 +1,7 @@
 import { LocatorValue } from "../../features/locators/types/locator.types";
 import { ElementLibrary, ElementClass } from "../../features/locators/types/generationClasses.types";
 import { sendMessage } from "../../pageServices/connector";
+import { AnnotationType } from "../../common/types/common";
 
 export const floatToPercent = (value: number) => {
   // wse need to show percents, but multiply float * 100 provides an unexpected result and leads to bugs
@@ -18,7 +19,7 @@ export const copyToClipboard = (text: string) => {
 };
 
 export const getLocatorString = (locator: LocatorValue, type: ElementLibrary | ElementClass, name: string): string =>
-  `@UI("${locator.output}")\npublic ${type} ${name};`;
+  `${AnnotationType.UI}("${locator.output}")\npublic ${type} ${name};`;
 
 export const isMacPlatform = (param: Window) => param.navigator?.userAgent.indexOf("Mac") != -1;
 
