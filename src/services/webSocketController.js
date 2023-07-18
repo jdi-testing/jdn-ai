@@ -82,7 +82,6 @@ class WebSocketController {
 
   startPing() {
     if (this.pingInterval) return;
-    console.log("set new interval");
     this.pingInterval = setInterval(() => {
       this.ping();
       if (this.pingTimeout) return;

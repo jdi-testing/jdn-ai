@@ -2,7 +2,7 @@ import { AsyncThunkAction } from "@reduxjs/toolkit";
 import { Dispatch } from "react";
 import { setScriptMessage } from "../app/main.slice";
 import { RootState } from "../app/store/store";
-import { Locator } from "../features/locators/types/locator.types";
+import { Locator, LocatorTaskStatus } from "../features/locators/types/locator.types";
 import {
   elementGroupSetActive,
   elementGroupUnsetActive,
@@ -11,13 +11,14 @@ import {
   toggleDeletedGroup,
   toggleElementGeneration,
   toggleElementGroupGeneration,
+  updateLocatorGroup,
 } from "../features/locators/locators.slice";
 import connector from "./connector";
 import { showOverlay } from "./pageDataHandlers";
 import { rerunGeneration } from "../features/locators/reducers/rerunGeneration.thunk";
 import { stopGenerationGroup } from "../features/locators/reducers/stopGenerationGroup.thunk";
 import { copyLocator } from "../features/locators/utils/utils";
-import { selectLocatorByJdnHash } from "../features/locators/selectors/locators.selectors";
+import { selectLocatorById, selectLocatorByJdnHash } from "../features/locators/selectors/locators.selectors";
 import { ScriptMsg } from "./scriptMsg.constants";
 import { selectPresentActiveLocators } from "../features/locators/selectors/locatorsByPO.selectors";
 
@@ -62,6 +63,16 @@ export const updateMessageHandler = (
       });
     },
     [ScriptMsg.RemoveElement]: (payload) => dispatch(toggleDeletedGroup(payload)),
+    [ScriptMsg.ResponseCssSelectors]: (payload) => {
+      const res = payload.map((element: Locator) => {
+        const { taskStatus: _, ...rest } = selectLocatorById(state, element.element_id)!.locator;
+        return {
+          ...element,
+          locator: { ...rest, ...element.locator, cssSelectorStatus: LocatorTaskStatus.SUCCESS },
+        };
+      });
+      dispatch(updateLocatorGroup(res));
+    },
     [ScriptMsg.RestoreElement]: (payload) => dispatch(toggleDeletedGroup(payload)),
     [ScriptMsg.OpenEditLocator]: () => {
       // handled in Locator

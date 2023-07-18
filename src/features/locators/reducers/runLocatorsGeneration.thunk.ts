@@ -6,53 +6,63 @@ import {
   LocatorsGenerationStatus,
   LocatorsState,
 } from "../types/locator.types";
-import { runXpathGeneration } from "./runXpathGeneration";
+import { runXpathGeneration } from "../utils/runXpathGeneration";
 import { MaxGenerationTime } from "../../../app/types/mainSlice.types";
 import { RootState } from "../../../app/store/store";
-import { locatorsAdapter } from "../selectors/locators.selectors";
+import { runCssSelectorGeneration } from "../utils/runCssSelectorGeneration";
+import { updateLocatorGroup } from "../locators.slice";
 
 interface Meta {
   locators: Locator[];
   maxGenerationTime?: MaxGenerationTime;
   generateXpath?: boolean;
   generateCssSelector?: boolean;
+  generateMissingLocator?: boolean;
 }
 
 export const runLocatorsGeneration = createAsyncThunk(
   "locators/runLocatorsGeneration",
   async (meta: Meta, thunkAPI) => {
-    const { locators, maxGenerationTime } = meta;
+    const { locators, maxGenerationTime, generateXpath, generateCssSelector, generateMissingLocator } = meta;
 
-    return Promise.all([
-      runXpathGeneration(thunkAPI.getState() as RootState, locators, maxGenerationTime),
-      // (runCssSelectorGeneration)
+    const toGenerateXpats =
+      generateMissingLocator || generateXpath
+        ? locators.filter(({ locator }) => !locator || !locator.xPath || locator.xPath === locator.fullXpath)
+        : [];
+    const toGenerateCss =
+      generateMissingLocator || generateCssSelector
+        ? locators.filter(({ locator }) => !locator || !locator.cssSelector)
+        : [];
+
+    const generations = Promise.all([
+      ...[
+        toGenerateXpats.length
+          ? runXpathGeneration(thunkAPI.getState() as RootState, toGenerateXpats, maxGenerationTime)
+          : null,
+      ],
+      ...[toGenerateCss.length ? runCssSelectorGeneration(toGenerateCss) : null],
     ]);
+
+    if (toGenerateXpats.length) {
+      const setPending = locators
+        .filter((locator) => locator.locator && locator.locator.taskStatus !== LocatorTaskStatus.PENDING)
+        .map(({ element_id, locator: { taskStatus: _, ...rest } }) => ({
+          element_id,
+          locator: { ...rest, xPathStatus: LocatorTaskStatus.PENDING },
+        }));
+
+      thunkAPI.dispatch(updateLocatorGroup(setPending as Locator[]));
+    }
+
+    return generations;
   }
 );
 
 export const runLocatorsGenerationReducer = (builder: ActionReducerMapBuilder<LocatorsState>) => {
   return builder
-    .addCase(
-      runLocatorsGeneration.pending,
-      (
-        state,
-        {
-          meta: {
-            arg: { locators },
-          },
-        }
-      ) => {
-        const setPending = locators
-          .filter((locator) => locator.locator && locator.locator.taskStatus !== LocatorTaskStatus.PENDING)
-          .map(({ element_id, locator }) => ({
-            element_id,
-            locator: { ...locator, taskStatus: LocatorTaskStatus.PENDING },
-          }));
-        // @ts-ignore
-        locatorsAdapter.upsertMany(state, setPending);
-        state.generationStatus = LocatorsGenerationStatus.starting;
-      }
-    )
+    .addCase(runLocatorsGeneration.pending, (state) => {
+      state.generationStatus = LocatorsGenerationStatus.starting;
+    })
     .addCase(runLocatorsGeneration.fulfilled, (state) => {
       state.status = IdentificationStatus.noStatus;
       state.generationStatus = LocatorsGenerationStatus.started;

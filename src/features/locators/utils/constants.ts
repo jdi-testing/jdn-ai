@@ -44,3 +44,5 @@ export const DEFAULT_ERROR = "An error has been encountered.";
 
 // max number of elements to start locators generation automatically
 export const AUTO_GENERATION_TRESHOLD = 1;
+
+export const CALCULATING = "Calculating...";

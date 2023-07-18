@@ -2,13 +2,13 @@ import { ActionReducerMapBuilder, createAsyncThunk, EntityState } from "@reduxjs
 import { RootState } from "../../../app/store/store";
 import { locatorsAdapter, selectLocatorById, simpleSelectLocatorById } from "../selectors/locators.selectors";
 import { ElementId, Locator, LocatorsState, LocatorTaskStatus } from "../types/locator.types";
-import { stopGenerationHandler } from "../utils/locatorGenerationController";
+import { locatorGenerationController } from "../utils/locatorGenerationController";
 
 export const stopGeneration = createAsyncThunk("locators/stopGeneration", async (element_id: ElementId, thunkAPI) => {
   const state = thunkAPI.getState() as RootState;
   const jdnHash = selectLocatorById(state, element_id)?.jdnHash;
   if (!jdnHash) return;
-  return stopGenerationHandler([jdnHash]);
+  return locatorGenerationController.revokeTasks([jdnHash]);
 });
 
 /* eslint-disable */
@@ -22,7 +22,7 @@ export const stopGenerationReducer = (builder: ActionReducerMapBuilder<LocatorsS
     // @ts-ignore
     locatorsAdapter.upsertOne(state, {
       element_id: id,
-      locator: { ...existingLocator.locator, taskStatus: LocatorTaskStatus.REVOKED },
+      locator: { ...existingLocator.locator, xPathStatus: LocatorTaskStatus.REVOKED },
     });
   })
     .addCase(stopGeneration.rejected, (state, { error }) => {

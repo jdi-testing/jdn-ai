@@ -42,8 +42,9 @@ export const identifyElements = createAsyncThunk("locators/identifyElements", as
     thunkAPI.dispatch(setPageData({ id: pageObj, pageData }));
     thunkAPI.dispatch(createLocators({ predictedElements: locators, library }));
 
-    const isAutogenerating = selectAutoGeneratingLocatorTypes(state as RootState, locators);
-    thunkAPI.dispatch(runLocatorsGeneration({ locators, ...isAutogenerating }));
+    const { generateXpath } = selectAutoGeneratingLocatorTypes(state as RootState, locators);
+    // generateCssSelector: false because it's run with attributes generation for performance reasons
+    thunkAPI.dispatch(runLocatorsGeneration({ locators, generateXpath, generateCssSelector: false }));
 
     return thunkAPI.fulfillWithValue(locators);
   } catch (error) {

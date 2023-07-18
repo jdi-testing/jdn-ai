@@ -16,11 +16,10 @@ interface Meta {
 export const createLocators = createAsyncThunk("locators/createLocators", async (payload: Meta, thunkAPI) => {
   const { predictedElements, library } = payload;
   const state = thunkAPI.getState();
-  const isAutogenerating = selectAutoGeneratingLocatorTypes(state as RootState);
-  const isAutogeneratingAll = Object.values(isAutogenerating).every((value) => value);
+  const isAutogenerating = selectAutoGeneratingLocatorTypes(state as RootState, predictedElements);
 
   if (predictedElements.length) {
-    const locators = await createLocatorAttributes(predictedElements, library, isAutogeneratingAll);
+    const locators = await createLocatorAttributes(predictedElements, library, isAutogenerating);
     thunkAPI.dispatch(addLocators(locators));
 
     const ids = locators.map(({ element_id }) => element_id);

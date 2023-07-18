@@ -9,10 +9,6 @@ export const isProgressStatus = (taskStatus?: LocatorTaskStatus) =>
   LocatorTaskStatus.PENDING === taskStatus || taskStatus === LocatorTaskStatus.STARTED;
 export const isGeneratedStatus = (taskStatus: LocatorTaskStatus) => taskStatus === LocatorTaskStatus.SUCCESS;
 
-export const stopGenerationHandler = (hashes: JDNHash[]) => {
-  return locatorGenerationController.revokeTasks(hashes);
-};
-
 class LocatorGenerationController {
   onGenerationFailed = null;
   sessionId: string;
@@ -92,10 +88,6 @@ class LocatorGenerationController {
         payload: { id: hashes },
       })
     );
-  }
-
-  revokeAll() {
-    // if (this.scheduledTasks.size) this.revokeTasks([...this.scheduledTasks.values()]);
   }
 }
 

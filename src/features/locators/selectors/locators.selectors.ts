@@ -4,6 +4,7 @@ import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
 import { ElementId, Locator } from "../types/locator.types";
 import { getLocator } from "../utils/locatorOutput";
 import { selectCurrentPageObject } from "../../pageObjects/selectors/pageObjects.selectors";
+import { getTaskStatus } from "../utils/utils";
 
 export const locatorsAdapter = createEntityAdapter<Locator>({
   selectId: (locator) => locator.element_id,
@@ -18,6 +19,7 @@ export const selectLocatorById = createSelector(selectById, (_item?: Locator) =>
       locator: {
         ..._item.locator,
         output: getLocator(_item.locator, _item.locatorType),
+        taskStatus: getTaskStatus(_item.locator),
       },
     };
   }
@@ -31,6 +33,7 @@ export const selectLocators = createSelector(selectAll, (items: Locator[]) =>
       locator: {
         ..._item.locator,
         output: getLocator(_item.locator, _item.locatorType),
+        taskStatus: getTaskStatus(_item.locator),
       },
     };
   })

@@ -174,6 +174,8 @@ export const sendMessage = {
   getPageData: (payload?: {}, onResponse?: () => void) => connector.sendMessage(ScriptMsg.GetPageData, payload, onResponse),
   generateSelectorByHash: (payload: { element_id: string, jdnHash: string }, onResponse?: () => void) =>
     connector.sendMessage(ScriptMsg.GenerateSelectorByHash, payload, onResponse),
+  generateSelectorGroupByHash: (payload: { elements: Locator[], fireCallbackMessage?: boolean }, onResponse?: () => void) =>
+    connector.sendMessage(ScriptMsg.GenerateSelectorGroupByHash, payload, onResponse),
   findBySelectors: (payload: SelectorsMap) => connector.sendMessage(ScriptMsg.FindBySelectors, payload),
   setClosedSession: (payload: { tabId: number; isClosed: boolean }) =>
     connector.sendMessage(ScriptMsg.SetClosedSession, payload),

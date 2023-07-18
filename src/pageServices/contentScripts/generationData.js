@@ -1,6 +1,7 @@
 import getCssSelector from "css-selector-generator";
 import { finder } from "@medv/finder";
 import { ScriptMsg } from "../scriptMsg.constants";
+import { sendMessage } from "./utils";
 
 export const getGenerationAttributes = () => {
   /*
@@ -94,6 +95,18 @@ export const getGenerationAttributes = () => {
     }
   };
 
+  const generateSelectorGroupByHash = (elements) => {
+    return elements.map(({ element_id, jdnHash }) => {
+      const element = document.querySelector(`[jdn-hash='${jdnHash}']`);
+      return {
+        element_id,
+        locator: {
+          cssSelector: element ? generateSelectorByElement(element) : null,
+        },
+      };
+    });
+  };
+
   const generateSelectorByHash = ({ element_id, jdnHash }) => {
     const element = document.querySelector(`[jdn-hash='${jdnHash}']`);
     return element ? { element_id, cssSelector: generateSelectorByElement(element) } : null;
@@ -121,13 +134,15 @@ export const getGenerationAttributes = () => {
         if (!element) {
           return;
         }
+        const xPath = getElementTreeXPath(element);
         const attrName = element.getAttribute("name");
         predictedElement.elemName = attrName ? camelCase(attrName) : "";
         predictedElement.elemId = element.id && typeof element.id === "string" ? camelCase(element.id) : "";
         predictedElement.elemText = element.textContent;
         predictedElement.elemAriaLabel = element.getAttribute("aria-label");
         predictedElement.locator = {
-          xPath: getElementTreeXPath(element),
+          xPath,
+          fullXpath: xPath,
           ...(generateCss ? { cssSelector: generateSelectorByElement(element) } : {}),
         };
 
@@ -140,7 +155,6 @@ export const getGenerationAttributes = () => {
   };
 
   chrome.runtime.onMessage.addListener(({ message, param }, sender, sendResponse) => {
-    console.log("message", message);
     switch (message) {
       case ScriptMsg.GenerateAttributes:
         const { elements, generateCss } = param;
@@ -153,6 +167,13 @@ export const getGenerationAttributes = () => {
       case ScriptMsg.GenerateSelectorByHash:
         sendResponse(generateSelectorByHash(param));
         break;
+      case ScriptMsg.GenerateSelectorGroupByHash: {
+        if (param.fireCallbackMessage) {
+          const res = generateSelectorGroupByHash(param.elements);
+          sendMessage({ message: ScriptMsg.ResponseCssSelectors, param: res });
+        } else sendResponse(generateSelectorGroupByHash(param.elements));
+        break;
+      }
       default:
         break;
     }

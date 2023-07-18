@@ -8,9 +8,12 @@ import { convertToListWithChildren } from "./locatorsTreeUtils";
 export const createLocatorAttributes = async (
   elements: PredictedEntity[],
   library: ElementLibrary,
-  isAutogeneratingAll: boolean
+  isAutogenerating: Record<"generateCssSelector" | "generateXpath", boolean>
 ) => {
-  const generationTags = await sendMessage.generateAttributes({ elements, generateCss: true });
+  const generationTags = await sendMessage.generateAttributes({
+    elements,
+    generateCss: isAutogenerating.generateCssSelector,
+  });
   const generationData = createLocatorNames(generationTags, library);
   const _locatorsWithParents = await setParents(generationData);
   const locatorsWithParents: Locator[] = convertToListWithChildren(_locatorsWithParents);
@@ -21,7 +24,8 @@ export const createLocatorAttributes = async (
       // now it's here for a performance optimization,
       // but with migration to React 18 it should be moved to the generateLocators thunk,
       // where this business logic actually happens
-      ...(isAutogeneratingAll ? { taskStatus: LocatorTaskStatus.PENDING } : {}),
+      ...(isAutogenerating.generateXpath ? { xPathStatus: LocatorTaskStatus.PENDING } : {}),
+      ...(isAutogenerating.generateCssSelector ? { cssSelectorStatus: LocatorTaskStatus.SUCCESS } : {}),
     },
   }));
 

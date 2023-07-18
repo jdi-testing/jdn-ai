@@ -42,7 +42,7 @@ export const updateSocketMessageHandler = (dispatch: any, state: any) => {
         }
 
         if (status === LocatorTaskStatus.REVOKED || status === LocatorTaskStatus.FAILURE) {
-          dispatch(updateLocatorGroup([{ ...element, locator: { ...element.locator, ...{ taskStatus: status } } }]));
+          dispatch(updateLocatorGroup([{ ...element, locator: { ...element.locator, ...{ xPathStatus: status } } }]));
         }
 
         break;
@@ -50,13 +50,19 @@ export const updateSocketMessageHandler = (dispatch: any, state: any) => {
       case "result_ready": {
         const onStatusChange = (payloads: any[]) => {
           const locators = payloads.map((_payload) => {
-            const { id: jdnHash, result: xPath } = _payload;
-            const element = selectLocatorByJdnHash(state, jdnHash)!;
-            return { ...element, locator: { ...element.locator, ...{ xPath, taskStatus: LocatorTaskStatus.SUCCESS } } };
+            const { element } = _payload;
+            const { result: xPath } = _payload.payload;
+            const { taskStatus: _, ...rest } = element.locator;
+            return {
+              ...element,
+              locator: { ...rest, ...{ xPath, xPathStatus: LocatorTaskStatus.SUCCESS } },
+            };
           });
           dispatch(updateLocatorGroup(locators));
         };
-        debouncer.accumulateAndDebounce(onStatusChange)([payload]);
+        const { id: jdnHash } = payload;
+        const element = selectLocatorByJdnHash(state, jdnHash)!;
+        if (element) debouncer.accumulateAndDebounce(onStatusChange)([{ payload, element }]);
         break;
       }
     }

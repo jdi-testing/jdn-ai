@@ -89,8 +89,8 @@ const locatorsSlice = createSlice({
       const newValue = locators.map((_locator) => ({ ..._locator, active: false }));
       locatorsAdapter.upsertMany(state, newValue);
     },
-    elementSetActive(state, { payload }: PayloadAction<ElementId>) {
-      locatorsAdapter.upsertOne(state, { element_id: payload, active: true } as Locator);
+    elementSetActive(state, { payload }: PayloadAction<Locator>) {
+      locatorsAdapter.upsertOne(state, { element_id: payload.element_id, active: true } as Locator);
     },
     elementUnsetActive(state, { payload }: PayloadAction<ElementId>) {
       locatorsAdapter.upsertOne(state, { element_id: payload, active: false } as Locator);
@@ -105,7 +105,7 @@ const locatorsSlice = createSlice({
             element_id,
             locator: {
               ...existingLocator.locator,
-              taskStatus: LocatorTaskStatus.FAILURE,
+              xPathStatus: LocatorTaskStatus.FAILURE,
               errorMessage: errorMessage || DEFAULT_ERROR,
             },
           } as Locator;

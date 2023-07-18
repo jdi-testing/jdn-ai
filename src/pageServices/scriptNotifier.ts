@@ -149,7 +149,7 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       const { ids } = payload;
       const elements = ids.map((element_id: string) => {
         const jdnHash = selectLocatorById(state, element_id)?.jdnHash;
-        return { element_id, jdnHash, locator: { taskStatus: LocatorTaskStatus.FAILURE } };
+        return { element_id, jdnHash, locator: { xPathStatus: LocatorTaskStatus.FAILURE } } as Locator;
       });
       elements.forEach((element: Locator) => sendMessage.changeStatus(element));
       break;
