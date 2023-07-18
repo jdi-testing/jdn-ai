@@ -2,6 +2,7 @@ import connector, { sendMessage } from "./connector";
 import { request } from "../services/backend";
 import { createLocatorNames } from "../features/pageObjects/utils/pageObject";
 import { createOverlay } from "./contentScripts/createOverlay";
+import { getFullDocument } from "../common/utils/getDocument";
 /* global chrome*/
 
 let overlayID;
@@ -32,11 +33,10 @@ const sendToModel = async (payload, endpoint) => {
 
 export const predictElements = (endpoint) => {
   let pageData;
-  return sendMessage
-    .getPageData()
-    .then((data) => {
+  return Promise.all([sendMessage.getPageData(), getFullDocument()])
+    .then(([data, document]) => {
       pageData = data[0];
-      return sendToModel(pageData, endpoint);
+      return sendToModel({ elements: pageData, document }, endpoint);
     })
     .then(
       (response) => {
