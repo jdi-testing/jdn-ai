@@ -111,9 +111,9 @@ export const PageObjGenerationBar: React.FC<Props> = ({ pageObj, library, url })
     setLocalStorage(LocalStorageKey.Library, library);
   };
 
-  const onAnnotationTypeChange = (annotation: AnnotationType) => {
-    dispatch(setAnnotationType({ id: pageObj, annotation }));
-    setLocalStorage(LocalStorageKey.AnnotationType, annotation);
+  const onAnnotationTypeChange = (annotationType: AnnotationType) => {
+    dispatch(setAnnotationType({ id: pageObj, annotationType }));
+    setLocalStorage(LocalStorageKey.AnnotationType, annotationType);
   };
 
   const onLocatorTypeChange = (locatorType: LocatorType) => {

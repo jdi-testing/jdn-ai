@@ -55,7 +55,7 @@ const pageObjSlice = createSlice({
     setHideUnadded(state, { payload }: PayloadAction<{ id: PageObjectId; hideUnadded: boolean }>) {
       pageObjAdapter.upsertOne(state, payload as PageObject);
     },
-    setAnnotationType(state, { payload }: PayloadAction<{ id: PageObjectId; annotation: AnnotationType }>) {
+    setAnnotationType(state, { payload }: PayloadAction<{ id: PageObjectId; annotationType: AnnotationType }>) {
       pageObjAdapter.upsertOne(state, payload as PageObject);
     },
     setLocatorType(state, { payload }: PayloadAction<{ id: PageObjectId; locatorType: LocatorType }>) {

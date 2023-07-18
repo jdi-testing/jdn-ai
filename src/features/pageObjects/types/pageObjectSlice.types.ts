@@ -13,7 +13,7 @@ export interface PageObject {
   id: PageObjectId;
   library: ElementLibrary;
   locators?: ElementId[];
-  annotation?: AnnotationType;
+  annotationType?: AnnotationType;
   locatorType?: LocatorType;
   name: string;
   origin: string;

@@ -37,5 +37,5 @@ export const selectLastLocatorType = createSelector(selectPageObjects, (pageObje
 
 export const selectLastAnnotationType = createSelector(
   selectPageObjects,
-  (pageObjects) => last(pageObjects)?.annotation
+  (pageObjects) => last(pageObjects)?.annotationType
 );

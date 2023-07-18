@@ -50,7 +50,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const { isOpen: isCustomLocatorFlow } = useContext(OnboardingContext);
-  const annotationType = useSelector(selectCurrentPageObject)?.annotation;
+  const annotationType = useSelector(selectCurrentPageObject)?.annotationType;
 
   const { element_id, type, name, locator, generate, message, deleted, active, isCustomLocator } = element;
 

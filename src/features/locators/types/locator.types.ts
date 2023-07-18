@@ -92,7 +92,7 @@ export interface Locator extends PredictedEntity {
   active?: boolean;
   isCustomName?: boolean;
   isCustomLocator?: boolean;
-  annotation?: AnnotationType;
+  annotationType?: AnnotationType;
   locatorType?: LocatorType;
   message: LocatorValidationErrorType;
   pageObj: PageObjectId;

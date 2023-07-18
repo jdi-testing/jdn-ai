@@ -59,7 +59,7 @@ export const addPageObjReducer = (builder) => {
         name,
         url,
         library: lastSelectedLibrary,
-        annotation: lastSelectedAnnotationType,
+        annotationType: lastSelectedAnnotationType,
         pathname,
         search,
         origin,
