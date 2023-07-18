@@ -34,3 +34,8 @@ export const selectMaxId = createSelector(simpleSelectPageObjects, (items) => {
 export const selectLastElementLibrary = createSelector(selectPageObjects, (pageObjects) => last(pageObjects)?.library);
 
 export const selectLastLocatorType = createSelector(selectPageObjects, (pageObjects) => last(pageObjects)?.locatorType);
+
+export const selectLastAnnotationType = createSelector(
+  selectPageObjects,
+  (pageObjects) => last(pageObjects)?.annotation
+);

@@ -3,11 +3,17 @@ import React, { useContext, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../app/store/store";
 import { selectCurrentPageObject } from "../selectors/pageObjects.selectors";
-import { changeElementLibrary, removePageObject, setHideUnadded, setLocatorType } from "../pageObject.slice";
+import {
+  changeElementLibrary,
+  removePageObject,
+  setHideUnadded,
+  setLocatorType,
+  setAnnotationType,
+} from "../pageObject.slice";
 import { PageObjectId } from "../types/pageObjectSlice.types";
 import { ElementLibrary, libraryNames } from "../../locators/types/generationClasses.types";
 import { identifyElements } from "../../locators/reducers/identifyElements.thunk";
-import { LocatorType, FrameworkType } from "../../../common/types/common";
+import { LocatorType, FrameworkType, AnnotationType } from "../../../common/types/common";
 import { useOnBoardingRef } from "../../onboarding/utils/useOnboardingRef";
 import { OnbrdStep } from "../../onboarding/types/constants";
 import { LocalStorageKey, setLocalStorage } from "../../../common/utils/localStorage";
@@ -64,6 +70,17 @@ const frameworkTypeOptions = [
   },
 ];
 
+const annotationTypeOptions = [
+  {
+    value: AnnotationType.UI,
+    label: AnnotationType.UI,
+  },
+  {
+    value: AnnotationType.FindBy,
+    label: AnnotationType.FindBy,
+  },
+];
+
 const locatorTypeOptions = [
   {
     value: LocatorType.xPath,
@@ -92,6 +109,11 @@ export const PageObjGenerationBar: React.FC<Props> = ({ pageObj, library, url })
   const onLibraryChange = (library: ElementLibrary) => {
     dispatch(changeElementLibrary({ id: pageObj, library }));
     setLocalStorage(LocalStorageKey.Library, library);
+  };
+
+  const onAnnotationTypeChange = (annotation: AnnotationType) => {
+    dispatch(setAnnotationType({ id: pageObj, annotation }));
+    setLocalStorage(LocalStorageKey.AnnotationType, annotation);
   };
 
   const onLocatorTypeChange = (locatorType: LocatorType) => {
@@ -138,6 +160,20 @@ export const PageObjGenerationBar: React.FC<Props> = ({ pageObj, library, url })
                 defaultValue={FrameworkType.JdiLight}
                 className="jdn__select"
                 options={frameworkTypeOptions}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col flex="104px">
+              <Typography.Text>Annotation:</Typography.Text>
+            </Col>
+            <Col flex="auto">
+              <Select
+                id="annotationType"
+                defaultValue={AnnotationType.UI}
+                className="jdn__select"
+                onChange={onAnnotationTypeChange}
+                options={annotationTypeOptions}
               />
             </Col>
           </Row>

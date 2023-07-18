@@ -24,7 +24,7 @@ import { createNewName, isValidLocator, getLocatorValidationStatus, getLocatorVa
 import { createLocatorValidationRules } from "../utils/locatorValidationRules";
 import { createNameValidationRules } from "../utils/nameValidationRules";
 import FormItem from "antd/es/form/FormItem";
-import { LocatorType, SelectOption } from "../../../common/types/common";
+import { LocatorType, SelectOption, AnnotationType } from "../../../common/types/common";
 import { isFilteredSelect } from "../../../common/utils/helpers";
 import { newLocatorStub } from "../utils/constants";
 import { changeLocatorElement } from "../reducers/changeLocatorElement.thunk";
@@ -44,6 +44,7 @@ interface FormValues {
   name: string;
   type: ElementClass;
   locatorType: LocatorType;
+  annotationType: AnnotationType;
   locator: string;
 }
 
@@ -83,6 +84,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
     name: name || "",
     locator: locator.output ?? "",
     locatorType: defaultLocatorType,
+    annotationType: AnnotationType.UI,
   };
 
   const [isOkButtonDisabled, setIsOkButtonDisabled] = useState<boolean>(true);
@@ -287,6 +289,25 @@ export const LocatorEditDialog: React.FC<Props> = ({
             {
               value: LocatorType.cssSelector,
               label: LocatorType.cssSelector,
+            },
+          ]}
+        />
+      </FormItem>
+      <FormItem
+        wrapperCol={{ span: 24, xs: { offset: 0 }, sm: { offset: 4 } }}
+        name="annotationType"
+        style={{ marginBottom: "8px" }}
+      >
+        <Select
+          disabled={!isValidLocator(validationMessage)}
+          options={[
+            {
+              value: AnnotationType.UI,
+              label: AnnotationType.UI,
+            },
+            {
+              value: AnnotationType.FindBy,
+              label: AnnotationType.FindBy,
             },
           ]}
         />

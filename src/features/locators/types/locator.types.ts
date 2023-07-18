@@ -1,4 +1,4 @@
-import { LocatorType } from "../../../common/types/common";
+import { LocatorType, AnnotationType } from "../../../common/types/common";
 import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
 import { ElementClass } from "./generationClasses.types";
 
@@ -92,6 +92,7 @@ export interface Locator extends PredictedEntity {
   active?: boolean;
   isCustomName?: boolean;
   isCustomLocator?: boolean;
+  annotation?: AnnotationType;
   locatorType?: LocatorType;
   message: LocatorValidationErrorType;
   pageObj: PageObjectId;
