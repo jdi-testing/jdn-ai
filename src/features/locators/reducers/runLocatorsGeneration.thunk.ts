@@ -64,7 +64,6 @@ export const runLocatorsGenerationReducer = (builder: ActionReducerMapBuilder<Lo
       state.generationStatus = LocatorsGenerationStatus.starting;
     })
     .addCase(runLocatorsGeneration.fulfilled, (state) => {
-      state.status = IdentificationStatus.noStatus;
       state.generationStatus = LocatorsGenerationStatus.started;
     })
     .addCase(runLocatorsGeneration.rejected, (state, { error }) => {

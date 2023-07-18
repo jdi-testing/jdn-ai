@@ -24,7 +24,9 @@ export const updateSocketMessageHandler = (dispatch: any, state: any) => {
     switch (action || result) {
       case "status_changed": {
         const { id: jdnHash, status } = payload;
-        const element = selectLocatorByJdnHash(state, jdnHash)!;
+        const element = selectLocatorByJdnHash(state, jdnHash);
+
+        if (!element) return;
 
         if (errorMessage === NO_ELEMENT_IN_DOCUMENT) {
           if (reScheduledTasks.has(jdnHash)) {
@@ -61,7 +63,7 @@ export const updateSocketMessageHandler = (dispatch: any, state: any) => {
           dispatch(updateLocatorGroup(locators));
         };
         const { id: jdnHash } = payload;
-        const element = selectLocatorByJdnHash(state, jdnHash)!;
+        const element = selectLocatorByJdnHash(state, jdnHash);
         if (element) debouncer.accumulateAndDebounce(onStatusChange)([{ payload, element }]);
         break;
       }
