@@ -34,6 +34,7 @@ import { selectFirstLocatorIdByPO } from "./selectors/locatorsByPO.selectors";
 import { selectCalculatedActiveByPageObj, selectWaitingActiveByPageObj } from "./selectors/locatorsFiltered.selectors";
 import { isLocatorListPage } from "../../app/utils/heplers";
 import { selectCurrentPageObject } from "../pageObjects/selectors/pageObjects.selectors";
+import { AnnotationType, LocatorType } from "../../common/types/common";
 
 interface Props {
   element: LocatorInterface;
@@ -52,7 +53,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
   const { isOpen: isCustomLocatorFlow } = useContext(OnboardingContext);
   const annotationType = useSelector(selectCurrentPageObject)?.annotationType;
 
-  const { element_id, type, name, locator, generate, message, deleted, active, isCustomLocator } = element;
+  const { element_id, type, name, locator, generate, message, deleted, active, isCustomLocator, locatorType } = element;
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -71,6 +72,9 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
   const calculatedActive: LocatorInterface[] = useSelector(selectCalculatedActiveByPageObj);
   const waitingActive = useSelector(selectWaitingActiveByPageObj);
   const actualSelected = useMemo(() => [...calculatedActive, ...waitingActive], [calculatedActive, waitingActive]);
+
+  const isXpathLocatorType = () => locatorType === LocatorType.xPath;
+  const isUiAnnotationType = () => annotationType === AnnotationType.UI;
 
   let timer: NodeJS.Timeout;
   useEffect(() => clearTimeout(timer), []);
@@ -133,7 +137,11 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
 
     return (
       <span onClick={handleClick}>
-        {annotationType}(<span className="jdn__xpath_item-locator">&quot;{locator.output}&quot;</span>)
+        {annotationType}(
+        <span className="jdn__xpath_item-locator">
+          {isUiAnnotationType() ? "" : isXpathLocatorType() ? "xpath = " : "css = "}&quot;{locator.output}&quot;
+        </span>
+        )
         <br />
         <span className="jdn__xpath_item-type">public</span>
         <span>&nbsp;{type as string}&nbsp;</span>

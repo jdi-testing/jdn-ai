@@ -63,11 +63,13 @@ export const LocatorEditDialog: React.FC<Props> = ({
   elemName,
   elemText,
   locatorType,
+  annotationType,
 }) => {
   const dispatch = useDispatch();
   const locators = useSelector(selectPresentLocatorsByPO);
   const types = useSelector((_state: RootState) => selectAvailableClasses(_state));
   const pageObjectLocatorType = useSelector(selectCurrentPageObject)?.locatorType;
+  const pageObjectAnnotationType = useSelector(selectCurrentPageObject)?.annotationType;
   const pageObjectId = useSelector(selectCurrentPageObject)!.id;
   const library = useSelector(selectCurrentPageObject)?.library || defaultLibrary;
 
@@ -79,12 +81,13 @@ export const LocatorEditDialog: React.FC<Props> = ({
 
   const [form] = Form.useForm<FormValues>();
   const defaultLocatorType = locatorType || pageObjectLocatorType || LocatorType.xPath;
+  const defaultAnnotationType = annotationType || pageObjectAnnotationType || AnnotationType.UI;
   const initialValues: FormValues = {
     type,
     name: name || "",
     locator: locator.output ?? "",
     locatorType: defaultLocatorType,
-    annotationType: AnnotationType.UI,
+    annotationType: defaultAnnotationType,
   };
 
   const [isOkButtonDisabled, setIsOkButtonDisabled] = useState<boolean>(true);

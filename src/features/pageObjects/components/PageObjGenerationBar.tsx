@@ -170,7 +170,7 @@ export const PageObjGenerationBar: React.FC<Props> = ({ pageObj, library, url })
             <Col flex="auto">
               <Select
                 id="annotationType"
-                defaultValue={AnnotationType.UI}
+                defaultValue={currentPageObject?.annotationType || AnnotationType.UI}
                 className="jdn__select"
                 onChange={onAnnotationTypeChange}
                 options={annotationTypeOptions}
