@@ -18,6 +18,7 @@ import { defineServer } from "./reducers/defineServer.thunk";
 import { Guide } from "./components/Guide";
 import "./styles/index.less";
 import { BackendStatus } from "./types/mainSlice.types";
+import { setIsSessionUnique } from "./main.slice";
 import { LocatorsPage } from "../features/locators/LocatorsPage";
 import { PageObjectPage } from "../features/pageObjects/PageObjectPage";
 import { OnboardingProvider } from "../features/onboarding/OnboardingProvider";
@@ -29,6 +30,7 @@ const App = () => {
   const backendAvailable = useSelector((state: RootState) => state.main.backendAvailable);
   const currentPage = useSelector(selectCurrentPage);
   const dispatch = useDispatch();
+  const isSessionUnique = useSelector((state: RootState) => state.main.isSessionUnique);
 
   useOnDisconnect();
 
@@ -48,6 +50,10 @@ const App = () => {
     }
   }, [backendAvailable]);
 
+  useEffect(() => {
+    store.dispatch(setIsSessionUnique({ isSessionUnique: !isInvalidSession }));
+  }, [isInvalidSession, isSessionUnique]);
+
   const renderPage = () => {
     const { page } = currentPage;
     return isPageObjectPage(page) ? <PageObjectPage {...{ template }} /> : <LocatorsPage />;
@@ -62,7 +68,7 @@ const App = () => {
         </Header>
         <Content className="jdn__content">
           {backendAvailable === BackendStatus.Accessed ? (
-            isInvalidSession ? (
+            isInvalidSession && !isSessionUnique ? (
               <SeveralTabsWarning {...{ checkSession: () => checkSession(setIsInvalidSession) }} />
             ) : (
               renderPage()
@@ -78,10 +84,12 @@ const App = () => {
   );
 };
 
-export const ReduxApp = () => (
-  <ReduxProvider {...{ store }}>
-    <OnboardingProvider>
-      <App />
-    </OnboardingProvider>
-  </ReduxProvider>
-);
+export const ReduxApp = () => {
+  return (
+    <ReduxProvider {...{ store }}>
+      <OnboardingProvider>
+        <App />
+      </OnboardingProvider>
+    </ReduxProvider>
+  );
+};

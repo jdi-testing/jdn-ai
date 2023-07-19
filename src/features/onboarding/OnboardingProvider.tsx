@@ -1,5 +1,5 @@
 import React, { FC, MutableRefObject, ReactNode, createContext, useEffect, useState } from "react";
-import { OnbrdStep } from "./types/constants";
+import { OnbrdStep, OnboardingProviderTexts } from "./types/constants";
 import { Onboarding } from "./Onboarding";
 import { OnboardingContext as ContextType, StepRef } from "./types/context.types";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,14 +28,17 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
   const _isOnboardingPassed = getLocalStorage(LocalStorageKey.IsOnboardingPassed);
   const isBackendAvailable = useSelector((state: RootState) => state.main.backendAvailable) === BackendStatus.Accessed;
   const isDefaultState = useSelector<RootState>(selectIsDefaultState);
+  const isSessionUnique = useSelector((state: RootState) => state.main.isSessionUnique);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (!_isOnboardingPassed && isBackendAvailable) {
+    if (!_isOnboardingPassed && isBackendAvailable && isSessionUnique) {
       setIsModalOpen(true);
+    } else {
+      setIsModalOpen(false);
     }
-  }, [isBackendAvailable]);
+  }, [isBackendAvailable, isSessionUnique]);
 
   const openOnboarding = () => {
     if (!isDefaultState) dispatch(removeAll());
@@ -139,13 +142,13 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
       {children}
       <Onboarding />
       <Modal
-        title="Welcome to Onboarding Tutorial!"
+        title={OnboardingProviderTexts.ModalTitle}
         open={isModalOpen}
         onCancel={() => setIsModalOpen(false)}
         onOk={handleConfirmModal}
-        okText="Start"
+        okText={OnboardingProviderTexts.ModalOkButtonText}
       >
-        Discover all the features and possibilities of the extension with the onboarding tutorial.
+        {OnboardingProviderTexts.ModalText}
       </Modal>
     </OnboardingContext.Provider>
   );
