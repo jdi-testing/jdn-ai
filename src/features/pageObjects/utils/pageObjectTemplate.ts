@@ -18,9 +18,10 @@ export const getClassName = (title: string) => {
 
 export const pageObjectTemplate = (locators: Locator[], title: string, library: ElementLibrary) => {
   const className = title;
-  const locatorsCode = locators.map(
-    (loc) => `    ${AnnotationType.UI}("${loc.locator.output}")\n    public ${loc.type} ${loc.name};`
-  );
+  const locatorsCode = locators.map((loc) => {
+    const locatorEscaped = loc.locator.output?.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+    return `    ${AnnotationType.UI}("${locatorEscaped}")\n    public ${loc.type} ${loc.name};`;
+  });
 
   const pageCode = `package site.pages;
 

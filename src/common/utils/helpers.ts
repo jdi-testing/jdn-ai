@@ -14,7 +14,9 @@ export const copyToClipboard = (text: string) => {
     .replace(/'/g, "\\'")
     .replace(/\n/g, "\\n")
     .replace(/#\\3/g, "#\\\\3")
-    .replace(/=\\'\\3/g, "=\\'\\\\3"); // two different cases for \\3 to avoid affecting something else...
+    .replace(/=\\'\\3/g, "=\\'\\\\3") // two different cases for \\3 to avoid affecting something else...
+    .replace(/\\/g, "\\\\")
+    .replace(/"/g, '\\"');
   chrome.devtools.inspectedWindow.eval(`copy('${transformedText}')`);
 };
 
