@@ -3,6 +3,7 @@ import { defineServerReducer } from "./reducers/defineServer.thunk";
 import { PageObjectId } from "../features/pageObjects/types/pageObjectSlice.types";
 import { BackendStatus, MainState, Notification, PageType } from "./types/mainSlice.types";
 import { removeAllReducer } from "./reducers/removeAll.thunk";
+import { redefineServerReducer } from "./reducers/redefineServer.thunk";
 
 const initialState: MainState = {
   backendAvailable: BackendStatus.TryToAccess,
@@ -58,7 +59,7 @@ const mainSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    defineServerReducer(builder), removeAllReducer(builder);
+    defineServerReducer(builder), redefineServerReducer(builder), removeAllReducer(builder);
   },
 });
 

@@ -42,6 +42,7 @@ export enum BackendStatus {
   OutdatedPluginLocal = "Plugin version need to be updated.",
   IncompatibleVersionRemote = "Remote server version is incompatible. Please, update plugin",
   IncompatibleVersions = "Remote and local server versions are incompatible. Please, update plugin or local server, or try to connect the remote server.",
+  Retry = "Retrying...",
 }
 
 export enum PageType {

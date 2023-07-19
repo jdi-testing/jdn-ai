@@ -7,8 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import readme from "../../../README.md";
 import { BackendStatus } from "../types/mainSlice.types";
 import { RootState } from "../store/store";
-import { defineServer } from "../reducers/defineServer.thunk";
 import { useGuideRehype } from "../utils/useGuideRehype";
+import { redefineServer } from "../reducers/redefineServer.thunk";
 
 const splitMD = (source: string) => source.match(/^#+ [^#]*/gm);
 
@@ -19,10 +19,8 @@ const serverGuide = (splittedMD: Array<string>) =>
 
 export const Guide = () => {
   const backendStatus = useSelector((_state: RootState) => _state.main.backendAvailable);
-  const step =
-    backendStatus === BackendStatus.OutdatedServerLocal || backendStatus === BackendStatus.AccessFailed ? 1 : 0;
-  const [isSettingsChecking, setSettingsChecking] = useState(false);
-  const [currentStep, setCurrentStep] = useState(step);
+  const isSettingsChecking = backendStatus === BackendStatus.Retry;
+  const [currentStep, setCurrentStep] = useState(0);
   const [pluginGuideComponent, setPluginGuide] = useGuideRehype();
   const [serverGuideComponent, setServerGuide] = useGuideRehype();
   const dispatch = useDispatch();
@@ -33,6 +31,13 @@ export const Guide = () => {
     setPluginGuide(pluginGuide(splittedMD));
     setServerGuide(serverGuide(splittedMD));
   }, []);
+
+  useEffect(() => {
+    if (backendStatus === BackendStatus.Retry) return;
+    const _step =
+      backendStatus === BackendStatus.OutdatedServerLocal || backendStatus === BackendStatus.AccessFailed ? 1 : 0;
+    setCurrentStep(_step);
+  }, [backendStatus]);
 
   const steps = [
     {
@@ -65,8 +70,7 @@ export const Guide = () => {
   };
 
   const onCheckButtonClick = async () => {
-    setSettingsChecking(true);
-    dispatch(defineServer());
+    dispatch(redefineServer());
   };
 
   return (
