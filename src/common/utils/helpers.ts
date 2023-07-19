@@ -7,7 +7,7 @@ export const floatToPercent = (value: number) => {
   return Math.trunc(value * 100);
 };
 
-const escapeLocator = (locator: string) => {
+export const escapeLocator = (locator: string) => {
   let transformedText = locator.replace(/[\\'\n]/g, (match: string) => {
     switch (match) {
       case "\\":
