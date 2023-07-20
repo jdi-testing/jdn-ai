@@ -1,5 +1,6 @@
 import { Alert, Button } from "antd";
 import React from "react";
+import { componentsTexts } from "../utils/constants";
 
 interface Props {
   checkSession: () => void;
@@ -9,13 +10,13 @@ export const SeveralTabsWarning: React.FC<Props> = ({ checkSession }) => {
   return (
     <React.Fragment>
       <Alert
-        message="You can use the plugin only within 1 tab!"
+        message={componentsTexts.SeveralTabsWarningMessage}
         showIcon
-        description="The plugin is open in several tabs now. Please leave 1 plugin tab open and continue working in it."
+        description={componentsTexts.SeveralTabsWarningDescription}
         type="error"
         action={
           <Button danger onClick={checkSession}>
-            Retry
+            {componentsTexts.SeveralTabsWarningRetryButton}
           </Button>
         }
       />

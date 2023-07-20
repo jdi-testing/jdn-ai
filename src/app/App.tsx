@@ -18,22 +18,26 @@ import { defineServer } from "./reducers/defineServer.thunk";
 import { Guide } from "./components/Guide";
 import "./styles/index.less";
 import { BackendStatus } from "./types/mainSlice.types";
+import { setIsSessionUnique } from "./main.slice";
 import { LocatorsPage } from "../features/locators/LocatorsPage";
 import { PageObjectPage } from "../features/pageObjects/PageObjectPage";
 import { OnboardingProvider } from "../features/onboarding/OnboardingProvider";
 import { isPageObjectPage } from "./utils/heplers";
 
 const App = () => {
-  const [isInvalidSession, setIsInvalidSession] = useState(false);
   const [template, setTemplate] = useState<Blob | undefined>(undefined);
   const backendAvailable = useSelector((state: RootState) => state.main.backendAvailable);
   const currentPage = useSelector(selectCurrentPage);
   const dispatch = useDispatch();
+  const isSessionUnique = useSelector((state: RootState) => state.main.isSessionUnique);
 
   useOnDisconnect();
+  const updateIsSessionUnique = (isInvalidSession: boolean) => {
+    store.dispatch(setIsSessionUnique(!isInvalidSession));
+  };
 
   useEffect(() => {
-    checkSession(setIsInvalidSession); // no need to refactor, we will get rid of it soon
+    checkSession(updateIsSessionUnique); // no need to refactor, we will get rid of it in future (hopefully soon)
     dispatch(defineServer());
   }, []);
 
@@ -62,8 +66,8 @@ const App = () => {
         </Header>
         <Content className="jdn__content">
           {backendAvailable === BackendStatus.Accessed ? (
-            isInvalidSession ? (
-              <SeveralTabsWarning {...{ checkSession: () => checkSession(setIsInvalidSession) }} />
+            !isSessionUnique ? (
+              <SeveralTabsWarning {...{ checkSession: () => checkSession(updateIsSessionUnique) }} />
             ) : (
               renderPage()
             )
@@ -78,10 +82,12 @@ const App = () => {
   );
 };
 
-export const ReduxApp = () => (
-  <ReduxProvider {...{ store }}>
-    <OnboardingProvider>
-      <App />
-    </OnboardingProvider>
-  </ReduxProvider>
-);
+export const ReduxApp = () => {
+  return (
+    <ReduxProvider {...{ store }}>
+      <OnboardingProvider>
+        <App />
+      </OnboardingProvider>
+    </ReduxProvider>
+  );
+};
