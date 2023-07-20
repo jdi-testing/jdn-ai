@@ -1,7 +1,7 @@
 import { Button, Tooltip } from "antd";
 import { Copy } from "phosphor-react";
 import React, { useState } from "react";
-import { copyToClipboard } from "../utils/helpers";
+import { copyToClipboard } from "../utils/copyToClipboard";
 import { CopyTitle } from "../types/common";
 
 interface Props {
