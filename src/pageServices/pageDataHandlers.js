@@ -1,6 +1,5 @@
 import connector, { sendMessage } from "./connector";
 import { request } from "../services/backend";
-import { createLocatorNames } from "../features/pageObjects/utils/pageObject";
 import { createOverlay } from "./contentScripts/createOverlay";
 /* global chrome*/
 
@@ -48,19 +47,6 @@ export const predictElements = (endpoint) => {
         return error;
       }
     );
-};
-const requestGenerationAttributes = (elements) =>
-  sendMessage.generateAttributes(elements).then((response) => {
-    if (chrome.runtime.lastError) return false;
-
-    if (response) return response;
-    else return false;
-  });
-
-export const requestGenerationData = async (elements, library) => {
-  const generationTags = await requestGenerationAttributes(elements);
-  const generationData = createLocatorNames(generationTags, library);
-  return { generationData };
 };
 
 export const setParents = async (elements) => {

@@ -4,9 +4,10 @@ import { ElementClass, ElementLibrary } from "./types/generationClasses.types";
 import {
   locatorsAdapter,
   simpleSelectLocatorById,
+  simpleSelectLocatorByJdnHash,
   simpleSelectLocatorsByPageObject,
 } from "./selectors/locators.selectors";
-import { generateLocatorsReducer } from "./reducers/generateLocators.thunk";
+import { createLocatorsReducer } from "./reducers/createLocators.thunk";
 import { identifyElementsReducer } from "./reducers/identifyElements.thunk";
 import { rerunGenerationReducer } from "./reducers/rerunGeneration.thunk";
 import { stopGenerationReducer } from "./reducers/stopGeneration.thunk";
@@ -20,13 +21,16 @@ import {
   LocatorTaskStatus,
   Locator,
   LocatorCalculationPriority,
+  JDNHash,
+  LocatorValue,
 } from "./types/locator.types";
-import { runXpathGenerationReducer } from "./reducers/runXpathGeneration.thunk";
 import { checkLocatorsValidityReducer } from "./reducers/checkLocatorValidity.thunk";
 import { LocatorType } from "../../common/types/common";
 import { addCustomLocatorReducer } from "./reducers/addCustomLocator.thunk";
 import { changeLocatorElementReducer } from "./reducers/changeLocatorElement.thunk";
 import { DEFAULT_ERROR, NETWORK_ERROR } from "./utils/constants";
+import { runLocatorsGenerationReducer } from "./reducers/runLocatorsGeneration.thunk";
+import { PageObject } from "../pageObjects/types/pageObjectSlice.types";
 
 const initialState: LocatorsState = {
   generationStatus: LocatorsGenerationStatus.noStatus,
@@ -79,7 +83,7 @@ const locatorsSlice = createSlice({
       { payload }: PayloadAction<Locator[] | { locators: Array<Locator>; fromScript: boolean }>
     ) {
       const locators = Array.isArray(payload) ? payload : payload.locators;
-      locatorsAdapter.upsertMany(state, locators.map((_locator) => ({ ..._locator, active: true })) as Locator[]);
+      locatorsAdapter.upsertMany(state, locators.map(({ element_id }) => ({ element_id, active: true })) as Locator[]);
     },
     elementGroupUnsetActive(
       state,
@@ -89,8 +93,8 @@ const locatorsSlice = createSlice({
       const newValue = locators.map((_locator) => ({ ..._locator, active: false }));
       locatorsAdapter.upsertMany(state, newValue);
     },
-    elementSetActive(state, { payload }: PayloadAction<ElementId>) {
-      locatorsAdapter.upsertOne(state, { element_id: payload, active: true } as Locator);
+    elementSetActive(state, { payload }: PayloadAction<Locator>) {
+      locatorsAdapter.upsertOne(state, { element_id: payload.element_id, active: true } as Locator);
     },
     elementUnsetActive(state, { payload }: PayloadAction<ElementId>) {
       locatorsAdapter.upsertOne(state, { element_id: payload, active: false } as Locator);
@@ -105,7 +109,7 @@ const locatorsSlice = createSlice({
             element_id,
             locator: {
               ...existingLocator.locator,
-              taskStatus: LocatorTaskStatus.FAILURE,
+              xPathStatus: LocatorTaskStatus.FAILURE,
               errorMessage: errorMessage || DEFAULT_ERROR,
             },
           } as Locator;
@@ -199,12 +203,23 @@ const locatorsSlice = createSlice({
       });
       locatorsAdapter.upsertMany(state, newValue as Locator[]);
     },
-    updateLocatorGroup(state, { payload }: PayloadAction<Locator[]>) {
-      const newValue = payload.map(({ element_id, locator }) => {
-        const existingLocator = simpleSelectLocatorById(state, element_id);
+    updateLocatorGroup(
+      state,
+      {
+        payload,
+      }: PayloadAction<{
+        locators: { element_id?: ElementId; jdnHash?: JDNHash; locator: Partial<LocatorValue> }[];
+        pageObject: PageObject;
+      }>
+    ) {
+      const { locators, pageObject } = payload;
+      const newValue = locators.map(({ element_id, jdnHash, locator }) => {
+        const existingLocator = element_id
+          ? simpleSelectLocatorById(state, element_id)
+          : simpleSelectLocatorByJdnHash(state, jdnHash!, pageObject);
         return (
           existingLocator && {
-            element_id,
+            element_id: existingLocator.element_id,
             locator: { ...existingLocator.locator, ...locator },
           }
         );
@@ -217,11 +232,11 @@ const locatorsSlice = createSlice({
       changeLocatorElementReducer(builder),
       checkLocatorsValidityReducer(builder),
       identifyElementsReducer(builder),
-      generateLocatorsReducer(builder),
+      createLocatorsReducer(builder),
       rerunGenerationReducer(builder),
       stopGenerationReducer(builder),
       stopGenerationGroupReducer(builder),
-      runXpathGenerationReducer(builder);
+      runLocatorsGenerationReducer(builder);
   },
 });
 

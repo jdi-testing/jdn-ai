@@ -9,7 +9,7 @@ import { Backdrop } from "./components/Backdrop";
 import { StatusBar } from "./components/StatusBar";
 import { SeveralTabsWarning } from "./components/SeveralTabsWarning";
 import { HttpEndpoint, request } from "../services/backend";
-import { checkSession, getSessionId } from "./utils/appUtils";
+import { checkSession, initLocatorSocketController } from "./utils/appUtils";
 import { selectCurrentPage } from "./main.selectors";
 import { RootState, store } from "./store/store";
 import { useOnDisconnect } from "./utils/useOnDisconnect";
@@ -27,6 +27,7 @@ import { isPageObjectPage } from "./utils/heplers";
 const App = () => {
   const [template, setTemplate] = useState<Blob | undefined>(undefined);
   const backendAvailable = useSelector((state: RootState) => state.main.backendAvailable);
+  const xpathConfig = useSelector((state: RootState) => state.main.xpathConfig);
   const currentPage = useSelector(selectCurrentPage);
   const dispatch = useDispatch();
   const isSessionUnique = useSelector((state: RootState) => state.main.isSessionUnique);
@@ -48,7 +49,7 @@ const App = () => {
 
     if (backendAvailable === BackendStatus.Accessed) {
       fetchTemplate();
-      getSessionId();
+      initLocatorSocketController(xpathConfig);
     }
   }, [backendAvailable]);
 

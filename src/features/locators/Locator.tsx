@@ -104,7 +104,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
     const keyForMultiSelect = isMacPlatform(window) ? evt.metaKey : evt.ctrlKey;
     if (keyForMultiSelect) {
       if (active) dispatch(elementUnsetActive(element_id));
-      else dispatch(elementSetActive(element_id));
+      else dispatch(elementSetActive(element));
     } else dispatch(setActiveSingle(element));
   };
 

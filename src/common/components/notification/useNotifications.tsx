@@ -53,11 +53,10 @@ export const useNotifications = (container?: HTMLElement | null) => {
       </div>
     );
 
-    // container &&
     notification[type]({
       message: _message,
       description,
-      duration: 50000, // remove before merge
+      duration: 500,
       getContainer: () => container || document.body,
       placement: "bottom",
       bottom,

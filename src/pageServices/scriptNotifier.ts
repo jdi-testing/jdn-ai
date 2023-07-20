@@ -1,6 +1,6 @@
 import { Middleware } from "@reduxjs/toolkit";
 import { compact, isNil, size } from "lodash";
-import { selectLocatorById } from "../features/locators/selectors/locators.selectors";
+import { selectLocatorById, selectLocatorByJdnHash } from "../features/locators/selectors/locators.selectors";
 import { Locator, LocatorTaskStatus, LocatorValidationWarnings } from "../features/locators/types/locator.types";
 import { sendMessage } from "./connector";
 import { selectCurrentPage } from "../app/main.selectors";
@@ -140,8 +140,8 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       });
       break;
     case "locators/updateLocatorGroup":
-      payload.forEach((element: Locator) => {
-        const locator = selectLocatorById(state, element.element_id);
+      payload.locators.forEach(({ element_id, jdnHash }: Locator) => {
+        const locator = element_id ? selectLocatorById(state, element_id) : selectLocatorByJdnHash(state, jdnHash!);
         locator && sendMessage.changeStatus(locator);
       });
       break;
@@ -149,7 +149,7 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       const { ids } = payload;
       const elements = ids.map((element_id: string) => {
         const jdnHash = selectLocatorById(state, element_id)?.jdnHash;
-        return { element_id, jdnHash, locator: { taskStatus: LocatorTaskStatus.FAILURE } };
+        return { element_id, jdnHash, locator: { xPathStatus: LocatorTaskStatus.FAILURE } } as Locator;
       });
       elements.forEach((element: Locator) => sendMessage.changeStatus(element));
       break;
