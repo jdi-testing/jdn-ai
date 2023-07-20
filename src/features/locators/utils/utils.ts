@@ -94,7 +94,11 @@ export const copyLocator = (locatorsForCopy: Locator[], option?: LocatorOption) 
       value = locatorsForCopy.map(({ locator }) => getLocatorWithJDIAnnotation(locator.cssSelector)).join("\n");
       break;
     default:
-      value = locatorsForCopy.map(({ locator, type, name }) => getLocatorString(locator, type, name)).join("\n");
+      value = locatorsForCopy
+        .map(({ annotationType, locatorType, locator, type, name }) =>
+          getLocatorString(annotationType, locatorType, locator, type, name)
+        )
+        .join("\n");
   }
 
   copyToClipboard(value);

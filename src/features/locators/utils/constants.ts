@@ -1,5 +1,6 @@
 import { LocatorTaskStatus, Locator } from "../types/locator.types";
 import { ElementClass } from "../types/generationClasses.types";
+import { AnnotationType, LocatorType } from "../../../common/types/common";
 
 export const PLUGIN_HEADER_HEIGHT = 169;
 
@@ -28,6 +29,8 @@ export const newLocatorStub: Locator = {
     cssSelector: "",
     taskStatus: LocatorTaskStatus.SUCCESS,
   },
+  annotationType: "" as AnnotationType,
+  locatorType: "" as LocatorType,
   name: "",
   message: "",
   pageObj: 0,

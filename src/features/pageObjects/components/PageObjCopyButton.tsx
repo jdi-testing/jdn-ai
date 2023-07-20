@@ -1,4 +1,5 @@
 import React, { FC, MouseEvent, useState } from "react";
+// import { useSelector } from "react-redux";
 
 import { Button, Tooltip } from "antd";
 import { copyToClipboard, getLocatorString } from "../../../common/utils/helpers";
@@ -14,7 +15,11 @@ export const PageObjCopyButton: FC<Props> = ({ elements }) => {
   const [copyTooltipTitle, setTooltipTitle] = useState(CopyTitle.Copy);
 
   const getPageObjectForCopying = (locators: Locator[]) => {
-    return locators.map(({ locator, type, name }) => getLocatorString(locator, type, name)).join("\n\n");
+    return locators
+      .map(({ annotationType, locatorType, locator, type, name }) =>
+        getLocatorString(annotationType, locatorType, locator, type, name)
+      )
+      .join("\n\n");
   };
 
   const handleCopy = (e: MouseEvent<HTMLElement>) => {

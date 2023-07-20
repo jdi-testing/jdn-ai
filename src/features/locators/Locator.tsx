@@ -5,7 +5,7 @@ import React, { useContext, useEffect, useRef, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { areChildrenChecked, isLocatorIndeterminate } from "./selectors/locators.selectors";
-import { isMacPlatform } from "../../common/utils/helpers";
+import { isMacPlatform, getLocatorPrefix } from "../../common/utils/helpers";
 import {
   elementSetActive,
   elementUnsetActive,
@@ -34,7 +34,7 @@ import { selectFirstLocatorIdByPO } from "./selectors/locatorsByPO.selectors";
 import { selectCalculatedActiveByPageObj, selectWaitingActiveByPageObj } from "./selectors/locatorsFiltered.selectors";
 import { isLocatorListPage } from "../../app/utils/heplers";
 import { selectCurrentPageObject } from "../pageObjects/selectors/pageObjects.selectors";
-import { AnnotationType, LocatorType } from "../../common/types/common";
+import { LocalStorageKey, getLocalStorage } from "../../common/utils/localStorage";
 
 interface Props {
   element: LocatorInterface;
@@ -51,9 +51,18 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const { isOpen: isCustomLocatorFlow } = useContext(OnboardingContext);
-  const annotationType = useSelector(selectCurrentPageObject)?.annotationType;
 
-  const { element_id, type, name, locator, generate, message, deleted, active, isCustomLocator, locatorType } = element;
+  const { element_id, type, name, locator, generate, message, deleted, active, isCustomLocator } = element;
+
+  const annotationType =
+    element?.annotationType ||
+    getLocalStorage(LocalStorageKey.AnnotationType) ||
+    useSelector(selectCurrentPageObject)?.annotationType;
+
+  const locatorType =
+    element?.locatorType ||
+    getLocalStorage(LocalStorageKey.LocatorType) ||
+    useSelector(selectCurrentPageObject)?.locatorType;
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -72,9 +81,6 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
   const calculatedActive: LocatorInterface[] = useSelector(selectCalculatedActiveByPageObj);
   const waitingActive = useSelector(selectWaitingActiveByPageObj);
   const actualSelected = useMemo(() => [...calculatedActive, ...waitingActive], [calculatedActive, waitingActive]);
-
-  const isXpathLocatorType = () => locatorType === LocatorType.xPath;
-  const isUiAnnotationType = () => annotationType === AnnotationType.UI;
 
   let timer: NodeJS.Timeout;
   useEffect(() => clearTimeout(timer), []);
@@ -137,11 +143,8 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
 
     return (
       <span onClick={handleClick}>
-        {annotationType}(
-        <span className="jdn__xpath_item-locator">
-          {isUiAnnotationType() ? "" : isXpathLocatorType() ? "xpath = " : "css = "}&quot;{locator.output}&quot;
-        </span>
-        )
+        {annotationType}({getLocatorPrefix(annotationType, locatorType)}
+        <span className="jdn__xpath_item-locator">&quot;{locator.output}&quot;</span>)
         <br />
         <span className="jdn__xpath_item-type">public</span>
         <span>&nbsp;{type as string}&nbsp;</span>

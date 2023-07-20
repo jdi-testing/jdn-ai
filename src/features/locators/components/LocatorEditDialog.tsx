@@ -140,12 +140,13 @@ export const LocatorEditDialog: React.FC<Props> = ({
     // in case if user didn't touch locator field to avoid forceUpdate
     const locatorMessage = isLocatorFieldTouched ? validationMessage : LocatorValidationWarnings.NotFound;
 
-    const { name, type, locator, locatorType } = await form.validateFields();
+    const { name, type, locator, locatorType, annotationType } = await form.validateFields();
     const isCSSLocator = locatorType === LocatorType.cssSelector;
     newLocator = {
       ...newLocator,
       locator: { ...newLocator.locator, ...{ [isCSSLocator ? "cssSelector" : "xPath"]: locator } },
       predicted_label: type.toLowerCase(),
+      annotationType,
       locatorType,
       message: locatorMessage,
       name,
@@ -157,11 +158,12 @@ export const LocatorEditDialog: React.FC<Props> = ({
   };
 
   const handleEditLocator = async () => {
-    const { name, type, locator, locatorType } = await form.validateFields();
+    const { name, type, locator, locatorType, annotationType } = await form.validateFields();
     const updatedLocator = {
       name,
       type,
       locator,
+      annotationType,
       locatorType,
       element_id,
       library,

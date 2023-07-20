@@ -6,11 +6,11 @@ import { CopyTitle } from "../../../common/types/common";
 
 export const LocatorCopyButton = ({ element }) => {
   const [copyTooltipTitle, setTooltipTitle] = useState(CopyTitle.Copy);
-  const { locator, type, name } = element;
+  const { locator, type, name, annotationType, locatorType } = element;
 
   const handleCopy = (event) => {
     event.stopPropagation();
-    const locatorString = getLocatorString(locator, type, name);
+    const locatorString = getLocatorString(annotationType, locatorType, locator, type, name);
     copyToClipboard(locatorString);
     setTooltipTitle(CopyTitle.Copied);
   };
