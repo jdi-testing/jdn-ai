@@ -1,5 +1,6 @@
 import { SearchState } from "../../../../features/locators/components/LocatorsTree";
 import { LocatorTaskStatus } from "../../../../features/locators/types/locator.types";
+import { AnnotationType, LocatorType } from "../../../../common/types/common";
 
 export const locatorsTreeMockSearchTypesNames = [
   {
@@ -15,6 +16,8 @@ export const locatorsTreeMockSearchTypesNames = [
       output: "",
       cssSelector: "",
     },
+    annotationType: AnnotationType.UI,
+    locatorType: LocatorType.xPath,
     name: "radiobuttonsUl",
     message: "",
     predictedAttrId: "",
@@ -37,6 +40,8 @@ export const locatorsTreeMockSearchTypesNames = [
           output: "",
           cssSelector: "",
         },
+        annotationType: AnnotationType.UI,
+        locatorType: LocatorType.xPath,
         name: "anyName",
         message: "",
         predictedAttrId: "",
@@ -59,6 +64,8 @@ export const locatorsTreeMockSearchTypesNames = [
               output: "",
               cssSelector: "",
             },
+            annotationType: AnnotationType.UI,
+            locatorType: LocatorType.xPath,
             name: "breadcrumbsLi6",
             message: "",
             predictedAttrId: "",
@@ -82,6 +89,8 @@ export const locatorsTreeMockSearchTypesNames = [
               output: "",
               cssSelector: "",
             },
+            annotationType: AnnotationType.UI,
+            locatorType: LocatorType.xPath,
             name: "breadcrumbsUl",
             message: "",
             predictedAttrId: "",
@@ -107,6 +116,8 @@ export const locatorsTreeMockSearchTypesNames = [
           output: "",
           cssSelector: "",
         },
+        annotationType: AnnotationType.UI,
+        locatorType: LocatorType.xPath,
         name: "breadcrumbsLi2",
         message: "",
         predictedAttrId: "",
@@ -129,6 +140,8 @@ export const locatorsTreeMockSearchTypesNames = [
               output: "",
               cssSelector: "",
             },
+            annotationType: AnnotationType.UI,
+            locatorType: LocatorType.xPath,
             name: "breadcrumbsLi7",
             message: "",
             predictedAttrId: "",
@@ -152,6 +165,8 @@ export const locatorsTreeMockSearchTypesNames = [
               output: "",
               cssSelector: "",
             },
+            annotationType: AnnotationType.UI,
+            locatorType: LocatorType.xPath,
             name: "breadcrumbsUl",
             message: "",
             predictedAttrId: "",
