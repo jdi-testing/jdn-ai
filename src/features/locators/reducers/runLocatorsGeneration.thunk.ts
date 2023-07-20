@@ -4,7 +4,8 @@ import { runXpathGeneration } from "../utils/runXpathGeneration";
 import { MaxGenerationTime } from "../../../app/types/mainSlice.types";
 import { RootState } from "../../../app/store/store";
 import { runCssSelectorGeneration } from "../utils/runCssSelectorGeneration";
-import { locatorsAdapter } from "../selectors/locators.selectors";
+import { updateLocatorGroup } from "../locators.slice";
+import { selectCurrentPageObject } from "../../pageObjects/selectors/pageObjects.selectors";
 
 interface Meta {
   locators: Locator[];
@@ -35,9 +36,38 @@ export const runLocatorsGeneration = createAsyncThunk(
           : null,
       ],
       ...[toGenerateCss.length ? runCssSelectorGeneration(toGenerateCss) : null],
-      Promise.resolve(toGenerateXpaths),
-      Promise.resolve(toGenerateCss),
     ]);
+
+    const setPendingXpaths = toGenerateXpaths
+      .filter((locator) => locator.locator && locator.locator.taskStatus !== LocatorTaskStatus.PENDING)
+      .map(({ element_id }) => ({
+        element_id,
+        locator: { xPathStatus: LocatorTaskStatus.PENDING },
+      }));
+
+    const setPendingCss = toGenerateCss
+      .filter((locator) => locator.locator && locator.locator.taskStatus !== LocatorTaskStatus.PENDING)
+      .map(({ element_id }) => ({
+        element_id,
+        locator: { cssSelectorStatus: LocatorTaskStatus.PENDING },
+      }));
+
+    const state = thunkAPI.getState() as RootState;
+    if (setPendingXpaths)
+      thunkAPI.dispatch(
+        updateLocatorGroup({
+          locators: setPendingXpaths,
+          pageObject: selectCurrentPageObject(state)!,
+        })
+      );
+
+    if (setPendingCss)
+      thunkAPI.dispatch(
+        updateLocatorGroup({
+          locators: setPendingCss,
+          pageObject: selectCurrentPageObject(state)!,
+        })
+      );
 
     return generations;
   }
@@ -50,29 +80,7 @@ export const runLocatorsGenerationReducer = (builder: ActionReducerMapBuilder<Lo
     })
     .addCase(runLocatorsGeneration.fulfilled, (state, { payload }) => {
       state.generationStatus = LocatorsGenerationStatus.started;
-      const [_startXpaths, _startCss, toGenerateXpaths, toGenerateCss] = payload as [
-        string | null,
-        string | null,
-        Locator[],
-        Locator[]
-      ];
-
-      const setPendingXpaths = toGenerateXpaths
-        .filter((locator) => locator.locator && locator.locator.taskStatus !== LocatorTaskStatus.PENDING)
-        .map(({ element_id, locator: { taskStatus: _, ...rest } }) => ({
-          element_id,
-          locator: { ...rest, xPathStatus: LocatorTaskStatus.PENDING },
-        }));
-
-      const setPendingCss = toGenerateCss
-        .filter((locator) => locator.locator && locator.locator.taskStatus !== LocatorTaskStatus.PENDING)
-        .map(({ element_id, locator: { taskStatus: _, ...rest } }) => ({
-          element_id,
-          locator: { ...rest, cssSelectorStatus: LocatorTaskStatus.PENDING },
-        }));
-
-      // @ts-ignore
-      locatorsAdapter.upsertMany(state, [...setPendingXpaths, ...setPendingCss] as Locator[]);
+      const [_startXpaths, _startCss] = payload as [string | null, string | null];
     })
     .addCase(runLocatorsGeneration.rejected, (state, { error }) => {
       throw new Error(error.stack);

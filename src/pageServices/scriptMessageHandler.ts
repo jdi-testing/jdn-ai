@@ -18,9 +18,10 @@ import { showOverlay } from "./pageDataHandlers";
 import { rerunGeneration } from "../features/locators/reducers/rerunGeneration.thunk";
 import { stopGenerationGroup } from "../features/locators/reducers/stopGenerationGroup.thunk";
 import { copyLocator } from "../features/locators/utils/utils";
-import { selectLocatorById, selectLocatorByJdnHash } from "../features/locators/selectors/locators.selectors";
+import { selectLocatorByJdnHash } from "../features/locators/selectors/locators.selectors";
 import { ScriptMsg } from "./scriptMsg.constants";
 import { selectPresentActiveLocators } from "../features/locators/selectors/locatorsByPO.selectors";
+import { selectCurrentPageObject } from "../features/pageObjects/selectors/pageObjects.selectors";
 
 export type ScriptMessagePayload = { message: keyof Actions; param: Record<string, never> };
 
@@ -64,14 +65,14 @@ export const updateMessageHandler = (
     },
     [ScriptMsg.RemoveElement]: (payload) => dispatch(toggleDeletedGroup(payload)),
     [ScriptMsg.ResponseCssSelectors]: (payload) => {
-      const res = payload.map((element: Locator) => {
-        const { taskStatus: _, ...rest } = selectLocatorById(state, element.element_id)!.locator;
+      const locators = payload.map(({ element_id, locator }: Locator) => {
         return {
-          ...element,
-          locator: { ...rest, ...element.locator, cssSelectorStatus: LocatorTaskStatus.SUCCESS },
+          element_id,
+          locator: { ...locator, cssSelectorStatus: LocatorTaskStatus.SUCCESS },
         };
       });
-      dispatch(updateLocatorGroup(res));
+      const pageObject = selectCurrentPageObject(state)!;
+      dispatch(updateLocatorGroup({ locators, pageObject }));
     },
     [ScriptMsg.RestoreElement]: (payload) => dispatch(toggleDeletedGroup(payload)),
     [ScriptMsg.OpenEditLocator]: () => {

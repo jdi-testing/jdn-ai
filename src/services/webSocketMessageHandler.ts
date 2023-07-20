@@ -7,6 +7,7 @@ import { locatorGenerationController } from "../features/locators/utils/locatorG
 import { sendMessage } from "../pageServices/connector";
 import { webSocketController } from "./webSocketController";
 import { selectInProgressByPageObj } from "../features/locators/selectors/locatorsFiltered.selectors";
+import { selectCurrentPageObject } from "../features/pageObjects/selectors/pageObjects.selectors";
 
 const reScheduledTasks = new Set();
 
@@ -44,27 +45,25 @@ export const updateSocketMessageHandler = (dispatch: any, state: any) => {
         }
 
         if (status === LocatorTaskStatus.REVOKED || status === LocatorTaskStatus.FAILURE) {
-          dispatch(updateLocatorGroup([{ ...element, locator: { ...element.locator, ...{ xPathStatus: status } } }]));
+          const pageObject = selectCurrentPageObject(state)!;
+          dispatch(updateLocatorGroup({ locators: [{ jdnHash, locator: { xPathStatus: status } }], pageObject }));
         }
 
         break;
       }
       case "result_ready": {
-        const onStatusChange = (payloads: any[]) => {
-          const locators = payloads.map((_payload) => {
-            const { element } = _payload;
-            const { result: xPath } = _payload.payload;
-            const { taskStatus: _, ...rest } = element.locator;
+        const onStatusChange = (payload: any[]) => {
+          const locators = payload.map((_payload) => {
+            const { id, result: xPath } = _payload;
             return {
-              ...element,
-              locator: { ...rest, ...{ xPath, xPathStatus: LocatorTaskStatus.SUCCESS } },
+              jdnHash: id,
+              locator: { xPath, xPathStatus: LocatorTaskStatus.SUCCESS },
             };
           });
-          dispatch(updateLocatorGroup(locators));
+          const pageObject = selectCurrentPageObject(state)!;
+          dispatch(updateLocatorGroup({ locators, pageObject }));
         };
-        const { id: jdnHash } = payload;
-        const element = selectLocatorByJdnHash(state, jdnHash);
-        if (element) debouncer.accumulateAndDebounce(onStatusChange)([{ payload, element }]);
+        debouncer.accumulateAndDebounce(onStatusChange)([payload]);
         break;
       }
     }
