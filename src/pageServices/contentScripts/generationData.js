@@ -107,15 +107,14 @@ export const getGenerationAttributes = () => {
 
     const isSelectorByGeneratorString = typeof selectorByGenerator === "string";
     const isSelectorByFinderString = typeof selectorByFinder === "string";
-    const transformSelector = (selector) => selector.replace(/"/g, "'");
 
     if (isSelectorByGeneratorString && isSelectorByFinderString) {
       const selector = selectorByGenerator.length < selectorByFinder.length ? selectorByGenerator : selectorByFinder;
-      return transformSelector(selector);
+      return selector;
     } else if (!isSelectorByFinderString && isSelectorByGeneratorString) {
-      return transformSelector(selectorByGenerator);
+      return selectorByGenerator;
     } else if (!isSelectorByGeneratorString && isSelectorByFinderString) {
-      return transformSelector(selectorByFinder);
+      return selectorByFinder;
     } else {
       return "CSS selector generation was failed";
     }
