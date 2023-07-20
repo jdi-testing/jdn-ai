@@ -13,11 +13,12 @@ import {
   JDNHash,
   LocatorTaskStatus,
 } from "../types/locator.types";
-import { copyToClipboard, getLocatorString, getElementFullXpath } from "../../../common/utils/helpers";
+import { getLocatorString, getElementFullXpath } from "../../../common/utils/helpers";
 import { LocatorOption } from "./constants";
 import { LocatorType } from "../../../common/types/common";
 import { isStringContainsNumbers } from "../../../common/utils/helpers";
 import { FormInstance } from "antd/es/form/Form";
+import { copyToClipboard } from "../../../common/utils/copyToClipboard";
 
 export const getLocatorWithJDIAnnotation = (locator: string): string => `@UI("${locator}")`;
 
