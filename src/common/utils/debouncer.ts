@@ -1,26 +1,37 @@
-export const accumulateAndDenounce = (fn: (arg: any[]) => any) => {
-  let accumulatedArgs: any[] = [];
-  let interval: NodeJS.Timer | null = null;
-  let cancelTimeout: NodeJS.Timeout | null = null;
+class Debouncer {
+  accumulatedArgs: any[] = [];
+  interval: NodeJS.Timer | null = null;
+  cancelTimeout: NodeJS.Timeout | null = null;
 
-  const debouncedFn = (args: any[]) => {
-    accumulatedArgs.push(...args);
-  };
+  constructor() {
+    this.accumulateAndDebounce = this.accumulateAndDebounce.bind(this);
+  }
 
-  const throttledFn = () => {
-    if (accumulatedArgs.length > 0) {
-      cancelTimeout && clearTimeout(cancelTimeout);
-      fn(accumulatedArgs);
-      accumulatedArgs = [];
-    } else {
-      if (cancelTimeout) return;
-      cancelTimeout = setTimeout(() => interval && clearInterval(interval), 30000);
-    }
-  };
+  accumulateAndDebounce(fn: (arg: any[]) => any) {
+    const debouncedFn = (args: any[]) => {
+      this.accumulatedArgs.push(...args);
+    };
 
-  interval = setInterval(throttledFn, 500);
+    const throttledFn = () => {
+      if (this.accumulatedArgs.length > 0) {
+        this.cancelTimeout && clearTimeout(this.cancelTimeout);
+        fn(this.accumulatedArgs);
+        this.accumulatedArgs = [];
+      } else {
+        if (this.cancelTimeout) return;
+        this.cancelTimeout = setTimeout(() => {
+          this.interval && clearInterval(this.interval);
+          this.interval = null;
+        }, 30000);
+      }
+    };
 
-  return (args: any) => {
-    debouncedFn(args);
-  };
-};
+    if (!this.interval) this.interval = setInterval(throttledFn, 500);
+
+    return (args: any) => {
+      debouncedFn(args);
+    };
+  }
+}
+
+export const debouncer = new Debouncer();

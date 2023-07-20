@@ -26,7 +26,7 @@ import { createNameValidationRules } from "../utils/nameValidationRules";
 import FormItem from "antd/es/form/FormItem";
 import { LocatorType, SelectOption } from "../../../common/types/common";
 import { isFilteredSelect } from "../../../common/utils/helpers";
-import { newLocatorStub } from "../utils/constants";
+import { CALCULATING, newLocatorStub } from "../utils/constants";
 import { changeLocatorElement } from "../reducers/changeLocatorElement.thunk";
 import { addCustomLocator } from "../reducers/addCustomLocator.thunk";
 import { OnboardingContext } from "../../onboarding/OnboardingProvider";
@@ -236,6 +236,8 @@ export const LocatorEditDialog: React.FC<Props> = ({
     );
   };
 
+  const isLocatorDisabled = form.getFieldValue("locator") === CALCULATING;
+
   return (
     <DialogWithForm
       modalProps={{
@@ -300,6 +302,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
         extra={renderValidationWarning()}
       >
         <Input.TextArea
+          disabled={isLocatorDisabled}
           autoSize
           // expands textarea to view port height
           style={{ maxHeight: `calc(100vh - 396px)`, overflowY: "scroll" }}

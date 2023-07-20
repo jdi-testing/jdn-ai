@@ -59,7 +59,7 @@ describe("changeLocatorAttributes reducer", () => {
     expect(changeElementNameSpy).toHaveBeenCalledWith(locator);
   });
 
-  test("edit type, custom name stays the same", () => {
+  test("edit type, custom name remains the same", () => {
     store.dispatch(
       changeLocatorAttributes({
         element_id: "8736312404689610766421832473",
@@ -96,7 +96,7 @@ describe("changeLocatorAttributes reducer", () => {
     expect(locator.isCustomLocator).toBeTruthy();
     expect(locator.isCustomName).toBeTruthy();
     expect(locator.locator.xPath).toBe("//*[@class='any-class']");
-    expect(locator.locator.taskStatus).toBe(LocatorTaskStatus.SUCCESS);
+    expect(locator.locator.xPathStatus).toBe(LocatorTaskStatus.SUCCESS);
   });
 
   test("warned validation", () => {

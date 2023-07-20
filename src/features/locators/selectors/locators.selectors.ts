@@ -1,9 +1,10 @@
 import { createDraftSafeSelector, createEntityAdapter, createSelector, EntityState } from "@reduxjs/toolkit";
 import { RootState } from "../../../app/store/store";
-import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
+import { PageObject, PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
 import { ElementId, Locator } from "../types/locator.types";
 import { getLocator } from "../utils/locatorOutput";
 import { selectCurrentPageObject } from "../../pageObjects/selectors/pageObjects.selectors";
+import { getTaskStatus } from "../utils/utils";
 
 export const locatorsAdapter = createEntityAdapter<Locator>({
   selectId: (locator) => locator.element_id,
@@ -18,6 +19,7 @@ export const selectLocatorById = createSelector(selectById, (_item?: Locator) =>
       locator: {
         ..._item.locator,
         output: getLocator(_item.locator, _item.locatorType),
+        taskStatus: getTaskStatus(_item.locator),
       },
     };
   }
@@ -31,6 +33,7 @@ export const selectLocators = createSelector(selectAll, (items: Locator[]) =>
       locator: {
         ..._item.locator,
         output: getLocator(_item.locator, _item.locatorType),
+        taskStatus: getTaskStatus(_item.locator),
       },
     };
   })
@@ -74,6 +77,14 @@ export const areChildrenChecked = createSelector(
     locator.children?.every((childId) => locators.some((loc) => loc.element_id === childId && loc.generate))
 );
 
+export const selectLocatorByJdnHash = createSelector(
+  (state: RootState, jdnHash: string) => selectLocators(state).filter((loc) => loc.jdnHash === jdnHash),
+  (state: RootState) => selectCurrentPageObject(state)?.locators,
+  (locators, pageObjLocators) => {
+    return locators.find(({ element_id }) => pageObjLocators?.includes(element_id));
+  }
+);
+
 /* these selectors are for using inside reducers */
 
 export const { selectAll: simpleSelectLocators, selectById: simpleSelectLocatorById } = locatorsAdapter.getSelectors();
@@ -88,11 +99,10 @@ export const simpleSelectLocatorsByPageObject = createDraftSafeSelector(
   (locators: Locator[], pageObj: PageObjectId) => locators.filter((_loc) => _loc.pageObj === pageObj)
 );
 
-  // move to loc
-  export const selectLocatorByJdnHash = createSelector(
-    (state: RootState, jdnHash: string) => selectLocators(state).filter((loc) => loc.jdnHash === jdnHash),
-    (state: RootState) => selectCurrentPageObject(state)?.locators,
-    (locators, pageObjLocators) => {
-      return locators.find(({ element_id }) => pageObjLocators?.includes(element_id));
-    }
-  );
+export const simpleSelectLocatorByJdnHash = createDraftSafeSelector(
+  (state: EntityState<Locator>, jdnHash: string) => simpleSelectLocators(state).filter((loc) => loc.jdnHash === jdnHash),
+  (_state: EntityState<Locator>, _: string, pageObject: PageObject) => pageObject.locators,
+  (locators, pageObjLocators) => {
+    return locators.find(({ element_id }) => pageObjLocators?.includes(element_id));
+  }
+);

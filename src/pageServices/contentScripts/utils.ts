@@ -73,3 +73,8 @@ export const utilityScript = () => {
     }
   });
 };
+
+export const sendMessage = (msg: { message: ScriptMsg; param: any }) =>
+  chrome.runtime.sendMessage(msg).catch((error) => {
+    if (error.message !== "The message port closed before a response was received.") throw new Error(error.message);
+  });

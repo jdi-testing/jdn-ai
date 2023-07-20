@@ -41,3 +41,8 @@ export const newLocatorStub: Locator = {
 export const NO_ELEMENT_IN_DOCUMENT = "Document does not contain given element!";
 export const NETWORK_ERROR = "Network Error has been encountered.";
 export const DEFAULT_ERROR = "An error has been encountered.";
+
+// max number of elements to start locators generation automatically
+export const AUTO_GENERATION_TRESHOLD = 500;
+
+export const CALCULATING = "Calculating...";

@@ -6,6 +6,8 @@ import { ScriptMsg } from "../scriptMsg.constants";
 import { assignJdnHash } from "./utils";
 import { LocatorTaskStatus, LocatorElementStatus } from "../../features/locators/types/locator.types";
 
+const ADD_ELEMENT_TO_PO = "To get data add element to Page Object";
+
 /* global chrome */
 export const highlightOnPage = () => {
   let port;
@@ -215,7 +217,7 @@ export const highlightOnPage = () => {
       <div class="jdn-tooltip-paragraph"><b>Name:</b> ${el.name}</div>
       <div class="jdn-tooltip-paragraph"><b>Type:</b> ${el.type}</div>
       <div class="jdn-tooltip-paragraph"><b>xPath:</b> <span class="jdn-tooltip-xpath">${el.locator.xPath}</span></div>
-      <div class="jdn-tooltip-paragraph"><b>CSS selector:</b> ${el.locator.cssSelector}</div>`;
+      <div class="jdn-tooltip-paragraph"><b>CSS selector:</b> ${el.locator.cssSelector ?? ADD_ELEMENT_TO_PO}</div>`;
     };
 
     const showTooltip = (event) => {

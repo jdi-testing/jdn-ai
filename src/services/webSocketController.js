@@ -1,24 +1,30 @@
 import { isNull } from "lodash";
-import { request } from "./backend";
+import { WebSocketMessage, request } from "./backend";
+import { NETWORK_ERROR } from "../features/locators/utils/constants";
 
 class WebSocketController {
-  constructor() {
-    this.readyState = null;
-    this.messageSubscribers = new Set();
-  }
+  pingInterval = null;
+  pingTimeout = null;
+  readyState = null;
+  messageListener;
+  errorListener;
 
   async init() {
-    return this.openWebSocket().then(() => {
-      return this.setMessageListener();
-    });
+    return this.openWebSocket();
   }
 
-  addSubscriber(callback) {
-    this.messageSubscribers.add(callback);
-  }
-
-  removeSubscriber(callback) {
-    this.messageSubscribers.delete(callback);
+  updateMessageListener(callback) {
+    if (this.socket) {
+      this.socket.removeEventListener("message", this.messageListener);
+      this.messageListener = (event) => {
+        const response = event === NETWORK_ERROR ? event : JSON.parse(event.data || event);
+        if (response.pong) {
+          this.pong();
+        }
+        callback(event);
+      };
+      this.socket.addEventListener("message", this.messageListener);
+    }
   }
 
   sendSocket(json) {
@@ -48,23 +54,49 @@ class WebSocketController {
       });
 
       this.socket.addEventListener("error", (event) => {
+        console.log("error", event);
         this.readyState = event.target.readyState;
-        reject(new Error(event));
+        this.messageListener(NETWORK_ERROR);
+        this.stopPing();
+        reject(NETWORK_ERROR);
       });
 
       this.socket.addEventListener("close", (event) => {
         this.readyState = event.target.readyState;
-        this.messageObservers = [];
       });
     });
   }
 
-  setMessageListener() {
-    this.socket.addEventListener("message", (event) => {
-      for (const callback of this.messageSubscribers) {
-        callback(event);
-      }
-    });
+  ping() {
+    this.sendSocket(
+      JSON.stringify({
+        action: WebSocketMessage.PING,
+        payload: Date.now(),
+      })
+    );
+  }
+
+  pong() {
+    clearTimeout(this.pingTimeout);
+    this.pingTimeout = null;
+  }
+
+  startPing() {
+    if (this.pingInterval) return;
+    this.pingInterval = setInterval(() => {
+      this.ping();
+      if (this.pingTimeout) return;
+      this.pingTimeout = setTimeout(() => {
+        this.messageListener(NETWORK_ERROR);
+      }, 10000);
+    }, 5000);
+  }
+
+  stopPing() {
+    clearInterval(this.pingInterval);
+    clearTimeout(this.pingTimeout);
+    this.pingInterval = null;
+    this.pingTimeout = null;
   }
 }
 

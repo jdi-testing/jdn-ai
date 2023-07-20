@@ -86,6 +86,10 @@ export const selectWaitingByPageObj = createSelector(selectFilteredLocators, (el
     .value()
 );
 
+export const selectInProgressHashes = createSelector(selectWaitingByPageObj, (locators) =>
+  locators.map((loc) => loc.jdnHash)
+);
+
 export const selectWaitingActiveByPageObj = createSelector(selectWaitingByPageObj, (locators) =>
   locators.filter((_loc) => _loc.active)
 );
@@ -123,6 +127,10 @@ export const selectInProgressActiveDecPriorityByPageObject = createSelector(
 
 export const selectInProgressGenerateByPageObj = createSelector(selectWaitingByPageObj, (items) =>
   items.filter((item) => item.generate)
+);
+
+export const selectInProgressGenerateHashes = createSelector(selectInProgressGenerateByPageObj, (locators) =>
+  locators.map((loc) => loc.jdnHash)
 );
 
 export const selectFailedByPageObject = createSelector(selectFilteredLocators, (elements) =>

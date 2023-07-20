@@ -1,7 +1,7 @@
 import { Button, Tooltip } from "antd";
 import { CopySimple } from "phosphor-react";
 import React, { useState } from "react";
-import { copyToClipboard, getLocatorString } from "../../../common/utils/helpers";
+import { copyToClipboard, getLocatorString } from "../../../common/utils/copyToClipboard";
 import { CopyTitle } from "../../../common/types/common";
 
 export const LocatorCopyButton = ({ element }) => {
