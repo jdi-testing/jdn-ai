@@ -14,6 +14,7 @@ import { LocatorsGenerationStatus } from "../../features/locators/types/locator.
 import { useOnBoardingRef } from "../../features/onboarding/utils/useOnboardingRef";
 import { OnbrdStep } from "../../features/onboarding/types/constants";
 import { OnboardingButton } from "./OnboardingButton";
+import { componentsTexts } from "../utils/constants";
 
 export const StatusBar = () => {
   const backendVer = useSelector<RootState>((_state) => _state.main.serverVersion);
@@ -22,6 +23,7 @@ export const StatusBar = () => {
   const generationStatus = useSelector<RootState>((_state) => _state.locators.present.generationStatus);
   const manifest = chrome.runtime.getManifest();
   const pluginVer = manifest.version;
+  const isSessionUnique = useSelector((state: RootState) => state.main.isSessionUnique);
 
   const renderServerIndicator = () => {
     const locationIcon =
@@ -34,10 +36,10 @@ export const StatusBar = () => {
 
     const title =
       generationStatus === LocatorsGenerationStatus.failed
-        ? "No connection"
+        ? componentsTexts.StatusBarServerNoConnection
         : serverLocation === LocalUrl
-        ? "Local server"
-        : "Remote server";
+        ? componentsTexts.StatusBarLocalServer
+        : componentsTexts.StatusBarRemoteServer;
 
     return backendAvailable === BackendStatus.Accessed ? (
       <Tooltip placement="bottomRight" align={{ offset: [12, 0] }} title={title}>
@@ -61,11 +63,13 @@ export const StatusBar = () => {
   return (
     <React.Fragment>
       <div className="jdn__header-version">
-        <span>{`JDN v ${pluginVer} ${!isNil(backendVer) ? `Back-end v ${backendVer}` : ""}`}</span>
+        <span>{`${componentsTexts.StatusBarVersionJdn} ${pluginVer} ${
+          !isNil(backendVer) ? `${componentsTexts.StatusBarVersionBackend} ${backendVer}` : ""
+        }`}</span>
       </div>
       <Space size={[10, 0]} className="header__space">
-        <OnboardingButton />
-        <Tooltip title="Readme">
+        {isSessionUnique && <OnboardingButton />}
+        <Tooltip title={componentsTexts.StatusBarVersionReadme}>
           <Button
             ref={readmeRef}
             type="link"
