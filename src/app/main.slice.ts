@@ -6,7 +6,7 @@ import { removeAllReducer } from "./reducers/removeAll.thunk";
 
 const initialState: MainState = {
   backendAvailable: BackendStatus.TryToAccess,
-  isSessionUnique: false,
+  isSessionUnique: true,
   notifications: [],
   pageHistory: [],
   perception: 0.5,
@@ -57,8 +57,8 @@ const mainSlice = createSlice({
     toggleBackdrop(state, { payload }) {
       state.showBackdrop = payload;
     },
-    setIsSessionUnique(state, { payload }) {
-      state.isSessionUnique = payload.isSessionUnique;
+    setIsSessionUnique(state, { payload }: PayloadAction<boolean>) {
+      state.isSessionUnique = payload;
     },
   },
   extraReducers: (builder) => {
