@@ -11,12 +11,14 @@ import {
   ValidationStatus,
   ElementId,
   JDNHash,
+  LocatorTaskStatus,
 } from "../types/locator.types";
-import { copyToClipboard, getLocatorString, getElementFullXpath } from "../../../common/utils/helpers";
+import { getLocatorString, getElementFullXpath } from "../../../common/utils/helpers";
 import { LocatorOption } from "./constants";
 import { LocatorType, AnnotationType } from "../../../common/types/common";
 import { isStringContainsNumbers } from "../../../common/utils/helpers";
 import { FormInstance } from "antd/es/form/Form";
+import { copyToClipboard } from "../../../common/utils/copyToClipboard";
 
 export const getLocatorWithJDIAnnotation = (locator: string): string => `${AnnotationType.UI}}("${locator}")`;
 
@@ -157,4 +159,23 @@ export const getLocatorValueOnTypeSwitch = async (
   }
 
   return newLocatorValue;
+};
+
+export const getTaskStatus = (locator: LocatorValue) => {
+  const { xPathStatus, cssSelectorStatus } = locator;
+  if (!xPathStatus && !cssSelectorStatus) return;
+  if (xPathStatus === LocatorTaskStatus.SUCCESS && cssSelectorStatus === LocatorTaskStatus.SUCCESS) {
+    return LocatorTaskStatus.SUCCESS;
+  }
+  if (xPathStatus === LocatorTaskStatus.PENDING || cssSelectorStatus === LocatorTaskStatus.PENDING) {
+    return LocatorTaskStatus.PENDING;
+  }
+  if (xPathStatus === LocatorTaskStatus.FAILURE || cssSelectorStatus === LocatorTaskStatus.FAILURE) {
+    return LocatorTaskStatus.FAILURE;
+  }
+  if (xPathStatus === LocatorTaskStatus.REVOKED || cssSelectorStatus === LocatorTaskStatus.REVOKED) {
+    return LocatorTaskStatus.REVOKED;
+  }
+  // fallback for any unhandled cases
+  return xPathStatus || cssSelectorStatus;
 };

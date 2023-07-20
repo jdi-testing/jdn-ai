@@ -3,6 +3,7 @@ import { PageObjectId } from "../../features/pageObjects/types/pageObjectSlice.t
 
 export interface MainState {
   backendAvailable: BackendStatus;
+  isSessionUnique: boolean;
   baseUrl?: BaseUrl;
   serverVersion?: string;
   notifications: Notification[];

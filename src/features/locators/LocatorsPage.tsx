@@ -29,6 +29,8 @@ import {
   selectCalculatedGenerateByPageObj,
   selectDeletedGenerateByPageObj,
   selectCheckedLocators,
+  selectInProgressGenerateHashes,
+  selectInProgressHashes,
 } from "./selectors/locatorsFiltered.selectors";
 import { useNotifications } from "../../common/components/notification/useNotifications";
 import { selectCurrentPageObject } from "../pageObjects/selectors/pageObjects.selectors";
@@ -45,6 +47,8 @@ export const LocatorsPage = () => {
   const areUnselectedAll = useSelector(selectIfUnselectedAll);
   const locatorIds = useSelector(getLocatorsIdsByPO);
   const inProgressGenerate = useSelector(selectInProgressGenerateByPageObj);
+  const inProgressGenerateHashes = useSelector(selectInProgressGenerateHashes);
+  const inProgressHashes = useSelector(selectInProgressHashes);
   const calculatedGenerate = useSelector(selectCalculatedGenerateByPageObj);
   const deletedGenerate = useSelector(selectDeletedGenerateByPageObj);
   const { id: currentPOId } = useSelector(selectCurrentPageObject) ?? {};
@@ -71,7 +75,7 @@ export const LocatorsPage = () => {
         okText: "Confirm",
         cancelText: "Cancel",
         onOk: () => {
-          locatorGenerationController.revokeAll();
+          locatorGenerationController.revokeTasks(inProgressGenerateHashes);
           pageBack();
         },
       });
@@ -109,7 +113,7 @@ export const LocatorsPage = () => {
     };
 
     const handleDiscard = () => {
-      locatorGenerationController.revokeAll();
+      locatorGenerationController.revokeTasks(inProgressHashes);
       if (!size(locatorsSnapshot)) {
         dispatch(removeLocators(locatorIds));
         dispatch(clearLocators(undefined));

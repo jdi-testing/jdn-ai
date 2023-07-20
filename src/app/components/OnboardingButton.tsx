@@ -7,6 +7,7 @@ import { BackendStatus } from "../types/mainSlice.types";
 import { useOnBoardingRef } from "../../features/onboarding/utils/useOnboardingRef";
 import { OnbrdStep } from "../../features/onboarding/types/constants";
 import { OnboardingPopup } from "../../features/onboarding/components/OnboardingPopup";
+import { componentsTexts } from "../utils/constants";
 
 export const OnboardingButton = () => {
   const [isTooltipVisible, setIsTooltipVisible] = React.useState(false);
@@ -18,7 +19,12 @@ export const OnboardingButton = () => {
 
   return (
     <OnboardingPopup>
-      <Tooltip placement="bottomRight" open={isTooltipVisible} align={{ offset: [16, 0] }} title="Onboarding tutorial">
+      <Tooltip
+        placement="bottomRight"
+        open={isTooltipVisible}
+        align={{ offset: [16, 0] }}
+        title={componentsTexts.OnboardingButtonTitle}
+      >
         <Button
           disabled={!isOnboardingAvailable}
           ref={onbrdRef}

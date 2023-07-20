@@ -1,12 +1,12 @@
 import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
 import { locatorsAdapter } from "../selectors/locators.selectors";
 import { Locator, LocatorsState } from "../types/locator.types";
-import { stopGenerationHandler } from "../utils/locatorGenerationController";
+import { locatorGenerationController } from "../utils/locatorGenerationController";
 import { LocatorTaskStatus } from "../types/locator.types";
 
 export const stopGenerationGroup = createAsyncThunk("locators/stopGenerationGroup", async (elements: Locator[]) => {
   const hashes = elements.map(({ jdnHash }) => jdnHash);
-  return stopGenerationHandler(hashes);
+  return locatorGenerationController.revokeTasks(hashes);
 });
 
 export const stopGenerationGroupReducer = (builder: ActionReducerMapBuilder<LocatorsState>) => {
@@ -15,7 +15,7 @@ export const stopGenerationGroupReducer = (builder: ActionReducerMapBuilder<Loca
       const newValue = meta.arg.map(({ element_id, locator }) => {
         return {
           element_id,
-          locator: { ...locator, taskStatus: LocatorTaskStatus.REVOKED },
+          locator: { ...locator, xPathStatus: LocatorTaskStatus.REVOKED },
         };
       });
       // @ts-ignore

@@ -6,6 +6,7 @@ export const locator1 = {
     xPath: "//*[@class='sidebar-menu left']",
     output: "//*[@class='sidebar-menu left']",
     taskStatus: "SUCCESS",
+    xPathStatus: "SUCCESS",
     cssSelector: ".sidebar-menu.left",
   },
   name: "radiobuttonsUl",
@@ -28,7 +29,7 @@ export const locator2 = {
   locator: {
     xPath: "//*[@class='sidebar-menu left']",
     cssSelector: "",
-    taskStatus: "SUCCESS",
+    xPathStatus: "SUCCESS",
   },
   name: "radiobuttonsUl",
   predictedAttrId: "",
@@ -49,7 +50,7 @@ export const locator3 = {
   locator: {
     xPath: "//*[@class='sidebar-menu left']",
     cssSelector: "",
-    taskStatus: "SUCCESS",
+    xPathStatus: "SUCCESS",
   },
   name: "radiobuttonsUl",
   predictedAttrId: "",

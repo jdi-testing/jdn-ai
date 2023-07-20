@@ -8,18 +8,6 @@ export const floatToPercent = (value: number) => {
   return Math.trunc(value * 100);
 };
 
-export const copyToClipboard = (text: string) => {
-  // "\\\\3" - needed to get "\3" in 'eval()'
-  const transformedText = text
-    .replace(/'/g, "\\'")
-    .replace(/\n/g, "\\n")
-    .replace(/#\\3/g, "#\\\\3")
-    .replace(/=\\'\\3/g, "=\\'\\\\3") // two different cases for \\3 to avoid affecting something else...
-    .replace(/\\/g, "\\\\")
-    .replace(/"/g, '\\"');
-  chrome.devtools.inspectedWindow.eval(`copy('${transformedText}')`);
-};
-
 export const getLocatorPrefix = (annotationType: AnnotationType, locatorType: LocatorType): string => {
   if (annotationType === AnnotationType.FindBy) {
     return `${locatorType === LocatorType.xPath ? "xpath" : "css"} = `;
@@ -34,11 +22,8 @@ export const getLocatorString = (
   locator: LocatorValue,
   type: ElementLibrary | ElementClass,
   name: string
-): string => {
-  return `${annotationType}(${getLocatorPrefix(annotationType, locatorType)}"${
-    locator.output
-  }")\npublic ${type} ${name};`;
-};
+): string =>
+  `${annotationType}(${getLocatorPrefix(annotationType, locatorType)}"${locator.output}")\npublic ${type} ${name};`;
 
 export const isMacPlatform = (param: Window) => param.navigator?.userAgent.indexOf("Mac") != -1;
 
