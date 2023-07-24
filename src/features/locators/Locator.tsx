@@ -5,7 +5,7 @@ import React, { useContext, useEffect, useRef, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { areChildrenChecked, isLocatorIndeterminate } from "./selectors/locators.selectors";
-import { isMacPlatform, getLocatorPrefix } from "../../common/utils/helpers";
+import { isMacPlatform } from "../../common/utils/helpers";
 import {
   elementSetActive,
   elementUnsetActive,
@@ -35,6 +35,7 @@ import { selectCalculatedActiveByPageObj, selectWaitingActiveByPageObj } from ".
 import { isLocatorListPage } from "../../app/utils/heplers";
 import { selectCurrentPageObject } from "../pageObjects/selectors/pageObjects.selectors";
 import { AnnotationType, LocatorType } from "../../common/types/common";
+import { getLocatorPrefix } from "./utils/locatorOutput";
 
 interface Props {
   element: LocatorInterface;

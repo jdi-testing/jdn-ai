@@ -13,17 +13,13 @@ import {
   JDNHash,
   LocatorTaskStatus,
 } from "../types/locator.types";
-import { getLocatorString, getElementFullXpath } from "../../../common/utils/helpers";
+import { getElementFullXpath } from "../../../common/utils/helpers";
 import { LocatorOption } from "./constants";
-import { LocatorType, AnnotationType } from "../../../common/types/common";
+import { LocatorType } from "../../../common/types/common";
 import { isStringContainsNumbers } from "../../../common/utils/helpers";
 import { FormInstance } from "antd/es/form/Form";
 import { copyToClipboard } from "../../../common/utils/copyToClipboard";
-
-export const getLocatorWithJDIAnnotation = (locator: string): string => `${AnnotationType.UI}}("${locator}")`;
-
-export const getLocatorWithSelenium = (locator: string, option: string): string =>
-  `${AnnotationType.FindBy}(${option} = "${locator}")`;
+import { getLocatorString, getLocatorWithJDIAnnotation, getLocatorWithSelenium } from "./locatorOutput";
 
 export const isValidJavaVariable = (value: string) => /^[a-zA-Z_$]([a-zA-Z0-9_])*$/.test(value);
 

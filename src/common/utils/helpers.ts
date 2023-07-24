@@ -1,31 +1,9 @@
-import { LocatorValue } from "../../features/locators/types/locator.types";
-import { ElementLibrary, ElementClass } from "../../features/locators/types/generationClasses.types";
 import { sendMessage } from "../../pageServices/connector";
-import { AnnotationType, LocatorType } from "../../common/types/common";
 
 export const floatToPercent = (value: number) => {
   // wse need to show percents, but multiply float * 100 provides an unexpected result and leads to bugs
   return Math.trunc(value * 100);
 };
-
-export const getLocatorPrefix = (annotationType?: AnnotationType, locatorType?: LocatorType): string => {
-  if (annotationType === AnnotationType.FindBy) {
-    return `${locatorType === LocatorType.cssSelector ? "css" : "xpath"} = `;
-  }
-
-  return "";
-};
-
-export const getLocatorString = (
-  annotationType: AnnotationType | undefined,
-  locatorType: LocatorType | undefined,
-  locator: LocatorValue,
-  type: ElementLibrary | ElementClass,
-  name: string
-): string =>
-  `${annotationType || AnnotationType.UI}(${getLocatorPrefix(annotationType, locatorType)}"${
-    locator.output
-  }")\npublic ${type} ${name};`;
 
 export const isMacPlatform = (param: Window) => param.navigator?.userAgent.indexOf("Mac") != -1;
 

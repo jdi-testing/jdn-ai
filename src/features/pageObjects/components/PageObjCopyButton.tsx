@@ -1,11 +1,11 @@
 import React, { FC, MouseEvent, useState } from "react";
 
 import { Button, Tooltip } from "antd";
-import { getLocatorString } from "../../../common/utils/helpers";
 import { CopySimple } from "phosphor-react";
 import { Locator } from "../../locators/types/locator.types";
 import { CopyTitle } from "../../../common/types/common";
 import { copyToClipboard } from "../../../common/utils/copyToClipboard";
+import { getLocatorString } from "../../locators/utils/locatorOutput";
 
 interface Props {
   elements: Locator[];
