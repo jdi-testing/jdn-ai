@@ -1,7 +1,6 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { isNil } from "lodash";
 import { RootState } from "../../../app/store/store";
-// import { LocatorType, AnnotationType } from "../../../common/types/common";
 import { selectCurrentPageObject, selectPageObjById } from "../../pageObjects/selectors/pageObjects.selectors";
 import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
 import { getLocator } from "../utils/locatorOutput";
