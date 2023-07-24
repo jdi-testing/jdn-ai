@@ -4,7 +4,7 @@ import { toInteger } from "lodash";
 import { BackendStatus, BaseUrl, MainState } from "../types/mainSlice.types";
 import { LocalUrl, RemoteUrl } from "../utils/constants";
 import { HttpEndpoint, request } from "../../services/backend";
-import { compatibleBuildVer, compatibleMajorVer, compatibleMinorVer } from "../../common/constants/compatibleVersions";
+import { compatibleBuildVer, compatibleMajorVer, compatibleMinorVer } from "../utils/compatibleVersions";
 
 export const defineServer = createAsyncThunk("main/defineServer", async () => {
   const checkVersion = (request: Promise<AxiosResponse<BaseUrl>>, isRemote: boolean) =>
