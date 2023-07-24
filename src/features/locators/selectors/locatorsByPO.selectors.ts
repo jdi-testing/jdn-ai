@@ -7,6 +7,7 @@ import { getLocator } from "../utils/locatorOutput";
 import { sortLocatorsWithChildren } from "../utils/sortLocators";
 import { selectLocatorById, selectLocators } from "./locators.selectors";
 import { isValidLocator } from "../utils/utils";
+import { LocatorType } from "../../../common/types/common";
 
 export const getLocatorsIdsByPO = (state: RootState, pageObjId?: PageObjectId) => {
   pageObjId = isNil(pageObjId) ? selectCurrentPageObject(state)?.id : pageObjId;
@@ -31,11 +32,16 @@ export const selectPresentLocatorsByPO = createSelector(
     return locators
       .filter((loc) => locByPageObj.includes(loc.element_id))
       .map((loc) => {
+        const annotationType = loc.annotationType || pageObject?.annotationType;
+        const isDefaultLocatorType = () => !loc.locatorType && pageObject?.locatorType === LocatorType.cssSelector;
+
         return {
           ...loc,
-          locatorType: loc.locatorType || pageObject?.locatorType,
-          annotationType: loc.annotationType || pageObject?.annotationType,
-          locator: { ...loc.locator, output: getLocator(loc.locator, pageObject?.locatorType) },
+          ...(annotationType && { annotationType }),
+          ...(isDefaultLocatorType() && { locatorType: pageObject?.locatorType }),
+          ...(isDefaultLocatorType() && {
+            locator: { ...loc.locator, output: getLocator(loc.locator, pageObject?.locatorType) },
+          }),
         };
       });
   }
