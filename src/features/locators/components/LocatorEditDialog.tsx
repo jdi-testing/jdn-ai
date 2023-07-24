@@ -306,7 +306,6 @@ export const LocatorEditDialog: React.FC<Props> = ({
         style={{ marginBottom: "8px" }}
       >
         <Select
-          disabled={!isValidLocator(validationMessage)}
           options={[
             {
               value: AnnotationType.UI,

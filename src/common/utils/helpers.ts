@@ -8,22 +8,24 @@ export const floatToPercent = (value: number) => {
   return Math.trunc(value * 100);
 };
 
-export const getLocatorPrefix = (annotationType: AnnotationType, locatorType: LocatorType): string => {
+export const getLocatorPrefix = (annotationType?: AnnotationType, locatorType?: LocatorType): string => {
   if (annotationType === AnnotationType.FindBy) {
-    return `${locatorType === LocatorType.xPath ? "xpath" : "css"} = `;
+    return `${locatorType === LocatorType.cssSelector ? "css" : "xpath"} = `;
   }
 
   return "";
 };
 
 export const getLocatorString = (
-  annotationType: AnnotationType,
-  locatorType: LocatorType,
+  annotationType: AnnotationType | undefined,
+  locatorType: LocatorType | undefined,
   locator: LocatorValue,
   type: ElementLibrary | ElementClass,
   name: string
 ): string =>
-  `${annotationType}(${getLocatorPrefix(annotationType, locatorType)}"${locator.output}")\npublic ${type} ${name};`;
+  `${annotationType || AnnotationType.UI}(${getLocatorPrefix(annotationType, locatorType)}"${
+    locator.output
+  }")\npublic ${type} ${name};`;
 
 export const isMacPlatform = (param: Window) => param.navigator?.userAgent.indexOf("Mac") != -1;
 

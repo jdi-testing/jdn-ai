@@ -34,7 +34,7 @@ import { selectFirstLocatorIdByPO } from "./selectors/locatorsByPO.selectors";
 import { selectCalculatedActiveByPageObj, selectWaitingActiveByPageObj } from "./selectors/locatorsFiltered.selectors";
 import { isLocatorListPage } from "../../app/utils/heplers";
 import { selectCurrentPageObject } from "../pageObjects/selectors/pageObjects.selectors";
-import { LocalStorageKey, getLocalStorage } from "../../common/utils/localStorage";
+import { AnnotationType, LocatorType } from "../../common/types/common";
 
 interface Props {
   element: LocatorInterface;
@@ -54,15 +54,11 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
 
   const { element_id, type, name, locator, generate, message, deleted, active, isCustomLocator } = element;
 
-  const annotationType =
-    element?.annotationType ||
-    getLocalStorage(LocalStorageKey.AnnotationType) ||
-    useSelector(selectCurrentPageObject)?.annotationType;
+  const pageObjectAnnotationType = useSelector(selectCurrentPageObject)?.annotationType;
+  const pageObjectLocatorType = useSelector(selectCurrentPageObject)?.locatorType;
 
-  const locatorType =
-    element?.locatorType ||
-    getLocalStorage(LocalStorageKey.LocatorType) ||
-    useSelector(selectCurrentPageObject)?.locatorType;
+  const annotationType = element?.annotationType || pageObjectAnnotationType || AnnotationType.UI;
+  const locatorType = element?.locatorType || pageObjectLocatorType || LocatorType.xPath;
 
   const ref = useRef<HTMLDivElement>(null);
 

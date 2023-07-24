@@ -1,7 +1,7 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { isNil } from "lodash";
 import { RootState } from "../../../app/store/store";
-import { LocatorType } from "../../../common/types/common";
+// import { LocatorType, AnnotationType } from "../../../common/types/common";
 import { selectCurrentPageObject, selectPageObjById } from "../../pageObjects/selectors/pageObjects.selectors";
 import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
 import { getLocator } from "../utils/locatorOutput";
@@ -31,15 +31,14 @@ export const selectPresentLocatorsByPO = createSelector(
     const locByPageObj = pageObject?.locators || [];
     return locators
       .filter((loc) => locByPageObj.includes(loc.element_id))
-      .map((loc) =>
-        !loc.locatorType && pageObject?.locatorType === LocatorType.cssSelector
-          ? {
-              ...loc,
-              locatorType: pageObject?.locatorType,
-              locator: { ...loc.locator, output: getLocator(loc.locator, pageObject?.locatorType) },
-            }
-          : loc
-      );
+      .map((loc) => {
+        return {
+          ...loc,
+          locatorType: loc.locatorType || pageObject?.locatorType,
+          annotationType: loc.annotationType || pageObject?.annotationType,
+          locator: { ...loc.locator, output: getLocator(loc.locator, pageObject?.locatorType) },
+        };
+      });
   }
 );
 
