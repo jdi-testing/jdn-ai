@@ -6,7 +6,7 @@ import { NETWORK_ERROR, NO_ELEMENT_IN_DOCUMENT } from "../features/locators/util
 import { locatorGenerationController } from "../features/locators/utils/locatorGenerationController";
 import { sendMessage } from "../pageServices/connector";
 import { webSocketController } from "./webSocketController";
-import { selectInProgressByPageObj } from "../features/locators/selectors/locatorsFiltered.selectors";
+import { areInProgress, selectInProgressByPageObj } from "../features/locators/selectors/locatorsFiltered.selectors";
 import { selectCurrentPageObject } from "../features/pageObjects/selectors/pageObjects.selectors";
 
 const reScheduledTasks = new Set();
@@ -63,13 +63,12 @@ export const updateSocketMessageHandler = (dispatch: any, state: any) => {
           const pageObject = selectCurrentPageObject(state)!;
           dispatch(updateLocatorGroup({ locators, pageObject }));
         };
-        debouncer.accumulateAndDebounce(onStatusChange)([payload]);
+        if (areInProgress(state)) debouncer.accumulateAndDebounce(onStatusChange)([payload]);
         break;
       }
     }
     if (pong) {
-      const areInProgress = selectInProgressByPageObj(state).length > 0;
-      if (!areInProgress) webSocketController.stopPing();
+      if (!areInProgress(state)) webSocketController.stopPing();
     }
   };
 
