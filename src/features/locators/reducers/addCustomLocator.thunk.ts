@@ -2,7 +2,7 @@ import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
 import { Locator, LocatorsState, ValidationStatus } from "../types/locator.types";
 import { generateId, getElementFullXpath } from "../../../common/utils/helpers";
 import { addLocatorToPageObj } from "../../pageObjects/pageObject.slice";
-import { addLocators, setScrollToLocator } from "../locators.slice";
+import { addLocators, setScrollToLocator, setActiveSingle } from "../locators.slice";
 import { getLocatorValidationStatus, evaluateXpath, evaluateCssSelector, generateSelectorByHash } from "../utils/utils";
 import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
 import { sendMessage } from "../../../pageServices/connector";
@@ -74,9 +74,9 @@ export const addCustomLocator = createAsyncThunk(
     }
 
     const dispatch = thunkAPI.dispatch;
-
     dispatch(addLocators([newLocator]));
     dispatch(addLocatorToPageObj({ pageObjId: pageObjectId, locatorId: newLocator.element_id }));
+    dispatch(setActiveSingle(newLocator));
     dispatch(setScrollToLocator(newLocator.element_id));
 
     return newLocator;
