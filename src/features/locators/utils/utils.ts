@@ -13,16 +13,13 @@ import {
   JDNHash,
   LocatorTaskStatus,
 } from "../types/locator.types";
-import { getLocatorString, getElementFullXpath } from "../../../common/utils/helpers";
+import { getElementFullXpath } from "../../../common/utils/helpers";
 import { LocatorOption } from "./constants";
 import { LocatorType } from "../../../common/types/common";
 import { isStringContainsNumbers } from "../../../common/utils/helpers";
 import { FormInstance } from "antd/es/form/Form";
 import { copyToClipboard } from "../../../common/utils/copyToClipboard";
-
-export const getLocatorWithJDIAnnotation = (locator: string): string => `@UI("${locator}")`;
-
-export const getLocatorWithSelenium = (locator: string, option: string): string => `@FindBy(${option} = "${locator}")`;
+import { getLocatorString, getLocatorWithJDIAnnotation, getLocatorWithSelenium } from "./locatorOutput";
 
 export const isValidJavaVariable = (value: string) => /^[a-zA-Z_$]([a-zA-Z0-9_])*$/.test(value);
 
@@ -95,7 +92,11 @@ export const copyLocator = (locatorsForCopy: Locator[], option?: LocatorOption) 
       value = locatorsForCopy.map(({ locator }) => getLocatorWithJDIAnnotation(locator.cssSelector)).join("\n");
       break;
     default:
-      value = locatorsForCopy.map(({ locator, type, name }) => getLocatorString(locator, type, name)).join("\n");
+      value = locatorsForCopy
+        .map(({ annotationType, locatorType, locator, type, name }) =>
+          getLocatorString(annotationType, locatorType, locator, type, name)
+        )
+        .join("\n");
   }
 
   copyToClipboard(value);

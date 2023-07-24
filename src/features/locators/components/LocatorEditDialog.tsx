@@ -24,7 +24,7 @@ import { createNewName, isValidLocator, getLocatorValidationStatus, getLocatorVa
 import { createLocatorValidationRules } from "../utils/locatorValidationRules";
 import { createNameValidationRules } from "../utils/nameValidationRules";
 import FormItem from "antd/es/form/FormItem";
-import { LocatorType, SelectOption } from "../../../common/types/common";
+import { LocatorType, SelectOption, AnnotationType } from "../../../common/types/common";
 import { isFilteredSelect } from "../../../common/utils/helpers";
 import { CALCULATING, newLocatorStub } from "../utils/constants";
 import { changeLocatorElement } from "../reducers/changeLocatorElement.thunk";
@@ -44,6 +44,7 @@ interface FormValues {
   name: string;
   type: ElementClass;
   locatorType: LocatorType;
+  annotationType: AnnotationType;
   locator: string;
 }
 
@@ -62,11 +63,13 @@ export const LocatorEditDialog: React.FC<Props> = ({
   elemName,
   elemText,
   locatorType,
+  annotationType,
 }) => {
   const dispatch = useDispatch();
   const locators = useSelector(selectPresentLocatorsByPO);
   const types = useSelector((_state: RootState) => selectAvailableClasses(_state));
   const pageObjectLocatorType = useSelector(selectCurrentPageObject)?.locatorType;
+  const pageObjectAnnotationType = useSelector(selectCurrentPageObject)?.annotationType;
   const pageObjectId = useSelector(selectCurrentPageObject)!.id;
   const library = useSelector(selectCurrentPageObject)?.library || defaultLibrary;
 
@@ -78,11 +81,13 @@ export const LocatorEditDialog: React.FC<Props> = ({
 
   const [form] = Form.useForm<FormValues>();
   const defaultLocatorType = locatorType || pageObjectLocatorType || LocatorType.xPath;
+  const defaultAnnotationType = annotationType || pageObjectAnnotationType || AnnotationType.UI;
   const initialValues: FormValues = {
     type,
     name: name || "",
     locator: locator.output ?? "",
     locatorType: defaultLocatorType,
+    annotationType: defaultAnnotationType,
   };
 
   const [isOkButtonDisabled, setIsOkButtonDisabled] = useState<boolean>(true);
@@ -135,12 +140,13 @@ export const LocatorEditDialog: React.FC<Props> = ({
     // in case if user didn't touch locator field to avoid forceUpdate
     const locatorMessage = isLocatorFieldTouched ? validationMessage : LocatorValidationWarnings.NotFound;
 
-    const { name, type, locator, locatorType } = await form.validateFields();
+    const { name, type, locator, locatorType, annotationType } = await form.validateFields();
     const isCSSLocator = locatorType === LocatorType.cssSelector;
     newLocator = {
       ...newLocator,
       locator: { ...newLocator.locator, ...{ [isCSSLocator ? "cssSelector" : "xPath"]: locator } },
       predicted_label: type.toLowerCase(),
+      annotationType,
       locatorType,
       message: locatorMessage,
       name,
@@ -152,11 +158,12 @@ export const LocatorEditDialog: React.FC<Props> = ({
   };
 
   const handleEditLocator = async () => {
-    const { name, type, locator, locatorType } = await form.validateFields();
+    const { name, type, locator, locatorType, annotationType } = await form.validateFields();
     const updatedLocator = {
       name,
       type,
       locator,
+      annotationType,
       locatorType,
       element_id,
       library,
@@ -289,6 +296,24 @@ export const LocatorEditDialog: React.FC<Props> = ({
             {
               value: LocatorType.cssSelector,
               label: LocatorType.cssSelector,
+            },
+          ]}
+        />
+      </FormItem>
+      <FormItem
+        wrapperCol={{ span: 24, xs: { offset: 0 }, sm: { offset: 4 } }}
+        name="annotationType"
+        style={{ marginBottom: "8px" }}
+      >
+        <Select
+          options={[
+            {
+              value: AnnotationType.UI,
+              label: AnnotationType.UI,
+            },
+            {
+              value: AnnotationType.FindBy,
+              label: AnnotationType.FindBy,
             },
           ]}
         />

@@ -1,14 +1,9 @@
-import { LocatorValue } from "../../features/locators/types/locator.types";
-import { ElementLibrary, ElementClass } from "../../features/locators/types/generationClasses.types";
 import { sendMessage } from "../../pageServices/connector";
 
 export const floatToPercent = (value: number) => {
   // wse need to show percents, but multiply float * 100 provides an unexpected result and leads to bugs
   return Math.trunc(value * 100);
 };
-
-export const getLocatorString = (locator: LocatorValue, type: ElementLibrary | ElementClass, name: string): string =>
-  `@UI("${locator.output}")\npublic ${type} ${name};`;
 
 export const isMacPlatform = (param: Window) => param.navigator?.userAgent.indexOf("Mac") != -1;
 

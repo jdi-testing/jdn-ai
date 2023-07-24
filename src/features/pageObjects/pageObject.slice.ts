@@ -5,7 +5,7 @@ import { PageObjectState, PageObject, PageObjectId } from "./types/pageObjectSli
 import { ElementId } from "../locators/types/locator.types";
 import { addPageObjReducer } from "./reducers/addPageObject.thunk";
 import { ElementLibrary } from "../locators/types/generationClasses.types";
-import { LocatorType } from "../../common/types/common";
+import { LocatorType, AnnotationType } from "../../common/types/common";
 
 const initialState: PageObjectState = {};
 
@@ -55,6 +55,9 @@ const pageObjSlice = createSlice({
     setHideUnadded(state, { payload }: PayloadAction<{ id: PageObjectId; hideUnadded: boolean }>) {
       pageObjAdapter.upsertOne(state, payload as PageObject);
     },
+    setAnnotationType(state, { payload }: PayloadAction<{ id: PageObjectId; annotationType: AnnotationType }>) {
+      pageObjAdapter.upsertOne(state, payload as PageObject);
+    },
     setLocatorType(state, { payload }: PayloadAction<{ id: PageObjectId; locatorType: LocatorType }>) {
       pageObjAdapter.upsertOne(state, payload as PageObject);
     },
@@ -79,6 +82,7 @@ export const {
   removePageObject,
   setCurrentPageObj,
   setHideUnadded,
+  setAnnotationType,
   setLocatorType,
   setPageData,
 } = pageObjSlice.actions;

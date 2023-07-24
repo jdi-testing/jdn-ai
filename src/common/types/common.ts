@@ -5,6 +5,11 @@ export enum FrameworkType {
   Vividus = "Vividus",
 }
 
+export enum AnnotationType {
+  UI = "@UI",
+  FindBy = "@FindBy",
+}
+
 export enum LocatorType {
   cssSelector = "CSS selector",
   xPath = "xPath",

@@ -37,6 +37,11 @@ export const selectLastElementLibrary = createSelector(selectPageObjects, (pageO
 
 export const selectLastLocatorType = createSelector(selectPageObjects, (pageObjects) => last(pageObjects)?.locatorType);
 
+export const selectLastAnnotationType = createSelector(
+  selectPageObjects,
+  (pageObjects) => last(pageObjects)?.annotationType
+);
+
 export const selectAutoGeneratingLocatorTypes = createSelector(
   selectCurrentPageObject,
   (_: RootState, locators?: any[]) => locators,
