@@ -1,5 +1,4 @@
 import { LocatorTaskStatus } from "../../../../features/locators/types/locator.types";
-import { AnnotationType, LocatorType } from "../../../../common/types/common";
 
 export const locatorsTreeMockSearch = [
   {
@@ -15,8 +14,6 @@ export const locatorsTreeMockSearch = [
       errorMessage: "",
       output: "",
     },
-    annotationType: AnnotationType.UI,
-    locatorType: LocatorType.xPath,
     name: "radiobuttonsUl",
     message: "",
     predictedAttrId: "",
@@ -39,8 +36,6 @@ export const locatorsTreeMockSearch = [
           errorMessage: "",
           output: "",
         },
-        annotationType: AnnotationType.UI,
-        locatorType: LocatorType.xPath,
         name: "breadcrumbsLi7",
         message: "",
         predictedAttrId: "",
@@ -66,8 +61,6 @@ export const locatorsTreeMockSearch = [
       errorMessage: "",
       output: "",
     },
-    annotationType: AnnotationType.UI,
-    locatorType: LocatorType.xPath,
     name: "radiobuttonsUl",
     message: "",
     predictedAttrId: "",
