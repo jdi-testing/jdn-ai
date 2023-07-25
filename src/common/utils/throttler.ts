@@ -41,7 +41,7 @@ class Throttler {
 
 export const throttler = new Throttler();
 
-export const quitDebouncerMiddleware: Middleware = (store) => (next) => (action) => {
+export const quitThrottlerMiddleware: Middleware = (store) => (next) => (action) => {
   const result = next(action);
 
   switch (action.type) {

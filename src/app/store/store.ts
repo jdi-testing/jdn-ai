@@ -11,7 +11,7 @@ import { scriptNotifier } from "../../pageServices/scriptNotifier";
 import { changePageMiddleware } from "./middlewares/changePage.middleware";
 import { updateSocketMessageHandler } from "../../services/webSocketMessageHandler";
 import { onSetActive } from "../../features/locators/reducers/onSetActive.middleware";
-import { quitDebouncerMiddleware } from "../../common/utils/throttler";
+import { quitThrottlerMiddleware } from "../../common/utils/throttler";
 
 const rootReducer = {
   main: mainSlice,
@@ -34,7 +34,7 @@ export const store = configureStore({
           "main/setScriptMessage",
         ],
       },
-    }).concat([logger, scriptNotifier, cancellableActions, changePageMiddleware, onSetActive, quitDebouncerMiddleware]),
+    }).concat([logger, scriptNotifier, cancellableActions, changePageMiddleware, onSetActive, quitThrottlerMiddleware]),
 });
 
 store.subscribe(() => updateMessageHandler(store.dispatch, store.getState()));
