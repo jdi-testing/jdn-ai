@@ -1,15 +1,15 @@
 import { Middleware } from "@reduxjs/toolkit";
 import { areInProgress } from "../../features/locators/selectors/locatorsFiltered.selectors";
 
-class Debouncer {
+class Throttler {
   accumulatedArgs: any[] = [];
   interval: NodeJS.Timer | null = null;
 
   constructor() {
-    this.accumulateAndDebounce = this.accumulateAndDebounce.bind(this);
+    this.accumulateAndThrottle = this.accumulateAndThrottle.bind(this);
   }
 
-  accumulateAndDebounce(fn: (arg: any[]) => any) {
+  accumulateAndThrottle(fn: (arg: any[]) => any) {
     const debouncedFn = (args: any[]) => {
       this.accumulatedArgs.push(...args);
     };
@@ -20,7 +20,7 @@ class Debouncer {
       try {
         fn(this.accumulatedArgs);
       } catch (error) {
-        this.quitDebouncer();
+        this.quitThrottler();
         if (__DEV_ENVIRONMENT__) console.log("Can't invoke throttled function:", error);
       }
       this.accumulatedArgs = [];
@@ -33,13 +33,13 @@ class Debouncer {
     };
   }
 
-  quitDebouncer() {
+  quitThrottler() {
     this.interval && clearInterval(this.interval);
     this.interval = null;
   }
 }
 
-export const debouncer = new Debouncer();
+export const throttler = new Throttler();
 
 export const quitDebouncerMiddleware: Middleware = (store) => (next) => (action) => {
   const result = next(action);
@@ -48,7 +48,7 @@ export const quitDebouncerMiddleware: Middleware = (store) => (next) => (action)
     case "locators/updateLocatorGroup":
     case "locators/failGeneration":
       if (!areInProgress(store.getState())) {
-        debouncer.quitDebouncer();
+        throttler.quitThrottler();
       }
       break;
   }

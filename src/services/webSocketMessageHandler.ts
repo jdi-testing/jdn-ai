@@ -1,4 +1,4 @@
-import { debouncer } from "../common/utils/debouncer";
+import { throttler } from "../common/utils/throttler";
 import { failGeneration, updateLocatorGroup } from "../features/locators/locators.slice";
 import { selectLocatorByJdnHash } from "../features/locators/selectors/locators.selectors";
 import { Locator, LocatorTaskStatus } from "../features/locators/types/locator.types";
@@ -63,7 +63,7 @@ export const updateSocketMessageHandler = (dispatch: any, state: any) => {
           const pageObject = selectCurrentPageObject(state)!;
           dispatch(updateLocatorGroup({ locators, pageObject }));
         };
-        if (areInProgress(state)) debouncer.accumulateAndDebounce(onStatusChange)([payload]);
+        if (areInProgress(state)) throttler.accumulateAndThrottle(onStatusChange)([payload]);
         break;
       }
     }
