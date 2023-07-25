@@ -1,26 +1,22 @@
-import { Button, Steps, Typography } from "antd";
+import { Alert, Button, Steps, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 /* eslint-disable-next-line */
 // @ts-ignore
 // since webpack works fine with it
-import readme from "../../../README.md";
-import { BackendStatus } from "../types/mainSlice.types";
-import { RootState } from "../store/store";
-import { useGuideRehype } from "../utils/useGuideRehype";
-import { redefineServer } from "../reducers/redefineServer.thunk";
-
-const splitMD = (source: string) => source.match(/^#+ [^#]*/gm);
-
-const pluginGuide = (splittedMD: Array<string>): string =>
-  splittedMD.find((markdown: string) => markdown.includes("### Frontend setup")) || "";
-const serverGuide = (splittedMD: Array<string>) =>
-  splittedMD.find((markdown: string) => markdown.includes("### Server setup")) || "";
+import readme from "../../../../README.md";
+import { BackendStatus } from "../../types/mainSlice.types";
+import { RootState } from "../../store/store";
+import { useGuideRehype } from "../../utils/useGuideRehype";
+import { redefineServer } from "../../reducers/redefineServer.thunk";
+import { GuideText } from "./text.constants";
+import { AlertStatus, getSteps, pluginGuide, serverGuide, splitMD } from "./utils";
 
 export const Guide = () => {
   const backendStatus = useSelector((_state: RootState) => _state.main.backendAvailable);
   const isSettingsChecking = backendStatus === BackendStatus.Retry;
   const [currentStep, setCurrentStep] = useState(0);
+  const [alertStatus, setAlertStatus] = useState<AlertStatus>(AlertStatus.Hide);
   const [pluginGuideComponent, setPluginGuide] = useGuideRehype();
   const [serverGuideComponent, setServerGuide] = useGuideRehype();
   const dispatch = useDispatch();
@@ -37,29 +33,15 @@ export const Guide = () => {
     const _step =
       backendStatus === BackendStatus.OutdatedServerLocal || backendStatus === BackendStatus.AccessFailed ? 1 : 0;
     setCurrentStep(_step);
+  }, []);
+
+  useEffect(() => {
+    if (backendStatus === BackendStatus.Retry) setAlertStatus(AlertStatus.Checking);
+    if (backendStatus === BackendStatus.OutdatedServerLocal)
+      setAlertStatus((prevStatus) => (prevStatus === AlertStatus.Checking ? AlertStatus.Show : prevStatus));
   }, [backendStatus]);
 
-  const steps = [
-    {
-      title: "Step 1",
-      key: "Step1",
-      description: "Frontend setup",
-      content: pluginGuideComponent,
-    },
-    {
-      title: "Step 2",
-      key: "Step2",
-      description: "Server setup",
-      content: [serverGuideComponent],
-    },
-    {
-      title: "Step 3",
-      key: "Step3",
-      description: "Check",
-      content:
-        "The plugin will check if everything works correctly, the instruction will be closed and you will be redirected to start page.",
-    },
-  ];
+  const steps = getSteps(pluginGuideComponent, serverGuideComponent);
 
   const onNextStepClick = () => {
     setCurrentStep(currentStep + 1);
@@ -73,12 +55,23 @@ export const Guide = () => {
     dispatch(redefineServer());
   };
 
+  const showAlert = alertStatus === AlertStatus.Show;
+
   return (
     <div className="jdn__guide">
       <Typography.Title level={5}>Installation guide</Typography.Title>
       <div className="jdn__guide_content">
         <Steps current={currentStep} items={steps} />
         <div className="steps-content">{steps[currentStep].content}</div>
+        {showAlert ? (
+          <Alert
+            type="error"
+            message={GuideText.ServerError}
+            description={GuideText.ServerErrorDescription}
+            showIcon
+            closable
+          />
+        ) : null}
       </div>
       <div className="jdn__navigation">
         {currentStep > 0 && <Button onClick={onPrevStepClick}>Back</Button>}
