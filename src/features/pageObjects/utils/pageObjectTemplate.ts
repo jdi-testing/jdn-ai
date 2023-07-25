@@ -2,6 +2,7 @@ import { ElementLibrary } from "../../locators/types/generationClasses.types";
 import { camelCase, upperFirst } from "lodash";
 import transliterate from "@sindresorhus/transliterate";
 import { Locator } from "../../locators/types/locator.types";
+import { AnnotationType } from "../../../common/types/common";
 
 export const getClassName = (title: string) => {
   let className = transliterate(title);
@@ -19,7 +20,7 @@ export const pageObjectTemplate = (locators: Locator[], title: string, library: 
   const className = title;
   const locatorsCode = locators.map((loc) => {
     const locatorEscaped = loc.locator.output?.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
-    return `    @UI("${locatorEscaped}")\n    public ${loc.type} ${loc.name};`;
+    return `    ${AnnotationType.UI}("${locatorEscaped}")\n    public ${loc.type} ${loc.name};`;
   });
 
   const pageCode = `package site.pages;

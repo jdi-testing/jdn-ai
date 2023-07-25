@@ -1,3 +1,5 @@
+import { AnnotationType } from "../../../common/types/common";
+
 export const locators = [
   {
     attrId: "",
@@ -75,13 +77,13 @@ import com.epam.jdi.light.elements.complex.table.*;
 import com.epam.jdi.light.ui.html.elements.complex.*;
 
 public class HomePage extends WebPage {
-    @UI("//*[@class='uui-navigation nav navbar-nav m-l8']")
+    ${AnnotationType.UI}("//*[@class='uui-navigation nav navbar-nav m-l8']")
     public list listUl;
 
-    @UI("//*[@class='footer-menu']")
+    ${AnnotationType.UI}("//*[@class='footer-menu']")
     public list listUl7;
 
-    @UI("/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[1]/a")
+    ${AnnotationType.UI}("/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[1]/a")
     public badge badge;
 }
 `;
@@ -110,13 +112,13 @@ import com.epam.jdi.light.material.elements.surfaces.*;
 import com.epam.jdi.light.material.elements.utils.*;
 
 public class HomePage extends WebPage {
-    @UI("//*[@class='uui-navigation nav navbar-nav m-l8']")
+    ${AnnotationType.UI}("//*[@class='uui-navigation nav navbar-nav m-l8']")
     public list listUl;
 
-    @UI("//*[@class='footer-menu']")
+    ${AnnotationType.UI}("//*[@class='footer-menu']")
     public list listUl7;
 
-    @UI("/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[1]/a")
+    ${AnnotationType.UI}("/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[1]/a")
     public badge badge;
 }
 `;
@@ -144,13 +146,13 @@ import com.epam.jdi.light.vuetify.elements.complex.timelines.*;
 import com.epam.jdi.light.vuetify.elements.composite.*;
 
 public class HomePage extends WebPage {
-    @UI("//*[@class='uui-navigation nav navbar-nav m-l8']")
+    ${AnnotationType.UI}("//*[@class='uui-navigation nav navbar-nav m-l8']")
     public list listUl;
 
-    @UI("//*[@class='footer-menu']")
+    ${AnnotationType.UI}("//*[@class='footer-menu']")
     public list listUl7;
 
-    @UI("/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[1]/a")
+    ${AnnotationType.UI}("/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[1]/a")
     public badge badge;
 }
 `;

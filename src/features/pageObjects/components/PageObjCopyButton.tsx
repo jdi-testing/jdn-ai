@@ -1,11 +1,11 @@
 import React, { FC, MouseEvent, useState } from "react";
 
 import { Button, Tooltip } from "antd";
-import { getLocatorString } from "../../../common/utils/helpers";
 import { CopySimple } from "phosphor-react";
 import { Locator } from "../../locators/types/locator.types";
 import { CopyTitle } from "../../../common/types/common";
 import { copyToClipboard } from "../../../common/utils/copyToClipboard";
+import { getLocatorString } from "../../locators/utils/locatorOutput";
 
 interface Props {
   elements: Locator[];
@@ -15,7 +15,9 @@ export const PageObjCopyButton: FC<Props> = ({ elements }) => {
   const [copyTooltipTitle, setTooltipTitle] = useState(CopyTitle.Copy);
 
   const getPageObjectForCopying = (locators: Locator[]) => {
-    return locators.map(({ locator, type, name }) => getLocatorString(locator, type, name));
+    return locators.map(({ annotationType, locatorType, locator, type, name }) =>
+      getLocatorString(annotationType, locatorType, locator, type, name)
+    );
   };
 
   const handleCopy = (e: MouseEvent<HTMLElement>) => {

@@ -3,15 +3,15 @@ import { CopySimple } from "phosphor-react";
 import React, { useState } from "react";
 import { copyToClipboard } from "../../../common/utils/copyToClipboard";
 import { CopyTitle } from "../../../common/types/common";
-import { getLocatorString } from "../../../common/utils/helpers";
+import { getLocatorString } from "../../locators/utils/locatorOutput";
 
 export const LocatorCopyButton = ({ element }) => {
   const [copyTooltipTitle, setTooltipTitle] = useState(CopyTitle.Copy);
-  const { locator, type, name } = element;
+  const { locator, type, name, annotationType, locatorType } = element;
 
   const handleCopy = (event) => {
     event.stopPropagation();
-    const locatorString = getLocatorString(locator, type, name);
+    const locatorString = getLocatorString(annotationType, locatorType, locator, type, name);
     copyToClipboard(locatorString);
     setTooltipTitle(CopyTitle.Copied);
   };
