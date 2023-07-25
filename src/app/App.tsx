@@ -15,7 +15,7 @@ import { RootState, store } from "./store/store";
 import { useOnDisconnect } from "./utils/useOnDisconnect";
 
 import { defineServer } from "./reducers/defineServer.thunk";
-import { Guide } from "./components/Guide";
+import { Guide } from "./components/guide/Guide";
 import "./styles/index.less";
 import { BackendStatus } from "./types/mainSlice.types";
 import { setIsSessionUnique } from "./main.slice";
