@@ -1,5 +1,5 @@
 import { Alert, Button, Steps, Typography } from "antd";
-import React, { ReactElement, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 /* eslint-disable-next-line */
 // @ts-ignore

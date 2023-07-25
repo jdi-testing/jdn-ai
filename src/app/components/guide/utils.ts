@@ -30,7 +30,7 @@ export const getSteps = (pluginGuideComponent: ReactElement | null, serverGuideC
 ];
 
 export enum AlertStatus {
-    Checking,
-    Hide,
-    Show,
+  Checking,
+  Hide,
+  Show,
 }
