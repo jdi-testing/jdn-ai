@@ -85,7 +85,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
   const initialValues: FormValues = {
     type,
     name: name || "",
-    locator: locator.output ?? "",
+    locator: locator?.output ?? "",
     locatorType: defaultLocatorType,
     annotationType: defaultAnnotationType,
   };

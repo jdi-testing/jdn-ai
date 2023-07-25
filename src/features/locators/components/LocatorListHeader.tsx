@@ -22,10 +22,19 @@ import {
   selectActualActiveByPageObject,
 } from "../selectors/locatorsFiltered.selectors";
 
-export const LocatorListHeader = ({ render }: { render: (viewProps: LocatorTreeProps["viewProps"]) => ReactNode }) => {
+interface LocatorListHeaderProps {
+  render: (viewProps: LocatorTreeProps["viewProps"]) => ReactNode;
+  isEditModalOpen: boolean;
+  setIsEditModalOpen: (isOpen: boolean) => void;
+}
+
+export const LocatorListHeader = ({
+  render,
+  isEditModalOpen,
+  setIsEditModalOpen,
+}: LocatorListHeaderProps): JSX.Element => {
   const dispatch = useDispatch();
   const [expandAll, setExpandAll] = useState(ExpandState.Expanded);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isCreatingForm, setIsCreatingForm] = useState(false);
   const [searchString, setSearchString] = useState("");
 
