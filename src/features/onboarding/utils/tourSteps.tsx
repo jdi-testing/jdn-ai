@@ -102,7 +102,7 @@ const saveLocators = (refs: Record<OnbrdStep, StepRef>) => ({
   description: "Save your selections.",
   target: refs[OnbrdStep.SaveLocators]?.target?.current,
   nextButtonProps: {
-    children: "Save PO",
+    children: "Save Page Object",
     onClick: refs[OnbrdStep.SaveLocators]?.onClickNext,
   },
 });
