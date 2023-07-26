@@ -6,6 +6,8 @@ import { Locator } from "../types/locator.types";
 import { filterLocatorsByClassFilter } from "../utils/filterLocators";
 import { isProgressStatus } from "../utils/locatorGenerationController";
 import { selectLocatorsByPageObject, selectSortedLocators } from "./locatorsByPO.selectors";
+import { selectCurrentPage } from "../../../app/main.selectors";
+import { isLocatorListPage } from "../../../app/utils/heplers";
 
 export const selectFilteredLocators = createSelector(
   selectLocatorsByPageObject,
@@ -147,4 +149,10 @@ export const selectActiveLocators = createSelector(selectFilteredLocators, (loca
 
 export const selectCheckedLocators = createSelector(selectFilteredLocators, (locators) =>
   locators.filter((_loc) => _loc.generate)
+);
+
+export const areInProgress = createSelector(
+  selectInProgressByPageObj,
+  selectCurrentPage,
+  (locators, page) => isLocatorListPage(page.page) && locators.length > 0
 );
