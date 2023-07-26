@@ -35,6 +35,7 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
   useEffect(() => {
     if (!_isOnboardingPassed && isBackendAvailable && isSessionUnique) {
       setIsModalOpen(true);
+      setLocalStorage(LocalStorageKey.IsOnboardingPassed, true);
     } else {
       setIsModalOpen(false);
     }
@@ -47,7 +48,6 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
 
   const closeOnboarding = () => {
     setIsOnbrdOpen(false);
-    setLocalStorage(LocalStorageKey.IsOnboardingPassed, true);
   };
   const addRef = (
     name: OnbrdStep,
