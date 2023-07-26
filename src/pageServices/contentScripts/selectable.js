@@ -216,6 +216,7 @@ export const selectable = () => {
       const selected = new Set();
       const deselected = new Set();
       const a = rb();
+      if (!a) return;
 
       delete self.ipos;
       document.body.classList.remove("s-noselect");
@@ -228,8 +229,6 @@ export const selectable = () => {
       const removeRect = function () {
         if (a && a.parentNode) a.parentNode.removeChild(a);
       };
-
-      if (!a) return;
 
       const toggleActiveClass = function (el) {
         if (el.classList.contains(s)) {
