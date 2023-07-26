@@ -147,6 +147,7 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
         onCancel={() => setIsModalOpen(false)}
         onOk={handleConfirmModal}
         okText={OnboardingProviderTexts.ModalOkButtonText}
+        cancelText={OnboardingProviderTexts.ModalCancelButtonText}
       >
         {OnboardingProviderTexts.ModalText}
       </Modal>

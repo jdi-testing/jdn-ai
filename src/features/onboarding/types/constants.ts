@@ -29,4 +29,5 @@ export enum OnboardingProviderTexts {
   ModalTitle = "Welcome to Onboarding Tutorial!",
   ModalText = "Discover all the features and possibilities of the extension with the onboarding tutorial.",
   ModalOkButtonText = "Start",
+  ModalCancelButtonText = "Skip",
 }
