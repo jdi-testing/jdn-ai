@@ -46,4 +46,4 @@ export enum ScriptMsg {
   ToggleElementGroup = "ToggleElementGroup",
 }
 
-export const dispatchingMessages = [ ScriptMsg.OpenEditLocator ];
+export const dispatchingMessages = [ScriptMsg.OpenEditLocator];
