@@ -272,8 +272,6 @@ export const selectable = () => {
         removeRect();
       }, 100);
 
-      console.log("selected", selected);
-      console.log("deselected", deselected);
       if (selected.size && self.options.onSelect) self.options.onSelect(Array.from(selected));
       if (deselected.size && self.options.onDeselect) self.options.onDeselect(Array.from(deselected));
 
