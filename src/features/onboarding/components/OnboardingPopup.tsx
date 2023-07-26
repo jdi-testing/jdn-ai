@@ -22,6 +22,7 @@ export const OnboardingPopup: FC<Props> = ({ children }) => {
       overlayClassName="jdn__header-onboarding-button"
       placement="bottomRight"
       align={{ offset: [18, 0] }}
+      icon={false}
       disabled={!isOnboardingAvailable}
       title={isDefaultState ? OnboardingPopupText.Default : OnboardingPopupText.InProgress}
       onConfirm={openOnboarding}
