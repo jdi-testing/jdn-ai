@@ -23,6 +23,7 @@ import { getLocatorString, getLocatorWithJDIAnnotation, getLocatorWithSelenium }
 
 export const isValidJavaVariable = (value: string) => /^[a-zA-Z_$]([a-zA-Z0-9_])*$/.test(value);
 
+// wishes for future refactorings: get rid these three functions and call sendMessage<> directly
 export const evaluateXpath = (xPath: string, element_id?: ElementId, originJdnHash?: string) =>
   sendMessage.evaluateXpath({ xPath, element_id, originJdnHash });
 
@@ -175,3 +176,8 @@ export const getTaskStatus = (locator: LocatorValue) => {
   // fallback for any unhandled cases
   return xPathStatus || cssSelectorStatus;
 };
+
+export const hasAllLocators = ({ locator }: Locator) =>
+  locator && locator.xPath !== locator.fullXpath && locator.cssSelector;
+
+export const getNoLocatorsElements = (locators: Locator[]) => locators.filter((locator) => !hasAllLocators(locator));

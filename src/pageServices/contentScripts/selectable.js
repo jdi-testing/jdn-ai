@@ -216,9 +216,7 @@ export const selectable = () => {
       const selected = new Set();
       const deselected = new Set();
       const a = rb();
-      if (!a) {
-        return;
-      }
+
       delete self.ipos;
       document.body.classList.remove("s-noselect");
       document.body.removeEventListener("mousemove", self.rectDraw);
@@ -226,6 +224,13 @@ export const selectable = () => {
       document.body.removeEventListener("mouseleave", self.select);
 
       const s = self.options.selectedClass;
+
+      const removeRect = function () {
+        if (a && a.parentNode) a.parentNode.removeChild(a);
+      };
+
+      if (!a) return;
+
       const toggleActiveClass = function (el) {
         if (el.classList.contains(s)) {
           deselected.add(el.id);
@@ -237,12 +242,22 @@ export const selectable = () => {
       };
       if (isPlainClick(a)) {
         const highlightTarget = e.target.closest("[jdn-highlight=true]:not([id^='jdn-overlay'])");
+        const isActiveTarget = highlightTarget && highlightTarget.classList.contains(self.options.selectedClass);
+        const isActiveGroup = document.querySelectorAll(`[jdn-highlight=true].${self.options.selectedClass}`).length > 0;
 
         if (highlightTarget && !self.isContextForGroup(e)) {
-          // simple click on any highlight
-          if (!e[self.options.moreUsing]) self.removePreviousSelection();
-          toggleActiveClass(highlightTarget);
-        } else if (!highlightTarget) self.removePreviousSelection(); // simple click outside highlight
+          /** single click on any highlight **/
+          if (!e[self.options.moreUsing]) {
+            /** remove selection from all items, except just clicked **/
+            if (isActiveGroup) self.removePreviousSelection([highlightTarget.id]);
+            /** make target active, if it's still not **/
+            if (!isActiveTarget) toggleActiveClass(highlightTarget);
+          } else {
+            /** with "more button" used, active class is always converted **/
+            toggleActiveClass(highlightTarget);
+          }
+          /* single click outside highlight cancels all selections */
+        } else if (!highlightTarget) self.removePreviousSelection();
       } else {
         self.selectedItems = new Set();
         self.foreach(self.items, function (el) {
@@ -254,18 +269,21 @@ export const selectable = () => {
 
       // setTimeout to allow click listeners in other scripts (eg. contextmenu.js) work correctly
       setTimeout(function () {
-        if (a && a.parentNode) a.parentNode.removeChild(a);
+        removeRect();
       }, 100);
 
+      console.log("selected", selected);
+      console.log("deselected", deselected);
       if (selected.size && self.options.onSelect) self.options.onSelect(Array.from(selected));
       if (deselected.size && self.options.onDeselect) self.options.onDeselect(Array.from(deselected));
 
       if (self.options.stop) self.options.stop(e);
     };
 
-    this.removePreviousSelection = function () {
+    this.removePreviousSelection = function (exceptIds) {
       const deselected = new Set();
       self.foreach(self.items, function (el) {
+        if (exceptIds && exceptIds.includes(el.id)) return;
         const s = self.options.selectedClass;
         if (el.classList.contains(s)) {
           el.classList.remove(s);

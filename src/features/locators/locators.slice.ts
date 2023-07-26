@@ -90,8 +90,8 @@ const locatorsSlice = createSlice({
       { payload }: PayloadAction<Array<Locator> | { locators: Array<Locator>; fromScript: boolean }>
     ) {
       const locators = Array.isArray(payload) ? payload : payload.locators;
-      const newValue = locators.map((_locator) => ({ ..._locator, active: false }));
-      locatorsAdapter.upsertMany(state, newValue);
+      const newValue = locators.map(({ element_id }) => ({ element_id, active: false }));
+      locatorsAdapter.upsertMany(state, newValue as Locator[]);
     },
     elementSetActive(state, { payload }: PayloadAction<Locator>) {
       locatorsAdapter.upsertOne(state, { element_id: payload.element_id, active: true } as Locator);
