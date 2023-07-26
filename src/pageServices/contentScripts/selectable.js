@@ -226,10 +226,6 @@ export const selectable = () => {
 
       const s = self.options.selectedClass;
 
-      const removeRect = function () {
-        if (a && a.parentNode) a.parentNode.removeChild(a);
-      };
-
       const toggleActiveClass = function (el) {
         if (el.classList.contains(s)) {
           deselected.add(el.id);
@@ -242,7 +238,8 @@ export const selectable = () => {
       if (isPlainClick(a)) {
         const highlightTarget = e.target.closest("[jdn-highlight=true]:not([id^='jdn-overlay'])");
         const isActiveTarget = highlightTarget && highlightTarget.classList.contains(self.options.selectedClass);
-        const isActiveGroup = document.querySelectorAll(`[jdn-highlight=true].${self.options.selectedClass}`).length > 0;
+        const isActiveGroup =
+          document.querySelectorAll(`[jdn-highlight=true].${self.options.selectedClass}`).length > 0;
 
         if (highlightTarget && !self.isContextForGroup(e)) {
           /** single click on any highlight **/
@@ -268,7 +265,7 @@ export const selectable = () => {
 
       // setTimeout to allow click listeners in other scripts (eg. contextmenu.js) work correctly
       setTimeout(function () {
-        removeRect();
+        if (a && a.parentNode) a.parentNode.removeChild(a);
       }, 100);
 
       if (selected.size && self.options.onSelect) self.options.onSelect(Array.from(selected));
