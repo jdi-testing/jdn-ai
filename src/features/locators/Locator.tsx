@@ -36,6 +36,7 @@ import { isLocatorListPage } from "../../app/utils/heplers";
 import { selectCurrentPageObject } from "../pageObjects/selectors/pageObjects.selectors";
 import { AnnotationType, LocatorType } from "../../common/types/common";
 import { getLocatorPrefix } from "./utils/locatorOutput";
+import { ScriptMsg } from "../../pageServices/scriptMsg.constants";
 
 interface Props {
   element: LocatorInterface;
@@ -91,7 +92,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
     const param = scriptMessage?.param;
 
     switch (message) {
-      case "OPEN_EDIT_LOCATOR":
+      case ScriptMsg.OpenEditLocator:
         if (param?.value.element_id !== element_id) return;
         setIsEditModalOpen(true);
         dispatch(setScriptMessage({}));
