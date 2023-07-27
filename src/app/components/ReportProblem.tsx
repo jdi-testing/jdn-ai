@@ -3,7 +3,7 @@ import TextArea from "antd/lib/input/TextArea";
 import { UploadChangeParam } from "antd/lib/upload";
 import { RcFile, UploadFileStatus } from "antd/lib/upload/interface";
 import { UploadSimple, Warning } from "phosphor-react";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectCurrentPage } from "../main.selectors";
 import { PageType } from "../types/mainSlice.types";
@@ -20,6 +20,7 @@ import {
 import { selectCurrentPageObject } from "../../features/pageObjects/selectors/pageObjects.selectors";
 import { useOnBoardingRef } from "../../features/onboarding/utils/useOnboardingRef";
 import { OnbrdStep } from "../../features/onboarding/types/constants";
+import { OnboardingContext } from "../../features/onboarding/OnboardingProvider";
 
 const { info } = Modal;
 
@@ -60,6 +61,8 @@ export const ReportProblem = () => {
     const files = document.querySelector(".ant-upload-list");
     if (files) files.scrollTop = files.scrollHeight;
   }, [fileList]);
+
+  const { isOpen: isOnboardingOpen } = useContext(OnboardingContext);
 
   const showExceptionConfirm = () =>
     info({
@@ -176,6 +179,7 @@ export const ReportProblem = () => {
     <div className="jdn__reportProblem">
       <Tooltip title="Report a problem" placement="bottomRight" align={{ offset: [12, 0] }}>
         <Button
+          disabled={isOnboardingOpen}
           ref={reportRef}
           onClick={showModal}
           type="link"
