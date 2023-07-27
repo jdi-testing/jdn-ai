@@ -23,6 +23,7 @@ import {
   LocatorCalculationPriority,
   JDNHash,
   LocatorValue,
+  LocatorValidationWarnings,
 } from "./types/locator.types";
 import { checkLocatorsValidityReducer } from "./reducers/checkLocatorValidity.thunk";
 import { LocatorType } from "../../common/types/common";
@@ -72,6 +73,8 @@ const locatorsSlice = createSlice({
       } else if (locatorType === LocatorType.xPath) {
         newValue.locator.xPath = locator;
       }
+
+      if (rest.message === LocatorValidationWarnings.NotFound) newValue.jdnHash = "";
 
       locatorsAdapter.upsertOne(state, newValue);
     },
