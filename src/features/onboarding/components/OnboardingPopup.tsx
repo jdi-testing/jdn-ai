@@ -4,7 +4,6 @@ import { Popconfirm } from "antd";
 import { RootState } from "../../../app/store/store";
 import { selectIsDefaultState } from "../../../app/main.selectors";
 import { OnboardingContext } from "../OnboardingProvider";
-import { BackendStatus } from "../../../app/types/mainSlice.types";
 import { OnboardingPopupText, OnboardingPopupButtons } from "../types/constants";
 
 interface Props {
@@ -14,10 +13,7 @@ interface Props {
 export const OnboardingPopup: FC<Props> = ({ children }) => {
   const { openOnboarding } = useContext(OnboardingContext);
   const isDefaultState = useSelector<RootState>(selectIsDefaultState);
-  const { isOpen: isOnboardingOpen } = useContext(OnboardingContext);
-
-  const isOnboardingAvailable =
-    useSelector<RootState>((_state) => _state.main.backendAvailable) === BackendStatus.Accessed && !isOnboardingOpen;
+  const { isOnboardingAvailable } = useContext(OnboardingContext);
 
   return (
     <Popconfirm

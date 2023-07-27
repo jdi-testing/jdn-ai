@@ -29,6 +29,7 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
   const isBackendAvailable = useSelector((state: RootState) => state.main.backendAvailable) === BackendStatus.Accessed;
   const isDefaultState = useSelector<RootState>(selectIsDefaultState);
   const isSessionUnique = useSelector((state: RootState) => state.main.isSessionUnique);
+  const isOnboardingAvailable = isBackendAvailable && !isOnbrdOpen;
 
   const dispatch = useDispatch();
 
@@ -131,6 +132,7 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
       value={{
         defaultStep,
         isOpen: isOnbrdOpen,
+        isOnboardingAvailable,
         tourSteps,
         isCustomLocatorFlow,
         addRef,

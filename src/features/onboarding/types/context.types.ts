@@ -8,6 +8,7 @@ export interface OnboardingContext {
   defaultStep?: number;
   isCustomLocatorFlow: boolean;
   isOpen: boolean;
+  isOnboardingAvailable: boolean;
   tourSteps: TourProps["steps"];
   addRef: (
     name: OnbrdStep,
