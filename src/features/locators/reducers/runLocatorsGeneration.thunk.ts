@@ -53,7 +53,7 @@ export const runLocatorsGeneration = createAsyncThunk(
       }));
 
     const state = thunkAPI.getState() as RootState;
-    if (setPendingXpaths)
+    if (setPendingXpaths.length)
       thunkAPI.dispatch(
         updateLocatorGroup({
           locators: setPendingXpaths,
@@ -61,7 +61,7 @@ export const runLocatorsGeneration = createAsyncThunk(
         })
       );
 
-    if (setPendingCss)
+    if (setPendingCss.length)
       thunkAPI.dispatch(
         updateLocatorGroup({
           locators: setPendingCss,

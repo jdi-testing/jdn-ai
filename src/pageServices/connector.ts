@@ -21,7 +21,7 @@ class Connector {
   port?: chrome.runtime.Port;
   onerror: (err: Error) => void;
   onmessage: (
-    payload: { message: string; param: Record<string, never> },
+    payload: { message: ScriptMsg; param: Record<string, never> },
     sender: chrome.runtime.MessageSender,
     sendResponse: (response: any) => void
   ) => void;

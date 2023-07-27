@@ -45,3 +45,5 @@ export enum ScriptMsg {
   StopGroupGeneration = "StopGroupGeneration",
   ToggleElementGroup = "ToggleElementGroup",
 }
+
+export const dispatchingMessages = [ScriptMsg.OpenEditLocator];

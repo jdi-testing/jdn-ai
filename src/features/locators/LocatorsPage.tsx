@@ -34,7 +34,8 @@ import {
 } from "./selectors/locatorsFiltered.selectors";
 import { useNotifications } from "../../common/components/notification/useNotifications";
 import { selectCurrentPageObject } from "../pageObjects/selectors/pageObjects.selectors";
-import { EmptyListInfo } from "../../common/components/emptyListInfo/EmptyListInfo";
+import { EmptyListModal } from "./text.constants";
+import { LocatorsEmptyListInfo } from "./components/LocatorsEmptyListInfo";
 
 const { confirm } = Modal;
 
@@ -56,6 +57,8 @@ export const LocatorsPage = () => {
   const breadcrumbsRef = useRef(null);
   const [locatorsSnapshot] = useState(useSelector(selectLocatorsByPageObject));
   const [filterSnapshot] = useState(useSelector(selectClassFilterByPO));
+  const [isEmptyListModalOpen, setIsEmptyListModalOpen] = useState(!Boolean(size(locators)));
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   // For changing locatorsList-content height depends on header height
   const containerHeight = useCalculateHeaderSize(breadcrumbsRef);
 
@@ -168,6 +171,8 @@ export const LocatorsPage = () => {
           <Filter />
         </Row>
         <LocatorListHeader
+          isEditModalOpen={isEditModalOpen}
+          setIsEditModalOpen={setIsEditModalOpen}
           render={(viewProps: LocatorTreeProps["viewProps"]) => (
             <div
               ref={containerRef}
@@ -179,10 +184,18 @@ export const LocatorsPage = () => {
               ) : showSpinner ? (
                 <LocatorTreeSpinner />
               ) : (
-                <EmptyListInfo>
-                  Select the elements you need on the web page coverage and add them to the PO via a double-click or
-                  through the context menu
-                </EmptyListInfo>
+                <>
+                  <Modal
+                    title={EmptyListModal.Title}
+                    open={isEmptyListModalOpen}
+                    onCancel={() => setIsEmptyListModalOpen(false)}
+                    onOk={pageBack}
+                    okText={EmptyListModal.OkButtonTitle}
+                  >
+                    {EmptyListModal.Contents}
+                  </Modal>
+                  <LocatorsEmptyListInfo setIsEditModalOpen={setIsEditModalOpen}></LocatorsEmptyListInfo>
+                </>
               )}
             </div>
           )}

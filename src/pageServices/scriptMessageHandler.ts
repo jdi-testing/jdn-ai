@@ -19,7 +19,7 @@ import { rerunGeneration } from "../features/locators/reducers/rerunGeneration.t
 import { stopGenerationGroup } from "../features/locators/reducers/stopGenerationGroup.thunk";
 import { copyLocator } from "../features/locators/utils/utils";
 import { selectLocatorByJdnHash } from "../features/locators/selectors/locators.selectors";
-import { ScriptMsg } from "./scriptMsg.constants";
+import { ScriptMsg, dispatchingMessages } from "./scriptMsg.constants";
 import { selectPresentActiveLocators } from "../features/locators/selectors/locatorsByPO.selectors";
 import { selectCurrentPageObject } from "../features/pageObjects/selectors/pageObjects.selectors";
 
@@ -27,7 +27,7 @@ export type ScriptMessagePayload = { message: keyof Actions; param: Record<strin
 
 type Response<T> = (payload: T, sender: chrome.runtime.MessageSender, sendResponse: (response: any) => void) => void;
 
-type Actions<P = any> = Record<string, Response<P>>;
+type Actions<P = any> = Partial<Record<ScriptMsg, Response<P>>>;
 
 export const updateMessageHandler = (
   dispatch: Dispatch<{ payload?: any; type?: string } | AsyncThunkAction<any, any, any>>,
@@ -101,8 +101,8 @@ export const updateMessageHandler = (
     _actions: Actions
   ) => {
     if (_actions[message]) {
-      _actions[message](param, sender, sendResponse);
-      dispatch(setScriptMessage({ message, param }));
+      _actions[message]!(param, sender, sendResponse);
+      if (dispatchingMessages.includes(message)) dispatch(setScriptMessage({ message, param }));
     }
   };
 
