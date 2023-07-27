@@ -14,8 +14,10 @@ interface Props {
 export const OnboardingPopup: FC<Props> = ({ children }) => {
   const { openOnboarding } = useContext(OnboardingContext);
   const isDefaultState = useSelector<RootState>(selectIsDefaultState);
+  const { isOpen: isOnboardingOpen } = useContext(OnboardingContext);
+
   const isOnboardingAvailable =
-    useSelector<RootState>((_state) => _state.main.backendAvailable) === BackendStatus.Accessed;
+    useSelector<RootState>((_state) => _state.main.backendAvailable) === BackendStatus.Accessed && !isOnboardingOpen;
 
   return (
     <Popconfirm
