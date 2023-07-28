@@ -29,12 +29,14 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
   const isBackendAvailable = useSelector((state: RootState) => state.main.backendAvailable) === BackendStatus.Accessed;
   const isDefaultState = useSelector<RootState>(selectIsDefaultState);
   const isSessionUnique = useSelector((state: RootState) => state.main.isSessionUnique);
+  const isOnboardingAvailable = isBackendAvailable && !isOnbrdOpen;
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (!_isOnboardingPassed && isBackendAvailable && isSessionUnique) {
       setIsModalOpen(true);
+      setLocalStorage(LocalStorageKey.IsOnboardingPassed, true);
     } else {
       setIsModalOpen(false);
     }
@@ -47,7 +49,6 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
 
   const closeOnboarding = () => {
     setIsOnbrdOpen(false);
-    setLocalStorage(LocalStorageKey.IsOnboardingPassed, true);
   };
   const addRef = (
     name: OnbrdStep,
@@ -131,6 +132,7 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
       value={{
         defaultStep,
         isOpen: isOnbrdOpen,
+        isOnboardingAvailable,
         tourSteps,
         isCustomLocatorFlow,
         addRef,
@@ -147,6 +149,7 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
         onCancel={() => setIsModalOpen(false)}
         onOk={handleConfirmModal}
         okText={OnboardingProviderTexts.ModalOkButtonText}
+        cancelText={OnboardingProviderTexts.ModalCancelButtonText}
       >
         {OnboardingProviderTexts.ModalText}
       </Modal>

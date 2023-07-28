@@ -91,6 +91,7 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, url, locators, elements
     <div onClick={(e) => e.stopPropagation()}>
       <OnbrdTooltip>
         <Dropdown
+          disabled={isOnboardingOpen}
           align={{ offset: [15, 0] }}
           trigger={["click"]}
           menu={getMenuItems(id, locators, elements, name, url)}

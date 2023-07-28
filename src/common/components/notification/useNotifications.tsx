@@ -56,7 +56,6 @@ export const useNotifications = (container?: HTMLElement | null) => {
     notification[type]({
       message: _message,
       description,
-      duration: 500,
       getContainer: () => container || document.body,
       placement: "bottom",
       bottom,
