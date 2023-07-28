@@ -176,9 +176,6 @@ export const createPOSteps = (refs: Record<OnbrdStep, StepRef>) => [
 ];
 
 export const addLocatorsSteps = (refs: Record<OnbrdStep, StepRef>, isCustomLocatorFlow: boolean) => {
-  // if (!isCustomLocatorFlow) {
-  //   return [customLocator(refs, isCustomLocatorFlow), contextMenu(refs), addToPO(refs), saveLocators(refs)];
-  // }
   return [
     customLocator(refs, isCustomLocatorFlow),
     isCustomLocatorFlow ? createCustomLocator(refs) : contextMenu(refs),
