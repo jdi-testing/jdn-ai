@@ -24,8 +24,8 @@ export const useOnBoardingRef = (
       refName === OnbrdStep.EditLocator && isCustomLocatorFlow && ref.current
         ? { current: ref.current.closest(".ant-modal-content") }
         : ref;
-    (!isSkipHook && !isRedundantStep) && addRef(refName, _ref, onClickNext, onClickPrev);
+    !isSkipHook && !isRedundantStep && addRef(refName, _ref, onClickNext, onClickPrev);
   }, [ref, isFirstLocatorChecked]);
 
-  return (!isSkipHook && !isRedundantStep) ? ref : null;
+  return !isSkipHook && !isRedundantStep ? ref : null;
 };
