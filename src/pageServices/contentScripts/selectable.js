@@ -38,11 +38,13 @@ export const selectable = () => {
         });
       } else query = `[id='${payload.jdnHash}']`;
 
-      this.foreach(document.querySelectorAll(query), (element) => {
-        if (element.classList.contains(opt.selectedClass)) {
-          element.classList.remove(opt.selectedClass);
-        }
-      });
+      if (query.length) {
+        this.foreach(document.querySelectorAll(query), (element) => {
+          if (element.classList.contains(opt.selectedClass)) {
+            element.classList.remove(opt.selectedClass);
+          }
+        });
+      }
     };
 
     Selectables.prototype.setSelect = function (payload) {
