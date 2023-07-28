@@ -79,9 +79,9 @@ export const StatusBar = () => {
           />
         </Tooltip>
         <ReportProblem />
-        <span ref={connectionRef} className="jdn_header-connection">
+        <div ref={connectionRef} className="jdn_header-connection">
           {renderServerIndicator()}
-        </span>
+        </div>
       </Space>
     </React.Fragment>
   );
