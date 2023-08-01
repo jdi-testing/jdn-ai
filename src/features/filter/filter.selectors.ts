@@ -8,6 +8,7 @@ import { ElementClass } from "../locators/types/generationClasses.types";
 import { jdiClassFilterInit } from "./utils/filterSet";
 import { selectLocatorById } from "../locators/selectors/locators.selectors";
 import { isNil } from "lodash";
+import { hasFalseValue } from "./utils/hasFalseValue";
 
 export const filterAdapter = createEntityAdapter<Filter>({
   selectId: (filter) => filter.pageObjectId,
@@ -68,3 +69,7 @@ export const selectIfUnselectedAll = createSelector(selectDetectedClassesFilter,
   const arr = Object.entries(classFilter);
   return arr.every(([, value]) => !value);
 });
+
+export const selectIsFiltered = createSelector(selectDetectedClassesFilter, (classFilter) =>
+  hasFalseValue(classFilter)
+);
