@@ -15,6 +15,10 @@ interface Meta {
   generateMissingLocator?: boolean;
 }
 
+/* Purpose of this thunk is to start locators generation.
+It's used for initial locators generation, or can be called on demand for particular locator type
+or with parameters.
+*/
 export const runLocatorsGeneration = createAsyncThunk(
   "locators/runLocatorsGeneration",
   async (meta: Meta, thunkAPI) => {

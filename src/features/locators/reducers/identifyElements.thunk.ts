@@ -19,15 +19,20 @@ interface Meta {
 }
 
 export const identifyElements = createAsyncThunk("locators/identifyElements", async ({ pageObj }: Meta, thunkAPI) => {
+  /* set current page object and filter */
   thunkAPI.dispatch(setCurrentPageObj(pageObj));
+
+  /* set filter, if any exists in local storage */
   const state = thunkAPI.getState() as RootState;
   const library = selectPageObjById(state, pageObj)?.library || defaultLibrary;
   const savedFilters = getLocalStorage(LocalStorageKey.Filter);
-
   if (savedFilters && savedFilters[library]) {
     thunkAPI.dispatch(setFilter({ pageObjectId: pageObj, JDIclassFilter: savedFilters[library] }));
   }
 
+  /* Identify elements, needed for testing purposes. Depend on selected element library,
+  elements will be identified by predictElements() or findByRules().
+  Then adds needed locators to state and runs locator value generation. */
   try {
     const endpoint = predictEndpoints[library];
     const { data: res, pageData } =

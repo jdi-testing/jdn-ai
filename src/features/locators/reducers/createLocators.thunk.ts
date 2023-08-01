@@ -13,6 +13,8 @@ interface Meta {
   library: ElementLibrary;
 }
 
+/* this thunk collects data from page, needed for locators business logic,
+finds child-parent connections and then saves locators to state */
 export const createLocators = createAsyncThunk("locators/createLocators", async (payload: Meta, thunkAPI) => {
   const { predictedElements, library } = payload;
   const state = thunkAPI.getState();
