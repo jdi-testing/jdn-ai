@@ -85,7 +85,7 @@ export const runContextMenu = () => {
     this.reload = function () {
       if (document.getElementById("jdn_cm_" + num) == null) {
         const cnt = document.createElement("div");
-        cnt.className = "cm_container";
+        cnt.className = "cm_container context-menu";
         cnt.id = "jdn_cm_" + num;
 
         document.body.appendChild(cnt);
