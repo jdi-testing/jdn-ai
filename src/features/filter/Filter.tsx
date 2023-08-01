@@ -1,15 +1,15 @@
-import { Button, Checkbox, Dropdown, Input, Switch, Typography } from "antd";
+import { Badge, Button, Checkbox, Dropdown, Input, Switch, Typography } from "antd";
 import { SwitchChangeEventHandler } from "antd/lib/switch";
-import { Funnel } from "phosphor-react";
 import React, { ChangeEvent, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectCurrentPageObject } from "../pageObjects/selectors/pageObjects.selectors";
 import { ElementClass } from "../locators/types/generationClasses.types";
 import { FilterHeader } from "./components/FilterHeader";
-import { selectDetectedClassesFilter, selectIfSelectedAll } from "./filter.selectors";
+import { selectDetectedClassesFilter, selectIfSelectedAll, selectIsFiltered } from "./filter.selectors";
 import { toggleClassFilter } from "./reducers/toggleClassFilter.thunk";
 import { toggleClassFilterAll } from "./reducers/toggleClassFilterAll.thunk";
 import { convertFilterToArr } from "./utils/filterSet";
+import { FilterIcon } from "./components/shared/FilterIcon";
 
 export const Filter = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -20,6 +20,8 @@ export const Filter = () => {
   const classFilter = useSelector(selectDetectedClassesFilter);
   const areSelectedAll = useSelector(selectIfSelectedAll);
   const classFilterArr = useMemo(() => convertFilterToArr(classFilter, searchTerm), [classFilter, searchTerm]);
+
+  const isFiltered = useSelector(selectIsFiltered);
 
   const handleFilterChange = (key: string, oldValue: boolean) => () => {
     if (!pageObject) return;
@@ -65,6 +67,26 @@ export const Filter = () => {
     setOpen(flag);
   };
 
+  const renderFilterButton = useMemo(
+    () => (
+      <Button
+        className="jdn__filter_filter-button"
+        type="link"
+        icon={
+          isFiltered ? (
+            <Badge dot={true} color="blue" offset={[1, 4]}>
+              <FilterIcon />
+            </Badge>
+          ) : (
+            <FilterIcon />
+          )
+        }
+      />
+    ),
+
+    [isFiltered]
+  );
+
   return (
     <Dropdown
       menu={menuItems}
@@ -89,7 +111,7 @@ export const Filter = () => {
       onOpenChange={handleOpenChange}
       {...{ open }}
     >
-      <Button className="jdn__filter_filter-button" type="link" icon={<Funnel size={14} color="#8C8C8C" />} />
+      {renderFilterButton}
     </Dropdown>
   );
 };
