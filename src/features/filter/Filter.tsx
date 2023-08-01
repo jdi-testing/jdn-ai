@@ -1,4 +1,4 @@
-import { Button, Checkbox, Dropdown, Input, Switch, Typography } from "antd";
+import { Badge, Button, Checkbox, Dropdown, Input, Switch, Typography } from "antd";
 import { SwitchChangeEventHandler } from "antd/lib/switch";
 import { Funnel } from "phosphor-react";
 import React, { ChangeEvent, useMemo, useState } from "react";
@@ -10,6 +10,7 @@ import { selectDetectedClassesFilter, selectIfSelectedAll } from "./filter.selec
 import { toggleClassFilter } from "./reducers/toggleClassFilter.thunk";
 import { toggleClassFilterAll } from "./reducers/toggleClassFilterAll.thunk";
 import { convertFilterToArr } from "./utils/filterSet";
+import { checkFilterArrayForFalse } from "./utils/checkFilterArrayForFalse";
 
 export const Filter = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -20,6 +21,8 @@ export const Filter = () => {
   const classFilter = useSelector(selectDetectedClassesFilter);
   const areSelectedAll = useSelector(selectIfSelectedAll);
   const classFilterArr = useMemo(() => convertFilterToArr(classFilter, searchTerm), [classFilter, searchTerm]);
+
+  const isFiltered = checkFilterArrayForFalse(classFilterArr);
 
   const handleFilterChange = (key: string, oldValue: boolean) => () => {
     if (!pageObject) return;
@@ -65,6 +68,24 @@ export const Filter = () => {
     setOpen(flag);
   };
 
+  const filterButton = useMemo(
+    () =>
+      isFiltered ? (
+        <Button
+          className="jdn__filter_filter-button"
+          type="link"
+          icon={
+            <Badge dot={true} color="blue" offset={[1, 4]}>
+              <Funnel size={14} color="#8C8C8C" />{" "}
+            </Badge>
+          }
+        />
+      ) : (
+        <Button className="jdn__filter_filter-button" type="link" icon={<Funnel size={14} color="#8C8C8C" />} />
+      ),
+    [isFiltered]
+  );
+
   return (
     <Dropdown
       menu={menuItems}
@@ -89,7 +110,7 @@ export const Filter = () => {
       onOpenChange={handleOpenChange}
       {...{ open }}
     >
-      <Button className="jdn__filter_filter-button" type="link" icon={<Funnel size={14} color="#8C8C8C" />} />
+      {filterButton}
     </Dropdown>
   );
 };
