@@ -34,7 +34,14 @@ export const store = configureStore({
           "main/setScriptMessage",
         ],
       },
-    }).concat([logger, scriptNotifier, cancellableActions, changePageMiddleware, shouldRunGeneration, quitThrottlerMiddleware]),
+    }).concat([
+      logger,
+      scriptNotifier,
+      cancellableActions,
+      changePageMiddleware,
+      shouldRunGeneration,
+      quitThrottlerMiddleware,
+    ]),
 });
 
 store.subscribe(() => updateMessageHandler(store.dispatch, store.getState()));
