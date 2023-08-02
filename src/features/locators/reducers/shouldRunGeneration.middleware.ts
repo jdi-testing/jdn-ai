@@ -1,10 +1,12 @@
 import { Middleware } from "@reduxjs/toolkit";
-import { Locator } from "../types/locator.types";
+import { ElementId, Locator } from "../types/locator.types";
 import { runLocatorsGeneration } from "./runLocatorsGeneration.thunk";
 import { getNoLocatorsElements, hasAllLocators } from "../utils/utils";
+import { selectLocatorById } from "../selectors/locators.selectors";
 
-export const onSetActive: Middleware = (store) => (next) => (action) => {
+export const shouldRunGeneration: Middleware = (store) => (next) => (action) => {
   const { type, payload } = action;
+  const state = store.getState();
 
   switch (type) {
     case "locators/elementGroupSetActive": {
@@ -20,14 +22,19 @@ export const onSetActive: Middleware = (store) => (next) => (action) => {
       }
       break;
     }
+    case "locators/toggleElementGeneration":
     case "locators/setActiveSingle":
     case "locators/elementSetActive": {
-      const noLocators = !hasAllLocators(payload);
+      const _locator =
+        typeof payload === "string" ? selectLocatorById(state, payload as ElementId) : (payload as Locator);
+      if (!_locator) break;
+
+      const noLocators = !hasAllLocators(_locator);
       if (noLocators) {
         store.dispatch(
           // @ts-ignore
           runLocatorsGeneration({
-            locators: [payload as Locator],
+            locators: [_locator as Locator],
             generateMissingLocator: true,
           })
         );

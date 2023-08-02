@@ -75,6 +75,9 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
     onClickPrev?: (...args: any) => void
   ) => {
     setStepRefs((prevRefs) => {
+      /* case for skippeed step, see `locatorPageSteps` at useOnBoardingRef.ts */
+      if (!prevRefs[name]) return prevRefs;
+
       const { target: currentTarget, onClickNext: currentNext, onClickPrev: currentPrev } = prevRefs[name];
       return {
         ...prevRefs,
