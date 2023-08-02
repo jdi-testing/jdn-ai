@@ -10,7 +10,7 @@ import { logger } from "./middlewares/logger";
 import { scriptNotifier } from "../../pageServices/scriptNotifier";
 import { changePageMiddleware } from "./middlewares/changePage.middleware";
 import { updateSocketMessageHandler } from "../../services/webSocketMessageHandler";
-import { onSetActive } from "../../features/locators/reducers/onSetActive.middleware";
+import { shouldRunGeneration } from "../../features/locators/reducers/shouldRunGeneration.middleware";
 import { quitThrottlerMiddleware } from "../../common/utils/throttler";
 
 const rootReducer = {
@@ -34,7 +34,7 @@ export const store = configureStore({
           "main/setScriptMessage",
         ],
       },
-    }).concat([logger, scriptNotifier, cancellableActions, changePageMiddleware, onSetActive, quitThrottlerMiddleware]),
+    }).concat([logger, scriptNotifier, cancellableActions, changePageMiddleware, shouldRunGeneration, quitThrottlerMiddleware]),
 });
 
 store.subscribe(() => updateMessageHandler(store.dispatch, store.getState()));
