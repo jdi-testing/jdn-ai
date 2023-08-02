@@ -93,10 +93,9 @@ export const copyLocator = (locatorsForCopy: Locator[], option?: LocatorOption) 
       value = locatorsForCopy.map(({ locator }) => getLocatorWithJDIAnnotation(locator.cssSelector));
       break;
     default:
-      value = locatorsForCopy
-        .map(({ annotationType, locatorType, locator, type, name }) =>
-          getLocatorString(annotationType, locatorType, locator, type, name)
-        );
+      value = locatorsForCopy.map(({ annotationType, locatorType, locator, type, name }) =>
+        getLocatorString(annotationType, locatorType, locator, type, name)
+      );
   }
 
   copyLocatorsToClipboard(value);
