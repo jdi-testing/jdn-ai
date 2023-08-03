@@ -4,37 +4,37 @@ import { runLocatorsGeneration } from "./runLocatorsGeneration.thunk";
 import { getNoLocatorsElements, hasAllLocators } from "../utils/utils";
 import { selectLocatorById } from "../selectors/locators.selectors";
 
+const onSetActiveGroup = (dispatch: any, locators: Locator[]) => {
+  dispatch(
+    // @ts-ignore
+    runLocatorsGeneration({
+      locators: getNoLocatorsElements(locators),
+      generateMissingLocator: true,
+    })
+  );
+};
+
 export const shouldRunGeneration: Middleware = (store) => (next) => (action) => {
   const { type, payload } = action;
-  const state = store.getState();
 
   switch (type) {
-    case "locators/elementGroupSetActive": {
-      const noLocators = getNoLocatorsElements(payload.locators);
-      if (noLocators.length) {
-        store.dispatch(
-          // @ts-ignore
-          runLocatorsGeneration({
-            locators: noLocators,
-            generateMissingLocator: true,
-          })
-        );
-      }
+    case "locators/setElementGroupGeneration": {
+      const { locators, generate } = payload;
+      if (generate) onSetActiveGroup(store.dispatch, locators);
       break;
     }
-    case "locators/toggleElementGeneration":
+    case "locators/elementGroupSetActive": {
+      onSetActiveGroup(store.dispatch, payload as Locator[]);
+      break;
+    }
     case "locators/setActiveSingle":
     case "locators/elementSetActive": {
-      const _locator =
-        typeof payload === "string" ? selectLocatorById(state, payload as ElementId) : (payload as Locator);
-      if (!_locator) break;
-
-      const noLocators = !hasAllLocators(_locator);
+      const noLocators = !hasAllLocators(payload);
       if (noLocators) {
         store.dispatch(
           // @ts-ignore
           runLocatorsGeneration({
-            locators: [_locator as Locator],
+            locators: [payload as Locator],
             generateMissingLocator: true,
           })
         );
