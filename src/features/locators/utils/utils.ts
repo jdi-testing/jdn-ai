@@ -18,7 +18,7 @@ import { LocatorOption } from "./constants";
 import { LocatorType } from "../../../common/types/common";
 import { isStringContainsNumbers } from "../../../common/utils/helpers";
 import { FormInstance } from "antd/es/form/Form";
-import { copyToClipboard } from "../../../common/utils/copyToClipboard";
+import { copyLocatorsToClipboard } from "./copyLocatorToClipboard";
 import { getLocatorString, getLocatorWithJDIAnnotation, getLocatorWithSelenium } from "./locatorOutput";
 
 export const isValidJavaVariable = (value: string) => /^[a-zA-Z_$]([a-zA-Z0-9_])*$/.test(value);
@@ -72,35 +72,33 @@ export const setIndents = (ref: React.RefObject<HTMLDivElement>, depth: number) 
 };
 
 export const copyLocator = (locatorsForCopy: Locator[], option?: LocatorOption) => (): void => {
-  let value: string;
+  let value: string[];
   switch (option) {
     case LocatorOption.Xpath:
-      value = locatorsForCopy.map(({ locator }) => `"${locator.xPath}"`).join("\n");
+      value = locatorsForCopy.map(({ locator }) => `"${locator.xPath}"`);
       break;
     case LocatorOption.XpathAndSelenium:
-      value = locatorsForCopy.map(({ locator }) => getLocatorWithSelenium(locator.xPath, "xpath")).join("\n");
+      value = locatorsForCopy.map(({ locator }) => getLocatorWithSelenium(locator.xPath, "xpath"));
       break;
     case LocatorOption.XpathAndJDI:
-      value = locatorsForCopy.map(({ locator }) => getLocatorWithJDIAnnotation(locator.xPath)).join("\n");
+      value = locatorsForCopy.map(({ locator }) => getLocatorWithJDIAnnotation(locator.xPath));
       break;
     case LocatorOption.CSSSelector:
-      value = locatorsForCopy.map(({ locator }) => `"${locator.cssSelector}"`).join("\n");
+      value = locatorsForCopy.map(({ locator }) => `"${locator.cssSelector}"`);
       break;
     case LocatorOption.CSSAndSelenium:
-      value = locatorsForCopy.map(({ locator }) => getLocatorWithSelenium(locator.cssSelector, "css")).join("\n");
+      value = locatorsForCopy.map(({ locator }) => getLocatorWithSelenium(locator.cssSelector, "css"));
       break;
     case LocatorOption.CSSAndJDI:
-      value = locatorsForCopy.map(({ locator }) => getLocatorWithJDIAnnotation(locator.cssSelector)).join("\n");
+      value = locatorsForCopy.map(({ locator }) => getLocatorWithJDIAnnotation(locator.cssSelector));
       break;
     default:
-      value = locatorsForCopy
-        .map(({ annotationType, locatorType, locator, type, name }) =>
-          getLocatorString(annotationType, locatorType, locator, type, name)
-        )
-        .join("\n");
+      value = locatorsForCopy.map(({ annotationType, locatorType, locator, type, name }) =>
+        getLocatorString(annotationType, locatorType, locator, type, name)
+      );
   }
 
-  copyToClipboard(value);
+  copyLocatorsToClipboard(value);
 };
 
 export const getCopyOptions = (selectedLocators: Locator[]) => {
