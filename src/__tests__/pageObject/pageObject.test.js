@@ -1,8 +1,12 @@
 import {
   locators,
+  locatorsWithFindBy,
   pageObjectHTML,
   pageObjectMUI,
   pageObjectVuetify,
+  pageObjectHTMLWithFindBy,
+  pageObjectMUIWithFindBy,
+  pageObjectVuetifyWithFindBy,
 } from "../__mocks__/pageObjectMocks/pageObject.mock";
 import { elementsWithoutNames } from "../__mocks__/pageObjectMocks/elementsWithoutNames";
 import { elementsWithNames } from "../__mocks__/pageObjectMocks/elementsWithNames";
@@ -27,6 +31,21 @@ const templateTestData = [
   },
 ];
 
+const templateTestDataWithFindBy = [
+  {
+    input: "HTML",
+    output: pageObjectHTMLWithFindBy,
+  },
+  {
+    input: "MUI",
+    output: pageObjectMUIWithFindBy,
+  },
+  {
+    input: "Vuetify",
+    output: pageObjectVuetifyWithFindBy,
+  },
+];
+
 describe("page object code generation", () => {
   templateTestData.forEach(({ input, output }) => {
     test(`page object generated with ${input}`, () => {
@@ -46,5 +65,17 @@ describe("page object code generation", () => {
 describe("create locators names", () => {
   test("create unique names, create name by Id,  if exists; transform ID to name correctly", () => {
     expect(createLocatorNames(elementsWithoutNames, ElementLibrary.MUI)).toStrictEqual(elementsWithNames);
+  });
+});
+
+describe("pageObjectTemplate", () => {
+  describe("should return pageObjectHTML with FindBy import", () => {
+    templateTestDataWithFindBy.forEach(({ input, output }) => {
+      test(`when page object generated with ${input} and locators has Annotation Type === 'FindBy'`, () => {
+        const page = pageObjectTemplate(locatorsWithFindBy, "HomePage", input);
+        expect(page.pageCode).toBe(output);
+        expect(page.title).toBe("HomePage");
+      });
+    });
   });
 });
