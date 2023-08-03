@@ -4,10 +4,10 @@ import { LocatorCalculationPriority, LocatorTaskStatus } from "../types/locator.
 import { selectClassFilterByPO } from "../../filter/filter.selectors";
 import { Locator } from "../types/locator.types";
 import { filterLocatorsByClassFilter } from "../utils/filterLocators";
-import { isProgressStatus } from "../utils/locatorGenerationController";
 import { selectLocatorsByPageObject, selectSortedLocators } from "./locatorsByPO.selectors";
 import { selectCurrentPage } from "../../../app/main.selectors";
 import { isLocatorListPage } from "../../../app/utils/heplers";
+import { filterInProgress, isProgressStatus } from "../utils/helpers";
 
 export const selectFilteredLocators = createSelector(
   selectLocatorsByPageObject,
@@ -102,11 +102,7 @@ export const selectActualActiveByPageObject = createSelector(
   (locators) => locators
 );
 
-export const selectInProgressByPageObj = createSelector(selectFilteredLocators, (elements) =>
-  chain(elements)
-    .filter((el) => isProgressStatus(el.locator.taskStatus) && !el.deleted)
-    .value()
-);
+export const selectInProgressByPageObj = createSelector(selectFilteredLocators, filterInProgress);
 
 export const selectInProgressActiveByPageObject = createSelector(selectInProgressByPageObj, (items) =>
   items.filter((item) => item.active)

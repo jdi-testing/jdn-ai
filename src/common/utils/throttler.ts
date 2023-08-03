@@ -1,5 +1,5 @@
 import { Middleware } from "@reduxjs/toolkit";
-import { areInProgress } from "../../features/locators/selectors/locatorsFiltered.selectors";
+import { selectPresentLocatorsInProgress } from "../../features/locators/selectors/locatorsByPO.selectors";
 
 class Throttler {
   accumulatedArgs: any[] = [];
@@ -47,7 +47,7 @@ export const quitThrottlerMiddleware: Middleware = (store) => (next) => (action)
   switch (action.type) {
     case "locators/updateLocatorGroup":
     case "locators/failGeneration":
-      if (!areInProgress(store.getState())) {
+      if (!selectPresentLocatorsInProgress(store.getState())) {
         throttler.quitThrottler();
       }
       break;
