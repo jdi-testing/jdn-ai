@@ -20,10 +20,14 @@ export const runLocatorsGeneration = createAsyncThunk(
   async (meta: Meta, thunkAPI) => {
     const { locators, maxGenerationTime, generateXpath, generateCssSelector, generateMissingLocator } = meta;
 
-    const toGenerateXpaths =
-      generateMissingLocator || generateXpath
-        ? locators.filter(({ locator }) => !locator || !locator.xPath || locator.xPath === locator.fullXpath)
-        : [];
+    const toGenerateXpaths = maxGenerationTime
+      ? locators
+      : generateMissingLocator || generateXpath
+      ? locators.filter(
+          ({ locator }) => !locator || !locator.xPath || locator.xPath === locator.fullXpath || !locator.fullXpath
+        )
+      : [];
+
     const toGenerateCss =
       generateMissingLocator || generateCssSelector
         ? locators.filter(({ locator }) => !locator || !locator.cssSelector)
