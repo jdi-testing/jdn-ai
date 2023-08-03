@@ -115,8 +115,8 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
       if (active) dispatch(elementUnsetActive(element_id));
       else dispatch(elementSetActive(element));
     } else {
-      if (!active) dispatch(setActiveSingle(element))
-    };
+      if (!active) dispatch(setActiveSingle(element));
+    }
   };
 
   const handleLocatorRightClick: React.MouseEventHandler<HTMLDivElement> = (evt) => {

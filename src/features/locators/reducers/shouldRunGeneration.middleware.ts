@@ -1,8 +1,7 @@
 import { Middleware } from "@reduxjs/toolkit";
-import { ElementId, Locator } from "../types/locator.types";
+import { Locator } from "../types/locator.types";
 import { runLocatorsGeneration } from "./runLocatorsGeneration.thunk";
 import { getNoLocatorsElements, hasAllLocators } from "../utils/utils";
-import { selectLocatorById } from "../selectors/locators.selectors";
 
 const onSetActiveGroup = (dispatch: any, locators: Locator[]) => {
   dispatch(
