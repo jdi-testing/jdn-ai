@@ -114,7 +114,9 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
     if (keyForMultiSelect) {
       if (active) dispatch(elementUnsetActive(element_id));
       else dispatch(elementSetActive(element));
-    } else dispatch(setActiveSingle(element));
+    } else {
+      if (!active) dispatch(setActiveSingle(element))
+    };
   };
 
   const handleLocatorRightClick: React.MouseEventHandler<HTMLDivElement> = (evt) => {
@@ -127,15 +129,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
 
   const renderColorizedString = () => {
     const handleClick: React.MouseEventHandler<HTMLDivElement> = (event) => {
-      event.stopPropagation();
-      if (event.detail === 2) {
-        setIsEditModalOpen(true);
-        clearTimeout(timer);
-      } else {
-        timer = setTimeout(() => {
-          handleLocatorClick(event);
-        }, 200);
-      }
+      if (event.detail === 2) setIsEditModalOpen(true);
     };
 
     return (
