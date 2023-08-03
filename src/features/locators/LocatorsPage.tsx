@@ -2,7 +2,7 @@ import { Button, Modal, Tooltip, Row } from "antd";
 import React, { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import { isEqual, size } from "lodash";
+import { isEmpty, isEqual, size } from "lodash";
 
 import { changePageBack, setScriptMessage } from "../../app/main.slice";
 import { Breadcrumbs } from "../../common/components/breadcrumbs/Breadcrumbs";
@@ -22,7 +22,11 @@ import { OnbrdStep } from "../onboarding/types/constants";
 import { removeAll as removeAllFilters, setFilter } from "../filter/filter.slice";
 import { selectIfUnselectedAll } from "../filter/filter.selectors";
 import { selectClassFilterByPO } from "../filter/filter.selectors";
-import { getLocatorsIdsByPO, selectLocatorsByPageObject } from "./selectors/locatorsByPO.selectors";
+import {
+  getLocatorsIdsByPO,
+  selectLocatorsByPageObject,
+  selectPresentLocatorsByPO,
+} from "./selectors/locatorsByPO.selectors";
 import {
   selectFilteredLocators,
   selectInProgressGenerateByPageObj,
@@ -163,8 +167,10 @@ export const LocatorsPage = () => {
     );
   };
 
+  const isNoPageLocators = isEmpty(useSelector(selectPresentLocatorsByPO));
+
   return (
-    <React.Fragment>
+    <>
       <div className="jdn__locatorsList">
         <Row justify="space-between" wrap={false}>
           <Breadcrumbs ref={breadcrumbsRef} />
@@ -185,15 +191,17 @@ export const LocatorsPage = () => {
                 <LocatorTreeSpinner />
               ) : (
                 <>
-                  <Modal
-                    title={EmptyListModal.Title}
-                    open={isEmptyListModalOpen}
-                    onCancel={() => setIsEmptyListModalOpen(false)}
-                    onOk={pageBack}
-                    okText={EmptyListModal.OkButtonTitle}
-                  >
-                    {EmptyListModal.Contents}
-                  </Modal>
+                  {isNoPageLocators && (
+                    <Modal
+                      title={EmptyListModal.Title}
+                      open={isEmptyListModalOpen}
+                      onCancel={() => setIsEmptyListModalOpen(false)}
+                      onOk={pageBack}
+                      okText={EmptyListModal.OkButtonTitle}
+                    >
+                      {EmptyListModal.Contents}
+                    </Modal>
+                  )}
                   <LocatorsEmptyListInfo setIsEditModalOpen={setIsEditModalOpen}></LocatorsEmptyListInfo>
                 </>
               )}
@@ -205,6 +213,6 @@ export const LocatorsPage = () => {
         {renderBackButton()}
         {renderConfirmButton()}
       </div>
-    </React.Fragment>
+    </>
   );
 };
