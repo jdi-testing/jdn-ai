@@ -5,8 +5,6 @@ import { selectClassFilterByPO } from "../../filter/filter.selectors";
 import { Locator } from "../types/locator.types";
 import { filterLocatorsByClassFilter } from "../utils/filterLocators";
 import { selectLocatorsByPageObject, selectSortedLocators } from "./locatorsByPO.selectors";
-import { selectCurrentPage } from "../../../app/main.selectors";
-import { isLocatorListPage } from "../../../app/utils/heplers";
 import { filterInProgress, isProgressStatus } from "../utils/helpers";
 
 export const selectFilteredLocators = createSelector(
