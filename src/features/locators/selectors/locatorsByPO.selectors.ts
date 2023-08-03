@@ -78,4 +78,4 @@ export const selectAreInProgress = createSelector(
   selectPresentLocatorsInProgress,
   selectCurrentPage,
   (locators, page) => isLocatorListPage(page.page) && locators.length > 0
-  )
+);
