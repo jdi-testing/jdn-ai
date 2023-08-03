@@ -100,8 +100,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
     }
   }, [scriptMessage]);
 
-  const handleOnChange: React.MouseEventHandler<HTMLDivElement> = (evt) => {
-    evt.stopPropagation();
+  const handleOnChange: React.MouseEventHandler<HTMLDivElement> = () => {
     dispatch(toggleElementGeneration(element_id));
     if (allChildrenChecked && size(element.children)) {
       dispatch(setChildrenGeneration({ locator: element, generate: false }));
