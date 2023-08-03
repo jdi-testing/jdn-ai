@@ -4,13 +4,16 @@ import { runLocatorsGeneration } from "./runLocatorsGeneration.thunk";
 import { getNoLocatorsElements, hasAllLocators } from "../utils/utils";
 
 const onSetActiveGroup = (dispatch: any, locators: Locator[]) => {
-  dispatch(
-    // @ts-ignore
-    runLocatorsGeneration({
-      locators: getNoLocatorsElements(locators),
-      generateMissingLocator: true,
-    })
-  );
+  const noLocators = getNoLocatorsElements(locators);
+  if (noLocators.length) {
+    dispatch(
+      // @ts-ignore
+      runLocatorsGeneration({
+        locators: noLocators,
+        generateMissingLocator: true,
+      })
+    );
+  }
 };
 
 export const shouldRunGeneration: Middleware = (store) => (next) => (action) => {
@@ -23,7 +26,7 @@ export const shouldRunGeneration: Middleware = (store) => (next) => (action) => 
       break;
     }
     case "locators/elementGroupSetActive": {
-      onSetActiveGroup(store.dispatch, payload as Locator[]);
+      onSetActiveGroup(store.dispatch, payload.locators as Locator[]);
       break;
     }
     case "locators/setActiveSingle":

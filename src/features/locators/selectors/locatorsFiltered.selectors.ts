@@ -146,9 +146,3 @@ export const selectActiveLocators = createSelector(selectFilteredLocators, (loca
 export const selectCheckedLocators = createSelector(selectFilteredLocators, (locators) =>
   locators.filter((_loc) => _loc.generate)
 );
-
-export const areInProgress = createSelector(
-  selectInProgressByPageObj,
-  selectCurrentPage,
-  (locators, page) => isLocatorListPage(page.page) && locators.length > 0
-);

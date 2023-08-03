@@ -8,7 +8,7 @@ import { sendMessage } from "../pageServices/connector";
 import { webSocketController } from "./webSocketController";
 import { selectInProgressByPageObj } from "../features/locators/selectors/locatorsFiltered.selectors";
 import { selectCurrentPageObject } from "../features/pageObjects/selectors/pageObjects.selectors";
-import { selectPresentLocatorsInProgress } from "../features/locators/selectors/locatorsByPO.selectors";
+import { selectAreInProgress } from "../features/locators/selectors/locatorsByPO.selectors";
 
 const reScheduledTasks = new Set();
 
@@ -64,12 +64,12 @@ export const updateSocketMessageHandler = (dispatch: any, state: any) => {
           const pageObject = selectCurrentPageObject(state)!;
           dispatch(updateLocatorGroup({ locators, pageObject }));
         };
-        if (selectPresentLocatorsInProgress(state)) throttler.accumulateAndThrottle(onStatusChange)([payload]);
+        if (selectAreInProgress(state)) throttler.accumulateAndThrottle(onStatusChange)([payload]);
         break;
       }
     }
     if (pong) {
-      if (!selectPresentLocatorsInProgress(state)) webSocketController.stopPing();
+      if (!selectAreInProgress(state)) webSocketController.stopPing();
     }
   };
 

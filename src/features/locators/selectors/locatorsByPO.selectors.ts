@@ -9,6 +9,8 @@ import { selectLocatorById, selectLocators } from "./locators.selectors";
 import { isValidLocator } from "../utils/utils";
 import { LocatorType } from "../../../common/types/common";
 import { filterInProgress } from "../utils/helpers";
+import { selectCurrentPage } from "../../../app/main.selectors";
+import { isLocatorListPage } from "../../../app/utils/heplers";
 
 export const getLocatorsIdsByPO = (state: RootState, pageObjId?: PageObjectId) => {
   pageObjId = isNil(pageObjId) ? selectCurrentPageObject(state)?.id : pageObjId;
@@ -71,3 +73,9 @@ export const selectPresentActiveLocators = createSelector(selectPresentLocatorsB
 );
 
 export const selectPresentLocatorsInProgress = createSelector(selectPresentLocatorsByPO, filterInProgress);
+
+export const selectAreInProgress = createSelector(
+  selectPresentLocatorsInProgress,
+  selectCurrentPage,
+  (locators, page) => isLocatorListPage(page.page) && locators.length > 0
+  )
