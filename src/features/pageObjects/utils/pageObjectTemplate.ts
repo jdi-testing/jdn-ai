@@ -3,6 +3,8 @@ import { camelCase, upperFirst } from "lodash";
 import transliterate from "@sindresorhus/transliterate";
 import { Locator } from "../../locators/types/locator.types";
 import { getLocatorPrefix } from "../../locators/utils/locatorOutput";
+import { AnnotationType } from "../../../common/types/common";
+import { hasAnnotationType } from "./hasAnnotationType";
 
 export const getClassName = (title: string) => {
   let className = transliterate(title);
@@ -25,6 +27,8 @@ export const pageObjectTemplate = (locators: Locator[], title: string, library: 
       loc.locatorType
     )}"${locatorEscaped}")\n    public ${loc.type} ${loc.name};`;
   });
+
+  const hasFindByAnnotationType: boolean = hasAnnotationType(locators, AnnotationType.FindBy);
 
   const pageCode = `package site.pages;
 
@@ -67,11 +71,10 @@ import com.epam.jdi.light.vuetify.elements.complex.timelines.*;
 import com.epam.jdi.light.vuetify.elements.composite.*;
 `
       : ""
-  }
+  }${hasFindByAnnotationType ? `import com.epam.jdi.light.elements.pageobjects.annotations.FindBy;\n` : ""}
 public class ${className} extends WebPage {
 ${locatorsCode.join("\n\n")}
 }
 `;
-
   return { pageCode, title: className };
 };
