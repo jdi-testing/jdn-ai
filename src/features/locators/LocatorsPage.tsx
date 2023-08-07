@@ -202,7 +202,10 @@ export const LocatorsPage = () => {
                       {EmptyListModal.Contents}
                     </Modal>
                   )}
-                  <LocatorsEmptyListInfo setIsEditModalOpen={setIsEditModalOpen}></LocatorsEmptyListInfo>
+                  <LocatorsEmptyListInfo
+                    isNoPageLocators={isNoPageLocators}
+                    setIsEditModalOpen={setIsEditModalOpen}
+                  ></LocatorsEmptyListInfo>
                 </>
               )}
             </div>
