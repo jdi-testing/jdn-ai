@@ -17,17 +17,6 @@ export const createLocatorAttributes = async (
   const generationData = createLocatorNames(generationTags, library);
   const _locatorsWithParents = await setParents(generationData);
   const locatorsWithParents: Locator[] = convertToListWithChildren(_locatorsWithParents);
-  const locators = locatorsWithParents.map((locator) => ({
-    ...locator,
-    locator: {
-      ...locator.locator,
-      // now it's here for a performance optimization,
-      // but with migration to React 18 it should be moved to the generateLocators thunk,
-      // where this business logic actually happens
-      ...(isAutogenerating.generateXpath ? { xPathStatus: LocatorTaskStatus.PENDING } : {}),
-      ...(isAutogenerating.generateCssSelector ? { cssSelectorStatus: LocatorTaskStatus.SUCCESS } : {}),
-    },
-  }));
 
-  return locators;
+  return locatorsWithParents;
 };

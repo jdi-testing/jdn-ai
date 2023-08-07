@@ -6,6 +6,8 @@ import { RootState } from "../../../app/store/store";
 import { runCssSelectorGeneration } from "../utils/runCssSelectorGeneration";
 import { updateLocatorGroup } from "../locators.slice";
 import { selectCurrentPageObject } from "../../pageObjects/selectors/pageObjects.selectors";
+import { filterLocatorsByClassFilter } from "../utils/filterLocators";
+import { selectClassFilterByPO } from "../../filter/filter.selectors";
 
 interface Meta {
   locators: Locator[];
@@ -18,7 +20,10 @@ interface Meta {
 export const runLocatorsGeneration = createAsyncThunk(
   "locators/runLocatorsGeneration",
   async (meta: Meta, thunkAPI) => {
+    const state = thunkAPI.getState() as RootState;
+
     const { locators, maxGenerationTime, generateXpath, generateCssSelector, generateMissingLocator } = meta;
+    const filter = selectClassFilterByPO(state);
 
     const toGenerateXpaths = maxGenerationTime
       ? locators
@@ -36,13 +41,13 @@ export const runLocatorsGeneration = createAsyncThunk(
     const generations = Promise.all([
       ...[
         toGenerateXpaths.length
-          ? runXpathGeneration(thunkAPI.getState() as RootState, toGenerateXpaths, maxGenerationTime)
+          ? runXpathGeneration(state, toGenerateXpaths, maxGenerationTime)
           : null,
       ],
       ...[toGenerateCss.length ? runCssSelectorGeneration(toGenerateCss) : null],
     ]);
 
-    const setPendingXpaths = toGenerateXpaths
+    const setPendingXpaths = filterLocatorsByClassFilter(toGenerateXpaths, filter)
       .filter((locator) => locator.locator && locator.locator.taskStatus !== LocatorTaskStatus.PENDING)
       .map(({ element_id }) => ({
         element_id,
@@ -56,7 +61,6 @@ export const runLocatorsGeneration = createAsyncThunk(
         locator: { cssSelectorStatus: LocatorTaskStatus.PENDING },
       }));
 
-    const state = thunkAPI.getState() as RootState;
     if (setPendingXpaths.length)
       thunkAPI.dispatch(
         updateLocatorGroup({
