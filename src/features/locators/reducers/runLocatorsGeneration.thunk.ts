@@ -39,11 +39,7 @@ export const runLocatorsGeneration = createAsyncThunk(
         : [];
 
     const generations = Promise.all([
-      ...[
-        toGenerateXpaths.length
-          ? runXpathGeneration(state, toGenerateXpaths, maxGenerationTime)
-          : null,
-      ],
+      ...[toGenerateXpaths.length ? runXpathGeneration(state, toGenerateXpaths, maxGenerationTime) : null],
       ...[toGenerateCss.length ? runCssSelectorGeneration(toGenerateCss) : null],
     ]);
 
