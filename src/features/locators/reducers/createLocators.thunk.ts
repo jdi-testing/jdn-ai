@@ -26,7 +26,9 @@ export const createLocators = createAsyncThunk("locators/createLocators", async 
 
     const ids = locators.map(({ element_id }) => element_id);
     thunkAPI.dispatch(addLocatorsToPageObj(ids));
-  }
+
+    return locators;
+  } else return undefined;
 });
 
 export const createLocatorsReducer = (builder: ActionReducerMapBuilder<LocatorsState>) => {

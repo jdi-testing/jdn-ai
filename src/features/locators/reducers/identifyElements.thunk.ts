@@ -1,4 +1,4 @@
-import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
+import { ActionReducerMapBuilder, Middleware, createAsyncThunk } from "@reduxjs/toolkit";
 import { predictElements } from "../../../pageServices/pageDataHandlers";
 import { IdentificationStatus, LocatorsState, PredictedEntity } from "../../locators/types/locator.types";
 import { setCurrentPageObj, setPageData } from "../../pageObjects/pageObject.slice";
@@ -47,10 +47,6 @@ export const identifyElements = createAsyncThunk("locators/identifyElements", as
     thunkAPI.dispatch(setPageData({ id: pageObj, pageData }));
     thunkAPI.dispatch(createLocators({ predictedElements: locators, library }));
 
-    const { generateXpath } = selectAutoGeneratingLocatorTypes(state as RootState, locators);
-    // generateCssSelector: false because it's run with attributes generation for performance reasons
-    thunkAPI.dispatch(runLocatorsGeneration({ locators, generateXpath, generateCssSelector: false }));
-
     return thunkAPI.fulfillWithValue(locators);
   } catch (error) {
     return thunkAPI.rejectWithValue(null);
@@ -70,4 +66,17 @@ export const identifyElementsReducer = (builder: ActionReducerMapBuilder<Locator
     .addCase(identifyElements.rejected, (state) => {
       state.status = IdentificationStatus.error;
     });
+};
+
+export const onLocatorsCreated: Middleware = (store) => (next) => (action) => {
+  const state = store.getState();
+  if (action.type === createLocators.fulfilled.type) {
+    const locators = action.payload;
+    const { generateXpath } = selectAutoGeneratingLocatorTypes(state as RootState, locators);
+    // generateCssSelector: false because it's run with attributes generation for performance reasons
+    // @ts-ignore
+    store.dispatch(runLocatorsGeneration({ locators, generateXpath, generateCssSelector: false }));
+  }
+
+  return next(action);
 };
