@@ -5,6 +5,8 @@ import { request } from "../../../services/backend";
 
 const middlewares = [thunk];
 
+jest.mock("../../../app/utils/compatibleVersions");
+
 describe("defineServer", () => {
   const mockStore = configureMockStore(middlewares);
 

@@ -3,21 +3,30 @@ import { Locator } from "../types/locator.types";
 import { runLocatorsGeneration } from "./runLocatorsGeneration.thunk";
 import { getNoLocatorsElements, hasAllLocators } from "../utils/utils";
 
-export const onSetActive: Middleware = (store) => (next) => (action) => {
+const onSetActiveGroup = (dispatch: any, locators: Locator[]) => {
+  const noLocators = getNoLocatorsElements(locators);
+  if (noLocators.length) {
+    dispatch(
+      // @ts-ignore
+      runLocatorsGeneration({
+        locators: noLocators,
+        generateMissingLocator: true,
+      })
+    );
+  }
+};
+
+export const shouldRunGeneration: Middleware = (store) => (next) => (action) => {
   const { type, payload } = action;
 
   switch (type) {
+    case "locators/setElementGroupGeneration": {
+      const { locators, generate } = payload;
+      if (generate) onSetActiveGroup(store.dispatch, locators);
+      break;
+    }
     case "locators/elementGroupSetActive": {
-      const noLocators = getNoLocatorsElements(payload.locators);
-      if (noLocators.length) {
-        store.dispatch(
-          // @ts-ignore
-          runLocatorsGeneration({
-            locators: noLocators,
-            generateMissingLocator: true,
-          })
-        );
-      }
+      onSetActiveGroup(store.dispatch, payload.locators as Locator[]);
       break;
     }
     case "locators/setActiveSingle":

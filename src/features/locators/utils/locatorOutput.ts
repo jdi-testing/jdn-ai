@@ -27,7 +27,7 @@ export const getLocatorString = (
     locator.output
   }")\npublic ${type} ${name};`;
 
-export const getLocatorWithJDIAnnotation = (locator: string): string => `${AnnotationType.UI}}("${locator}")`;
+export const getLocatorWithJDIAnnotation = (locator: string): string => `${AnnotationType.UI}("${locator}")`;
 
 export const getLocatorWithSelenium = (locator: string, option: string): string =>
   `${AnnotationType.FindBy}(${option} = "${locator}")`;

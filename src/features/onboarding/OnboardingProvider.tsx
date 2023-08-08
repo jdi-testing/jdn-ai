@@ -75,6 +75,9 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
     onClickPrev?: (...args: any) => void
   ) => {
     setStepRefs((prevRefs) => {
+      /* case for skippeed step, see `locatorPageSteps` at useOnBoardingRef.ts */
+      if (!prevRefs[name]) return prevRefs;
+
       const { target: currentTarget, onClickNext: currentNext, onClickPrev: currentPrev } = prevRefs[name];
       return {
         ...prevRefs,
@@ -111,7 +114,7 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
       ? OnbrdStep.DownloadPO
       : !isPoPage && isCustomLocatorFlow && poHasLocators
       ? OnbrdStep.AddToPO
-      : !isPoPage && isCustomLocatorFlow && stepRefs[OnbrdStep.EditLocator].target?.current
+      : !isPoPage && isCustomLocatorFlow && stepRefs[OnbrdStep.EditLocator]?.target?.current
       ? OnbrdStep.EditLocator
       : !isPoPage
       ? OnbrdStep.CustomLocator

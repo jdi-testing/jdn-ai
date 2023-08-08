@@ -4,8 +4,8 @@ import { Button, Tooltip } from "antd";
 import { CopySimple } from "phosphor-react";
 import { Locator } from "../../locators/types/locator.types";
 import { CopyTitle } from "../../../common/types/common";
-import { copyToClipboard } from "../../../common/utils/copyToClipboard";
 import { getLocatorString } from "../../locators/utils/locatorOutput";
+import { copyLocatorsToClipboard } from "../../locators/utils/copyLocatorToClipboard";
 
 interface Props {
   elements: Locator[];
@@ -24,7 +24,7 @@ export const PageObjCopyButton: FC<Props> = ({ elements }) => {
     e.stopPropagation();
 
     const pageObject = getPageObjectForCopying(elements);
-    copyToClipboard(pageObject);
+    copyLocatorsToClipboard(pageObject);
 
     setTooltipTitle(CopyTitle.Copied);
   };
