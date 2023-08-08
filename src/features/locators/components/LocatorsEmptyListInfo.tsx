@@ -2,7 +2,7 @@ import { EmptyListInfo } from "../../../common/components/emptyListInfo/EmptyLis
 import React from "react";
 import { Button } from "antd";
 import { OnboardingPopup } from "../../onboarding/components/OnboardingPopup";
-import { isNoPageLocatorsText } from "../text.constants";
+import { EmptyListText } from "../text.constants";
 
 interface LocatorsEmptyListInfoProps {
   setIsEditModalOpen: (isOpen: boolean) => void;
@@ -15,8 +15,6 @@ export const LocatorsEmptyListInfo = ({
 }: LocatorsEmptyListInfoProps): JSX.Element => (
   <EmptyListInfo>
     {isNoPageLocators ? (
-      isNoPageLocatorsText
-    ) : (
       <>
         You can either create a{" "}
         <Button type="link" onClick={() => setIsEditModalOpen(true)}>
@@ -31,6 +29,8 @@ export const LocatorsEmptyListInfo = ({
         </OnboardingPopup>{" "}
         to understand the JDN features
       </>
+    ) : (
+      EmptyListText
     )}
   </EmptyListInfo>
 );
