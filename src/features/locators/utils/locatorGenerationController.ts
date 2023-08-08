@@ -5,8 +5,6 @@ import { getDocument } from "../../../common/utils/getDocument";
 import { MainState, MaxGenerationTime } from "../../../app/types/mainSlice.types";
 import { PageObject } from "../../pageObjects/types/pageObjectSlice.types";
 
-export const isProgressStatus = (taskStatus?: LocatorTaskStatus) =>
-  LocatorTaskStatus.PENDING === taskStatus || taskStatus === LocatorTaskStatus.STARTED;
 export const isGeneratedStatus = (taskStatus: LocatorTaskStatus) => taskStatus === LocatorTaskStatus.SUCCESS;
 
 class LocatorGenerationController {

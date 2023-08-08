@@ -114,7 +114,7 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
       ? OnbrdStep.DownloadPO
       : !isPoPage && isCustomLocatorFlow && poHasLocators
       ? OnbrdStep.AddToPO
-      : !isPoPage && isCustomLocatorFlow && stepRefs[OnbrdStep.EditLocator].target?.current
+      : !isPoPage && isCustomLocatorFlow && stepRefs[OnbrdStep.EditLocator]?.target?.current
       ? OnbrdStep.EditLocator
       : !isPoPage
       ? OnbrdStep.CustomLocator
