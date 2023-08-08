@@ -234,7 +234,7 @@ export const highlightOnPage = () => {
     div.id = jdnHash;
     div.className = getClassName(predictedElement);
     div.setAttribute("jdn-highlight", true);
-    div.setAttribute("jdn-status", predictedElement.locator.taskStatus);
+    div.setAttribute("jdn-status", predictedElement.locator.taskStatus || LocatorTaskStatus.STARTED);
     div.addEventListener("mouseover", () => {
       tooltipTimer = setTimeout(() => {
         showTooltip(coordinates);
