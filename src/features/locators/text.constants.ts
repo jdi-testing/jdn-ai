@@ -5,5 +5,5 @@ export const enum EmptyListModal {
   OkButtonTitle = "Open Settings",
 }
 
-export const isNoPageLocatorsText =
+export const EmptyListText =
   "Select the elements you need on the web page coverage and add them to the PO via a double-click or through the context menu";
