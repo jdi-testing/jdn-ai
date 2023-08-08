@@ -29,6 +29,9 @@ const sendToModel = async (payload, endpoint) => {
   return response;
 };
 
+/* First, plugin collects necessary data from the page.
+And then tha data is sent to endpoint, according to selected library.
+Function returns predicted elements. */
 export const predictElements = (endpoint) => {
   let pageData;
   return sendMessage
