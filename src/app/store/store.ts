@@ -12,6 +12,7 @@ import { changePageMiddleware } from "./middlewares/changePage.middleware";
 import { updateSocketMessageHandler } from "../../services/webSocketMessageHandler";
 import { shouldRunGeneration } from "../../features/locators/reducers/shouldRunGeneration.middleware";
 import { quitThrottlerMiddleware } from "../../common/utils/throttler";
+import { onLocatorsCreated } from "../../features/locators/reducers/identifyElements.thunk";
 
 const rootReducer = {
   main: mainSlice,
@@ -41,6 +42,7 @@ export const store = configureStore({
       changePageMiddleware,
       shouldRunGeneration,
       quitThrottlerMiddleware,
+      onLocatorsCreated,
     ]),
 });
 

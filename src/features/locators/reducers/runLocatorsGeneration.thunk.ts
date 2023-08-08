@@ -32,14 +32,14 @@ export const runLocatorsGeneration = createAsyncThunk(
     const toGenerateXpaths = maxGenerationTime
       ? locators
       : generateMissingLocator || generateXpath
-      ? locators.filter(
+      ? filterLocatorsByClassFilter(locators, filter).filter(
           ({ locator }) => !locator || !locator.xPath || locator.xPath === locator.fullXpath || !locator.fullXpath
         )
       : [];
 
     const toGenerateCss =
       generateMissingLocator || generateCssSelector
-        ? locators.filter(({ locator }) => !locator || !locator.cssSelector)
+        ? filterLocatorsByClassFilter(locators, filter).filter(({ locator }) => !locator || !locator.cssSelector)
         : [];
 
     const generations = Promise.all([
@@ -47,7 +47,7 @@ export const runLocatorsGeneration = createAsyncThunk(
       ...[toGenerateCss.length ? runCssSelectorGeneration(toGenerateCss) : null],
     ]);
 
-    const setPendingXpaths = filterLocatorsByClassFilter(toGenerateXpaths, filter)
+    const setPendingXpaths = toGenerateXpaths
       .filter((locator) => locator.locator && locator.locator.taskStatus !== LocatorTaskStatus.PENDING)
       .map(({ element_id }) => ({
         element_id,
