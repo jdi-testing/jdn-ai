@@ -1,16 +1,18 @@
 import { LocatorType } from "../../../common/types/common";
+import { ElementLibrary } from "../../../features/locators/types/generationClasses.types";
 import { PageObject } from "../../../features/pageObjects/types/pageObjectSlice.types";
 
-export const pageObject0 = {
+export const pageObject0: PageObject = {
   id: 0,
   name: "HomePage",
   url: "https://jdi-testing.github.io/jdi-light/index.html",
-  library: "MUI",
+  library: ElementLibrary.MUI,
   pathname: "/jdi-light/index.html",
   search: "",
   origin: "https://jdi-testing.github.io",
   pageData: "",
   locators: ["7524916072510597399809892823_0", "2075611903510597386448924232_0", "4138940493550098806301857686_0"],
+  locatorType: LocatorType.xPath,
 };
 
 export const pageObjectXpath = {

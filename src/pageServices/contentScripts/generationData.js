@@ -2,6 +2,7 @@ import getCssSelector from "css-selector-generator";
 import { finder } from "@medv/finder";
 import { ScriptMsg } from "../scriptMsg.constants";
 import { sendMessage } from "./utils";
+import { LocatorTaskStatus } from "../../features/locators/types/locator.types";
 
 export const getGenerationAttributes = () => {
   /*
@@ -169,7 +170,9 @@ export const getGenerationAttributes = () => {
         predictedElement.locator = {
           xPath,
           fullXpath: xPath,
-          ...(generateCss ? { cssSelector: generateSelectorByElement(element) } : {}),
+          ...(generateCss
+            ? { cssSelector: generateSelectorByElement(element), cssSelectorStatus: LocatorTaskStatus.SUCCESS }
+            : {}),
         };
 
         return {

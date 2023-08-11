@@ -3,7 +3,7 @@ import { Locator } from "../types/locator.types";
 import { runLocatorsGeneration } from "./runLocatorsGeneration.thunk";
 import { getNoLocatorsElements, hasAllLocators } from "../utils/utils";
 import { selectLocatorsByPageObject } from "../selectors/locatorsByPO.selectors";
-import { AUTO_GENERATION_TRESHOLD } from "../utils/constants";
+import { AUTO_GENERATION_THRESHOLD } from "../utils/constants";
 
 const onSetActiveGroup = (dispatch: any, locators: Locator[]) => {
   const noLocators = getNoLocatorsElements(locators);
@@ -52,7 +52,7 @@ export const shouldRunGeneration: Middleware = (store) => (next) => (action) => 
 
       const locators = selectLocatorsByPageObject(state, pageObjectId).filter((loc) => loc.type === jdiClass);
       const noLocators = getNoLocatorsElements(locators);
-      if (noLocators.length < AUTO_GENERATION_TRESHOLD) {
+      if (noLocators.length < AUTO_GENERATION_THRESHOLD) {
         store.dispatch(
           // @ts-ignore
           runLocatorsGeneration({
@@ -69,7 +69,7 @@ export const shouldRunGeneration: Middleware = (store) => (next) => (action) => 
       if (!value) break;
 
       const noLocators = getNoLocatorsElements(selectLocatorsByPageObject(state, pageObjectId));
-      if (noLocators.length < AUTO_GENERATION_TRESHOLD) {
+      if (noLocators.length < AUTO_GENERATION_THRESHOLD) {
         store.dispatch(
           // @ts-ignore
           runLocatorsGeneration({

@@ -14,7 +14,7 @@ export interface PageObject {
   library: ElementLibrary;
   locators?: ElementId[];
   annotationType?: AnnotationType;
-  locatorType?: LocatorType;
+  locatorType: LocatorType;
   name: string;
   origin: string;
   pathname: string;
