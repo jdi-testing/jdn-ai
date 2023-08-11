@@ -12,7 +12,7 @@ import { defaultLibrary } from "../../locators/types/generationClasses.types";
 import { getPageAttributes, isPONameUnique } from "../utils/pageObject";
 import { getClassName } from "../utils/pageObjectTemplate";
 import { LocalStorageKey, getLocalStorage } from "../../../common/utils/localStorage";
-import { AnnotationType } from "../../../common/types/common";
+import { AnnotationType, LocatorType } from "../../../common/types/common";
 
 export const addPageObj = createAsyncThunk("pageObject/addPageObj", async (payload, { getState }) => {
   const res = await getPageAttributes();
@@ -63,7 +63,7 @@ export const addPageObjReducer = (builder) => {
         pathname,
         search,
         origin,
-        ...(lastSelectedLocatorType ? { locatorType: lastSelectedLocatorType } : {}),
+        ...(lastSelectedLocatorType ? { locatorType: lastSelectedLocatorType } : { locatorType: LocatorType.xPath }),
       });
       state.currentPageObject = id;
     })

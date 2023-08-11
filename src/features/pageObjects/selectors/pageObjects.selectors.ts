@@ -2,7 +2,7 @@ import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
 import { isNil, last } from "lodash";
 import { RootState } from "../../../app/store/store";
 import { PageObject } from "../types/pageObjectSlice.types";
-import { AUTO_GENERATION_TRESHOLD } from "../../locators/utils/constants";
+import { AUTO_GENERATION_THRESHOLD } from "../../locators/utils/constants";
 import { LocatorType } from "../../../common/types/common";
 
 export const pageObjAdapter = createEntityAdapter<PageObject>({
@@ -54,11 +54,16 @@ export const selectAutoGeneratingLocatorTypes = createSelector(
 
     locators = locators || pageObj.locators;
 
-    const isLowerTreshold = (locators?.length || 0) <= AUTO_GENERATION_TRESHOLD;
+    // TODO: rewrite with normal condition:
+    const isLessThanMinLocatorsThreshold: boolean = (locators?.length || 0) <= AUTO_GENERATION_THRESHOLD;
 
-    return {
-      generateCssSelector: isLowerTreshold || (!pageObj.hideUnadded && pageObj.locatorType === LocatorType.cssSelector),
-      generateXpath: isLowerTreshold || (!pageObj.hideUnadded && pageObj.locatorType === LocatorType.xPath),
+    const isAutoGenerating = {
+      generateCssSelector:
+        isLessThanMinLocatorsThreshold || (!pageObj.hideUnadded && pageObj.locatorType === LocatorType.cssSelector),
+      generateXpath:
+        isLessThanMinLocatorsThreshold || (!pageObj.hideUnadded && pageObj.locatorType === LocatorType.xPath),
     };
+
+    return isAutoGenerating;
   }
 );
