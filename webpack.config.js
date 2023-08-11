@@ -155,6 +155,7 @@ const manifest = {
     path: join(__dirname, "dist"),
     publicPath: "./",
     assetModuleFilename: "[name][ext]",
+    clean: true,
   },
   module: {
     rules: [
