@@ -31,12 +31,12 @@ interface Props {
 
 const libraryOptions = [
   {
-    value: ElementLibrary.MUI,
-    label: libraryNames.MUI,
-  },
-  {
     value: ElementLibrary.HTML5,
     label: libraryNames.HTML5,
+  },
+  {
+    value: ElementLibrary.MUI,
+    label: libraryNames.MUI,
   },
   {
     value: ElementLibrary.Vuetify,
@@ -138,6 +138,19 @@ export const PageObjGenerationBar: React.FC<Props> = ({ pageObj, library, url })
           <div ref={refSettings} className="jdn__generationButtons_onboardingMask"></div>
           <Row>
             <Col flex="104px">
+              <Typography.Text>Framework:</Typography.Text>
+            </Col>
+            <Col flex="auto">
+              <Select
+                id="frameworkType"
+                defaultValue={FrameworkType.JdiLight}
+                className="jdn__select"
+                options={frameworkTypeOptions}
+              />
+            </Col>
+          </Row>
+          <Row>
+            <Col flex="104px">
               <Typography.Text>Library:</Typography.Text>
             </Col>
             <Col flex="auto">
@@ -147,19 +160,6 @@ export const PageObjGenerationBar: React.FC<Props> = ({ pageObj, library, url })
                 className="jdn__select"
                 onChange={onLibraryChange}
                 options={libraryOptions}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col flex="104px">
-              <Typography.Text>Framework:</Typography.Text>
-            </Col>
-            <Col flex="auto">
-              <Select
-                id="frameworkType"
-                defaultValue={FrameworkType.JdiLight}
-                className="jdn__select"
-                options={frameworkTypeOptions}
               />
             </Col>
           </Row>
