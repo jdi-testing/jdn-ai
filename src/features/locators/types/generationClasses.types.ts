@@ -25,10 +25,10 @@ export enum ElementLibrary {
 export const defaultLibrary = ElementLibrary.MUI;
 
 export const libraryNames: Record<ElementLibrary, string> = {
-  [ElementLibrary.MUI]: "Material UI",
+  [ElementLibrary.MUI]: "Material UI (beta)",
   [ElementLibrary.HTML5]: "HTML5",
   [ElementLibrary.NgMat]: "Angular Material",
-  [ElementLibrary.Vuetify]: "Vuetify",
+  [ElementLibrary.Vuetify]: "Vuetify (beta)",
 };
 
 export const libraryClasses: Record<ElementLibrary, ElementLabel> = {
