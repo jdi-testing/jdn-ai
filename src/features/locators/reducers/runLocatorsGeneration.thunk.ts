@@ -8,6 +8,7 @@ import { updateLocatorGroup } from "../locators.slice";
 import { selectCurrentPageObject } from "../../pageObjects/selectors/pageObjects.selectors";
 import { filterLocatorsByClassFilter } from "../utils/filterLocators";
 import { LocalStorageKey, getLocalStorage } from "../../../common/utils/localStorage";
+import { selectClassFilterByPO } from "../../filter/filter.selectors";
 
 interface Meta {
   locators: Locator[];
@@ -29,7 +30,10 @@ export const runLocatorsGeneration = createAsyncThunk(
     const currentPageObjLibrary = selectCurrentPageObject(state)?.library;
     const { locators, maxGenerationTime, generateXpath, generateCssSelector, generateMissingLocator } = meta;
 
-    const filter = getLocalStorage(LocalStorageKey.Filter)[currentPageObjLibrary ?? ""];
+    let filter = selectClassFilterByPO(state);
+    if (currentPageObjLibrary && getLocalStorage(LocalStorageKey.Filter)) {
+      filter = getLocalStorage(LocalStorageKey.Filter)[currentPageObjLibrary];
+    }
 
     const getXpathsForGeneration = (): Locator[] => {
       if (maxGenerationTime) {
