@@ -125,28 +125,26 @@ export const getPageAttributes = async () => {
   });
 };
 
-export const getPage = async (locators: Array<Locator>, title: string, library: ElementLibrary) => {
-  const pageObject = pageObjectTemplate(locators, title, library);
-  return pageObject;
+export const getPage = async (locators: Array<Locator>, pageObject: PageObject) => {
+  return pageObjectTemplate(locators, pageObject);
 };
 
-export const getPagePerfTest = async (locators: Array<Locator>, title: string, url: string) => {
-  const pageObject = pageObjectTemplatePerfTest(locators, title, url);
-  return pageObject;
+export const getPagePerfTest = async (locators: Array<Locator>, pageObject: PageObject) => {
+  return pageObjectTemplatePerfTest(locators, pageObject);
 };
 
-export const generatePageObject = async (elements: Array<Locator>, title: string, library: ElementLibrary) => {
-  const page = await getPage(elements, title, library);
+export const generatePageObject = async (elements: Array<Locator>, pageObject: PageObject) => {
+  const page = await getPage(elements, pageObject);
   const blob = new Blob([page.pageCode], {
     type: "text/plain;charset=utf-8",
   });
   saveAs(blob, `${page.title}.java`);
 };
 
-export const generatePageObjectPerfTest = async (elements: Array<Locator>, title: string, url: string) => {
-  const page = await getPagePerfTest(elements, title, url);
+export const generatePageObjectPerfTest = async (elements: Array<Locator>, pageObject: PageObject) => {
+  const page = await getPagePerfTest(elements, pageObject);
   const blob = new Blob([page.pageCode], {
     type: "text/plain;charset=utf-8",
   });
-  saveAs(blob, `${page.title}.js`);
+  saveAs(blob, `${page.name}.js`);
 };

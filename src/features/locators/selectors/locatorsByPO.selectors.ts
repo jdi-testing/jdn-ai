@@ -36,12 +36,13 @@ export const selectPresentLocatorsByPO = createSelector(
       .filter((loc) => locByPageObj.includes(loc.element_id))
       .map((loc) => {
         const annotationType = loc.annotationType || pageObject?.annotationType;
+        const locatorType = loc.locatorType || pageObject?.locatorType || LocatorType.xPath;
         const isDefaultLocatorType = () => !loc.locatorType && pageObject?.locatorType === LocatorType.cssSelector;
 
         return {
           ...loc,
           ...(annotationType && { annotationType }),
-          ...(isDefaultLocatorType() && { locatorType: pageObject?.locatorType }),
+          ...(locatorType && { locatorType }),
           ...(isDefaultLocatorType() && {
             locator: { ...loc.locator, output: getLocator(loc.locator, pageObject?.locatorType) },
           }),

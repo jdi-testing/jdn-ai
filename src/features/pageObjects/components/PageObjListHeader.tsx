@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Modal, Row, Space, Tooltip } from "antd";
 import { CaretDown, Plus, Trash } from "phosphor-react";
@@ -27,7 +27,8 @@ interface Props {
   isExpanded: boolean;
 }
 
-export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isExpanded, setActivePanel }) => {
+export const PageObjListHeader: React.FC<Props> = ({ toggleExpand, isExpanded, setActivePanel }) => {
+  const [template, setTemplate] = useState<Blob | undefined>(undefined);
   const state = useSelector((state) => state) as RootState;
   const pageObjects = useSelector(selectPageObjects);
   const locatorsToGenerate = useSelector(selectLocatorsToGenerate);
@@ -39,6 +40,8 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
 
   const handleDownload = () => {
     dispatch(pushNotification({ action: { type: "downloadTemplate" } }));
+    console.log("🤯");
+    console.log(template);
     if (template) generateAndDownloadZip(state, template);
   };
 

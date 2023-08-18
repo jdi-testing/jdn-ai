@@ -1,6 +1,7 @@
 import { Locator } from "../../locators/types/locator.types";
+import { PageObject } from "../types/pageObjectSlice.types";
 
-export const pageObjectTemplatePerfTest = (locators: Locator[], title: string, url: string) => {
+export const pageObjectTemplatePerfTest = (locators: Locator[], pageObject: PageObject) => {
   const locatorsCode = locators.map((loc) => `    this.${loc.name} = new ${loc.type}("${loc.locator.output}", page)`);
 
   const pageCode = `const Page = require("../../core/page");
@@ -8,18 +9,18 @@ export const pageObjectTemplatePerfTest = (locators: Locator[], title: string, u
   const Button = require("../../core/elements/button");
   const UploadField = require("../../core/elements/uploadField");
   const UIElement = require("../../core/elements/element");\n
-class ${title} extends Page {\n
+class ${pageObject.name} extends Page {\n
   constructor(page) {
     super(page)
-    this.url = "${url}"
+    this.url = "${pageObject.url}"
   }\n
   init(page){
     super.init(page)
 ${locatorsCode.join("\n")}
   }\n
 }\n
-module.exports = ${title};
+module.exports = ${pageObject.name};
 `;
 
-  return { pageCode, title };
+  return { pageCode, name: pageObject.name };
 };

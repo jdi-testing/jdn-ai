@@ -9,9 +9,20 @@ import { PageObject } from "../types/pageObjectSlice.types";
 import { ElementLibrary } from "../../locators/types/generationClasses.types";
 import { editPomContent } from "./templateFileContent";
 import { selectConfirmedLocators } from "../../locators/selectors/locatorsFiltered.selectors";
+import { FrameworkType } from "../../../common/types/common";
 
-const generatePoFile = (newZip: JSZip, page: { pageCode: string; title: string }) =>
-  newZip.file(`src/main/java/site/pages/${page.title}.java`, page.pageCode, { binary: false });
+const PAGES_PROPERTIES_PATH = "src/main/resources/properties/suite/web_app/pages.properties";
+const SITE_PROPERTIES_PATH = "src/main/resources/properties/suite/web_app/site.properties";
+const MY_SITE_PATH = "src/main/java/site/MySite.java";
+const EXAMPLE_STRING = "// ADD SITE PAGES WITH URLS";
+
+const isVividusFramework = (framework: FrameworkType) => framework === FrameworkType.Vividus;
+
+const generatePoFile = (newZip: JSZip, framework: FrameworkType, page: { pageCode: string; title: string }) => {
+  const path = isVividusFramework(framework) ? PAGES_PROPERTIES_PATH : `src/main/java/site/pages/${page.title}.java`;
+
+  newZip.file(path, page.pageCode, { binary: false });
+};
 
 const editTestPropertiesFile = (newZip: JSZip, po: PageObject) =>
   newZip
@@ -23,21 +34,24 @@ const editTestPropertiesFile = (newZip: JSZip, po: PageObject) =>
       return newZip.file(`src/test/resources/test.properties`, newContent, { binary: true });
     });
 
-const editMySiteFile = (newZip: JSZip, po: PageObject, instanceName: string) =>
+const editMySiteFile = (newZip: JSZip, po: PageObject, instanceName: string) => {
+  if (isVividusFramework(po.framework)) return;
+  // const path = isVividusFramework(po.framework) ? PAGES_PROPERTIES_PATH : MY_SITE_PATH;
   newZip
-    .file("src/main/java/site/MySite.java")!
+    .file(MY_SITE_PATH)!
     .async("string")
     .then((content) => {
       if (content.includes(instanceName)) instanceName = `${instanceName}1`;
       const urlSearchParams = po.search;
       const testUrl = urlSearchParams.length ? po.pathname + urlSearchParams : po.pathname;
       const newContent = content.replace(
-        "// ADD SITE PAGES WITH URLS",
-        `// ADD SITE PAGES WITH URLS\n    @Url("${testUrl}")\n    public static ${po.name} ${instanceName};
+        EXAMPLE_STRING,
+        `${EXAMPLE_STRING}\n    @Url("${testUrl}")\n    public static ${po.name} ${instanceName};
           `
       );
-      return newZip.file(`src/main/java/site/MySite.java`, newContent, { binary: true });
+      return newZip.file(MY_SITE_PATH, newContent, { binary: true });
     });
+};
 
 const editTestsFile = (newZip: JSZip, po: PageObject, instanceName: string) =>
   newZip.file(`src/test/java/tests/${po.name}Tests.java`, testFileTemplate(instanceName, po.name));
@@ -81,15 +95,20 @@ export const generateAndDownloadZip = async (state: RootState, template: Blob) =
       // create page object files
       const locators = selectConfirmedLocators(state, po.id);
       if (!size(locators)) continue;
-      const page = await getPage(locators, po.name, po.library);
+      const page = await getPage(locators, po);
 
       const instanceName = lowerFirst(po.name);
 
-      await generatePoFile(newZip, page);
-      await editTestPropertiesFile(newZip, po);
-      await editMySiteFile(newZip, po, instanceName);
-      await editTestsFile(newZip, po, instanceName);
-      await editPomFile(newZip, po);
+      await generatePoFile(newZip, po.framework, page);
+
+      if (!isVividusFramework(po.framework)) {
+        await editTestPropertiesFile(newZip, po);
+        await editMySiteFile(newZip, po, instanceName);
+        await editTestsFile(newZip, po, instanceName);
+        await editPomFile(newZip, po);
+      } else {
+        newZip.file(SITE_PROPERTIES_PATH, `variables.siteURL=${po.url}`, { binary: true });
+      }
     }
 
     saveZip();

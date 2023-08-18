@@ -104,31 +104,31 @@ export const PageObjList: React.FC<Props> = (props) => {
               {...(!isNil(activePanel) ? { activeKey: activePanel } : {})}
               onChange={(key) => setActivePanel([...key])}
             >
-              {pageObjects.map(({ id, name, url, locators, library }) => {
-                const elements = selectConfirmedLocators(state as RootState, id);
-                const isPageObjectNotEmpty = !!size(locators);
+              {pageObjects.map((pageObject) => {
+                const elements = selectConfirmedLocators(state as RootState, pageObject.id);
+                const isPageObjectNotEmpty = !!size(pageObject.locators);
                 return (
                   <Collapse.Panel
-                    key={id}
+                    key={pageObject.id}
                     header={
                       <Tooltip
-                        title={url}
+                        title={pageObject.url}
                         placement="bottomLeft"
                         getPopupContainer={(triggerNode) => triggerNode}
                         align={{ offset: [-28, 0] }}
                       >
                         <Icon component={PageSvg} className="jdn__itemsList-status" />
-                        <Typography.Text className="jdn__pageObject-content-text">{name}</Typography.Text>
+                        <Typography.Text className="jdn__pageObject-content-text">{pageObject.name}</Typography.Text>
                       </Tooltip>
                     }
                     extra={
                       <>
                         {isPageObjectNotEmpty && <PageObjCopyButton {...{ elements }} />}
-                        <PageObjMenu {...{ id, name, url, locators, elements, library }} />
+                        <PageObjMenu {...{ pageObject, elements }} />
                       </>
                     }
                   >
-                    {renderContent(id, url, elements, library, isPageObjectNotEmpty)}
+                    {renderContent(pageObject.id, pageObject.url, elements, pageObject.library, isPageObjectNotEmpty)}
                   </Collapse.Panel>
                 );
               })}

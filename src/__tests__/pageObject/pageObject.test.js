@@ -1,4 +1,5 @@
 import {
+  locators,
   pageObjectMUI,
   pageObjectHTML,
   pageObjectVuetify,
@@ -16,29 +17,44 @@ import { AnnotationType } from "../../common/types/common";
 
 const templateTestData = [
   {
-    input: "HTML",
+    pageObject: {
+      framework: "JDI Light",
+      library: "HTML",
+      name: "HomePage",
+    },
     output: pageObjectHTML,
   },
   {
-    input: "MUI",
+    pageObject: {
+      framework: "JDI Light",
+      library: "MUI",
+      name: "HomePage",
+    },
     output: pageObjectMUI,
   },
   {
-    input: "Vuetify",
+    pageObject: {
+      framework: "JDI Light",
+      library: "Vuetify",
+      name: "HomePage",
+    },
     output: pageObjectVuetify,
   },
 ];
 
 const templateTestDataWithFindBy = {
-  input: "HTML",
+  pageObject: {
+    framework: "JDI Light",
+    library: "HTML",
+    name: "HomePage",
+  },
   output: pageObjectHTMLWithFindBy,
 };
 
 describe("page object code generation", () => {
-  const locators = getLocatorsByAnnotationType(AnnotationType.UI);
-  templateTestData.forEach(({ input, output }) => {
-    test(`page object generated with ${input}`, () => {
-      const page = pageObjectTemplate(locators, "HomePage", input);
+  templateTestData.forEach(({ pageObject, output }) => {
+    test(`page object generated with ${pageObject.library}`, () => {
+      const page = pageObjectTemplate(locators, pageObject);
       expect(page.pageCode).toBe(output);
       expect(page.title).toBe("HomePage");
     });
@@ -52,8 +68,8 @@ describe("page object code generation", () => {
 
   describe("pageObjectTemplate should return pageObjectHTML with FindBy import", () => {
     const locators = getLocatorsByAnnotationType(AnnotationType.FindBy);
-    test(`when page object generated with ${templateTestDataWithFindBy.input} and locators has Annotation Type === 'FindBy'`, () => {
-      const page = pageObjectTemplate(locators, "HomePage", templateTestDataWithFindBy.input);
+    test(`when page object generated with ${templateTestDataWithFindBy.pageObject.library} and locators has Annotation Type === 'FindBy'`, () => {
+      const page = pageObjectTemplate(locators, templateTestDataWithFindBy.pageObject);
       expect(page.pageCode).toBe(templateTestDataWithFindBy.output);
       expect(page.title).toBe("HomePage");
     });
