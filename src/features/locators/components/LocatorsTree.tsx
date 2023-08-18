@@ -162,7 +162,7 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
   }, [expandedKeys]);
 
   return (
-    <React.Fragment>
+    <>
       <div ref={containerRef} className="jdn__locatorsTree-container">
         {/* incompatible type of Key */}
         {/* eslint-disable-next-line */}
@@ -176,6 +176,6 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
         />
       </div>
       <LocatorsProgress />
-    </React.Fragment>
+    </>
   );
 };

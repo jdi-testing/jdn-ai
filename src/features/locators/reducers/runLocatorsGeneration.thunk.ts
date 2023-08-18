@@ -7,6 +7,7 @@ import { runCssSelectorGeneration } from "../utils/runCssSelectorGeneration";
 import { updateLocatorGroup } from "../locators.slice";
 import { selectCurrentPageObject } from "../../pageObjects/selectors/pageObjects.selectors";
 import { filterLocatorsByClassFilter } from "../utils/filterLocators";
+import { LocalStorageKey, getLocalStorage } from "../../../common/utils/localStorage";
 import { selectClassFilterByPO } from "../../filter/filter.selectors";
 
 interface Meta {
@@ -26,16 +27,27 @@ export const runLocatorsGeneration = createAsyncThunk(
   async (meta: Meta, thunkAPI) => {
     const state = thunkAPI.getState() as RootState;
 
+    const currentPageObjLibrary = selectCurrentPageObject(state)?.library;
     const { locators, maxGenerationTime, generateXpath, generateCssSelector, generateMissingLocator } = meta;
-    const filter = selectClassFilterByPO(state);
 
-    const toGenerateXpaths = maxGenerationTime
-      ? locators
-      : generateMissingLocator || generateXpath
-      ? filterLocatorsByClassFilter(locators, filter).filter(
+    let filter = selectClassFilterByPO(state);
+    if (currentPageObjLibrary && getLocalStorage(LocalStorageKey.Filter)) {
+      filter = getLocalStorage(LocalStorageKey.Filter)[currentPageObjLibrary];
+    }
+
+    const getXpathsForGeneration = (): Locator[] => {
+      if (maxGenerationTime) {
+        return locators;
+      } else if (generateMissingLocator || generateXpath) {
+        return filterLocatorsByClassFilter(locators, filter).filter(
           ({ locator }) => !locator || !locator.xPath || locator.xPath === locator.fullXpath || !locator.fullXpath
-        )
-      : [];
+        );
+      } else {
+        return [];
+      }
+    };
+
+    const toGenerateXpaths: Locator[] = getXpathsForGeneration();
 
     const toGenerateCss =
       generateMissingLocator || generateCssSelector

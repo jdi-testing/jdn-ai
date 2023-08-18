@@ -27,8 +27,9 @@ interface Props {
   vividusTemplate?: Blob;
 }
 
+const DEFAULT_ACTIVE_KEY = "0";
+
 export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) => {
-  const DEFAULT_ACTIVE_KEY = "0";
   const state = useSelector((state) => state);
   // due to antd types: onChange?: (key: string | string[]) => void;
   const currentPageObject = useSelector((state: RootState): string | undefined =>
