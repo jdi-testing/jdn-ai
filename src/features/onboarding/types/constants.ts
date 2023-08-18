@@ -17,7 +17,9 @@ export enum OnbrdStep {
 
 export enum OnboardingPopupText {
   Default = "Would you like to start the onboarding?",
-  InProgress = "Your current progress will not be saved. Are you sure you want to start the onboarding?",
+  InProgress = `Your Page Objects will be deleted and the current progress will not be saved.
+  
+  Are you sure you want to start the onboarding?`,
 }
 
 export enum OnboardingPopupButtons {
