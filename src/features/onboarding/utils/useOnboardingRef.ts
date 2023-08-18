@@ -16,7 +16,7 @@ export const useOnBoardingRef = (
 
   const { addRef, isCustomLocatorFlow, isOpen } = useContext(OnboardingContext);
   const isFirstLocatorChecked = useSelector(selectFirstLocatorByPO)?.generate;
-  /* if unboarding is closed, no need to save these refs */
+  /* if onboarding is closed, no need to save these refs */
   const isRedundantStep = !isOpen && locatorPageSteps.includes(refName);
 
   useLayoutEffect(() => {

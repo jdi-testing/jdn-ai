@@ -27,7 +27,7 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
 
   const _isOnboardingPassed = getLocalStorage(LocalStorageKey.IsOnboardingPassed);
   const isBackendAvailable = useSelector((state: RootState) => state.main.backendAvailable) === BackendStatus.Accessed;
-  const isDefaultState = useSelector<RootState>(selectIsDefaultState);
+  const isDefaultState: boolean = (useSelector<RootState>(selectIsDefaultState) as unknown) as boolean;
   const isSessionUnique = useSelector((state: RootState) => state.main.isSessionUnique);
   const isOnboardingAvailable = isBackendAvailable && !isOnbrdOpen;
 
@@ -75,7 +75,7 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
     onClickPrev?: (...args: any) => void
   ) => {
     setStepRefs((prevRefs) => {
-      /* case for skippeed step, see `locatorPageSteps` at useOnBoardingRef.ts */
+      /* case for skipped step, see `locatorPageSteps` at useOnBoardingRef.ts */
       if (!prevRefs[name]) return prevRefs;
 
       const { target: currentTarget, onClickNext: currentNext, onClickPrev: currentPrev } = prevRefs[name];
