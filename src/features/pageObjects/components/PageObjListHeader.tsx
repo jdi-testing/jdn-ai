@@ -27,8 +27,7 @@ interface Props {
   isExpanded: boolean;
 }
 
-export const PageObjListHeader: React.FC<Props> = ({ toggleExpand, isExpanded, setActivePanel }) => {
-  const [template, setTemplate] = useState<Blob | undefined>(undefined);
+export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isExpanded, setActivePanel }) => {
   const state = useSelector((state) => state) as RootState;
   const pageObjects = useSelector(selectPageObjects);
   const locatorsToGenerate = useSelector(selectLocatorsToGenerate);

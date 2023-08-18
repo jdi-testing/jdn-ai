@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 
 import { CaretDown } from "phosphor-react";
 import PageSvg from "../assets/page.svg";
-import { selectPageObjects } from "../selectors/pageObjects.selectors";
+import { selectCurrentPageObject, selectPageObjects } from "../selectors/pageObjects.selectors";
 import { PageObjGenerationBar } from "./PageObjGenerationBar";
 import { PageObjectPlaceholder } from "./PageObjectPlaceholder";
 import { PageObjCopyButton } from "./PageObjCopyButton";
@@ -20,25 +20,38 @@ import { PageObjectId } from "../types/pageObjectSlice.types";
 import { ElementLibrary } from "../../locators/types/generationClasses.types";
 import { PageType } from "../../../app/types/mainSlice.types";
 import { selectConfirmedLocators } from "../../locators/selectors/locatorsFiltered.selectors";
+import { request, HttpEndpoint } from "../../../services/backend";
+import { FrameworkType } from "../../../common/types/common";
 
-interface Props {
-  template?: Blob;
-}
-
-export const PageObjList: React.FC<Props> = (props) => {
+export const PageObjList: React.FC = () => {
   const DEFAULT_ACTIVE_KEY = "0";
   const state = useSelector((state) => state);
   // due to antd types: onChange?: (key: string | string[]) => void;
   const currentPageObject = useSelector((state: RootState): string | undefined =>
     state.pageObject.present.currentPageObject?.toString()
   );
+  const currentPageObject2 = useSelector(selectCurrentPageObject);
   const pageObjects = useSelector(selectPageObjects);
   const [activePanel, setActivePanel] = useState<string[] | undefined>([DEFAULT_ACTIVE_KEY]);
+  const [template, setTemplate] = useState<Blob | undefined>(undefined);
 
   const contentRef = useRef<HTMLDivElement>(null);
   useNotifications(contentRef?.current);
 
   const isExpanded = !!size(activePanel);
+
+  const fetchTemplate = async (framework: FrameworkType) => {
+    const targetTemplate =
+      framework === FrameworkType.Vividus ? HttpEndpoint.DOWNLOAD_TEMPLATE_VIVIDUS : HttpEndpoint.DOWNLOAD_TEMPLATE;
+    setTemplate(await request.getBlob(targetTemplate));
+  };
+
+  useEffect(() => {
+    currentPageObject2 && fetchTemplate(currentPageObject2.framework);
+  }, [currentPageObject2?.framework]);
+
+  console.log("👽");
+  console.log(template);
 
   useEffect(() => {
     if (currentPageObject) {
@@ -85,7 +98,7 @@ export const PageObjList: React.FC<Props> = (props) => {
 
   return (
     <div>
-      <PageObjListHeader {...{ ...props, toggleExpand, isExpanded, setActivePanel }} />
+      <PageObjListHeader {...{ template, toggleExpand, isExpanded, setActivePanel }} />
       <div ref={contentRef} className="jdn__itemsList-content jdn__pageObject-content">
         {size(pageObjects) ? (
           <React.Fragment>

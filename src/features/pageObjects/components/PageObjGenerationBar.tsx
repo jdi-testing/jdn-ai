@@ -1,5 +1,5 @@
 import { Col, Row, Select, Space, Typography } from "antd";
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../app/store/store";
 import { selectCurrentPageObject } from "../selectors/pageObjects.selectors";
@@ -23,9 +23,6 @@ import { isIdentificationLoading } from "../../locators/utils/helpers";
 import { PageObjGenerationButton } from "./PageObjGenerationButton";
 import { OnboardingContext } from "../../onboarding/OnboardingProvider";
 import { IN_DEVELOPMENT_TITLE } from "../../../common/constants/constants";
-import { BackendStatus } from "../../../app/types/mainSlice.types";
-import { initLocatorSocketController } from "../../../app/utils/appUtils";
-import { request, HttpEndpoint } from "../../../services/backend";
 
 interface Props {
   pageObj: PageObjectId;
@@ -100,27 +97,7 @@ export const PageObjGenerationBar: React.FC<Props> = ({ pageObj, library, url })
   const currentPageObject = useSelector(selectCurrentPageObject);
   const { isOpen: isOnboardingOpen } = useContext(OnboardingContext);
 
-  const [template, setTemplate] = useState<Blob | undefined>(undefined);
-  const backendAvailable = useSelector((state: RootState) => state.main.backendAvailable);
-  const xpathConfig = useSelector((state: RootState) => state.main.xpathConfig);
-
-  // useEffect(() => {
-  //   const fetchTemplate = async () => {
-  //     setTemplate(await request.getBlob(HttpEndpoint.DOWNLOAD_TEMPLATE));
-  //     console.log("🤭");
-  //     console.log(template);
-  //   };
-
-  //   if (backendAvailable === BackendStatus.Accessed) {
-  //     fetchTemplate();
-  //     initLocatorSocketController(xpathConfig);
-  //   }
-  // }, [backendAvailable]);
-
   const handleGenerate = async () => {
-    setTemplate(await request.getBlob(HttpEndpoint.DOWNLOAD_TEMPLATE));
-    console.log("👻");
-    console.log(template);
     dispatch(setHideUnadded({ id: pageObj, hideUnadded: false }));
     dispatch(identifyElements({ library, pageObj }));
   };
@@ -142,10 +119,7 @@ export const PageObjGenerationBar: React.FC<Props> = ({ pageObj, library, url })
     setLocalStorage(LocalStorageKey.Framework, framework);
 
     if (framework === FrameworkType.Vividus) {
-      // setTemplate(await request.getBlob(HttpEndpoint.DOWNLOAD_TEMPLATE_VIVIDUS));
       onLibraryChange(ElementLibrary.HTML5);
-    } else {
-      // setTemplate(await request.getBlob(HttpEndpoint.DOWNLOAD_TEMPLATE));
     }
   };
 
