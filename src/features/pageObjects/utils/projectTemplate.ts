@@ -11,15 +11,22 @@ import { editPomContent } from "./templateFileContent";
 import { selectConfirmedLocators } from "../../locators/selectors/locatorsFiltered.selectors";
 import { FrameworkType } from "../../../common/types/common";
 
-const PAGES_PROPERTIES_PATH = "src/main/resources/properties/suite/web_app/pages.properties";
-const SITE_PROPERTIES_PATH = "src/main/resources/properties/suite/web_app/site.properties";
-const MY_SITE_PATH = "src/main/java/site/MySite.java";
-const EXAMPLE_STRING = "// ADD SITE PAGES WITH URLS";
+const VIVIDUS = {
+  PAGES_PROPERTIES_PATH: "src/main/resources/properties/suite/web_app/pages.properties",
+  SITE_PROPERTIES_PATH: "src/main/resources/properties/suite/web_app/site.properties",
+};
+
+const JDI = {
+  MY_SITE_PATH: "src/main/java/site/MySite.java",
+  EXAMPLE_STRING: "// ADD SITE PAGES WITH URLS",
+};
 
 const isVividusFramework = (framework: FrameworkType) => framework === FrameworkType.Vividus;
 
 const generatePoFile = (newZip: JSZip, framework: FrameworkType, page: { pageCode: string; title: string }) => {
-  const path = isVividusFramework(framework) ? PAGES_PROPERTIES_PATH : `src/main/java/site/pages/${page.title}.java`;
+  const path = isVividusFramework(framework)
+    ? VIVIDUS.PAGES_PROPERTIES_PATH
+    : `src/main/java/site/pages/${page.title}.java`;
 
   newZip.file(path, page.pageCode, { binary: false });
 };
@@ -37,18 +44,18 @@ const editTestPropertiesFile = (newZip: JSZip, po: PageObject) =>
 const editMySiteFile = (newZip: JSZip, po: PageObject, instanceName: string) => {
   if (isVividusFramework(po.framework)) return;
   newZip
-    .file(MY_SITE_PATH)!
+    .file(JDI.MY_SITE_PATH)!
     .async("string")
     .then((content) => {
       if (content.includes(instanceName)) instanceName = `${instanceName}1`;
       const urlSearchParams = po.search;
       const testUrl = urlSearchParams.length ? po.pathname + urlSearchParams : po.pathname;
       const newContent = content.replace(
-        EXAMPLE_STRING,
-        `${EXAMPLE_STRING}\n    @Url("${testUrl}")\n    public static ${po.name} ${instanceName};
+        JDI.EXAMPLE_STRING,
+        `${JDI.EXAMPLE_STRING}\n    @Url("${testUrl}")\n    public static ${po.name} ${instanceName};
           `
       );
-      return newZip.file(MY_SITE_PATH, newContent, { binary: true });
+      return newZip.file(JDI.MY_SITE_PATH, newContent, { binary: true });
     });
 };
 
@@ -106,7 +113,7 @@ export const generateAndDownloadZip = async (state: RootState, template: Blob) =
         await editTestsFile(newZip, po, instanceName);
         await editPomFile(newZip, po);
       } else {
-        newZip.file(SITE_PROPERTIES_PATH, `variables.siteURL=${po.url}`, { binary: true });
+        newZip.file(VIVIDUS.SITE_PROPERTIES_PATH, `variables.siteURL=${po.url}`, { binary: true });
       }
     }
 
