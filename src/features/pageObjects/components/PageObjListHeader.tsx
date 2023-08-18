@@ -39,8 +39,6 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
 
   const handleDownload = () => {
     dispatch(pushNotification({ action: { type: "downloadTemplate" } }));
-    console.log("🤯");
-    console.log(template);
     if (template) generateAndDownloadZip(state, template);
   };
 

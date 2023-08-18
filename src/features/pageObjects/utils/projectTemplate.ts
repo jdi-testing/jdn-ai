@@ -36,7 +36,6 @@ const editTestPropertiesFile = (newZip: JSZip, po: PageObject) =>
 
 const editMySiteFile = (newZip: JSZip, po: PageObject, instanceName: string) => {
   if (isVividusFramework(po.framework)) return;
-  // const path = isVividusFramework(po.framework) ? PAGES_PROPERTIES_PATH : MY_SITE_PATH;
   newZip
     .file(MY_SITE_PATH)!
     .async("string")

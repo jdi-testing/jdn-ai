@@ -97,7 +97,7 @@ export const PageObjGenerationBar: React.FC<Props> = ({ pageObj, library, url })
   const currentPageObject = useSelector(selectCurrentPageObject);
   const { isOpen: isOnboardingOpen } = useContext(OnboardingContext);
 
-  const handleGenerate = async () => {
+  const handleGenerate = () => {
     dispatch(setHideUnadded({ id: pageObj, hideUnadded: false }));
     dispatch(identifyElements({ library, pageObj }));
   };
