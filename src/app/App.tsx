@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Provider as ReduxProvider, useDispatch, useSelector } from "react-redux";
 
 import "antd/dist/antd.less";
@@ -8,6 +8,7 @@ import Layout, { Content, Header } from "antd/lib/layout/layout";
 import { Backdrop } from "./components/Backdrop";
 import { StatusBar } from "./components/StatusBar";
 import { SeveralTabsWarning } from "./components/SeveralTabsWarning";
+import { HttpEndpoint, request } from "../services/backend";
 import { checkSession, initLocatorSocketController } from "./utils/appUtils";
 import { selectCurrentPage } from "./main.selectors";
 import { RootState, store } from "./store/store";
@@ -24,6 +25,8 @@ import { OnboardingProvider } from "../features/onboarding/OnboardingProvider";
 import { isPageObjectPage } from "./utils/heplers";
 
 const App = () => {
+  const [jdiTemplate, setJdiTemplate] = useState<Blob | undefined>(undefined);
+  const [vividusTemplate, setVividusTemplate] = useState<Blob | undefined>(undefined);
   const backendAvailable = useSelector((state: RootState) => state.main.backendAvailable);
   const xpathConfig = useSelector((state: RootState) => state.main.xpathConfig);
   const currentPage = useSelector(selectCurrentPage);
@@ -41,14 +44,20 @@ const App = () => {
   }, []);
 
   useEffect(() => {
+    const fetchTemplates = async () => {
+      setJdiTemplate(await request.getBlob(HttpEndpoint.DOWNLOAD_TEMPLATE));
+      setVividusTemplate(await request.getBlob(HttpEndpoint.DOWNLOAD_TEMPLATE_VIVIDUS));
+    };
+
     if (backendAvailable === BackendStatus.Accessed) {
+      fetchTemplates();
       initLocatorSocketController(xpathConfig);
     }
   }, [backendAvailable]);
 
   const renderPage = () => {
     const { page } = currentPage;
-    return isPageObjectPage(page) ? <PageObjectPage /> : <LocatorsPage />;
+    return isPageObjectPage(page) ? <PageObjectPage {...{ jdiTemplate, vividusTemplate }} /> : <LocatorsPage />;
   };
 
   return (

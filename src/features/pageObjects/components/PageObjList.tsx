@@ -20,10 +20,14 @@ import { PageObjectId } from "../types/pageObjectSlice.types";
 import { ElementLibrary } from "../../locators/types/generationClasses.types";
 import { PageType } from "../../../app/types/mainSlice.types";
 import { selectConfirmedLocators } from "../../locators/selectors/locatorsFiltered.selectors";
-import { request, HttpEndpoint } from "../../../services/backend";
 import { FrameworkType } from "../../../common/types/common";
 
-export const PageObjList: React.FC = () => {
+interface Props {
+  jdiTemplate?: Blob;
+  vividusTemplate?: Blob;
+}
+
+export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) => {
   const DEFAULT_ACTIVE_KEY = "0";
   const state = useSelector((state) => state);
   // due to antd types: onChange?: (key: string | string[]) => void;
@@ -33,25 +37,11 @@ export const PageObjList: React.FC = () => {
   const currentPageObject2 = useSelector(selectCurrentPageObject);
   const pageObjects = useSelector(selectPageObjects);
   const [activePanel, setActivePanel] = useState<string[] | undefined>([DEFAULT_ACTIVE_KEY]);
-  const [template, setTemplate] = useState<Blob | undefined>(undefined);
 
   const contentRef = useRef<HTMLDivElement>(null);
   useNotifications(contentRef?.current);
 
   const isExpanded = !!size(activePanel);
-
-  const fetchTemplate = async (framework: FrameworkType) => {
-    const targetTemplate =
-      framework === FrameworkType.Vividus ? HttpEndpoint.DOWNLOAD_TEMPLATE_VIVIDUS : HttpEndpoint.DOWNLOAD_TEMPLATE;
-    setTemplate(await request.getBlob(targetTemplate));
-  };
-
-  useEffect(() => {
-    currentPageObject2 && fetchTemplate(currentPageObject2.framework);
-  }, [currentPageObject2?.framework]);
-
-  console.log("👽");
-  console.log(template);
 
   useEffect(() => {
     if (currentPageObject) {
@@ -98,7 +88,14 @@ export const PageObjList: React.FC = () => {
 
   return (
     <div>
-      <PageObjListHeader {...{ template, toggleExpand, isExpanded, setActivePanel }} />
+      <PageObjListHeader
+        {...{
+          template: currentPageObject2?.framework === FrameworkType.Vividus ? vividusTemplate : jdiTemplate,
+          toggleExpand,
+          isExpanded,
+          setActivePanel,
+        }}
+      />
       <div ref={contentRef} className="jdn__itemsList-content jdn__pageObject-content">
         {size(pageObjects) ? (
           <React.Fragment>
