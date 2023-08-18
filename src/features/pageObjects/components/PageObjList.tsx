@@ -32,10 +32,10 @@ const DEFAULT_ACTIVE_KEY = "0";
 export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) => {
   const state = useSelector((state) => state);
   // due to antd types: onChange?: (key: string | string[]) => void;
-  const currentPageObject = useSelector((state: RootState): string | undefined =>
+  const currentPageObjectIndex = useSelector((state: RootState): string | undefined =>
     state.pageObject.present.currentPageObject?.toString()
   );
-  const currentPageObject2 = useSelector(selectCurrentPageObject);
+  const currentPageObject = useSelector(selectCurrentPageObject);
   const pageObjects = useSelector(selectPageObjects);
   const [activePanel, setActivePanel] = useState<string[] | undefined>([DEFAULT_ACTIVE_KEY]);
 
@@ -45,12 +45,12 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
   const isExpanded = !!size(activePanel);
 
   useEffect(() => {
-    if (currentPageObject) {
-      setActivePanel([currentPageObject]);
+    if (currentPageObjectIndex) {
+      setActivePanel([currentPageObjectIndex]);
     } else {
       setActivePanel([DEFAULT_ACTIVE_KEY]);
     }
-  }, [currentPageObject]);
+  }, [currentPageObjectIndex]);
 
   const renderLocators = (elements: LocatorType[], library: ElementLibrary) => {
     if (size(elements)) {
@@ -91,7 +91,7 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
     <div>
       <PageObjListHeader
         {...{
-          template: currentPageObject2?.framework === FrameworkType.Vividus ? vividusTemplate : jdiTemplate,
+          template: currentPageObject?.framework === FrameworkType.Vividus ? vividusTemplate : jdiTemplate,
           toggleExpand,
           isExpanded,
           setActivePanel,
