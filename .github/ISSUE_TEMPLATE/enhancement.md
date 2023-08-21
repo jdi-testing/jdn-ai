@@ -8,6 +8,8 @@ labels: enhancement
 assignees: ''
 
 ---
+body:
+  - type: markdown
 
 ###Description:
 
