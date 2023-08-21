@@ -7,24 +7,24 @@ assignees: ''
 
 ---
 
-###Description
+### Description
 
-AS A <user>
-I WANT TO <action>
-SO THAT <value/benefit>.
+**AS A** <user>
+**I WANT TO** <action>
+**SO THAT** <value/benefit>.
 
-###Dependencies
+### Dependencies
 
 
-###Acceptance criteria
+### Acceptance criteria
 
+- **AC-1**
 GIVEN <state of the system, enter point>
-
 WHEN <single action>
-
 THEN <result>
+- 
 
-###Artefacts
+### Artefacts
+**Design:**
 
-
-###Comments
+### Comments
