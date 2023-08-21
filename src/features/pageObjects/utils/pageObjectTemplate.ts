@@ -20,7 +20,7 @@ export const getClassName = (title: string) => {
   return className;
 };
 
-export const vividusTemplate = (locators: Locator[], pageObject: PageObject) => {
+export const vividusTemplate = (locators: Locator[], pageObject: PageObject): { pageCode: string; title: string } => {
   let pageCode = `variables.${pageObject.name}.url=(${pageObject.pathname})\n`;
 
   locators.forEach((it) => {
@@ -32,7 +32,10 @@ export const vividusTemplate = (locators: Locator[], pageObject: PageObject) => 
   return { pageCode, title: pageObject.name };
 };
 
-export const pageObjectTemplate = (locators: Locator[], pageObject: PageObject) => {
+export const pageObjectTemplate = (
+  locators: Locator[],
+  pageObject: PageObject
+): { pageCode: string; title: string } => {
   if (pageObject.framework === FrameworkType.Vividus) {
     return vividusTemplate(locators, pageObject);
   }

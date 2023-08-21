@@ -1,7 +1,10 @@
 import { Locator } from "../../locators/types/locator.types";
 import { PageObject } from "../types/pageObjectSlice.types";
 
-export const pageObjectTemplatePerfTest = (locators: Locator[], pageObject: PageObject) => {
+export const pageObjectTemplatePerfTest = (
+  locators: Locator[],
+  pageObject: PageObject
+): { pageCode: string; name: string } => {
   const locatorsCode = locators.map((loc) => `    this.${loc.name} = new ${loc.type}("${loc.locator.output}", page)`);
 
   const pageCode = `const Page = require("../../core/page");
