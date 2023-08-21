@@ -87,11 +87,13 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
     }
   };
 
+  const template = currentPageObject?.framework === FrameworkType.Vividus ? vividusTemplate : jdiTemplate;
+
   return (
     <div>
       <PageObjListHeader
         {...{
-          template: currentPageObject?.framework === FrameworkType.Vividus ? vividusTemplate : jdiTemplate,
+          template,
           toggleExpand,
           isExpanded,
           setActivePanel,
@@ -116,20 +118,21 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
               onChange={(key) => setActivePanel([...key])}
             >
               {pageObjects.map((pageObject) => {
-                const elements = selectConfirmedLocators(state as RootState, pageObject.id);
-                const isPageObjectNotEmpty = !!size(pageObject.locators);
+                const { id, locators, url, name, library } = pageObject;
+                const elements = selectConfirmedLocators(state as RootState, id);
+                const isPageObjectNotEmpty = !!size(locators);
                 return (
                   <Collapse.Panel
-                    key={pageObject.id}
+                    key={id}
                     header={
                       <Tooltip
-                        title={pageObject.url}
+                        title={url}
                         placement="bottomLeft"
                         getPopupContainer={(triggerNode) => triggerNode}
                         align={{ offset: [-28, 0] }}
                       >
                         <Icon component={PageSvg} className="jdn__itemsList-status" />
-                        <Typography.Text className="jdn__pageObject-content-text">{pageObject.name}</Typography.Text>
+                        <Typography.Text className="jdn__pageObject-content-text">{name}</Typography.Text>
                       </Tooltip>
                     }
                     extra={
@@ -139,7 +142,7 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
                       </>
                     }
                   >
-                    {renderContent(pageObject.id, pageObject.url, elements, pageObject.library, isPageObjectNotEmpty)}
+                    {renderContent(id, url, elements, library, isPageObjectNotEmpty)}
                   </Collapse.Panel>
                 );
               })}

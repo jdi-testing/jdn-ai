@@ -21,34 +21,34 @@ export const getClassName = (title: string) => {
 };
 
 export const vividusTemplate = (locators: Locator[], pageObject: PageObject): { pageCode: string; title: string } => {
-  let pageCode = `variables.${pageObject.name}.url=(${pageObject.pathname})\n`;
+  const { name, pathname, locatorType } = pageObject;
+  let pageCode = `variables.${name}.url=(${pathname})\n`;
 
   locators.forEach((it) => {
-    const currentLocatorType = _.camelCase(it.locatorType || pageObject.locatorType || LocatorType.xPath);
+    const currentLocatorType = _.camelCase(it.locatorType || locatorType || LocatorType.xPath);
     // @ts-ignore
-    pageCode += `variables.${pageObject.name}.${it.type}.${it.name}=By.${currentLocatorType}(${it.locator[currentLocatorType]})\n`;
+    pageCode += `variables.${name}.${it.type}.${it.name}=By.${currentLocatorType}(${it.locator[currentLocatorType]})\n`;
   });
 
-  return { pageCode, title: pageObject.name };
+  return { pageCode, title: name };
 };
 
 export const pageObjectTemplate = (
   locators: Locator[],
   pageObject: PageObject
 ): { pageCode: string; title: string } => {
-  if (pageObject.framework === FrameworkType.Vividus) {
+  const { framework, name: className, library } = pageObject;
+
+  if (framework === FrameworkType.Vividus) {
     return vividusTemplate(locators, pageObject);
   }
 
-  const className = pageObject.name;
   const locatorsCode = locators.map((loc) => {
     const locatorEscaped = loc.locator.output?.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
-    return pageObject.framework === FrameworkType.Vividus
-      ? `variables.${className}.url=(${pageObject.pathname})`
-      : `    ${loc.annotationType}(${getLocatorPrefix(
-          loc.annotationType,
-          loc.locatorType
-        )}"${locatorEscaped}")\n    public ${loc.type} ${loc.name};`;
+    return `    ${loc.annotationType}(${getLocatorPrefix(
+      loc.annotationType,
+      loc.locatorType
+    )}"${locatorEscaped}")\n    public ${loc.type} ${loc.name};`;
   });
 
   const hasFindByAnnotationType: boolean = hasAnnotationType(locators, AnnotationType.FindBy);
@@ -64,7 +64,7 @@ import com.epam.jdi.light.elements.complex.dropdown.*;
 import com.epam.jdi.light.elements.complex.table.*;
 import com.epam.jdi.light.ui.html.elements.complex.*;
 ${
-  pageObject.library === ElementLibrary.MUI
+  library === ElementLibrary.MUI
     ? `
 import com.epam.jdi.light.material.elements.displaydata.*;
 import com.epam.jdi.light.material.elements.displaydata.table.*;
@@ -80,7 +80,7 @@ import com.epam.jdi.light.material.elements.utils.*;
 `
     : ""
 }${
-    pageObject.library === ElementLibrary.Vuetify
+    library === ElementLibrary.Vuetify
       ? `
 import com.epam.jdi.light.vuetify.elements.common.*;
 import com.epam.jdi.light.vuetify.elements.complex.*;

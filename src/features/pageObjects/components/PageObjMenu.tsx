@@ -32,6 +32,7 @@ interface Props {
 
 export const PageObjMenu: React.FC<Props> = ({ pageObject, elements }) => {
   const dispatch = useDispatch();
+  const { id, locators, name } = pageObject;
 
   const [isRenameModalOpen, setIsRenameModalOpen] = useState(false);
 
@@ -41,7 +42,7 @@ export const PageObjMenu: React.FC<Props> = ({ pageObject, elements }) => {
     const handleRename = () => setIsRenameModalOpen(true);
 
     const handleRemove = () => {
-      dispatch(removePageObject(pageObject.id));
+      dispatch(removePageObject(id));
       dispatch(removeLocators(locatorIds));
     };
 
@@ -58,7 +59,7 @@ export const PageObjMenu: React.FC<Props> = ({ pageObject, elements }) => {
     };
 
     const handleEdit = () => {
-      dispatch(setCurrentPageObj(pageObject.id));
+      dispatch(setCurrentPageObj(id));
       dispatch(checkLocatorsValidity()); // create thunk
     };
 
@@ -83,7 +84,7 @@ export const PageObjMenu: React.FC<Props> = ({ pageObject, elements }) => {
           disabled={isOnboardingOpen}
           align={{ offset: [15, 0] }}
           trigger={["click"]}
-          menu={getMenuItems(pageObject, pageObject.locators, elements)}
+          menu={getMenuItems(pageObject, locators, elements)}
           getPopupContainer={(triggerNode) => triggerNode}
           destroyPopupOnHide
         >
@@ -99,8 +100,8 @@ export const PageObjMenu: React.FC<Props> = ({ pageObject, elements }) => {
       <RenamePageObjectDialog
         isModalOpen={isRenameModalOpen}
         setIsModalOpen={setIsRenameModalOpen}
-        pageObjId={pageObject.id}
-        {...{ name: pageObject.name }}
+        pageObjId={id}
+        {...{ name }}
       />
     </div>
   );
