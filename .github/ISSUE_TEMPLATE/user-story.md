@@ -6,6 +6,8 @@ labels: ''
 assignees: ''
 
 ---
+body:
+  - type: markdown
 
 ###Description
 
