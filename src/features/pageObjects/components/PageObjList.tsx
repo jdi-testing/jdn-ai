@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 
 import { CaretDown } from "phosphor-react";
 import PageSvg from "../assets/page.svg";
-import { selectPageObjects } from "../selectors/pageObjects.selectors";
+import { selectCurrentPageObject, selectPageObjects } from "../selectors/pageObjects.selectors";
 import { PageObjGenerationBar } from "./PageObjGenerationBar";
 import { PageObjectPlaceholder } from "./PageObjectPlaceholder";
 import { PageObjCopyButton } from "./PageObjCopyButton";
@@ -20,19 +20,22 @@ import { PageObjectId } from "../types/pageObjectSlice.types";
 import { ElementLibrary } from "../../locators/types/generationClasses.types";
 import { PageType } from "../../../app/types/mainSlice.types";
 import { selectConfirmedLocators } from "../../locators/selectors/locatorsFiltered.selectors";
+import { FrameworkType } from "../../../common/types/common";
 
 interface Props {
-  template?: Blob;
+  jdiTemplate?: Blob;
+  vividusTemplate?: Blob;
 }
 
 const DEFAULT_ACTIVE_KEY = "0";
 
-export const PageObjList: React.FC<Props> = (props) => {
+export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) => {
   const state = useSelector((state) => state);
   // due to antd types: onChange?: (key: string | string[]) => void;
-  const currentPageObject = useSelector((state: RootState): string | undefined =>
+  const currentPageObjectIndex = useSelector((state: RootState): string | undefined =>
     state.pageObject.present.currentPageObject?.toString()
   );
+  const currentPageObject = useSelector(selectCurrentPageObject);
   const pageObjects = useSelector(selectPageObjects);
   const [activePanel, setActivePanel] = useState<string[] | undefined>([DEFAULT_ACTIVE_KEY]);
 
@@ -42,12 +45,12 @@ export const PageObjList: React.FC<Props> = (props) => {
   const isExpanded = !!size(activePanel);
 
   useEffect(() => {
-    if (currentPageObject) {
-      setActivePanel([currentPageObject]);
+    if (currentPageObjectIndex) {
+      setActivePanel([currentPageObjectIndex]);
     } else {
       setActivePanel([DEFAULT_ACTIVE_KEY]);
     }
-  }, [currentPageObject]);
+  }, [currentPageObjectIndex]);
 
   const renderLocators = (elements: LocatorType[], library: ElementLibrary) => {
     if (size(elements)) {
@@ -84,9 +87,18 @@ export const PageObjList: React.FC<Props> = (props) => {
     }
   };
 
+  const template = currentPageObject?.framework === FrameworkType.Vividus ? vividusTemplate : jdiTemplate;
+
   return (
     <div>
-      <PageObjListHeader {...{ ...props, toggleExpand, isExpanded, setActivePanel }} />
+      <PageObjListHeader
+        {...{
+          template,
+          toggleExpand,
+          isExpanded,
+          setActivePanel,
+        }}
+      />
       <div ref={contentRef} className="jdn__itemsList-content jdn__pageObject-content">
         {size(pageObjects) ? (
           <React.Fragment>
@@ -105,7 +117,8 @@ export const PageObjList: React.FC<Props> = (props) => {
               {...(!isNil(activePanel) ? { activeKey: activePanel } : {})}
               onChange={(key) => setActivePanel([...key])}
             >
-              {pageObjects.map(({ id, name, url, locators, library }) => {
+              {pageObjects.map((pageObject) => {
+                const { id, locators, url, name, library } = pageObject;
                 const elements = selectConfirmedLocators(state as RootState, id);
                 const isPageObjectNotEmpty = !!size(locators);
                 return (
@@ -125,7 +138,7 @@ export const PageObjList: React.FC<Props> = (props) => {
                     extra={
                       <>
                         {isPageObjectNotEmpty && <PageObjCopyButton {...{ elements }} />}
-                        <PageObjMenu {...{ id, name, url, locators, elements, library }} />
+                        <PageObjMenu {...{ pageObject, elements }} />
                       </>
                     }
                   >

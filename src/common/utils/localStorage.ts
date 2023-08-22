@@ -4,6 +4,7 @@ export enum LocalStorageKey {
   AnnotationType = "JDN_ANNOTATION_TYPE",
   LocatorType = "JDN_LOCATOR_TYPE",
   Library = "JDN_LIBRARY",
+  Framework = "JDN_FRAMEWORK",
   Filter = "JDN_FILTER",
 }
 

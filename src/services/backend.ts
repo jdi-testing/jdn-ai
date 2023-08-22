@@ -8,6 +8,8 @@ export enum HttpEndpoint {
   NGMAT_PREDICT = "angular-predict", // TODO: check when implemented at BE
   REPORT_PROBLEM = "report_problem",
   DOWNLOAD_TEMPLATE = "download_template",
+  DOWNLOAD_TEMPLATE_VIVIDUS = "download_template?repo_zip_url=https://github.com/vividus-framework/vividus-sample-tests/archive/refs/heads/main.zip",
+
   SESSION_ID = "get_session_id",
   PING_SMTP = "ping_smtp",
 }

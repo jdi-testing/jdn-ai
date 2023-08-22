@@ -33,6 +33,8 @@ export const selectMaxId = createSelector(simpleSelectPageObjects, (items) => {
   return res !== -Infinity ? res : null;
 });
 
+export const selectLastFrameworkType = createSelector(selectPageObjects, (pageObjects) => last(pageObjects)?.framework);
+
 export const selectLastElementLibrary = createSelector(selectPageObjects, (pageObjects) => last(pageObjects)?.library);
 
 export const selectLastLocatorType = createSelector(selectPageObjects, (pageObjects) => last(pageObjects)?.locatorType);

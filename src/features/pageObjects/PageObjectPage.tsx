@@ -2,7 +2,8 @@ import React from "react";
 import { PageObjList } from "./components/PageObjList";
 
 interface Props {
-  template?: Blob;
+  jdiTemplate?: Blob;
+  vividusTemplate?: Blob;
 }
 
 export const PageObjectPage: React.FC<Props> = (props) => {

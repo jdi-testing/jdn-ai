@@ -16,8 +16,7 @@ import {
 import { ElementId, Locator } from "../../locators/types/locator.types";
 import { removeLocators } from "../../locators/locators.slice";
 import { removePageObject, setCurrentPageObj } from "../pageObject.slice";
-import { PageObjectId } from "../types/pageObjectSlice.types";
-import { ElementLibrary } from "../../locators/types/generationClasses.types";
+import { PageObject } from "../types/pageObjectSlice.types";
 import { generatePageObject, generatePageObjectPerfTest } from "../../pageObjects/utils/pageObject";
 import { RenamePageObjectDialog } from "./RenamePageObjDialog";
 import { checkLocatorsValidity } from "../../locators/reducers/checkLocatorValidity.thunk";
@@ -27,28 +26,19 @@ import { OnbrdTooltip } from "../../onboarding/components/OnbrdTooltip";
 import { OnboardingContext } from "../../onboarding/OnboardingProvider";
 
 interface Props {
-  id: PageObjectId;
-  name: string;
-  url: string;
-  locators?: ElementId[];
+  pageObject: PageObject;
   elements: Locator[];
-  library: ElementLibrary;
 }
 
-export const PageObjMenu: React.FC<Props> = ({ id, name, url, locators, elements, library }) => {
+export const PageObjMenu: React.FC<Props> = ({ pageObject, elements }) => {
   const dispatch = useDispatch();
+  const { id, locators, name } = pageObject;
 
   const [isRenameModalOpen, setIsRenameModalOpen] = useState(false);
 
   const { isOpen: isOnboardingOpen } = useContext(OnboardingContext);
 
-  const getMenuItems = (
-    id: PageObjectId,
-    locatorIds: ElementId[] | undefined,
-    locatorObjects: Locator[],
-    name: string,
-    url: string
-  ) => {
+  const getMenuItems = (pageObject: PageObject, locatorIds: ElementId[] | undefined, locatorObjects: Locator[]) => {
     const handleRename = () => setIsRenameModalOpen(true);
 
     const handleRemove = () => {
@@ -57,13 +47,13 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, url, locators, elements
     };
 
     const handleDownload = () => {
-      generatePageObject(locatorObjects, name, library).then(() =>
+      generatePageObject(locatorObjects, pageObject).then(() =>
         dispatch(pushNotification({ action: { type: "downloadFile" } }))
       );
     };
 
     const handleDownloadPerfTest = () => {
-      generatePageObjectPerfTest(locatorObjects, name, url).then(() =>
+      generatePageObjectPerfTest(locatorObjects, pageObject).then(() =>
         dispatch(pushNotification({ action: { type: "downloadJSFile" } }))
       );
     };
@@ -94,7 +84,7 @@ export const PageObjMenu: React.FC<Props> = ({ id, name, url, locators, elements
           disabled={isOnboardingOpen}
           align={{ offset: [15, 0] }}
           trigger={["click"]}
-          menu={getMenuItems(id, locators, elements, name, url)}
+          menu={getMenuItems(pageObject, locators, elements)}
           getPopupContainer={(triggerNode) => triggerNode}
           destroyPopupOnHide
         >

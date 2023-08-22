@@ -1,4 +1,4 @@
-import { LocatorType } from "../../../common/types/common";
+import { FrameworkType, LocatorType } from "../../../common/types/common";
 import { ElementLibrary } from "../../../features/locators/types/generationClasses.types";
 import { PageObject } from "../../../features/pageObjects/types/pageObjectSlice.types";
 
@@ -6,6 +6,7 @@ export const pageObject0: PageObject = {
   id: 0,
   name: "HomePage",
   url: "https://jdi-testing.github.io/jdi-light/index.html",
+  framework: FrameworkType.JdiLight,
   library: ElementLibrary.MUI,
   pathname: "/jdi-light/index.html",
   search: "",
@@ -168,7 +169,7 @@ export const selectMockedLocators = (pageObject: PageObject) => [
     elemId: "",
     elemText: "Home",
     elemAriaLabel: null,
-    ...(pageObject.locatorType === LocatorType.cssSelector ? { locatorType: LocatorType.cssSelector } : null),
+    locatorType: pageObject.locatorType || LocatorType.xPath,
     locator: {
       taskStatus: "PENDING",
       xPathStatus: "SUCCESS",

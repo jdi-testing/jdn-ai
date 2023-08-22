@@ -7,12 +7,13 @@ import {
   selectLastAnnotationType,
   selectMaxId,
   simpleSelectPageObjects,
+  selectLastFrameworkType,
 } from "../selectors/pageObjects.selectors";
 import { defaultLibrary } from "../../locators/types/generationClasses.types";
 import { getPageAttributes, isPONameUnique } from "../utils/pageObject";
 import { getClassName } from "../utils/pageObjectTemplate";
 import { LocalStorageKey, getLocalStorage } from "../../../common/utils/localStorage";
-import { AnnotationType, LocatorType } from "../../../common/types/common";
+import { AnnotationType, LocatorType, FrameworkType } from "../../../common/types/common";
 
 export const addPageObj = createAsyncThunk("pageObject/addPageObj", async (payload, { getState }) => {
   const res = await getPageAttributes();
@@ -21,19 +22,35 @@ export const addPageObj = createAsyncThunk("pageObject/addPageObj", async (paylo
 
   const state = getState();
 
+  const lastSelectedFrameworkType =
+    getLocalStorage(LocalStorageKey.Framework) || selectLastFrameworkType(state) || FrameworkType.JdiLight;
   const lastSelectedLibrary =
     getLocalStorage(LocalStorageKey.Library) || selectLastElementLibrary(state) || defaultLibrary;
   const lastSelectedLocatorType = getLocalStorage(LocalStorageKey.LocatorType) || selectLastLocatorType(state);
   const lastSelectedAnnotationType =
     getLocalStorage(LocalStorageKey.AnnotationType) || selectLastAnnotationType(state) || AnnotationType.UI;
 
-  return { className, url, lastSelectedLibrary, lastSelectedLocatorType, lastSelectedAnnotationType };
+  return {
+    className,
+    url,
+    lastSelectedFrameworkType,
+    lastSelectedLibrary,
+    lastSelectedLocatorType,
+    lastSelectedAnnotationType,
+  };
 });
 
 export const addPageObjReducer = (builder) => {
   return builder
     .addCase(addPageObj.fulfilled, (state, { payload }) => {
-      const { className, url, lastSelectedLibrary, lastSelectedLocatorType, lastSelectedAnnotationType } = payload;
+      const {
+        className,
+        url,
+        lastSelectedFrameworkType,
+        lastSelectedLibrary,
+        lastSelectedLocatorType,
+        lastSelectedAnnotationType,
+      } = payload;
 
       // create unique PO name
       let maxExistingId = selectMaxId(state);
@@ -58,6 +75,7 @@ export const addPageObjReducer = (builder) => {
         id,
         name,
         url,
+        framework: lastSelectedFrameworkType,
         library: lastSelectedLibrary,
         annotationType: lastSelectedAnnotationType,
         pathname,
