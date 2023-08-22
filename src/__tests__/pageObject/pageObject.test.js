@@ -5,6 +5,8 @@ import {
   pageObjectVuetify,
   pageObjectHTMLWithFindBy,
   getLocatorsByAnnotationType,
+  locatorsVividus,
+  pageObjectVividus,
 } from "../__mocks__/pageObjectMocks/pageObject.mock";
 import { elementsWithoutNames } from "../__mocks__/pageObjectMocks/elementsWithoutNames";
 import { elementsWithNames } from "../__mocks__/pageObjectMocks/elementsWithNames";
@@ -13,7 +15,7 @@ import { ElementLibrary } from "../../features/locators/types/generationClasses.
 import { pageObjectTemplate } from "../../features/pageObjects/utils/pageObjectTemplate";
 import { createLocatorNames } from "../../features/pageObjects/utils/pageObject";
 import { getClassName } from "../../features/pageObjects/utils/pageObjectTemplate";
-import { AnnotationType } from "../../common/types/common";
+import { AnnotationType, LocatorType } from "../../common/types/common";
 
 const templateTestData = [
   {
@@ -51,6 +53,17 @@ const templateTestDataWithFindBy = {
   output: pageObjectHTMLWithFindBy,
 };
 
+const templateTestDataVividus = {
+  pageObject: {
+    framework: "Vividus",
+    library: "HTML",
+    name: "HomePage",
+    pathname: "/jdi-light/index.html",
+    locatorType: LocatorType.cssSelector,
+  },
+  output: pageObjectVividus,
+};
+
 describe("page object code generation", () => {
   templateTestData.forEach(({ pageObject, output }) => {
     test(`page object generated with ${pageObject.library}`, () => {
@@ -64,6 +77,12 @@ describe("page object code generation", () => {
     pageObjectsNames.forEach((poName) => {
       expect(getClassName(poName.input)).toBe(poName.output);
     });
+  });
+
+  test("generate page object template for Vividus", () => {
+    const { pageObject, output } = templateTestDataVividus;
+    const page = pageObjectTemplate(locatorsVividus, pageObject);
+    expect(page.pageCode).toBe(output);
   });
 
   describe("pageObjectTemplate should return pageObjectHTML with FindBy import", () => {
