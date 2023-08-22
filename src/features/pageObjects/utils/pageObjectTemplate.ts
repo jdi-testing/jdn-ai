@@ -21,13 +21,17 @@ export const getClassName = (title: string) => {
 };
 
 export const vividusTemplate = (locators: Locator[], pageObject: PageObject): { pageCode: string; title: string } => {
-  const { name, pathname, locatorType } = pageObject;
+  const { name, pathname, annotationType, locatorType } = pageObject;
   let pageCode = `variables.${name}.url=(${pathname})\n`;
 
   locators.forEach((it) => {
+    const currentAnnotationType = it.annotationType || annotationType || AnnotationType.UI;
     const currentLocatorType = _.camelCase(it.locatorType || locatorType || LocatorType.xPath);
-    // @ts-ignore
-    pageCode += `variables.${name}.${it.type}.${it.name}=By.${currentLocatorType}(${it.locator[currentLocatorType]})\n`;
+    pageCode += `variables.${name}.${it.type}.${it.name}=By.${currentLocatorType}(${getLocatorPrefix(
+      currentAnnotationType,
+      currentLocatorType as LocatorType
+      // @ts-ignore
+    )}${it.locator[currentLocatorType]})\n`;
   });
 
   return { pageCode, title: name };
