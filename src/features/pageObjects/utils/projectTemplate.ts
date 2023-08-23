@@ -101,23 +101,24 @@ export const generateAndDownloadZip = async (state: RootState, template: Blob) =
 
     for (const po of pageObjects) {
       // create page object files
-      const locators = selectConfirmedLocators(state, po.id);
+      const { id, name, framework, url } = po;
+      const locators = selectConfirmedLocators(state, id);
       const isLastPo = po === pageObjects[pageObjects.length - 1];
 
       if (!size(locators)) continue;
 
-      if (isVividusFramework(po.framework)) {
+      if (isVividusFramework(framework)) {
         vividusPageCode += (await getPage(locators, po))?.pageCode + "\n";
 
         if (!isLastPo) continue;
 
-        newZip.file(VIVIDUS.SITE_PROPERTIES_PATH, `variables.siteURL=${po.url}`, { binary: true });
-        await generatePoFile(newZip, FrameworkType.Vividus, { pageCode: vividusPageCode });
+        newZip.file(VIVIDUS.SITE_PROPERTIES_PATH, `variables.siteURL=${url}`, { binary: true });
+        await generatePoFile(newZip, framework, { pageCode: vividusPageCode });
       } else {
         const page = await getPage(locators, po);
-        const instanceName = lowerFirst(po.name);
+        const instanceName = lowerFirst(name);
 
-        await generatePoFile(newZip, po.framework, page);
+        await generatePoFile(newZip, framework, page);
         await editTestPropertiesFile(newZip, po);
         await editMySiteFile(newZip, po, instanceName);
         await editTestsFile(newZip, po, instanceName);
