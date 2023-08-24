@@ -29,12 +29,13 @@ export const getPageObjectTemplateForVidus = (
 
   locators.forEach((it) => {
     const currentAnnotationType = it.annotationType || annotationType || AnnotationType.UI;
-    const currentLocatorType = _.camelCase(it.locatorType || locatorType || LocatorType.xPath);
-    pageCode += `variables.${name}.${it.type}.${it.name}=By.${currentLocatorType}(${getLocatorPrefix(
+    const currentLocatorType: LocatorType = it.locatorType || locatorType || LocatorType.xPath;
+    const currentLocatorTypeProperty = _.camelCase(currentLocatorType);
+    pageCode += `variables.${name}.${it.type}.${it.name}=By.${currentLocatorTypeProperty}(${getLocatorPrefix(
       currentAnnotationType,
-      currentLocatorType as LocatorType
+      currentLocatorType
       // @ts-ignore
-    )}${it.locator[currentLocatorType]})\n`;
+    )}${it.locator[currentLocatorTypeProperty]})\n`;
   });
 
   return { pageCode, title: name };
