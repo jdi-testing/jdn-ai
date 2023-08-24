@@ -3,7 +3,7 @@ import { camelCase, upperFirst } from "lodash";
 import transliterate from "@sindresorhus/transliterate";
 import { Locator } from "../../locators/types/locator.types";
 import { getLocatorPrefix } from "../../locators/utils/locatorOutput";
-import { AnnotationType, LocatorType, FrameworkType } from "../../../common/types/common";
+import { AnnotationType, LocatorType } from "../../../common/types/common";
 import { hasAnnotationType } from "./hasAnnotationType";
 import { PageObject } from "../types/pageObjectSlice.types";
 import _ from "lodash";
@@ -20,7 +20,10 @@ export const getClassName = (title: string) => {
   return className;
 };
 
-export const vividusTemplate = (locators: Locator[], pageObject: PageObject): { pageCode: string; title: string } => {
+export const getPageObjectTemplateForVidus = (
+  locators: Locator[],
+  pageObject: PageObject
+): { pageCode: string; title: string } => {
   const { name, pathname, annotationType, locatorType } = pageObject;
   let pageCode = `variables.${name}.url=(${pathname})\n`;
 
@@ -37,15 +40,11 @@ export const vividusTemplate = (locators: Locator[], pageObject: PageObject): { 
   return { pageCode, title: name };
 };
 
-export const pageObjectTemplate = (
+export const getPageObjectTemplateForJdi = (
   locators: Locator[],
   pageObject: PageObject
 ): { pageCode: string; title: string } => {
-  const { framework, name: className, library } = pageObject;
-
-  if (framework === FrameworkType.Vividus) {
-    return vividusTemplate(locators, pageObject);
-  }
+  const { name: className, library } = pageObject;
 
   const locatorsCode = locators.map((loc) => {
     const locatorEscaped = loc.locator.output?.replace(/\\/g, "\\\\").replace(/"/g, '\\"');

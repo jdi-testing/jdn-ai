@@ -6,10 +6,11 @@ import { PageObject, PageObjectId } from "../../pageObjects/types/pageObjectSlic
 import { ElementLabel, ElementLibrary } from "../../locators/types/generationClasses.types";
 import javaReservedWords from "./javaReservedWords.json";
 import perfReservedWords from "./perfReservedWords.json";
-import { pageObjectTemplate } from "./pageObjectTemplate";
+import { getPageObjectTemplateForJdi, getPageObjectTemplateForVidus } from "./pageObjectTemplate";
 import { pageObjectTemplatePerfTest } from "./pageObjectTemplatePerfTest";
 import { getJDILabel } from "../../locators/utils/locatorTypesUtils";
 import { MAX_LOCATOR_NAME_LENGTH } from "./constants";
+import { FrameworkType } from "../../../common/types/common";
 
 export const isStringMatchesReservedWord = (string: string) => javaReservedWords.includes(string);
 
@@ -129,7 +130,9 @@ export const getPage = async (
   locators: Array<Locator>,
   pageObject: PageObject
 ): Promise<{ pageCode: string; title: string }> => {
-  return pageObjectTemplate(locators, pageObject);
+  return pageObject.framework === FrameworkType.Vividus
+    ? getPageObjectTemplateForVidus(locators, pageObject)
+    : getPageObjectTemplateForJdi(locators, pageObject);
 };
 
 export const getPagePerfTest = async (
