@@ -1,6 +1,6 @@
 import { Button, Modal, ModalProps } from "antd";
 import React, { ReactNode, useState } from "react";
-import { render, unmountComponentAtNode } from "react-dom";
+import ReactDOM from "react-dom/client";
 
 interface Props extends ModalProps {
   confirmTitle: string;
@@ -12,11 +12,11 @@ interface Props extends ModalProps {
 }
 
 export const customConfirm = (props: Props) => {
-  const container = document.createDocumentFragment();
+  const container = ReactDOM.createRoot(document.createDocumentFragment());
 
-  const destroy = () => unmountComponentAtNode(container);
+  const destroy = () => container.unmount();
 
-  render(<CustomConfirm {...props} {...{ destroy }} />, container);
+  container.render(<CustomConfirm {...props} {...{ destroy }} />);
 };
 
 export const CustomConfirm: React.FC<Props> = ({
@@ -33,12 +33,14 @@ export const CustomConfirm: React.FC<Props> = ({
   const [isModalOpen, setIsModalOpen] = useState(true);
 
   const handleOk = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+    //@ts-ignore
     onOk && onOk(e);
     setIsModalOpen(false);
     destroy && destroy();
   };
 
   const handleCancel = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+     //@ts-ignore
     onCancel && onCancel(e);
     setIsModalOpen(false);
     destroy && destroy();

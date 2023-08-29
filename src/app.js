@@ -2,15 +2,15 @@ import "./icon128.png";
 import "./app/App";
 import connector from "./pageServices/connector";
 import React from "react";
-import ReactDOM from "react-dom";
+import ReactDOM from "react-dom/client";
 import { ReduxApp } from "./app/App";
 
 connector
   .initScripts()
   .then(() => {
-    const div = document.getElementById("chromeExtensionReactApp");
+    const root = ReactDOM.createRoot(document.getElementById('root'));
     if (div instanceof Element) {
-      ReactDOM.render(<ReduxApp />, div);
+      root.render(<ReduxApp />);
     }
   })
   .catch((error) => {

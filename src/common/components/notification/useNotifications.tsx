@@ -2,16 +2,16 @@ import { Button, notification } from "antd";
 import { last } from "lodash";
 import React, { useLayoutEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../app/store/store";
+import { AppDispatch, RootState } from "../../../app/store/store";
 
 import { Action } from "./types/notification.types";
 import { messages } from "./utils/messages";
 import { useNotificationController } from "./utils/useNotificationController";
-import { NotificationInstance } from "antd/lib/notification";
+import { NotificationInstance } from "antd/lib/notification/interface";
 
 export const useNotifications = (container?: HTMLElement | null) => {
   const [bottom, setBottom] = React.useState(0);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const lastNotification = useSelector((state: RootState) => last(state.main.notifications));
 
   useLayoutEffect(() => {
@@ -30,8 +30,10 @@ export const useNotifications = (container?: HTMLElement | null) => {
   const cancelNotification = (action: Action) => () => {
     if (Array.isArray(action)) {
       action.forEach((_action) => {
+        //@ts-ignore
         dispatch(_action);
       });
+      //@ts-ignore
     } else dispatch(action);
     openNotification(messages().ACTION_CANCELLED, "info");
   };
@@ -52,7 +54,7 @@ export const useNotifications = (container?: HTMLElement | null) => {
         {renderCancelButton(cancelAction)}
       </div>
     );
-
+      //@ts-ignore
     notification[type]({
       message: _message,
       description,

@@ -273,6 +273,7 @@ export const ReportProblem = () => {
               <Tooltip
                 placement="right"
                 title={getTextForUploadButtonTooltip()}
+                //@ts-ignore
                 trigger={areFilesInvalid ? ["hover", "focus"] : ""}
               >
                 <Button

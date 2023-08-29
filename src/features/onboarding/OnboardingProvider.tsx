@@ -4,7 +4,7 @@ import { Onboarding } from "./Onboarding";
 import { OnboardingContext as ContextType, StepRef } from "./types/context.types";
 import { useDispatch, useSelector } from "react-redux";
 import { selectCurrentPageObject, selectPageObjects } from "../pageObjects/selectors/pageObjects.selectors";
-import { RootState } from "../../app/store/store";
+import { AppDispatch, RootState } from "../../app/store/store";
 import { IdentificationStatus } from "../locators/types/locator.types";
 import { getPOPageSteps } from "./utils/tourSteps";
 import { selectCurrentPage, selectIsDefaultState } from "../../app/main.selectors";
@@ -31,7 +31,7 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
   const isSessionUnique = useSelector((state: RootState) => state.main.isSessionUnique);
   const isOnboardingAvailable = isBackendAvailable && !isOnbrdOpen;
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     if (!_isOnboardingPassed && isBackendAvailable && isSessionUnique) {

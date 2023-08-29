@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Provider as ReduxProvider, useDispatch, useSelector } from "react-redux";
 
-import "antd/dist/antd.less";
-import "antd/lib/style/themes/default.less";
+import "antd/dist/reset.css"
 
 import Layout, { Content, Header } from "antd/lib/layout/layout";
 import { Backdrop } from "./components/Backdrop";
@@ -11,7 +10,7 @@ import { SeveralTabsWarning } from "./components/SeveralTabsWarning";
 import { HttpEndpoint, request } from "../services/backend";
 import { checkSession, initLocatorSocketController } from "./utils/appUtils";
 import { selectCurrentPage } from "./main.selectors";
-import { RootState, store } from "./store/store";
+import { AppDispatch, RootState, store } from "./store/store";
 import { useOnDisconnect } from "./utils/useOnDisconnect";
 
 import { defineServer } from "./reducers/defineServer.thunk";
@@ -30,7 +29,7 @@ const App = () => {
   const backendAvailable = useSelector((state: RootState) => state.main.backendAvailable);
   const xpathConfig = useSelector((state: RootState) => state.main.xpathConfig);
   const currentPage = useSelector(selectCurrentPage);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const isSessionUnique = useSelector((state: RootState) => state.main.isSessionUnique);
 
   useOnDisconnect();

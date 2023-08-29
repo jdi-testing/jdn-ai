@@ -8,9 +8,10 @@ import { clearAll } from "../main.slice";
 import { changeIdentificationStatus } from "../../features/locators/locators.slice";
 import { IdentificationStatus } from "../../features/locators/types/locator.types";
 import { selectInProgressHashes } from "../../features/locators/selectors/locatorsFiltered.selectors";
+import { AppDispatch } from '../store/store';
 
 export const useOnDisconnect = () => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const inProgressHashes = useSelector(selectInProgressHashes);
 
   useEffect(() => {

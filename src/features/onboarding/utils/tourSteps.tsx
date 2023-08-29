@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Row, TourStepProps } from "antd5";
+import { Col, Row, TourStepProps } from "antd";
 import { OnbrdStep } from "../types/constants";
 import { StepRef } from "../types/context.types";
 import Link from "antd/lib/typography/Link";

@@ -1,6 +1,6 @@
 import { MutableRefObject } from "react";
 import { OnbrdStep } from "./constants";
-import { TourProps } from "antd5";
+import { TourProps } from "antd";
 
 export interface OnboardingContext {
   // a step, that is set to Onboarding based on a state,

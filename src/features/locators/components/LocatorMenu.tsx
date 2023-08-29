@@ -52,6 +52,7 @@ import {
   selectInProgressActiveIncPriorityByPageObject,
   selectInProgressActiveDecPriorityByPageObject,
 } from "../selectors/locatorsFiltered.selectors";
+import { AppDispatch } from '../../../app/store/store';
 
 interface Props {
   setIsEditModalOpen: (val: boolean) => void;
@@ -60,7 +61,7 @@ interface Props {
 }
 
 export const LocatorMenu: React.FC<Props> = ({ setIsEditModalOpen, children, trigger }) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const activeNonGenerate = useSelector(selectActiveNonGenerateByPO);
   const activeGenerate = useSelector(selectActiveGenerateByPO);

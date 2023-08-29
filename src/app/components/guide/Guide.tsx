@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 // since webpack works fine with it
 import readme from "../../../../README.md";
 import { BackendStatus } from "../../types/mainSlice.types";
-import { RootState } from "../../store/store";
+import { AppDispatch, RootState } from "../../store/store";
 import { useGuideRehype } from "../../utils/useGuideRehype";
 import { redefineServer } from "../../reducers/redefineServer.thunk";
 import { GuideText } from "./text.constants";
@@ -19,7 +19,7 @@ export const Guide = () => {
   const [alertStatus, setAlertStatus] = useState<AlertStatus>(AlertStatus.Hide);
   const [pluginGuideComponent, setPluginGuide] = useGuideRehype();
   const [serverGuideComponent, setServerGuide] = useGuideRehype();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     const splittedMD = splitMD(readme);
