@@ -1,6 +1,6 @@
 {
   "name": "jdn-ai-chrome-extension",
-  "version": "3.13.562",
+  "version": "3.14.2",
   "description": "jdn-ai chrome extension",
   "scripts": {
     "start": "webpack --watch --env devenv",
@@ -9,6 +9,7 @@
     "build": "webpack --mode production",
     "build:devenv": "webpack --mode production --env devenv",
     "patch": "npx mversion patch",
+    "minor": "npx mversion minor",
     "test": "jest",
     "test:watch": "jest --watch",
     "lint": "eslint --ext .jsx --ext .tsx --ext .ts --ext .js src/",

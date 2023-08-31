@@ -23,7 +23,7 @@ const JDI = {
 
 const isVividusFramework = (framework: FrameworkType) => framework === FrameworkType.Vividus;
 
-const generatePoFile = (newZip: JSZip, framework: FrameworkType, page: { pageCode: string; title: string }) => {
+const generatePoFile = (newZip: JSZip, framework: FrameworkType, page: { pageCode: string; title?: string }) => {
   const path = isVividusFramework(framework)
     ? VIVIDUS.PAGES_PROPERTIES_PATH
     : `src/main/java/site/pages/${page.title}.java`;
@@ -97,23 +97,32 @@ export const generateAndDownloadZip = async (state: RootState, template: Blob) =
       saveAs(blob, `${rootFolder.replace("/", "")}.zip`);
     };
 
+    let vividusPageCode = "";
+
     for (const po of pageObjects) {
       // create page object files
-      const locators = selectConfirmedLocators(state, po.id);
+      const { id, name, framework, url } = po;
+      const locators = selectConfirmedLocators(state, id);
+      const isLastPo = po === pageObjects[pageObjects.length - 1];
+
       if (!size(locators)) continue;
-      const page = await getPage(locators, po);
 
-      const instanceName = lowerFirst(po.name);
+      if (isVividusFramework(framework)) {
+        vividusPageCode += (await getPage(locators, po))?.pageCode + "\n";
 
-      await generatePoFile(newZip, po.framework, page);
+        if (!isLastPo) continue;
 
-      if (!isVividusFramework(po.framework)) {
+        newZip.file(VIVIDUS.SITE_PROPERTIES_PATH, `variables.siteURL=${url}`, { binary: true });
+        await generatePoFile(newZip, framework, { pageCode: vividusPageCode });
+      } else {
+        const page = await getPage(locators, po);
+        const instanceName = lowerFirst(name);
+
+        await generatePoFile(newZip, framework, page);
         await editTestPropertiesFile(newZip, po);
         await editMySiteFile(newZip, po, instanceName);
         await editTestsFile(newZip, po, instanceName);
         await editPomFile(newZip, po);
-      } else {
-        newZip.file(VIVIDUS.SITE_PROPERTIES_PATH, `variables.siteURL=${po.url}`, { binary: true });
       }
     }
 
