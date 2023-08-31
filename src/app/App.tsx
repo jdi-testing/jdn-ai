@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Provider as ReduxProvider, useDispatch, useSelector } from "react-redux";
 
-import "antd/dist/reset.css"
+import "antd/dist/reset.css";
 
 import Layout, { Content, Header } from "antd/lib/layout/layout";
 import { Backdrop } from "./components/Backdrop";

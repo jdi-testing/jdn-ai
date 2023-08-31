@@ -203,9 +203,7 @@ export const getPOPageSteps = (refs: Record<OnbrdStep, StepRef>, isCustomLocator
   });
 
   // use "as TourStepProps[]" because {nextButtonProps: { disabled: boolean }} is not a documented feature
-  return ([
-    ...createPOSteps(refs),
-    ...addLocatorsSteps(refs, isCustomLocatorFlow),
-    ...finishSteps(refs),
-  ] as TourStepProps[]).map(addPrevButtonChilds);
+  return (
+    [...createPOSteps(refs), ...addLocatorsSteps(refs, isCustomLocatorFlow), ...finishSteps(refs)] as TourStepProps[]
+  ).map(addPrevButtonChilds);
 };

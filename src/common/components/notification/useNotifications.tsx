@@ -54,7 +54,7 @@ export const useNotifications = (container?: HTMLElement | null) => {
         {renderCancelButton(cancelAction)}
       </div>
     );
-      //@ts-ignore
+    //@ts-ignore
     notification[type]({
       message: _message,
       description,

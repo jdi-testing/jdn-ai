@@ -24,7 +24,7 @@ import { useOnBoardingRef } from "../../onboarding/utils/useOnboardingRef";
 import { OnbrdStep } from "../../onboarding/types/constants";
 import { OnbrdTooltip } from "../../onboarding/components/OnbrdTooltip";
 import { OnboardingContext } from "../../onboarding/OnboardingProvider";
-import { AppDispatch } from '../../../app/store/store';
+import { AppDispatch } from "../../../app/store/store";
 
 interface Props {
   pageObject: PageObject;

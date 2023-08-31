@@ -40,7 +40,7 @@ export const CustomConfirm: React.FC<Props> = ({
   };
 
   const handleCancel = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-     //@ts-ignore
+    //@ts-ignore
     onCancel && onCancel(e);
     setIsModalOpen(false);
     destroy && destroy();

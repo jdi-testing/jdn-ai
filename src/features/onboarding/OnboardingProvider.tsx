@@ -27,7 +27,7 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
 
   const _isOnboardingPassed = getLocalStorage(LocalStorageKey.IsOnboardingPassed);
   const isBackendAvailable = useSelector((state: RootState) => state.main.backendAvailable) === BackendStatus.Accessed;
-  const isDefaultState: boolean = (useSelector<RootState>(selectIsDefaultState) as unknown) as boolean;
+  const isDefaultState: boolean = useSelector<RootState>(selectIsDefaultState) as unknown as boolean;
   const isSessionUnique = useSelector((state: RootState) => state.main.isSessionUnique);
   const isOnboardingAvailable = isBackendAvailable && !isOnbrdOpen;
 

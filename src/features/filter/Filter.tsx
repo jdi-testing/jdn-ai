@@ -10,7 +10,7 @@ import { toggleClassFilter } from "./reducers/toggleClassFilter.thunk";
 import { toggleClassFilterAll } from "./reducers/toggleClassFilterAll.thunk";
 import { convertFilterToArr } from "./utils/filterSet";
 import { FilterIcon } from "./components/shared/FilterIcon";
-import { AppDispatch } from '../../app/store/store';
+import { AppDispatch } from "../../app/store/store";
 
 export const Filter = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");

@@ -52,7 +52,7 @@ import {
   selectInProgressActiveIncPriorityByPageObject,
   selectInProgressActiveDecPriorityByPageObject,
 } from "../selectors/locatorsFiltered.selectors";
-import { AppDispatch } from '../../../app/store/store';
+import { AppDispatch } from "../../../app/store/store";
 
 interface Props {
   setIsEditModalOpen: (val: boolean) => void;
