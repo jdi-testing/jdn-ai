@@ -24,6 +24,7 @@ import { useOnBoardingRef } from "../../onboarding/utils/useOnboardingRef";
 import { OnbrdStep } from "../../onboarding/types/constants";
 import { OnbrdTooltip } from "../../onboarding/components/OnbrdTooltip";
 import { OnboardingContext } from "../../onboarding/OnboardingProvider";
+import { AppDispatch } from "../../../app/store/store";
 
 interface Props {
   pageObject: PageObject;
@@ -31,7 +32,7 @@ interface Props {
 }
 
 export const PageObjMenu: React.FC<Props> = ({ pageObject, elements }) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const { id, locators, name } = pageObject;
 
   const [isRenameModalOpen, setIsRenameModalOpen] = useState(false);

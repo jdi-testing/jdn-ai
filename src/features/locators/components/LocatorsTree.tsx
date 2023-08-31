@@ -96,11 +96,10 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
 
   const locatorsMap = createLocatorsMap();
 
-  const locatorsTree = useMemo(() => convertListToTree(locators, searchString), [
-    currentPage,
-    searchString,
-    filteredLocators,
-  ]);
+  const locatorsTree = useMemo(
+    () => convertListToTree(locators, searchString),
+    [currentPage, searchString, filteredLocators]
+  );
 
   const renderTreeNodes = (data: Array<LocatorTree>): Array<TreeNode> => {
     const treeNodes: Array<TreeNode> = [];

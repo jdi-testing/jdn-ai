@@ -1,5 +1,5 @@
 import React from "react";
-import { Col, Row, TourStepProps } from "antd5";
+import { Col, Row, TourStepProps } from "antd";
 import { OnbrdStep } from "../types/constants";
 import { StepRef } from "../types/context.types";
 import Link from "antd/lib/typography/Link";
@@ -203,9 +203,7 @@ export const getPOPageSteps = (refs: Record<OnbrdStep, StepRef>, isCustomLocator
   });
 
   // use "as TourStepProps[]" because {nextButtonProps: { disabled: boolean }} is not a documented feature
-  return ([
-    ...createPOSteps(refs),
-    ...addLocatorsSteps(refs, isCustomLocatorFlow),
-    ...finishSteps(refs),
-  ] as TourStepProps[]).map(addPrevButtonChilds);
+  return (
+    [...createPOSteps(refs), ...addLocatorsSteps(refs, isCustomLocatorFlow), ...finishSteps(refs)] as TourStepProps[]
+  ).map(addPrevButtonChilds);
 };

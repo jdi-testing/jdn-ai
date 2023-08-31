@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { Tour, TourStepProps } from "antd5";
+import { Tour, TourStepProps } from "antd";
 import { OnboardingContext } from "./OnboardingProvider";
 import { StepIndicator } from "./components/stepIndicator";
 import { useSelector } from "react-redux";

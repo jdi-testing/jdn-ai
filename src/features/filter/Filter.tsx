@@ -10,12 +10,13 @@ import { toggleClassFilter } from "./reducers/toggleClassFilter.thunk";
 import { toggleClassFilterAll } from "./reducers/toggleClassFilterAll.thunk";
 import { convertFilterToArr } from "./utils/filterSet";
 import { FilterIcon } from "./components/shared/FilterIcon";
+import { AppDispatch } from "../../app/store/store";
 
 export const Filter = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [open, setOpen] = useState(false);
   const pageObject = useSelector(selectCurrentPageObject);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const classFilter = useSelector(selectDetectedClassesFilter);
   const areSelectedAll = useSelector(selectIfSelectedAll);

@@ -32,8 +32,8 @@ const DEFAULT_ACTIVE_KEY = "0";
 export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) => {
   const state = useSelector((state) => state);
   // due to antd types: onChange?: (key: string | string[]) => void;
-  const currentPageObjectIndex = useSelector((state: RootState): string | undefined =>
-    state.pageObject.present.currentPageObject?.toString()
+  const currentPageObjectIndex = useSelector(
+    (state: RootState): string | undefined => state.pageObject.present.currentPageObject?.toString()
   );
   const currentPageObject = useSelector(selectCurrentPageObject);
   const pageObjects = useSelector(selectPageObjects);

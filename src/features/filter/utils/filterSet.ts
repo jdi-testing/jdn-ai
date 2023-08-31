@@ -14,15 +14,18 @@ export const jdiClassFilterInit = (library: ElementLibrary) => ({
 });
 
 export const mapJDIclassesToFilter = (library: ElementLibrary): Record<ElementClass, boolean> => {
-  return Object.entries(libraryClasses[library]).reduce((acc: Record<ElementClass, boolean>, entry) => {
-    const [, value] = entry as [string, ElementClass];
-    const _defaultFilter = defaultFilter[library];
+  return Object.entries(libraryClasses[library]).reduce(
+    (acc: Record<ElementClass, boolean>, entry) => {
+      const [, value] = entry as [string, ElementClass];
+      const _defaultFilter = defaultFilter[library];
 
-    if (_defaultFilter) acc[value as ElementClass] = _defaultFilter.includes(value);
-    else acc[value as ElementClass] = true;
+      if (_defaultFilter) acc[value as ElementClass] = _defaultFilter.includes(value);
+      else acc[value as ElementClass] = true;
 
-    return acc;
-  }, {} as Record<ElementClass, boolean>);
+      return acc;
+    },
+    {} as Record<ElementClass, boolean>
+  );
 };
 
 export const convertFilterToArr = (classFilter: ClassFilterValue, searchTerm: string) =>
