@@ -8,9 +8,12 @@ import { ReduxApp } from "./app/App";
 connector
   .initScripts()
   .then(() => {
-    const root = ReactDOM.createRoot(document.getElementById("root"));
-    if (div instanceof Element) {
+    const rootElement = document.getElementById("chromeExtensionReactApp");
+    if (rootElement instanceof HTMLElement) {
+      const root = ReactDOM.createRoot(rootElement);
       root.render(<ReduxApp />);
+    } else {
+      console.error("Container with ID 'chromeExtensionReactApp' not found in the DOM.");
     }
   })
   .catch((error) => {
