@@ -3,7 +3,7 @@ import React, { useContext, useState } from "react";
 import { useDispatch } from "react-redux";
 
 import { size } from "lodash";
-import { DotsThree } from "phosphor-react";
+import { DotsThree } from "@phosphor-icons/react";
 import { pushNotification } from "../../../app/main.slice";
 import {
   deleteOption,

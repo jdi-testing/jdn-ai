@@ -14,7 +14,7 @@ import {
   CopySimple,
   MinusCircle,
   PlusCircle,
-} from "phosphor-react";
+} from "@phosphor-icons/react";
 import React from "react";
 import { MenuItem } from "./Menu";
 import { LocatorOption } from "../../../features/locators/utils/constants";

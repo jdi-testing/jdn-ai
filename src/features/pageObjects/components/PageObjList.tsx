@@ -4,7 +4,7 @@ import { isNil, size } from "lodash";
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
-import { CaretDown } from "phosphor-react";
+import { CaretDown } from "@phosphor-icons/react";
 import PageSvg from "../assets/page.svg";
 import { selectCurrentPageObject, selectPageObjects } from "../selectors/pageObjects.selectors";
 import { PageObjGenerationBar } from "./PageObjGenerationBar";

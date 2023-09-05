@@ -2,7 +2,7 @@ import { Button, Form, Input, Modal, Tooltip, Upload, UploadFile } from "antd";
 import TextArea from "antd/lib/input/TextArea";
 import { UploadChangeParam } from "antd/lib/upload";
 import { RcFile, UploadFileStatus } from "antd/lib/upload/interface";
-import { UploadSimple, Warning } from "phosphor-react";
+import { UploadSimple, Warning } from "@phosphor-icons/react";
 import React, { useContext, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectCurrentPage } from "../main.selectors";
