@@ -83,6 +83,7 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
               danger
               size="small"
               onClick={handleRemoveAll}
+              className="button--remove"
               data-testid="remove-button"
               icon={<Trash color="#D82C15" size={16} />}
             />

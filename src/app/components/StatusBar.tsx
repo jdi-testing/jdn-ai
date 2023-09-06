@@ -1,6 +1,6 @@
-import { Button, Space, Tooltip, Typography } from "antd";
 import React from "react";
 import { useSelector } from "react-redux";
+import { Button, Space, Tooltip, Typography } from "antd";
 
 import { isNil } from "lodash";
 import { CloudCheck, CloudSlash, DesktopTower, Info } from "@phosphor-icons/react";
@@ -61,7 +61,7 @@ export const StatusBar = () => {
   const connectionRef = useOnBoardingRef(OnbrdStep.Connection);
 
   return (
-    <React.Fragment>
+    <>
       <div className="jdn__header-version">
         <span>{`${componentsTexts.StatusBarVersionJdn} ${pluginVer} ${
           !isNil(backendVer) ? `${componentsTexts.StatusBarVersionBackend} ${backendVer}` : ""
@@ -83,6 +83,6 @@ export const StatusBar = () => {
           {renderServerIndicator()}
         </div>
       </Space>
-    </React.Fragment>
+    </>
   );
 };
