@@ -1,4 +1,4 @@
-import { AnnotationType } from "../../../common/types/common";
+import { AnnotationType, LocatorType } from "../../../common/types/common";
 
 export const getLocatorsByAnnotationType = (value) => {
   return [
@@ -233,8 +233,8 @@ export const locatorsVividus = [
     children: [],
     active: false,
     generate: true,
-    annotationType: "@FindBy",
-    locatorType: "CSS selector",
+    annotationType: AnnotationType.FindBy,
+    locatorType: LocatorType.cssSelector,
   },
   {
     element_id: "0735357117115098156691382591_0",
@@ -261,8 +261,8 @@ export const locatorsVividus = [
     parent_id: "",
     children: [],
     active: false,
-    locatorType: "xPath",
-    annotationType: "@FindBy",
+    locatorType: LocatorType.xPath,
+    annotationType: AnnotationType.FindBy,
     library: "HTML5",
     message: "",
     isCustomName: true,
@@ -294,8 +294,8 @@ export const locatorsVividus = [
     parent_id: "",
     children: [],
     active: false,
-    locatorType: "CSS selector",
-    annotationType: "@UI",
+    locatorType: LocatorType.cssSelector,
+    annotationType: AnnotationType.FindBy,
     library: "HTML5",
     message: "",
     isCustomName: true,
@@ -327,8 +327,8 @@ export const locatorsVividus = [
     parent_id: "",
     children: [],
     active: true,
-    locatorType: "xPath",
-    annotationType: "@UI",
+    locatorType: LocatorType.xPath,
+    annotationType: AnnotationType.FindBy,
     library: "HTML5",
     message: "",
     isCustomName: true,
@@ -454,8 +454,8 @@ public class HomePage extends WebPage {
 `;
 
 export const pageObjectVividus = `variables.HomePage.url=(/jdi-light/index.html)
-variables.HomePage.Label.simpleTable=By.cssSelector(xpath = [index="\\33 "] [index="\\34 "] > a)
-variables.HomePage.Label.userTable=By.xPath(xpath = //*[contains(text(), 'User Table ')])
+variables.HomePage.Label.simpleTable=By.cssSelector([index="\\33 "] [index="\\34 "] > a)
+variables.HomePage.Label.userTable=By.xPath(//*[contains(text(), 'User Table ')])
 variables.HomePage.TextArea.password=By.cssSelector(#password)
 variables.HomePage.Label.dates=By.xPath(//a[contains(text(), 'Dates')])
 `;
