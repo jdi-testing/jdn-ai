@@ -17,7 +17,8 @@ export const OnboardingPopup: FC<Props> = ({ children }) => {
 
   return (
     <Popconfirm
-      overlayClassName="jdn__header-onboarding-button"
+      className="onboarding-popup"
+      overlayClassName="onboarding-popup__overlay"
       placement="bottomRight"
       align={{ offset: [18, 0] }}
       icon={false}

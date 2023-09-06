@@ -1,6 +1,6 @@
-import { Badge, Button, Checkbox, Dropdown, Input, Switch, Typography } from "antd";
-import { SwitchChangeEventHandler } from "antd/lib/switch";
 import React, { ChangeEvent, useMemo, useState } from "react";
+import { Badge, Button, Checkbox, Divider, Dropdown, Input, Switch, Typography } from "antd";
+import { SwitchChangeEventHandler } from "antd/lib/switch";
 import { useDispatch, useSelector } from "react-redux";
 import { selectCurrentPageObject } from "../pageObjects/selectors/pageObjects.selectors";
 import { ElementClass } from "../locators/types/generationClasses.types";
@@ -94,6 +94,7 @@ export const Filter = () => {
       dropdownRender={(menu) => (
         <div className="jdn__filter_dropdown-content">
           <FilterHeader onClickClose={() => setOpen(false)} />
+          <Divider style={{ margin: 0 }} />
           <div className="jdn__filter_dropdown_control">
             <Input allowClear placeholder="Start typing" value={searchTerm} onChange={handleInputChange} />
           </div>

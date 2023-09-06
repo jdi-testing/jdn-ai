@@ -1,6 +1,5 @@
-import { X } from "@phosphor-icons/react";
 import * as React from "react";
-import { Footnote } from "./footnote/Footnote";
+import { Tag } from "antd";
 
 interface Props {
   hidden: boolean;
@@ -10,25 +9,11 @@ interface Props {
 }
 
 export const Chip: React.FC<Props> = ({ hidden, primaryLabel, secondaryLabel, onDelete }) => {
-  return (
-    <div className="ant-select ant-select-multiple" style={{ display: `${hidden ? "none" : "inline-block"}` }}>
-      <div className="ant-select-selection-overflow-item" style={{ opacity: 1 }}>
-        <span className="ant-select-selection-item">
-          <span className="ant-select-selection-item-content">
-            <Footnote>{`${primaryLabel} ${secondaryLabel}`}</Footnote>
-          </span>
-          <span
-            className="ant-select-selection-item-remove"
-            unselectable="on"
-            aria-hidden="true"
-            style={{ userSelect: "none" }}
-          >
-            <span role="img" aria-label="close" className="anticon anticon-close" onClick={onDelete}>
-              <X size={12} color="#00000073" />
-            </span>
-          </span>
-        </span>
-      </div>
-    </div>
+  return hidden ? (
+    <></>
+  ) : (
+    <Tag closeIcon onClose={onDelete} className="tag--selected">
+      {`${primaryLabel} ${secondaryLabel}`}
+    </Tag>
   );
 };
