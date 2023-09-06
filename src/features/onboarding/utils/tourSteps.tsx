@@ -3,7 +3,7 @@ import { Col, Row, TourStepProps } from "antd";
 import { OnbrdStep } from "../types/constants";
 import { StepRef } from "../types/context.types";
 import Link from "antd/lib/typography/Link";
-import { CloudCheck, DesktopTower } from "phosphor-react";
+import { CloudCheck, DesktopTower } from "@phosphor-icons/react";
 
 const newPageObject = (refs: Record<OnbrdStep, StepRef>) => ({
   title: "Begin using JDN",

@@ -1,5 +1,5 @@
 import { Button, Tooltip } from "antd";
-import { BookOpen } from "phosphor-react";
+import { BookOpen } from "@phosphor-icons/react";
 import React, { useContext } from "react";
 import { useOnBoardingRef } from "../../features/onboarding/utils/useOnboardingRef";
 import { OnbrdStep } from "../../features/onboarding/types/constants";

@@ -2,7 +2,7 @@ import React from "react";
 import { Spin, Tooltip } from "antd";
 import Icon from "@ant-design/icons";
 import WarningEditedSvg from "../assets/warning-edited.svg";
-import { PauseCircle, Trash, WarningCircle } from "phosphor-react";
+import { PauseCircle, Trash, WarningCircle } from "@phosphor-icons/react";
 import { LocatorValidationErrorType, LocatorValue, ValidationStatus, LocatorTaskStatus } from "../types/locator.types";
 import { getLocatorValidationStatus } from "../utils/utils";
 

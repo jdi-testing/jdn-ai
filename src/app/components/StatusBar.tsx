@@ -3,7 +3,7 @@ import React from "react";
 import { useSelector } from "react-redux";
 
 import { isNil } from "lodash";
-import { CloudCheck, CloudSlash, DesktopTower, Info } from "phosphor-react";
+import { CloudCheck, CloudSlash, DesktopTower, Info } from "@phosphor-icons/react";
 import { BackendStatus } from "../types/mainSlice.types";
 import { LocalUrl } from "../utils/constants";
 import { RootState } from "../store/store";

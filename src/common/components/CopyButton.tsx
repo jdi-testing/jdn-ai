@@ -1,5 +1,5 @@
 import { Button, Tooltip } from "antd";
-import { Copy } from "phosphor-react";
+import { Copy } from "@phosphor-icons/react";
 import React, { useState } from "react";
 import { copyToClipboard } from "../utils/copyToClipboard";
 import { CopyTitle } from "../types/common";

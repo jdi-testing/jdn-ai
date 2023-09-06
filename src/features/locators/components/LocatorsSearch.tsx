@@ -1,5 +1,5 @@
 import { Input } from "antd";
-import { MagnifyingGlass } from "phosphor-react";
+import { MagnifyingGlass } from "@phosphor-icons/react";
 import React from "react";
 
 interface Props {
