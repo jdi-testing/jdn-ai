@@ -25,7 +25,6 @@ export const vividusTemplate = (locators: Locator[], pageObject: PageObject): { 
   let pageCode = `variables.${name}.url=(${pathname})\n`;
 
   locators.forEach((it) => {
-    // const currentAnnotationType = it.annotationType || annotationType || AnnotationType.UI;
     const currentLocatorType = _.camelCase(it.locatorType || locatorType || LocatorType.xPath);
     // @ts-ignore
     pageCode += `variables.${name}.${it.type}.${it.name}=By.${currentLocatorType}(${it.locator[currentLocatorType]})\n`;
