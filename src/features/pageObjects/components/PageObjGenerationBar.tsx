@@ -2,7 +2,7 @@ import { Col, Row, Select, Space, Typography } from "antd";
 import React, { useContext, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../app/store/store";
-import { selectCurrentPageObject } from "../selectors/pageObjects.selectors";
+import { selectCurrentPageObject, selectPageObjects } from "../selectors/pageObjects.selectors";
 import {
   changeElementLibrary,
   removePageObject,
@@ -95,6 +95,7 @@ const locatorTypeOptions = [
 export const PageObjGenerationBar: React.FC<Props> = ({ pageObj, library, url }) => {
   const status = useSelector((state: RootState) => state.locators.present.status);
   const currentPageObject = useSelector(selectCurrentPageObject);
+  const pageObjects = useSelector(selectPageObjects);
   const { isOpen: isOnboardingOpen } = useContext(OnboardingContext);
 
   const handleGenerate = () => {
@@ -107,6 +108,7 @@ export const PageObjGenerationBar: React.FC<Props> = ({ pageObj, library, url })
   const dispatch = useDispatch();
 
   const currentLibrary = currentPageObject?.library;
+  const isMoreThanOnePageObject = pageObjects?.length > 1;
   const isCurrentFrameworkVividus = currentPageObject?.framework === FrameworkType.Vividus;
 
   const onLibraryChange = (library: ElementLibrary) => {
@@ -155,6 +157,7 @@ export const PageObjGenerationBar: React.FC<Props> = ({ pageObj, library, url })
             <Col flex="auto">
               <Select
                 id="frameworkType"
+                disabled={isMoreThanOnePageObject}
                 defaultValue={currentPageObject?.framework || FrameworkType.JdiLight}
                 className="jdn__select"
                 options={frameworkTypeOptions}
