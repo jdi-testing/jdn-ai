@@ -2,11 +2,11 @@ import { ElementLibrary } from "../../locators/types/generationClasses.types";
 import { camelCase, upperFirst } from "lodash";
 import transliterate from "@sindresorhus/transliterate";
 import { Locator } from "../../locators/types/locator.types";
-import { getLocatorPrefix } from "../../locators/utils/locatorOutput";
+import { getLocatorPrefix, getLocatorTemplateWithVividus } from "../../locators/utils/locatorOutput";
 import { AnnotationType, LocatorType, FrameworkType } from "../../../common/types/common";
 import { hasAnnotationType } from "./hasAnnotationType";
 import { PageObject } from "../types/pageObjectSlice.types";
-import _ from "lodash";
+import { transformLocatorTypeToCamelCase } from "../../locators/utils/helpers";
 
 export const getClassName = (title: string) => {
   let className = transliterate(title);
@@ -25,9 +25,10 @@ export const vividusTemplate = (locators: Locator[], pageObject: PageObject): { 
   let pageCode = `variables.${name}.url=(${pathname})\n`;
 
   locators.forEach((it) => {
-    const currentLocatorType = _.camelCase(it.locatorType || locatorType || LocatorType.xPath);
+    const currentLocatorType = it.locatorType || locatorType || LocatorType.xPath;
+    const ocatorTypeProperty = transformLocatorTypeToCamelCase(currentLocatorType);
     // @ts-ignore
-    pageCode += `variables.${name}.${it.type}.${it.name}=By.${currentLocatorType}(${it.locator[currentLocatorType]})\n`;
+    pageCode += `${getLocatorTemplateWithVividus(name, ocatorTypeProperty, it)}(${it.locator[ocatorTypeProperty]})\n`;
   });
 
   return { pageCode, title: name };
