@@ -37,7 +37,7 @@ import { selectCurrentPageObject } from "../pageObjects/selectors/pageObjects.se
 import { AnnotationType, FrameworkType, LocatorType } from "../../common/types/common";
 import { getLocatorPrefix, getLocatorTemplateWithVividus } from "./utils/locatorOutput";
 import { ScriptMsg } from "../../pageServices/scriptMsg.constants";
-import { transformLocatorTypeToCamelCase } from "./utils/helpers";
+import _ from "lodash";
 
 interface Props {
   element: LocatorInterface;
@@ -155,14 +155,8 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
     const vividusString = () => {
       return (
         <>
-          <span>
-            {getLocatorTemplateWithVividus(
-              pageObjectName as string,
-              transformLocatorTypeToCamelCase(locatorType),
-              element
-            )}
-          </span>
-          (<span className="jdn__xpath_item-locator">{locator.output}</span>)
+          <span>{getLocatorTemplateWithVividus(pageObjectName as string, _.camelCase(locatorType), element)}</span>(
+          <span className="jdn__xpath_item-locator">{locator.output}</span>)
           <br />
         </>
       );

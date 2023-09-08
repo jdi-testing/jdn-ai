@@ -1,5 +1,3 @@
-import _ from "lodash";
-import { LocatorType } from "../../../common/types/common";
 import { IdentificationStatus, Locator, LocatorTaskStatus } from "../types/locator.types";
 import { AUTO_GENERATION_THRESHOLD } from "./constants";
 
@@ -12,5 +10,3 @@ export const isProgressStatus = (taskStatus?: LocatorTaskStatus) =>
 
 export const filterInProgress = (elements: Locator[]) =>
   elements.filter((el) => isProgressStatus(el.locator.taskStatus) && !el.deleted);
-
-export const transformLocatorTypeToCamelCase = (locatorType: LocatorType) => _.camelCase(locatorType);
