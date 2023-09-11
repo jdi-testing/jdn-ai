@@ -15,7 +15,7 @@ import {
   toggleElementGeneration,
 } from "./locators.slice";
 
-import { size } from "lodash";
+import _ from "lodash";
 import { PageType } from "../../app/types/mainSlice.types";
 import { RootState } from "../../app/store/store";
 import { Locator as LocatorInterface } from "./types/locator.types";
@@ -37,7 +37,6 @@ import { selectCurrentPageObject } from "../pageObjects/selectors/pageObjects.se
 import { AnnotationType, FrameworkType, LocatorType } from "../../common/types/common";
 import { getLocatorPrefix, getLocatorTemplateWithVividus } from "./utils/locatorOutput";
 import { ScriptMsg } from "../../pageServices/scriptMsg.constants";
-import _ from "lodash";
 
 interface Props {
   element: LocatorInterface;
@@ -113,7 +112,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
 
   const handleOnChange: React.MouseEventHandler<HTMLDivElement> = () => {
     dispatch(toggleElementGeneration(element_id));
-    if (allChildrenChecked && size(element.children)) {
+    if (allChildrenChecked && _.size(element.children)) {
       dispatch(setChildrenGeneration({ locator: element, generate: false }));
     } else {
       dispatch(setChildrenGeneration({ locator: element, generate: true }));
