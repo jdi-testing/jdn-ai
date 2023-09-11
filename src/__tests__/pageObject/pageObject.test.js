@@ -12,7 +12,10 @@ import { elementsWithoutNames } from "../__mocks__/pageObjectMocks/elementsWitho
 import { elementsWithNames } from "../__mocks__/pageObjectMocks/elementsWithNames";
 import { pageObjectsNames } from "../__mocks__/pageObjectMocks/pageObjectNames";
 import { ElementLibrary } from "../../features/locators/types/generationClasses.types";
-import { pageObjectTemplate } from "../../features/pageObjects/utils/pageObjectTemplate";
+import {
+  getPageObjectTemplateForJdi,
+  getPageObjectTemplateForVidus,
+} from "../../features/pageObjects/utils/pageObjectTemplate";
 import { createLocatorNames } from "../../features/pageObjects/utils/pageObject";
 import { getClassName } from "../../features/pageObjects/utils/pageObjectTemplate";
 import { AnnotationType, LocatorType } from "../../common/types/common";
@@ -67,7 +70,7 @@ const templateTestDataVividus = {
 describe("page object code generation", () => {
   templateTestData.forEach(({ pageObject, output }) => {
     test(`page object generated with ${pageObject.library}`, () => {
-      const page = pageObjectTemplate(locators, pageObject);
+      const page = getPageObjectTemplateForJdi(locators, pageObject);
       expect(page.pageCode).toBe(output);
       expect(page.title).toBe("HomePage");
     });
@@ -81,14 +84,14 @@ describe("page object code generation", () => {
 
   test("generate page object template for Vividus", () => {
     const { pageObject, output } = templateTestDataVividus;
-    const page = pageObjectTemplate(locatorsVividus, pageObject);
+    const page = getPageObjectTemplateForVidus(locatorsVividus, pageObject);
     expect(page.pageCode).toBe(output);
   });
 
   describe("pageObjectTemplate should return pageObjectHTML with FindBy import", () => {
     const locators = getLocatorsByAnnotationType(AnnotationType.FindBy);
     test(`when page object generated with ${templateTestDataWithFindBy.pageObject.library} and locators has Annotation Type === 'FindBy'`, () => {
-      const page = pageObjectTemplate(locators, templateTestDataWithFindBy.pageObject);
+      const page = getPageObjectTemplateForJdi(locators, templateTestDataWithFindBy.pageObject);
       expect(page.pageCode).toBe(templateTestDataWithFindBy.output);
       expect(page.title).toBe("HomePage");
     });
