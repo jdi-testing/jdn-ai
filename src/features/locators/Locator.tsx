@@ -57,17 +57,23 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
 
   const { element_id, type, name, locator, generate, message, deleted, active, isCustomLocator } = element;
 
-  const pageObjectName = useSelector(selectCurrentPageObject)?.name;
-  const pageObjectFramework = useSelector(selectCurrentPageObject)?.framework;
-  const pageObjectAnnotationType = useSelector(selectCurrentPageObject)?.annotationType;
-  const pageObjectLocatorType = useSelector(selectCurrentPageObject)?.locatorType;
+  const currentPageObject = useSelector(selectCurrentPageObject);
+
+  if (!currentPageObject) return null;
+
+  const {
+    name: pageObjectName,
+    framework,
+    annotationType: pageObjectAnnotationType,
+    locatorType: pageObjectLocatorType,
+  } = currentPageObject;
 
   const annotationType = element?.annotationType || pageObjectAnnotationType || AnnotationType.UI;
   const locatorType = element?.locatorType || pageObjectLocatorType || LocatorType.xPath;
 
   const ref = useRef<HTMLDivElement>(null);
 
-  const isVividusFramework = pageObjectFramework && pageObjectFramework === FrameworkType.Vividus;
+  const isVividusFramework = framework === FrameworkType.Vividus;
 
   const isFirstLocator = useSelector(selectFirstLocatorIdByPO) === element_id;
   const menuRef = useOnBoardingRef(
@@ -146,7 +152,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
           <span className="jdn__xpath_item-locator">&quot;{locator.output}&quot;</span>)
           <br />
           <span className="jdn__xpath_item-type">public</span>
-          <span>&nbsp;{type as string}&nbsp;</span>
+          <span>&nbsp;{type}&nbsp;</span>
           {name}
         </>
       );
@@ -155,7 +161,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
     const vividusString = () => {
       return (
         <>
-          <span>{getLocatorTemplateWithVividus(pageObjectName as string, _.camelCase(locatorType), element)}</span>(
+          <span>{getLocatorTemplateWithVividus(pageObjectName, _.camelCase(locatorType), element)}</span>(
           <span className="jdn__xpath_item-locator">{locator.output}</span>)
           <br />
         </>
