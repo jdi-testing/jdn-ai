@@ -109,11 +109,17 @@ export const PageObjGenerationBar: React.FC<Props> = ({ pageObj, library, url })
 
   const currentLibrary = currentPageObject?.library;
   const isMoreThanOnePageObject = pageObjects?.length > 1;
+  const currentAnnotation = currentPageObject?.annotationType;
   const isCurrentFrameworkVividus = currentPageObject?.framework === FrameworkType.Vividus;
 
   const onLibraryChange = (library: ElementLibrary) => {
     dispatch(changeElementLibrary({ id: pageObj, library }));
     setLocalStorage(LocalStorageKey.Library, library);
+  };
+
+  const onAnnotationTypeChange = (annotationType: AnnotationType) => {
+    dispatch(setAnnotationType({ id: pageObj, annotationType }));
+    setLocalStorage(LocalStorageKey.AnnotationType, annotationType);
   };
 
   const onFrameworkChange = async (framework: FrameworkType) => {
@@ -122,12 +128,8 @@ export const PageObjGenerationBar: React.FC<Props> = ({ pageObj, library, url })
 
     if (framework === FrameworkType.Vividus) {
       onLibraryChange(ElementLibrary.HTML5);
+      onAnnotationTypeChange(AnnotationType.FindBy);
     }
-  };
-
-  const onAnnotationTypeChange = (annotationType: AnnotationType) => {
-    dispatch(setAnnotationType({ id: pageObj, annotationType }));
-    setLocalStorage(LocalStorageKey.AnnotationType, annotationType);
   };
 
   const onLocatorTypeChange = (locatorType: LocatorType) => {
@@ -188,6 +190,8 @@ export const PageObjGenerationBar: React.FC<Props> = ({ pageObj, library, url })
             <Col flex="auto">
               <Select
                 id="annotationType"
+                disabled={isCurrentFrameworkVividus}
+                value={currentAnnotation}
                 defaultValue={currentPageObject?.annotationType || AnnotationType.UI}
                 className="jdn__select"
                 onChange={onAnnotationTypeChange}
