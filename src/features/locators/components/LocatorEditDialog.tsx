@@ -24,7 +24,7 @@ import { createNewName, isValidLocator, getLocatorValidationStatus, getLocatorVa
 import { createLocatorValidationRules } from "../utils/locatorValidationRules";
 import { createNameValidationRules } from "../utils/nameValidationRules";
 import FormItem from "antd/es/form/FormItem";
-import { LocatorType, SelectOption, AnnotationType } from "../../../common/types/common";
+import { LocatorType, SelectOption, AnnotationType, FrameworkType } from "../../../common/types/common";
 import { isFilteredSelect } from "../../../common/utils/helpers";
 import { CALCULATING, newLocatorStub } from "../utils/constants";
 import { changeLocatorElement } from "../reducers/changeLocatorElement.thunk";
@@ -68,6 +68,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
   const dispatch = useDispatch();
   const locators = useSelector(selectPresentLocatorsByPO);
   const types = useSelector((_state: RootState) => selectAvailableClasses(_state));
+  const pageObjectFramework = useSelector(selectCurrentPageObject)?.framework;
   const pageObjectLocatorType = useSelector(selectCurrentPageObject)?.locatorType;
   const pageObjectAnnotationType = useSelector(selectCurrentPageObject)?.annotationType;
   const pageObjectId = useSelector(selectCurrentPageObject)!.id;
@@ -80,6 +81,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
   const { updateRef } = useContext(OnboardingContext);
 
   const [form] = Form.useForm<FormValues>();
+  const isCurrentFrameworkVividus = pageObjectFramework === FrameworkType.Vividus;
   const defaultLocatorType = locatorType || pageObjectLocatorType || LocatorType.xPath;
   const defaultAnnotationType = annotationType || pageObjectAnnotationType || AnnotationType.UI;
   const initialValues: FormValues = {
@@ -306,6 +308,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
         style={{ marginBottom: "8px" }}
       >
         <Select
+          disabled={isCurrentFrameworkVividus}
           options={[
             {
               value: AnnotationType.UI,
