@@ -295,7 +295,7 @@ export const locatorsVividus = [
     children: [],
     active: false,
     locatorType: LocatorType.cssSelector,
-    annotationType: AnnotationType.UI,
+    annotationType: AnnotationType.FindBy,
     library: "HTML5",
     message: "",
     isCustomName: true,
@@ -328,7 +328,7 @@ export const locatorsVividus = [
     children: [],
     active: true,
     locatorType: LocatorType.xPath,
-    annotationType: AnnotationType.UI,
+    annotationType: AnnotationType.FindBy,
     library: "HTML5",
     message: "",
     isCustomName: true,
@@ -454,8 +454,8 @@ public class HomePage extends WebPage {
 `;
 
 export const pageObjectVividus = `variables.HomePage.url=(/jdi-light/index.html)
-variables.HomePage.Label.simpleTable=By.cssSelector(css = [index="\\33 "] [index="\\34 "] > a)
-variables.HomePage.Label.userTable=By.xPath(xpath = //*[contains(text(), 'User Table ')])
+variables.HomePage.Label.simpleTable=By.cssSelector([index="\\33 "] [index="\\34 "] > a)
+variables.HomePage.Label.userTable=By.xPath(//*[contains(text(), 'User Table ')])
 variables.HomePage.TextArea.password=By.cssSelector(#password)
 variables.HomePage.Label.dates=By.xPath(//a[contains(text(), 'Dates')])
 `;
