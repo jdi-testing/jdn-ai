@@ -34,9 +34,10 @@ import { selectFirstLocatorIdByPO } from "./selectors/locatorsByPO.selectors";
 import { selectCalculatedActiveByPageObj, selectWaitingActiveByPageObj } from "./selectors/locatorsFiltered.selectors";
 import { isLocatorListPage } from "../../app/utils/heplers";
 import { selectCurrentPageObject } from "../pageObjects/selectors/pageObjects.selectors";
-import { AnnotationType, LocatorType } from "../../common/types/common";
-import { getLocatorPrefix } from "./utils/locatorOutput";
+import { AnnotationType, FrameworkType, LocatorType } from "../../common/types/common";
+import { getLocatorPrefix, getLocatorTemplateWithVividus } from "./utils/locatorOutput";
 import { ScriptMsg } from "../../pageServices/scriptMsg.constants";
+import _ from "lodash";
 
 interface Props {
   element: LocatorInterface;
@@ -56,13 +57,23 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
 
   const { element_id, type, name, locator, generate, message, deleted, active, isCustomLocator } = element;
 
-  const pageObjectAnnotationType = useSelector(selectCurrentPageObject)?.annotationType;
-  const pageObjectLocatorType = useSelector(selectCurrentPageObject)?.locatorType;
+  const currentPageObject = useSelector(selectCurrentPageObject);
+
+  if (!currentPageObject) return null;
+
+  const {
+    name: pageObjectName,
+    framework,
+    annotationType: pageObjectAnnotationType,
+    locatorType: pageObjectLocatorType,
+  } = currentPageObject;
 
   const annotationType = element?.annotationType || pageObjectAnnotationType || AnnotationType.UI;
   const locatorType = element?.locatorType || pageObjectLocatorType || LocatorType.xPath;
 
   const ref = useRef<HTMLDivElement>(null);
+
+  const isVividusFramework = framework === FrameworkType.Vividus;
 
   const isFirstLocator = useSelector(selectFirstLocatorIdByPO) === element_id;
   const menuRef = useOnBoardingRef(
@@ -132,16 +143,32 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
       if (event.detail === 2) setIsEditModalOpen(true);
     };
 
-    return (
-      <span onClick={handleClick}>
-        {annotationType}({getLocatorPrefix(annotationType, locatorType)}
-        <span className="jdn__xpath_item-locator">&quot;{locator.output}&quot;</span>)
-        <br />
-        <span className="jdn__xpath_item-type">public</span>
-        <span>&nbsp;{type as string}&nbsp;</span>
-        {name};
-      </span>
-    );
+    const jdiString = () => {
+      return (
+        <>
+          <span>
+            {annotationType}({getLocatorPrefix(annotationType, locatorType)}
+          </span>
+          <span className="jdn__xpath_item-locator">&quot;{locator.output}&quot;</span>)
+          <br />
+          <span className="jdn__xpath_item-type">public</span>
+          <span>&nbsp;{type}&nbsp;</span>
+          {name}
+        </>
+      );
+    };
+
+    const vividusString = () => {
+      return (
+        <>
+          <span>{getLocatorTemplateWithVividus(pageObjectName, _.camelCase(locatorType), element)}</span>(
+          <span className="jdn__xpath_item-locator">{locator.output}</span>)
+          <br />
+        </>
+      );
+    };
+
+    return <span onClick={handleClick}>{isVividusFramework ? vividusString() : jdiString()}</span>;
   };
 
   return (
