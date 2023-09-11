@@ -20,7 +20,10 @@ export const getClassName = (title: string) => {
   return className;
 };
 
-export const vividusTemplate = (locators: Locator[], pageObject: PageObject): { pageCode: string; title: string } => {
+export const getPageObjectTemplateForVidus = (
+  locators: Locator[],
+  pageObject: PageObject
+): { pageCode: string; title: string } => {
   const { name, pathname, locatorType } = pageObject;
   let pageCode = `variables.${name}.url=(${pathname})\n`;
 
