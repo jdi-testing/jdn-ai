@@ -3,7 +3,7 @@ import { camelCase, upperFirst } from "lodash";
 import transliterate from "@sindresorhus/transliterate";
 import { Locator } from "../../locators/types/locator.types";
 import { getLocatorPrefix, getLocatorTemplateWithVividus } from "../../locators/utils/locatorOutput";
-import { AnnotationType, LocatorType, FrameworkType } from "../../../common/types/common";
+import { AnnotationType, LocatorType } from "../../../common/types/common";
 import { hasAnnotationType } from "./hasAnnotationType";
 import { PageObject } from "../types/pageObjectSlice.types";
 import _ from "lodash";
