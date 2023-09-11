@@ -2,7 +2,7 @@ import { ElementLibrary } from "../../locators/types/generationClasses.types";
 import { camelCase, upperFirst } from "lodash";
 import transliterate from "@sindresorhus/transliterate";
 import { Locator } from "../../locators/types/locator.types";
-import { getLocatorPrefix } from "../../locators/utils/locatorOutput";
+import { getLocatorPrefix, getLocatorTemplateWithVividus } from "../../locators/utils/locatorOutput";
 import { AnnotationType, LocatorType } from "../../../common/types/common";
 import { hasAnnotationType } from "./hasAnnotationType";
 import { PageObject } from "../types/pageObjectSlice.types";
@@ -24,18 +24,14 @@ export const getPageObjectTemplateForVidus = (
   locators: Locator[],
   pageObject: PageObject
 ): { pageCode: string; title: string } => {
-  const { name, pathname, annotationType, locatorType } = pageObject;
+  const { name, pathname, locatorType } = pageObject;
   let pageCode = `variables.${name}.url=(${pathname})\n`;
 
   locators.forEach((it) => {
-    const currentAnnotationType = it.annotationType || annotationType || AnnotationType.UI;
-    const currentLocatorType: LocatorType = it.locatorType || locatorType || LocatorType.xPath;
-    const currentLocatorTypeProperty = _.camelCase(currentLocatorType);
-    pageCode += `variables.${name}.${it.type}.${it.name}=By.${currentLocatorTypeProperty}(${getLocatorPrefix(
-      currentAnnotationType,
-      currentLocatorType
-      // @ts-ignore
-    )}${it.locator[currentLocatorTypeProperty]})\n`;
+    const currentLocatorType = it.locatorType || locatorType || LocatorType.xPath;
+    const locatorTypeProperty = _.camelCase(currentLocatorType);
+    // @ts-ignore
+    pageCode += `${getLocatorTemplateWithVividus(name, locatorTypeProperty, it)}(${it.locator[locatorTypeProperty]})\n`;
   });
 
   return { pageCode, title: name };
