@@ -5,7 +5,7 @@ import { messages } from "./messages";
 import { Action } from "../types/notification.types";
 import { locatorUndo, pageobjectUndo } from "./undoActions";
 import { Locator } from "../../../../features/locators/types/locator.types";
-import { NotificationInstance } from "antd/lib/notification";
+import { NotificationInstance } from "antd/lib/notification/interface";
 
 export const useNotificationController = (
   lastNotification: Notification | undefined,

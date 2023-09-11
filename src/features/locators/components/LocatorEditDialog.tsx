@@ -6,7 +6,7 @@ import { Rule } from "antd/lib/form";
 import { FieldData } from "rc-field-form/lib/interface";
 import React, { useContext, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../app/store/store";
+import { AppDispatch, RootState } from "../../../app/store/store";
 import { DialogWithForm } from "../../../common/components/DialogWithForm";
 import { selectAvailableClasses } from "../../filter/filter.selectors";
 import { selectCurrentPageObject } from "../../pageObjects/selectors/pageObjects.selectors";
@@ -65,7 +65,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
   locatorType,
   annotationType,
 }) => {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const locators = useSelector(selectPresentLocatorsByPO);
   const types = useSelector((_state: RootState) => selectAvailableClasses(_state));
   const pageObjectFramework = useSelector(selectCurrentPageObject)?.framework;

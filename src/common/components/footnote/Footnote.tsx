@@ -6,6 +6,6 @@ interface Props {
   className?: string;
 }
 
-export const Footnote: React.FC<Props> = ({ children, className }) => {
+export const Footnote: React.FC<Props> = ({ children, className = "" }) => {
   return <Typography.Text className={`jdn__footnote ${className}`}>{children}</Typography.Text>;
 };

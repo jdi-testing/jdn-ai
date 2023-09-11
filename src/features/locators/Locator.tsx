@@ -1,5 +1,5 @@
 import { Checkbox, Button } from "antd";
-import { DotsThree } from "phosphor-react";
+import { DotsThree } from "@phosphor-icons/react";
 import Text from "antd/lib/typography/Text";
 import React, { useContext, useEffect, useRef, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
