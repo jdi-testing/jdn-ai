@@ -2,7 +2,7 @@ import { saveAs } from "file-saver";
 import { entries, isNumber, lowerFirst, size } from "lodash";
 import JSZip from "jszip";
 import { RootState } from "../../../app/store/store";
-import { selectPageObjects } from "../selectors/pageObjects.selectors";
+import { selectCurrentPageObject, selectPageObjects } from "../selectors/pageObjects.selectors";
 import { testFileTemplate } from "./testTemplate";
 import { getPage } from "./pageObject";
 import { PageObject } from "../types/pageObjectSlice.types";
@@ -73,6 +73,7 @@ export const editPomFile = (newZip: JSZip, po: PageObject) => {
 
 export const generateAndDownloadZip = async (state: RootState, template: Blob) => {
   const pageObjects = selectPageObjects(state);
+  const currentPageObject = selectCurrentPageObject(state);
 
   const zip = await JSZip.loadAsync(template, { createFolders: true });
   const rootFolder = entries(zip.files)[0][0];
@@ -104,13 +105,14 @@ export const generateAndDownloadZip = async (state: RootState, template: Blob) =
       const { id, name, framework, url } = po;
       const locators = selectConfirmedLocators(state, id);
       const isLastPo = po === pageObjects[pageObjects.length - 1];
+      const isEmptyPageObject = currentPageObject?.id !== id;
 
       if (!size(locators)) continue;
 
       if (isVividusFramework(framework)) {
         vividusPageCode += (await getPage(locators, po))?.pageCode + "\n";
 
-        if (!isLastPo) continue;
+        if (!isLastPo && !isEmptyPageObject) continue;
 
         newZip.file(VIVIDUS.SITE_PROPERTIES_PATH, `variables.siteURL=${url}`, { binary: true });
         await generatePoFile(newZip, framework, { pageCode: vividusPageCode });
