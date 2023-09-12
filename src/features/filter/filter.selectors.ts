@@ -41,11 +41,14 @@ export const selectDetectedClassesFilter = createSelector(
     const classFilterPO = selectClassFilterByPO(state, pageObj?.id);
     if (pageObj?.locators) {
       const locatorType = new Set(pageObj?.locators.map((locatorId) => selectLocatorById(state, locatorId)?.type));
-      return Object.entries(classFilterPO).reduce((result: Record<ElementClass, boolean>, entry) => {
-        const [key, value] = entry;
-        locatorType.has(key as ElementClass) ? (result[key as ElementClass] = value as boolean) : null;
-        return result;
-      }, {} as Record<ElementClass, boolean>);
+      return Object.entries(classFilterPO).reduce(
+        (result: Record<ElementClass, boolean>, entry) => {
+          const [key, value] = entry;
+          locatorType.has(key as ElementClass) ? (result[key as ElementClass] = value as boolean) : null;
+          return result;
+        },
+        {} as Record<ElementClass, boolean>
+      );
     }
     return classFilterPO;
   }

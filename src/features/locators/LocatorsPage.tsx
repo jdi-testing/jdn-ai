@@ -144,26 +144,24 @@ export const LocatorsPage = () => {
     const checkedLocators = useSelector(selectCheckedLocators);
     const isDisabled = !size(inProgressGenerate) && !size(calculatedGenerate);
     return (
-      <React.Fragment>
-        <Tooltip
-          overlayClassName="jdn__button-tooltip"
-          title={isDisabled ? "Please select locators for your current page object." : ""}
+      <Tooltip
+        overlayClassName="jdn__button-tooltip"
+        title={isDisabled ? "Please select locators for your current page object." : ""}
+      >
+        <Button
+          ref={saveLocatorsRef}
+          type="primary"
+          onClick={handleConfirm}
+          className="jdn__buttons"
+          disabled={isDisabled}
         >
-          <Button
-            ref={saveLocatorsRef}
-            type="primary"
-            onClick={handleConfirm}
-            className="jdn__buttons"
-            disabled={isDisabled}
-          >
-            {!size(checkedLocators)
-              ? "Save"
-              : size(checkedLocators) > 1
-              ? `Save ${size(checkedLocators)} locators`
-              : "Save 1 locator"}
-          </Button>
-        </Tooltip>
-      </React.Fragment>
+          {!size(checkedLocators)
+            ? "Save"
+            : size(checkedLocators) > 1
+            ? `Save ${size(checkedLocators)} locators`
+            : "Save 1 locator"}
+        </Button>
+      </Tooltip>
     );
   };
 

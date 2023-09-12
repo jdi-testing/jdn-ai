@@ -1,9 +1,9 @@
 import React from "react";
-import { Col, Row, TourStepProps } from "antd5";
+import { Col, Row, TourStepProps } from "antd";
 import { OnbrdStep } from "../types/constants";
 import { StepRef } from "../types/context.types";
 import Link from "antd/lib/typography/Link";
-import { CloudCheck, DesktopTower } from "phosphor-react";
+import { CloudCheck, DesktopTower } from "@phosphor-icons/react";
 
 const newPageObject = (refs: Record<OnbrdStep, StepRef>) => ({
   title: "Begin using JDN",
@@ -17,8 +17,8 @@ const newPageObject = (refs: Record<OnbrdStep, StepRef>) => ({
 
 const poSettings = (refs: Record<OnbrdStep, StepRef>) => ({
   title: "Basic settings",
-  description:
-    "At the start of the creation process, you can specify certain characteristics of the Page Object locators for your convenience. Later you can modify these characteristics.",
+  description: `At the start of the creation process, you can specify certain characteristics of the Page Object 
+    locators for your convenience.Later you can modify these characteristics.`,
   target: refs[OnbrdStep.POsettings]?.target?.current,
   prevButtonProps: {
     onClick: refs[OnbrdStep.POsettings]?.onClickPrev,
@@ -27,8 +27,10 @@ const poSettings = (refs: Record<OnbrdStep, StepRef>) => ({
 
 const generate = (refs: Record<OnbrdStep, StepRef>) => ({
   title: "Start creating",
-  description:
-    "After clicking this button, the page will be scanned and locators will be generated. Please make sure that you have opened the required web page before proceeding.",
+  description: `After clicking this button, the page will be scanned and locators will be generated.
+    Please make sure that you have opened the required web page before proceeding.
+        
+    Also, you can create an Empty Page Object and then select the elements you need for generation.`,
   target: refs[OnbrdStep.Generate]?.target?.current,
   nextButtonProps: {
     children: "Generate",
@@ -80,7 +82,8 @@ const createCustomLocator = (refs: Record<OnbrdStep, StepRef>) => {
 const contextMenu = (refs: Record<OnbrdStep, StepRef>) => ({
   title: "Context menu",
   description:
-    'You can modify the name, type, or locator itself by selecting the "Edit" option from the context menu. \n Additionally, you can copy an already optimized locator in your preferred format by accessing the context menu or by right-clicking on the locator.',
+    'You can modify the name, type, or locator itself by selecting the "Edit" option from the context menu.' +
+    "\n Additionally, you can copy an already optimized locator in your preferred format by accessing the context menu or by right-clicking on the locator.",
   target: refs[OnbrdStep.EditLocator]?.target?.current,
 });
 
@@ -203,9 +206,7 @@ export const getPOPageSteps = (refs: Record<OnbrdStep, StepRef>, isCustomLocator
   });
 
   // use "as TourStepProps[]" because {nextButtonProps: { disabled: boolean }} is not a documented feature
-  return ([
-    ...createPOSteps(refs),
-    ...addLocatorsSteps(refs, isCustomLocatorFlow),
-    ...finishSteps(refs),
-  ] as TourStepProps[]).map(addPrevButtonChilds);
+  return (
+    [...createPOSteps(refs), ...addLocatorsSteps(refs, isCustomLocatorFlow), ...finishSteps(refs)] as TourStepProps[]
+  ).map(addPrevButtonChilds);
 };

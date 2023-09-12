@@ -1,5 +1,5 @@
 import { Button, Tooltip } from "antd";
-import { CopySimple } from "phosphor-react";
+import { CopySimple } from "@phosphor-icons/react";
 import React, { useState } from "react";
 import { CopyTitle } from "../../../common/types/common";
 import { getLocatorString } from "../../locators/utils/locatorOutput";

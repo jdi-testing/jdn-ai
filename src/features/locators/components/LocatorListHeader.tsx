@@ -3,7 +3,7 @@ import { size } from "lodash";
 import { Button, Checkbox, Row } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { Chip } from "../../../common/components/Chip";
-import { CaretDown, DotsThree } from "phosphor-react";
+import { CaretDown, DotsThree } from "@phosphor-icons/react";
 import { PlusOutlined } from "@ant-design/icons";
 import { elementGroupUnsetActive, setElementGroupGeneration } from "../locators.slice";
 import { newLocatorStub } from "../utils/constants";

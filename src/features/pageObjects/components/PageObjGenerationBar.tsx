@@ -1,8 +1,8 @@
 import { Col, Row, Select, Space, Typography } from "antd";
 import React, { useContext, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../app/store/store";
 import { selectCurrentPageObject, selectPageObjects } from "../selectors/pageObjects.selectors";
+import { AppDispatch, RootState } from "../../../app/store/store";
 import {
   changeElementLibrary,
   removePageObject,
@@ -105,7 +105,7 @@ export const PageObjGenerationBar: React.FC<Props> = ({ pageObj, library, url })
 
   const refSettings = useOnBoardingRef(OnbrdStep.POsettings, undefined, () => dispatch(removePageObject(pageObj)));
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const currentLibrary = currentPageObject?.library;
   const isMoreThanOnePageObject = pageObjects?.length > 1;

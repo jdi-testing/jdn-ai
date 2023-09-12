@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Modal, Row, Space, Tooltip } from "antd";
-import { CaretDown, Plus, Trash } from "phosphor-react";
+import { CaretDown, Plus, Trash } from "@phosphor-icons/react";
 
 import { pushNotification } from "../../../app/main.slice";
 import { size } from "lodash";
@@ -10,7 +10,7 @@ import { selectPageObjects } from "../selectors/pageObjects.selectors";
 import { removeAll as removeAllLocators } from "../../locators/locators.slice";
 import { removeAll as removeAllPageObjects } from "../pageObject.slice";
 import { removeAll as removeAllFilters } from "../../filter/filter.slice";
-import { RootState } from "../../../app/store/store";
+import { AppDispatch, RootState } from "../../../app/store/store";
 import { selectLocatorsToGenerate } from "../../locators/selectors/locators.selectors";
 import { generateAndDownloadZip } from "../utils/projectTemplate";
 import { useOnBoardingRef } from "../../onboarding/utils/useOnboardingRef";
@@ -34,7 +34,7 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
   const enableDownload = useMemo(() => !!size(locatorsToGenerate), [locatorsToGenerate]);
   const newPOstub = pageObjects.find((pageObject) => !pageObject.locators?.length);
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const handleAddPageObject = useAddPageObject(setActivePanel);
 
   const handleDownload = () => {
@@ -83,6 +83,7 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
               danger
               size="small"
               onClick={handleRemoveAll}
+              className="button--remove"
               data-testid="remove-button"
               icon={<Trash color="#D82C15" size={16} />}
             />
