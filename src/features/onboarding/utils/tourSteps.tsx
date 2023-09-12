@@ -17,8 +17,8 @@ const newPageObject = (refs: Record<OnbrdStep, StepRef>) => ({
 
 const poSettings = (refs: Record<OnbrdStep, StepRef>) => ({
   title: "Basic settings",
-  description:
-    "At the start of the creation process, you can specify certain characteristics of the Page Object locators for your convenience. Later you can modify these characteristics.",
+  description: `At the start of the creation process, you can specify certain characteristics of the Page Object 
+    locators for your convenience.Later you can modify these characteristics.`,
   target: refs[OnbrdStep.POsettings]?.target?.current,
   prevButtonProps: {
     onClick: refs[OnbrdStep.POsettings]?.onClickPrev,
@@ -27,8 +27,10 @@ const poSettings = (refs: Record<OnbrdStep, StepRef>) => ({
 
 const generate = (refs: Record<OnbrdStep, StepRef>) => ({
   title: "Start creating",
-  description:
-    "After clicking this button, the page will be scanned and locators will be generated. Please make sure that you have opened the required web page before proceeding.",
+  description: `After clicking this button, the page will be scanned and locators will be generated.
+    Please make sure that you have opened the required web page before proceeding.
+        
+    Also, you can create an Empty Page Object and then select the elements you need for generation.`,
   target: refs[OnbrdStep.Generate]?.target?.current,
   nextButtonProps: {
     children: "Generate",
@@ -80,7 +82,8 @@ const createCustomLocator = (refs: Record<OnbrdStep, StepRef>) => {
 const contextMenu = (refs: Record<OnbrdStep, StepRef>) => ({
   title: "Context menu",
   description:
-    'You can modify the name, type, or locator itself by selecting the "Edit" option from the context menu. \n Additionally, you can copy an already optimized locator in your preferred format by accessing the context menu or by right-clicking on the locator.',
+    'You can modify the name, type, or locator itself by selecting the "Edit" option from the context menu.' +
+    "\n Additionally, you can copy an already optimized locator in your preferred format by accessing the context menu or by right-clicking on the locator.",
   target: refs[OnbrdStep.EditLocator]?.target?.current,
 });
 
