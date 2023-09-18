@@ -126,8 +126,6 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
     }
     case "locators/setElementGroupGeneration":
       payload.locators.forEach((_loc: ILocator) => {
-        console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ notifier");
-
         const element = selectLocatorById(state, _loc.element_id);
         element && sendMessage.toggle({ element, skipScroll: true });
       });

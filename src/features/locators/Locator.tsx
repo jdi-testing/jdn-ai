@@ -120,8 +120,6 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
   };
 
   const handleLocatorClick: React.MouseEventHandler<HTMLDivElement> = (event) => {
-    console.log("%chandleLocatorClick: ", "background-color: lightblue", element_id);
-
     const keyForMultiSelect = isMacPlatform(window) ? event.metaKey : event.ctrlKey;
     if (keyForMultiSelect) {
       if (active) dispatch(elementUnsetActive(element_id));

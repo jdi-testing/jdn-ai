@@ -28,6 +28,8 @@ interface LocatorListHeaderProps {
   setIsEditModalOpen: (isOpen: boolean) => void;
 }
 
+const emptyLength = 0;
+
 export const LocatorListHeader = ({
   render,
   isEditModalOpen,
@@ -47,12 +49,12 @@ export const LocatorListHeader = ({
   const { isOpen: isOnboardingOpen, isCustomLocatorFlow } = useContext(OnboardingContext);
 
   useEffect(() => {
-    if (checkedLocators.length > 0 && checkedLocators.length === locators.length) {
+    if (checkedLocators.length > emptyLength && checkedLocators.length === locators.length) {
       setIsAllLocatorsSelected(true);
     }
   }, [checkedLocators.length]);
 
-  const partiallySelected = checkedLocators.length > 0 && checkedLocators.length < locators.length;
+  const partiallySelected = checkedLocators.length > emptyLength && checkedLocators.length < locators.length;
 
   const handleOnChange = () => {
     dispatch(toggleAllLocatorsIsChecked({ locators, isChecked: !isAllLocatorsSelected }));
