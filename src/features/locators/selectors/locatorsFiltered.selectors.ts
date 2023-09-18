@@ -2,7 +2,7 @@ import { createSelector } from "@reduxjs/toolkit";
 import { chain } from "lodash";
 import { LocatorCalculationPriority, LocatorTaskStatus } from "../types/locator.types";
 import { selectClassFilterByPO } from "../../filter/filter.selectors";
-import { Locator } from "../types/locator.types";
+import { ILocator } from "../types/locator.types";
 import { filterLocatorsByClassFilter } from "../utils/filterLocators";
 import { selectLocatorsByPageObject, selectSortedLocators } from "./locatorsByPO.selectors";
 import { filterInProgress, isProgressStatus } from "../utils/helpers";
@@ -19,28 +19,27 @@ const selectSortedFilteredLocators = createSelector(
   filterLocatorsByClassFilter
 );
 
-export const selectGenerateByPageObject = createSelector(selectFilteredLocators, (elements: Array<Locator> = []) =>
+export const selectGenerateByPageObject = createSelector(selectFilteredLocators, (elements: ILocator[] = []) =>
   elements.filter((elem) => elem?.generate)
 );
 
-export const selectActiveGenerateByPO = createSelector(selectGenerateByPageObject, (elements: Array<Locator> = []) =>
+export const selectActiveGenerateByPO = createSelector(selectGenerateByPageObject, (elements: ILocator[] = []) =>
   elements.filter((elem) => elem?.active)
 );
 
-export const selectNonGenerateByPageObject = createSelector(selectFilteredLocators, (elements: Array<Locator> = []) =>
+export const selectNonGenerateByPageObject = createSelector(selectFilteredLocators, (elements: ILocator[] = []) =>
   elements.filter((elem) => !elem?.generate)
 );
 
-export const selectActiveNonGenerateByPO = createSelector(
-  selectNonGenerateByPageObject,
-  (elements: Array<Locator> = []) => elements.filter((elem) => elem?.active && !elem.deleted)
+export const selectActiveNonGenerateByPO = createSelector(selectNonGenerateByPageObject, (elements: ILocator[] = []) =>
+  elements.filter((elem) => elem?.active && !elem.deleted)
 );
 
-export const selectConfirmedLocators = createSelector(selectSortedFilteredLocators, (elements: Array<Locator> = []) =>
-  elements.filter((elem) => elem?.generate && !elem.deleted)
+export const selectConfirmedLocators = createSelector(selectSortedFilteredLocators, (elements: ILocator[] = []) =>
+  elements.filter((elem) => elem?.isChecked && !elem.deleted)
 );
 
-export const selectCalculatedByPageObj = createSelector(selectFilteredLocators, (locators: Locator[]) =>
+export const selectCalculatedByPageObj = createSelector(selectFilteredLocators, (locators: ILocator[]) =>
   locators.filter(
     (_loc) => (_loc.locator.taskStatus === LocatorTaskStatus.SUCCESS || _loc.isCustomLocator) && !_loc.deleted
   )
@@ -60,6 +59,10 @@ export const selectCalculatedGenerateByPageObj = createSelector(selectCalculated
   items.filter((item) => item.generate)
 );
 
+export const selectCalculatedAndCheckedByPageObj = createSelector(selectCalculatedByPageObj, (items) =>
+  items.filter((item) => item.isChecked === true)
+);
+
 export const selectDeletedByPageObj = createSelector(selectFilteredLocators, (items) =>
   chain(items)
     .filter((el) => el.deleted || false)
@@ -68,6 +71,10 @@ export const selectDeletedByPageObj = createSelector(selectFilteredLocators, (it
 
 export const selectDeletedGenerateByPageObj = createSelector(selectDeletedByPageObj, (items) =>
   items.filter((item) => item.generate)
+);
+
+export const selectDeletedCheckedByPageObj = createSelector(selectDeletedByPageObj, (items) =>
+  items.filter((item) => item.isChecked)
 );
 
 export const selectDeletedActiveByPageObj = createSelector(selectDeletedByPageObj, (locators) =>
@@ -141,6 +148,6 @@ export const selectActiveLocators = createSelector(selectFilteredLocators, (loca
   locators.filter((_loc) => _loc.active)
 );
 
-export const selectCheckedLocators = createSelector(selectFilteredLocators, (locators) =>
-  locators.filter((_loc) => _loc.generate)
+export const selectCheckedLocatorsByPageObject = createSelector(selectFilteredLocators, (elements: ILocator[] = []) =>
+  elements.filter((elem) => elem?.isChecked === true)
 );

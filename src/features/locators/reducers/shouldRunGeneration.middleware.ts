@@ -1,11 +1,11 @@
 import { Middleware } from "@reduxjs/toolkit";
-import { Locator } from "../types/locator.types";
+import { ILocator } from "../types/locator.types";
 import { runLocatorsGeneration } from "./runLocatorsGeneration.thunk";
 import { getNoLocatorsElements, hasAllLocators } from "../utils/utils";
 import { selectLocatorsByPageObject } from "../selectors/locatorsByPO.selectors";
 import { AUTO_GENERATION_THRESHOLD } from "../utils/constants";
 
-const onSetActiveGroup = (dispatch: any, locators: Locator[]) => {
+const onSetActiveGroup = (dispatch: any, locators: ILocator[]) => {
   const noLocators = getNoLocatorsElements(locators);
   if (noLocators.length) {
     dispatch(
@@ -25,11 +25,13 @@ export const shouldRunGeneration: Middleware = (store) => (next) => (action) => 
   switch (type) {
     case "locators/setElementGroupGeneration": {
       const { locators, generate } = payload;
-      if (generate) onSetActiveGroup(store.dispatch, locators);
+      if (generate) {
+        onSetActiveGroup(store.dispatch, locators);
+      }
       break;
     }
     case "locators/elementGroupSetActive": {
-      onSetActiveGroup(store.dispatch, payload.locators as Locator[]);
+      onSetActiveGroup(store.dispatch, payload.locators as ILocator[]);
       break;
     }
     case "locators/setActiveSingle":
@@ -39,7 +41,7 @@ export const shouldRunGeneration: Middleware = (store) => (next) => (action) => 
         store.dispatch(
           // @ts-ignore
           runLocatorsGeneration({
-            locators: [payload as Locator],
+            locators: [payload as ILocator],
             generateMissingLocator: true,
           })
         );

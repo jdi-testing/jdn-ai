@@ -1,5 +1,5 @@
-import { Button, Modal, Tooltip, Row } from "antd";
 import React, { useState, useRef } from "react";
+import { Button, Modal, Tooltip, Row } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 
 import { isEmpty, isEqual, size } from "lodash";
@@ -30,11 +30,11 @@ import {
 import {
   selectFilteredLocators,
   selectInProgressGenerateByPageObj,
-  selectCalculatedGenerateByPageObj,
-  selectDeletedGenerateByPageObj,
-  selectCheckedLocators,
+  selectCheckedLocatorsByPageObject,
   selectInProgressGenerateHashes,
   selectInProgressHashes,
+  selectCalculatedAndCheckedByPageObj,
+  selectDeletedCheckedByPageObj,
 } from "./selectors/locatorsFiltered.selectors";
 import { useNotifications } from "../../common/components/notification/useNotifications";
 import { selectCurrentPageObject } from "../pageObjects/selectors/pageObjects.selectors";
@@ -54,14 +54,14 @@ export const LocatorsPage = () => {
   const inProgressGenerate = useSelector(selectInProgressGenerateByPageObj);
   const inProgressGenerateHashes = useSelector(selectInProgressGenerateHashes);
   const inProgressHashes = useSelector(selectInProgressHashes);
-  const calculatedGenerate = useSelector(selectCalculatedGenerateByPageObj);
-  const deletedGenerate = useSelector(selectDeletedGenerateByPageObj);
+  const calculatedAndChecked = useSelector(selectCalculatedAndCheckedByPageObj);
+  const deletedChecked = useSelector(selectDeletedCheckedByPageObj);
   const { id: currentPOId } = useSelector(selectCurrentPageObject) ?? {};
 
   const breadcrumbsRef = useRef(null);
   const [locatorsSnapshot] = useState(useSelector(selectLocatorsByPageObject));
   const [filterSnapshot] = useState(useSelector(selectClassFilterByPO));
-  const [isEmptyListModalOpen, setIsEmptyListModalOpen] = useState(!Boolean(size(locators)));
+  const [isEmptyListModalOpen, setIsEmptyListModalOpen] = useState(!!locators.length);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   // For changing locatorsList-content height depends on header height
   const containerHeight = useCalculateHeaderSize(breadcrumbsRef);
@@ -75,7 +75,7 @@ export const LocatorsPage = () => {
   };
 
   const handleConfirm = () => {
-    if (size(inProgressGenerate)) {
+    if (inProgressGenerate.length) {
       confirm({
         title: "Confirm this locators list",
         content: `Not all of the selected locators have already been generated, we recommend waiting until the generation is complete.`,
@@ -86,7 +86,7 @@ export const LocatorsPage = () => {
           pageBack();
         },
       });
-    } else if (size(deletedGenerate)) {
+    } else if (deletedChecked.length) {
       confirm({
         title: "Confirm the selection",
         content: `Not all selected locators will be generated.
@@ -102,7 +102,8 @@ export const LocatorsPage = () => {
       if (!locators.length && !locatorsSnapshot.length) handleDiscard();
       if (isEqual(locators, locatorsSnapshot)) pageBack();
       else {
-        const enableOk = !!(size(inProgressGenerate) || size(calculatedGenerate));
+        const enableOk = !!(inProgressGenerate.length || calculatedAndChecked.length);
+
         customConfirm({
           onAlt: handleDiscard,
           altText: "Discard",
@@ -141,8 +142,16 @@ export const LocatorsPage = () => {
 
   const renderConfirmButton = () => {
     const saveLocatorsRef = useOnBoardingRef(OnbrdStep.SaveLocators, pageBack);
-    const checkedLocators = useSelector(selectCheckedLocators);
-    const isDisabled = !size(inProgressGenerate) && !size(calculatedGenerate);
+    const checkedLocators = useSelector(selectCheckedLocatorsByPageObject);
+    const isDisabled = !inProgressGenerate.length && !calculatedAndChecked.length;
+
+    const saveButtonLabel =
+      checkedLocators.length === 1
+        ? "Save 1 locator"
+        : checkedLocators.length
+        ? `Save ${checkedLocators.length} locators`
+        : "Save";
+
     return (
       <Tooltip
         overlayClassName="jdn__button-tooltip"
@@ -155,11 +164,7 @@ export const LocatorsPage = () => {
           className="jdn__buttons"
           disabled={isDisabled}
         >
-          {!size(checkedLocators)
-            ? "Save"
-            : size(checkedLocators) > 1
-            ? `Save ${size(checkedLocators)} locators`
-            : "Save 1 locator"}
+          {saveButtonLabel}
         </Button>
       </Tooltip>
     );
@@ -183,7 +188,7 @@ export const LocatorsPage = () => {
               className="jdn__locatorsList-content jdn__itemsList-content"
               style={{ height: containerHeight }}
             >
-              {size(locators) || areUnselectedAll ? (
+              {locators.length || areUnselectedAll ? (
                 <LocatorsTree {...{ viewProps, locatorIds }} />
               ) : showSpinner ? (
                 <LocatorTreeSpinner />

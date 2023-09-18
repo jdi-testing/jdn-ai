@@ -54,7 +54,7 @@ class WebSocketController {
       });
 
       this.socket.addEventListener("error", (event) => {
-        console.log("error", event);
+        console.error("error", event);
         this.readyState = event.target.readyState;
         this.messageListener(NETWORK_ERROR);
         this.stopPing();

@@ -1,11 +1,11 @@
-import React, { ReactNode, useContext, useState } from "react";
+import React, { ReactNode, useContext, useEffect, useState } from "react";
 import { size } from "lodash";
 import { Button, Checkbox, Row } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { Chip } from "../../../common/components/Chip";
 import { CaretDown, DotsThree } from "@phosphor-icons/react";
 import { PlusOutlined } from "@ant-design/icons";
-import { elementGroupUnsetActive, setElementGroupGeneration } from "../locators.slice";
+import { elementGroupUnsetActive, toggleAllLocatorsIsChecked } from "../locators.slice";
 import { newLocatorStub } from "../utils/constants";
 import { LocatorsSearch } from "./LocatorsSearch";
 import { LocatorEditDialog } from "./LocatorEditDialog";
@@ -18,7 +18,7 @@ import { LocatorTreeProps, ExpandState } from "./LocatorsTree";
 import {
   selectActiveLocators,
   selectFilteredLocators,
-  selectGenerateByPageObject,
+  selectCheckedLocatorsByPageObject,
   selectActualActiveByPageObject,
 } from "../selectors/locatorsFiltered.selectors";
 
@@ -37,19 +37,26 @@ export const LocatorListHeader = ({
   const [expandAll, setExpandAll] = useState(ExpandState.Expanded);
   const [isCreatingForm, setIsCreatingForm] = useState(false);
   const [searchString, setSearchString] = useState("");
+  const [isAllLocatorsSelected, setIsAllLocatorsSelected] = useState<boolean>(false);
 
   const locators = useSelector(selectFilteredLocators);
-  const locatorsGenerate = useSelector(selectGenerateByPageObject);
+  const checkedLocators = useSelector(selectCheckedLocatorsByPageObject);
   const active = useSelector(selectActiveLocators);
   const actualSelected = useSelector(selectActualActiveByPageObject);
 
   const { isOpen: isOnboardingOpen, isCustomLocatorFlow } = useContext(OnboardingContext);
 
-  const fullySelected = size(locatorsGenerate) === size(locators);
-  const partiallySelected = !!size(locatorsGenerate) && size(locatorsGenerate) < size(locators);
+  useEffect(() => {
+    if (checkedLocators.length > 0 && checkedLocators.length === locators.length) {
+      setIsAllLocatorsSelected(true);
+    }
+  }, [checkedLocators.length]);
 
-  const handleOnCheck = () => {
-    dispatch(setElementGroupGeneration({ locators, generate: !fullySelected }));
+  const partiallySelected = checkedLocators.length > 0 && checkedLocators.length < locators.length;
+
+  const handleOnChange = () => {
+    dispatch(toggleAllLocatorsIsChecked({ locators, isChecked: !isAllLocatorsSelected }));
+    setIsAllLocatorsSelected((prev) => !prev);
   };
 
   const ref = useOnBoardingRef(
@@ -58,7 +65,7 @@ export const LocatorListHeader = ({
   );
 
   return (
-    <React.Fragment>
+    <>
       <Row justify="space-between" align="bottom">
         <LocatorsSearch value={searchString} onChange={setSearchString} />
         <OnbrdTooltip>
@@ -87,11 +94,11 @@ export const LocatorListHeader = ({
             }
           />
           <Checkbox
-            checked={fullySelected}
+            checked={isAllLocatorsSelected}
             indeterminate={partiallySelected}
-            onClick={handleOnCheck}
-            disabled={!size(locators)}
-          ></Checkbox>
+            onClick={handleOnChange}
+            disabled={!locators.length}
+          />
           <Chip
             hidden={!size(active)}
             primaryLabel={size(active).toString()}
@@ -117,6 +124,6 @@ export const LocatorListHeader = ({
           {...(isCreatingForm ? newLocatorStub : actualSelected[0])}
         />
       ) : null}
-    </React.Fragment>
+    </>
   );
 };

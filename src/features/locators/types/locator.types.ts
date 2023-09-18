@@ -81,7 +81,7 @@ export enum LocatorValidationWarnings {
 export type LocatorValidationErrorType = LocatorValidationErrors | LocatorValidationWarnings | "";
 export type JDNHash = string;
 
-export interface Locator extends PredictedEntity {
+export interface ILocator extends PredictedEntity {
   children?: ElementId[];
   deleted?: boolean;
   elemAriaLabel?: string;
@@ -89,6 +89,7 @@ export interface Locator extends PredictedEntity {
   elemName?: string;
   elemText?: string;
   generate: boolean;
+  isChecked: boolean;
   jdnHash: JDNHash;
   locator: LocatorValue;
   name: string;

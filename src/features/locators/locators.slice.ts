@@ -19,7 +19,7 @@ import {
   ElementId,
   LocatorValidationErrorType,
   LocatorTaskStatus,
-  Locator,
+  ILocator,
   LocatorCalculationPriority,
   JDNHash,
   LocatorValue,
@@ -83,24 +83,24 @@ const locatorsSlice = createSlice({
     },
     elementGroupSetActive(
       state,
-      { payload }: PayloadAction<Locator[] | { locators: Array<Locator>; fromScript: boolean }>
+      { payload }: PayloadAction<ILocator[] | { locators: ILocator[]; fromScript: boolean }>
     ) {
       const locators = Array.isArray(payload) ? payload : payload.locators;
-      locatorsAdapter.upsertMany(state, locators.map(({ element_id }) => ({ element_id, active: true })) as Locator[]);
+      locatorsAdapter.upsertMany(state, locators.map(({ element_id }) => ({ element_id, active: true })) as ILocator[]);
     },
     elementGroupUnsetActive(
       state,
-      { payload }: PayloadAction<Array<Locator> | { locators: Array<Locator>; fromScript: boolean }>
+      { payload }: PayloadAction<ILocator[] | { locators: ILocator[]; fromScript: boolean }>
     ) {
       const locators = Array.isArray(payload) ? payload : payload.locators;
       const newValue = locators.map(({ element_id }) => ({ element_id, active: false }));
-      locatorsAdapter.upsertMany(state, newValue as Locator[]);
+      locatorsAdapter.upsertMany(state, newValue as ILocator[]);
     },
-    elementSetActive(state, { payload }: PayloadAction<Locator>) {
-      locatorsAdapter.upsertOne(state, { element_id: payload.element_id, active: true } as Locator);
+    elementSetActive(state, { payload }: PayloadAction<ILocator>) {
+      locatorsAdapter.upsertOne(state, { element_id: payload.element_id, active: true } as ILocator);
     },
     elementUnsetActive(state, { payload }: PayloadAction<ElementId>) {
-      locatorsAdapter.upsertOne(state, { element_id: payload, active: false } as Locator);
+      locatorsAdapter.upsertOne(state, { element_id: payload, active: false } as ILocator);
     },
     failGeneration(state, { payload }: PayloadAction<{ ids: string[]; errorMessage?: string }>) {
       const { ids, errorMessage } = payload;
@@ -115,11 +115,11 @@ const locatorsSlice = createSlice({
               xPathStatus: LocatorTaskStatus.FAILURE,
               errorMessage: errorMessage || DEFAULT_ERROR,
             },
-          } as Locator;
+          } as ILocator;
         }
         return null;
       });
-      locatorsAdapter.upsertMany(state, newValues.filter((value) => value) as Locator[]);
+      locatorsAdapter.upsertMany(state, newValues.filter((value) => value) as ILocator[]);
     },
     removeAll(state) {
       locatorsAdapter.removeAll(state);
@@ -130,7 +130,7 @@ const locatorsSlice = createSlice({
     restoreLocators(state, { payload: locators }) {
       locatorsAdapter.setMany(state, locators);
     },
-    setActiveSingle(state, { payload: locator }: PayloadAction<Locator>) {
+    setActiveSingle(state, { payload: locator }: PayloadAction<ILocator>) {
       const newValue = simpleSelectLocatorsByPageObject(state, locator.pageObj).map((_loc) =>
         _loc.element_id === locator.element_id ? { ..._loc, active: true } : { ..._loc, active: false }
       );
@@ -141,16 +141,17 @@ const locatorsSlice = createSlice({
       { payload }: PayloadAction<{ element_id?: ElementId; priority: LocatorCalculationPriority; ids?: ElementId[] }>
     ) {
       const { element_id, ids, priority } = payload;
-      if (element_id) locatorsAdapter.upsertOne(state, { element_id, priority } as Locator);
+      if (element_id) locatorsAdapter.upsertOne(state, { element_id, priority } as ILocator);
       if (ids) {
-        const newValue: Partial<Locator>[] = ids.map((element_id) => ({ element_id, priority }));
-        locatorsAdapter.upsertMany(state, newValue as Locator[]);
+        const newValue: Partial<ILocator>[] = ids.map((element_id) => ({ element_id, priority }));
+        locatorsAdapter.upsertMany(state, newValue as ILocator[]);
       }
     },
-    setChildrenGeneration(state, { payload }: PayloadAction<{ locator: Locator; generate: boolean }>) {
+    setChildrenGeneration(state, { payload }: PayloadAction<{ locator: ILocator; generate: boolean }>) {
+      // TODO generate refactoring
       const { locator, generate } = payload;
-      const newValue: Partial<Locator>[] = [];
-      const toggleGenerate = (_locator: Locator) => {
+      const newValue: Partial<ILocator>[] = [];
+      const toggleGenerate = (_locator: ILocator) => {
         _locator.children &&
           _locator.children.forEach((childId) => {
             newValue.push({ element_id: childId, generate });
@@ -159,21 +160,35 @@ const locatorsSlice = createSlice({
           });
       };
       toggleGenerate(locator);
-      locatorsAdapter.upsertMany(state, newValue as Locator[]);
+      locatorsAdapter.upsertMany(state, newValue as ILocator[]);
     },
-    setElementGroupGeneration(state, { payload }: PayloadAction<{ locators: Locator[]; generate: boolean }>) {
+    setChildrenIsChecked(state, { payload }: PayloadAction<{ locator: ILocator; isChecked: boolean }>) {
+      const { locator, isChecked } = payload;
+      const newValue: Partial<ILocator>[] = [];
+      const toggleIsChecked = (_locator: ILocator) => {
+        _locator.children &&
+          _locator.children.forEach((childId) => {
+            newValue.push({ element_id: childId, isChecked });
+            const child = simpleSelectLocatorById(state, childId);
+            if (child && size(child.children)) toggleIsChecked(child);
+          });
+      };
+      toggleIsChecked(locator);
+      locatorsAdapter.upsertMany(state, newValue as ILocator[]);
+    },
+    setElementGroupGeneration(state, { payload }: PayloadAction<{ locators: ILocator[]; generate: boolean }>) {
       const { locators, generate } = payload;
-      locatorsAdapter.upsertMany(state, locators.map(({ element_id }) => ({ element_id, generate })) as Locator[]);
+      locatorsAdapter.upsertMany(state, locators.map(({ element_id }) => ({ element_id, generate })) as ILocator[]);
     },
     setJdnHash(state, { payload }: PayloadAction<{ element_id: ElementId; jdnHash: string }>) {
       const { element_id, jdnHash } = payload;
-      locatorsAdapter.upsertOne(state, { element_id, jdnHash } as Locator);
+      locatorsAdapter.upsertOne(state, { element_id, jdnHash } as ILocator);
     },
     setScrollToLocator(state, { payload: element_id }: PayloadAction<ElementId>) {
       state.scrollToLocator = element_id;
     },
-    setValidity(state, { payload }: PayloadAction<{ element_id: ElementId; message: Locator["message"] }>) {
-      locatorsAdapter.upsertOne(state, payload as Locator);
+    setValidity(state, { payload }: PayloadAction<{ element_id: ElementId; message: ILocator["message"] }>) {
+      locatorsAdapter.upsertOne(state, payload as ILocator);
     },
     toggleDeleted(state, { payload }: PayloadAction<string>) {
       const locator = simpleSelectLocatorById(state, payload);
@@ -183,28 +198,39 @@ const locatorsSlice = createSlice({
           deleted: !locator.deleted,
           // when we delete locator, we uncheck it, when restore - keep generate state as is
           generate: !locator.deleted ? false : locator.generate,
-        } as Locator);
+        } as ILocator);
     },
-    toggleDeletedGroup(state, { payload }: PayloadAction<Locator[]>) {
-      const newValue: Partial<Locator>[] = [];
+    toggleDeletedGroup(state, { payload }: PayloadAction<ILocator[]>) {
+      const newValue: Partial<ILocator>[] = [];
       payload.forEach(({ element_id, deleted, generate }) => {
         // when we delete locator, we uncheck it, when restore - keep generate state as is
         newValue.push({ element_id, deleted: !deleted, generate: !deleted ? false : generate });
       });
-      locatorsAdapter.upsertMany(state, newValue as Locator[]);
+      locatorsAdapter.upsertMany(state, newValue as ILocator[]);
     },
-    toggleElementGeneration(state, { payload }: PayloadAction<string | Locator>) {
+    toggleElementGeneration(state, { payload }: PayloadAction<string | ILocator>) {
+      // TODO generate refactoring
       const locator = typeof payload === "string" ? simpleSelectLocatorById(state, payload) : payload;
       if (!locator) return;
       const { generate, element_id } = locator;
-      locatorsAdapter.upsertOne(state, { element_id, generate: !generate } as Locator);
+      locatorsAdapter.upsertOne(state, { element_id, generate: !generate } as ILocator);
     },
-    toggleElementGroupGeneration(state, { payload }: PayloadAction<Locator[]>) {
-      const newValue: Partial<Locator>[] = [];
+    toggleLocatorIsChecked(state, { payload }: PayloadAction<string>) {
+      const locator = simpleSelectLocatorById(state, payload);
+      if (!locator) return;
+      const { isChecked, element_id } = locator;
+      locatorsAdapter.upsertOne(state, { element_id, isChecked: !isChecked } as ILocator);
+    },
+    toggleAllLocatorsIsChecked(state, { payload }: PayloadAction<{ locators: ILocator[]; isChecked: boolean }>) {
+      const { locators, isChecked } = payload;
+      locatorsAdapter.upsertMany(state, locators.map(({ element_id }) => ({ element_id, isChecked })) as ILocator[]);
+    },
+    toggleElementGroupGeneration(state, { payload }: PayloadAction<ILocator[]>) {
+      const newValue: Partial<ILocator>[] = [];
       payload.forEach(({ element_id, generate }) => {
         newValue.push({ element_id, generate: !generate });
       });
-      locatorsAdapter.upsertMany(state, newValue as Locator[]);
+      locatorsAdapter.upsertMany(state, newValue as ILocator[]);
     },
     updateLocatorGroup(
       state,
@@ -227,7 +253,7 @@ const locatorsSlice = createSlice({
           }
         );
       });
-      locatorsAdapter.upsertMany(state, newValue as Locator[]);
+      locatorsAdapter.upsertMany(state, newValue as ILocator[]);
     },
   },
   extraReducers: (builder) => {
@@ -258,6 +284,7 @@ export const {
   restoreLocators,
   setActiveSingle,
   setChildrenGeneration,
+  setChildrenIsChecked,
   setCalculationPriority,
   setElementGroupGeneration,
   setJdnHash,
@@ -267,5 +294,7 @@ export const {
   toggleDeletedGroup,
   toggleElementGeneration,
   toggleElementGroupGeneration,
+  toggleLocatorIsChecked,
+  toggleAllLocatorsIsChecked,
   updateLocatorGroup,
 } = locatorsSlice.actions;
