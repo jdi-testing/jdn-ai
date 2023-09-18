@@ -232,7 +232,7 @@ export const locatorsVividus = [
     parent_id: "",
     children: [],
     active: false,
-    generate: true,
+    isGenerated: true,
     annotationType: AnnotationType.FindBy,
     locatorType: LocatorType.cssSelector,
   },
@@ -267,7 +267,7 @@ export const locatorsVividus = [
     message: "",
     isCustomName: true,
     isCustomLocator: true,
-    generate: true,
+    isGenerated: true,
   },
   {
     element_id: "0790139442115098150038335533_0",
@@ -300,7 +300,7 @@ export const locatorsVividus = [
     message: "",
     isCustomName: true,
     isCustomLocator: true,
-    generate: true,
+    isGenerated: true,
   },
   {
     element_id: "0928942213115098152027249027_0",
@@ -333,7 +333,7 @@ export const locatorsVividus = [
     message: "",
     isCustomName: true,
     isCustomLocator: true,
-    generate: true,
+    isGenerated: true,
   },
 ];
 

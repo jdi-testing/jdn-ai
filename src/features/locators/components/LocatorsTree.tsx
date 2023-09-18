@@ -114,7 +114,7 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
         const node: TreeNode = {
           key: element_id,
           className: `${
-            locatorsMap[element_id].generate && isLocatorListPage(currentPage) ? "jdn__tree-item--selected" : ""
+            locatorsMap[element_id].isGenerated && isLocatorListPage(currentPage) ? "jdn__tree-item--selected" : ""
           }${locatorsMap[element_id].active ? " jdn__tree-item--active" : ""}`,
           title: (
             <Locator

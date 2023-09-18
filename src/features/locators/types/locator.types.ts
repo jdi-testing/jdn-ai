@@ -88,7 +88,7 @@ export interface ILocator extends PredictedEntity {
   elemId?: string;
   elemName?: string;
   elemText?: string;
-  generate: boolean;
+  isGenerated: boolean;
   isChecked: boolean;
   jdnHash: JDNHash;
   locator: LocatorValue;

@@ -8,28 +8,28 @@ describe("convertToListWithChildren", () => {
       jdnHash: "hash1",
       name: "Element 1",
       parent_id: "",
-      generate: true,
+      isGenerated: true,
     },
     {
       element_id: "2",
       jdnHash: "hash2",
       name: "Element 2",
       parent_id: "hash1",
-      generate: true,
+      isGenerated: true,
     },
     {
       element_id: "3",
       jdnHash: "hash3",
       name: "Element 3",
       parent_id: "hash2",
-      generate: true,
+      isGenerated: true,
     },
     {
       element_id: "4",
       jdnHash: "hash4",
       name: "Element 4",
       parent_id: "",
-      generate: true,
+      isGenerated: true,
     },
   ];
 
@@ -39,7 +39,7 @@ describe("convertToListWithChildren", () => {
       jdnHash: "hash1",
       name: "Element 1",
       parent_id: "",
-      generate: true,
+      isGenerated: true,
       children: ["2"],
     },
     {
@@ -47,7 +47,7 @@ describe("convertToListWithChildren", () => {
       jdnHash: "hash2",
       name: "Element 2",
       parent_id: "hash1",
-      generate: true,
+      isGenerated: true,
       children: ["3"],
     },
     {
@@ -55,7 +55,7 @@ describe("convertToListWithChildren", () => {
       jdnHash: "hash3",
       name: "Element 3",
       parent_id: "hash2",
-      generate: true,
+      isGenerated: true,
       children: [],
     },
     {
@@ -63,7 +63,7 @@ describe("convertToListWithChildren", () => {
       jdnHash: "hash4",
       name: "Element 4",
       parent_id: "",
-      generate: true,
+      isGenerated: true,
       children: [],
     },
   ];
@@ -74,20 +74,20 @@ describe("convertToListWithChildren", () => {
       jdnHash: "hash1",
       name: "Element 1",
       parent_id: "",
-      generate: true,
+      isGenerated: true,
     },
     {
       element_id: "2",
       jdnHash: "hash2",
       name: "Element 2",
-      generate: true,
+      isGenerated: true,
     },
     {
       element_id: "3",
       jdnHash: "hash3",
       name: "Element 3",
       parent_id: "hash2",
-      generate: true,
+      isGenerated: true,
     },
   ];
   const expectedOutput2: Partial<ILocator>[] = [
@@ -96,14 +96,14 @@ describe("convertToListWithChildren", () => {
       jdnHash: "hash1",
       name: "Element 1",
       parent_id: "",
-      generate: true,
+      isGenerated: true,
       children: [],
     },
     {
       element_id: "2",
       jdnHash: "hash2",
       name: "Element 2",
-      generate: true,
+      isGenerated: true,
       children: ["3"],
     },
     {
@@ -111,7 +111,7 @@ describe("convertToListWithChildren", () => {
       jdnHash: "hash3",
       name: "Element 3",
       parent_id: "hash2",
-      generate: true,
+      isGenerated: true,
       children: [],
     },
   ];

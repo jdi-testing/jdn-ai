@@ -13,7 +13,7 @@ export const getClassName = (title: string) => {
   className = camelCase(className);
 
   className = className.substring(className.search(/[a-zA-Za]/)); // removing numbers in the start of string
-  className = upperFirst(className); // we generate Java class name, so we always need a capital first letter
+  className = upperFirst(className); // we isGenerated Java class name, so we always need a capital first letter
 
   if (className.length > 56) className = className.slice(0, 55);
   if (className.length > 4 && className.slice(-4).toLowerCase() !== "page") className += "Page";

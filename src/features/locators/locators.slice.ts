@@ -147,14 +147,14 @@ const locatorsSlice = createSlice({
         locatorsAdapter.upsertMany(state, newValue as ILocator[]);
       }
     },
-    setChildrenGeneration(state, { payload }: PayloadAction<{ locator: ILocator; generate: boolean }>) {
-      // TODO generate refactoring
-      const { locator, generate } = payload;
+    setChildrenGeneration(state, { payload }: PayloadAction<{ locator: ILocator; isGenerated: boolean }>) {
+      // TODO isGenerated refactoring
+      const { locator, isGenerated } = payload;
       const newValue: Partial<ILocator>[] = [];
       const toggleGenerate = (_locator: ILocator) => {
         _locator.children &&
           _locator.children.forEach((childId) => {
-            newValue.push({ element_id: childId, generate });
+            newValue.push({ element_id: childId, isGenerated });
             const child = simpleSelectLocatorById(state, childId);
             if (child && size(child.children)) toggleGenerate(child);
           });
@@ -176,9 +176,9 @@ const locatorsSlice = createSlice({
       toggleIsChecked(locator);
       locatorsAdapter.upsertMany(state, newValue as ILocator[]);
     },
-    setElementGroupGeneration(state, { payload }: PayloadAction<{ locators: ILocator[]; generate: boolean }>) {
-      const { locators, generate } = payload;
-      locatorsAdapter.upsertMany(state, locators.map(({ element_id }) => ({ element_id, generate })) as ILocator[]);
+    setElementGroupGeneration(state, { payload }: PayloadAction<{ locators: ILocator[]; isGenerated: boolean }>) {
+      const { locators, isGenerated } = payload;
+      locatorsAdapter.upsertMany(state, locators.map(({ element_id }) => ({ element_id, isGenerated })) as ILocator[]);
     },
     setJdnHash(state, { payload }: PayloadAction<{ element_id: ElementId; jdnHash: string }>) {
       const { element_id, jdnHash } = payload;
@@ -196,24 +196,24 @@ const locatorsSlice = createSlice({
         locatorsAdapter.upsertOne(state, {
           ...locator,
           deleted: !locator.deleted,
-          // when we delete locator, we uncheck it, when restore - keep generate state as is
-          generate: !locator.deleted ? false : locator.generate,
+          // when we delete locator, we uncheck it, when restore - keep isGenerated state as is
+          isGenerated: !locator.deleted ? false : locator.isGenerated,
         } as ILocator);
     },
     toggleDeletedGroup(state, { payload }: PayloadAction<ILocator[]>) {
       const newValue: Partial<ILocator>[] = [];
-      payload.forEach(({ element_id, deleted, generate }) => {
-        // when we delete locator, we uncheck it, when restore - keep generate state as is
-        newValue.push({ element_id, deleted: !deleted, generate: !deleted ? false : generate });
+      payload.forEach(({ element_id, deleted, isGenerated }) => {
+        // when we delete locator, we uncheck it, when restore - keep isGenerated state as is
+        newValue.push({ element_id, deleted: !deleted, isGenerated: !deleted ? false : isGenerated });
       });
       locatorsAdapter.upsertMany(state, newValue as ILocator[]);
     },
     toggleElementGeneration(state, { payload }: PayloadAction<string | ILocator>) {
-      // TODO generate refactoring
+      // TODO isGenerated refactoring
       const locator = typeof payload === "string" ? simpleSelectLocatorById(state, payload) : payload;
       if (!locator) return;
-      const { generate, element_id } = locator;
-      locatorsAdapter.upsertOne(state, { element_id, generate: !generate } as ILocator);
+      const { isGenerated, element_id } = locator;
+      locatorsAdapter.upsertOne(state, { element_id, isGenerated: !isGenerated } as ILocator);
     },
     toggleLocatorIsChecked(state, { payload }: PayloadAction<string>) {
       const locator = simpleSelectLocatorById(state, payload);
@@ -227,8 +227,8 @@ const locatorsSlice = createSlice({
     },
     toggleElementGroupGeneration(state, { payload }: PayloadAction<ILocator[]>) {
       const newValue: Partial<ILocator>[] = [];
-      payload.forEach(({ element_id, generate }) => {
-        newValue.push({ element_id, generate: !generate });
+      payload.forEach(({ element_id, isGenerated }) => {
+        newValue.push({ element_id, isGenerated: !isGenerated });
       });
       locatorsAdapter.upsertMany(state, newValue as ILocator[]);
     },

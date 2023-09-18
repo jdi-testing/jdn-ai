@@ -10,7 +10,7 @@ export const Onboarding = () => {
   const { defaultStep, isOpen, tourSteps, closeOnboarding } = useContext(OnboardingContext);
   const [currentStep, setCurrentStep] = React.useState<number | undefined>();
 
-  const isFirstLocatorChecked = useSelector(selectFirstLocatorByPO)?.generate;
+  const isFirstLocatorChecked = useSelector(selectFirstLocatorByPO)?.isGenerated;
 
   const tourStepsStateMapped = tourSteps?.map((step, index) => {
     if (index === OnbrdStep.AddToPO && isFirstLocatorChecked) {

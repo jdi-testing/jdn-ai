@@ -5,7 +5,7 @@ import ReactDOM from "react-dom/client";
 interface Props extends ModalProps {
   confirmTitle: string;
   confirmContent: ReactNode;
-  enableOk: boolean;
+  isOkButtonEnabled: boolean;
   onAlt: () => void;
   altText: string;
   destroy?: () => void;
@@ -23,7 +23,7 @@ export const CustomConfirm: React.FC<Props> = ({
   confirmTitle,
   confirmContent,
   onOk,
-  enableOk,
+  isOkButtonEnabled,
   onCancel,
   onAlt,
   altText,
@@ -64,7 +64,7 @@ export const CustomConfirm: React.FC<Props> = ({
         <Button key="alt" danger onClick={handleAlt}>
           {altText}
         </Button>,
-        <Button key="ok" type="primary" disabled={!enableOk} onClick={handleOk}>
+        <Button key="ok" type="primary" disabled={!isOkButtonEnabled} onClick={handleOk}>
           Save
         </Button>,
       ]}

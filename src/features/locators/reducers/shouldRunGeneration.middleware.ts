@@ -24,8 +24,8 @@ export const shouldRunGeneration: Middleware = (store) => (next) => (action) => 
 
   switch (type) {
     case "locators/setElementGroupGeneration": {
-      const { locators, generate } = payload;
-      if (generate) {
+      const { locators, isGenerated } = payload;
+      if (isGenerated) {
         onSetActiveGroup(store.dispatch, locators);
       }
       break;

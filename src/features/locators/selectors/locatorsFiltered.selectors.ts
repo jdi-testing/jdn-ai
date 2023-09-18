@@ -20,7 +20,7 @@ const selectSortedFilteredLocators = createSelector(
 );
 
 export const selectGenerateByPageObject = createSelector(selectFilteredLocators, (elements: ILocator[] = []) =>
-  elements.filter((elem) => elem?.generate)
+  elements.filter((elem) => elem?.isGenerated)
 );
 
 export const selectActiveGenerateByPO = createSelector(selectGenerateByPageObject, (elements: ILocator[] = []) =>
@@ -28,7 +28,7 @@ export const selectActiveGenerateByPO = createSelector(selectGenerateByPageObjec
 );
 
 export const selectNonGenerateByPageObject = createSelector(selectFilteredLocators, (elements: ILocator[] = []) =>
-  elements.filter((elem) => !elem?.generate)
+  elements.filter((elem) => !elem?.isGenerated)
 );
 
 export const selectActiveNonGenerateByPO = createSelector(selectNonGenerateByPageObject, (elements: ILocator[] = []) =>
@@ -56,7 +56,7 @@ export const selectCalculatedActiveByPageObj = createSelector(selectCalculatedBy
 );
 
 export const selectCalculatedGenerateByPageObj = createSelector(selectCalculatedByPageObj, (items) =>
-  items.filter((item) => item.generate)
+  items.filter((item) => item.isGenerated)
 );
 
 export const selectCalculatedAndCheckedByPageObj = createSelector(selectCalculatedByPageObj, (items) =>
@@ -70,7 +70,7 @@ export const selectDeletedByPageObj = createSelector(selectFilteredLocators, (it
 );
 
 export const selectDeletedGenerateByPageObj = createSelector(selectDeletedByPageObj, (items) =>
-  items.filter((item) => item.generate)
+  items.filter((item) => item.isGenerated)
 );
 
 export const selectDeletedCheckedByPageObj = createSelector(selectDeletedByPageObj, (items) =>
@@ -129,7 +129,7 @@ export const selectInProgressActiveDecPriorityByPageObject = createSelector(
 );
 
 export const selectInProgressGenerateByPageObj = createSelector(selectWaitingByPageObj, (items) =>
-  items.filter((item) => item.generate)
+  items.filter((item) => item.isGenerated)
 );
 
 export const selectInProgressGenerateHashes = createSelector(selectInProgressGenerateByPageObj, (locators) =>

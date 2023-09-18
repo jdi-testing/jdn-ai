@@ -40,7 +40,7 @@ export const selectLocators = createSelector(selectAll, (items: ILocator[]) =>
 );
 
 export const selectLocatorsToGenerate = createSelector(selectLocators, (items: ILocator[]) =>
-  items.filter((el) => el.generate && !el.deleted)
+  items.filter((el) => el.isGenerated && !el.deleted)
 );
 
 export const isLocatorIndeterminate = createSelector(
@@ -49,11 +49,11 @@ export const isLocatorIndeterminate = createSelector(
   (state: RootState) => state,
   (locators, locator, state) => {
     if (!locator) return false;
-    if (locator.generate) return false;
+    if (locator.isGenerated) return false;
     const hasChildToGenerate = (_locator: ILocator) => {
       const hasSelectedChild =
         _locator.children &&
-        _locator.children.some((childId) => locators.some((loc) => loc.element_id === childId && loc.generate));
+        _locator.children.some((childId) => locators.some((loc) => loc.element_id === childId && loc.isGenerated));
       return (
         hasSelectedChild ||
         (_locator.children &&
@@ -74,7 +74,7 @@ export const areChildrenChecked = createSelector(
   (locators, locator) =>
     locator &&
     Boolean(locator.children?.length) &&
-    locator.children?.every((childId) => locators.some((loc) => loc.element_id === childId && loc.generate))
+    locator.children?.every((childId) => locators.some((loc) => loc.element_id === childId && loc.isGenerated))
 );
 
 export const selectLocatorByJdnHash = createSelector(

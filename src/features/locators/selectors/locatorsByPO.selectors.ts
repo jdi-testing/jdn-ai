@@ -57,7 +57,7 @@ export const selectLocatorsByPageObject = createSelector(
     isNil(pageObjId) ? selectCurrentPageObject(state) : selectPageObjById(state, pageObjId),
   (locators, pageObj) => {
     const hideUnadded = pageObj?.hideUnadded;
-    return hideUnadded ? locators.filter((loc) => loc.generate || loc.active) : locators;
+    return hideUnadded ? locators.filter((loc) => loc.isGenerated || loc.active) : locators;
   }
 );
 

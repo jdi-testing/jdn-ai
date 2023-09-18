@@ -38,7 +38,7 @@ export const newLocatorStub: ILocator = {
   isCustomName: true,
   isCustomLocator: true,
   type: "" as ElementClass,
-  generate: true,
+  isGenerated: true,
   isChecked: false,
 };
 

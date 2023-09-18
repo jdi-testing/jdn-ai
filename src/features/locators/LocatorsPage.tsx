@@ -102,13 +102,13 @@ export const LocatorsPage = () => {
       if (!locators.length && !locatorsSnapshot.length) handleDiscard();
       if (isEqual(locators, locatorsSnapshot)) pageBack();
       else {
-        const enableOk = !!(inProgressGenerate.length || calculatedAndChecked.length);
+        const isOkButtonEnabled = !!(inProgressGenerate.length || calculatedAndChecked.length);
 
         customConfirm({
           onAlt: handleDiscard,
           altText: "Discard",
           onOk: handleOk,
-          enableOk,
+          isOkButtonEnabled,
           confirmTitle: "Save this locators list?",
           confirmContent:
             "The list has been edited and the changes have not been accepted. Do you want to save changes?",

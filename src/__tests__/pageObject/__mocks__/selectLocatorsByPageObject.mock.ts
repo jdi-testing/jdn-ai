@@ -104,7 +104,7 @@ export const getRootState = (_pageObject: PageObject) => ({
           message: "The locator was not found on the page.",
           isCustomName: false,
           isCustomLocator: true,
-          generate: true,
+          isGenerated: true,
         },
         "4138940493550098806301857686_0": {
           element_id: "4138940493550098806301857686_0",
@@ -127,7 +127,7 @@ export const getRootState = (_pageObject: PageObject) => ({
           type: "Menu",
           parent_id: "",
           children: [],
-          generate: true,
+          isGenerated: true,
         },
       },
       ids: ["7524916072510597399809892823_0", "2075611903510597386448924232_0", "4138940493550098806301857686_0"],
@@ -189,7 +189,7 @@ export const selectMockedLocators = (pageObject: PageObject) => [
     message: "The locator was not found on the page.",
     isCustomName: false,
     isCustomLocator: true,
-    generate: true,
+    isGenerated: true,
   },
   {
     element_id: "4138940493550098806301857686_0",
@@ -213,6 +213,6 @@ export const selectMockedLocators = (pageObject: PageObject) => [
     type: "Menu",
     parent_id: "",
     children: [],
-    generate: true,
+    isGenerated: true,
   },
 ];

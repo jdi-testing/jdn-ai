@@ -98,7 +98,7 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       });
       break;
     }
-    case "locators/toggleElementGeneration": // TODO generate refactoring
+    case "locators/toggleElementGeneration": // TODO isGenerated refactoring
     case "locators/toggleLocatorIsChecked": {
       const element = selectLocatorById(state, typeof payload === "string" ? payload : payload.element_id);
       element && sendMessage.toggle({ element });
@@ -110,7 +110,7 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
         locator && sendMessage.toggle({ element: locator, skipScroll: true });
       });
       break;
-    case "locators/setChildrenGeneration": // TODO generate refactoring
+    case "locators/setChildrenGeneration": // TODO isGenerated refactoring
     case "locators/setChildrenIsChecked": {
       const { locator } = payload;
       const iterateChildren = (_locator: ILocator | undefined) => {
