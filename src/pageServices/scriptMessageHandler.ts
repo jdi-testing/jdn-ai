@@ -2,7 +2,7 @@ import { AsyncThunkAction } from "@reduxjs/toolkit";
 import { Dispatch } from "react";
 import { setScriptMessage } from "../app/main.slice";
 import { RootState } from "../app/store/store";
-import { Locator, LocatorTaskStatus } from "../features/locators/types/locator.types";
+import { ILocator, LocatorTaskStatus } from "../features/locators/types/locator.types";
 import {
   elementGroupSetActive,
   elementGroupUnsetActive,
@@ -54,7 +54,7 @@ export const updateMessageHandler = (
       dispatch(setScrollToLocator(locators[0].element_id));
     },
     [ScriptMsg.ElementGroupUnsetActive]: (payload) => {
-      const locators = payload.map((jdnHash: string) => selectLocatorByJdnHash(state, jdnHash)) as Locator[];
+      const locators = payload.map((jdnHash: string) => selectLocatorByJdnHash(state, jdnHash)) as ILocator[];
       dispatch(elementGroupUnsetActive({ locators, fromScript: true }));
     },
     [ScriptMsg.GetActiveElements]: (_, sender, sendResponse) => {
@@ -65,7 +65,7 @@ export const updateMessageHandler = (
     },
     [ScriptMsg.RemoveElement]: (payload) => dispatch(toggleDeletedGroup(payload)),
     [ScriptMsg.ResponseCssSelectors]: (payload) => {
-      const locators = payload.map(({ element_id, locator }: Locator) => {
+      const locators = payload.map(({ element_id, locator }: ILocator) => {
         return {
           element_id,
           locator: { ...locator, cssSelectorStatus: LocatorTaskStatus.SUCCESS },

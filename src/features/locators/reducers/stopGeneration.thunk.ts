@@ -1,7 +1,7 @@
 import { ActionReducerMapBuilder, createAsyncThunk, EntityState } from "@reduxjs/toolkit";
 import { RootState } from "../../../app/store/store";
 import { locatorsAdapter, selectLocatorById, simpleSelectLocatorById } from "../selectors/locators.selectors";
-import { ElementId, Locator, LocatorsState, LocatorTaskStatus } from "../types/locator.types";
+import { ElementId, ILocator, LocatorsState, LocatorTaskStatus } from "../types/locator.types";
 import { locatorGenerationController } from "../utils/locatorGenerationController";
 
 export const stopGeneration = createAsyncThunk("locators/stopGeneration", async (element_id: ElementId, thunkAPI) => {
@@ -14,7 +14,7 @@ export const stopGeneration = createAsyncThunk("locators/stopGeneration", async 
 /* eslint-disable */
 /* wrong toolkit typings */
 
-export const stopGenerationReducer = (builder: ActionReducerMapBuilder<LocatorsState & EntityState<Locator>>) => {
+export const stopGenerationReducer = (builder: ActionReducerMapBuilder<LocatorsState & EntityState<ILocator>>) => {
   return builder.addCase(stopGeneration.pending, (state, { meta }) => {
     const id = meta.arg;
     const existingLocator = simpleSelectLocatorById(state, id);

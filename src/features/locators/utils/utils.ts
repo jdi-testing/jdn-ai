@@ -3,7 +3,7 @@ import { sendMessage } from "../../../pageServices/connector";
 import { ElementLibrary } from "../types/generationClasses.types";
 import { createElementName } from "../../pageObjects/utils/pageObject";
 import {
-  Locator,
+  ILocator,
   LocatorValue,
   LocatorValidationWarnings,
   LocatorValidationErrors,
@@ -33,17 +33,17 @@ export const evaluateCssSelector = (selector: string, element_id?: ElementId, or
 export const generateSelectorByHash = (element_id: ElementId, jdnHash: string) =>
   sendMessage.generateSelectorByHash({ element_id, jdnHash });
 
-export const checkDuplicates = (jdnHash: string, locators: Locator[], element_id: ElementId) =>
+export const checkDuplicates = (jdnHash: string, locators: ILocator[], element_id: ElementId) =>
   locators.filter(
     ({ jdnHash: _jdnHash, message, element_id: _element_id }) =>
       _jdnHash === jdnHash && isValidLocator(message) && _element_id !== element_id
   );
 
 export const createNewName = (
-  element: Locator,
+  element: ILocator,
   newType: string,
   library: ElementLibrary,
-  elements: Locator[]
+  elements: ILocator[]
 ): string => {
   const names = chain(elements).map("name").without(element.name).value();
   const newName = createElementName({ ...element }, library, names, newType);
@@ -71,7 +71,7 @@ export const setIndents = (ref: React.RefObject<HTMLDivElement>, depth: number) 
   }
 };
 
-export const copyLocator = (locatorsForCopy: Locator[], option?: LocatorOption) => (): void => {
+export const copyLocator = (locatorsForCopy: ILocator[], option?: LocatorOption) => (): void => {
   let value: string[];
   switch (option) {
     case LocatorOption.Xpath:
@@ -101,7 +101,7 @@ export const copyLocator = (locatorsForCopy: Locator[], option?: LocatorOption) 
   copyLocatorsToClipboard(value);
 };
 
-export const getCopyOptions = (selectedLocators: Locator[]) => {
+export const getCopyOptions = (selectedLocators: ILocator[]) => {
   return Object.values(LocatorOption).reduce(
     (options, option) => {
       options[option as LocatorOption] = copyLocator(selectedLocators, option);
@@ -178,7 +178,7 @@ export const getTaskStatus = (locator: LocatorValue) => {
   return xPathStatus || cssSelectorStatus;
 };
 
-export const hasAllLocators = ({ locator }: Locator) =>
+export const hasAllLocators = ({ locator }: ILocator) =>
   locator && locator.xPath !== locator.fullXpath && locator.cssSelector;
 
-export const getNoLocatorsElements = (locators: Locator[]) => locators.filter((locator) => !hasAllLocators(locator));
+export const getNoLocatorsElements = (locators: ILocator[]) => locators.filter((locator) => !hasAllLocators(locator));

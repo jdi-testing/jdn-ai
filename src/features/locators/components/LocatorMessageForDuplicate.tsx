@@ -1,11 +1,11 @@
 import React, { MouseEvent } from "react";
 import { useDispatch } from "react-redux";
 import { setActiveSingle, setScrollToLocator } from "../locators.slice";
-import { Locator } from "../types/locator.types";
+import { ILocator } from "../types/locator.types";
 
 interface LocatorMessageForDuplicateProps {
   closeDialog: () => void;
-  duplicates: Locator[] | undefined;
+  duplicates?: ILocator[];
 }
 
 export const LocatorMessageForDuplicate: React.FC<LocatorMessageForDuplicateProps> = ({ closeDialog, duplicates }) => {

@@ -1,7 +1,7 @@
 import { Middleware } from "@reduxjs/toolkit";
 import { compact } from "lodash";
 import { selectLocatorById } from "../../../../features/locators/selectors/locators.selectors";
-import { Locator } from "../../../../features/locators/types/locator.types";
+import { ILocator } from "../../../../features/locators/types/locator.types";
 import { pushNotification } from "../../../../app/main.slice";
 import { RootState } from "../../../../app/store/store";
 
@@ -26,7 +26,7 @@ export const cancellableActions: Middleware = (store) => (next) => (action) => {
       pushNotificationHandler(meta.arg);
       break;
     case "locators/stopGenerationGroup/fulfilled": {
-      const _arr: Locator[] = compact(payload);
+      const _arr: ILocator[] = compact(payload);
       pushNotificationHandler(_arr);
       break;
     }

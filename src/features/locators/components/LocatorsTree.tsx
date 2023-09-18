@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { CaretDown } from "@phosphor-icons/react";
 import { selectCurrentPage } from "../../../app/main.selectors";
 import { RootState } from "../../../app/store/store";
-import { ElementId, Locator as LocatorType } from "../types/locator.types";
+import { ElementId, ILocator } from "../types/locator.types";
 import { defaultLibrary } from "../types/generationClasses.types";
 import { LocatorsProgress } from "./LocatorsProgress";
 import { useSize } from "../utils/useSize";
@@ -87,7 +87,7 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
   };
 
   const createLocatorsMap = () => {
-    const map: Record<ElementId, LocatorType> = {};
+    const map: Record<ElementId, ILocator> = {};
     for (let index = 0; index < locators.length; index++) {
       map[locators[index].element_id] = locators[index];
     }

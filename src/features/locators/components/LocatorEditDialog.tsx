@@ -13,7 +13,7 @@ import { selectCurrentPageObject } from "../../pageObjects/selectors/pageObjects
 import { ElementClass } from "../types/generationClasses.types";
 import { isNameUnique } from "../../pageObjects/utils/pageObject";
 import {
-  Locator,
+  ILocator,
   LocatorValidationWarnings,
   LocatorValidationErrors,
   LocatorValidationErrorType,
@@ -34,7 +34,7 @@ import { OnbrdStep } from "../../onboarding/types/constants";
 import { selectPresentLocatorsByPO } from "../selectors/locatorsByPO.selectors";
 import { LocatorMessageForDuplicate } from "./LocatorMessageForDuplicate";
 
-interface Props extends Locator {
+interface Props extends ILocator {
   isModalOpen: boolean;
   setIsModalOpen: (value: boolean) => void;
   isCreatingForm?: boolean;
@@ -75,7 +75,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
   const library = useSelector(selectCurrentPageObject)?.library || defaultLibrary;
 
   const [validationMessage, setValidationMessage] = useState<LocatorValidationErrorType>(message || "");
-  const [validationErrorOptions, setValidationErrorOptions] = useState<{ duplicates?: Locator[] }>({});
+  const [validationErrorOptions, setValidationErrorOptions] = useState<{ duplicates?: ILocator[] }>({});
   const [isEditedName, setIsEditedName] = useState<boolean>(isCustomName);
 
   const { updateRef } = useContext(OnboardingContext);
@@ -119,7 +119,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
     if (isEditedName) return;
 
     const newName = createNewName(
-      { element_id, isCustomName, type, name, elemId, elemName, elemText } as Locator,
+      { element_id, isCustomName, type, name, elemId, elemName, elemText } as ILocator,
       value,
       library,
       locators
@@ -132,7 +132,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
   };
 
   const handleCreateCustomLocator = async () => {
-    let newLocator: Locator = {
+    let newLocator: ILocator = {
       ...newLocatorStub,
       pageObj: pageObjectId,
       isCustomName: isEditedName,

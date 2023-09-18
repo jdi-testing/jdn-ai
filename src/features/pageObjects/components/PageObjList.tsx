@@ -15,7 +15,7 @@ import { PageObjMenu } from "./PageObjMenu";
 import { PageObjListHeader } from "./PageObjListHeader";
 import { useNotifications } from "../../../common/components/notification/useNotifications";
 import { RootState } from "../../../app/store/store";
-import { Locator as LocatorType } from "../../locators/types/locator.types";
+import { ILocator } from "../../locators/types/locator.types";
 import { PageObjectId } from "../types/pageObjectSlice.types";
 import { ElementLibrary } from "../../locators/types/generationClasses.types";
 import { PageType } from "../../../app/types/mainSlice.types";
@@ -52,7 +52,7 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
     }
   }, [currentPageObjectIndex]);
 
-  const renderLocators = (elements: LocatorType[], library: ElementLibrary) => {
+  const renderLocators = (elements: ILocator[], library: ElementLibrary) => {
     if (size(elements)) {
       return elements.map((element) => (
         <Locator {...{ element, library }} key={element.element_id} currentPage={PageType.PageObject} />
@@ -65,7 +65,7 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
   const renderContent = (
     pageObjId: PageObjectId,
     url: string,
-    elements: LocatorType[],
+    elements: ILocator[],
     library: ElementLibrary,
     isPageObjectNotEmpty: boolean
   ) => {

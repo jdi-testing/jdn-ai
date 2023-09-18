@@ -1,6 +1,6 @@
 import { AnnotationType, LocatorType } from "../../../common/types/common";
 import { ElementLibrary, ElementClass } from "../types/generationClasses.types";
-import { Locator, LocatorValue } from "../types/locator.types";
+import { ILocator, LocatorValue } from "../types/locator.types";
 import { CALCULATING } from "./constants";
 
 export const getLocator = (locatorValue: LocatorValue, locatorType: LocatorType = LocatorType.xPath) => {
@@ -32,5 +32,5 @@ export const getLocatorWithJDIAnnotation = (locator: string): string => `${Annot
 export const getLocatorWithSelenium = (locator: string, option: string): string =>
   `${AnnotationType.FindBy}(${option} = "${locator}")`;
 
-export const getLocatorTemplateWithVividus = (name: string, locatorType: string, locator: Locator): string =>
+export const getLocatorTemplateWithVividus = (name: string, locatorType: string, locator: ILocator): string =>
   `variables.${name}.${locator.type}.${locator.name}=By.${locatorType}`;

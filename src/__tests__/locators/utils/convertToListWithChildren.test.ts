@@ -1,8 +1,8 @@
-import { Locator } from "../../../features/locators/types/locator.types";
+import { ILocator } from "../../../features/locators/types/locator.types";
 import { convertToListWithChildren } from "../../../features/locators/utils/locatorsTreeUtils";
 
 describe("convertToListWithChildren", () => {
-  const inputList: Partial<Locator>[] = [
+  const inputList: Partial<ILocator>[] = [
     {
       element_id: "1",
       jdnHash: "hash1",
@@ -33,7 +33,7 @@ describe("convertToListWithChildren", () => {
     },
   ];
 
-  const expectedOutput: Partial<Locator>[] = [
+  const expectedOutput: Partial<ILocator>[] = [
     {
       element_id: "1",
       jdnHash: "hash1",
@@ -68,7 +68,7 @@ describe("convertToListWithChildren", () => {
     },
   ];
 
-  const inputList2: Partial<Locator>[] = [
+  const inputList2: Partial<ILocator>[] = [
     {
       element_id: "1",
       jdnHash: "hash1",
@@ -90,7 +90,7 @@ describe("convertToListWithChildren", () => {
       generate: true,
     },
   ];
-  const expectedOutput2: Partial<Locator>[] = [
+  const expectedOutput2: Partial<ILocator>[] = [
     {
       element_id: "1",
       jdnHash: "hash1",
@@ -121,16 +121,16 @@ describe("convertToListWithChildren", () => {
   });
 
   test("should correctly convert list of locators to list with children", () => {
-    expect(convertToListWithChildren(inputList as Locator[])).toEqual(expectedOutput);
+    expect(convertToListWithChildren(inputList as ILocator[])).toEqual(expectedOutput);
   });
 
   test("should not modify the input list", () => {
     const inputListCopy = JSON.parse(JSON.stringify(inputList)); // Deep copy
-    convertToListWithChildren(inputList as Locator[]);
+    convertToListWithChildren(inputList as ILocator[]);
     expect(inputList).toEqual(inputListCopy);
   });
 
   test("should handle missing parent_id gracefully", () => {
-    expect(convertToListWithChildren(inputList2 as Locator[])).toEqual(expectedOutput2);
+    expect(convertToListWithChildren(inputList2 as ILocator[])).toEqual(expectedOutput2);
   });
 });

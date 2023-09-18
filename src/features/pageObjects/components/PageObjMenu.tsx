@@ -13,7 +13,7 @@ import {
   renameOption,
   dividerItem,
 } from "../../../common/components/menu/menuOptions";
-import { ElementId, Locator } from "../../locators/types/locator.types";
+import { ElementId, ILocator } from "../../locators/types/locator.types";
 import { removeLocators } from "../../locators/locators.slice";
 import { removePageObject, setCurrentPageObj } from "../pageObject.slice";
 import { PageObject } from "../types/pageObjectSlice.types";
@@ -28,7 +28,7 @@ import { AppDispatch } from "../../../app/store/store";
 
 interface Props {
   pageObject: PageObject;
-  elements: Locator[];
+  elements: ILocator[];
 }
 
 export const PageObjMenu: React.FC<Props> = ({ pageObject, elements }) => {
@@ -39,7 +39,7 @@ export const PageObjMenu: React.FC<Props> = ({ pageObject, elements }) => {
 
   const { isOpen: isOnboardingOpen } = useContext(OnboardingContext);
 
-  const getMenuItems = (pageObject: PageObject, locatorIds: ElementId[] | undefined, locatorObjects: Locator[]) => {
+  const getMenuItems = (pageObject: PageObject, locatorIds: ElementId[] | undefined, locatorObjects: ILocator[]) => {
     const handleRename = () => setIsRenameModalOpen(true);
 
     const handleRemove = () => {
