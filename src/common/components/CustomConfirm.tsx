@@ -1,6 +1,9 @@
-import { Button, Modal, ModalProps } from "antd";
 import React, { ReactNode, useState } from "react";
 import ReactDOM from "react-dom/client";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
+import { Button, Modal, ModalProps } from "antd";
+
+import "../styles/customConfirm.less";
 
 interface Props extends ModalProps {
   confirmTitle: string;
@@ -71,26 +74,7 @@ export const CustomConfirm: React.FC<Props> = ({
       {...{ rest }}
     >
       <div className="ant-modal-confirm-body">
-        <span role="img" aria-label="exclamation-circle" className="anticon anticon-exclamation-circle">
-          <svg
-            viewBox="64 64 896 896"
-            focusable="false"
-            data-icon="exclamation-circle"
-            width="1em"
-            height="1em"
-            fill="currentColor"
-            aria-hidden="true"
-          >
-            {/* eslint-disable-next-line max-len */}
-            <path
-              d={`M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z`}
-            ></path>
-            {/* eslint-disable-next-line max-len */}
-            <path
-              d={`M464 688a48 48 0 1096 0 48 48 0 10-96 0zm24-112h48c4.4 0 8-3.6 8-8V296c0-4.4-3.6-8-8-8h-48c-4.4 0-8 3.6-8 8v272c0 4.4 3.6 8 8 8z`}
-            ></path>
-          </svg>
-        </span>
+        <ExclamationCircleOutlined className="custom-confirm__icon" />
         <span className="ant-modal-confirm-title">{confirmTitle}</span>
         <div className="ant-modal-confirm-content">{confirmContent}</div>
       </div>
