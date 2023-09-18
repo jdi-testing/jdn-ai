@@ -22,6 +22,7 @@ export const locatorsTreeMock = [
     generate: true,
     tagName: "ul",
     type: "RadioButtons",
+    isChecked: false,
     children: [
       {
         depth: 1,
@@ -44,6 +45,7 @@ export const locatorsTreeMock = [
         generate: true,
         tagName: "div",
         type: "Button",
+        isChecked: false,
         children: [
           {
             searchState: undefined,
@@ -65,6 +67,7 @@ export const locatorsTreeMock = [
             generate: true,
             tagName: "a",
             type: "TextField",
+            isChecked: false,
             children: [],
             depth: 2,
           },
@@ -87,6 +90,7 @@ export const locatorsTreeMock = [
             generate: true,
             tagName: "ul",
             type: "List",
+            isChecked: false,
             children: [],
             depth: 2,
             searchState: undefined,
@@ -114,6 +118,7 @@ export const locatorsTreeMock = [
         generate: true,
         tagName: "a",
         type: "Link",
+        isChecked: false,
         children: [
           {
             depth: 2,
@@ -136,6 +141,7 @@ export const locatorsTreeMock = [
             generate: true,
             tagName: "li",
             type: "Breadcrumbs",
+            isChecked: false,
             children: [
               {
                 depth: 3,
@@ -158,6 +164,7 @@ export const locatorsTreeMock = [
                 generate: true,
                 tagName: "li",
                 type: "Breadcrumbs",
+                isChecked: false,
                 children: [],
               },
               {
@@ -181,6 +188,7 @@ export const locatorsTreeMock = [
                 generate: true,
                 tagName: "ul",
                 type: "Breadcrumbs",
+                isChecked: false,
                 children: [],
               },
             ],
@@ -208,6 +216,7 @@ export const locatorsTreeMock = [
         generate: true,
         tagName: "a",
         type: "Link",
+        isChecked: false,
         children: [
           {
             depth: 2,
@@ -230,6 +239,7 @@ export const locatorsTreeMock = [
             generate: true,
             tagName: "li",
             type: "Breadcrumbs",
+            isChecked: false,
             children: [
               {
                 depth: 3,
@@ -252,6 +262,7 @@ export const locatorsTreeMock = [
                 generate: true,
                 tagName: "li",
                 type: "Breadcrumbs",
+                isChecked: false,
                 children: [],
               },
               {
@@ -275,6 +286,7 @@ export const locatorsTreeMock = [
                 generate: true,
                 tagName: "ul",
                 type: "Breadcrumbs",
+                isChecked: false,
                 children: [],
               },
             ],
@@ -305,6 +317,7 @@ export const locatorsTreeMock = [
     generate: true,
     tagName: "ul",
     type: "RadioButtons",
+    isChecked: false,
     children: [],
   },
 ];

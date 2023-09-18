@@ -23,6 +23,7 @@ export const locatorsTreeMockSearchTypesNames = [
     generate: true,
     tagName: "ul",
     type: "RadioButtons",
+    isChecked: false,
     children: [
       {
         depth: 2,
@@ -45,6 +46,7 @@ export const locatorsTreeMockSearchTypesNames = [
         generate: true,
         tagName: "li",
         type: "Breadcrumbs",
+        isChecked: false,
         children: [
           {
             depth: 3,
@@ -67,6 +69,7 @@ export const locatorsTreeMockSearchTypesNames = [
             generate: true,
             tagName: "li",
             type: "Breadcrumbs",
+            isChecked: false,
             children: [],
           },
           {
@@ -90,6 +93,7 @@ export const locatorsTreeMockSearchTypesNames = [
             generate: true,
             tagName: "ul",
             type: "Breadcrumbs",
+            isChecked: false,
             children: [],
           },
         ],
@@ -115,6 +119,7 @@ export const locatorsTreeMockSearchTypesNames = [
         generate: true,
         tagName: "li",
         type: "Breadcrumbs",
+        isChecked: false,
         children: [
           {
             depth: 3,
@@ -137,6 +142,7 @@ export const locatorsTreeMockSearchTypesNames = [
             generate: true,
             tagName: "li",
             type: "Breadcrumbs",
+            isChecked: false,
             children: [],
           },
           {
@@ -160,6 +166,7 @@ export const locatorsTreeMockSearchTypesNames = [
             generate: true,
             tagName: "ul",
             type: "Breadcrumbs",
+            isChecked: false,
             children: [],
           },
         ],

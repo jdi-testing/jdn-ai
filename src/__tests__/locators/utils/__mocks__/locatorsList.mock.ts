@@ -22,6 +22,7 @@ export const locatorsListMock = [
     message: "" as LocatorValidationErrorType,
     tagName: "ul",
     type: MUIclasses.radiogroup,
+    isChecked: false,
   },
   {
     element_id: "3969471880322359761484771163_0",
@@ -42,6 +43,7 @@ export const locatorsListMock = [
     predicted_label: "button",
     tagName: "div",
     type: MUIclasses.button,
+    isChecked: false,
   },
   {
     element_id: "0045220328322359764482356698_0",
@@ -62,6 +64,7 @@ export const locatorsListMock = [
     predicted_label: "textarea-autosize",
     tagName: "a",
     type: MUIclasses["text-field"],
+    isChecked: false,
   },
   {
     element_id: "6771529534322359778589411351_0",
@@ -82,6 +85,7 @@ export const locatorsListMock = [
     predicted_label: "list",
     tagName: "ul",
     type: MUIclasses.list,
+    isChecked: false,
   },
   {
     element_id: "4899732051322359779677566872_0",
@@ -102,6 +106,7 @@ export const locatorsListMock = [
     predicted_label: "link",
     tagName: "a",
     type: MUIclasses.link,
+    isChecked: false,
   },
   {
     element_id: "4829071593322359778594168519_0",
@@ -122,6 +127,7 @@ export const locatorsListMock = [
     predicted_label: "breadcrumbs",
     tagName: "li",
     type: MUIclasses.breadcrumbs,
+    isChecked: false,
   },
   {
     element_id: "9636042053322359773245578788_0",
@@ -142,6 +148,7 @@ export const locatorsListMock = [
     predicted_label: "breadcrumbs",
     tagName: "li",
     type: MUIclasses.breadcrumbs,
+    isChecked: false,
   },
   {
     element_id: "8381553594322359777170267551_0",
@@ -162,6 +169,7 @@ export const locatorsListMock = [
     predicted_label: "breadcrumbs",
     tagName: "ul",
     type: MUIclasses.breadcrumbs,
+    isChecked: false,
   },
   {
     element_id: "4899732051322359779677566873_0",
@@ -182,6 +190,7 @@ export const locatorsListMock = [
     predicted_label: "link",
     tagName: "a",
     type: MUIclasses.link,
+    isChecked: false,
   },
   {
     element_id: "4829071593322359778594168522_0",
@@ -202,6 +211,7 @@ export const locatorsListMock = [
     predicted_label: "breadcrumbs",
     tagName: "li",
     type: MUIclasses.breadcrumbs,
+    isChecked: false,
   },
   {
     element_id: "9636042053322359773245578777_0",
@@ -222,6 +232,7 @@ export const locatorsListMock = [
     predicted_label: "breadcrumbs",
     tagName: "li",
     type: MUIclasses.breadcrumbs,
+    isChecked: false,
   },
   {
     element_id: "8381553594322359777170267550_0",
@@ -242,6 +253,7 @@ export const locatorsListMock = [
     predicted_label: "breadcrumbs",
     tagName: "ul",
     type: MUIclasses.breadcrumbs,
+    isChecked: false,
   },
   {
     element_id: "796719024432235977136974900_0",
@@ -264,5 +276,6 @@ export const locatorsListMock = [
     tagName: "ul",
     type: MUIclasses.radiogroup,
     children: [],
+    isChecked: false,
   },
 ];
