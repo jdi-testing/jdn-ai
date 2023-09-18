@@ -1,4 +1,4 @@
-import { Locator } from "../../../features/locators/types/locator.types";
+import { ILocator } from "../../../features/locators/types/locator.types";
 import { sortLocatorsWithChildren } from "../../../features/locators/utils/sortLocators";
 
 describe("sortLocatorsWithChildren", () => {
@@ -64,7 +64,7 @@ describe("sortLocatorsWithChildren", () => {
   ];
 
   test("should sort locators with childs", () => {
-    const output = sortLocatorsWithChildren(input as Locator[]);
+    const output = sortLocatorsWithChildren(input as ILocator[]);
     expect(output).toEqual(expectedOutput);
   });
 });

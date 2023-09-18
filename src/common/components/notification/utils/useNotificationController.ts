@@ -4,7 +4,7 @@ import { Notification } from "../../../../app/types/mainSlice.types";
 import { messages } from "./messages";
 import { Action } from "../types/notification.types";
 import { locatorUndo, pageobjectUndo } from "./undoActions";
-import { Locator } from "../../../../features/locators/types/locator.types";
+import { ILocator } from "../../../../features/locators/types/locator.types";
 import { NotificationInstance } from "antd/lib/notification/interface";
 
 export const useNotificationController = (
@@ -43,7 +43,7 @@ export const useNotificationController = (
         openNotification(messages(size(action.meta.arg).toString()).STOP_GENERATION_GROUP, "info");
         break;
       case "locators/toggleDeleted":
-        const _prevValueLocator = prevValue as Locator;
+        const _prevValueLocator = prevValue as ILocator;
         openNotification(
           _prevValueLocator.deleted ? messages().RESTORE : messages().DELETE,
           _prevValueLocator.deleted ? "success" : "warning",
@@ -51,7 +51,7 @@ export const useNotificationController = (
         );
         break;
       case "locators/toggleDeletedGroup":
-        const _prevValueGroup = prevValue as Array<Locator>;
+        const _prevValueGroup = prevValue as ILocator[];
         const valueLength = size(_prevValueGroup);
         openNotification(
           _prevValueGroup[0].deleted

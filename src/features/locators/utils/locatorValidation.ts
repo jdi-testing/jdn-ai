@@ -1,7 +1,7 @@
 import { LocatorType } from "../../../common/types/common";
 import { CustomError } from "../../../common/utils/customError";
 import {
-  Locator,
+  ILocator,
   LocatorValidationErrors,
   LocatorValidationErrorType,
   LocatorValidationWarnings,
@@ -14,7 +14,7 @@ export const validateLocator = async (
   locatorString: string,
   locatorType: LocatorType,
   jdnHash: JDNHash,
-  locators: Locator[],
+  locators: ILocator[],
   element_id: ElementId,
   isCreatingForm?: boolean
 ): Promise<LocatorValidationErrorType | string> => {

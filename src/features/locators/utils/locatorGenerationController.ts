@@ -1,5 +1,5 @@
 import { WebSocketMessage } from "../../../services/backend";
-import { JDNHash, Locator, LocatorTaskStatus } from "../types/locator.types";
+import { JDNHash, ILocator, LocatorTaskStatus } from "../types/locator.types";
 import { webSocketController } from "../../../services/webSocketController";
 import { getDocument } from "../../../common/utils/getDocument";
 import { MainState, MaxGenerationTime } from "../../../app/types/mainSlice.types";
@@ -20,7 +20,7 @@ class LocatorGenerationController {
   }
 
   async scheduleMultipleXpathGeneration(
-    elements: Locator[],
+    elements: ILocator[],
     pageObject?: PageObject,
     maxGenerationTime?: MaxGenerationTime
   ) {

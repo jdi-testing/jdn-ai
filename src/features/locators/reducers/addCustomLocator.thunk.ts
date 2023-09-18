@@ -1,5 +1,5 @@
 import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
-import { Locator, LocatorsState, ValidationStatus } from "../types/locator.types";
+import { ILocator, LocatorsState, ValidationStatus } from "../types/locator.types";
 import { generateId, getElementFullXpath } from "../../../common/utils/helpers";
 import { addLocatorToPageObj } from "../../pageObjects/pageObject.slice";
 import { addLocators, setScrollToLocator, setActiveSingle } from "../locators.slice";
@@ -11,7 +11,7 @@ import { LocatorType } from "../../../common/types/common";
 
 export const addCustomLocator = createAsyncThunk(
   "locators/addCustomLocator",
-  async (payload: { newLocator: Locator; pageObjectId: PageObjectId }, thunkAPI) => {
+  async (payload: { newLocator: ILocator; pageObjectId: PageObjectId }, thunkAPI) => {
     let { newLocator } = payload;
     const { pageObjectId } = payload;
     const { message, locator, locatorType } = newLocator;

@@ -1,4 +1,4 @@
-import { LocatorTaskStatus, Locator } from "../types/locator.types";
+import { LocatorTaskStatus, ILocator } from "../types/locator.types";
 import { ElementClass } from "../types/generationClasses.types";
 import { AnnotationType, LocatorType } from "../../../common/types/common";
 
@@ -16,7 +16,7 @@ export enum LocatorOption {
   FullCode = "Full code",
 }
 
-export const newLocatorStub: Locator = {
+export const newLocatorStub: ILocator = {
   elemAriaLabel: "",
   elemId: "",
   elemName: "",
@@ -38,7 +38,8 @@ export const newLocatorStub: Locator = {
   isCustomName: true,
   isCustomLocator: true,
   type: "" as ElementClass,
-  generate: true,
+  isGenerated: true,
+  isChecked: false,
 };
 
 export const NO_ELEMENT_IN_DOCUMENT = "Document does not contain given element!";

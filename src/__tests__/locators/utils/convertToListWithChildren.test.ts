@@ -1,45 +1,45 @@
-import { Locator } from "../../../features/locators/types/locator.types";
+import { ILocator } from "../../../features/locators/types/locator.types";
 import { convertToListWithChildren } from "../../../features/locators/utils/locatorsTreeUtils";
 
 describe("convertToListWithChildren", () => {
-  const inputList: Partial<Locator>[] = [
+  const inputList: Partial<ILocator>[] = [
     {
       element_id: "1",
       jdnHash: "hash1",
       name: "Element 1",
       parent_id: "",
-      generate: true,
+      isGenerated: true,
     },
     {
       element_id: "2",
       jdnHash: "hash2",
       name: "Element 2",
       parent_id: "hash1",
-      generate: true,
+      isGenerated: true,
     },
     {
       element_id: "3",
       jdnHash: "hash3",
       name: "Element 3",
       parent_id: "hash2",
-      generate: true,
+      isGenerated: true,
     },
     {
       element_id: "4",
       jdnHash: "hash4",
       name: "Element 4",
       parent_id: "",
-      generate: true,
+      isGenerated: true,
     },
   ];
 
-  const expectedOutput: Partial<Locator>[] = [
+  const expectedOutput: Partial<ILocator>[] = [
     {
       element_id: "1",
       jdnHash: "hash1",
       name: "Element 1",
       parent_id: "",
-      generate: true,
+      isGenerated: true,
       children: ["2"],
     },
     {
@@ -47,7 +47,7 @@ describe("convertToListWithChildren", () => {
       jdnHash: "hash2",
       name: "Element 2",
       parent_id: "hash1",
-      generate: true,
+      isGenerated: true,
       children: ["3"],
     },
     {
@@ -55,7 +55,7 @@ describe("convertToListWithChildren", () => {
       jdnHash: "hash3",
       name: "Element 3",
       parent_id: "hash2",
-      generate: true,
+      isGenerated: true,
       children: [],
     },
     {
@@ -63,47 +63,47 @@ describe("convertToListWithChildren", () => {
       jdnHash: "hash4",
       name: "Element 4",
       parent_id: "",
-      generate: true,
+      isGenerated: true,
       children: [],
     },
   ];
 
-  const inputList2: Partial<Locator>[] = [
+  const inputList2: Partial<ILocator>[] = [
     {
       element_id: "1",
       jdnHash: "hash1",
       name: "Element 1",
       parent_id: "",
-      generate: true,
+      isGenerated: true,
     },
     {
       element_id: "2",
       jdnHash: "hash2",
       name: "Element 2",
-      generate: true,
+      isGenerated: true,
     },
     {
       element_id: "3",
       jdnHash: "hash3",
       name: "Element 3",
       parent_id: "hash2",
-      generate: true,
+      isGenerated: true,
     },
   ];
-  const expectedOutput2: Partial<Locator>[] = [
+  const expectedOutput2: Partial<ILocator>[] = [
     {
       element_id: "1",
       jdnHash: "hash1",
       name: "Element 1",
       parent_id: "",
-      generate: true,
+      isGenerated: true,
       children: [],
     },
     {
       element_id: "2",
       jdnHash: "hash2",
       name: "Element 2",
-      generate: true,
+      isGenerated: true,
       children: ["3"],
     },
     {
@@ -111,7 +111,7 @@ describe("convertToListWithChildren", () => {
       jdnHash: "hash3",
       name: "Element 3",
       parent_id: "hash2",
-      generate: true,
+      isGenerated: true,
       children: [],
     },
   ];
@@ -121,16 +121,16 @@ describe("convertToListWithChildren", () => {
   });
 
   test("should correctly convert list of locators to list with children", () => {
-    expect(convertToListWithChildren(inputList as Locator[])).toEqual(expectedOutput);
+    expect(convertToListWithChildren(inputList as ILocator[])).toEqual(expectedOutput);
   });
 
   test("should not modify the input list", () => {
     const inputListCopy = JSON.parse(JSON.stringify(inputList)); // Deep copy
-    convertToListWithChildren(inputList as Locator[]);
+    convertToListWithChildren(inputList as ILocator[]);
     expect(inputList).toEqual(inputListCopy);
   });
 
   test("should handle missing parent_id gracefully", () => {
-    expect(convertToListWithChildren(inputList2 as Locator[])).toEqual(expectedOutput2);
+    expect(convertToListWithChildren(inputList2 as ILocator[])).toEqual(expectedOutput2);
   });
 });

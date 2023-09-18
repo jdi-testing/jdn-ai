@@ -1,7 +1,7 @@
 import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "../../../app/store/store";
 import { locatorsAdapter } from "../selectors/locators.selectors";
-import { Locator, LocatorsState, LocatorValidationErrorType } from "../types/locator.types";
+import { ILocator, LocatorsState, LocatorValidationErrorType } from "../types/locator.types";
 import { validateLocator } from "../utils/locatorValidation";
 import { LocatorType } from "../../../common/types/common";
 import { selectLocatorsByPageObject } from "../selectors/locatorsByPO.selectors";
@@ -11,7 +11,7 @@ export const checkLocatorsValidity = createAsyncThunk("locators/checkLocatorsVal
 
   const locators = selectLocatorsByPageObject(state as RootState);
 
-  const invalidLocators: Partial<Locator>[] = [];
+  const invalidLocators: Partial<ILocator>[] = [];
 
   for (const locator of locators) {
     const { jdnHash, element_id, locator: locatorValue, locatorType } = locator;

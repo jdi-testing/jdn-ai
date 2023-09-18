@@ -1,7 +1,7 @@
+import React, { useContext, useEffect, useRef, useState, useMemo } from "react";
 import { Checkbox, Button } from "antd";
 import { DotsThree } from "@phosphor-icons/react";
 import Text from "antd/lib/typography/Text";
-import React, { useContext, useEffect, useRef, useState, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { areChildrenChecked, isLocatorIndeterminate } from "./selectors/locators.selectors";
@@ -11,14 +11,14 @@ import {
   elementUnsetActive,
   elementGroupUnsetActive,
   setActiveSingle,
-  setChildrenGeneration,
-  toggleElementGeneration,
+  toggleLocatorIsChecked,
+  setChildrenIsChecked,
 } from "./locators.slice";
 
 import _ from "lodash";
 import { PageType } from "../../app/types/mainSlice.types";
 import { RootState } from "../../app/store/store";
-import { Locator as LocatorInterface } from "./types/locator.types";
+import { ILocator } from "./types/locator.types";
 import { SearchState } from "./components/LocatorsTree";
 import { LocatorEditDialog } from "./components/LocatorEditDialog";
 import { LocatorCopyButton } from "./components/LocatorCopyButton";
@@ -39,7 +39,7 @@ import { getLocatorPrefix, getLocatorTemplateWithVividus } from "./utils/locator
 import { ScriptMsg } from "../../pageServices/scriptMsg.constants";
 
 interface Props {
-  element: LocatorInterface;
+  element: ILocator;
   currentPage: PageType;
   disabled?: boolean;
   searchState?: SearchState;
@@ -54,7 +54,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const { isCustomLocatorFlow } = useContext(OnboardingContext);
 
-  const { element_id, type, name, locator, generate, message, deleted, active, isCustomLocator } = element;
+  const { element_id, type, name, locator, message, deleted, active, isCustomLocator, isChecked } = element;
 
   const currentPageObject = useSelector(selectCurrentPageObject);
 
@@ -86,7 +86,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
   const indeterminate = useSelector((state: RootState) => isLocatorIndeterminate(state, element_id));
   const allChildrenChecked = useSelector((state: RootState) => areChildrenChecked(state, element_id));
   const scriptMessage = useSelector((_state: RootState) => _state.main.scriptMessage);
-  const calculatedActive: LocatorInterface[] = useSelector(selectCalculatedActiveByPageObj);
+  const calculatedActive: ILocator[] = useSelector(selectCalculatedActiveByPageObj);
   const waitingActive = useSelector(selectWaitingActiveByPageObj);
   const actualSelected = useMemo(() => [...calculatedActive, ...waitingActive], [calculatedActive, waitingActive]);
 
@@ -111,16 +111,16 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
   }, [scriptMessage]);
 
   const handleOnChange: React.MouseEventHandler<HTMLDivElement> = () => {
-    dispatch(toggleElementGeneration(element_id));
+    dispatch(toggleLocatorIsChecked(element_id));
     if (allChildrenChecked && _.size(element.children)) {
-      dispatch(setChildrenGeneration({ locator: element, generate: false }));
+      dispatch(setChildrenIsChecked({ locator: element, isChecked: false }));
     } else {
-      dispatch(setChildrenGeneration({ locator: element, generate: true }));
+      dispatch(setChildrenIsChecked({ locator: element, isChecked: true }));
     }
   };
 
-  const handleLocatorClick: React.MouseEventHandler<HTMLDivElement> = (evt) => {
-    const keyForMultiSelect = isMacPlatform(window) ? evt.metaKey : evt.ctrlKey;
+  const handleLocatorClick: React.MouseEventHandler<HTMLDivElement> = (event) => {
+    const keyForMultiSelect = isMacPlatform(window) ? event.metaKey : event.ctrlKey;
     if (keyForMultiSelect) {
       if (active) dispatch(elementUnsetActive(element_id));
       else dispatch(elementSetActive(element));
@@ -129,8 +129,8 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
     }
   };
 
-  const handleLocatorRightClick: React.MouseEventHandler<HTMLDivElement> = (evt) => {
-    evt.stopPropagation();
+  const handleLocatorRightClick: React.MouseEventHandler<HTMLDivElement> = (event) => {
+    event.stopPropagation();
     if (!active) {
       dispatch(elementGroupUnsetActive(actualSelected));
       dispatch(setActiveSingle(element));
@@ -171,7 +171,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
   };
 
   return (
-    <React.Fragment>
+    <>
       <div
         ref={ref}
         className="jdn__xpath_container"
@@ -183,7 +183,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
             <div className="jdn__xpath_locators">
               <div ref={addToPORef} onContextMenu={(e) => e.stopPropagation()} className="jdn__xpath_checkbox_wrapper">
                 <Checkbox
-                  checked={generate}
+                  checked={isChecked}
                   indeterminate={indeterminate}
                   onClick={handleOnChange}
                   disabled={searchState === SearchState.Hidden}
@@ -220,6 +220,6 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
       {isEditModalOpen ? (
         <LocatorEditDialog {...element} isModalOpen={isEditModalOpen} setIsModalOpen={setIsEditModalOpen} />
       ) : null}
-    </React.Fragment>
+    </>
   );
 };

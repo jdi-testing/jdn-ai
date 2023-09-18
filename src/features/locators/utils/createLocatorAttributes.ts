@@ -2,7 +2,7 @@ import { sendMessage } from "../../../pageServices/connector";
 import { setParents } from "../../../pageServices/pageDataHandlers";
 import { createLocatorNames } from "../../pageObjects/utils/pageObject";
 import { ElementLibrary } from "../types/generationClasses.types";
-import { Locator, PredictedEntity } from "../types/locator.types";
+import { ILocator, PredictedEntity } from "../types/locator.types";
 import { convertToListWithChildren } from "./locatorsTreeUtils";
 
 export const createLocatorAttributes = async (
@@ -16,7 +16,7 @@ export const createLocatorAttributes = async (
   });
   const generationData = createLocatorNames(generationTags, library);
   const _locatorsWithParents = await setParents(generationData);
-  const locatorsWithParents: Locator[] = convertToListWithChildren(_locatorsWithParents);
+  const locatorsWithParents: ILocator[] = convertToListWithChildren(_locatorsWithParents);
 
   return locatorsWithParents;
 };

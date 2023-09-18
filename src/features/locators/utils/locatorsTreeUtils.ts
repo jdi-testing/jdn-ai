@@ -1,14 +1,14 @@
 import { cloneDeep, map as mapFunction, size } from "lodash";
-import { JDNHash, Locator } from "../../locators/types/locator.types";
+import { JDNHash, ILocator } from "../../locators/types/locator.types";
 import { SearchState } from "../components/LocatorsTree";
 
-export interface LocatorTree extends Omit<Locator, "children"> {
+export interface LocatorTree extends Omit<ILocator, "children"> {
   children?: Array<LocatorTree>;
   depth?: number;
   searchState?: SearchState;
 }
 
-export const convertToListWithChildren = (_list: Array<Locator>) => {
+export const convertToListWithChildren = (_list: ILocator[]) => {
   const list = cloneDeep(_list);
   const map: Record<string, number> = {};
 
@@ -35,14 +35,14 @@ export const includesSearchSubstr = (strings: Array<string | undefined>, searchS
   return !!size(includesSubstring);
 };
 
-export const applySearch = (element: Locator, searchString: string): SearchState => {
+export const applySearch = (element: ILocator, searchString: string): SearchState => {
   const { locator, type, name, elemText } = element;
   if (includesSearchSubstr([locator.output, type as string, name, ...(elemText ? [elemText] : [])], searchString)) {
     return SearchState.None;
   } else return SearchState.Hidden;
 };
 
-export const convertListToTree = (_list: Array<Locator>, searchString = "") => {
+export const convertListToTree = (_list: ILocator[], searchString = "") => {
   const list: Array<LocatorTree> = mapFunction(cloneDeep(_list), (elem) => ({
     ...elem,
     children: [],
@@ -82,10 +82,10 @@ export const convertListToTree = (_list: Array<Locator>, searchString = "") => {
   return tree.filter((treeElement) => treeElement.children?.length || treeElement.searchState !== SearchState.Hidden);
 };
 
-export const setNewParents = (origLocators: Array<Locator>, filteredLocators: Array<Locator>) => {
-  const origMap: Record<string, Locator> = {};
-  const filteredMap: Record<string, Locator> = {};
-  const newLocators: Array<Locator> = [];
+export const setNewParents = (origLocators: ILocator[], filteredLocators: ILocator[]) => {
+  const origMap: Record<string, ILocator> = {};
+  const filteredMap: Record<string, ILocator> = {};
+  const newLocators: Array<ILocator> = [];
 
   for (let i = 0; i < origLocators.length; i++) {
     const element = origLocators[i];

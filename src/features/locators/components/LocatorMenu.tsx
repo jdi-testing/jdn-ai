@@ -21,7 +21,7 @@ import {
 } from "../../../common/components/menu/menuOptions";
 import { locatorGenerationController } from "../utils/locatorGenerationController";
 import {
-  Locator,
+  ILocator,
   LocatorCalculationPriority,
   ValidationStatus,
   LocatorValidationWarnings,
@@ -76,7 +76,7 @@ export const LocatorMenu: React.FC<Props> = ({ setIsEditModalOpen, children, tri
   const decreasedPrioritySelected = useSelector(selectInProgressActiveDecPriorityByPageObject);
 
   // should be revised after 1240 implementation
-  const isAdvancedCalculationDisabled = (element: Locator) => {
+  const isAdvancedCalculationDisabled = (element: ILocator) => {
     return element.locatorType === LocatorType.cssSelector
       ? true
       : element.message === LocatorValidationWarnings.NewElement

@@ -1,18 +1,18 @@
 import { createDraftSafeSelector, createEntityAdapter, createSelector, EntityState } from "@reduxjs/toolkit";
 import { RootState } from "../../../app/store/store";
 import { PageObject, PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
-import { ElementId, Locator } from "../types/locator.types";
+import { ElementId, ILocator } from "../types/locator.types";
 import { getLocator } from "../utils/locatorOutput";
 import { selectCurrentPageObject } from "../../pageObjects/selectors/pageObjects.selectors";
 import { getTaskStatus } from "../utils/utils";
 
-export const locatorsAdapter = createEntityAdapter<Locator>({
+export const locatorsAdapter = createEntityAdapter<ILocator>({
   selectId: (locator) => locator.element_id,
 });
 
 const { selectAll, selectById } = locatorsAdapter.getSelectors<RootState>((state) => state.locators.present);
 
-export const selectLocatorById = createSelector(selectById, (_item?: Locator) => {
+export const selectLocatorById = createSelector(selectById, (_item?: ILocator) => {
   if (_item) {
     return {
       ..._item,
@@ -26,7 +26,7 @@ export const selectLocatorById = createSelector(selectById, (_item?: Locator) =>
   return _item;
 });
 
-export const selectLocators = createSelector(selectAll, (items: Locator[]) =>
+export const selectLocators = createSelector(selectAll, (items: ILocator[]) =>
   items.map((_item) => {
     return {
       ..._item,
@@ -39,8 +39,8 @@ export const selectLocators = createSelector(selectAll, (items: Locator[]) =>
   })
 );
 
-export const selectLocatorsToGenerate = createSelector(selectLocators, (items: Locator[]) =>
-  items.filter((el) => el.generate && !el.deleted)
+export const selectLocatorsToGenerate = createSelector(selectLocators, (items: ILocator[]) =>
+  items.filter((el) => el.isGenerated && !el.deleted)
 );
 
 export const isLocatorIndeterminate = createSelector(
@@ -49,11 +49,11 @@ export const isLocatorIndeterminate = createSelector(
   (state: RootState) => state,
   (locators, locator, state) => {
     if (!locator) return false;
-    if (locator.generate) return false;
-    const hasChildToGenerate = (_locator: Locator) => {
+    if (locator.isGenerated) return false;
+    const hasChildToGenerate = (_locator: ILocator) => {
       const hasSelectedChild =
         _locator.children &&
-        _locator.children.some((childId) => locators.some((loc) => loc.element_id === childId && loc.generate));
+        _locator.children.some((childId) => locators.some((loc) => loc.element_id === childId && loc.isGenerated));
       return (
         hasSelectedChild ||
         (_locator.children &&
@@ -74,7 +74,7 @@ export const areChildrenChecked = createSelector(
   (locators, locator) =>
     locator &&
     Boolean(locator.children?.length) &&
-    locator.children?.every((childId) => locators.some((loc) => loc.element_id === childId && loc.generate))
+    locator.children?.every((childId) => locators.some((loc) => loc.element_id === childId && loc.isGenerated))
 );
 
 export const selectLocatorByJdnHash = createSelector(
@@ -95,13 +95,13 @@ export const { selectAll: simpleSelectLocators, selectById: simpleSelectLocatorB
 // @ts-ignore
 export const simpleSelectLocatorsByPageObject = createDraftSafeSelector(
   simpleSelectLocators,
-  (_: EntityState<Locator>, pageObj: PageObjectId) => pageObj,
-  (locators: Locator[], pageObj: PageObjectId) => locators.filter((_loc) => _loc.pageObj === pageObj)
+  (_: EntityState<ILocator>, pageObj: PageObjectId) => pageObj,
+  (locators: ILocator[], pageObj: PageObjectId) => locators.filter((_loc) => _loc.pageObj === pageObj)
 );
 
 export const simpleSelectLocatorByJdnHash = createDraftSafeSelector(
-  (state: EntityState<Locator>, jdnHash: string) => simpleSelectLocators(state).filter((loc) => loc.jdnHash === jdnHash),
-  (_state: EntityState<Locator>, _: string, pageObject: PageObject) => pageObject.locators,
+  (state: EntityState<ILocator>, jdnHash: string) => simpleSelectLocators(state).filter((loc) => loc.jdnHash === jdnHash),
+  (_state: EntityState<ILocator>, _: string, pageObject: PageObject) => pageObject.locators,
   (locators, pageObjLocators) => {
     return locators.find(({ element_id }) => pageObjLocators?.includes(element_id));
   }

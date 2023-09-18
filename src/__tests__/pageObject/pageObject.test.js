@@ -76,13 +76,13 @@ describe("page object code generation", () => {
     });
   });
 
-  test("generate page object name", () => {
+  test("isGenerated page object name", () => {
     pageObjectsNames.forEach((poName) => {
       expect(getClassName(poName.input)).toBe(poName.output);
     });
   });
 
-  test("generate page object template for Vividus", () => {
+  test("isGenerated page object template for Vividus", () => {
     const { pageObject, output } = templateTestDataVividus;
     const page = getPageObjectTemplateForVidus(locatorsVividus, pageObject);
     expect(page.pageCode).toBe(output);

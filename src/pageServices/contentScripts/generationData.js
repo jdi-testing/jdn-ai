@@ -110,16 +110,19 @@ export const getGenerationAttributes = () => {
     const isSelectorByGeneratorString = typeof selectorByGenerator === "string";
     const isSelectorByFinderString = typeof selectorByFinder === "string";
 
+    let selectorGenerationResult;
+
     if (isSelectorByGeneratorString && isSelectorByFinderString) {
       const selector = selectorByGenerator.length < selectorByFinder.length ? selectorByGenerator : selectorByFinder;
-      return selector;
+      selectorGenerationResult = selector;
     } else if (!isSelectorByFinderString && isSelectorByGeneratorString) {
-      return selectorByGenerator;
+      selectorGenerationResult = selectorByGenerator;
     } else if (!isSelectorByGeneratorString && isSelectorByFinderString) {
-      return selectorByFinder;
+      selectorGenerationResult = selectorByFinder;
     } else {
-      return "CSS selector generation was failed";
+      selectorGenerationResult = "CSS selector generation was failed";
     }
+    return selectorGenerationResult;
   };
 
   const generateSelectorGroupByHash = (elements) => {

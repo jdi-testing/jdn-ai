@@ -1,7 +1,7 @@
 import { saveAs } from "file-saver";
 import { chain, isEmpty, size, subtract, toLower, toString, truncate, upperFirst } from "lodash";
 import connector from "../../../pageServices/connector";
-import { ElementId, Locator } from "../../locators/types/locator.types";
+import { ElementId, ILocator } from "../../locators/types/locator.types";
 import { PageObject, PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
 import { ElementLabel, ElementLibrary } from "../../locators/types/generationClasses.types";
 import javaReservedWords from "./javaReservedWords.json";
@@ -16,14 +16,14 @@ export const isStringMatchesReservedWord = (string: string) => javaReservedWords
 
 export const isStringMatchesReservedWordPerfTest = (string: string) => perfReservedWords.includes(string);
 
-export const isNameUnique = (elements: Array<Locator>, element_id: ElementId, newName: string) =>
+export const isNameUnique = (elements: ILocator[], element_id: ElementId, newName: string) =>
   !elements.find((elem) => elem.name === newName && elem.element_id !== element_id);
 
 export const isPONameUnique = (elements: Array<PageObject>, id: PageObjectId, newName: string) =>
   !elements.find((elem) => toLower(elem.name) === toLower(newName) && elem.id !== id);
 
 export const createElementName = (
-  element: Locator,
+  element: ILocator,
   library: ElementLibrary,
   uniqueNames: Array<string>,
   newType?: string
@@ -101,7 +101,7 @@ export const createElementName = (
   return _resultName;
 };
 
-export const createLocatorNames = (elements: Array<Locator>, library: ElementLibrary) => {
+export const createLocatorNames = (elements: ILocator[], library: ElementLibrary) => {
   const f = elements.filter((el) => el && !el.deleted);
   const uniqueNames: Array<string> = [];
 
@@ -127,7 +127,7 @@ export const getPageAttributes = async () => {
 };
 
 export const getPage = async (
-  locators: Array<Locator>,
+  locators: ILocator[],
   pageObject: PageObject
 ): Promise<{ pageCode: string; title: string }> => {
   return pageObject.framework === FrameworkType.Vividus
@@ -136,13 +136,13 @@ export const getPage = async (
 };
 
 export const getPagePerfTest = async (
-  locators: Array<Locator>,
+  locators: ILocator[],
   pageObject: PageObject
 ): Promise<{ pageCode: string; name: string }> => {
   return pageObjectTemplatePerfTest(locators, pageObject);
 };
 
-export const generatePageObject = async (elements: Array<Locator>, pageObject: PageObject): Promise<void> => {
+export const generatePageObject = async (elements: ILocator[], pageObject: PageObject): Promise<void> => {
   const page = await getPage(elements, pageObject);
   const blob = new Blob([page.pageCode], {
     type: "text/plain;charset=utf-8",
@@ -150,7 +150,7 @@ export const generatePageObject = async (elements: Array<Locator>, pageObject: P
   saveAs(blob, `${page.title}.java`);
 };
 
-export const generatePageObjectPerfTest = async (elements: Array<Locator>, pageObject: PageObject): Promise<void> => {
+export const generatePageObjectPerfTest = async (elements: ILocator[], pageObject: PageObject): Promise<void> => {
   const page = await getPagePerfTest(elements, pageObject);
   const blob = new Blob([page.pageCode], {
     type: "text/plain;charset=utf-8",

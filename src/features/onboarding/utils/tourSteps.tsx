@@ -25,7 +25,7 @@ const poSettings = (refs: Record<OnbrdStep, StepRef>) => ({
   },
 });
 
-const generate = (refs: Record<OnbrdStep, StepRef>) => ({
+const isGenerated = (refs: Record<OnbrdStep, StepRef>) => ({
   title: "Start creating",
   description: `After clicking this button, the page will be scanned and locators will be generated.
     Please make sure that you have opened the required web page before proceeding.
@@ -174,7 +174,7 @@ const connection = (refs: Record<OnbrdStep, StepRef>) => ({
 export const createPOSteps = (refs: Record<OnbrdStep, StepRef>) => [
   newPageObject(refs),
   poSettings(refs),
-  generate(refs),
+  isGenerated(refs),
   creating(),
 ];
 

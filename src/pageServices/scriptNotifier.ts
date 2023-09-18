@@ -1,7 +1,7 @@
 import { Middleware } from "@reduxjs/toolkit";
 import { compact, isNil, size } from "lodash";
 import { selectLocatorById, selectLocatorByJdnHash } from "../features/locators/selectors/locators.selectors";
-import { Locator, LocatorTaskStatus, LocatorValidationWarnings } from "../features/locators/types/locator.types";
+import { ILocator, LocatorTaskStatus, LocatorValidationWarnings } from "../features/locators/types/locator.types";
 import { sendMessage } from "./connector";
 import { selectCurrentPage } from "../app/main.selectors";
 import { RootState } from "../app/store/store";
@@ -34,7 +34,7 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       if (isNil(state.pageObject.present.currentPageObject)) return;
       const locators = selectValidLocators(state);
       const filter = selectClassFilterByPO(state);
-      locators && sendMessage.setHighlight({ elements: locators as Locator[], filter });
+      locators && sendMessage.setHighlight({ elements: locators as ILocator[], filter });
       break;
     }
     case "pageObject/addLocatorToPageObj": {
@@ -47,7 +47,7 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
     case "locators/checkLocatorsValidity/fulfilled": {
       const locators = selectValidLocators(state);
       const filter = selectClassFilterByPO(state);
-      locators && sendMessage.setHighlight({ elements: locators as Locator[], filter, isAlreadyGenerated: true });
+      locators && sendMessage.setHighlight({ elements: locators as ILocator[], filter, isAlreadyGenerated: true });
       break;
     }
     case "locators/changeLocatorAttributes":
@@ -90,7 +90,7 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       break;
     }
     case "locators/stopGenerationGroup/fulfilled": {
-      const _arr: Locator[] = compact(payload);
+      const _arr: ILocator[] = compact(payload);
       _arr.forEach((element) => {
         const { element_id } = element;
         const locator = selectLocatorById(state, element_id);
@@ -98,20 +98,22 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       });
       break;
     }
-    case "locators/toggleElementGeneration": {
+    case "locators/toggleElementGeneration": // TODO isGenerated refactoring
+    case "locators/toggleLocatorIsChecked": {
       const element = selectLocatorById(state, typeof payload === "string" ? payload : payload.element_id);
       element && sendMessage.toggle({ element });
       break;
     }
     case "locators/toggleElementGroupGeneration":
-      payload.forEach((element: Locator) => {
+      payload.forEach((element: ILocator) => {
         const locator = selectLocatorById(state, element.element_id);
         locator && sendMessage.toggle({ element: locator, skipScroll: true });
       });
       break;
-    case "locators/setChildrenGeneration": {
+    case "locators/setChildrenGeneration": // TODO isGenerated refactoring
+    case "locators/setChildrenIsChecked": {
       const { locator } = payload;
-      const iterateChildren = (_locator: Locator | undefined) => {
+      const iterateChildren = (_locator: ILocator | undefined) => {
         _locator?.children &&
           _locator.children.forEach((childId) => {
             const child = selectLocatorById(state, childId);
@@ -123,7 +125,7 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       break;
     }
     case "locators/setElementGroupGeneration":
-      payload.locators.forEach((_loc: Locator) => {
+      payload.locators.forEach((_loc: ILocator) => {
         const element = selectLocatorById(state, _loc.element_id);
         element && sendMessage.toggle({ element, skipScroll: true });
       });
@@ -134,13 +136,13 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       break;
     }
     case "locators/toggleDeletedGroup":
-      payload.forEach((element: Locator) => {
+      payload.forEach((element: ILocator) => {
         const locator = selectLocatorById(state, element.element_id);
         locator && sendMessage.toggleDeleted(locator);
       });
       break;
     case "locators/updateLocatorGroup":
-      payload.locators.forEach(({ element_id, jdnHash }: Locator) => {
+      payload.locators.forEach(({ element_id, jdnHash }: ILocator) => {
         const locator = element_id ? selectLocatorById(state, element_id) : selectLocatorByJdnHash(state, jdnHash!);
         locator && sendMessage.changeStatus(locator);
       });
@@ -149,9 +151,9 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       const { ids } = payload;
       const elements = ids.map((element_id: string) => {
         const jdnHash = selectLocatorById(state, element_id)?.jdnHash;
-        return { element_id, jdnHash, locator: { xPathStatus: LocatorTaskStatus.FAILURE } } as Locator;
+        return { element_id, jdnHash, locator: { xPathStatus: LocatorTaskStatus.FAILURE } } as ILocator;
       });
-      elements.forEach((element: Locator) => sendMessage.changeStatus(element));
+      elements.forEach((element: ILocator) => sendMessage.changeStatus(element));
       break;
     }
     case "locators/elementUnsetActive":

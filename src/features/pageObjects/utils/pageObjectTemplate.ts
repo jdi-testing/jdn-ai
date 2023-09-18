@@ -1,7 +1,7 @@
 import { ElementLibrary } from "../../locators/types/generationClasses.types";
 import { camelCase, upperFirst } from "lodash";
 import transliterate from "@sindresorhus/transliterate";
-import { Locator } from "../../locators/types/locator.types";
+import { ILocator } from "../../locators/types/locator.types";
 import { getLocatorPrefix, getLocatorTemplateWithVividus } from "../../locators/utils/locatorOutput";
 import { AnnotationType, LocatorType } from "../../../common/types/common";
 import { hasAnnotationType } from "./hasAnnotationType";
@@ -13,7 +13,7 @@ export const getClassName = (title: string) => {
   className = camelCase(className);
 
   className = className.substring(className.search(/[a-zA-Za]/)); // removing numbers in the start of string
-  className = upperFirst(className); // we generate Java class name, so we always need a capital first letter
+  className = upperFirst(className); // we isGenerated Java class name, so we always need a capital first letter
 
   if (className.length > 56) className = className.slice(0, 55);
   if (className.length > 4 && className.slice(-4).toLowerCase() !== "page") className += "Page";
@@ -21,7 +21,7 @@ export const getClassName = (title: string) => {
 };
 
 export const getPageObjectTemplateForVidus = (
-  locators: Locator[],
+  locators: ILocator[],
   pageObject: PageObject
 ): { pageCode: string; title: string } => {
   const { name, pathname, locatorType } = pageObject;
@@ -38,7 +38,7 @@ export const getPageObjectTemplateForVidus = (
 };
 
 export const getPageObjectTemplateForJdi = (
-  locators: Locator[],
+  locators: ILocator[],
   pageObject: PageObject
 ): { pageCode: string; title: string } => {
   const { name: className, library } = pageObject;

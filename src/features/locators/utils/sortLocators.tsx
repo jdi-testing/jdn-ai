@@ -1,7 +1,7 @@
-import { ElementId, Locator } from "../types/locator.types";
+import { ElementId, ILocator } from "../types/locator.types";
 
-export const sortLocatorsWithChildren = (locators: Array<Locator>) => {
-  const childrenMap: Map<string, Locator> = new Map();
+export const sortLocatorsWithChildren = (locators: ILocator[]) => {
+  const childrenMap: Map<string, ILocator> = new Map();
 
   for (const locator of locators) {
     if (locator.parent_id) {
@@ -9,13 +9,13 @@ export const sortLocatorsWithChildren = (locators: Array<Locator>) => {
     }
   }
 
-  const sorted: Locator[] = [];
+  const sorted: ILocator[] = [];
 
-  const addLocators = (_locators: Locator[] | ElementId[]) => {
+  const addLocators = (_locators: ILocator[] | ElementId[]) => {
     for (let locator of _locators) {
       if (typeof locator === "string") {
         if (!childrenMap.has(locator)) continue;
-        locator = childrenMap.get(locator) as Locator;
+        locator = childrenMap.get(locator) as ILocator;
       } else if (locator.parent_id?.length && !childrenMap.has(locator.element_id)) continue;
 
       sorted.push(locator);
@@ -26,5 +26,5 @@ export const sortLocatorsWithChildren = (locators: Array<Locator>) => {
   };
 
   addLocators(locators);
-  return sorted as Locator[];
+  return sorted;
 };

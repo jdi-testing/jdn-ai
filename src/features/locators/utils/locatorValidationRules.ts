@@ -1,6 +1,6 @@
 import { Rule, RuleObject } from "antd/lib/form";
 import { validateLocator } from "./locatorValidation";
-import { ElementId, Locator, LocatorValidationErrorType, LocatorValidationWarnings } from "../types/locator.types";
+import { ElementId, ILocator, LocatorValidationErrorType, LocatorValidationWarnings } from "../types/locator.types";
 import { LocatorType } from "../../../common/types/common";
 
 export const createLocatorValidationRules = (
@@ -8,7 +8,7 @@ export const createLocatorValidationRules = (
   locatorType: LocatorType,
   setValidationMessage: React.Dispatch<React.SetStateAction<LocatorValidationErrorType>>,
   setValidationErrorOptions: React.Dispatch<React.SetStateAction<any>>,
-  locators: Locator[],
+  locators: ILocator[],
   jdnHash: string,
   element_id: ElementId
 ): Rule[] => {

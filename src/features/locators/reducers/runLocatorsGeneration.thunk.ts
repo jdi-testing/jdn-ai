@@ -1,5 +1,5 @@
 import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
-import { Locator, LocatorTaskStatus, LocatorsGenerationStatus, LocatorsState } from "../types/locator.types";
+import { ILocator, LocatorTaskStatus, LocatorsGenerationStatus, LocatorsState } from "../types/locator.types";
 import { runXpathGeneration } from "../utils/runXpathGeneration";
 import { MaxGenerationTime } from "../../../app/types/mainSlice.types";
 import { RootState } from "../../../app/store/store";
@@ -11,7 +11,7 @@ import { LocalStorageKey, getLocalStorage } from "../../../common/utils/localSto
 import { selectClassFilterByPO } from "../../filter/filter.selectors";
 
 interface Meta {
-  locators: Locator[];
+  locators: ILocator[];
   maxGenerationTime?: MaxGenerationTime;
   generateXpath?: boolean;
   generateCssSelector?: boolean;
@@ -35,7 +35,7 @@ export const runLocatorsGeneration = createAsyncThunk(
       filter = getLocalStorage(LocalStorageKey.Filter)[currentPageObjLibrary];
     }
 
-    const getXpathsForGeneration = (): Locator[] => {
+    const getXpathsForGeneration = (): ILocator[] => {
       if (maxGenerationTime) {
         return locators;
       } else if (generateMissingLocator || generateXpath) {
@@ -47,7 +47,7 @@ export const runLocatorsGeneration = createAsyncThunk(
       }
     };
 
-    const toGenerateXpaths: Locator[] = getXpathsForGeneration();
+    const toGenerateXpaths: ILocator[] = getXpathsForGeneration();
 
     const toGenerateCss =
       generateMissingLocator || generateCssSelector

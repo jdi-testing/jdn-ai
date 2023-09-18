@@ -1,11 +1,11 @@
 import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
 import { MaxGenerationTime } from "../../../app/types/mainSlice.types";
-import { Locator, LocatorTaskStatus, LocatorsState } from "../../../features/locators/types/locator.types";
+import { ILocator, LocatorTaskStatus, LocatorsState } from "../../../features/locators/types/locator.types";
 import { sendMessage } from "../../../pageServices/connector";
 import { runLocatorsGeneration } from "./runLocatorsGeneration.thunk";
 
 interface Meta {
-  generationData: Locator[];
+  generationData: ILocator[];
   maxGenerationTime?: MaxGenerationTime;
 }
 

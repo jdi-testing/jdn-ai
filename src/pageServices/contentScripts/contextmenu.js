@@ -307,8 +307,8 @@ export const runContextMenu = () => {
 
   /* helpers */
 
-  const notAddedToPO = () => predictedElements.some(({ generate }) => !generate);
-  const addedToPO = () => predictedElements.some(({ generate }) => generate);
+  const notAddedToPO = () => predictedElements.some(({ isGenerated }) => !isGenerated);
+  const addedToPO = () => predictedElements.some(({ isGenerated }) => isGenerated);
   const isGroup = () => predictedElements.length !== 1;
   const noDeleted = () => predictedElements.some(({ deleted }) => !deleted);
   const areInProgress = () =>
@@ -329,7 +329,7 @@ export const runContextMenu = () => {
                 click: () =>
                   sendMessage({
                     message: isGroup() ? ScriptMsg.ToggleElementGroup : ScriptMsg.ToggleElement,
-                    param: predictedElements.filter((element) => !element.generate),
+                    param: predictedElements.filter((element) => !element.isGenerated),
                   }),
               },
             },
@@ -344,7 +344,7 @@ export const runContextMenu = () => {
                 click: () =>
                   sendMessage({
                     message: isGroup() ? ScriptMsg.ToggleElementGroup : ScriptMsg.ToggleElement,
-                    param: predictedElements.filter((element) => element.generate),
+                    param: predictedElements.filter((element) => element.isGenerated),
                   }),
               },
             },

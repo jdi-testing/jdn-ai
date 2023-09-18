@@ -70,7 +70,9 @@ export const highlightOnPage = () => {
   };
 
   const getClassName = (element) => {
-    return `jdn-highlight ${element.generate ? "jdn-primary" : "jdn-secondary"} ${element.active ? "jdn-active" : ""}`;
+    return `jdn-highlight ${element.isGenerated ? "jdn-primary" : "jdn-secondary"} ${
+      element.active ? "jdn-active" : ""
+    }`;
   };
 
   const scrollToElement = (jdnHash) => {
@@ -95,7 +97,7 @@ export const highlightOnPage = () => {
     if (div) {
       div.className = getClassName(element);
     }
-    if (!skipScroll && element.generate) scrollToElement(element.jdnHash);
+    if (!skipScroll && element.isGenerated) scrollToElement(element.jdnHash);
   };
 
   const toggleDeletedElement = (element) => {
