@@ -15,7 +15,7 @@ import {
   setChildrenIsChecked,
 } from "./locators.slice";
 
-import { camelCase } from "lodash";
+import { camelCase, size } from "lodash";
 import { PageType } from "../../app/types/mainSlice.types";
 import { RootState } from "../../app/store/store";
 import { ILocator } from "./types/locator.types";
@@ -112,7 +112,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
 
   const handleOnChange: React.MouseEventHandler<HTMLDivElement> = () => {
     dispatch(toggleLocatorIsChecked(element_id));
-    if (allChildrenChecked && _.size(element.children)) {
+    if (allChildrenChecked && size(element.children)) {
       dispatch(setChildrenIsChecked({ locator: element, isChecked: false }));
     } else {
       dispatch(setChildrenIsChecked({ locator: element, isChecked: true }));
