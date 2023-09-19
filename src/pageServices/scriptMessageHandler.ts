@@ -43,7 +43,9 @@ export const updateMessageHandler = (
       );
     },
     [ScriptMsg.CopyLocator]: ({ value, option }) => {
-      copyLocator(value, option)();
+      const pageObject = selectCurrentPageObject(state)!;
+      const framework = pageObject?.framework;
+      copyLocator(framework, value, option)();
     },
     [ScriptMsg.ElementSelect]: (payload) => {
       dispatch(elementSetActive(payload.element_id));

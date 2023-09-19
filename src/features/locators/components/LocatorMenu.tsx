@@ -53,6 +53,7 @@ import {
   selectInProgressActiveDecPriorityByPageObject,
 } from "../selectors/locatorsFiltered.selectors";
 import { AppDispatch } from "../../../app/store/store";
+import { selectLastFrameworkType } from "../../pageObjects/selectors/pageObjects.selectors";
 
 interface Props {
   setIsEditModalOpen: (val: boolean) => void;
@@ -74,6 +75,7 @@ export const LocatorMenu: React.FC<Props> = ({ setIsEditModalOpen, children, tri
   const noPrioritySelected = useSelector(selectInProgressActiveNoPriorityByPageObject);
   const increasedPrioritySelected = useSelector(selectInProgressActiveIncPriorityByPageObject);
   const decreasedPrioritySelected = useSelector(selectInProgressActiveDecPriorityByPageObject);
+  const framework = useSelector(selectLastFrameworkType)!;
 
   // should be revised after 1240 implementation
   const isAdvancedCalculationDisabled = (element: ILocator) => {
@@ -157,7 +159,7 @@ export const LocatorMenu: React.FC<Props> = ({ setIsEditModalOpen, children, tri
       ...(size(actualSelected) === 1 ? [edit(handleEditClick)] : []),
       ...(size(activeNonGenerate) ? [addToPO(handleAddToPO)] : []),
       ...(size(activeGenerate) ? [removeFromPO(handleRemoveFromPO)] : []),
-      ...(size(actualSelected) ? [copyLocatorOption(getCopyOptions(actualSelected))] : []),
+      ...(size(actualSelected) ? [copyLocatorOption(getCopyOptions(framework, actualSelected))] : []),
       ...(size(stoppedSelected) ? [rerun(() => dispatch(rerunGeneration({ generationData: stoppedSelected })))] : []),
       ...(size(deletedActive) ? [restore(handleRestore)] : []),
       ...(size(inProgressSelected) ? [pause(handlePause)] : []),

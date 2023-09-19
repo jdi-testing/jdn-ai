@@ -199,7 +199,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
               </Text>
               {searchState !== SearchState.Hidden ? (
                 <div onContextMenu={handleLocatorRightClick} className="jdn__xpath_buttons">
-                  <LocatorCopyButton {...{ element }} />
+                  <LocatorCopyButton {...{ framework, element }} />
                   <OnbrdTooltip>
                     <LocatorMenu {...{ setIsEditModalOpen, trigger: ["click", "contextMenu"] }}>
                       <Button

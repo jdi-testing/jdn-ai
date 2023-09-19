@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 
 import { CaretDown } from "@phosphor-icons/react";
 import PageSvg from "../assets/page.svg";
-import { selectCurrentPageObject, selectPageObjects } from "../selectors/pageObjects.selectors";
+import { selectPageObjects, selectLastFrameworkType } from "../selectors/pageObjects.selectors";
 import { PageObjGenerationBar } from "./PageObjGenerationBar";
 import { PageObjectPlaceholder } from "./PageObjectPlaceholder";
 import { PageObjCopyButton } from "./PageObjCopyButton";
@@ -35,7 +35,7 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
   const currentPageObjectIndex = useSelector(
     (state: RootState): string | undefined => state.pageObject.present.currentPageObject?.toString()
   );
-  const currentPageObject = useSelector(selectCurrentPageObject);
+  const framework = useSelector(selectLastFrameworkType)!;
   const pageObjects = useSelector(selectPageObjects);
   const [activePanel, setActivePanel] = useState<string[] | undefined>([DEFAULT_ACTIVE_KEY]);
 
@@ -87,7 +87,7 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
     }
   };
 
-  const template = currentPageObject?.framework === FrameworkType.Vividus ? vividusTemplate : jdiTemplate;
+  const template = framework === FrameworkType.Vividus ? vividusTemplate : jdiTemplate;
 
   return (
     <div>
@@ -137,7 +137,7 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
                     }
                     extra={
                       <>
-                        {isPageObjectNotEmpty && <PageObjCopyButton {...{ elements }} />}
+                        {isPageObjectNotEmpty && <PageObjCopyButton {...{ framework, elements }} />}
                         <PageObjMenu {...{ pageObject, elements }} />
                       </>
                     }

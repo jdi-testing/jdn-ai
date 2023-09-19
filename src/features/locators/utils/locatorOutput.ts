@@ -34,3 +34,6 @@ export const getLocatorWithSelenium = (locator: string, option: string): string 
 
 export const getLocatorTemplateWithVividus = (name: string, locatorType: string, locator: ILocator): string =>
   `variables.${name}.${locator.type}.${locator.name}=By.${locatorType}`;
+
+export const getFullLocatorVividusString = (name: string, locatorType: string, locator: ILocator): string =>
+  `${getLocatorTemplateWithVividus(name, locatorType, locator)}(${locator.locator.output})`;

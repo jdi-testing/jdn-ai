@@ -1,17 +1,29 @@
 import { Button, Tooltip } from "antd";
 import { CopySimple } from "@phosphor-icons/react";
 import React, { useState } from "react";
-import { CopyTitle } from "../../../common/types/common";
-import { getLocatorString } from "../../locators/utils/locatorOutput";
+import { CopyTitle, FrameworkType } from "../../../common/types/common";
+import { getLocatorString, getFullLocatorVividusString } from "../utils/locatorOutput";
 import { copyLocatorToClipboard } from "../utils/copyLocatorToClipboard";
+import { ILocator } from "../types/locator.types";
+import _ from "lodash";
 
-export const LocatorCopyButton = ({ element }) => {
+interface Props {
+  framework: FrameworkType;
+  element: ILocator;
+}
+
+export const LocatorCopyButton: React.FC<Props> = ({ framework, element }) => {
   const [copyTooltipTitle, setTooltipTitle] = useState(CopyTitle.Copy);
   const { locator, type, name, annotationType, locatorType } = element;
+  const isVividusFramework = framework === FrameworkType.Vividus;
 
-  const handleCopy = (event) => {
+  const handleCopy = (event: any) => {
     event.stopPropagation();
-    const locatorString = getLocatorString(annotationType, locatorType, locator, type, name);
+
+    const locatorString = isVividusFramework
+      ? getFullLocatorVividusString(name, _.camelCase(locatorType), element)
+      : getLocatorString(annotationType, locatorType, locator, type, name);
+
     copyLocatorToClipboard(locatorString);
     setTooltipTitle(CopyTitle.Copied);
   };
@@ -21,7 +33,7 @@ export const LocatorCopyButton = ({ element }) => {
   };
 
   return (
-    <React.Fragment>
+    <>
       <Tooltip placement="bottom" title={copyTooltipTitle} align={{ offset: [0, -10] }}>
         <Button
           onClick={handleCopy}
@@ -30,6 +42,6 @@ export const LocatorCopyButton = ({ element }) => {
           icon={<CopySimple size={18} color="currentColor" />}
         />
       </Tooltip>
-    </React.Fragment>
+    </>
   );
 };
