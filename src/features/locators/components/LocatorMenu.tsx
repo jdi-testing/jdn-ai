@@ -1,6 +1,6 @@
+import React, { ReactNode, SyntheticEvent, useContext } from "react";
 import { Dropdown } from "antd";
 import { size } from "lodash";
-import React, { ReactNode, SyntheticEvent, useContext } from "react";
 import { useDispatch } from "react-redux";
 import { MaxGenerationTime } from "../../../app/types/mainSlice.types";
 import { MenuItem } from "../../../common/components/menu/Menu";
@@ -194,6 +194,7 @@ export const LocatorMenu: React.FC<Props> = ({ setIsEditModalOpen, children, tri
 
   return (
     <Dropdown
+      className="locator-menu"
       disabled={isOnboardingOpen}
       menu={{ items: getMenuItems(), onClick: handleMenuClick }}
       align={{ offset: [10, 0] }}
