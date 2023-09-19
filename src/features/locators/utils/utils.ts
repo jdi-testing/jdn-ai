@@ -1,4 +1,4 @@
-import { chain } from "lodash";
+import { chain, camelCase } from "lodash";
 import { sendMessage } from "../../../pageServices/connector";
 import { ElementLibrary } from "../types/generationClasses.types";
 import { createElementName } from "../../pageObjects/utils/pageObject";
@@ -25,7 +25,6 @@ import {
   getLocatorWithJDIAnnotation,
   getLocatorWithSelenium,
 } from "./locatorOutput";
-import _ from "lodash";
 
 export const isValidJavaVariable = (value: string) => /^[a-zA-Z_$]([a-zA-Z0-9_])*$/.test(value);
 
@@ -105,7 +104,7 @@ export const copyLocator =
           const { annotationType, locatorType, locator, type, name } = element;
 
           return isVividusFramework
-            ? getFullLocatorVividusString(name, _.camelCase(locatorType), element)
+            ? getFullLocatorVividusString(name, camelCase(locatorType), element)
             : getLocatorString(annotationType, locatorType, locator, type, name);
         });
     }

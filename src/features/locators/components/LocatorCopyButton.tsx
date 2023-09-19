@@ -5,7 +5,7 @@ import { CopyTitle, FrameworkType } from "../../../common/types/common";
 import { getLocatorString, getFullLocatorVividusString } from "../utils/locatorOutput";
 import { copyLocatorToClipboard } from "../utils/copyLocatorToClipboard";
 import { ILocator } from "../types/locator.types";
-import _ from "lodash";
+import { camelCase } from "lodash";
 
 interface Props {
   framework: FrameworkType;
@@ -21,7 +21,7 @@ export const LocatorCopyButton: React.FC<Props> = ({ framework, element }) => {
     event.stopPropagation();
 
     const locatorString = isVividusFramework
-      ? getFullLocatorVividusString(name, _.camelCase(locatorType), element)
+      ? getFullLocatorVividusString(name, camelCase(locatorType), element)
       : getLocatorString(annotationType, locatorType, locator, type, name);
 
     copyLocatorToClipboard(locatorString);

@@ -6,7 +6,7 @@ import { ILocator } from "../../locators/types/locator.types";
 import { CopyTitle, FrameworkType } from "../../../common/types/common";
 import { getLocatorString, getFullLocatorVividusString } from "../../locators/utils/locatorOutput";
 import { copyLocatorsToClipboard } from "../../locators/utils/copyLocatorToClipboard";
-import _ from "lodash";
+import { camelCase } from "lodash";
 
 interface Props {
   framework: FrameworkType;
@@ -22,7 +22,7 @@ export const PageObjCopyButton: FC<Props> = ({ framework, elements }) => {
       const { annotationType, locatorType, locator, type, name } = element;
 
       return isVividusFramework
-        ? getFullLocatorVividusString(name, _.camelCase(locatorType), element)
+        ? getFullLocatorVividusString(name, camelCase(locatorType), element)
         : getLocatorString(annotationType, locatorType, locator, type, name);
     });
   };

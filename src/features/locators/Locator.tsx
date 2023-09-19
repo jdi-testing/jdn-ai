@@ -15,7 +15,7 @@ import {
   setChildrenIsChecked,
 } from "./locators.slice";
 
-import _ from "lodash";
+import { camelCase } from "lodash";
 import { PageType } from "../../app/types/mainSlice.types";
 import { RootState } from "../../app/store/store";
 import { ILocator } from "./types/locator.types";
@@ -160,7 +160,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
     const vividusString = () => {
       return (
         <>
-          <span>{getLocatorTemplateWithVividus(pageObjectName, _.camelCase(locatorType), element)}</span>(
+          <span>{getLocatorTemplateWithVividus(pageObjectName, camelCase(locatorType), element)}</span>(
           <span className="jdn__xpath_item-locator">{locator.output}</span>)
           <br />
         </>
