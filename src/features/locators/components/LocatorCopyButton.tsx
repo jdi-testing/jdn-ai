@@ -1,6 +1,6 @@
 import { Button, Tooltip } from "antd";
 import { CopySimple } from "@phosphor-icons/react";
-import React, { useState } from "react";
+import React, { useState, MouseEvent } from "react";
 import { CopyTitle, FrameworkType } from "../../../common/types/common";
 import { getLocatorString, getFullLocatorVividusString } from "../utils/locatorOutput";
 import { copyLocatorToClipboard } from "../utils/copyLocatorToClipboard";
@@ -17,7 +17,7 @@ export const LocatorCopyButton: React.FC<Props> = ({ framework, element }) => {
   const { locator, type, name, annotationType, locatorType } = element;
   const isVividusFramework = framework === FrameworkType.Vividus;
 
-  const handleCopy = (event: any) => {
+  const handleCopy = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
 
     const locatorString = isVividusFramework
