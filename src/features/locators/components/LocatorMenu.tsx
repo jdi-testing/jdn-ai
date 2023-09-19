@@ -54,8 +54,6 @@ import {
 } from "../selectors/locatorsFiltered.selectors";
 import { AppDispatch } from "../../../app/store/store";
 
-import "../styles/locatorMenu.less";
-
 interface Props {
   setIsEditModalOpen: (val: boolean) => void;
   children?: ReactNode;
