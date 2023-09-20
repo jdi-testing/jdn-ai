@@ -3,13 +3,14 @@
   "name": "JDN",
   "description": "JDN – helps Test Automation Engineer to create Page Objects in the test automation framework and speed up test development",
   "devtools_page": "index.html",
-  "version": "3.14.12",
+  "version": "3.14.13",
   "icons": {
     "128": "icon128.png"
   },
   "permissions": [
     "scripting",
-    "storage"
+    "storage",
+    "clipboardWrite"
   ],
   "host_permissions": [
     "http://*/*",
