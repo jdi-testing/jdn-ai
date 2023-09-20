@@ -16,7 +16,7 @@ export const locatorsTreeMockSearch = [
       output: "",
     },
     name: "radiobuttonsUl",
-    locatorType: LocatorType.cssSelector,
+    locatorType: LocatorType.xPath,
     message: "",
     predictedAttrId: "",
     predicted_label: "radiogroup",
