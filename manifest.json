@@ -9,7 +9,8 @@
   },
   "permissions": [
     "scripting",
-    "storage"
+    "storage",
+    "clipboardWrite"
   ],
   "host_permissions": [
     "http://*/*",

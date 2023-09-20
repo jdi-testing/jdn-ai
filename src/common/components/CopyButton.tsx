@@ -1,6 +1,6 @@
+import React, { useState } from "react";
 import { Button, Tooltip } from "antd";
 import { Copy } from "@phosphor-icons/react";
-import React, { useState } from "react";
 import { copyToClipboard } from "../utils/copyToClipboard";
 import { CopyTitle } from "../types/common";
 
@@ -22,15 +22,13 @@ export const CopyButton: React.FC<Props> = ({ copyText, buttonClassName }) => {
   };
 
   return (
-    <React.Fragment>
-      <Tooltip placement="bottom" title={copyTooltipTitle}>
-        <Button
-          onClick={handleCopy}
-          onMouseEnter={handleMouseEnter}
-          className={buttonClassName}
-          icon={<Copy size={14} />}
-        />
-      </Tooltip>
-    </React.Fragment>
+    <Tooltip placement="bottom" title={copyTooltipTitle}>
+      <Button
+        onClick={handleCopy}
+        onMouseEnter={handleMouseEnter}
+        className={buttonClassName}
+        icon={<Copy size={14} />}
+      />
+    </Tooltip>
   );
 };
