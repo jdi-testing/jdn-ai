@@ -1,4 +1,4 @@
-import { chain, camelCase } from "lodash";
+import { chain } from "lodash";
 import { sendMessage } from "../../../pageServices/connector";
 import { ElementLibrary } from "../types/generationClasses.types";
 import { createElementName } from "../../pageObjects/utils/pageObject";
@@ -101,10 +101,11 @@ export const copyLocator =
         break;
       default:
         value = locatorsForCopy.map((element) => {
-          const { annotationType, locatorType, locator, type, name } = element;
+          const { annotationType, locator, type, name } = element;
+          const locatorType = element?.locatorType || LocatorType.xPath;
 
           return isVividusFramework
-            ? getFullLocatorVividusString(name, camelCase(locatorType), element)
+            ? getFullLocatorVividusString(name, locatorType, element)
             : getLocatorString(annotationType, locatorType, locator, type, name);
         });
     }

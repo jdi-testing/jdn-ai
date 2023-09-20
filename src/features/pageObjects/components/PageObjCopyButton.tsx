@@ -3,10 +3,9 @@ import React, { FC, MouseEvent, useState } from "react";
 import { Button, Tooltip } from "antd";
 import { CopySimple } from "@phosphor-icons/react";
 import { ILocator } from "../../locators/types/locator.types";
-import { CopyTitle, FrameworkType } from "../../../common/types/common";
+import { CopyTitle, FrameworkType, LocatorType } from "../../../common/types/common";
 import { getLocatorString, getFullLocatorVividusString } from "../../locators/utils/locatorOutput";
 import { copyLocatorsToClipboard } from "../../locators/utils/copyLocatorToClipboard";
-import { camelCase } from "lodash";
 
 interface Props {
   framework: FrameworkType;
@@ -19,10 +18,11 @@ export const PageObjCopyButton: FC<Props> = ({ framework, elements }) => {
 
   const getPageObjectForCopying = (locators: ILocator[]) => {
     return locators.map((element) => {
-      const { annotationType, locatorType, locator, type, name } = element;
+      const { annotationType, locator, type, name } = element;
+      const locatorType = element?.locatorType || LocatorType.xPath;
 
       return isVividusFramework
-        ? getFullLocatorVividusString(name, camelCase(locatorType), element)
+        ? getFullLocatorVividusString(name, locatorType, element)
         : getLocatorString(annotationType, locatorType, locator, type, name);
     });
   };

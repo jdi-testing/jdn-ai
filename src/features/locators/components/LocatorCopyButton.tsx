@@ -1,11 +1,10 @@
 import { Button, Tooltip } from "antd";
 import { CopySimple } from "@phosphor-icons/react";
 import React, { useState, MouseEvent } from "react";
-import { CopyTitle, FrameworkType } from "../../../common/types/common";
+import { CopyTitle, FrameworkType, LocatorType } from "../../../common/types/common";
 import { getLocatorString, getFullLocatorVividusString } from "../utils/locatorOutput";
 import { copyLocatorToClipboard } from "../utils/copyLocatorToClipboard";
 import { ILocator } from "../types/locator.types";
-import { camelCase } from "lodash";
 
 interface Props {
   framework: FrameworkType;
@@ -14,14 +13,15 @@ interface Props {
 
 export const LocatorCopyButton: React.FC<Props> = ({ framework, element }) => {
   const [copyTooltipTitle, setTooltipTitle] = useState(CopyTitle.Copy);
-  const { locator, type, name, annotationType, locatorType } = element;
+  const { locator, type, name, annotationType } = element;
   const isVividusFramework = framework === FrameworkType.Vividus;
+  const locatorType = element?.locatorType || LocatorType.xPath;
 
   const handleCopy = (event: MouseEvent<HTMLButtonElement>) => {
     event.stopPropagation();
 
     const locatorString = isVividusFramework
-      ? getFullLocatorVividusString(name, camelCase(locatorType), element)
+      ? getFullLocatorVividusString(name, locatorType, element)
       : getLocatorString(annotationType, locatorType, locator, type, name);
 
     copyLocatorToClipboard(locatorString);
