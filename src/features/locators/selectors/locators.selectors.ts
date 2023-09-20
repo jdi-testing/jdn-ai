@@ -40,7 +40,7 @@ export const selectLocators = createSelector(selectAll, (items: ILocator[]) =>
 );
 
 export const selectLocatorsToGenerate = createSelector(selectLocators, (items: ILocator[]) =>
-  items.filter((el) => el.isGenerated && !el.deleted)
+  items.filter((el) => el.isChecked && !el.deleted)
 );
 
 export const isLocatorIndeterminate = createSelector(
