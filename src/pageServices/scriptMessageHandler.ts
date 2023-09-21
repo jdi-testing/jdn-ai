@@ -22,6 +22,7 @@ import { selectLocatorByJdnHash } from "../features/locators/selectors/locators.
 import { ScriptMsg, dispatchingMessages } from "./scriptMsg.constants";
 import { selectPresentActiveLocators } from "../features/locators/selectors/locatorsByPO.selectors";
 import { selectCurrentPageObject } from "../features/pageObjects/selectors/pageObjects.selectors";
+import { FrameworkType } from "../common/types/common";
 
 export type ScriptMessagePayload = { message: keyof Actions; param: Record<string, never> };
 
@@ -44,7 +45,7 @@ export const updateMessageHandler = (
     },
     [ScriptMsg.CopyLocator]: ({ value, option }) => {
       const pageObject = selectCurrentPageObject(state)!;
-      const framework = pageObject?.framework;
+      const framework = pageObject?.framework || FrameworkType.JdiLight;
       copyLocator(framework, value, option)();
     },
     [ScriptMsg.ElementSelect]: (payload) => {

@@ -35,7 +35,7 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
   const currentPageObjectIndex = useSelector(
     (state: RootState): string | undefined => state.pageObject.present.currentPageObject?.toString()
   );
-  const framework = useSelector(selectLastFrameworkType)!;
+  const framework = useSelector(selectLastFrameworkType) || FrameworkType.JdiLight;
   const pageObjects = useSelector(selectPageObjects);
   const [activePanel, setActivePanel] = useState<string[] | undefined>([DEFAULT_ACTIVE_KEY]);
 
