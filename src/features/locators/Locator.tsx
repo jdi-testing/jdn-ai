@@ -15,7 +15,7 @@ import {
   setChildrenIsChecked,
 } from "./locators.slice";
 
-import _ from "lodash";
+import { size } from "lodash";
 import { PageType } from "../../app/types/mainSlice.types";
 import { RootState } from "../../app/store/store";
 import { ILocator } from "./types/locator.types";
@@ -112,7 +112,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
 
   const handleOnChange: React.MouseEventHandler<HTMLDivElement> = () => {
     dispatch(toggleLocatorIsChecked(element_id));
-    if (allChildrenChecked && _.size(element.children)) {
+    if (allChildrenChecked && size(element.children)) {
       dispatch(setChildrenIsChecked({ locator: element, isChecked: false }));
     } else {
       dispatch(setChildrenIsChecked({ locator: element, isChecked: true }));
@@ -160,7 +160,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
     const vividusString = () => {
       return (
         <>
-          <span>{getLocatorTemplateWithVividus(pageObjectName, _.camelCase(locatorType), element)}</span>(
+          <span>{getLocatorTemplateWithVividus(pageObjectName, locatorType, element)}</span>(
           <span className="jdn__xpath_item-locator">{locator.output}</span>)
           <br />
         </>
@@ -199,7 +199,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
               </Text>
               {searchState !== SearchState.Hidden ? (
                 <div onContextMenu={handleLocatorRightClick} className="jdn__xpath_buttons">
-                  <LocatorCopyButton {...{ element }} />
+                  <LocatorCopyButton {...{ framework, element }} />
                   <OnbrdTooltip>
                     <LocatorMenu {...{ setIsEditModalOpen, trigger: ["click", "contextMenu"] }}>
                       <Button

@@ -6,7 +6,6 @@ import { getLocatorPrefix, getLocatorTemplateWithVividus } from "../../locators/
 import { AnnotationType, LocatorType } from "../../../common/types/common";
 import { hasAnnotationType } from "./hasAnnotationType";
 import { PageObject } from "../types/pageObjectSlice.types";
-import _ from "lodash";
 
 export const getClassName = (title: string) => {
   let className = transliterate(title);
@@ -29,7 +28,7 @@ export const getPageObjectTemplateForVidus = (
 
   locators.forEach((it) => {
     const currentLocatorType = it.locatorType || locatorType || LocatorType.xPath;
-    const locatorTypeProperty = _.camelCase(currentLocatorType);
+    const locatorTypeProperty = camelCase(currentLocatorType);
     // @ts-ignore
     pageCode += `${getLocatorTemplateWithVividus(name, locatorTypeProperty, it)}(${it.locator[locatorTypeProperty]})\n`;
   });

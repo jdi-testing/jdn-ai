@@ -1,3 +1,4 @@
+import { LocatorType } from "../../../../common/types/common";
 import { LocatorTaskStatus } from "../../../../features/locators/types/locator.types";
 
 export const locatorsTreeMockSearch = [
@@ -15,6 +16,7 @@ export const locatorsTreeMockSearch = [
       output: "",
     },
     name: "radiobuttonsUl",
+    locatorType: LocatorType.xPath,
     message: "",
     predictedAttrId: "",
     predicted_label: "radiogroup",
@@ -38,6 +40,7 @@ export const locatorsTreeMockSearch = [
           output: "",
         },
         name: "breadcrumbsLi7",
+        locatorType: LocatorType.xPath,
         message: "",
         predictedAttrId: "",
         predicted_label: "breadcrumbs",
@@ -64,6 +67,7 @@ export const locatorsTreeMockSearch = [
       output: "",
     },
     name: "radiobuttonsUl",
+    locatorType: LocatorType.xPath,
     message: "",
     predictedAttrId: "",
     elemText: "radioLi7",

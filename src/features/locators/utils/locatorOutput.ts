@@ -2,6 +2,7 @@ import { AnnotationType, LocatorType } from "../../../common/types/common";
 import { ElementLibrary, ElementClass } from "../types/generationClasses.types";
 import { ILocator, LocatorValue } from "../types/locator.types";
 import { CALCULATING } from "./constants";
+import { camelCase } from "lodash";
 
 export const getLocator = (locatorValue: LocatorValue, locatorType: LocatorType = LocatorType.xPath) => {
   if (locatorType !== LocatorType.cssSelector) return locatorValue.xPath;
@@ -32,5 +33,8 @@ export const getLocatorWithJDIAnnotation = (locator: string): string => `${Annot
 export const getLocatorWithSelenium = (locator: string, option: string): string =>
   `${AnnotationType.FindBy}(${option} = "${locator}")`;
 
-export const getLocatorTemplateWithVividus = (name: string, locatorType: string, locator: ILocator): string =>
-  `variables.${name}.${locator.type}.${locator.name}=By.${locatorType}`;
+export const getLocatorTemplateWithVividus = (name: string, locatorType: LocatorType, locator: ILocator): string =>
+  `variables.${name}.${locator.type}.${locator.name}=By.${camelCase(locatorType)}`;
+
+export const getFullLocatorVividusString = (name: string, locatorType: LocatorType, locator: ILocator): string =>
+  `${getLocatorTemplateWithVividus(name, locatorType, locator)}(${locator.locator.output})`;

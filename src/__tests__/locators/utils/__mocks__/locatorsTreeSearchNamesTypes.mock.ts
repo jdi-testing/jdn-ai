@@ -1,3 +1,4 @@
+import { LocatorType } from "../../../../common/types/common";
 import { SearchState } from "../../../../features/locators/components/LocatorsTree";
 import { LocatorTaskStatus } from "../../../../features/locators/types/locator.types";
 
@@ -16,6 +17,7 @@ export const locatorsTreeMockSearchTypesNames = [
       cssSelector: "",
     },
     name: "radiobuttonsUl",
+    locatorType: LocatorType.xPath,
     message: "",
     predictedAttrId: "",
     predicted_label: "radiogroup",
@@ -39,6 +41,7 @@ export const locatorsTreeMockSearchTypesNames = [
           cssSelector: "",
         },
         name: "anyName",
+        locatorType: LocatorType.xPath,
         message: "",
         predictedAttrId: "",
         predicted_label: "breadcrumbs",
@@ -62,6 +65,7 @@ export const locatorsTreeMockSearchTypesNames = [
               cssSelector: "",
             },
             name: "breadcrumbsLi6",
+            locatorType: LocatorType.xPath,
             message: "",
             predictedAttrId: "",
             predicted_label: "breadcrumbs",
@@ -86,6 +90,7 @@ export const locatorsTreeMockSearchTypesNames = [
               cssSelector: "",
             },
             name: "breadcrumbsUl",
+            locatorType: LocatorType.xPath,
             message: "",
             predictedAttrId: "",
             predicted_label: "breadcrumbs",
@@ -112,6 +117,7 @@ export const locatorsTreeMockSearchTypesNames = [
           cssSelector: "",
         },
         name: "breadcrumbsLi2",
+        locatorType: LocatorType.xPath,
         message: "",
         predictedAttrId: "",
         predicted_label: "breadcrumbs",
@@ -135,6 +141,7 @@ export const locatorsTreeMockSearchTypesNames = [
               cssSelector: "",
             },
             name: "breadcrumbsLi7",
+            locatorType: LocatorType.xPath,
             message: "",
             predictedAttrId: "",
             predicted_label: "breadcrumbs",
@@ -159,6 +166,7 @@ export const locatorsTreeMockSearchTypesNames = [
               cssSelector: "",
             },
             name: "breadcrumbsUl",
+            locatorType: LocatorType.xPath,
             message: "",
             predictedAttrId: "",
             predicted_label: "breadcrumbs",

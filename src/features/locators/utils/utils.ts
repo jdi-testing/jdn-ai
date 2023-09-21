@@ -15,11 +15,16 @@ import {
 } from "../types/locator.types";
 import { getElementFullXpath } from "../../../common/utils/helpers";
 import { LocatorOption } from "./constants";
-import { LocatorType } from "../../../common/types/common";
+import { FrameworkType, LocatorType } from "../../../common/types/common";
 import { isStringContainsNumbers } from "../../../common/utils/helpers";
 import { FormInstance } from "antd/es/form/Form";
 import { copyLocatorsToClipboard } from "./copyLocatorToClipboard";
-import { getLocatorString, getLocatorWithJDIAnnotation, getLocatorWithSelenium } from "./locatorOutput";
+import {
+  getFullLocatorVividusString,
+  getLocatorString,
+  getLocatorWithJDIAnnotation,
+  getLocatorWithSelenium,
+} from "./locatorOutput";
 
 export const isValidJavaVariable = (value: string) => /^[a-zA-Z_$]([a-zA-Z0-9_])*$/.test(value);
 
@@ -71,40 +76,47 @@ export const setIndents = (ref: React.RefObject<HTMLDivElement>, depth: number) 
   }
 };
 
-export const copyLocator = (locatorsForCopy: ILocator[], option?: LocatorOption) => (): void => {
-  let value: string[];
-  switch (option) {
-    case LocatorOption.Xpath:
-      value = locatorsForCopy.map(({ locator }) => `"${locator.xPath}"`);
-      break;
-    case LocatorOption.XpathAndSelenium:
-      value = locatorsForCopy.map(({ locator }) => getLocatorWithSelenium(locator.xPath, "xpath"));
-      break;
-    case LocatorOption.XpathAndJDI:
-      value = locatorsForCopy.map(({ locator }) => getLocatorWithJDIAnnotation(locator.xPath));
-      break;
-    case LocatorOption.CSSSelector:
-      value = locatorsForCopy.map(({ locator }) => `"${locator.cssSelector}"`);
-      break;
-    case LocatorOption.CSSAndSelenium:
-      value = locatorsForCopy.map(({ locator }) => getLocatorWithSelenium(locator.cssSelector, "css"));
-      break;
-    case LocatorOption.CSSAndJDI:
-      value = locatorsForCopy.map(({ locator }) => getLocatorWithJDIAnnotation(locator.cssSelector));
-      break;
-    default:
-      value = locatorsForCopy.map(({ annotationType, locatorType, locator, type, name }) =>
-        getLocatorString(annotationType, locatorType, locator, type, name)
-      );
-  }
+export const copyLocator =
+  (framework: FrameworkType, locatorsForCopy: ILocator[], option?: LocatorOption) => (): void => {
+    const isVividusFramework = framework === FrameworkType.Vividus;
+    let value: string[];
+    switch (option) {
+      case LocatorOption.Xpath:
+        value = locatorsForCopy.map(({ locator }) => `"${locator.xPath}"`);
+        break;
+      case LocatorOption.XpathAndSelenium:
+        value = locatorsForCopy.map(({ locator }) => getLocatorWithSelenium(locator.xPath, "xpath"));
+        break;
+      case LocatorOption.XpathAndJDI:
+        value = locatorsForCopy.map(({ locator }) => getLocatorWithJDIAnnotation(locator.xPath));
+        break;
+      case LocatorOption.CSSSelector:
+        value = locatorsForCopy.map(({ locator }) => `"${locator.cssSelector}"`);
+        break;
+      case LocatorOption.CSSAndSelenium:
+        value = locatorsForCopy.map(({ locator }) => getLocatorWithSelenium(locator.cssSelector, "css"));
+        break;
+      case LocatorOption.CSSAndJDI:
+        value = locatorsForCopy.map(({ locator }) => getLocatorWithJDIAnnotation(locator.cssSelector));
+        break;
+      default:
+        value = locatorsForCopy.map((element) => {
+          const { annotationType, locator, type, name } = element;
+          const locatorType = element?.locatorType || LocatorType.xPath;
 
-  copyLocatorsToClipboard(value);
-};
+          return isVividusFramework
+            ? getFullLocatorVividusString(name, locatorType, element)
+            : getLocatorString(annotationType, locatorType, locator, type, name);
+        });
+    }
 
-export const getCopyOptions = (selectedLocators: ILocator[]) => {
+    copyLocatorsToClipboard(value);
+  };
+
+export const getCopyOptions = (framework: FrameworkType, selectedLocators: ILocator[]) => {
   return Object.values(LocatorOption).reduce(
     (options, option) => {
-      options[option as LocatorOption] = copyLocator(selectedLocators, option);
+      options[option as LocatorOption] = copyLocator(framework, selectedLocators, option);
       return options;
     },
     {} as Record<LocatorOption, () => void>
