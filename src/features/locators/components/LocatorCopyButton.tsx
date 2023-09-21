@@ -33,15 +33,13 @@ export const LocatorCopyButton: React.FC<Props> = ({ framework, element }) => {
   };
 
   return (
-    <>
-      <Tooltip placement="bottom" title={copyTooltipTitle} align={{ offset: [0, -10] }}>
-        <Button
-          onClick={handleCopy}
-          onMouseEnter={handleMouseEnter}
-          className="jdn__itemsList-button jdn__locatorsList_button-copy"
-          icon={<CopySimple size={18} color="currentColor" />}
-        />
-      </Tooltip>
-    </>
+    <Tooltip placement="bottom" title={copyTooltipTitle} align={{ offset: [0, -10] }}>
+      <Button
+        onClick={handleCopy}
+        onMouseEnter={handleMouseEnter}
+        className="jdn__itemsList-button jdn__locatorsList_button-copy"
+        icon={<CopySimple size={18} color="currentColor" />}
+      />
+    </Tooltip>
   );
 };
