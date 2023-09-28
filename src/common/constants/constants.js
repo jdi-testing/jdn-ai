@@ -6,3 +6,5 @@ export const SCRIPT_ERROR = {
 };
 
 export const IN_DEVELOPMENT_TITLE = "This feature is in development";
+
+export const ONE_SECOND = 1000;

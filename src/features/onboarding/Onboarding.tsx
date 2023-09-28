@@ -5,6 +5,7 @@ import { StepIndicator } from "./components/stepIndicator";
 import { useSelector } from "react-redux";
 import { OnbrdStep } from "./types/constants";
 import { selectFirstLocatorByPO } from "../locators/selectors/locatorsByPO.selectors";
+import { ONE_SECOND } from "../../common/constants/constants";
 
 export const Onboarding = () => {
   const { defaultStep, isOpen, tourSteps, closeOnboarding } = useContext(OnboardingContext);
@@ -34,7 +35,9 @@ export const Onboarding = () => {
       (defaultStep !== OnbrdStep.CustomLocator || // this is a case for go Back correctly from DownloadPO to
         currentStep !== OnbrdStep.SaveLocators) // SaveLocators, because it's hard to set a default step from context
     ) {
-      setCurrentStep(defaultStep);
+      defaultStep === OnbrdStep.CustomLocator
+        ? setTimeout(() => setCurrentStep(defaultStep), ONE_SECOND)
+        : setCurrentStep(defaultStep);
     } else if (defaultStep && defaultStep > tourSteps!.length) {
       closeOnboarding();
     }
