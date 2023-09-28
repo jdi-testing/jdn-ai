@@ -1,24 +1,24 @@
-import { configureStore } from "@reduxjs/toolkit";
-import undoable from "redux-undo";
-import filterSlice from "../../features/filter/filter.slice";
-import locatorsSlice from "../../features/locators/locators.slice";
-import pageObjectSlice from "../../features/pageObjects/pageObject.slice";
-import { updateMessageHandler } from "../../pageServices/scriptMessageHandler";
-import mainSlice from "../main.slice";
-import { cancellableActions } from "../../common/components/notification/middlewares/cancellableActions";
-import { logger } from "./middlewares/logger";
-import { scriptNotifier } from "../../pageServices/scriptNotifier";
-import { changePageMiddleware } from "./middlewares/changePage.middleware";
-import { updateSocketMessageHandler } from "../../services/webSocketMessageHandler";
-import { shouldRunGeneration } from "../../features/locators/reducers/shouldRunGeneration.middleware";
-import { quitThrottlerMiddleware } from "../../common/utils/throttler";
-import { onLocatorsCreated } from "../../features/locators/reducers/identifyElements.thunk";
+import { configureStore } from '@reduxjs/toolkit';
+import undoable from 'redux-undo';
+import filterSlice from '../../features/filter/filter.slice';
+import locatorsSlice from '../../features/locators/locators.slice';
+import pageObjectSlice from '../../features/pageObjects/pageObject.slice';
+import { updateMessageHandler } from '../../pageServices/scriptMessageHandler';
+import mainSlice from '../main.slice';
+import { cancellableActions } from '../../common/components/notification/middlewares/cancellableActions';
+import { logger } from './middlewares/logger';
+import { scriptNotifier } from '../../pageServices/scriptNotifier';
+import { changePageMiddleware } from './middlewares/changePage.middleware';
+import { updateSocketMessageHandler } from '../../services/webSocketMessageHandler';
+import { shouldRunGeneration } from '../../features/locators/reducers/shouldRunGeneration.middleware';
+import { quitThrottlerMiddleware } from '../../common/utils/throttler';
+import { onLocatorsCreated } from '../../features/locators/reducers/identifyElements.thunk';
 
 const rootReducer = {
   main: mainSlice,
   filters: filterSlice,
-  locators: undoable(locatorsSlice, { undoType: "LOCATOR_UNDO", jumpType: "LOCATOR_JUMP" }),
-  pageObject: undoable(pageObjectSlice, { undoType: "PAGEOBJECT_UNDO" }),
+  locators: undoable(locatorsSlice, { undoType: 'LOCATOR_UNDO', jumpType: 'LOCATOR_JUMP' }),
+  pageObject: undoable(pageObjectSlice, { undoType: 'PAGEOBJECT_UNDO' }),
 };
 
 export const store = configureStore({
@@ -27,12 +27,12 @@ export const store = configureStore({
     getDefaultMiddleware({
       serializableCheck: {
         ignoredActions: [
-          "locators/setElementGroupGeneration",
-          "locators/elementSetActive",
-          "locators/elementGroupSetActive",
-          "locators/setActiveSingle",
-          "locators/updateLocatorGroup",
-          "main/setScriptMessage",
+          'locators/setElementGroupGeneration',
+          'locators/elementSetActive',
+          'locators/elementGroupSetActive',
+          'locators/setActiveSingle',
+          'locators/updateLocatorGroup',
+          'main/setScriptMessage',
         ],
       },
     }).concat([

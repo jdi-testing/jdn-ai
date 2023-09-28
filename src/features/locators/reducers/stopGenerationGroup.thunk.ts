@@ -1,10 +1,9 @@
-import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
-import { locatorsAdapter } from "../selectors/locators.selectors";
-import { ILocator, LocatorsState } from "../types/locator.types";
-import { locatorGenerationController } from "../utils/locatorGenerationController";
-import { LocatorTaskStatus } from "../types/locator.types";
+import { ActionReducerMapBuilder, createAsyncThunk } from '@reduxjs/toolkit';
+import { locatorsAdapter } from '../selectors/locators.selectors';
+import { ILocator, LocatorsState, LocatorTaskStatus } from '../types/locator.types';
+import { locatorGenerationController } from '../utils/locatorGenerationController';
 
-export const stopGenerationGroup = createAsyncThunk("locators/stopGenerationGroup", async (elements: ILocator[]) => {
+export const stopGenerationGroup = createAsyncThunk('locators/stopGenerationGroup', async (elements: ILocator[]) => {
   const hashes = elements.map(({ jdnHash }) => jdnHash);
   return locatorGenerationController.revokeTasks(hashes);
 });

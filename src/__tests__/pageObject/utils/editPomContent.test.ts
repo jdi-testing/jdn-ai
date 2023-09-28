@@ -1,10 +1,10 @@
-import { FrameworkType, LocatorType } from "../../../common/types/common";
-import { ElementLibrary } from "../../../features/locators/types/generationClasses.types";
-import { editPomContent } from "../../../features/pageObjects/utils/templateFileContent";
-import { html5Result, muiResult, vuetifyResult } from "../__mocks__/pomTemplates.mock";
-import { pageObject0 } from "../__mocks__/selectLocatorsByPageObject.mock";
+import { FrameworkType, LocatorType } from '../../../common/types/common';
+import { ElementLibrary } from '../../../features/locators/types/generationClasses.types';
+import { editPomContent } from '../../../features/pageObjects/utils/templateFileContent';
+import { html5Result, muiResult, vuetifyResult } from '../__mocks__/pomTemplates.mock';
+import { pageObject0 } from '../__mocks__/selectLocatorsByPageObject.mock';
 
-describe("editPomContent function", () => {
+describe('editPomContent function', () => {
   const content = `        <!--JDI-->
         <dependency>
         </dependency>

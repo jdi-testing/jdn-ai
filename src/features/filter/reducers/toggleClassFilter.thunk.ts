@@ -1,11 +1,11 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { filterAdapter, simpleSelectFilterById } from "../filter.selectors";
-import { RootState } from "../../../app/store/store";
-import { FilterKey, Filter, ClassFilterValue } from "../types/filter.types";
-import { jdiClassFilterInit } from "../utils/filterSet";
-import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
-import { ElementClass, ElementLibrary } from "../../locators/types/generationClasses.types";
-import { LocalStorageKey, setLocalStorage, getLocalStorage } from "../../../common/utils/localStorage";
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import { filterAdapter, simpleSelectFilterById } from '../filter.selectors';
+import { RootState } from '../../../app/store/store';
+import { FilterKey, Filter, ClassFilterValue } from '../types/filter.types';
+import { jdiClassFilterInit } from '../utils/filterSet';
+import { PageObjectId } from '../../pageObjects/types/pageObjectSlice.types';
+import { ElementClass, ElementLibrary } from '../../locators/types/generationClasses.types';
+import { LocalStorageKey, setLocalStorage, getLocalStorage } from '../../../common/utils/localStorage';
 
 interface toggleClassFilterPayload {
   pageObjectId: PageObjectId;
@@ -22,7 +22,7 @@ interface toggleClassFilterReducerPayload {
 }
 
 export const toggleClassFilter = createAsyncThunk(
-  "filter/toggleClassFilter",
+  'filter/toggleClassFilter',
   async (payload: toggleClassFilterPayload, { getState }) => {
     const { pageObjectId, jdiClass, value, library } = payload;
 
@@ -45,7 +45,7 @@ export const toggleClassFilter = createAsyncThunk(
     }
 
     return { newFilterValue, newFilter, initialFilter, pageObjectId };
-  }
+  },
 );
 
 export const toggleClassFilterReducer = (builder: any) => {

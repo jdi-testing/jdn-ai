@@ -1,5 +1,5 @@
-import { AnyAction, AsyncThunkAction } from "@reduxjs/toolkit";
-import { locatorJump, locatorUndo, pageobjectUndo } from "../utils/undoActions";
+import { AnyAction, AsyncThunkAction } from '@reduxjs/toolkit';
+import { locatorJump, locatorUndo, pageobjectUndo } from '../utils/undoActions';
 
 export type UndoAction = typeof pageobjectUndo | typeof locatorUndo | typeof locatorJump;
 

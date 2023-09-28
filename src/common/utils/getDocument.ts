@@ -1,4 +1,4 @@
-import connector from "../../pageServices/connector";
+import connector from '../../pageServices/connector';
 
 export const getDocument = async () => {
   const documentResult = await connector.attachContentScript(() => JSON.stringify(document.documentElement.innerHTML));

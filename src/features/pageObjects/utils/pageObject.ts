@@ -1,16 +1,16 @@
-import { saveAs } from "file-saver";
-import { chain, isEmpty, size, subtract, toLower, toString, truncate, upperFirst } from "lodash";
-import connector from "../../../pageServices/connector";
-import { ElementId, ILocator } from "../../locators/types/locator.types";
-import { PageObject, PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
-import { ElementLabel, ElementLibrary } from "../../locators/types/generationClasses.types";
-import javaReservedWords from "./javaReservedWords.json";
-import perfReservedWords from "./perfReservedWords.json";
-import { getPageObjectTemplateForJdi, getPageObjectTemplateForVividus } from "./pageObjectTemplate";
-import { pageObjectTemplatePerfTest } from "./pageObjectTemplatePerfTest";
-import { getJDILabel } from "../../locators/utils/locatorTypesUtils";
-import { MAX_LOCATOR_NAME_LENGTH } from "./constants";
-import { FrameworkType } from "../../../common/types/common";
+import { saveAs } from 'file-saver';
+import { chain, isEmpty, size, subtract, toLower, toString, truncate, upperFirst } from 'lodash';
+import connector from '../../../pageServices/connector';
+import { ElementId, ILocator } from '../../locators/types/locator.types';
+import { PageObject, PageObjectId } from '../../pageObjects/types/pageObjectSlice.types';
+import { ElementLabel, ElementLibrary } from '../../locators/types/generationClasses.types';
+import javaReservedWords from './javaReservedWords.json';
+import perfReservedWords from './perfReservedWords.json';
+import { getPageObjectTemplateForJdi, getPageObjectTemplateForVividus } from './pageObjectTemplate';
+import { pageObjectTemplatePerfTest } from './pageObjectTemplatePerfTest';
+import { getJDILabel } from '../../locators/utils/locatorTypesUtils';
+import { MAX_LOCATOR_NAME_LENGTH } from './constants';
+import { FrameworkType } from '../../../common/types/common';
 
 export const isStringMatchesReservedWord = (string: string) => javaReservedWords.includes(string);
 
@@ -26,7 +26,7 @@ export const createElementName = (
   element: ILocator,
   library: ElementLibrary,
   uniqueNames: Array<string>,
-  newType?: string
+  newType?: string,
 ) => {
   const { elemName, elemId, elemText, predicted_label, elemAriaLabel } = element;
 
@@ -40,38 +40,38 @@ export const createElementName = (
     return index;
   };
 
-  const returnLatinCodePoints = (string: string) => string.replace(/[^\u0000-\u00ff]/gu, "");
+  const returnLatinCodePoints = (string: string) => string.replace(/[^\u0000-\u00ff]/gu, '');
 
   const normalizeString = (string: string) =>
-    chain(string).trim().camelCase().truncate({ length: MAX_LOCATOR_NAME_LENGTH, omission: "" }).value();
+    chain(string).trim().camelCase().truncate({ length: MAX_LOCATOR_NAME_LENGTH, omission: '' }).value();
 
   const isUnique = (_name: string) => uniqueNames.indexOf(_name) === -1;
 
   const concat = (origin: string) => (append: string) => {
     const _origin = origin;
     if (_origin)
-      return truncate(_origin, { length: subtract(60, size(append)), omission: "" }).concat(upperFirst(append));
+      return truncate(_origin, { length: subtract(60, size(append)), omission: '' }).concat(upperFirst(append));
     else return append;
   };
 
-  const getName = () => (elemName ? normalizeString(elemName) : "");
-  const getText = () => (elemText ? normalizeString(returnLatinCodePoints(elemText)) : "");
-  const getAriaLabel = () => (elemAriaLabel ? normalizeString(returnLatinCodePoints(elemAriaLabel)) : "");
-  const getId = () => (elemId ? normalizeString(elemId) : "");
+  const getName = () => (elemName ? normalizeString(elemName) : '');
+  const getText = () => (elemText ? normalizeString(returnLatinCodePoints(elemText)) : '');
+  const getAriaLabel = () => (elemAriaLabel ? normalizeString(returnLatinCodePoints(elemAriaLabel)) : '');
+  const getId = () => (elemId ? normalizeString(elemId) : '');
   const getClass = () => (newType || getJDILabel(predicted_label as keyof ElementLabel, library)).toLowerCase();
   const getIndex = (string: string) => toString(uniqueIndex(string));
 
   const pickingTerms = [getName, getText, getAriaLabel];
   const concatenatingTerms = [getId, getClass, getIndex];
 
-  const startsWithNumber = new RegExp("^[0-9].*$");
+  const startsWithNumber = new RegExp('^[0-9].*$');
   const checkNumberFirst = (string: string) => (string.match(startsWithNumber) ? `name${string}` : string);
 
-  let _resultName = "";
+  let _resultName = '';
 
   const pickValue = () => {
-    let _baseName = "";
-    let _result = "";
+    let _baseName = '';
+    let _result = '';
 
     let indexP = 0;
     do {
@@ -120,7 +120,7 @@ export const createLocatorNames = (elements: ILocator[], library: ElementLibrary
 };
 
 export const getPageAttributes = async () => {
-  return await connector.attachContentScript(() => {
+  return connector.attachContentScript(() => {
     const { title, URL } = document;
     return { title, url: URL };
   });
@@ -128,7 +128,7 @@ export const getPageAttributes = async () => {
 
 export const getPage = async (
   locators: ILocator[],
-  pageObject: PageObject
+  pageObject: PageObject,
 ): Promise<{ pageCode: string; title: string }> => {
   return pageObject.framework === FrameworkType.Vividus
     ? getPageObjectTemplateForVividus(locators, pageObject)
@@ -137,7 +137,7 @@ export const getPage = async (
 
 export const getPagePerfTest = async (
   locators: ILocator[],
-  pageObject: PageObject
+  pageObject: PageObject,
 ): Promise<{ pageCode: string; name: string }> => {
   return pageObjectTemplatePerfTest(locators, pageObject);
 };
@@ -145,7 +145,7 @@ export const getPagePerfTest = async (
 export const generatePageObject = async (elements: ILocator[], pageObject: PageObject): Promise<void> => {
   const page = await getPage(elements, pageObject);
   const blob = new Blob([page.pageCode], {
-    type: "text/plain;charset=utf-8",
+    type: 'text/plain;charset=utf-8',
   });
   saveAs(blob, `${page.title}.java`);
 };
@@ -153,7 +153,7 @@ export const generatePageObject = async (elements: ILocator[], pageObject: PageO
 export const generatePageObjectPerfTest = async (elements: ILocator[], pageObject: PageObject): Promise<void> => {
   const page = await getPagePerfTest(elements, pageObject);
   const blob = new Blob([page.pageCode], {
-    type: "text/plain;charset=utf-8",
+    type: 'text/plain;charset=utf-8',
   });
   saveAs(blob, `${page.name}.js`);
 };

@@ -1,8 +1,8 @@
-import { AnnotationType, LocatorType } from "../../../common/types/common";
-import { ElementLibrary, ElementClass } from "../types/generationClasses.types";
-import { ILocator, LocatorValue } from "../types/locator.types";
-import { CALCULATING } from "./constants";
-import { camelCase } from "lodash";
+import { AnnotationType, LocatorType } from '../../../common/types/common';
+import { ElementLibrary, ElementClass } from '../types/generationClasses.types';
+import { ILocator, LocatorValue } from '../types/locator.types';
+import { CALCULATING } from './constants';
+import { camelCase } from 'lodash';
 
 export const getLocator = (locatorValue: LocatorValue, locatorType: LocatorType = LocatorType.xPath) => {
   if (locatorType !== LocatorType.cssSelector) return locatorValue.xPath;
@@ -11,10 +11,10 @@ export const getLocator = (locatorValue: LocatorValue, locatorType: LocatorType 
 
 export const getLocatorPrefix = (annotationType?: AnnotationType, locatorType?: LocatorType): string => {
   if (annotationType === AnnotationType.FindBy) {
-    return `${locatorType === LocatorType.cssSelector ? "css" : "xpath"} = `;
+    return `${locatorType === LocatorType.cssSelector ? 'css' : 'xpath'} = `;
   }
 
-  return "";
+  return '';
 };
 
 export const getLocatorString = (
@@ -22,7 +22,7 @@ export const getLocatorString = (
   locatorType: LocatorType | undefined,
   locator: LocatorValue,
   type: ElementLibrary | ElementClass,
-  name: string
+  name: string,
 ): string =>
   `${annotationType || AnnotationType.UI}(${getLocatorPrefix(annotationType, locatorType)}"${
     locator.output

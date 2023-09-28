@@ -1,8 +1,9 @@
-import { Middleware } from "@reduxjs/toolkit";
-import { selectAreInProgress } from "../../features/locators/selectors/locatorsByPO.selectors";
+import { Middleware } from '@reduxjs/toolkit';
+import { selectAreInProgress } from '../../features/locators/selectors/locatorsByPO.selectors';
 
 class Throttler {
   accumulatedArgs: any[] = [];
+
   interval: NodeJS.Timer | null = null;
 
   constructor() {
@@ -45,8 +46,8 @@ export const quitThrottlerMiddleware: Middleware = (store) => (next) => (action)
   const result = next(action);
 
   switch (action.type) {
-    case "locators/updateLocatorGroup":
-    case "locators/failGeneration":
+    case 'locators/updateLocatorGroup':
+    case 'locators/failGeneration':
       if (!selectAreInProgress(store.getState())) {
         throttler.quitThrottler();
       }

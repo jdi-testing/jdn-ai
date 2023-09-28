@@ -1,5 +1,5 @@
-import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
-import { ElementClass } from "../../locators/types/generationClasses.types";
+import { PageObjectId } from '../../pageObjects/types/pageObjectSlice.types';
+import { ElementClass } from '../../locators/types/generationClasses.types';
 
 export interface Filter extends FilterType {
   pageObjectId: PageObjectId;
@@ -12,7 +12,7 @@ export interface FilterType {
 export type ClassFilterValue = Partial<Record<ElementClass, boolean>>;
 
 export enum FilterKey {
-  JDIclassFilter = "JDIclassFilter",
+  JDIclassFilter = 'JDIclassFilter',
 }
 
 export interface JDIClassFilterValue {

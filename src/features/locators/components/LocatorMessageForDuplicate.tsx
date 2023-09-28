@@ -1,7 +1,7 @@
-import React, { MouseEvent } from "react";
-import { useDispatch } from "react-redux";
-import { setActiveSingle, setScrollToLocator } from "../locators.slice";
-import { ILocator } from "../types/locator.types";
+import React, { MouseEvent } from 'react';
+import { useDispatch } from 'react-redux';
+import { setActiveSingle, setScrollToLocator } from '../locators.slice';
+import { ILocator } from '../types/locator.types';
 
 interface LocatorMessageForDuplicateProps {
   closeDialog: () => void;
@@ -11,7 +11,7 @@ interface LocatorMessageForDuplicateProps {
 export const LocatorMessageForDuplicate: React.FC<LocatorMessageForDuplicateProps> = ({ closeDialog, duplicates }) => {
   const dispatch = useDispatch();
 
-  dispatch(setScrollToLocator(""));
+  dispatch(setScrollToLocator(''));
 
   const handleOnMessageClick = async (event: MouseEvent<HTMLSpanElement>) => {
     event.stopPropagation();
@@ -25,10 +25,10 @@ export const LocatorMessageForDuplicate: React.FC<LocatorMessageForDuplicateProp
 
   return (
     <span>
-      Duplicate locator detected. Please, edit or{" "}
+      Duplicate locator detected. Please, edit or{' '}
       <span className="jdn__locatorEdit-navigation" onClick={handleOnMessageClick}>
         refer to the original locator
-      </span>{" "}
+      </span>{' '}
       for further actions.
     </span>
   );

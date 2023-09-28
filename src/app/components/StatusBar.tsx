@@ -1,20 +1,19 @@
-import React from "react";
-import { useSelector } from "react-redux";
-import { Button, Space, Tooltip, Typography } from "antd";
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { Button, Space, Tooltip, Typography } from 'antd';
 
-import { isNil } from "lodash";
-import { CloudCheck, CloudSlash, DesktopTower, Info } from "@phosphor-icons/react";
-import { BackendStatus } from "../types/mainSlice.types";
-import { LocalUrl } from "../utils/constants";
-import { RootState } from "../store/store";
-import DesktopSlash from "../assets/desktopTowerSlash.svg";
-import { readmeLinkAddress } from "../../common/constants/constants";
-import { ReportProblem } from "./ReportProblem";
-import { LocatorsGenerationStatus } from "../../features/locators/types/locator.types";
-import { useOnBoardingRef } from "../../features/onboarding/utils/useOnboardingRef";
-import { OnbrdStep } from "../../features/onboarding/types/constants";
-import { OnboardingButton } from "./OnboardingButton";
-import { componentsTexts } from "../utils/constants";
+import { isNil } from 'lodash';
+import { CloudCheck, CloudSlash, DesktopTower, Info } from '@phosphor-icons/react';
+import { BackendStatus } from '../types/mainSlice.types';
+import { LocalUrl, componentsTexts } from '../utils/constants';
+import { RootState } from '../store/store';
+import DesktopSlash from '../assets/desktopTowerSlash.svg';
+import { readmeLinkAddress } from '../../common/constants/constants';
+import { ReportProblem } from './ReportProblem';
+import { LocatorsGenerationStatus } from '../../features/locators/types/locator.types';
+import { useOnBoardingRef } from '../../features/onboarding/utils/useOnboardingRef';
+import { OnbrdStep } from '../../features/onboarding/types/constants';
+import { OnboardingButton } from './OnboardingButton';
 
 export const StatusBar = () => {
   const backendVer = useSelector<RootState>((_state) => _state.main.serverVersion);
@@ -64,7 +63,7 @@ export const StatusBar = () => {
     <>
       <div className="jdn__header-version">
         <span>{`${componentsTexts.StatusBarVersionJdn} ${pluginVer} ${
-          !isNil(backendVer) ? `${componentsTexts.StatusBarVersionBackend} ${backendVer}` : ""
+          !isNil(backendVer) ? `${componentsTexts.StatusBarVersionBackend} ${backendVer}` : ''
         }`}</span>
       </div>
       <Space size={[10, 0]} className="header__space">

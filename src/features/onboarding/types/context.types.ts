@@ -1,6 +1,6 @@
-import { MutableRefObject } from "react";
-import { OnbrdStep } from "./constants";
-import { TourProps } from "antd";
+import { MutableRefObject } from 'react';
+import { OnbrdStep } from './constants';
+import { TourProps } from 'antd';
 
 export interface OnboardingContext {
   // a step, that is set to Onboarding based on a state,
@@ -9,18 +9,18 @@ export interface OnboardingContext {
   isCustomLocatorFlow: boolean;
   isOpen: boolean;
   isOnboardingAvailable: boolean;
-  tourSteps: TourProps["steps"];
+  tourSteps: TourProps['steps'];
   addRef: (
     name: OnbrdStep,
     ref?: MutableRefObject<any>,
     onClickNext?: (...args: any) => void,
-    onClickPrev?: (...args: any) => void
+    onClickPrev?: (...args: any) => void,
   ) => void;
   updateRef: (
     name: OnbrdStep,
     ref?: MutableRefObject<any>,
     onClickNext?: (...args: any) => void,
-    onClickPrev?: (...args: any) => void
+    onClickPrev?: (...args: any) => void,
   ) => void;
   openOnboarding: () => void;
   closeOnboarding: () => void;

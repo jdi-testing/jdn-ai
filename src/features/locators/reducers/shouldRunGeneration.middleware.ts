@@ -1,9 +1,9 @@
-import { Middleware } from "@reduxjs/toolkit";
-import { ILocator } from "../types/locator.types";
-import { runLocatorsGeneration } from "./runLocatorsGeneration.thunk";
-import { getNoLocatorsElements, hasAllLocators } from "../utils/utils";
-import { selectLocatorsByPageObject } from "../selectors/locatorsByPO.selectors";
-import { AUTO_GENERATION_THRESHOLD } from "../utils/constants";
+import { Middleware } from '@reduxjs/toolkit';
+import { ILocator } from '../types/locator.types';
+import { runLocatorsGeneration } from './runLocatorsGeneration.thunk';
+import { getNoLocatorsElements, hasAllLocators } from '../utils/utils';
+import { selectLocatorsByPageObject } from '../selectors/locatorsByPO.selectors';
+import { AUTO_GENERATION_THRESHOLD } from '../utils/constants';
 
 const onSetActiveGroup = (dispatch: any, locators: ILocator[]) => {
   const noLocators = getNoLocatorsElements(locators);
@@ -13,7 +13,7 @@ const onSetActiveGroup = (dispatch: any, locators: ILocator[]) => {
       runLocatorsGeneration({
         locators: noLocators,
         generateMissingLocator: true,
-      })
+      }),
     );
   }
 };
@@ -23,19 +23,19 @@ export const shouldRunGeneration: Middleware = (store) => (next) => (action) => 
   const state = store.getState();
 
   switch (type) {
-    case "locators/setElementGroupGeneration": {
+    case 'locators/setElementGroupGeneration': {
       const { locators, isGenerated } = payload;
       if (isGenerated) {
         onSetActiveGroup(store.dispatch, locators);
       }
       break;
     }
-    case "locators/elementGroupSetActive": {
+    case 'locators/elementGroupSetActive': {
       onSetActiveGroup(store.dispatch, payload.locators as ILocator[]);
       break;
     }
-    case "locators/setActiveSingle":
-    case "locators/elementSetActive": {
+    case 'locators/setActiveSingle':
+    case 'locators/elementSetActive': {
       const noLocators = !hasAllLocators(payload);
       if (noLocators) {
         store.dispatch(
@@ -43,12 +43,12 @@ export const shouldRunGeneration: Middleware = (store) => (next) => (action) => 
           runLocatorsGeneration({
             locators: [payload as ILocator],
             generateMissingLocator: true,
-          })
+          }),
         );
       }
       break;
     }
-    case "filter/toggleClassFilter/fulfilled": {
+    case 'filter/toggleClassFilter/fulfilled': {
       const { value, jdiClass, pageObjectId } = meta.arg;
       if (!value) break;
 
@@ -60,13 +60,13 @@ export const shouldRunGeneration: Middleware = (store) => (next) => (action) => 
           runLocatorsGeneration({
             locators: noLocators,
             generateMissingLocator: true,
-          })
+          }),
         );
       }
 
       break;
     }
-    case "filter/toggleClassFilterAll/fulfilled": {
+    case 'filter/toggleClassFilterAll/fulfilled': {
       const { value, pageObjectId } = meta.arg;
       if (!value) break;
 
@@ -77,7 +77,7 @@ export const shouldRunGeneration: Middleware = (store) => (next) => (action) => 
           runLocatorsGeneration({
             locators: noLocators,
             generateMissingLocator: true,
-          })
+          }),
         );
       }
 

@@ -1,11 +1,11 @@
-import React, { FC, MouseEvent, useState } from "react";
+import React, { FC, MouseEvent, useState } from 'react';
 
-import { Button, Tooltip } from "antd";
-import { CopySimple } from "@phosphor-icons/react";
-import { ILocator } from "../../locators/types/locator.types";
-import { CopyTitle, FrameworkType, LocatorType } from "../../../common/types/common";
-import { getLocatorString, getFullLocatorVividusString } from "../../locators/utils/locatorOutput";
-import { copyLocatorsToClipboard } from "../../locators/utils/copyLocatorToClipboard";
+import { Button, Tooltip } from 'antd';
+import { CopySimple } from '@phosphor-icons/react';
+import { ILocator } from '../../locators/types/locator.types';
+import { CopyTitle, FrameworkType, LocatorType } from '../../../common/types/common';
+import { getLocatorString, getFullLocatorVividusString } from '../../locators/utils/locatorOutput';
+import { copyLocatorsToClipboard } from '../../locators/utils/copyLocatorToClipboard';
 
 interface Props {
   framework: FrameworkType;

@@ -1,22 +1,22 @@
-import React, { useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Button, Modal, Row, Space, Tooltip } from "antd";
-import { CaretDown, Plus, Trash } from "@phosphor-icons/react";
+import React, { useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Button, Modal, Row, Space, Tooltip } from 'antd';
+import { CaretDown, Plus, Trash } from '@phosphor-icons/react';
 
-import { pushNotification } from "../../../app/main.slice";
-import { size } from "lodash";
-import { selectPageObjects } from "../selectors/pageObjects.selectors";
+import { pushNotification } from '../../../app/main.slice';
+import { size } from 'lodash';
+import { selectPageObjects } from '../selectors/pageObjects.selectors';
 
-import { removeAll as removeAllLocators } from "../../locators/locators.slice";
-import { removeAll as removeAllPageObjects } from "../pageObject.slice";
-import { removeAll as removeAllFilters } from "../../filter/filter.slice";
-import { AppDispatch, RootState } from "../../../app/store/store";
-import { selectLocatorsToGenerate } from "../../locators/selectors/locators.selectors";
-import { generateAndDownloadZip } from "../utils/projectTemplate";
-import { useOnBoardingRef } from "../../onboarding/utils/useOnboardingRef";
-import { OnbrdStep } from "../../onboarding/types/constants";
-import { checkLocatorsValidity } from "../../locators/reducers/checkLocatorValidity.thunk";
-import { useAddPageObject } from "../utils/useAddPageObject";
+import { removeAll as removeAllLocators } from '../../locators/locators.slice';
+import { removeAll as removeAllPageObjects } from '../pageObject.slice';
+import { removeAll as removeAllFilters } from '../../filter/filter.slice';
+import { AppDispatch, RootState } from '../../../app/store/store';
+import { selectLocatorsToGenerate } from '../../locators/selectors/locators.selectors';
+import { generateAndDownloadZip } from '../utils/projectTemplate';
+import { useOnBoardingRef } from '../../onboarding/utils/useOnboardingRef';
+import { OnbrdStep } from '../../onboarding/types/constants';
+import { checkLocatorsValidity } from '../../locators/reducers/checkLocatorValidity.thunk';
+import { useAddPageObject } from '../utils/useAddPageObject';
 
 const { confirm } = Modal;
 
@@ -38,20 +38,20 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
   const handleAddPageObject = useAddPageObject(setActivePanel);
 
   const handleDownload = () => {
-    dispatch(pushNotification({ action: { type: "downloadTemplate" } }));
+    dispatch(pushNotification({ action: { type: 'downloadTemplate' } }));
     if (template) generateAndDownloadZip(state, template);
   };
 
   const handleRemoveAll = () => {
     const isOnePO = size(pageObjects) === 1;
     confirm({
-      title: isOnePO ? "Delete page object?" : "Delete all page objects?",
+      title: isOnePO ? 'Delete page object?' : 'Delete all page objects?',
       content: isOnePO
-        ? "This page object will be deleted and you can lose all your data"
-        : "All page objects will be deleted and you can lose all your data",
-      okText: isOnePO ? "Delete" : "Delete all",
+        ? 'This page object will be deleted and you can lose all your data'
+        : 'All page objects will be deleted and you can lose all your data',
+      okText: isOnePO ? 'Delete' : 'Delete all',
       okButtonProps: {
-        type: "primary",
+        type: 'primary',
         danger: true,
       },
       onOk: () => {
@@ -69,7 +69,7 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
     <Row className="jdn__itemsList-header" justify="space-between">
       <CaretDown
         style={{
-          transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)",
+          transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
         }}
         className="jdn__itemsList-header-collapse"
         color="#00000073"
@@ -100,7 +100,7 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
           size="small"
           onClick={handleAddPageObject}
           disabled={!!newPOstub}
-          icon={<Plus size={16} color={newPOstub ? "#00000040" : "#fff"} />}
+          icon={<Plus size={16} color={newPOstub ? '#00000040' : '#fff'} />}
         >
           Page Object
         </Button>

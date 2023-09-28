@@ -18,7 +18,7 @@ const mainConfig = {
   mode: "development",
   entry: {
     index: "./src/index.js",
-    app: "./src/app.js",
+    app: "./src/app.jsx",
     contentScript: "./src/pageServices/contentScripts/index.ts",
   },
   output: {

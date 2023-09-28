@@ -1,10 +1,10 @@
-import { defaultClass } from "../../features/locators/types/generationClasses.types";
-import { JDNLabel, RulesMap, SelectorsMap } from "../../services/rules/rules.types";
-import { ScriptMsg } from "../scriptMsg.constants";
+import { defaultClass } from '../../features/locators/types/generationClasses.types';
+import { JDNLabel, RulesMap, SelectorsMap } from '../../services/rules/rules.types';
+import { ScriptMsg } from '../scriptMsg.constants';
 
 export const findBySelectors = () => {
-  const JDN_HASH = "jdn-hash";
-  const JDN_LABEL = "jdn-label";
+  const JDN_HASH = 'jdn-hash';
+  const JDN_LABEL = 'jdn-label';
 
   // elements with conflicted labels
   const conflictLabels: Element[] = [];
@@ -47,12 +47,12 @@ export const findBySelectors = () => {
 
   const removeConflictedClasses = (elements: NodeListOf<Element>, selectorsMap: SelectorsMap) => {
     conflictLabels.forEach((_elem) => {
-      const labels = _elem.getAttribute(JDN_LABEL)?.split(" ") || [];
+      const labels = _elem.getAttribute(JDN_LABEL)?.split(' ') || [];
       if (labels?.length > 1) {
         // @ts-ignore
-        const prioritized: Partial<Record<RulesMap["priority"], JDNLabel>> = {};
+        const prioritized: Partial<Record<RulesMap['priority'], JDNLabel>> = {};
         // @ts-ignore
-        labels.forEach((_label) => (prioritized[selectorsMap[_label as JDNLabel]?.priority || "normal"] = _label));
+        labels.forEach((_label) => (prioritized[selectorsMap[_label as JDNLabel]?.priority || 'normal'] = _label));
         _elem.setAttribute(JDN_LABEL, prioritized.normal || prioritized.low || defaultClass);
       }
     });
@@ -61,17 +61,17 @@ export const findBySelectors = () => {
 
   const findElements = async (selectorsMap: SelectorsMap, callback: (arr: any[]) => void) => {
     Object.entries(selectorsMap).forEach(([jdnLabel, { selector }]) =>
-      markupElements(document.querySelectorAll(selector), jdnLabel as JDNLabel)
+      markupElements(document.querySelectorAll(selector), jdnLabel as JDNLabel),
     );
 
     callback(
       cleanUpContent(
         removeConflictedClasses(document.querySelectorAll(`[${JDN_LABEL}]`), selectorsMap),
-        selectorsMap
+        selectorsMap,
       ).map((_elem) => ({
         element_id: _elem.getAttribute(JDN_HASH),
         predicted_label: _elem.getAttribute(JDN_LABEL),
-      }))
+      })),
     );
 
     removeLabels();
@@ -80,7 +80,7 @@ export const findBySelectors = () => {
   const messageHandler = (
     { message, param }: { message: string; param: any },
     _: chrome.runtime.MessageSender,
-    sendResponse: (response: any) => void
+    sendResponse: (response: any) => void,
   ) => {
     switch (message) {
       case ScriptMsg.FindBySelectors:

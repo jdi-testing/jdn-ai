@@ -1,7 +1,7 @@
-import { Spin } from "antd";
-import React from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../app/store/store";
+import { Spin } from 'antd';
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../app/store/store';
 
 export const LocatorTreeSpinner = () => {
   const status = useSelector((state: RootState) => state.locators.present.status);

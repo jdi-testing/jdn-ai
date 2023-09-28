@@ -1,14 +1,14 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { filterAdapter, simpleSelectFilterById } from "../filter.selectors";
-import { RootState } from "../../../app/store/store";
-import { FilterKey, ClassFilterValue, Filter } from "../types/filter.types";
-import { jdiClassFilterInit } from "../utils/filterSet";
-import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
-import { ElementLibrary } from "../../locators/types/generationClasses.types";
-import { LocalStorageKey, setLocalStorage, getLocalStorage } from "../../../common/utils/localStorage";
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import { filterAdapter, simpleSelectFilterById } from '../filter.selectors';
+import { RootState } from '../../../app/store/store';
+import { FilterKey, ClassFilterValue, Filter } from '../types/filter.types';
+import { jdiClassFilterInit } from '../utils/filterSet';
+import { PageObjectId } from '../../pageObjects/types/pageObjectSlice.types';
+import { ElementLibrary } from '../../locators/types/generationClasses.types';
+import { LocalStorageKey, setLocalStorage, getLocalStorage } from '../../../common/utils/localStorage';
 
 export const toggleClassFilterAll = createAsyncThunk(
-  "filter/toggleClassFilterAll",
+  'filter/toggleClassFilterAll',
   async (payload: { pageObjectId: PageObjectId; library: ElementLibrary; value: boolean }, { getState }) => {
     const { pageObjectId, value, library } = payload;
     const state = getState() as RootState;
@@ -27,7 +27,7 @@ export const toggleClassFilterAll = createAsyncThunk(
 
     setLocalStorage(LocalStorageKey.Filter, { ...(savedFilters ?? {}), [library]: newFilter });
     return { newFilterValue, newFilter };
-  }
+  },
 );
 
 export const toggleClassFilterAllReducer = (builder: any) => {
@@ -37,7 +37,7 @@ export const toggleClassFilterAllReducer = (builder: any) => {
       (state: any, { payload }: { payload: { newFilterValue: Filter; newFilter: ClassFilterValue } }) => {
         const { newFilterValue, newFilter } = payload;
         filterAdapter.upsertOne(state, { ...newFilterValue, [FilterKey.JDIclassFilter]: newFilter });
-      }
+      },
     )
     .addCase(toggleClassFilterAll.rejected, (state: RootState, { error }: { error: Error }) => {
       throw new Error(error.stack);

@@ -1,8 +1,8 @@
-import getCssSelector from "css-selector-generator";
-import { finder } from "@medv/finder";
-import { ScriptMsg } from "../scriptMsg.constants";
-import { sendMessage } from "./utils";
-import { LocatorTaskStatus } from "../../features/locators/types/locator.types";
+import getCssSelector from 'css-selector-generator';
+import { finder } from '@medv/finder';
+import { ScriptMsg } from '../scriptMsg.constants';
+import { sendMessage } from './utils';
+import { LocatorTaskStatus } from '../../features/locators/types/locator.types';
 
 export const getGenerationAttributes = () => {
   /*
@@ -58,12 +58,12 @@ export const getGenerationAttributes = () => {
         }
       }
 
-      const tagName = (element.prefix ? element.prefix + ":" : "") + element.localName;
-      const pathIndex = index || hasFollowingSiblings ? "[" + (index + 1) + "]" : "";
+      const tagName = (element.prefix ? element.prefix + ':' : '') + element.localName;
+      const pathIndex = index || hasFollowingSiblings ? '[' + (index + 1) + ']' : '';
       paths.splice(0, 0, tagName + pathIndex);
     }
 
-    return paths.length ? "/" + paths.join("/") : null;
+    return paths.length ? '/' + paths.join('/') : null;
     /*
             <---
             */
@@ -80,7 +80,7 @@ export const getGenerationAttributes = () => {
     // And because of lib logic we can't prevent generation these selectors.
     // Reproduced on https://www.docker.com
     try {
-      const finderForbiddenAttributes = ["jdn-hash", "href", "class", "xmlns", "xmlns:xlink", "xlink:href"];
+      const finderForbiddenAttributes = ['jdn-hash', 'href', 'class', 'xmlns', 'xmlns:xlink', 'xlink:href'];
       selectorByFinder = finder(element, {
         attr: (name, value) => value && !finderForbiddenAttributes.includes(name),
       });
@@ -107,8 +107,8 @@ export const getGenerationAttributes = () => {
       selectorByGenerator = err;
     }
 
-    const isSelectorByGeneratorString = typeof selectorByGenerator === "string";
-    const isSelectorByFinderString = typeof selectorByFinder === "string";
+    const isSelectorByGeneratorString = typeof selectorByGenerator === 'string';
+    const isSelectorByFinderString = typeof selectorByFinder === 'string';
 
     let selectorGenerationResult;
 
@@ -120,7 +120,7 @@ export const getGenerationAttributes = () => {
     } else if (!isSelectorByGeneratorString && isSelectorByFinderString) {
       selectorGenerationResult = selectorByFinder;
     } else {
-      selectorGenerationResult = "CSS selector generation was failed";
+      selectorGenerationResult = 'CSS selector generation was failed';
     }
     return selectorGenerationResult;
   };
@@ -149,12 +149,12 @@ export const getGenerationAttributes = () => {
     - Otherwise, leave it as it is (searchButton -> searchButton)
   */
   const camelCase = (string) => {
-    if (string.indexOf("-") < 0 && string.indexOf("_") < 0) {
+    if (string.indexOf('-') < 0 && string.indexOf('_') < 0) {
       return string;
     }
     const regex = /(_|-)([a-z])/g;
     const toCamelCase = (string) => string[1].toUpperCase();
-    return string.toLowerCase().replace(regex, toCamelCase).replaceAll("-", "_");
+    return string.toLowerCase().replace(regex, toCamelCase).replaceAll('-', '_');
   };
 
   const mapElements = (elements, generateCss) => {
@@ -165,11 +165,11 @@ export const getGenerationAttributes = () => {
           return;
         }
         const xPath = getElementTreeXPath(element);
-        const attrName = element.getAttribute("name");
-        predictedElement.elemName = attrName ? camelCase(attrName) : "";
-        predictedElement.elemId = element.id && typeof element.id === "string" ? camelCase(element.id) : "";
+        const attrName = element.getAttribute('name');
+        predictedElement.elemName = attrName ? camelCase(attrName) : '';
+        predictedElement.elemId = element.id && typeof element.id === 'string' ? camelCase(element.id) : '';
         predictedElement.elemText = element.textContent;
-        predictedElement.elemAriaLabel = element.getAttribute("aria-label");
+        predictedElement.elemAriaLabel = element.getAttribute('aria-label');
         predictedElement.locator = {
           xPath,
           fullXpath: xPath,

@@ -1,31 +1,31 @@
-import { Tree } from "antd";
-import { size } from "lodash";
-import React, { ReactNode, useEffect, useMemo, useRef, useState } from "react";
-import { useSelector } from "react-redux";
-import { CaretDown } from "@phosphor-icons/react";
-import { selectCurrentPage } from "../../../app/main.selectors";
-import { RootState } from "../../../app/store/store";
-import { ElementId, ILocator } from "../types/locator.types";
-import { defaultLibrary } from "../types/generationClasses.types";
-import { LocatorsProgress } from "./LocatorsProgress";
-import { useSize } from "../utils/useSize";
-import { convertListToTree, LocatorTree, setNewParents } from "../utils/locatorsTreeUtils";
-import { Locator } from "../Locator";
-import { selectCurrentPageObject } from "../../pageObjects/selectors/pageObjects.selectors";
-import { selectPresentLocatorsByPO } from "../selectors/locatorsByPO.selectors";
-import { selectFilteredLocators } from "../selectors/locatorsFiltered.selectors";
-import { isLocatorListPage } from "../../../app/utils/heplers";
+import { Tree } from 'antd';
+import { size } from 'lodash';
+import React, { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { CaretDown } from '@phosphor-icons/react';
+import { selectCurrentPage } from '../../../app/main.selectors';
+import { RootState } from '../../../app/store/store';
+import { ElementId, ILocator } from '../types/locator.types';
+import { defaultLibrary } from '../types/generationClasses.types';
+import { LocatorsProgress } from './LocatorsProgress';
+import { useSize } from '../utils/useSize';
+import { convertListToTree, LocatorTree, setNewParents } from '../utils/locatorsTreeUtils';
+import { Locator } from '../Locator';
+import { selectCurrentPageObject } from '../../pageObjects/selectors/pageObjects.selectors';
+import { selectPresentLocatorsByPO } from '../selectors/locatorsByPO.selectors';
+import { selectFilteredLocators } from '../selectors/locatorsFiltered.selectors';
+import { isLocatorListPage } from '../../../app/utils/heplers';
 
 export enum SearchState {
-  None = "none",
-  Disabled = "disabled",
-  Hidden = "hidden",
+  None = 'none',
+  Disabled = 'disabled',
+  Hidden = 'hidden',
 }
 
 export enum ExpandState {
-  Expanded = "Expanded",
-  Collapsed = "Collapsed",
-  Custom = "Custom",
+  Expanded = 'Expanded',
+  Collapsed = 'Collapsed',
+  Custom = 'Custom',
 }
 
 export interface LocatorTreeProps {
@@ -98,7 +98,7 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
 
   const locatorsTree = useMemo(
     () => convertListToTree(locators, searchString),
-    [currentPage, searchString, filteredLocators]
+    [currentPage, searchString, filteredLocators],
   );
 
   const renderTreeNodes = (data: Array<LocatorTree>): Array<TreeNode> => {
@@ -114,8 +114,8 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
         const node: TreeNode = {
           key: element_id,
           className: `${
-            locatorsMap[element_id].isGenerated && isLocatorListPage(currentPage) ? "jdn__tree-item--selected" : ""
-          }${locatorsMap[element_id].active ? " jdn__tree-item--active" : ""}`,
+            locatorsMap[element_id].isGenerated && isLocatorListPage(currentPage) ? 'jdn__tree-item--selected' : ''
+          }${locatorsMap[element_id].active ? ' jdn__tree-item--active' : ''}`,
           title: (
             <Locator
               {...{
@@ -155,7 +155,7 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
           // bug in ant's typings, impossible to create correct ref type
           // eslint-disable-next-line
           // @ts-ignore
-          treeRef.current.scrollTo({ key: scrollToLocator, align: "top", offset: containerHeight / 2 });
+          treeRef.current.scrollTo({ key: scrollToLocator, align: 'top', offset: containerHeight / 2 });
       }, 500);
     }
   }, [expandedKeys]);

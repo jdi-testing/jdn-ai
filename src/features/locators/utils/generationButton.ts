@@ -1,6 +1,6 @@
-import { sendMessage } from "../../../pageServices/connector";
-import { getLibrarySelectors } from "../../../services/rules/createSelector";
-import { VueRules } from "../../../services/rules/Vue.rules";
+import { sendMessage } from '../../../pageServices/connector';
+import { getLibrarySelectors } from '../../../services/rules/createSelector';
+import { VueRules } from '../../../services/rules/Vue.rules';
 
 /* Runs elements identification based on algorithmic rules */
 export const findByRules = () => {

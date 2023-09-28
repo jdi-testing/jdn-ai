@@ -1,36 +1,36 @@
-import { LocatorType } from "../common/types/common";
-import { getLocator } from "../features/locators/utils/locatorOutput";
+import { LocatorType } from '../common/types/common';
+import { getLocator } from '../features/locators/utils/locatorOutput';
 
 const data = [
   {
-    input: { xPath: "/html/body/footer", cssSelector: "html > body > footer" },
-    xpathOutput: "/html/body/footer",
-    cssOutput: "html > body > footer",
+    input: { xPath: '/html/body/footer', cssSelector: 'html > body > footer' },
+    xpathOutput: '/html/body/footer',
+    cssOutput: 'html > body > footer',
   },
   {
-    input: { xPath: "//*[@class='footer-menu']", cssSelector: ".footer-menu" },
+    input: { xPath: "//*[@class='footer-menu']", cssSelector: '.footer-menu' },
     xpathOutput: "//*[@class='footer-menu']",
-    cssOutput: ".footer-menu",
+    cssOutput: '.footer-menu',
   },
   {
     input: {
-      xPath: "//div/button",
-      cssSelector: "div > button",
+      xPath: '//div/button',
+      cssSelector: 'div > button',
     },
-    xpathOutput: "//div/button",
-    cssOutput: "div > button",
+    xpathOutput: '//div/button',
+    cssOutput: 'div > button',
   },
   {
     input: {
       xPath: "//*[contains(text(), 'JDI Github')]",
-      cssSelector: "html > body > footer",
+      cssSelector: 'html > body > footer',
     },
     xpathOutput: "//*[contains(text(), 'JDI Github')]",
-    cssOutput: "html > body > footer",
+    cssOutput: 'html > body > footer',
   },
 ];
 
-describe("locator presentation by getLocator()", () => {
+describe('locator presentation by getLocator()', () => {
   data.forEach((_data) => {
     test(`converts ${JSON.stringify(_data.input, LocatorType.xPath)} to ${_data.xpathOutput}`, () => {
       expect(getLocator(_data.input)).toBe(_data.xpathOutput);

@@ -1,24 +1,24 @@
-import { ActionReducerMapBuilder, Middleware, createAsyncThunk } from "@reduxjs/toolkit";
-import { predictElements } from "../../../pageServices/pageDataHandlers";
-import { IdentificationStatus, LocatorsState, PredictedEntity } from "../../locators/types/locator.types";
-import { setCurrentPageObj, setPageData } from "../../pageObjects/pageObject.slice";
-import { setFilter } from "../../filter/filter.slice";
-import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
-import { ElementLibrary, defaultLibrary, predictEndpoints } from "../types/generationClasses.types";
+import { ActionReducerMapBuilder, Middleware, createAsyncThunk } from '@reduxjs/toolkit';
+import { predictElements } from '../../../pageServices/pageDataHandlers';
+import { IdentificationStatus, LocatorsState, PredictedEntity } from '../../locators/types/locator.types';
+import { setCurrentPageObj, setPageData } from '../../pageObjects/pageObject.slice';
+import { setFilter } from '../../filter/filter.slice';
+import { PageObjectId } from '../../pageObjects/types/pageObjectSlice.types';
+import { ElementLibrary, defaultLibrary, predictEndpoints } from '../types/generationClasses.types';
 
-import { createLocators } from "./createLocators.thunk";
-import { findByRules } from "../utils/generationButton";
-import { LocalStorageKey, getLocalStorage } from "../../../common/utils/localStorage";
-import { selectAutoGeneratingLocatorTypes, selectPageObjById } from "../../pageObjects/selectors/pageObjects.selectors";
-import { RootState } from "../../../app/store/store";
-import { runLocatorsGeneration } from "./runLocatorsGeneration.thunk";
+import { createLocators } from './createLocators.thunk';
+import { findByRules } from '../utils/generationButton';
+import { LocalStorageKey, getLocalStorage } from '../../../common/utils/localStorage';
+import { selectAutoGeneratingLocatorTypes, selectPageObjById } from '../../pageObjects/selectors/pageObjects.selectors';
+import { RootState } from '../../../app/store/store';
+import { runLocatorsGeneration } from './runLocatorsGeneration.thunk';
 
 interface Meta {
   library: ElementLibrary;
   pageObj: PageObjectId;
 }
 
-export const identifyElements = createAsyncThunk("locators/identifyElements", async ({ pageObj }: Meta, thunkAPI) => {
+export const identifyElements = createAsyncThunk('locators/identifyElements', async ({ pageObj }: Meta, thunkAPI) => {
   /* set current page object and filter */
   thunkAPI.dispatch(setCurrentPageObj(pageObj));
 

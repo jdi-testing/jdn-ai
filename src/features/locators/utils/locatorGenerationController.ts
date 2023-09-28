@@ -1,20 +1,24 @@
-import { WebSocketMessage } from "../../../services/backend";
-import { JDNHash, ILocator, LocatorTaskStatus } from "../types/locator.types";
-import { webSocketController } from "../../../services/webSocketController";
-import { getDocument } from "../../../common/utils/getDocument";
-import { MainState, MaxGenerationTime } from "../../../app/types/mainSlice.types";
-import { PageObject } from "../../pageObjects/types/pageObjectSlice.types";
+import { WebSocketMessage } from '../../../services/backend';
+import { JDNHash, ILocator, LocatorTaskStatus } from '../types/locator.types';
+import { webSocketController } from '../../../services/webSocketController';
+import { getDocument } from '../../../common/utils/getDocument';
+import { MainState, MaxGenerationTime } from '../../../app/types/mainSlice.types';
+import { PageObject } from '../../pageObjects/types/pageObjectSlice.types';
 
 export const isGeneratedStatus = (taskStatus: LocatorTaskStatus) => taskStatus === LocatorTaskStatus.SUCCESS;
 
 class LocatorGenerationController {
   onGenerationFailed = null;
+
   sessionId: string;
+
   pageObject: PageObject;
-  xPathConfig: MainState["xpathConfig"];
+
+  xPathConfig: MainState['xpathConfig'];
+
   document: string;
 
-  init(sessionId: string, xPathConfig: MainState["xpathConfig"]) {
+  init(sessionId: string, xPathConfig: MainState['xpathConfig']) {
     this.sessionId = sessionId;
     this.xPathConfig = xPathConfig;
   }
@@ -22,7 +26,7 @@ class LocatorGenerationController {
   async scheduleMultipleXpathGeneration(
     elements: ILocator[],
     pageObject?: PageObject,
-    maxGenerationTime?: MaxGenerationTime
+    maxGenerationTime?: MaxGenerationTime,
   ) {
     if (pageObject) this.pageObject = pageObject;
     this.document = await getDocument();
@@ -50,7 +54,7 @@ class LocatorGenerationController {
             element_library: this.pageObject.library,
             website_url: this.pageObject.url,
           },
-        })
+        }),
       )
       .then(() => {
         webSocketController.startPing();
@@ -63,7 +67,7 @@ class LocatorGenerationController {
         JSON.stringify({
           action: WebSocketMessage.UP_PRIORITY,
           payload: { element_id: id },
-        })
+        }),
       );
     });
   }
@@ -74,7 +78,7 @@ class LocatorGenerationController {
         JSON.stringify({
           action: WebSocketMessage.DOWN_PRIORITY,
           payload: { element_id: id },
-        })
+        }),
       );
     });
   }
@@ -84,7 +88,7 @@ class LocatorGenerationController {
       JSON.stringify({
         action: WebSocketMessage.REVOKE_TASKS,
         payload: { id: hashes },
-      })
+      }),
     );
   }
 }

@@ -1,8 +1,8 @@
-import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
-import { BackendStatus, MainState } from "../types/mainSlice.types";
-import { defineServer } from "./defineServer.thunk";
+import { ActionReducerMapBuilder, createAsyncThunk } from '@reduxjs/toolkit';
+import { BackendStatus, MainState } from '../types/mainSlice.types';
+import { defineServer } from './defineServer.thunk';
 
-export const redefineServer = createAsyncThunk("main/redefineServer", async (_, thunkApi) => {
+export const redefineServer = createAsyncThunk('main/redefineServer', async (_, thunkApi) => {
   thunkApi.dispatch(defineServer());
 });
 

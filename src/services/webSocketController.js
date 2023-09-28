@@ -1,12 +1,16 @@
-import { isNull } from "lodash";
-import { WebSocketMessage, request } from "./backend";
-import { NETWORK_ERROR } from "../features/locators/utils/constants";
+import { isNull } from 'lodash';
+import { WebSocketMessage, request } from './backend';
+import { NETWORK_ERROR } from '../features/locators/utils/constants';
 
 class WebSocketController {
   pingInterval = null;
+
   pingTimeout = null;
+
   readyState = null;
+
   messageListener;
+
   errorListener;
 
   async init() {
@@ -15,7 +19,7 @@ class WebSocketController {
 
   updateMessageListener(callback) {
     if (this.socket) {
-      this.socket.removeEventListener("message", this.messageListener);
+      this.socket.removeEventListener('message', this.messageListener);
       this.messageListener = (event) => {
         const response = event === NETWORK_ERROR ? event : JSON.parse(event.data || event);
         if (response.pong) {
@@ -23,7 +27,7 @@ class WebSocketController {
         }
         callback(event);
       };
-      this.socket.addEventListener("message", this.messageListener);
+      this.socket.addEventListener('message', this.messageListener);
     }
   }
 
@@ -45,23 +49,23 @@ class WebSocketController {
 
   openWebSocket() {
     return new Promise((resolve, reject) => {
-      this.socket = new WebSocket(`${request.baseUrl.replace("http", "ws")}/ws`);
+      this.socket = new WebSocket(`${request.baseUrl.replace('http', 'ws')}/ws`);
       this.readyState = this.socket.readyState;
 
-      this.socket.addEventListener("open", () => {
+      this.socket.addEventListener('open', () => {
         this.readyState = this.socket.readyState;
         resolve(this.socket);
       });
 
-      this.socket.addEventListener("error", (event) => {
-        console.error("error", event);
+      this.socket.addEventListener('error', (event) => {
+        console.error('error', event);
         this.readyState = event.target.readyState;
         this.messageListener(NETWORK_ERROR);
         this.stopPing();
         reject(NETWORK_ERROR);
       });
 
-      this.socket.addEventListener("close", (event) => {
+      this.socket.addEventListener('close', (event) => {
         this.readyState = event.target.readyState;
       });
     });
@@ -72,7 +76,7 @@ class WebSocketController {
       JSON.stringify({
         action: WebSocketMessage.PING,
         payload: Date.now(),
-      })
+      }),
     );
   }
 

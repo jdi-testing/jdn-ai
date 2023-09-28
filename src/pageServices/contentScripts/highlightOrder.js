@@ -4,7 +4,7 @@ export function highlightOrder() {
     const origNode = document.getElementById(id);
     const { left: origLeft, right: origRight, top: origTop, bottom: origBottom } = origNode.getBoundingClientRect();
 
-    const proposedNodes = document.querySelectorAll("[jdn-highlight=true]");
+    const proposedNodes = document.querySelectorAll('[jdn-highlight=true]');
     proposedNodes.forEach((node) => {
       const { left, right, top, bottom } = node.getBoundingClientRect();
       if (
@@ -28,7 +28,7 @@ export function highlightOrder() {
   const bringToFront = (elements) => {
     elements.forEach((_element) => {
       const id = _element.jdnHash;
-      const maxZIndex = getUtterZIndex(getOverlappedHighlightings(id), "max");
+      const maxZIndex = getUtterZIndex(getOverlappedHighlightings(id), 'max');
       const node = document.getElementById(id);
       node.style.zIndex = maxZIndex + 1;
     });
@@ -37,15 +37,15 @@ export function highlightOrder() {
   const bringToBack = (elements) => {
     elements.forEach((_element) => {
       const id = _element.jdnHash;
-      const minZIndex = getUtterZIndex(getOverlappedHighlightings(id), "min");
+      const minZIndex = getUtterZIndex(getOverlappedHighlightings(id), 'min');
       const node = document.getElementById(id);
       node.style.zIndex = minZIndex - 1;
     });
   };
 
   chrome.storage.onChanged.addListener((event) => {
-    if (event.hasOwnProperty("JDN_BRING_TO_FRONT")) bringToFront(event.JDN_BRING_TO_FRONT.newValue.predictedElements);
-    if (event.hasOwnProperty("JDN_BRING_TO_BACKGROUND")) {
+    if (event.hasOwnProperty('JDN_BRING_TO_FRONT')) bringToFront(event.JDN_BRING_TO_FRONT.newValue.predictedElements);
+    if (event.hasOwnProperty('JDN_BRING_TO_BACKGROUND')) {
       bringToBack(event.JDN_BRING_TO_BACKGROUND.newValue.predictedElements);
     }
   });
