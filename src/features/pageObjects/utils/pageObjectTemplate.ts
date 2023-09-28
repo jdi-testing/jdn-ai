@@ -19,7 +19,7 @@ export const getClassName = (title: string) => {
   return className;
 };
 
-export const getPageObjectTemplateForVidus = (
+export const getPageObjectTemplateForVividus = (
   locators: ILocator[],
   pageObject: PageObject
 ): { pageCode: string; title: string } => {

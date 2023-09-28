@@ -14,7 +14,7 @@ import { pageObjectsNames } from "../__mocks__/pageObjectMocks/pageObjectNames";
 import { ElementLibrary } from "../../features/locators/types/generationClasses.types";
 import {
   getPageObjectTemplateForJdi,
-  getPageObjectTemplateForVidus,
+  getPageObjectTemplateForVividus,
 } from "../../features/pageObjects/utils/pageObjectTemplate";
 import { createLocatorNames } from "../../features/pageObjects/utils/pageObject";
 import { getClassName } from "../../features/pageObjects/utils/pageObjectTemplate";
@@ -76,15 +76,15 @@ describe("page object code generation", () => {
     });
   });
 
-  test("isGenerated page object name", () => {
+  test("generate page object name", () => {
     pageObjectsNames.forEach((poName) => {
       expect(getClassName(poName.input)).toBe(poName.output);
     });
   });
 
-  test("isGenerated page object template for Vividus", () => {
+  test("generate page object template for Vividus", () => {
     const { pageObject, output } = templateTestDataVividus;
-    const page = getPageObjectTemplateForVidus(locatorsVividus, pageObject);
+    const page = getPageObjectTemplateForVividus(locatorsVividus, pageObject);
     expect(page.pageCode).toBe(output);
   });
 
