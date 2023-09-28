@@ -47,7 +47,6 @@ interface Props {
   searchString?: string;
 }
 
-// eslint-disable-next-line react/display-name
 export const Locator: React.FC<Props> = ({ element, currentPage, searchState, depth, searchString }) => {
   const dispatch = useDispatch();
 
