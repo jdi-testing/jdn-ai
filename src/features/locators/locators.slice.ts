@@ -225,6 +225,13 @@ const locatorsSlice = createSlice({
       const { locators, isChecked } = payload;
       locatorsAdapter.upsertMany(state, locators.map(({ element_id }) => ({ element_id, isChecked })) as ILocator[]);
     },
+    toggleElementGroupIsChecked(state, { payload }: PayloadAction<ILocator[]>) {
+      const newValue: Partial<ILocator>[] = [];
+      payload.forEach(({ element_id, isChecked }) => {
+        newValue.push({ element_id, isChecked: !isChecked });
+      });
+      locatorsAdapter.upsertMany(state, newValue as ILocator[]);
+    },
     toggleElementGroupGeneration(state, { payload }: PayloadAction<ILocator[]>) {
       const newValue: Partial<ILocator>[] = [];
       payload.forEach(({ element_id, isGenerated }) => {
@@ -294,6 +301,7 @@ export const {
   toggleDeletedGroup,
   toggleElementGeneration,
   toggleElementGroupGeneration,
+  toggleElementGroupIsChecked,
   toggleLocatorIsChecked,
   toggleAllLocatorsIsChecked,
   updateLocatorGroup,

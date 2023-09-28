@@ -1,29 +1,29 @@
-import React, { ReactNode, useContext, useEffect, useState } from 'react';
-import { size } from 'lodash';
-import { Button, Checkbox, Row } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
-import { Chip } from '../../../common/components/Chip';
-import { CaretDown, DotsThree } from '@phosphor-icons/react';
-import { PlusOutlined } from '@ant-design/icons';
-import { elementGroupUnsetActive, toggleAllLocatorsIsChecked } from '../locators.slice';
-import { newLocatorStub } from '../utils/constants';
-import { LocatorsSearch } from './LocatorsSearch';
-import { LocatorEditDialog } from './LocatorEditDialog';
-import { useOnBoardingRef } from '../../onboarding/utils/useOnboardingRef';
-import { OnbrdStep } from '../../onboarding/types/constants';
-import { OnboardingContext } from '../../onboarding/OnboardingProvider';
-import { OnbrdTooltip } from '../../onboarding/components/OnbrdTooltip';
-import { LocatorMenu } from './LocatorMenu';
-import { LocatorTreeProps, ExpandState } from './LocatorsTree';
+import React, { ReactNode, useContext, useEffect, useState } from "react";
+import { size } from "lodash";
+import { Button, Checkbox, Row } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { Chip } from "../../../common/components/Chip";
+import { CaretDown, DotsThree } from "@phosphor-icons/react";
+import { PlusOutlined } from "@ant-design/icons";
+import { elementGroupUnsetActive, toggleAllLocatorsIsChecked } from "../locators.slice";
+import { newLocatorStub } from "../utils/constants";
+import { LocatorsSearch } from "./LocatorsSearch";
+import { LocatorEditDialog } from "./LocatorEditDialog";
+import { useOnBoardingRef } from "../../onboarding/utils/useOnboardingRef";
+import { OnbrdStep } from "../../onboarding/types/constants";
+import { OnboardingContext } from "../../onboarding/OnboardingProvider";
+import { OnbrdTooltip } from "../../onboarding/components/OnbrdTooltip";
+import { LocatorMenu } from "./LocatorMenu";
+import { LocatorTreeProps, ExpandState } from "./LocatorsTree";
 import {
   selectActiveLocators,
   selectFilteredLocators,
   selectCheckedLocatorsByPageObject,
   selectActualActiveByPageObject,
-} from '../selectors/locatorsFiltered.selectors';
+} from "../selectors/locatorsFiltered.selectors";
 
 interface LocatorListHeaderProps {
-  render: (viewProps: LocatorTreeProps['viewProps']) => ReactNode;
+  render: (viewProps: LocatorTreeProps["viewProps"]) => ReactNode;
   isEditModalOpen: boolean;
   setIsEditModalOpen: (isOpen: boolean) => void;
 }
@@ -38,10 +38,11 @@ export const LocatorListHeader = ({
   const dispatch = useDispatch();
   const [expandAll, setExpandAll] = useState(ExpandState.Expanded);
   const [isCreatingForm, setIsCreatingForm] = useState(false);
-  const [searchString, setSearchString] = useState('');
+  const [searchString, setSearchString] = useState("");
   const [isAllLocatorsSelected, setIsAllLocatorsSelected] = useState<boolean>(false);
 
   const locators = useSelector(selectFilteredLocators);
+  const generatedLocators = useSelector(selectGenerateByPageObject);
   const checkedLocators = useSelector(selectCheckedLocatorsByPageObject);
   const active = useSelector(selectActiveLocators);
   const actualSelected = useSelector(selectActualActiveByPageObject);
@@ -49,21 +50,30 @@ export const LocatorListHeader = ({
   const { isOpen: isOnboardingOpen, isCustomLocatorFlow } = useContext(OnboardingContext);
 
   useEffect(() => {
-    if (checkedLocators.length > emptyLength && checkedLocators.length === locators.length) {
+    if (
+      checkedLocators.length > emptyLength &&
+      checkedLocators.length === locators.length &&
+      generatedLocators.length === locators.length
+    ) {
       setIsAllLocatorsSelected(true);
     }
   }, [checkedLocators.length]);
 
-  const partiallySelected = checkedLocators.length > emptyLength && checkedLocators.length < locators.length;
+  const partiallySelected =
+    checkedLocators.length > emptyLength &&
+    checkedLocators.length < locators.length &&
+    generatedLocators.length < locators.length; // TODO isGenerated refactoring
 
   const handleOnChange = () => {
     dispatch(toggleAllLocatorsIsChecked({ locators, isChecked: !isAllLocatorsSelected }));
     setIsAllLocatorsSelected((prev) => !prev);
+    // eslint-disable-next-line max-len
+    dispatch(setElementGroupGeneration({ locators, isGenerated: !isAllLocatorsSelected })); // TODO isGenerated refactoring
   };
 
   const ref = useOnBoardingRef(
     OnbrdStep.CustomLocator,
-    isCustomLocatorFlow ? () => setIsEditModalOpen(true) : undefined,
+    isCustomLocatorFlow ? () => setIsEditModalOpen(true) : undefined
   );
 
   return (
@@ -86,7 +96,7 @@ export const LocatorListHeader = ({
         <span className="jdn__itemsList-header-title">
           <CaretDown
             style={{
-              transform: expandAll === ExpandState.Expanded ? 'rotate(180deg)' : 'rotate(0deg)',
+              transform: expandAll === ExpandState.Expanded ? "rotate(180deg)" : "rotate(0deg)",
             }}
             className="jdn__itemsList-header-collapse"
             color="#878A9C"
@@ -104,12 +114,12 @@ export const LocatorListHeader = ({
           <Chip
             hidden={!size(active)}
             primaryLabel={size(active).toString()}
-            secondaryLabel={'selected'}
+            secondaryLabel={"selected"}
             onDelete={() => dispatch(elementGroupUnsetActive(active))}
           />
         </span>
         {size(active) ? (
-          <LocatorMenu {...{ trigger: ['click'], setIsEditModalOpen }}>
+          <LocatorMenu {...{ trigger: ["click"], setIsEditModalOpen }}>
             <Button
               className="jdn__itemsList-button jdn__locatorsList_button-menu"
               icon={<DotsThree size={18} onClick={(e) => e.preventDefault()} />}

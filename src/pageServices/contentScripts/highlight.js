@@ -371,6 +371,11 @@ export const highlightOnPage = () => {
       message: ScriptMsg.ToggleElement,
       param: [element],
     });
+
+    sendMessage({
+      message: ScriptMsg.ToggleElementGroupIsChecked,
+      param: [element],
+    });
   };
 
   const onDocumentClick = (event) => {

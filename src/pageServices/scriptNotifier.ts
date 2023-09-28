@@ -1,26 +1,26 @@
-import { Middleware } from '@reduxjs/toolkit';
-import { compact, isNil, size } from 'lodash';
-import { selectLocatorById, selectLocatorByJdnHash } from '../features/locators/selectors/locators.selectors';
-import { ILocator, LocatorTaskStatus, LocatorValidationWarnings } from '../features/locators/types/locator.types';
-import { sendMessage } from './connector';
-import { selectCurrentPage } from '../app/main.selectors';
-import { RootState } from '../app/store/store';
-import { PageType } from '../app/types/mainSlice.types';
-import { selectClassFilterByPO } from '../features/filter/filter.selectors';
-import { selectPresentLocatorsByPO, selectValidLocators } from '../features/locators/selectors/locatorsByPO.selectors';
-import { isPageObjectPage } from '../app/utils/heplers';
+import { Middleware } from "@reduxjs/toolkit";
+import { compact, isNil, size } from "lodash";
+import { selectLocatorById, selectLocatorByJdnHash } from "../features/locators/selectors/locators.selectors";
+import { ILocator, LocatorTaskStatus, LocatorValidationWarnings } from "../features/locators/types/locator.types";
+import { sendMessage } from "./connector";
+import { selectCurrentPage } from "../app/main.selectors";
+import { RootState } from "../app/store/store";
+import { PageType } from "../app/types/mainSlice.types";
+import { selectClassFilterByPO } from "../features/filter/filter.selectors";
+import { selectPresentLocatorsByPO, selectValidLocators } from "../features/locators/selectors/locatorsByPO.selectors";
+import { isPageObjectPage } from "../app/utils/heplers";
 
 const notify = (state: RootState, action: any, prevState: RootState) => {
   let { type, payload } = action;
   const { meta } = action;
-  if (type === 'LOCATOR_UNDO') {
+  if (type === "LOCATOR_UNDO") {
     type = payload?.type;
     payload = payload?.payload;
   }
   switch (type) {
-    case 'main/changePage':
-    case 'main/changePageBack':
-    case 'main/clearAll':
+    case "main/changePage":
+    case "main/changePageBack":
+    case "main/clearAll":
       const page = selectCurrentPage(state);
       if (isPageObjectPage(page.page)) sendMessage.killHighlight();
       break;
@@ -30,28 +30,28 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
   if (noHighlight) return;
 
   switch (type) {
-    case 'pageObject/addLocatorsToPageObj': {
+    case "pageObject/addLocatorsToPageObj": {
       if (isNil(state.pageObject.present.currentPageObject)) return;
       const locators = selectValidLocators(state);
       const filter = selectClassFilterByPO(state);
       locators && sendMessage.setHighlight({ elements: locators as ILocator[], filter });
       break;
     }
-    case 'pageObject/addLocatorToPageObj': {
+    case "pageObject/addLocatorToPageObj": {
       if (isNil(state.pageObject.present.currentPageObject)) return;
       const { locatorId } = payload;
       const locator = selectLocatorById(state, locatorId);
       locator && !locator?.message && sendMessage.addElement(locator);
       break;
     }
-    case 'locators/checkLocatorsValidity/fulfilled': {
+    case "locators/checkLocatorsValidity/fulfilled": {
       const locators = selectValidLocators(state);
       const filter = selectClassFilterByPO(state);
       locators && sendMessage.setHighlight({ elements: locators as ILocator[], filter, isAlreadyGenerated: true });
       break;
     }
-    case 'locators/changeLocatorAttributes':
-    case 'locators/changeLocatorElement/fulfilled': {
+    case "locators/changeLocatorAttributes":
+    case "locators/changeLocatorElement/fulfilled": {
       const { element_id, message, type: elementType, name } = payload;
       const prevValue = selectLocatorById(prevState, element_id);
       const newValue = selectLocatorById(state, element_id);
@@ -73,23 +73,23 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       }
       break;
     }
-    case 'locators/elementSetActive':
-    case 'locators/setActiveSingle': {
+    case "locators/elementSetActive":
+    case "locators/setActiveSingle": {
       const locators = selectPresentLocatorsByPO(state);
       locators && sendMessage.toggleActiveGroup(locators);
       break;
     }
-    case 'locators/generateLocators/pending': {
+    case "locators/generateLocators/pending": {
       const { predictedElements } = meta.arg;
       sendMessage.assignDataLabels(predictedElements);
       break;
     }
-    case 'locators/stopGeneration/fulfilled': {
+    case "locators/stopGeneration/fulfilled": {
       const locator = selectLocatorById(state, meta.arg);
       locator && sendMessage.changeStatus(locator);
       break;
     }
-    case 'locators/stopGenerationGroup/fulfilled': {
+    case "locators/stopGenerationGroup/fulfilled": {
       const _arr: ILocator[] = compact(payload);
       _arr.forEach((element) => {
         const { element_id } = element;
@@ -98,20 +98,26 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       });
       break;
     }
-    case 'locators/toggleElementGeneration': // TODO isGenerated refactoring
-    case 'locators/toggleLocatorIsChecked': {
-      const element = selectLocatorById(state, typeof payload === 'string' ? payload : payload.element_id);
+    case "locators/toggleElementGeneration": // TODO isGenerated refactoring
+    case "locators/toggleLocatorIsChecked": {
+      const element = selectLocatorById(state, typeof payload === "string" ? payload : payload.element_id);
       element && sendMessage.toggle({ element });
       break;
     }
-    case 'locators/toggleElementGroupGeneration':
+    case "locators/toggleElementGroupGeneration":
       payload.forEach((element: ILocator) => {
         const locator = selectLocatorById(state, element.element_id);
         locator && sendMessage.toggle({ element: locator, skipScroll: true });
       });
       break;
-    case 'locators/setChildrenGeneration': // TODO isGenerated refactoring
-    case 'locators/setChildrenIsChecked': {
+    case "locators/toggleElementGroupIsChecked":
+      payload.forEach((element: ILocator) => {
+        const locator = selectLocatorById(state, element.element_id);
+        locator && sendMessage.toggle({ element: locator, skipScroll: true });
+      });
+      break;
+    case "locators/setChildrenGeneration": // TODO isGenerated refactoring
+    case "locators/setChildrenIsChecked": {
       const { locator } = payload;
       const iterateChildren = (_locator: ILocator | undefined) => {
         _locator?.children &&
@@ -124,30 +130,30 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       iterateChildren(locator);
       break;
     }
-    case 'locators/setElementGroupGeneration':
+    case "locators/setElementGroupGeneration":
       payload.locators.forEach((_loc: ILocator) => {
         const element = selectLocatorById(state, _loc.element_id);
         element && sendMessage.toggle({ element, skipScroll: true });
       });
       break;
-    case 'locators/toggleDeleted': {
+    case "locators/toggleDeleted": {
       const locator = selectLocatorById(state, payload);
       locator && sendMessage.toggleDeleted(locator);
       break;
     }
-    case 'locators/toggleDeletedGroup':
+    case "locators/toggleDeletedGroup":
       payload.forEach((element: ILocator) => {
         const locator = selectLocatorById(state, element.element_id);
         locator && sendMessage.toggleDeleted(locator);
       });
       break;
-    case 'locators/updateLocatorGroup':
+    case "locators/updateLocatorGroup":
       payload.locators.forEach(({ element_id, jdnHash }: ILocator) => {
         const locator = element_id ? selectLocatorById(state, element_id) : selectLocatorByJdnHash(state, jdnHash);
         locator && sendMessage.changeStatus(locator);
       });
       break;
-    case 'locators/failGeneration': {
+    case "locators/failGeneration": {
       const { ids } = payload;
       const elements = ids.map((element_id: string) => {
         const jdnHash = selectLocatorById(state, element_id)?.jdnHash;
@@ -156,21 +162,21 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       elements.forEach((element: ILocator) => sendMessage.changeStatus(element));
       break;
     }
-    case 'locators/elementUnsetActive':
+    case "locators/elementUnsetActive":
       const locator = selectLocatorById(state, payload);
       if (locator) sendMessage.unsetActive(locator);
       break;
-    case 'locators/elementGroupUnsetActive': {
+    case "locators/elementGroupUnsetActive": {
       if (!payload.fromScript) sendMessage.unsetActive(payload);
       break;
     }
-    case 'filter/setFilters': {
+    case "filter/setFilters": {
       const newFilter = selectClassFilterByPO(state);
       sendMessage.toggleFilter(newFilter);
       break;
     }
-    case 'filter/toggleClassFilter/fulfilled':
-    case 'filter/toggleClassFilterAll/fulfilled': {
+    case "filter/toggleClassFilter/fulfilled":
+    case "filter/toggleClassFilterAll/fulfilled": {
       sendMessage.toggleFilter(payload.newFilter);
       break;
     }

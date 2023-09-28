@@ -1,11 +1,11 @@
-import React, { useContext, useEffect, useRef, useState, useMemo } from 'react';
-import { Checkbox, Button } from 'antd';
-import { DotsThree } from '@phosphor-icons/react';
-import Text from 'antd/lib/typography/Text';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useContext, useEffect, useRef, useState, useMemo } from "react";
+import { Checkbox, Button } from "antd";
+import { DotsThree } from "@phosphor-icons/react";
+import Text from "antd/lib/typography/Text";
+import { useDispatch, useSelector } from "react-redux";
 
-import { areChildrenChecked, isLocatorIndeterminate } from './selectors/locators.selectors';
-import { isMacPlatform } from '../../common/utils/helpers';
+import { areChildrenChecked, isLocatorIndeterminate } from "./selectors/locators.selectors";
+import { isMacPlatform } from "../../common/utils/helpers";
 import {
   elementSetActive,
   elementUnsetActive,
@@ -13,30 +13,30 @@ import {
   setActiveSingle,
   toggleLocatorIsChecked,
   setChildrenIsChecked,
-} from './locators.slice';
+} from "./locators.slice";
 
-import { size } from 'lodash';
-import { PageType } from '../../app/types/mainSlice.types';
-import { RootState } from '../../app/store/store';
-import { ILocator } from './types/locator.types';
-import { SearchState } from './components/LocatorsTree';
-import { LocatorEditDialog } from './components/LocatorEditDialog';
-import { LocatorCopyButton } from './components/LocatorCopyButton';
-import { LocatorIcon } from './components/LocatorIcon';
-import { LocatorMenu } from './components/LocatorMenu';
-import { setIndents } from './utils/utils';
-import { setScriptMessage } from '../../app/main.slice';
-import { useOnBoardingRef } from '../onboarding/utils/useOnboardingRef';
-import { OnbrdStep } from '../onboarding/types/constants';
-import { OnbrdTooltip } from '../onboarding/components/OnbrdTooltip';
-import { OnboardingContext } from '../onboarding/OnboardingProvider';
-import { selectFirstLocatorIdByPO } from './selectors/locatorsByPO.selectors';
-import { selectCalculatedActiveByPageObj, selectWaitingActiveByPageObj } from './selectors/locatorsFiltered.selectors';
-import { isLocatorListPage } from '../../app/utils/heplers';
-import { selectCurrentPageObject } from '../pageObjects/selectors/pageObjects.selectors';
-import { AnnotationType, FrameworkType, LocatorType } from '../../common/types/common';
-import { getLocatorPrefix, getLocatorTemplateWithVividus } from './utils/locatorOutput';
-import { ScriptMsg } from '../../pageServices/scriptMsg.constants';
+import { size } from "lodash";
+import { PageType } from "../../app/types/mainSlice.types";
+import { RootState } from "../../app/store/store";
+import { ILocator } from "./types/locator.types";
+import { SearchState } from "./components/LocatorsTree";
+import { LocatorEditDialog } from "./components/LocatorEditDialog";
+import { LocatorCopyButton } from "./components/LocatorCopyButton";
+import { LocatorIcon } from "./components/LocatorIcon";
+import { LocatorMenu } from "./components/LocatorMenu";
+import { setIndents } from "./utils/utils";
+import { setScriptMessage } from "../../app/main.slice";
+import { useOnBoardingRef } from "../onboarding/utils/useOnboardingRef";
+import { OnbrdStep } from "../onboarding/types/constants";
+import { OnbrdTooltip } from "../onboarding/components/OnbrdTooltip";
+import { OnboardingContext } from "../onboarding/OnboardingProvider";
+import { selectFirstLocatorIdByPO } from "./selectors/locatorsByPO.selectors";
+import { selectCalculatedActiveByPageObj, selectWaitingActiveByPageObj } from "./selectors/locatorsFiltered.selectors";
+import { isLocatorListPage } from "../../app/utils/heplers";
+import { selectCurrentPageObject } from "../pageObjects/selectors/pageObjects.selectors";
+import { AnnotationType, FrameworkType, LocatorType } from "../../common/types/common";
+import { getLocatorPrefix, getLocatorTemplateWithVividus } from "./utils/locatorOutput";
+import { ScriptMsg } from "../../pageServices/scriptMsg.constants";
 
 interface Props {
   element: ILocator;
@@ -53,8 +53,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const { isCustomLocatorFlow } = useContext(OnboardingContext);
 
-  const { element_id, type, name, locator, message, deleted, active, isCustomLocator, isChecked, isGenerated } =
-    element;
+  const { element_id, type, name, locator, message, deleted, active, isCustomLocator, isChecked } = element;
 
   const currentPageObject = useSelector(selectCurrentPageObject);
 
@@ -79,7 +78,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
     OnbrdStep.EditLocator,
     undefined,
     undefined,
-    !(isFirstLocator && !isCustomLocatorFlow),
+    !(isFirstLocator && !isCustomLocatorFlow)
   );
   const addToPORef = useOnBoardingRef(OnbrdStep.AddToPO, undefined, undefined, !isFirstLocator);
 
@@ -112,10 +111,13 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
 
   const handleOnChange: React.MouseEventHandler<HTMLDivElement> = () => {
     dispatch(toggleLocatorIsChecked(element_id));
+    dispatch(toggleElementGeneration(element_id)); // TODO isGenerated refactoring
     if (allChildrenChecked && size(element.children)) {
       dispatch(setChildrenIsChecked({ locator: element, isChecked: false }));
+      dispatch(setChildrenGeneration({ locator: element, isGenerated: false })); // TODO isGenerated refactoring
     } else {
       dispatch(setChildrenIsChecked({ locator: element, isChecked: true }));
+      dispatch(setChildrenGeneration({ locator: element, isGenerated: true })); // TODO isGenerated refactoring
     }
   };
 
@@ -179,7 +181,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
         onContextMenu={handleLocatorRightClick}
       >
         {isLocatorListPage(currentPage) ? (
-          <LocatorMenu {...{ setIsEditModalOpen, trigger: ['contextMenu'] }}>
+          <LocatorMenu {...{ setIsEditModalOpen, trigger: ["contextMenu"] }}>
             <div className="jdn__xpath_locators">
               <div ref={addToPORef} onContextMenu={(e) => e.stopPropagation()} className="jdn__xpath_checkbox_wrapper">
                 <Checkbox
@@ -190,8 +192,8 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
                 />
               </div>
               <Text
-                className={`jdn__xpath_item${deleted ? ' jdn__xpath_item--deleted' : ''}${
-                  searchState === SearchState.Hidden ? ' jdn__xpath_item--disabled' : ''
+                className={`jdn__xpath_item${deleted ? " jdn__xpath_item--deleted" : ""}${
+                  searchState === SearchState.Hidden ? " jdn__xpath_item--disabled" : ""
                 }`}
               >
                 <LocatorIcon {...{ message, locator, deleted, isCustomLocator }} />
@@ -201,7 +203,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
                 <div onContextMenu={handleLocatorRightClick} className="jdn__xpath_buttons">
                   <LocatorCopyButton {...{ framework, element }} />
                   <OnbrdTooltip>
-                    <LocatorMenu {...{ setIsEditModalOpen, trigger: ['click', 'contextMenu'] }}>
+                    <LocatorMenu {...{ setIsEditModalOpen, trigger: ["click", "contextMenu"] }}>
                       <Button
                         ref={menuRef}
                         className="jdn__itemsList-button jdn__locatorsList_button-menu"
