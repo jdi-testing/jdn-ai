@@ -1,27 +1,27 @@
-import React, { useEffect, useState } from "react";
-import { Provider as ReduxProvider, useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from 'react';
+import { Provider as ReduxProvider, useDispatch, useSelector } from 'react-redux';
 
-import "antd/dist/reset.css";
+import 'antd/dist/reset.css';
 
-import Layout, { Content, Header } from "antd/lib/layout/layout";
-import { Backdrop } from "./components/Backdrop";
-import { StatusBar } from "./components/StatusBar";
-import { SeveralTabsWarning } from "./components/SeveralTabsWarning";
-import { HttpEndpoint, request } from "../services/backend";
-import { checkSession, initLocatorSocketController } from "./utils/appUtils";
-import { selectCurrentPage } from "./main.selectors";
-import { AppDispatch, RootState, store } from "./store/store";
-import { useOnDisconnect } from "./utils/useOnDisconnect";
+import Layout, { Content, Header } from 'antd/lib/layout/layout';
+import { Backdrop } from './components/Backdrop';
+import { StatusBar } from './components/StatusBar';
+import { SeveralTabsWarning } from './components/SeveralTabsWarning';
+import { HttpEndpoint, request } from '../services/backend';
+import { checkSession, initLocatorSocketController } from './utils/appUtils';
+import { selectCurrentPage } from './main.selectors';
+import { AppDispatch, RootState, store } from './store/store';
+import { useOnDisconnect } from './utils/useOnDisconnect';
 
-import { defineServer } from "./reducers/defineServer.thunk";
-import { Guide } from "./components/guide/Guide";
-import "./styles/index.less";
-import { BackendStatus } from "./types/mainSlice.types";
-import { setIsSessionUnique } from "./main.slice";
-import { LocatorsPage } from "../features/locators/LocatorsPage";
-import { PageObjectPage } from "../features/pageObjects/PageObjectPage";
-import { OnboardingProvider } from "../features/onboarding/OnboardingProvider";
-import { isPageObjectPage } from "./utils/heplers";
+import { defineServer } from './reducers/defineServer.thunk';
+import { Guide } from './components/guide/Guide';
+import './styles/index.less';
+import { BackendStatus } from './types/mainSlice.types';
+import { setIsSessionUnique } from './main.slice';
+import { LocatorsPage } from '../features/locators/LocatorsPage';
+import { PageObjectPage } from '../features/pageObjects/PageObjectPage';
+import { OnboardingProvider } from '../features/onboarding/OnboardingProvider';
+import { isPageObjectPage } from './utils/heplers';
 
 const App = () => {
   const [jdiTemplate, setJdiTemplate] = useState<Blob | undefined>(undefined);

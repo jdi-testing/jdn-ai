@@ -1,5 +1,5 @@
-import { createAsyncThunk } from "@reduxjs/toolkit";
-import { isNull, map, size, toLower } from "lodash";
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import { isNull, map, size, toLower } from 'lodash';
 import {
   pageObjAdapter,
   selectLastElementLibrary,
@@ -8,14 +8,14 @@ import {
   selectMaxId,
   simpleSelectPageObjects,
   selectLastFrameworkType,
-} from "../selectors/pageObjects.selectors";
-import { defaultLibrary } from "../../locators/types/generationClasses.types";
-import { getPageAttributes, isPONameUnique } from "../utils/pageObject";
-import { getClassName } from "../utils/pageObjectTemplate";
-import { LocalStorageKey, getLocalStorage } from "../../../common/utils/localStorage";
-import { AnnotationType, LocatorType, FrameworkType } from "../../../common/types/common";
+} from '../selectors/pageObjects.selectors';
+import { defaultLibrary } from '../../locators/types/generationClasses.types';
+import { getPageAttributes, isPONameUnique } from '../utils/pageObject';
+import { getClassName } from '../utils/pageObjectTemplate';
+import { LocalStorageKey, getLocalStorage } from '../../../common/utils/localStorage';
+import { AnnotationType, LocatorType, FrameworkType } from '../../../common/types/common';
 
-export const addPageObj = createAsyncThunk("pageObject/addPageObj", async (payload, { getState }) => {
+export const addPageObj = createAsyncThunk('pageObject/addPageObj', async (payload, { getState }) => {
   const res = await getPageAttributes();
   const { title, url } = res[0].result;
   const className = getClassName(title);
@@ -56,7 +56,7 @@ export const addPageObjReducer = (builder) => {
       let maxExistingId = selectMaxId(state);
       const id = !isNull(maxExistingId) ? ++maxExistingId : 0;
       const pageObjects = simpleSelectPageObjects(state);
-      const names = map(pageObjects, "name");
+      const names = map(pageObjects, 'name');
       let name = className;
 
       for (let index = 0; !isPONameUnique(pageObjects, null, name); index++) {
@@ -64,7 +64,7 @@ export const addPageObjReducer = (builder) => {
           names.filter((_name) => {
             const res = toLower(_name).includes(toLower(className));
             return res;
-          })
+          }),
         );
         name = `${className}${repeats + index}`;
       }

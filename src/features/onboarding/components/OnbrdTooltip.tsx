@@ -1,6 +1,6 @@
-import React, { FC, useContext } from "react";
-import { OnboardingContext } from "../OnboardingProvider";
-import { Tooltip } from "antd";
+import React, { FC, useContext } from 'react';
+import { OnboardingContext } from '../OnboardingProvider';
+import { Tooltip } from 'antd';
 
 interface Props {
   children: React.ReactNode;

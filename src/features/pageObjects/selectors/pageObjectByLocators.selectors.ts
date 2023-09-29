@@ -1,9 +1,9 @@
-import { createSelector } from "@reduxjs/toolkit";
-import { size } from "lodash";
-import { RootState } from "../../../app/store/store";
-import { selectConfirmedLocators } from "../../locators/selectors/locatorsFiltered.selectors";
-import { selectPageObjects } from "./pageObjects.selectors";
-import { PageObjectId } from "../types/pageObjectSlice.types";
+import { createSelector } from '@reduxjs/toolkit';
+import { size } from 'lodash';
+import { RootState } from '../../../app/store/store';
+import { selectConfirmedLocators } from '../../locators/selectors/locatorsFiltered.selectors';
+import { selectPageObjects } from './pageObjects.selectors';
+import { PageObjectId } from '../types/pageObjectSlice.types';
 
 export const selectEmptyPageObjects = createSelector(
   selectPageObjects,
@@ -17,5 +17,5 @@ export const selectEmptyPageObjects = createSelector(
       });
     }
     return emptyPOs;
-  }
+  },
 );

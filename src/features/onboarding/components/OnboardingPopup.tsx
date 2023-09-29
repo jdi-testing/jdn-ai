@@ -1,10 +1,10 @@
-import React, { FC, useContext } from "react";
-import { useSelector } from "react-redux";
-import { Popconfirm } from "antd";
-import { RootState } from "../../../app/store/store";
-import { selectIsDefaultState } from "../../../app/main.selectors";
-import { OnboardingContext } from "../OnboardingProvider";
-import { OnboardingPopupText, OnboardingPopupButtons } from "../types/constants";
+import React, { FC, useContext } from 'react';
+import { useSelector } from 'react-redux';
+import { Popconfirm } from 'antd';
+import { RootState } from '../../../app/store/store';
+import { selectIsDefaultState } from '../../../app/main.selectors';
+import { OnboardingContext } from '../OnboardingProvider';
+import { OnboardingPopupText, OnboardingPopupButtons } from '../types/constants';
 
 interface Props {
   children: React.ReactNode;

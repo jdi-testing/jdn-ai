@@ -1,14 +1,14 @@
-import { Form, Input } from "antd";
-import { useForm } from "antd/es/form/Form";
-import { Rule } from "antd/lib/form";
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { DialogWithForm } from "../../../common/components/DialogWithForm";
-import { PageObjValidationErrorType } from "../utils/constants";
-import { selectPageObjects } from "../selectors/pageObjects.selectors";
-import { changeName } from "../pageObject.slice";
-import { PageObjectId } from "../types/pageObjectSlice.types";
-import { isPONameUnique } from "../../pageObjects/utils/pageObject";
+import { Form, Input } from 'antd';
+import { useForm } from 'antd/es/form/Form';
+import { Rule } from 'antd/lib/form';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { DialogWithForm } from '../../../common/components/DialogWithForm';
+import { PageObjValidationErrorType } from '../utils/constants';
+import { selectPageObjects } from '../selectors/pageObjects.selectors';
+import { changeName } from '../pageObject.slice';
+import { PageObjectId } from '../types/pageObjectSlice.types';
+import { isPONameUnique } from '../../pageObjects/utils/pageObject';
 
 interface Props {
   isModalOpen: boolean;
@@ -58,7 +58,7 @@ export const RenamePageObjectDialog: React.FC<Props> = ({ isModalOpen, setIsModa
   return (
     <DialogWithForm
       modalProps={{
-        title: "Rename page object",
+        title: 'Rename page object',
         open: isModalOpen,
         setIsModalOpen,
         onOk: handleOk,

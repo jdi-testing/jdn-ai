@@ -1,11 +1,11 @@
-import { compact, uniq } from "lodash";
+import { compact, uniq } from 'lodash';
 import {
   ElementLabel,
   ElementLibrary,
   ElementClass,
   libraryClasses,
   defaultClass,
-} from "../types/generationClasses.types";
+} from '../types/generationClasses.types';
 
 export const getJDILabel = (label: keyof ElementLabel, library: ElementLibrary): ElementClass =>
   libraryClasses[library][label] || defaultClass;
@@ -24,6 +24,6 @@ export const getTypesMenuOptions = (library: ElementLibrary) =>
           if (value !== defaultClass) return value;
           else return undefined;
         })
-        .sort()
-    )
+        .sort(),
+    ),
   );

@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { PLUGIN_HEADER_HEIGHT, DEFAULT_BREADCRUMBS_HEIGHT } from "./constants";
+import { useEffect, useState } from 'react';
+import { PLUGIN_HEADER_HEIGHT, DEFAULT_BREADCRUMBS_HEIGHT } from './constants';
 
 export const useCalculateHeaderSize = (target: React.RefObject<HTMLDivElement>): string => {
   const [headerHeight, setHeaderHeight] = useState(0);

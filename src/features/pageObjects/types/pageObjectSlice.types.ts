@@ -1,6 +1,6 @@
-import { ElementId } from "../../locators/types/locator.types";
-import { ElementLibrary } from "../../locators/types/generationClasses.types";
-import { FrameworkType, LocatorType, AnnotationType } from "../../../common/types/common";
+import { ElementId } from '../../locators/types/locator.types';
+import { ElementLibrary } from '../../locators/types/generationClasses.types';
+import { FrameworkType, LocatorType, AnnotationType } from '../../../common/types/common';
 
 export type PageObjectId = number;
 

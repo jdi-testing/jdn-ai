@@ -1,9 +1,9 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { defineServerReducer } from "./reducers/defineServer.thunk";
-import { PageObjectId } from "../features/pageObjects/types/pageObjectSlice.types";
-import { BackendStatus, MainState, Notification, PageType } from "./types/mainSlice.types";
-import { removeAllReducer } from "./reducers/removeAll.thunk";
-import { redefineServerReducer } from "./reducers/redefineServer.thunk";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { defineServerReducer } from './reducers/defineServer.thunk';
+import { PageObjectId } from '../features/pageObjects/types/pageObjectSlice.types';
+import { BackendStatus, MainState, Notification, PageType } from './types/mainSlice.types';
+import { removeAllReducer } from './reducers/removeAll.thunk';
+import { redefineServerReducer } from './reducers/redefineServer.thunk';
 
 const initialState: MainState = {
   backendAvailable: BackendStatus.TryToAccess,
@@ -22,12 +22,12 @@ const initialState: MainState = {
 };
 
 const mainSlice = createSlice({
-  name: "main",
+  name: 'main',
   initialState,
   reducers: {
     changePage(
       state,
-      { payload }: PayloadAction<{ page: PageType; pageObj?: PageObjectId; alreadyGenerated?: boolean }>
+      { payload }: PayloadAction<{ page: PageType; pageObj?: PageObjectId; alreadyGenerated?: boolean }>,
     ) {
       state.pageHistory.push(payload);
       state.notifications = [];

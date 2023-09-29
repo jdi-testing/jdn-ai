@@ -1,13 +1,13 @@
-import configureMockStore from "redux-mock-store";
-import thunk from "redux-thunk";
-import { defineServer } from "../../../app/reducers/defineServer.thunk";
-import { request } from "../../../services/backend";
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
+import { defineServer } from '../../../app/reducers/defineServer.thunk';
+import { request } from '../../../services/backend';
 
 const middlewares = [thunk];
 
-jest.mock("../../../app/utils/compatibleVersions");
+jest.mock('../../../app/utils/compatibleVersions');
 
-describe("defineServer", () => {
+describe('defineServer', () => {
   const mockStore = configureMockStore(middlewares);
 
   const cleanActions = (actions: any[]) =>
@@ -30,19 +30,19 @@ describe("defineServer", () => {
     jest.clearAllMocks();
   });
 
-  test("dispatches the correct actions for ver. 0.2.37 with local server", async () => {
-    jest.spyOn(request, "get").mockImplementationOnce(() => Promise.reject({}));
+  test('dispatches the correct actions for ver. 0.2.37 with local server', async () => {
+    jest.spyOn(request, 'get').mockImplementationOnce(() => Promise.reject({}));
     jest
-      .spyOn(request, "get")
-      .mockImplementationOnce(() => Promise.resolve({ data: "0.2.37", config: { baseURL: "http://localhost:5050" } }));
+      .spyOn(request, 'get')
+      .mockImplementationOnce(() => Promise.resolve({ data: '0.2.37', config: { baseURL: 'http://localhost:5050' } }));
 
     const expectedActions = [
-      { type: "main/defineServer/pending" },
+      { type: 'main/defineServer/pending' },
       {
-        type: "main/defineServer/fulfilled",
+        type: 'main/defineServer/fulfilled',
         payload: {
-          data: "0.2.37",
-          config: { baseURL: "http://localhost:5050" },
+          data: '0.2.37',
+          config: { baseURL: 'http://localhost:5050' },
         },
       },
     ];
@@ -53,21 +53,21 @@ describe("defineServer", () => {
     expect(cleanActions(store.getActions())).toEqual(expectedActions);
   });
 
-  test("dispatches the correct actions for ver. 0.2.37 with remote server", async () => {
+  test('dispatches the correct actions for ver. 0.2.37 with remote server', async () => {
     jest
-      .spyOn(request, "get")
+      .spyOn(request, 'get')
       .mockImplementationOnce(() =>
-        Promise.resolve({ data: "0.2.37", config: { baseURL: "http://10.253.219.156:80" } })
+        Promise.resolve({ data: '0.2.37', config: { baseURL: 'http://10.253.219.156:80' } }),
       );
-    jest.spyOn(request, "get").mockImplementationOnce(() => Promise.reject({}));
+    jest.spyOn(request, 'get').mockImplementationOnce(() => Promise.reject({}));
 
     const expectedActions = [
-      { type: "main/defineServer/pending" },
+      { type: 'main/defineServer/pending' },
       {
-        type: "main/defineServer/fulfilled",
+        type: 'main/defineServer/fulfilled',
         payload: {
-          data: "0.2.37",
-          config: { baseURL: "http://10.253.219.156:80" },
+          data: '0.2.37',
+          config: { baseURL: 'http://10.253.219.156:80' },
         },
       },
     ];
@@ -78,17 +78,17 @@ describe("defineServer", () => {
     expect(cleanActions(store.getActions())).toEqual(expectedActions);
   });
 
-  test("dispatches error when remote build ver is 0.2.100 (higher than compatible)", async () => {
+  test('dispatches error when remote build ver is 0.2.100 (higher than compatible)', async () => {
     jest
-      .spyOn(request, "get")
+      .spyOn(request, 'get')
       .mockImplementationOnce(() =>
-        Promise.resolve({ data: "0.2.100", config: { baseURL: "http://10.253.219.156:80" } })
+        Promise.resolve({ data: '0.2.100', config: { baseURL: 'http://10.253.219.156:80' } }),
       );
-    jest.spyOn(request, "get").mockImplementationOnce(() => Promise.reject({}));
+    jest.spyOn(request, 'get').mockImplementationOnce(() => Promise.reject({}));
     const expectedActions = [
-      { type: "main/defineServer/pending" },
+      { type: 'main/defineServer/pending' },
       {
-        type: "main/defineServer/fulfilled",
+        type: 'main/defineServer/fulfilled',
       },
     ];
     const store = mockStore({});
@@ -98,16 +98,16 @@ describe("defineServer", () => {
     expect(cleanErroredActions(store.getActions())).toEqual(expectedActions);
   });
 
-  test("dispatches error when local ver is 0.2.20 (lower than compatible)", async () => {
-    jest.spyOn(request, "get").mockImplementationOnce(() => Promise.reject({}));
+  test('dispatches error when local ver is 0.2.20 (lower than compatible)', async () => {
+    jest.spyOn(request, 'get').mockImplementationOnce(() => Promise.reject({}));
     jest
-      .spyOn(request, "get")
-      .mockImplementationOnce(() => Promise.resolve({ data: "0.2.20", config: { baseURL: "http://localhost:5050" } }));
+      .spyOn(request, 'get')
+      .mockImplementationOnce(() => Promise.resolve({ data: '0.2.20', config: { baseURL: 'http://localhost:5050' } }));
     const expectedActions = [
-      { type: "main/defineServer/pending" },
+      { type: 'main/defineServer/pending' },
       {
-        type: "main/defineServer/rejected",
-        error: { message: "Local server version need to be updated." },
+        type: 'main/defineServer/rejected',
+        error: { message: 'Local server version need to be updated.' },
       },
     ];
     const store = mockStore({});
@@ -117,16 +117,16 @@ describe("defineServer", () => {
     expect(cleanErroredActions(store.getActions())).toEqual(expectedActions);
   });
 
-  test("dispatches error when local ver is 0.3.50 (higher than compatible)", async () => {
-    jest.spyOn(request, "get").mockImplementationOnce(() => Promise.reject({}));
+  test('dispatches error when local ver is 0.3.50 (higher than compatible)', async () => {
+    jest.spyOn(request, 'get').mockImplementationOnce(() => Promise.reject({}));
     jest
-      .spyOn(request, "get")
-      .mockImplementationOnce(() => Promise.resolve({ data: "0.3.50", config: { baseURL: "http://localhost:5050" } }));
+      .spyOn(request, 'get')
+      .mockImplementationOnce(() => Promise.resolve({ data: '0.3.50', config: { baseURL: 'http://localhost:5050' } }));
     const expectedActions = [
-      { type: "main/defineServer/pending" },
+      { type: 'main/defineServer/pending' },
       {
-        type: "main/defineServer/rejected",
-        error: { message: "Plugin version need to be updated." },
+        type: 'main/defineServer/rejected',
+        error: { message: 'Plugin version need to be updated.' },
       },
     ];
     const store = mockStore({});
@@ -137,13 +137,13 @@ describe("defineServer", () => {
   });
 
   test("dispatches network error when can't get any of versions", async () => {
-    jest.spyOn(request, "get").mockImplementationOnce(() => Promise.reject({}));
-    jest.spyOn(request, "get").mockImplementationOnce(() => Promise.reject({}));
+    jest.spyOn(request, 'get').mockImplementationOnce(() => Promise.reject({}));
+    jest.spyOn(request, 'get').mockImplementationOnce(() => Promise.reject({}));
     const expectedActions = [
-      { type: "main/defineServer/pending" },
+      { type: 'main/defineServer/pending' },
       {
-        type: "main/defineServer/rejected",
-        error: { message: "Access failed" },
+        type: 'main/defineServer/rejected',
+        error: { message: 'Access failed' },
       },
     ];
     const store = mockStore({});

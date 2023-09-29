@@ -1,7 +1,7 @@
-import { chain } from "lodash";
-import { sendMessage } from "../../../pageServices/connector";
-import { ElementLibrary } from "../types/generationClasses.types";
-import { createElementName } from "../../pageObjects/utils/pageObject";
+import { chain } from 'lodash';
+import { sendMessage } from '../../../pageServices/connector';
+import { ElementLibrary } from '../types/generationClasses.types';
+import { createElementName } from '../../pageObjects/utils/pageObject';
 import {
   ILocator,
   LocatorValue,
@@ -12,19 +12,19 @@ import {
   ElementId,
   JDNHash,
   LocatorTaskStatus,
-} from "../types/locator.types";
-import { getElementFullXpath } from "../../../common/utils/helpers";
-import { LocatorOption } from "./constants";
-import { FrameworkType, LocatorType } from "../../../common/types/common";
-import { isStringContainsNumbers } from "../../../common/utils/helpers";
-import { FormInstance } from "antd/es/form/Form";
-import { copyLocatorsToClipboard } from "./copyLocatorToClipboard";
+} from '../types/locator.types';
+import { getElementFullXpath, isStringContainsNumbers } from '../../../common/utils/helpers';
+import { LocatorOption } from './constants';
+import { FrameworkType, LocatorType } from '../../../common/types/common';
+
+import { FormInstance } from 'antd/es/form/Form';
+import { copyLocatorsToClipboard } from './copyLocatorToClipboard';
 import {
   getFullLocatorVividusString,
   getLocatorString,
   getLocatorWithJDIAnnotation,
   getLocatorWithSelenium,
-} from "./locatorOutput";
+} from './locatorOutput';
 
 export const isValidJavaVariable = (value: string) => /^[a-zA-Z_$]([a-zA-Z0-9_])*$/.test(value);
 
@@ -41,31 +41,31 @@ export const generateSelectorByHash = (element_id: ElementId, jdnHash: string) =
 export const checkDuplicates = (jdnHash: string, locators: ILocator[], element_id: ElementId) =>
   locators.filter(
     ({ jdnHash: _jdnHash, message, element_id: _element_id }) =>
-      _jdnHash === jdnHash && isValidLocator(message) && _element_id !== element_id
+      _jdnHash === jdnHash && isValidLocator(message) && _element_id !== element_id,
   );
 
 export const createNewName = (
   element: ILocator,
   newType: string,
   library: ElementLibrary,
-  elements: ILocator[]
+  elements: ILocator[],
 ): string => {
-  const names = chain(elements).map("name").without(element.name).value();
+  const names = chain(elements).map('name').without(element.name).value();
   const newName = createElementName({ ...element }, library, names, newType);
 
   return newName;
 };
 
 export const setIndents = (ref: React.RefObject<HTMLDivElement>, depth: number) => {
-  const jdnIndentClass = "jdn__tree-indent";
+  const jdnIndentClass = 'jdn__tree-indent';
 
-  const container = ref.current?.closest(".ant-tree-treenode");
-  const indentContainer = container?.querySelector(".ant-tree-indent");
+  const container = ref.current?.closest('.ant-tree-treenode');
+  const indentContainer = container?.querySelector('.ant-tree-indent');
   if (!indentContainer) return;
   while ((indentContainer?.childElementCount || 0) < depth) {
-    const indentElement = indentContainer?.querySelector(":first-child");
+    const indentElement = indentContainer?.querySelector(':first-child');
     if (!indentElement) break;
-    const jdnIndentDiv = document.createElement("span");
+    const jdnIndentDiv = document.createElement('span');
     jdnIndentDiv.className = jdnIndentClass;
     indentContainer?.appendChild(jdnIndentDiv);
   }
@@ -85,7 +85,7 @@ export const copyLocator =
         value = locatorsForCopy.map(({ locator }) => `"${locator.xPath}"`);
         break;
       case LocatorOption.XpathAndSelenium:
-        value = locatorsForCopy.map(({ locator }) => getLocatorWithSelenium(locator.xPath, "xpath"));
+        value = locatorsForCopy.map(({ locator }) => getLocatorWithSelenium(locator.xPath, 'xpath'));
         break;
       case LocatorOption.XpathAndJDI:
         value = locatorsForCopy.map(({ locator }) => getLocatorWithJDIAnnotation(locator.xPath));
@@ -94,7 +94,7 @@ export const copyLocator =
         value = locatorsForCopy.map(({ locator }) => `"${locator.cssSelector}"`);
         break;
       case LocatorOption.CSSAndSelenium:
-        value = locatorsForCopy.map(({ locator }) => getLocatorWithSelenium(locator.cssSelector, "css"));
+        value = locatorsForCopy.map(({ locator }) => getLocatorWithSelenium(locator.cssSelector, 'css'));
         break;
       case LocatorOption.CSSAndJDI:
         value = locatorsForCopy.map(({ locator }) => getLocatorWithJDIAnnotation(locator.cssSelector));
@@ -119,7 +119,7 @@ export const getCopyOptions = (framework: FrameworkType, selectedLocators: ILoca
       options[option as LocatorOption] = copyLocator(framework, selectedLocators, option);
       return options;
     },
-    {} as Record<LocatorOption, () => void>
+    {} as Record<LocatorOption, () => void>,
   );
 };
 
@@ -145,7 +145,7 @@ export const getLocatorValueOnTypeSwitch = async (
   element_id: ElementId,
   jdnHash: JDNHash,
   locator: LocatorValue,
-  form: FormInstance
+  form: FormInstance,
 ) => {
   const isLocatorLeadsToNewElement = validationMessage === LocatorValidationWarnings.NewElement;
   const isCSSLocator = newLocatorType === LocatorType.cssSelector;
@@ -154,14 +154,14 @@ export const getLocatorValueOnTypeSwitch = async (
 
   if (isCSSLocator) {
     if (isLocatorLeadsToNewElement || !locator.cssSelector) {
-      const { foundHash } = JSON.parse(await evaluateXpath(form.getFieldValue("locator"), element_id, jdnHash));
+      const { foundHash } = JSON.parse(await evaluateXpath(form.getFieldValue('locator'), element_id, jdnHash));
       ({ cssSelector: newLocatorValue } = await generateSelectorByHash(element_id, foundHash));
     } else {
       newLocatorValue = locator.cssSelector;
     }
   } else {
     if (isLocatorLeadsToNewElement || !locator.xPath) {
-      const { foundHash } = JSON.parse(await evaluateCssSelector(form.getFieldValue("locator"), element_id));
+      const { foundHash } = JSON.parse(await evaluateCssSelector(form.getFieldValue('locator'), element_id));
       newLocatorValue = await getElementFullXpath(foundHash);
     } else {
       newLocatorValue = locator.xPath;

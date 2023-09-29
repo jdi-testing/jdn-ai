@@ -1,24 +1,24 @@
-import { saveAs } from "file-saver";
-import { entries, isNumber, lowerFirst, size } from "lodash";
-import JSZip from "jszip";
-import { RootState } from "../../../app/store/store";
-import { selectCurrentPageObject, selectPageObjects } from "../selectors/pageObjects.selectors";
-import { testFileTemplate } from "./testTemplate";
-import { getPage } from "./pageObject";
-import { PageObject } from "../types/pageObjectSlice.types";
-import { ElementLibrary } from "../../locators/types/generationClasses.types";
-import { editPomContent } from "./templateFileContent";
-import { selectConfirmedLocators } from "../../locators/selectors/locatorsFiltered.selectors";
-import { FrameworkType } from "../../../common/types/common";
+import { saveAs } from 'file-saver';
+import { entries, isNumber, lowerFirst, size } from 'lodash';
+import JSZip from 'jszip';
+import { RootState } from '../../../app/store/store';
+import { selectCurrentPageObject, selectPageObjects } from '../selectors/pageObjects.selectors';
+import { testFileTemplate } from './testTemplate';
+import { getPage } from './pageObject';
+import { PageObject } from '../types/pageObjectSlice.types';
+import { ElementLibrary } from '../../locators/types/generationClasses.types';
+import { editPomContent } from './templateFileContent';
+import { selectConfirmedLocators } from '../../locators/selectors/locatorsFiltered.selectors';
+import { FrameworkType } from '../../../common/types/common';
 
 const VIVIDUS = {
-  PAGES_PROPERTIES_PATH: "src/main/resources/properties/suite/web_app/pages.properties",
-  SITE_PROPERTIES_PATH: "src/main/resources/properties/suite/web_app/site.properties",
+  PAGES_PROPERTIES_PATH: 'src/main/resources/properties/suite/web_app/pages.properties',
+  SITE_PROPERTIES_PATH: 'src/main/resources/properties/suite/web_app/site.properties',
 };
 
 const JDI = {
-  MY_SITE_PATH: "src/main/java/site/MySite.java",
-  EXAMPLE_STRING: "// ADD SITE PAGES WITH URLS",
+  MY_SITE_PATH: 'src/main/java/site/MySite.java',
+  EXAMPLE_STRING: '// ADD SITE PAGES WITH URLS',
 };
 
 const isVividusFramework = (framework: FrameworkType) => framework === FrameworkType.Vividus;
@@ -33,11 +33,11 @@ const generatePoFile = (newZip: JSZip, framework: FrameworkType, page: { pageCod
 
 const editTestPropertiesFile = (newZip: JSZip, po: PageObject) =>
   newZip
-    .file("src/test/resources/test.properties")!
-    .async("string")
+    .file('src/test/resources/test.properties')!
+    .async('string')
     .then(function success(content) {
       const testDomain = po.origin;
-      const newContent = content.replace("${domain}", `${testDomain}`);
+      const newContent = content.replace('${domain}', `${testDomain}`);
       return newZip.file(`src/test/resources/test.properties`, newContent, { binary: true });
     });
 
@@ -45,7 +45,7 @@ const editMySiteFile = (newZip: JSZip, po: PageObject, instanceName: string) => 
   if (isVividusFramework(po.framework)) return;
   newZip
     .file(JDI.MY_SITE_PATH)!
-    .async("string")
+    .async('string')
     .then((content) => {
       if (content.includes(instanceName)) instanceName = `${instanceName}1`;
       const urlSearchParams = po.search;
@@ -53,7 +53,7 @@ const editMySiteFile = (newZip: JSZip, po: PageObject, instanceName: string) => 
       const newContent = content.replace(
         JDI.EXAMPLE_STRING,
         `${JDI.EXAMPLE_STRING}\n    @Url("${testUrl}")\n    public static ${po.name} ${instanceName};
-          `
+          `,
       );
       return newZip.file(JDI.MY_SITE_PATH, newContent, { binary: true });
     });
@@ -66,9 +66,9 @@ export const editPomFile = (newZip: JSZip, po: PageObject) => {
   if (po.library === ElementLibrary.HTML5) return;
 
   return newZip
-    .file("pom.xml")!
-    .async("string")
-    .then((content) => newZip.file("pom.xml", editPomContent(content, po), { binary: true }));
+    .file('pom.xml')!
+    .async('string')
+    .then((content) => newZip.file('pom.xml', editPomContent(content, po), { binary: true }));
 };
 
 export const generateAndDownloadZip = async (state: RootState, template: Blob) => {
@@ -86,19 +86,19 @@ export const generateAndDownloadZip = async (state: RootState, template: Blob) =
     if (isNumber(file) || file.dir) return;
 
     filePromises.push(
-      file.async("string").then((content) => {
+      file.async('string').then((content) => {
         newZip.file(relativePath, content, { binary: true });
-      })
+      }),
     );
   });
 
   Promise.all(filePromises).then(async () => {
     const saveZip = async () => {
-      const blob = await newZip.generateAsync({ type: "blob" });
-      saveAs(blob, `${rootFolder.replace("/", "")}.zip`);
+      const blob = await newZip.generateAsync({ type: 'blob' });
+      saveAs(blob, `${rootFolder.replace('/', '')}.zip`);
     };
 
-    let vividusPageCode = "";
+    let vividusPageCode = '';
 
     for (const po of pageObjects) {
       // create page object files
@@ -110,7 +110,7 @@ export const generateAndDownloadZip = async (state: RootState, template: Blob) =
       if (!size(locators)) continue;
 
       if (isVividusFramework(framework)) {
-        vividusPageCode += (await getPage(locators, po))?.pageCode + "\n";
+        vividusPageCode += (await getPage(locators, po))?.pageCode + '\n';
 
         if (!isLastPo && !isEmptyPageObject) continue;
 

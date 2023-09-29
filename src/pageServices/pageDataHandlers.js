@@ -1,6 +1,6 @@
-import connector, { sendMessage } from "./connector";
-import { request } from "../services/backend";
-import { createOverlay } from "./contentScripts/createOverlay";
+import connector, { sendMessage } from './connector';
+import { request } from '../services/backend';
+import { createOverlay } from './contentScripts/createOverlay';
 /* global chrome*/
 
 let overlayID;
@@ -16,7 +16,7 @@ export const removeOverlay = () => {
     chrome.storage.sync.set({ overlayID });
 
     connector.attachContentScript(() => {
-      chrome.storage.sync.get(["overlayID"], ({ overlayID }) => {
+      chrome.storage.sync.get(['overlayID'], ({ overlayID }) => {
         const overlay = document.getElementById(overlayID);
         overlay && overlay.remove();
       });
@@ -48,7 +48,7 @@ export const predictElements = (endpoint) => {
       (error) => {
         removeOverlay();
         return error;
-      }
+      },
     );
 };
 

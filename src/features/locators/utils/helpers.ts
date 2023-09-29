@@ -1,5 +1,5 @@
-import { IdentificationStatus, ILocator, LocatorTaskStatus } from "../types/locator.types";
-import { AUTO_GENERATION_THRESHOLD } from "./constants";
+import { IdentificationStatus, ILocator, LocatorTaskStatus } from '../types/locator.types';
+import { AUTO_GENERATION_THRESHOLD } from './constants';
 
 export const isIdentificationLoading = (status: IdentificationStatus) => status === IdentificationStatus.loading;
 

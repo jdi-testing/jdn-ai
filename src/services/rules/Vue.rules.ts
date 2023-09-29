@@ -1,186 +1,186 @@
-import { RulesMap } from "./rules.types";
+import { RulesMap } from './rules.types';
 
 export const VueRules: RulesMap[] = [
   {
-    jdnLabel: "alert",
+    jdnLabel: 'alert',
     rules: {
-      classes: ["v-alert"],
+      classes: ['v-alert'],
     },
   },
   {
-    jdnLabel: "appBar",
+    jdnLabel: 'appBar',
     rules: {
-      classes: ["v-app-bar"],
+      classes: ['v-app-bar'],
     },
   },
   {
-    jdnLabel: "aspectRatios",
+    jdnLabel: 'aspectRatios',
     rules: {
-      classes: ["v-responsive"],
-    },
-    detectContent: true,
-    priority: "low",
-  },
-  {
-    jdnLabel: "avatar",
-    rules: {
-      classes: ["v-avatar"],
-    },
-  },
-  {
-    jdnLabel: "badge",
-    rules: {
-      classes: ["v-badge"],
-    },
-  },
-  {
-    jdnLabel: "banner",
-    rules: {
-      classes: ["v-banner"],
-    },
-  },
-  {
-    jdnLabel: "bottomnavigation",
-    rules: {
-      classes: ["v-bottom-navigation"],
-    },
-  },
-  {
-    jdnLabel: "bottomsheet",
-    rules: {
-      classes: ["v-bottom-sheet"],
-    },
-  },
-  {
-    jdnLabel: "breadcrumbs",
-    rules: {
-      classes: ["v-breadcrumbs"],
-    },
-  },
-  {
-    jdnLabel: "button",
-    rules: {
-      classes: ["v-btn"],
-    },
-  },
-  {
-    jdnLabel: "buttonGroup",
-    rules: {
-      classes: ["v-btn-toggle"],
-    },
-  },
-  {
-    jdnLabel: "card",
-    rules: {
-      classes: ["v-card"],
+      classes: ['v-responsive'],
     },
     detectContent: true,
+    priority: 'low',
   },
   {
-    jdnLabel: "calendar",
+    jdnLabel: 'avatar',
     rules: {
-      classes: ["v-calendar"],
+      classes: ['v-avatar'],
     },
   },
   {
-    jdnLabel: "carousel",
+    jdnLabel: 'badge',
     rules: {
-      classes: ["v-carousel"],
+      classes: ['v-badge'],
     },
   },
   {
-    jdnLabel: "checkbox",
+    jdnLabel: 'banner',
     rules: {
-      selector: ".v-input--checkbox, .v-checkbox",
+      classes: ['v-banner'],
     },
   },
   {
-    jdnLabel: "chip",
+    jdnLabel: 'bottomnavigation',
     rules: {
-      classes: ["v-chip"],
+      classes: ['v-bottom-navigation'],
     },
   },
   {
-    jdnLabel: "chipgroup",
+    jdnLabel: 'bottomsheet',
     rules: {
-      classes: ["v-chip-group"],
+      classes: ['v-bottom-sheet'],
+    },
+  },
+  {
+    jdnLabel: 'breadcrumbs',
+    rules: {
+      classes: ['v-breadcrumbs'],
+    },
+  },
+  {
+    jdnLabel: 'button',
+    rules: {
+      classes: ['v-btn'],
+    },
+  },
+  {
+    jdnLabel: 'buttonGroup',
+    rules: {
+      classes: ['v-btn-toggle'],
+    },
+  },
+  {
+    jdnLabel: 'card',
+    rules: {
+      classes: ['v-card'],
     },
     detectContent: true,
   },
   {
-    jdnLabel: "colorpicker",
+    jdnLabel: 'calendar',
     rules: {
-      classes: ["v-color-picker"],
+      classes: ['v-calendar'],
     },
   },
   {
-    jdnLabel: "combobox",
+    jdnLabel: 'carousel',
     rules: {
-      classes: ["v-autocomplete"],
+      classes: ['v-carousel'],
+    },
+  },
+  {
+    jdnLabel: 'checkbox',
+    rules: {
+      selector: '.v-input--checkbox, .v-checkbox',
+    },
+  },
+  {
+    jdnLabel: 'chip',
+    rules: {
+      classes: ['v-chip'],
+    },
+  },
+  {
+    jdnLabel: 'chipgroup',
+    rules: {
+      classes: ['v-chip-group'],
+    },
+    detectContent: true,
+  },
+  {
+    jdnLabel: 'colorpicker',
+    rules: {
+      classes: ['v-color-picker'],
+    },
+  },
+  {
+    jdnLabel: 'combobox',
+    rules: {
+      classes: ['v-autocomplete'],
     },
     excludingRules: {
-      classes: ["v-overflow-btn"],
+      classes: ['v-overflow-btn'],
     },
   },
   {
-    jdnLabel: "dataIterator",
+    jdnLabel: 'dataIterator',
     rules: {
-      classes: ["v-data-iterator"],
+      classes: ['v-data-iterator'],
     },
     detectContent: true,
   },
   // for Vuetify 2
   {
-    jdnLabel: "dataTableV2",
+    jdnLabel: 'dataTableV2',
     rules: {
-      classes: ["v-data-table"],
+      classes: ['v-data-table'],
       children: [
         {
-          tag: "colgroup",
+          tag: 'colgroup',
         },
       ],
     },
   },
   // for Vuetify 3
   {
-    jdnLabel: "dataTableV3",
+    jdnLabel: 'dataTableV3',
     rules: {
-      classes: ["v-table", "v-data-table"],
+      classes: ['v-table', 'v-data-table'],
     },
   },
   {
-    jdnLabel: "datePicker",
+    jdnLabel: 'datePicker',
     rules: {
-      classes: ["v-picker--date"],
+      classes: ['v-picker--date'],
       children: [
         {
-          classes: ["v-date-picker-table--date"],
+          classes: ['v-date-picker-table--date'],
         },
       ],
     },
   },
   {
-    jdnLabel: "datePickerMonth",
+    jdnLabel: 'datePickerMonth',
     rules: {
-      classes: ["v-picker--date"],
+      classes: ['v-picker--date'],
       children: [
         {
-          classes: ["v-date-picker-table--month"],
+          classes: ['v-date-picker-table--month'],
         },
       ],
     },
   },
   {
-    jdnLabel: "dialog",
+    jdnLabel: 'dialog',
     rules: {
-      classes: ["v-dialog"],
+      classes: ['v-dialog'],
     },
-    priority: "low",
+    priority: 'low',
   },
   {
-    jdnLabel: "divider",
+    jdnLabel: 'divider',
     rules: {
-      classes: ["v-divider"],
+      classes: ['v-divider'],
     },
   },
   // {
@@ -190,360 +190,360 @@ export const VueRules: RulesMap[] = [
   //   },
   // },
   {
-    jdnLabel: "expansionPanels",
+    jdnLabel: 'expansionPanels',
     rules: {
-      classes: ["v-expansion-panels"],
+      classes: ['v-expansion-panels'],
     },
   },
   {
-    jdnLabel: "fileInput",
+    jdnLabel: 'fileInput',
     rules: {
-      classes: ["v-file-input"],
+      classes: ['v-file-input'],
     },
   },
   {
-    jdnLabel: "footer",
+    jdnLabel: 'footer',
     rules: {
-      classes: ["v-footer"],
+      classes: ['v-footer'],
     },
   },
   {
-    jdnLabel: "grid",
+    jdnLabel: 'grid',
     rules: {
-      classes: ["container"],
+      classes: ['container'],
       children: [
         {
-          classes: ["row"],
+          classes: ['row'],
         },
       ],
     },
     detectContent: true,
   },
   {
-    jdnLabel: "icon",
+    jdnLabel: 'icon',
     rules: {
-      classes: ["v-icon"],
+      classes: ['v-icon'],
     },
   },
   {
-    jdnLabel: "image",
+    jdnLabel: 'image',
     rules: {
-      classes: ["v-img"],
+      classes: ['v-img'],
     },
   },
   {
-    jdnLabel: "input",
+    jdnLabel: 'input',
     rules: {
-      classes: ["v-input"],
+      classes: ['v-input'],
     },
-    priority: "low",
+    priority: 'low',
   },
   {
-    jdnLabel: "itemGroup",
+    jdnLabel: 'itemGroup',
     rules: {
-      classes: ["v-item-group"],
-    },
-    detectContent: true,
-    priority: "low",
-  },
-  {
-    jdnLabel: "list",
-    rules: {
-      classes: ["v-list"],
+      classes: ['v-item-group'],
     },
     detectContent: true,
+    priority: 'low',
   },
   {
-    jdnLabel: "listGroup",
+    jdnLabel: 'list',
     rules: {
-      classes: ["v-list-group"],
-    },
-  },
-  {
-    jdnLabel: "listItem",
-    rules: {
-      classes: ["v-list-item"],
-    },
-  },
-  {
-    jdnLabel: "listItemGroups",
-    rules: {
-      classes: ["v-list-item-group"],
-    },
-  },
-  {
-    jdnLabel: "menu",
-    rules: {
-      classes: ["v-menu__content"],
-    },
-  },
-  {
-    jdnLabel: "navigationDrawer",
-    rules: {
-      classes: ["v-navigation-drawer"],
-    },
-  },
-  {
-    jdnLabel: "otpInput",
-    rules: {
-      classes: ["v-otp-input"],
-    },
-  },
-  {
-    jdnLabel: "overflowButton",
-    rules: {
-      classes: ["v-overflow-btn"],
-    },
-  },
-  {
-    jdnLabel: "overlay",
-    rules: {
-      classes: ["v-overlay"],
-    },
-  },
-  {
-    jdnLabel: "pagination",
-    rules: {
-      classes: ["v-pagination"],
+      classes: ['v-list'],
     },
     detectContent: true,
   },
   {
-    jdnLabel: "paginationPage",
+    jdnLabel: 'listGroup',
     rules: {
-      classes: ["v-pagination__item"],
+      classes: ['v-list-group'],
     },
   },
   {
-    jdnLabel: "parallax",
+    jdnLabel: 'listItem',
     rules: {
-      classes: ["v-parallax"],
+      classes: ['v-list-item'],
     },
   },
   {
-    jdnLabel: "progressCircular",
+    jdnLabel: 'listItemGroups',
     rules: {
-      classes: ["v-progress-circular"],
+      classes: ['v-list-item-group'],
     },
   },
   {
-    jdnLabel: "progressLinear",
+    jdnLabel: 'menu',
     rules: {
-      classes: ["v-progress-linear"],
+      classes: ['v-menu__content'],
     },
   },
   {
-    jdnLabel: "radiobutton",
+    jdnLabel: 'navigationDrawer',
     rules: {
-      classes: ["v-radio"],
+      classes: ['v-navigation-drawer'],
     },
   },
   {
-    jdnLabel: "radiobuttons",
+    jdnLabel: 'otpInput',
     rules: {
-      classes: ["v-input--radio-group"],
+      classes: ['v-otp-input'],
     },
   },
   {
-    jdnLabel: "rangeSlider",
+    jdnLabel: 'overflowButton',
     rules: {
-      selector: ".v-range-slider, .v-input--range-slider",
+      classes: ['v-overflow-btn'],
     },
   },
   {
-    jdnLabel: "rating",
+    jdnLabel: 'overlay',
     rules: {
-      classes: ["v-rating"],
+      classes: ['v-overlay'],
     },
   },
   {
-    jdnLabel: "select",
+    jdnLabel: 'pagination',
     rules: {
-      classes: ["v-select"],
+      classes: ['v-pagination'],
+    },
+    detectContent: true,
+  },
+  {
+    jdnLabel: 'paginationPage',
+    rules: {
+      classes: ['v-pagination__item'],
+    },
+  },
+  {
+    jdnLabel: 'parallax',
+    rules: {
+      classes: ['v-parallax'],
+    },
+  },
+  {
+    jdnLabel: 'progressCircular',
+    rules: {
+      classes: ['v-progress-circular'],
+    },
+  },
+  {
+    jdnLabel: 'progressLinear',
+    rules: {
+      classes: ['v-progress-linear'],
+    },
+  },
+  {
+    jdnLabel: 'radiobutton',
+    rules: {
+      classes: ['v-radio'],
+    },
+  },
+  {
+    jdnLabel: 'radiobuttons',
+    rules: {
+      classes: ['v-input--radio-group'],
+    },
+  },
+  {
+    jdnLabel: 'rangeSlider',
+    rules: {
+      selector: '.v-range-slider, .v-input--range-slider',
+    },
+  },
+  {
+    jdnLabel: 'rating',
+    rules: {
+      classes: ['v-rating'],
+    },
+  },
+  {
+    jdnLabel: 'select',
+    rules: {
+      classes: ['v-select'],
     },
     excludingRules: {
-      classes: ["v-autocomplete", "v-overflow-btn"],
+      classes: ['v-autocomplete', 'v-overflow-btn'],
     },
   },
   // for Vuetify 2
   {
-    jdnLabel: "simpleTable",
+    jdnLabel: 'simpleTable',
     rules: {
-      classes: ["v-data-table"],
+      classes: ['v-data-table'],
     },
     excludingRules: {
       children: [
         {
-          tag: "colgroup",
+          tag: 'colgroup',
         },
       ],
-      classes: ["v-table"],
+      classes: ['v-table'],
     },
   },
   // for Vuetify 3, Table component
   {
-    jdnLabel: "table",
+    jdnLabel: 'table',
     rules: {
-      selector: ".v-table:not(.v-data-table)",
+      selector: '.v-table:not(.v-data-table)',
     },
   },
   {
-    jdnLabel: "skeletonLoader",
+    jdnLabel: 'skeletonLoader',
     rules: {
-      classes: ["v-skeleton-loader"],
+      classes: ['v-skeleton-loader'],
     },
   },
   {
-    jdnLabel: "sliderV2",
+    jdnLabel: 'sliderV2',
     rules: {
-      classes: ["v-input__slider"],
+      classes: ['v-input__slider'],
     },
     excludingRules: {
-      classes: ["v-input--range-slider"],
+      classes: ['v-input--range-slider'],
     },
   },
   {
-    jdnLabel: "sliderV3",
+    jdnLabel: 'sliderV3',
     rules: {
-      classes: ["v-slider"],
+      classes: ['v-slider'],
     },
     excludingRules: {
-      classes: ["v-range-slider"],
+      classes: ['v-range-slider'],
     },
   },
   {
-    jdnLabel: "slideGroup",
+    jdnLabel: 'slideGroup',
     rules: {
-      classes: ["v-slide-group"],
+      classes: ['v-slide-group'],
     },
     excludingRules: {
-      classes: ["v-chip-group"],
+      classes: ['v-chip-group'],
     },
     detectContent: true,
   },
   {
-    jdnLabel: "sheet",
+    jdnLabel: 'sheet',
     rules: {
-      classes: ["v-sheet"],
+      classes: ['v-sheet'],
     },
     detectContent: true,
-    priority: "low",
+    priority: 'low',
   },
   {
-    jdnLabel: "snackbar",
+    jdnLabel: 'snackbar',
     rules: {
-      classes: ["v-snackbar"],
+      classes: ['v-snackbar'],
     },
   },
   {
-    jdnLabel: "stepper",
+    jdnLabel: 'stepper',
     rules: {
-      classes: ["v-stepper"],
+      classes: ['v-stepper'],
     },
     detectContent: true,
   },
   {
-    jdnLabel: "step",
+    jdnLabel: 'step',
     rules: {
-      classes: ["v-stepper__step"],
+      classes: ['v-stepper__step'],
     },
   },
   {
-    jdnLabel: "subheader",
+    jdnLabel: 'subheader',
     rules: {
-      classes: ["v-subheader"],
+      classes: ['v-subheader'],
     },
   },
   {
-    jdnLabel: "switch",
+    jdnLabel: 'switch',
     rules: {
-      classes: ["v-input--switch"],
+      classes: ['v-input--switch'],
     },
   },
   {
-    jdnLabel: "systembar",
+    jdnLabel: 'systembar',
     rules: {
-      classes: ["v-system-bar"],
+      classes: ['v-system-bar'],
     },
   },
   {
-    jdnLabel: "tabs",
+    jdnLabel: 'tabs',
     rules: {
-      classes: ["v-tabs"],
+      classes: ['v-tabs'],
     },
   },
   {
-    jdnLabel: "tableCheckbox",
+    jdnLabel: 'tableCheckbox',
     rules: {
-      classes: ["v-simple-checkbox"],
+      classes: ['v-simple-checkbox'],
     },
   },
   {
-    jdnLabel: "text",
+    jdnLabel: 'text',
     rules: {
       selector: `.text-h1, .text-h2, .text-h3, .text-h4, .text-h5, .text-h6, .text-subtitle-1, 
       .text-subtitle-2, .text-body-1, .text-body-2, .text-button, .text-caption, .text-overline`,
     },
   },
   {
-    jdnLabel: "textArea",
+    jdnLabel: 'textArea',
     rules: {
-      classes: ["v-textarea"],
+      classes: ['v-textarea'],
     },
   },
   {
-    jdnLabel: "textfield",
+    jdnLabel: 'textfield',
     rules: {
-      classes: ["v-text-field"],
+      classes: ['v-text-field'],
     },
-    priority: "low",
+    priority: 'low',
   },
   {
-    jdnLabel: "timeline",
+    jdnLabel: 'timeline',
     rules: {
-      classes: ["v-timeline"],
-    },
-  },
-  {
-    jdnLabel: "timepicker",
-    rules: {
-      classes: ["v-picker--time"],
+      classes: ['v-timeline'],
     },
   },
   {
-    jdnLabel: "toolbar",
+    jdnLabel: 'timepicker',
     rules: {
-      classes: ["v-toolbar"],
+      classes: ['v-picker--time'],
+    },
+  },
+  {
+    jdnLabel: 'toolbar',
+    rules: {
+      classes: ['v-toolbar'],
     },
     excludingRules: {
-      classes: ["v-app-bar"],
+      classes: ['v-app-bar'],
     },
   },
   {
-    jdnLabel: "tooltip",
+    jdnLabel: 'tooltip',
     rules: {
-      classes: ["v-tooltip"],
+      classes: ['v-tooltip'],
     },
     detectContent: true,
   },
   {
-    jdnLabel: "treeview",
+    jdnLabel: 'treeview',
     rules: {
-      classes: ["v-treeview"],
+      classes: ['v-treeview'],
     },
   },
   {
-    jdnLabel: "virtualscroller",
+    jdnLabel: 'virtualscroller',
     rules: {
-      classes: ["v-virtual-scroll"],
+      classes: ['v-virtual-scroll'],
     },
   },
   {
-    jdnLabel: "windows",
+    jdnLabel: 'windows',
     rules: {
-      classes: ["v-window"],
+      classes: ['v-window'],
     },
-    priority: "low",
+    priority: 'low',
     detectContent: true,
   },
 ];

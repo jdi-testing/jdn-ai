@@ -1,22 +1,20 @@
-import { createEntityAdapter, createSelector } from "@reduxjs/toolkit";
-import { isNil, last } from "lodash";
-import { RootState } from "../../../app/store/store";
-import { PageObject } from "../types/pageObjectSlice.types";
-import { AUTO_GENERATION_THRESHOLD } from "../../locators/utils/constants";
-import { LocatorType } from "../../../common/types/common";
+import { createEntityAdapter, createSelector } from '@reduxjs/toolkit';
+import { isNil, last } from 'lodash';
+import { RootState } from '../../../app/store/store';
+import { PageObject } from '../types/pageObjectSlice.types';
+import { AUTO_GENERATION_THRESHOLD } from '../../locators/utils/constants';
+import { LocatorType } from '../../../common/types/common';
 
 export const pageObjAdapter = createEntityAdapter<PageObject>({
   selectId: (pageObj) => pageObj.id,
 });
 
 export const { selectAll: selectPageObjects, selectById: selectPageObjById } = pageObjAdapter.getSelectors(
-  (state: RootState) => state.pageObject.present
+  (state: RootState) => state.pageObject.present,
 );
 
-export const {
-  selectAll: simpleSelectPageObjects,
-  selectById: simpleSelectPageObjById,
-} = pageObjAdapter.getSelectors();
+export const { selectAll: simpleSelectPageObjects, selectById: simpleSelectPageObjById } =
+  pageObjAdapter.getSelectors();
 
 export const selectCurrentPageObject = (state: RootState) => {
   const currentPageObj = state.pageObject.present.currentPageObject;
@@ -28,7 +26,7 @@ export const selectMaxId = createSelector(simpleSelectPageObjects, (items) => {
   // eslint-disable-next-line
   const res = Math.max.apply(
     Math,
-    items.map((po) => po.id)
+    items.map((po) => po.id),
   );
   return res !== -Infinity ? res : null;
 });
@@ -41,7 +39,7 @@ export const selectLastLocatorType = createSelector(selectPageObjects, (pageObje
 
 export const selectLastAnnotationType = createSelector(
   selectPageObjects,
-  (pageObjects) => last(pageObjects)?.annotationType
+  (pageObjects) => last(pageObjects)?.annotationType,
 );
 
 export const selectAutoGeneratingLocatorTypes = createSelector(
@@ -67,5 +65,5 @@ export const selectAutoGeneratingLocatorTypes = createSelector(
     };
 
     return isAutoGenerating;
-  }
+  },
 );

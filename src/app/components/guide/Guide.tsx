@@ -1,16 +1,16 @@
-import { Alert, Button, Steps, Typography } from "antd";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { Alert, Button, Steps, Typography } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 /* eslint-disable-next-line */
 // @ts-ignore
 // since webpack works fine with it
-import readme from "../../../../README.md";
-import { BackendStatus } from "../../types/mainSlice.types";
-import { AppDispatch, RootState } from "../../store/store";
-import { useGuideRehype } from "../../utils/useGuideRehype";
-import { redefineServer } from "../../reducers/redefineServer.thunk";
-import { GuideText } from "./text.constants";
-import { AlertStatus, getSteps, pluginGuide, serverGuide, splitMD } from "./utils";
+import readme from '../../../../README.md';
+import { BackendStatus } from '../../types/mainSlice.types';
+import { AppDispatch, RootState } from '../../store/store';
+import { useGuideRehype } from '../../utils/useGuideRehype';
+import { redefineServer } from '../../reducers/redefineServer.thunk';
+import { GuideText } from './text.constants';
+import { AlertStatus, getSteps, pluginGuide, serverGuide, splitMD } from './utils';
 
 export const Guide = () => {
   const backendStatus = useSelector((_state: RootState) => _state.main.backendAvailable);

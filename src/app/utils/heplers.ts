@@ -1,4 +1,4 @@
-import { PageType } from "../types/mainSlice.types";
+import { PageType } from '../types/mainSlice.types';
 
 export const isLocatorListPage = (pageType: PageType) => pageType === PageType.LocatorsList;
 

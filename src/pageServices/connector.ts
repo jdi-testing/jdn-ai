@@ -1,10 +1,10 @@
-import { isUndefined } from "lodash";
-import { SCRIPT_ERROR } from "../common/constants/constants";
-import { ElementId, ILocator, PredictedEntity } from "../features/locators/types/locator.types";
-import { SelectorsMap } from "../services/rules/rules.types";
-import { ScriptMessagePayload } from "./scriptMessageHandler";
-import { ClassFilterValue } from "../features/filter/types/filter.types";
-import { ScriptMsg } from "./scriptMsg.constants";
+import { isUndefined } from 'lodash';
+import { SCRIPT_ERROR } from '../common/constants/constants';
+import { ElementId, ILocator, PredictedEntity } from '../features/locators/types/locator.types';
+import { SelectorsMap } from '../services/rules/rules.types';
+import { ScriptMessagePayload } from './scriptMessageHandler';
+import { ClassFilterValue } from '../features/filter/types/filter.types';
+import { ScriptMsg } from './scriptMsg.constants';
 
 export interface ScriptMessage {
   message: string;

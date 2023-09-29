@@ -1,19 +1,19 @@
-import React, { ChangeEvent, useMemo, useState } from "react";
-import { Badge, Button, Checkbox, Divider, Dropdown, Input, Switch, Typography } from "antd";
-import { SwitchChangeEventHandler } from "antd/lib/switch";
-import { useDispatch, useSelector } from "react-redux";
-import { selectCurrentPageObject } from "../pageObjects/selectors/pageObjects.selectors";
-import { ElementClass } from "../locators/types/generationClasses.types";
-import { FilterHeader } from "./components/FilterHeader";
-import { selectDetectedClassesFilter, selectIfSelectedAll, selectIsFiltered } from "./filter.selectors";
-import { toggleClassFilter } from "./reducers/toggleClassFilter.thunk";
-import { toggleClassFilterAll } from "./reducers/toggleClassFilterAll.thunk";
-import { convertFilterToArr } from "./utils/filterSet";
-import { FilterIcon } from "./components/shared/FilterIcon";
-import { AppDispatch } from "../../app/store/store";
+import React, { ChangeEvent, useMemo, useState } from 'react';
+import { Badge, Button, Checkbox, Divider, Dropdown, Input, Switch, Typography } from 'antd';
+import { SwitchChangeEventHandler } from 'antd/lib/switch';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectCurrentPageObject } from '../pageObjects/selectors/pageObjects.selectors';
+import { ElementClass } from '../locators/types/generationClasses.types';
+import { FilterHeader } from './components/FilterHeader';
+import { selectDetectedClassesFilter, selectIfSelectedAll, selectIsFiltered } from './filter.selectors';
+import { toggleClassFilter } from './reducers/toggleClassFilter.thunk';
+import { toggleClassFilterAll } from './reducers/toggleClassFilterAll.thunk';
+import { convertFilterToArr } from './utils/filterSet';
+import { FilterIcon } from './components/shared/FilterIcon';
+import { AppDispatch } from '../../app/store/store';
 
 export const Filter = () => {
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const [open, setOpen] = useState(false);
   const pageObject = useSelector(selectCurrentPageObject);
   const dispatch = useDispatch<AppDispatch>();
@@ -32,7 +32,7 @@ export const Filter = () => {
         library: pageObject.library,
         jdiClass: key as ElementClass,
         value: !oldValue,
-      })
+      }),
     );
   };
 
@@ -60,7 +60,7 @@ export const Filter = () => {
         pageObjectId: pageObject.id,
         library: pageObject.library,
         value: checked,
-      })
+      }),
     );
   };
 
@@ -85,7 +85,7 @@ export const Filter = () => {
       />
     ),
 
-    [isFiltered]
+    [isFiltered],
   );
 
   return (
@@ -107,7 +107,7 @@ export const Filter = () => {
           </div>
         </div>
       )}
-      trigger={["click"]}
+      trigger={['click']}
       getPopupContainer={(triggerNode) => triggerNode}
       overlayClassName="jdn__filter_dropdown"
       onOpenChange={handleOpenChange}

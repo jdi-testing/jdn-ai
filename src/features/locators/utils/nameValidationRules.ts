@@ -1,7 +1,7 @@
-import { Rule, RuleObject } from "antd/lib/form";
-import { isStringMatchesReservedWord } from "../../pageObjects/utils/pageObject";
-import { LocatorValidationErrors, LocatorValidationWarnings } from "../types/locator.types";
-import { isValidJavaVariable } from "./utils";
+import { Rule, RuleObject } from 'antd/lib/form';
+import { isStringMatchesReservedWord } from '../../pageObjects/utils/pageObject';
+import { LocatorValidationErrors, LocatorValidationWarnings } from '../types/locator.types';
+import { isValidJavaVariable } from './utils';
 
 export const createNameValidationRules = (isNameUnique: (value: string) => boolean): Rule[] => {
   return [

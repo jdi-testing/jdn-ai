@@ -1,8 +1,8 @@
-import { AsyncThunkAction } from "@reduxjs/toolkit";
-import { Dispatch } from "react";
-import { setScriptMessage } from "../app/main.slice";
-import { RootState } from "../app/store/store";
-import { ILocator, LocatorTaskStatus } from "../features/locators/types/locator.types";
+import { AsyncThunkAction } from '@reduxjs/toolkit';
+import { Dispatch } from 'react';
+import { setScriptMessage } from '../app/main.slice';
+import { RootState } from '../app/store/store';
+import { ILocator, LocatorTaskStatus } from '../features/locators/types/locator.types';
 import {
   elementGroupSetActive,
   elementGroupUnsetActive,
@@ -12,17 +12,17 @@ import {
   toggleElementGeneration,
   toggleElementGroupGeneration,
   updateLocatorGroup,
-} from "../features/locators/locators.slice";
-import connector from "./connector";
-import { showOverlay } from "./pageDataHandlers";
-import { rerunGeneration } from "../features/locators/reducers/rerunGeneration.thunk";
-import { stopGenerationGroup } from "../features/locators/reducers/stopGenerationGroup.thunk";
-import { copyLocator } from "../features/locators/utils/utils";
-import { selectLocatorByJdnHash } from "../features/locators/selectors/locators.selectors";
-import { ScriptMsg, dispatchingMessages } from "./scriptMsg.constants";
-import { selectPresentActiveLocators } from "../features/locators/selectors/locatorsByPO.selectors";
-import { selectCurrentPageObject } from "../features/pageObjects/selectors/pageObjects.selectors";
-import { FrameworkType } from "../common/types/common";
+} from '../features/locators/locators.slice';
+import connector from './connector';
+import { showOverlay } from './pageDataHandlers';
+import { rerunGeneration } from '../features/locators/reducers/rerunGeneration.thunk';
+import { stopGenerationGroup } from '../features/locators/reducers/stopGenerationGroup.thunk';
+import { copyLocator } from '../features/locators/utils/utils';
+import { selectLocatorByJdnHash } from '../features/locators/selectors/locators.selectors';
+import { ScriptMsg, dispatchingMessages } from './scriptMsg.constants';
+import { selectPresentActiveLocators } from '../features/locators/selectors/locatorsByPO.selectors';
+import { selectCurrentPageObject } from '../features/pageObjects/selectors/pageObjects.selectors';
+import { FrameworkType } from '../common/types/common';
 
 export type ScriptMessagePayload = { message: keyof Actions; param: Record<string, never> };
 
@@ -32,7 +32,7 @@ type Actions<P = any> = Partial<Record<ScriptMsg, Response<P>>>;
 
 export const updateMessageHandler = (
   dispatch: Dispatch<{ payload?: any; type?: string } | AsyncThunkAction<any, any, any>>,
-  state: RootState
+  state: RootState,
 ) => {
   const actions: Actions = {
     [ScriptMsg.AdvancedCalculation]: ({ locators, time }) => {
@@ -40,7 +40,7 @@ export const updateMessageHandler = (
         rerunGeneration({
           generationData: locators,
           maxGenerationTime: time,
-        })
+        }),
       );
     },
     [ScriptMsg.CopyLocator]: ({ value, option }) => {

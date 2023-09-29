@@ -1,4 +1,4 @@
-import { ElementId, ILocator } from "../types/locator.types";
+import { ElementId, ILocator } from '../types/locator.types';
 
 export const sortLocatorsWithChildren = (locators: ILocator[]) => {
   const childrenMap: Map<string, ILocator> = new Map();
@@ -13,7 +13,7 @@ export const sortLocatorsWithChildren = (locators: ILocator[]) => {
 
   const addLocators = (_locators: ILocator[] | ElementId[]) => {
     for (let locator of _locators) {
-      if (typeof locator === "string") {
+      if (typeof locator === 'string') {
         if (!childrenMap.has(locator)) continue;
         locator = childrenMap.get(locator) as ILocator;
       } else if (locator.parent_id?.length && !childrenMap.has(locator.element_id)) continue;

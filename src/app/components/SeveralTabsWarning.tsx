@@ -1,6 +1,6 @@
-import { Alert, Button } from "antd";
-import React from "react";
-import { componentsTexts } from "../utils/constants";
+import { Alert, Button } from 'antd';
+import React from 'react';
+import { componentsTexts } from '../utils/constants';
 
 interface Props {
   checkSession: () => void;

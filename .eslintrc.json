@@ -4,9 +4,18 @@
     "es6": true,
     "webextensions": true,
     "amd": true,
-    "node": true
+    "node": true,
+    "jest": true
   },
-  "extends": ["plugin:react/recommended", "plugin:@typescript-eslint/recommended"],
+  "extends": [        
+  "plugin:react/recommended",
+  "airbnb-typescript",
+  "plugin:@typescript-eslint/recommended",
+  "plugin:@typescript-eslint/recommended-requiring-type-checking",
+  "plugin:jest/recommended",
+  "plugin:prettier/recommended",
+  "plugin:import/recommended"
+  ],
   "globals": {
     "Atomics": "readonly",
     "SharedArrayBuffer": "readonly",
@@ -18,13 +27,16 @@
       "jsx": true
     },
     "ecmaVersion": 2020,
-    "sourceType": "module"
+    "sourceType": "module",
+    "project": "./tsconfig.json"
   },
-  "plugins": ["react", "@typescript-eslint", "prettier"],
+  "plugins": ["react", "@typescript-eslint", "prettier", "jest", "react-hooks",  "import"],
+  "ignorePatterns": ["webpack.config.js"],
   "rules": {
     "prettier/prettier": ["error", {
       "bracket-same-line": true,
-      "printWidth": 120
+      "printWidth": 120,
+      "endOfLine": "auto"
     }],
     "ban-ts-comment": 0,
     "quotes": 0,

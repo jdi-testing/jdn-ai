@@ -1,43 +1,43 @@
 export const ruleMock1 = {
-  tag: "button",
-  classes: ["v-btn"],
+  tag: 'button',
+  classes: ['v-btn'],
 };
 
 export const ruleMock2 = {
-  classes: ["v-btn", "primary"],
+  classes: ['v-btn', 'primary'],
 };
 
 export const ruleMock3 = {
-  tag: "i",
+  tag: 'i',
   classes: [],
 };
 
 export const ruleMock4 = {
-  classes: ["v-picker--date"],
+  classes: ['v-picker--date'],
   children: [
     {
-      classes: ["v-date-picker-table--date"],
+      classes: ['v-date-picker-table--date'],
     },
   ],
 };
 
 export const ruleMock5 = {
-  classes: ["v-picker", "v-light"],
+  classes: ['v-picker', 'v-light'],
   children: [
     {
-      classes: ["v-picker--date", "v-input"],
+      classes: ['v-picker--date', 'v-input'],
     },
   ],
 };
 
 export const ruleMock6 = {
-  classes: ["v-select"],
+  classes: ['v-select'],
 };
 
 export const ruleMock7 = {
   children: [
     {
-      tag: "colgroup",
+      tag: 'colgroup',
     },
   ],
 };
@@ -45,11 +45,11 @@ export const ruleMock7 = {
 export const ruleMock8 = {
   children: [
     {
-      classes: ["v-light"],
+      classes: ['v-light'],
     },
   ],
 };
 
 export const ruleMock9 = {
-  selector: "[class*=text-]",
+  selector: '[class*=text-]',
 };

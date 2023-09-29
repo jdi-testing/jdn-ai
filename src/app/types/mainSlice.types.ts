@@ -1,5 +1,5 @@
-import { AnyAction } from "@reduxjs/toolkit";
-import { PageObjectId } from "../../features/pageObjects/types/pageObjectSlice.types";
+import { AnyAction } from '@reduxjs/toolkit';
+import { PageObjectId } from '../../features/pageObjects/types/pageObjectSlice.types';
 
 export interface MainState {
   backendAvailable: BackendStatus;
@@ -36,19 +36,19 @@ export interface Notification {
 }
 
 export enum BackendStatus {
-  TryToAccess = "Trying to access server...",
-  Accessed = "Accessed",
-  AccessFailed = "Access failed",
-  OutdatedServerLocal = "Local server version need to be updated.",
-  OutdatedPluginLocal = "Plugin version need to be updated.",
-  IncompatibleVersionRemote = "Remote server version is incompatible. Please, update plugin",
-  IncompatibleVersions = "Remote and local server versions are incompatible. Please, update plugin or local server, or try to connect the remote server.",
-  Retry = "Retrying...",
+  TryToAccess = 'Trying to access server...',
+  Accessed = 'Accessed',
+  AccessFailed = 'Access failed',
+  OutdatedServerLocal = 'Local server version need to be updated.',
+  OutdatedPluginLocal = 'Plugin version need to be updated.',
+  IncompatibleVersionRemote = 'Remote server version is incompatible. Please, update plugin',
+  IncompatibleVersions = 'Remote and local server versions are incompatible. Please, update plugin or local server, or try to connect the remote server.',
+  Retry = 'Retrying...',
 }
 
 export enum PageType {
-  PageObject = "pageObject",
-  LocatorsList = "locatorsList",
+  PageObject = 'pageObject',
+  LocatorsList = 'locatorsList',
 }
 
-export type BaseUrl = "http://localhost:5050" | "http://10.253.219.156";
+export type BaseUrl = 'http://localhost:5050' | 'http://10.253.219.156';

@@ -1,32 +1,32 @@
-import React, { useState, useRef } from "react";
-import { Button, Modal, Tooltip, Row } from "antd";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState, useRef } from 'react';
+import { Button, Modal, Tooltip, Row } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
 
-import { isEmpty, isEqual, size } from "lodash";
+import { isEmpty, isEqual, size } from 'lodash';
 
-import { changePageBack, setScriptMessage } from "../../app/main.slice";
-import { Breadcrumbs } from "../../common/components/breadcrumbs/Breadcrumbs";
-import { customConfirm } from "../../common/components/CustomConfirm";
-import { clearLocators } from "../pageObjects/pageObject.slice";
-import { locatorGenerationController } from "./utils/locatorGenerationController";
-import { removeLocators, restoreLocators } from "./locators.slice";
-import { LocatorsTree, LocatorTreeProps } from "./components/LocatorsTree";
-import { LocatorListHeader } from "./components/LocatorListHeader";
-import { Filter } from "../filter/Filter";
-import { useCalculateHeaderSize } from "./utils/useCalculateHeaderSize";
-import { RootState } from "../../app/store/store";
-import { IdentificationStatus } from "./types/locator.types";
-import { LocatorTreeSpinner } from "./components/LocatorTreeSpinner";
-import { useOnBoardingRef } from "../onboarding/utils/useOnboardingRef";
-import { OnbrdStep } from "../onboarding/types/constants";
-import { removeAll as removeAllFilters, setFilter } from "../filter/filter.slice";
-import { selectIfUnselectedAll } from "../filter/filter.selectors";
-import { selectClassFilterByPO } from "../filter/filter.selectors";
+import { changePageBack, setScriptMessage } from '../../app/main.slice';
+import { Breadcrumbs } from '../../common/components/breadcrumbs/Breadcrumbs';
+import { customConfirm } from '../../common/components/CustomConfirm';
+import { clearLocators } from '../pageObjects/pageObject.slice';
+import { locatorGenerationController } from './utils/locatorGenerationController';
+import { removeLocators, restoreLocators } from './locators.slice';
+import { LocatorsTree, LocatorTreeProps } from './components/LocatorsTree';
+import { LocatorListHeader } from './components/LocatorListHeader';
+import { Filter } from '../filter/Filter';
+import { useCalculateHeaderSize } from './utils/useCalculateHeaderSize';
+import { RootState } from '../../app/store/store';
+import { IdentificationStatus } from './types/locator.types';
+import { LocatorTreeSpinner } from './components/LocatorTreeSpinner';
+import { useOnBoardingRef } from '../onboarding/utils/useOnboardingRef';
+import { OnbrdStep } from '../onboarding/types/constants';
+import { removeAll as removeAllFilters, setFilter } from '../filter/filter.slice';
+import { selectIfUnselectedAll, selectClassFilterByPO } from '../filter/filter.selectors';
+
 import {
   getLocatorsIdsByPO,
   selectLocatorsByPageObject,
   selectPresentLocatorsByPO,
-} from "./selectors/locatorsByPO.selectors";
+} from './selectors/locatorsByPO.selectors';
 import {
   selectFilteredLocators,
   selectInProgressGenerateByPageObj,
@@ -35,18 +35,18 @@ import {
   selectInProgressHashes,
   selectCalculatedAndCheckedByPageObj,
   selectDeletedCheckedByPageObj,
-} from "./selectors/locatorsFiltered.selectors";
-import { useNotifications } from "../../common/components/notification/useNotifications";
-import { selectCurrentPageObject } from "../pageObjects/selectors/pageObjects.selectors";
-import { EmptyListModal } from "./text.constants";
-import { LocatorsEmptyListInfo } from "./components/LocatorsEmptyListInfo";
+} from './selectors/locatorsFiltered.selectors';
+import { useNotifications } from '../../common/components/notification/useNotifications';
+import { selectCurrentPageObject } from '../pageObjects/selectors/pageObjects.selectors';
+import { EmptyListModal } from './text.constants';
+import { LocatorsEmptyListInfo } from './components/LocatorsEmptyListInfo';
 
 const { confirm } = Modal;
 
 export const LocatorsPage = () => {
   const dispatch = useDispatch();
   const showSpinner = useSelector(
-    (state: RootState) => state.locators.present.status === IdentificationStatus.preparing
+    (state: RootState) => state.locators.present.status === IdentificationStatus.preparing,
   );
   const locators = useSelector(selectFilteredLocators);
   const areUnselectedAll = useSelector(selectIfUnselectedAll);
@@ -77,10 +77,10 @@ export const LocatorsPage = () => {
   const handleConfirm = () => {
     if (inProgressGenerate.length) {
       confirm({
-        title: "Confirm this locators list",
+        title: 'Confirm this locators list',
         content: `Not all of the selected locators have already been generated, we recommend waiting until the generation is complete.`,
-        okText: "Confirm",
-        cancelText: "Cancel",
+        okText: 'Confirm',
+        cancelText: 'Cancel',
         onOk: () => {
           locatorGenerationController.revokeTasks(inProgressGenerateHashes);
           pageBack();
@@ -88,10 +88,10 @@ export const LocatorsPage = () => {
       });
     } else if (deletedChecked.length) {
       confirm({
-        title: "Confirm the selection",
+        title: 'Confirm the selection',
         content: `Not all selected locators will be generated.
         You can cancel the generation and restore the required locators first.`,
-        okText: "Confirm",
+        okText: 'Confirm',
         onOk: () => pageBack(),
       });
     } else pageBack();
@@ -106,12 +106,12 @@ export const LocatorsPage = () => {
 
         customConfirm({
           onAlt: handleDiscard,
-          altText: "Discard",
+          altText: 'Discard',
           onOk: handleOk,
           isOkButtonEnabled,
-          confirmTitle: "Save this locators list?",
+          confirmTitle: 'Save this locators list?',
           confirmContent:
-            "The list has been edited and the changes have not been accepted. Do you want to save changes?",
+            'The list has been edited and the changes have not been accepted. Do you want to save changes?',
         });
       }
     };
@@ -147,15 +147,15 @@ export const LocatorsPage = () => {
 
     const saveButtonLabel =
       checkedLocators.length === 1
-        ? "Save 1 locator"
+        ? 'Save 1 locator'
         : checkedLocators.length
         ? `Save ${checkedLocators.length} locators`
-        : "Save";
+        : 'Save';
 
     return (
       <Tooltip
         overlayClassName="jdn__button-tooltip"
-        title={isDisabled ? "Please select locators for your current page object." : ""}
+        title={isDisabled ? 'Please select locators for your current page object.' : ''}
       >
         <Button
           ref={saveLocatorsRef}
@@ -182,7 +182,7 @@ export const LocatorsPage = () => {
         <LocatorListHeader
           isEditModalOpen={isEditModalOpen}
           setIsEditModalOpen={setIsEditModalOpen}
-          render={(viewProps: LocatorTreeProps["viewProps"]) => (
+          render={(viewProps: LocatorTreeProps['viewProps']) => (
             <div
               ref={containerRef}
               className="jdn__locatorsList-content jdn__itemsList-content"

@@ -1,4 +1,4 @@
-import { VuetifyClasses } from "../../features/locators/types/vuetifyClasses.types";
+import { VuetifyClasses } from '../../features/locators/types/vuetifyClasses.types';
 
 export type JDNLabel = keyof typeof VuetifyClasses;
 
@@ -11,7 +11,7 @@ export interface RulesMap {
   // to detect elements that are inside other elements
   detectContent?: boolean;
   // to resolve conflict if one element is predicted with mwny different classes
-  priority?: "normal" | "low";
+  priority?: 'normal' | 'low';
 }
 
 export interface Rule {
@@ -22,5 +22,5 @@ export interface Rule {
 }
 
 export type SelectorsMap = Partial<
-  Record<JDNLabel, { selector: string; detectContent?: boolean; priority?: RulesMap["priority"] }>
+  Record<JDNLabel, { selector: string; detectContent?: boolean; priority?: RulesMap['priority'] }>
 >;

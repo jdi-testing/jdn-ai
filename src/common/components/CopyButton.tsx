@@ -1,8 +1,8 @@
-import React, { useState } from "react";
-import { Button, Tooltip } from "antd";
-import { Copy } from "@phosphor-icons/react";
-import { copyToClipboard } from "../utils/copyToClipboard";
-import { CopyTitle } from "../types/common";
+import React, { useState } from 'react';
+import { Button, Tooltip } from 'antd';
+import { Copy } from '@phosphor-icons/react';
+import { copyToClipboard } from '../utils/copyToClipboard';
+import { CopyTitle } from '../types/common';
 
 interface Props {
   copyText: string;

@@ -1,5 +1,5 @@
-import { ElementClass } from "../../locators/types/generationClasses.types";
-import { VuetifyClasses } from "../../locators/types/vuetifyClasses.types";
+import { ElementClass } from '../../locators/types/generationClasses.types';
+import { VuetifyClasses } from '../../locators/types/vuetifyClasses.types';
 
 export const vuetifyDefaultFilterOn: ElementClass[] = [
   VuetifyClasses.alert,

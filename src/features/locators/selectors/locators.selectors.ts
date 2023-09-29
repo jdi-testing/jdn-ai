@@ -1,10 +1,10 @@
-import { createDraftSafeSelector, createEntityAdapter, createSelector, EntityState } from "@reduxjs/toolkit";
-import { RootState } from "../../../app/store/store";
-import { PageObject, PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
-import { ElementId, ILocator } from "../types/locator.types";
-import { getLocator } from "../utils/locatorOutput";
-import { selectCurrentPageObject } from "../../pageObjects/selectors/pageObjects.selectors";
-import { getTaskStatus } from "../utils/utils";
+import { createDraftSafeSelector, createEntityAdapter, createSelector, EntityState } from '@reduxjs/toolkit';
+import { RootState } from '../../../app/store/store';
+import { PageObject, PageObjectId } from '../../pageObjects/types/pageObjectSlice.types';
+import { ElementId, ILocator } from '../types/locator.types';
+import { getLocator } from '../utils/locatorOutput';
+import { selectCurrentPageObject } from '../../pageObjects/selectors/pageObjects.selectors';
+import { getTaskStatus } from '../utils/utils';
 
 export const locatorsAdapter = createEntityAdapter<ILocator>({
   selectId: (locator) => locator.element_id,
@@ -36,11 +36,11 @@ export const selectLocators = createSelector(selectAll, (items: ILocator[]) =>
         taskStatus: getTaskStatus(_item.locator),
       },
     };
-  })
+  }),
 );
 
 export const selectLocatorsToGenerate = createSelector(selectLocators, (items: ILocator[]) =>
-  items.filter((el) => el.isChecked && !el.deleted)
+  items.filter((el) => el.isChecked && !el.deleted),
 );
 
 export const isLocatorIndeterminate = createSelector(
@@ -65,7 +65,7 @@ export const isLocatorIndeterminate = createSelector(
     };
 
     return hasChildToGenerate(locator);
-  }
+  },
 );
 
 export const areChildrenChecked = createSelector(
@@ -74,7 +74,7 @@ export const areChildrenChecked = createSelector(
   (locators, locator) =>
     locator &&
     Boolean(locator.children?.length) &&
-    locator.children?.every((childId) => locators.some((loc) => loc.element_id === childId && loc.isGenerated))
+    locator.children?.every((childId) => locators.some((loc) => loc.element_id === childId && loc.isGenerated)),
 );
 
 export const selectLocatorByJdnHash = createSelector(
@@ -82,7 +82,7 @@ export const selectLocatorByJdnHash = createSelector(
   (state: RootState) => selectCurrentPageObject(state)?.locators,
   (locators, pageObjLocators) => {
     return locators.find(({ element_id }) => pageObjLocators?.includes(element_id));
-  }
+  },
 );
 
 /* these selectors are for using inside reducers */
