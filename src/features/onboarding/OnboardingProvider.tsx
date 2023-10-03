@@ -1,17 +1,17 @@
-import React, { FC, MutableRefObject, ReactNode, createContext, useEffect, useState } from "react";
-import { OnbrdStep, OnboardingProviderTexts } from "./types/constants";
-import { Onboarding } from "./Onboarding";
-import { OnboardingContext as ContextType, StepRef } from "./types/context.types";
-import { useDispatch, useSelector } from "react-redux";
-import { selectCurrentPageObject, selectPageObjects } from "../pageObjects/selectors/pageObjects.selectors";
-import { AppDispatch, RootState } from "../../app/store/store";
-import { IdentificationStatus } from "../locators/types/locator.types";
-import { getPOPageSteps } from "./utils/tourSteps";
-import { selectCurrentPage, selectIsDefaultState } from "../../app/main.selectors";
-import { BackendStatus, PageType } from "../../app/types/mainSlice.types";
-import { LocalStorageKey, getLocalStorage, setLocalStorage } from "../../common/utils/localStorage";
-import { Modal } from "antd";
-import { removeAll } from "../../app/reducers/removeAll.thunk";
+import React, { FC, MutableRefObject, ReactNode, createContext, useEffect, useState } from 'react';
+import { OnbrdStep, OnboardingProviderTexts } from './types/constants';
+import { Onboarding } from './Onboarding';
+import { OnboardingContext as ContextType, StepRef } from './types/context.types';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectCurrentPageObject, selectPageObjects } from '../pageObjects/selectors/pageObjects.selectors';
+import { AppDispatch, RootState } from '../../app/store/store';
+import { IdentificationStatus } from '../locators/types/locator.types';
+import { getPOPageSteps } from './utils/tourSteps';
+import { selectCurrentPage, selectIsDefaultState } from '../../app/main.selectors';
+import { BackendStatus, PageType } from '../../app/types/mainSlice.types';
+import { LocalStorageKey, getLocalStorage, setLocalStorage } from '../../common/utils/localStorage';
+import { Modal } from 'antd';
+import { removeAll } from '../../app/reducers/removeAll.thunk';
 
 interface Props {
   children: ReactNode;
@@ -27,7 +27,7 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
 
   const _isOnboardingPassed = getLocalStorage(LocalStorageKey.IsOnboardingPassed);
   const isBackendAvailable = useSelector((state: RootState) => state.main.backendAvailable) === BackendStatus.Accessed;
-  const isDefaultState: boolean = useSelector<RootState>(selectIsDefaultState) as unknown as boolean;
+  const isDefaultState: boolean = useSelector<RootState>(selectIsDefaultState) as boolean;
   const isSessionUnique = useSelector((state: RootState) => state.main.isSessionUnique);
   const isOnboardingAvailable = isBackendAvailable && !isOnbrdOpen;
 
@@ -54,7 +54,7 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
     name: OnbrdStep,
     ref?: MutableRefObject<any>,
     onClickNext?: (...args: any) => void,
-    onClickPrev?: (...args: any) => void
+    onClickPrev?: (...args: any) => void,
   ) => {
     setStepRefs((prevRefs) => {
       return {
@@ -72,7 +72,7 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
     name: OnbrdStep,
     ref?: MutableRefObject<any>,
     onClickNext?: (...args: any) => void,
-    onClickPrev?: (...args: any) => void
+    onClickPrev?: (...args: any) => void,
   ) => {
     setStepRefs((prevRefs) => {
       /* case for skipped step, see `locatorPageSteps` at useOnBoardingRef.ts */
@@ -104,7 +104,7 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
   const locatorsGenerated = useSelector(
     (state: RootState) =>
       state.locators.present.status === IdentificationStatus.noStatus ||
-      state.locators.present.status === IdentificationStatus.noElements
+      state.locators.present.status === IdentificationStatus.noElements,
   );
 
   // for a case when by any user's actions state is changed

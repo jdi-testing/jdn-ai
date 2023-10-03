@@ -1,10 +1,10 @@
-import { HttpEndpoint } from "../../../services/backend";
-import { HTML5classes } from "./html5Classes.types";
-import { MUIclasses } from "./muiClasses.types";
-import { NgMatClasses } from "./ngMatClasses.types";
-import { VuetifyClasses } from "./vuetifyClasses.types";
+import { HttpEndpoint } from '../../../services/backend';
+import { HTML5classes } from './html5Classes.types';
+import { MUIclasses } from './muiClasses.types';
+import { NgMatClasses } from './ngMatClasses.types';
+import { VuetifyClasses } from './vuetifyClasses.types';
 
-export const defaultClass = "UIElement";
+export const defaultClass = 'UIElement';
 
 export type ElementLabel =
   | typeof MUIclasses
@@ -16,19 +16,19 @@ export type ElementLabel =
 export type ElementClass = MUIclasses | HTML5classes | NgMatClasses | VuetifyClasses | typeof defaultClass;
 
 export enum ElementLibrary {
-  MUI = "MUI",
-  HTML5 = "HTML5",
-  NgMat = "NgMat",
-  Vuetify = "Vuetify",
+  MUI = 'MUI',
+  HTML5 = 'HTML5',
+  NgMat = 'NgMat',
+  Vuetify = 'Vuetify',
 }
 
 export const defaultLibrary = ElementLibrary.MUI;
 
 export const libraryNames: Record<ElementLibrary, string> = {
-  [ElementLibrary.MUI]: "Material UI (beta)",
-  [ElementLibrary.HTML5]: "HTML5",
-  [ElementLibrary.NgMat]: "Angular Material",
-  [ElementLibrary.Vuetify]: "Vuetify (beta)",
+  [ElementLibrary.MUI]: 'Material UI (beta)',
+  [ElementLibrary.HTML5]: 'HTML5',
+  [ElementLibrary.NgMat]: 'Angular Material',
+  [ElementLibrary.Vuetify]: 'Vuetify (beta)',
 };
 
 export const libraryClasses: Record<ElementLibrary, ElementLabel> = {

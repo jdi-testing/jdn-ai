@@ -1,16 +1,16 @@
-import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
-import { ILocator, LocatorsState, ValidationStatus } from "../types/locator.types";
-import { generateId, getElementFullXpath } from "../../../common/utils/helpers";
-import { addLocatorToPageObj } from "../../pageObjects/pageObject.slice";
-import { addLocators, setScrollToLocator, setActiveSingle } from "../locators.slice";
-import { getLocatorValidationStatus, evaluateXpath, evaluateCssSelector, generateSelectorByHash } from "../utils/utils";
-import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
-import { sendMessage } from "../../../pageServices/connector";
-import { locatorsAdapter } from "../selectors/locators.selectors";
-import { LocatorType } from "../../../common/types/common";
+import { ActionReducerMapBuilder, createAsyncThunk } from '@reduxjs/toolkit';
+import { ILocator, LocatorsState, ValidationStatus } from '../types/locator.types';
+import { generateId, getElementFullXpath } from '../../../common/utils/helpers';
+import { addLocatorToPageObj } from '../../pageObjects/pageObject.slice';
+import { addLocators, setScrollToLocator, setActiveSingle } from '../locators.slice';
+import { getLocatorValidationStatus, evaluateXpath, evaluateCssSelector, generateSelectorByHash } from '../utils/utils';
+import { PageObjectId } from '../../pageObjects/types/pageObjectSlice.types';
+import { sendMessage } from '../../../pageServices/connector';
+import { locatorsAdapter } from '../selectors/locators.selectors';
+import { LocatorType } from '../../../common/types/common';
 
 export const addCustomLocator = createAsyncThunk(
-  "locators/addCustomLocator",
+  'locators/addCustomLocator',
   async (payload: { newLocator: ILocator; pageObjectId: PageObjectId }, thunkAPI) => {
     let { newLocator } = payload;
     const { pageObjectId } = payload;
@@ -20,8 +20,8 @@ export const addCustomLocator = createAsyncThunk(
 
     let foundHash;
     let foundElementText;
-    let cssSelector = "";
-    let fullXpath = "";
+    let cssSelector = '';
+    let fullXpath = '';
 
     const element_id = `${generateId()}_${pageObjectId}`;
 
@@ -39,7 +39,7 @@ export const addCustomLocator = createAsyncThunk(
         }
 
         if (!foundHash) {
-          foundHash = element_id.split("_")[0];
+          foundHash = element_id.split('_')[0];
           await sendMessage
             .assignJdnHash({
               jdnHash: foundHash,
@@ -47,8 +47,8 @@ export const addCustomLocator = createAsyncThunk(
               isCSSLocator,
             })
             .then((res) => {
-              if (res === "success") return res;
-              else throw new Error("Failed to assign jdnHash");
+              if (res === 'success') return res;
+              else throw new Error('Failed to assign jdnHash');
             })
             .catch((err) => {
               console.log(err);
@@ -65,7 +65,7 @@ export const addCustomLocator = createAsyncThunk(
             ...newLocator.locator,
             ...(isCSSLocator ? { xPath: fullXpath } : { cssSelector }),
           },
-          elemText: foundElementText || "",
+          elemText: foundElementText || '',
           jdnHash: foundHash,
         };
       } catch (err) {
@@ -80,7 +80,7 @@ export const addCustomLocator = createAsyncThunk(
     dispatch(setScrollToLocator(newLocator.element_id));
 
     return newLocator;
-  }
+  },
 );
 
 export const addCustomLocatorReducer = (builder: ActionReducerMapBuilder<LocatorsState>) => {

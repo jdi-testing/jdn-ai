@@ -1,16 +1,16 @@
-import { createSelector } from "@reduxjs/toolkit";
-import { isNil } from "lodash";
-import { RootState } from "../../../app/store/store";
-import { selectCurrentPageObject, selectPageObjById } from "../../pageObjects/selectors/pageObjects.selectors";
-import { PageObjectId } from "../../pageObjects/types/pageObjectSlice.types";
-import { getLocator } from "../utils/locatorOutput";
-import { sortLocatorsWithChildren } from "../utils/sortLocators";
-import { selectLocatorById, selectLocators } from "./locators.selectors";
-import { isValidLocator } from "../utils/utils";
-import { LocatorType } from "../../../common/types/common";
-import { filterInProgress } from "../utils/helpers";
-import { selectCurrentPage } from "../../../app/main.selectors";
-import { isLocatorListPage } from "../../../app/utils/heplers";
+import { createSelector } from '@reduxjs/toolkit';
+import { isNil } from 'lodash';
+import { RootState } from '../../../app/store/store';
+import { selectCurrentPageObject, selectPageObjById } from '../../pageObjects/selectors/pageObjects.selectors';
+import { PageObjectId } from '../../pageObjects/types/pageObjectSlice.types';
+import { getLocator } from '../utils/locatorOutput';
+import { sortLocatorsWithChildren } from '../utils/sortLocators';
+import { selectLocatorById, selectLocators } from './locators.selectors';
+import { isValidLocator } from '../utils/utils';
+import { LocatorType } from '../../../common/types/common';
+import { filterInProgress } from '../utils/helpers';
+import { selectCurrentPage } from '../../../app/main.selectors';
+import { isLocatorListPage } from '../../../app/utils/heplers';
 
 export const getLocatorsIdsByPO = (state: RootState, pageObjId?: PageObjectId) => {
   pageObjId = isNil(pageObjId) ? selectCurrentPageObject(state)?.id : pageObjId;
@@ -22,7 +22,7 @@ export const selectFirstLocatorIdByPO = createSelector(getLocatorsIdsByPO, (loca
 
 export const selectFirstLocatorByPO = createSelector(
   (state: RootState) => selectLocatorById(state, selectFirstLocatorIdByPO(state)),
-  (loc) => loc
+  (loc) => loc,
 );
 
 // for highlight purposes use selectors based on this one
@@ -48,7 +48,7 @@ export const selectPresentLocatorsByPO = createSelector(
           }),
         };
       });
-  }
+  },
 );
 
 export const selectLocatorsByPageObject = createSelector(
@@ -58,19 +58,19 @@ export const selectLocatorsByPageObject = createSelector(
   (locators, pageObj) => {
     const hideUnadded = pageObj?.hideUnadded;
     return hideUnadded ? locators.filter((loc) => loc.isGenerated || loc.active) : locators;
-  }
+  },
 );
 
 export const selectSortedLocators = createSelector(selectLocatorsByPageObject, (locators) =>
-  sortLocatorsWithChildren(locators)
+  sortLocatorsWithChildren(locators),
 );
 
 export const selectValidLocators = createSelector(selectPresentLocatorsByPO, (locators) =>
-  locators.filter((loc) => isValidLocator(loc.message))
+  locators.filter((loc) => isValidLocator(loc.message)),
 );
 
 export const selectPresentActiveLocators = createSelector(selectPresentLocatorsByPO, (locators) =>
-  locators.filter((loc) => loc.active)
+  locators.filter((loc) => loc.active),
 );
 
 export const selectPresentLocatorsInProgress = createSelector(selectPresentLocatorsByPO, filterInProgress);
@@ -78,5 +78,5 @@ export const selectPresentLocatorsInProgress = createSelector(selectPresentLocat
 export const selectAreInProgress = createSelector(
   selectPresentLocatorsInProgress,
   selectCurrentPage,
-  (locators, page) => isLocatorListPage(page.page) && locators.length > 0
+  (locators, page) => isLocatorListPage(page.page) && locators.length > 0,
 );

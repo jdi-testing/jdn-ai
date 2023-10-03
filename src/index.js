@@ -1,8 +1,8 @@
-import "./icon128.png";
-import { ScriptMsg } from "./pageServices/scriptMsg.constants";
+import './icon128.png';
+import { ScriptMsg } from './pageServices/scriptMsg.constants';
 
 window.onload = () => {
-  chrome.devtools.panels.create("JDN", "icon128.png", "app.html");
+  chrome.devtools.panels.create('JDN', 'icon128.png', 'app.html');
 };
 
 window.onbeforeunload = () => {

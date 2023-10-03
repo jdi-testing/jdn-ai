@@ -1,14 +1,14 @@
-import { throttler } from "../common/utils/throttler";
-import { failGeneration, updateLocatorGroup } from "../features/locators/locators.slice";
-import { selectLocatorByJdnHash } from "../features/locators/selectors/locators.selectors";
-import { ILocator, LocatorTaskStatus } from "../features/locators/types/locator.types";
-import { NETWORK_ERROR, NO_ELEMENT_IN_DOCUMENT } from "../features/locators/utils/constants";
-import { locatorGenerationController } from "../features/locators/utils/locatorGenerationController";
-import { sendMessage } from "../pageServices/connector";
-import { webSocketController } from "./webSocketController";
-import { selectInProgressByPageObj } from "../features/locators/selectors/locatorsFiltered.selectors";
-import { selectCurrentPageObject } from "../features/pageObjects/selectors/pageObjects.selectors";
-import { selectAreInProgress } from "../features/locators/selectors/locatorsByPO.selectors";
+import { throttler } from '../common/utils/throttler';
+import { failGeneration, updateLocatorGroup } from '../features/locators/locators.slice';
+import { selectLocatorByJdnHash } from '../features/locators/selectors/locators.selectors';
+import { ILocator, LocatorTaskStatus } from '../features/locators/types/locator.types';
+import { NETWORK_ERROR, NO_ELEMENT_IN_DOCUMENT } from '../features/locators/utils/constants';
+import { locatorGenerationController } from '../features/locators/utils/locatorGenerationController';
+import { sendMessage } from '../pageServices/connector';
+import { webSocketController } from './webSocketController';
+import { selectInProgressByPageObj } from '../features/locators/selectors/locatorsFiltered.selectors';
+import { selectCurrentPageObject } from '../features/pageObjects/selectors/pageObjects.selectors';
+import { selectAreInProgress } from '../features/locators/selectors/locatorsByPO.selectors';
 
 const reScheduledTasks = new Set();
 
@@ -24,7 +24,7 @@ export const updateSocketMessageHandler = (dispatch: any, state: any) => {
     const { payload, action, result, pong, error_message: errorMessage } = JSON.parse(event.data);
 
     switch (action || result) {
-      case "status_changed": {
+      case 'status_changed': {
         const { id: jdnHash, status } = payload;
         const element = selectLocatorByJdnHash(state, jdnHash);
 
@@ -52,7 +52,7 @@ export const updateSocketMessageHandler = (dispatch: any, state: any) => {
 
         break;
       }
-      case "result_ready": {
+      case 'result_ready': {
         const onStatusChange = (payload: any[]) => {
           const locators = payload.map((_payload) => {
             const { id, result: xPath } = _payload;

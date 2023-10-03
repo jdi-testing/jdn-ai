@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ReactNode } from 'react';
 
 export interface MenuItem {
   key: string;
@@ -13,7 +13,7 @@ export const getItem = (
   label: ReactNode,
   onClick?: () => void,
   icon?: ReactNode,
-  children?: MenuItem[]
+  children?: MenuItem[],
 ): MenuItem => ({
   key,
   label,

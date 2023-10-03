@@ -1,10 +1,10 @@
-import { Rule, SelectorsMap } from "./rules.types";
-import { VueRules } from "./Vue.rules";
+import { Rule, SelectorsMap } from './rules.types';
+import { VueRules } from './Vue.rules';
 
 export const createSelector = (rules: Rule, excludingRules?: Rule) => {
-  let selector = "";
+  let selector = '';
 
-  selector = `${selector}${rules.tag || ""}`;
+  selector = `${selector}${rules.tag || ''}`;
 
   if (rules.selector) selector = `${selector}${rules.selector}`;
 
@@ -20,8 +20,8 @@ export const createSelector = (rules: Rule, excludingRules?: Rule) => {
   }
 
   const createNegativeSelector = (_selector: string, _excludingRules: Rule, isChild?: boolean) => {
-    const childStart = isChild ? ":has(" : "";
-    const childEnd = isChild ? ")" : "";
+    const childStart = isChild ? ':has(' : '';
+    const childEnd = isChild ? ')' : '';
 
     if (_excludingRules.tag) {
       _selector = `${_selector}:not(${childStart}${_excludingRules.tag}${childEnd})`;
@@ -50,7 +50,7 @@ export const getLibrarySelectors = (rules: typeof VueRules) => {
   const selectors: SelectorsMap = {};
   rules.forEach(
     ({ jdnLabel, rules, excludingRules, ...rest }) =>
-      (selectors[jdnLabel] = { selector: createSelector(rules, excludingRules), ...rest })
+      (selectors[jdnLabel] = { selector: createSelector(rules, excludingRules), ...rest }),
   );
   return selectors;
 };

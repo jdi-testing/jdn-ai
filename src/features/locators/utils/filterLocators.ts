@@ -1,6 +1,6 @@
-import { get } from "lodash";
-import { ILocator } from "../types/locator.types";
-import { ClassFilterValue } from "../../filter/types/filter.types";
+import { get } from 'lodash';
+import { ILocator } from '../types/locator.types';
+import { ClassFilterValue } from '../../filter/types/filter.types';
 
 export const filterLocatorsByClassFilter = (locators: ILocator[], filter: ClassFilterValue) => {
   if (!filter) return locators;

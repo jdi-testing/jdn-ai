@@ -1,14 +1,14 @@
-import { Button, Form, Input, Modal, Tooltip, Upload, UploadFile } from "antd";
-import TextArea from "antd/lib/input/TextArea";
-import { UploadChangeParam } from "antd/lib/upload";
-import { RcFile, UploadFileStatus } from "antd/lib/upload/interface";
-import { UploadSimple, Warning } from "@phosphor-icons/react";
-import React, { useContext, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
-import { selectCurrentPage } from "../main.selectors";
-import { PageType } from "../types/mainSlice.types";
-import { DialogWithForm } from "../../common/components/DialogWithForm";
-import { HttpEndpoint, request } from "../../services/backend";
+import { Button, Form, Input, Modal, Tooltip, Upload, UploadFile } from 'antd';
+import TextArea from 'antd/lib/input/TextArea';
+import { UploadChangeParam } from 'antd/lib/upload';
+import { RcFile, UploadFileStatus } from 'antd/lib/upload/interface';
+import { UploadSimple, Warning } from '@phosphor-icons/react';
+import React, { useContext, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { selectCurrentPage } from '../main.selectors';
+import { PageType } from '../types/mainSlice.types';
+import { DialogWithForm } from '../../common/components/DialogWithForm';
+import { HttpEndpoint, request } from '../../services/backend';
 import {
   isAllowedExtension,
   isImage,
@@ -16,11 +16,11 @@ import {
   getFilesSize,
   MAX_COUNT_FILES,
   MAX_FILES_SIZE_MB,
-} from "../utils/reportProblem";
-import { selectCurrentPageObject } from "../../features/pageObjects/selectors/pageObjects.selectors";
-import { useOnBoardingRef } from "../../features/onboarding/utils/useOnboardingRef";
-import { OnbrdStep } from "../../features/onboarding/types/constants";
-import { OnboardingContext } from "../../features/onboarding/OnboardingProvider";
+} from '../utils/reportProblem';
+import { selectCurrentPageObject } from '../../features/pageObjects/selectors/pageObjects.selectors';
+import { useOnBoardingRef } from '../../features/onboarding/utils/useOnboardingRef';
+import { OnbrdStep } from '../../features/onboarding/types/constants';
+import { OnboardingContext } from '../../features/onboarding/OnboardingProvider';
 
 const { info } = Modal;
 
@@ -46,11 +46,11 @@ export const ReportProblem = () => {
       pageData && currentPage === PageType.LocatorsList
         ? [
             {
-              uid: "0",
-              name: "pageData.json",
-              status: "done" as UploadFileStatus,
+              uid: '0',
+              name: 'pageData.json',
+              status: 'done' as UploadFileStatus,
               url: (await toBase64(new Blob([pageData]) as RcFile)) as string | undefined,
-              linkProps: { download: "pageData.json" },
+              linkProps: { download: 'pageData.json' },
             },
           ]
         : [];
@@ -58,7 +58,7 @@ export const ReportProblem = () => {
   }, [currentPage, pageData]);
 
   useEffect(() => {
-    const files = document.querySelector(".ant-upload-list");
+    const files = document.querySelector('.ant-upload-list');
     if (files) files.scrollTop = files.scrollHeight;
   }, [fileList]);
 
@@ -66,10 +66,10 @@ export const ReportProblem = () => {
 
   const showExceptionConfirm = () =>
     info({
-      title: "Problem report",
+      title: 'Problem report',
       content: (
         <React.Fragment>
-          Please send an email{" "}
+          Please send an email{' '}
           <a href="mailto:SupportJDI@epam.com" data-turbo-frame="">
             SupportJDI@epam.com
           </a>
@@ -82,8 +82,8 @@ export const ReportProblem = () => {
       .validateFields()
       .then((values) => {
         // have no idea how make antd validate uploads properly
-        if (values.upload?.find((file) => file.status === "error")) {
-          throw new Error("invalid uploads");
+        if (values.upload?.find((file) => file.status === 'error')) {
+          throw new Error('invalid uploads');
         }
         sendReport(values);
         form.resetFields();
@@ -91,8 +91,8 @@ export const ReportProblem = () => {
         setIsModalOpen(false);
       })
       .catch(() => {
-        const failedUploadFile = document.querySelector(".ant-upload-list-item-error");
-        failedUploadFile?.scrollIntoView({ behavior: "smooth" });
+        const failedUploadFile = document.querySelector('.ant-upload-list-item-error');
+        failedUploadFile?.scrollIntoView({ behavior: 'smooth' });
       });
   };
 
@@ -116,14 +116,14 @@ export const ReportProblem = () => {
 
     const attachments = upload
       ? upload.map((file: UploadFile) => ({
-          file_content: file.url?.replace(/data:(image|text|application)\/.+;base64,/, ""),
+          file_content: file.url?.replace(/data:(image|text|application)\/.+;base64,/, ''),
           filename: file.name,
         }))
       : [];
 
     request.post(HttpEndpoint.REPORT_PROBLEM, {
       attachments,
-      subject: "Report problem",
+      subject: 'Report problem',
       ...rest,
     });
   };
@@ -132,8 +132,8 @@ export const ReportProblem = () => {
     const newFileList = info.fileList.map(async (_file) => {
       if (info.file.uid === _file.uid && _file.originFileObj) {
         if (_file.size !== 0 && (_file.size || Infinity) / 1024 / 1024 > 2) {
-          _file.status = "error";
-          _file.response = "The file cannot weigh more than 2Mb";
+          _file.status = 'error';
+          _file.response = 'The file cannot weigh more than 2Mb';
           _file.error = true;
           return _file;
         }
@@ -141,8 +141,8 @@ export const ReportProblem = () => {
         if (isImage(_file) || (_file.type && isAllowedExtension(_file.type))) {
           _file.url = (await toBase64(_file.originFileObj)) as string;
         } else {
-          _file.status = "error";
-          _file.response = "Invalid file extension, only image/*, *.zip, *.rar, *.json, *.txt";
+          _file.status = 'error';
+          _file.response = 'Invalid file extension, only image/*, *.zip, *.rar, *.json, *.txt';
           _file.error = true;
         }
         _file.linkProps = { download: _file.name };
@@ -163,13 +163,13 @@ export const ReportProblem = () => {
   const getTextForUploadButtonTooltip = () => {
     switch (true) {
       case fileList.length >= MAX_COUNT_FILES && filesSize >= MAX_FILES_SIZE_MB:
-        return "Please check number of files and their weight";
+        return 'Please check number of files and their weight';
       case fileList.length >= MAX_COUNT_FILES:
-        return "Only 10 files can be uploaded";
+        return 'Only 10 files can be uploaded';
       case filesSize >= MAX_FILES_SIZE_MB:
-        return "The maximum files weight can not exceed 10Mb";
+        return 'The maximum files weight can not exceed 10Mb';
       default:
-        return "Please check number of files or their weight";
+        return 'Please check number of files or their weight';
     }
   };
 
@@ -195,14 +195,14 @@ export const ReportProblem = () => {
               disabled:
                 fileList.length > MAX_COUNT_FILES ||
                 filesSize > MAX_FILES_SIZE_MB ||
-                fileList.some((file) => file.status === "error"),
+                fileList.some((file) => file.status === 'error'),
             },
-            title: "Report a problem",
+            title: 'Report a problem',
             open: isModalOpen,
             onOk: handleOk,
             setIsModalOpen,
             cancelCallback: () => setFileList([]),
-            className: "jdn__reportProblem_modal",
+            className: 'jdn__reportProblem_modal',
           }}
           formProps={{
             form,
@@ -214,13 +214,13 @@ export const ReportProblem = () => {
             rules={[
               {
                 required: true,
-                message: "Please fill out this field.",
+                message: 'Please fill out this field.',
               },
               {
                 pattern:
                   // eslint-disable-next-line max-len
                   /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z](?:[a-z]*[a-z])?/,
-                message: "Please input a valid email",
+                message: 'Please input a valid email',
               },
             ]}
           >
@@ -232,7 +232,7 @@ export const ReportProblem = () => {
             rules={[
               {
                 required: true,
-                message: "Please input your problem description",
+                message: 'Please input your problem description',
               },
             ]}
           >
@@ -249,7 +249,7 @@ export const ReportProblem = () => {
                   if (value.length <= MAX_COUNT_FILES) {
                     return Promise.resolve();
                   }
-                  return Promise.reject(new Error("Only 10 files can be uploaded"));
+                  return Promise.reject(new Error('Only 10 files can be uploaded'));
                 },
               }),
               () => ({
@@ -258,7 +258,7 @@ export const ReportProblem = () => {
                   if (filesSize <= MAX_FILES_SIZE_MB) {
                     return Promise.resolve();
                   }
-                  return Promise.reject(new Error("The maximum files weight can not exceed 10Mb"));
+                  return Promise.reject(new Error('The maximum files weight can not exceed 10Mb'));
                 },
               }),
             ]}
@@ -275,7 +275,7 @@ export const ReportProblem = () => {
                 placement="right"
                 title={getTextForUploadButtonTooltip()}
                 //@ts-ignore
-                trigger={areFilesInvalid ? ["hover", "focus"] : ""}
+                trigger={areFilesInvalid ? ['hover', 'focus'] : ''}
               >
                 <Button
                   disabled={areFilesInvalid}

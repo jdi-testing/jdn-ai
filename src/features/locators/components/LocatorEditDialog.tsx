@@ -1,38 +1,38 @@
-import { Form, Input, Select } from "antd";
-import Icon from "@ant-design/icons";
-import WarningFilled from "../assets/warning-filled.svg";
-import { Footnote } from "../../../common/components/footnote/Footnote";
-import { Rule } from "antd/lib/form";
-import { FieldData } from "rc-field-form/lib/interface";
-import React, { useContext, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../../app/store/store";
-import { DialogWithForm } from "../../../common/components/DialogWithForm";
-import { selectAvailableClasses } from "../../filter/filter.selectors";
-import { selectCurrentPageObject } from "../../pageObjects/selectors/pageObjects.selectors";
-import { ElementClass } from "../types/generationClasses.types";
-import { isNameUnique } from "../../pageObjects/utils/pageObject";
+import { Form, Input, Select } from 'antd';
+import Icon from '@ant-design/icons';
+import WarningFilled from '../assets/warning-filled.svg';
+import { Footnote } from '../../../common/components/footnote/Footnote';
+import { Rule } from 'antd/lib/form';
+import { FieldData } from 'rc-field-form/lib/interface';
+import React, { useContext, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../../app/store/store';
+import { DialogWithForm } from '../../../common/components/DialogWithForm';
+import { selectAvailableClasses } from '../../filter/filter.selectors';
+import { selectCurrentPageObject } from '../../pageObjects/selectors/pageObjects.selectors';
+import { ElementClass, defaultLibrary } from '../types/generationClasses.types';
+import { isNameUnique } from '../../pageObjects/utils/pageObject';
 import {
   ILocator,
   LocatorValidationWarnings,
   LocatorValidationErrors,
   LocatorValidationErrorType,
-} from "../types/locator.types";
-import { defaultLibrary } from "../types/generationClasses.types";
-import { changeLocatorAttributes } from "../locators.slice";
-import { createNewName, isValidLocator, getLocatorValidationStatus, getLocatorValueOnTypeSwitch } from "../utils/utils";
-import { createLocatorValidationRules } from "../utils/locatorValidationRules";
-import { createNameValidationRules } from "../utils/nameValidationRules";
-import FormItem from "antd/es/form/FormItem";
-import { LocatorType, SelectOption, AnnotationType, FrameworkType } from "../../../common/types/common";
-import { isFilteredSelect } from "../../../common/utils/helpers";
-import { CALCULATING, newLocatorStub } from "../utils/constants";
-import { changeLocatorElement } from "../reducers/changeLocatorElement.thunk";
-import { addCustomLocator } from "../reducers/addCustomLocator.thunk";
-import { OnboardingContext } from "../../onboarding/OnboardingProvider";
-import { OnbrdStep } from "../../onboarding/types/constants";
-import { selectPresentLocatorsByPO } from "../selectors/locatorsByPO.selectors";
-import { LocatorMessageForDuplicate } from "./LocatorMessageForDuplicate";
+} from '../types/locator.types';
+
+import { changeLocatorAttributes } from '../locators.slice';
+import { createNewName, isValidLocator, getLocatorValidationStatus, getLocatorValueOnTypeSwitch } from '../utils/utils';
+import { createLocatorValidationRules } from '../utils/locatorValidationRules';
+import { createNameValidationRules } from '../utils/nameValidationRules';
+import FormItem from 'antd/es/form/FormItem';
+import { LocatorType, SelectOption, AnnotationType, FrameworkType } from '../../../common/types/common';
+import { isFilteredSelect } from '../../../common/utils/helpers';
+import { CALCULATING, newLocatorStub } from '../utils/constants';
+import { changeLocatorElement } from '../reducers/changeLocatorElement.thunk';
+import { addCustomLocator } from '../reducers/addCustomLocator.thunk';
+import { OnboardingContext } from '../../onboarding/OnboardingProvider';
+import { OnbrdStep } from '../../onboarding/types/constants';
+import { selectPresentLocatorsByPO } from '../selectors/locatorsByPO.selectors';
+import { LocatorMessageForDuplicate } from './LocatorMessageForDuplicate';
 
 interface Props extends ILocator {
   isModalOpen: boolean;
@@ -74,7 +74,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
   const pageObjectId = useSelector(selectCurrentPageObject)!.id;
   const library = useSelector(selectCurrentPageObject)?.library || defaultLibrary;
 
-  const [validationMessage, setValidationMessage] = useState<LocatorValidationErrorType>(message || "");
+  const [validationMessage, setValidationMessage] = useState<LocatorValidationErrorType>(message || '');
   const [validationErrorOptions, setValidationErrorOptions] = useState<{ duplicates?: ILocator[] }>({});
   const [isEditedName, setIsEditedName] = useState<boolean>(isCustomName);
 
@@ -86,8 +86,8 @@ export const LocatorEditDialog: React.FC<Props> = ({
   const defaultAnnotationType = annotationType || pageObjectAnnotationType || AnnotationType.UI;
   const initialValues: FormValues = {
     type,
-    name: name || "",
-    locator: locator?.output ?? "",
+    name: name || '',
+    locator: locator?.output ?? '',
     locatorType: defaultLocatorType,
     annotationType: defaultAnnotationType,
   };
@@ -106,12 +106,12 @@ export const LocatorEditDialog: React.FC<Props> = ({
   const _locatorValidationRules: () => Rule[] = () =>
     createLocatorValidationRules(
       isCreatingForm,
-      form.getFieldValue("locatorType") || defaultLocatorType,
+      form.getFieldValue('locatorType') || defaultLocatorType,
       setValidationMessage,
       setValidationErrorOptions,
       locators,
       jdnHash,
-      element_id
+      element_id,
     );
   const [locatorValidationRules, setLocatorValidationRules] = useState<Rule[]>(_locatorValidationRules());
 
@@ -122,9 +122,9 @@ export const LocatorEditDialog: React.FC<Props> = ({
       { element_id, isCustomName, type, name, elemId, elemName, elemText } as ILocator,
       value,
       library,
-      locators
+      locators,
     );
-    form.setFieldValue("name", newName);
+    form.setFieldValue('name', newName);
   };
 
   const handleNameChange = () => {
@@ -138,7 +138,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
       isCustomName: isEditedName,
     };
 
-    const isLocatorFieldTouched = form.isFieldTouched("locator");
+    const isLocatorFieldTouched = form.isFieldTouched('locator');
     // in case if user didn't touch locator field to avoid forceUpdate
     const locatorMessage = isLocatorFieldTouched ? validationMessage : LocatorValidationWarnings.NotFound;
 
@@ -146,7 +146,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
     const isCSSLocator = locatorType === LocatorType.cssSelector;
     newLocator = {
       ...newLocator,
-      locator: { ...newLocator.locator, ...{ [isCSSLocator ? "cssSelector" : "xPath"]: locator } },
+      locator: { ...newLocator.locator, ...{ [isCSSLocator ? 'cssSelector' : 'xPath']: locator } },
       predicted_label: type.toLowerCase(),
       annotationType,
       locatorType,
@@ -189,15 +189,15 @@ export const LocatorEditDialog: React.FC<Props> = ({
   const hasFormChanged = () => {
     const currentValues: FormValues = form.getFieldsValue(true);
     return !Object.keys(initialValues).some(
-      (key) => initialValues[key as keyof FormValues] !== currentValues[key as keyof FormValues]
+      (key) => initialValues[key as keyof FormValues] !== currentValues[key as keyof FormValues],
     );
   };
 
   const computeIsOkButtonDisabled = () => {
-    const hasFormErrors = !!form.getFieldsError(["name", "type", "locator"]).filter(({ errors }) => errors.length)
+    const hasFormErrors = !!form.getFieldsError(['name', 'type', 'locator']).filter(({ errors }) => errors.length)
       .length;
     if (isCreatingForm) {
-      return !form.isFieldsTouched(["type", "name"], true) || hasFormErrors;
+      return !form.isFieldsTouched(['type', 'name'], true) || hasFormErrors;
     }
     return hasFormErrors || hasFormChanged();
   };
@@ -213,24 +213,24 @@ export const LocatorEditDialog: React.FC<Props> = ({
   const onLocatorTypeChange = async () => {
     setLocatorValidationRules(_locatorValidationRules());
 
-    const newLocatorType = form.getFieldValue("locatorType");
-    const newLocator = form.getFieldValue("locator");
+    const newLocatorType = form.getFieldValue('locatorType');
+    const newLocator = form.getFieldValue('locator');
 
-    if (newLocator !== "") {
+    if (newLocator !== '') {
       const newLocatorValue = await getLocatorValueOnTypeSwitch(
         newLocatorType,
         validationMessage,
         element_id,
         jdnHash,
         locator,
-        form
+        form,
       );
-      form.setFieldValue("locator", newLocatorValue);
+      form.setFieldValue('locator', newLocatorValue);
     }
   };
 
   const onFieldsChange = async (changedValues: FieldData[]) => {
-    const isLocatorTypeChanged = changedValues.some((value) => value.name.toString().includes("locatorType"));
+    const isLocatorTypeChanged = changedValues.some((value) => value.name.toString().includes('locatorType'));
     isLocatorTypeChanged && onLocatorTypeChange();
     const isOkButtonDisabled = computeIsOkButtonDisabled();
     setIsOkButtonDisabled(isOkButtonDisabled);
@@ -245,12 +245,12 @@ export const LocatorEditDialog: React.FC<Props> = ({
     );
   };
 
-  const isLocatorDisabled = form.getFieldValue("locator") === CALCULATING;
+  const isLocatorDisabled = form.getFieldValue('locator') === CALCULATING;
 
   return (
     <DialogWithForm
       modalProps={{
-        title: isCreatingForm ? "Create custom locator" : "Edit locator",
+        title: isCreatingForm ? 'Create custom locator' : 'Edit locator',
         open: isModalOpen,
         onOk: isCreatingForm ? handleCreateCustomLocator : handleEditLocator,
         enableOverlay: isModalOpen,
@@ -264,7 +264,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
         form,
         initialValues,
         onFieldsChange,
-        className: "jdn__locatorEdit",
+        className: 'jdn__locatorEdit',
       }}
     >
       <Form.Item name="name" label="Name" rules={nameValidationRules}>
@@ -287,7 +287,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
           options={getBlockTypeOptions()}
         />
       </Form.Item>
-      <FormItem name="locatorType" label="Locator" style={{ marginBottom: "8px" }}>
+      <FormItem name="locatorType" label="Locator" style={{ marginBottom: '8px' }}>
         <Select
           disabled={!isValidLocator(validationMessage)}
           options={[
@@ -305,7 +305,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
       <FormItem
         wrapperCol={{ span: 24, xs: { offset: 0 }, sm: { offset: 4 } }}
         name="annotationType"
-        style={{ marginBottom: "8px" }}
+        style={{ marginBottom: '8px' }}
       >
         <Select
           disabled={isCurrentFrameworkVividus}
@@ -333,7 +333,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
           disabled={isLocatorDisabled}
           autoSize
           // expands textarea to view port height
-          style={{ maxHeight: `calc(100vh - 396px)`, overflowY: "scroll" }}
+          style={{ maxHeight: `calc(100vh - 396px)`, overflowY: 'scroll' }}
         />
       </Form.Item>
     </DialogWithForm>

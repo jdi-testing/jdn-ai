@@ -1,11 +1,11 @@
-import { Button, Tooltip } from "antd";
-import { BookOpen } from "@phosphor-icons/react";
-import React, { useContext } from "react";
-import { useOnBoardingRef } from "../../features/onboarding/utils/useOnboardingRef";
-import { OnbrdStep } from "../../features/onboarding/types/constants";
-import { OnboardingPopup } from "../../features/onboarding/components/OnboardingPopup";
-import { componentsTexts } from "../utils/constants";
-import { OnboardingContext } from "../../features/onboarding/OnboardingProvider";
+import { Button, Tooltip } from 'antd';
+import { BookOpen } from '@phosphor-icons/react';
+import React, { useContext } from 'react';
+import { useOnBoardingRef } from '../../features/onboarding/utils/useOnboardingRef';
+import { OnbrdStep } from '../../features/onboarding/types/constants';
+import { OnboardingPopup } from '../../features/onboarding/components/OnboardingPopup';
+import { componentsTexts } from '../utils/constants';
+import { OnboardingContext } from '../../features/onboarding/OnboardingProvider';
 
 export const OnboardingButton = () => {
   const [isTooltipVisible, setIsTooltipVisible] = React.useState(false);

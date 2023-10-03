@@ -1,10 +1,10 @@
-import { ActionReducerMapBuilder, createAsyncThunk, EntityState } from "@reduxjs/toolkit";
-import { RootState } from "../../../app/store/store";
-import { locatorsAdapter, selectLocatorById, simpleSelectLocatorById } from "../selectors/locators.selectors";
-import { ElementId, ILocator, LocatorsState, LocatorTaskStatus } from "../types/locator.types";
-import { locatorGenerationController } from "../utils/locatorGenerationController";
+import { ActionReducerMapBuilder, createAsyncThunk, EntityState } from '@reduxjs/toolkit';
+import { RootState } from '../../../app/store/store';
+import { locatorsAdapter, selectLocatorById, simpleSelectLocatorById } from '../selectors/locators.selectors';
+import { ElementId, ILocator, LocatorsState, LocatorTaskStatus } from '../types/locator.types';
+import { locatorGenerationController } from '../utils/locatorGenerationController';
 
-export const stopGeneration = createAsyncThunk("locators/stopGeneration", async (element_id: ElementId, thunkAPI) => {
+export const stopGeneration = createAsyncThunk('locators/stopGeneration', async (element_id: ElementId, thunkAPI) => {
   const state = thunkAPI.getState() as RootState;
   const jdnHash = selectLocatorById(state, element_id)?.jdnHash;
   if (!jdnHash) return;

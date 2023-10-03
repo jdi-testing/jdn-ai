@@ -1,8 +1,8 @@
-import { cloneDeep, map as mapFunction, size } from "lodash";
-import { JDNHash, ILocator } from "../../locators/types/locator.types";
-import { SearchState } from "../components/LocatorsTree";
+import { cloneDeep, map as mapFunction, size } from 'lodash';
+import { JDNHash, ILocator } from '../../locators/types/locator.types';
+import { SearchState } from '../components/LocatorsTree';
 
-export interface LocatorTree extends Omit<ILocator, "children"> {
+export interface LocatorTree extends Omit<ILocator, 'children'> {
   children?: Array<LocatorTree>;
   depth?: number;
   searchState?: SearchState;
@@ -19,7 +19,7 @@ export const convertToListWithChildren = (_list: ILocator[]) => {
 
   for (let i = 0; i < list.length; i++) {
     const node = list[i];
-    if (node.parent_id !== "") {
+    if (node.parent_id !== '') {
       const children = list[map[node.parent_id]]?.children;
       children && children.push(node.element_id);
     }
@@ -42,7 +42,7 @@ export const applySearch = (element: ILocator, searchString: string): SearchStat
   } else return SearchState.Hidden;
 };
 
-export const convertListToTree = (_list: ILocator[], searchString = "") => {
+export const convertListToTree = (_list: ILocator[], searchString = '') => {
   const list: Array<LocatorTree> = mapFunction(cloneDeep(_list), (elem) => ({
     ...elem,
     children: [],
@@ -60,7 +60,7 @@ export const convertListToTree = (_list: ILocator[], searchString = "") => {
   for (let i = 0; i < list.length; i++) {
     const node = list[i];
     const searchState = node.searchState;
-    if (node.parent_id !== "") {
+    if (node.parent_id !== '') {
       if (searchState === SearchState.Hidden) continue;
 
       const getParent = (parent_id: string): LocatorTree => {
@@ -99,14 +99,14 @@ export const setNewParents = (origLocators: ILocator[], filteredLocators: ILocat
   filteredLocators.forEach((element) => {
     let parent_id = element.parent_id;
     const newElement = { ...element };
-    if (parent_id === "" || filteredMap[parent_id] !== undefined) {
+    if (parent_id === '' || filteredMap[parent_id] !== undefined) {
       newLocators.push(newElement);
       return;
     }
 
     do {
       parent_id = origMap[parent_id].parent_id;
-      newElement.parent_id = parent_id !== "" ? filteredMap[parent_id]?.jdnHash : "";
+      newElement.parent_id = parent_id !== '' ? filteredMap[parent_id]?.jdnHash : '';
     } while (newElement.parent_id === undefined);
 
     newLocators.push(newElement);

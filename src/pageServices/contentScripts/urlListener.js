@@ -1,13 +1,13 @@
-import { ScriptMsg } from "../scriptMsg.constants";
+import { ScriptMsg } from '../scriptMsg.constants';
 
 export const urlListener = () => {
   let tabId;
   let isClosedSession;
 
   window.onbeforeunload = () => {
-    const highlightExists = document.querySelector("[jdn-highlight]");
+    const highlightExists = document.querySelector('[jdn-highlight]');
     if (highlightExists) {
-      return "";
+      return '';
     }
   };
 

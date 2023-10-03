@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Collapse } from "antd";
-import Children from "react-children-utilities";
-import { useRemark } from "react-remark";
-import rehypeRaw from "rehype-raw";
-import remarkEmoji from "remark-emoji";
-import rehypeSanitize from "rehype-sanitize";
-import { CopyButton } from "../../common/components/CopyButton";
+import React, { useEffect, useRef, useState } from 'react';
+import { Collapse } from 'antd';
+import Children from 'react-children-utilities';
+import { useRemark } from 'react-remark';
+import rehypeRaw from 'rehype-raw';
+import remarkEmoji from 'remark-emoji';
+import rehypeSanitize from 'rehype-sanitize';
+import { CopyButton } from '../../common/components/CopyButton';
 
 export const useGuideRehype = () =>
   useRemark({
@@ -21,7 +21,7 @@ export const useGuideRehype = () =>
         a: (props: Record<string, unknown>) => <a target="_blank" rel="noreferrer" {...props} />,
         pre: (props: Record<string, unknown>) => {
           const preElement = useRef(null);
-          const [text, setText] = useState("");
+          const [text, setText] = useState('');
 
           useEffect(() => {
             /* eslint-disable-next-line */
@@ -39,7 +39,7 @@ export const useGuideRehype = () =>
         // @ts-ignore
         details: (props) => {
           // @ts-ignore
-          const header = Children.onlyText(Children.filter(props.children, (child) => child.type === "summary"));
+          const header = Children.onlyText(Children.filter(props.children, (child) => child.type === 'summary'));
           return (
             <div className="jdn__guide_collapse">
               <Collapse ghost>

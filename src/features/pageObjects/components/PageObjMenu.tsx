@@ -1,10 +1,10 @@
-import { Button, Dropdown } from "antd";
-import React, { useContext, useState } from "react";
-import { useDispatch } from "react-redux";
+import { Button, Dropdown } from 'antd';
+import React, { useContext, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
-import { size } from "lodash";
-import { DotsThree } from "@phosphor-icons/react";
-import { pushNotification } from "../../../app/main.slice";
+import { size } from 'lodash';
+import { DotsThree } from '@phosphor-icons/react';
+import { pushNotification } from '../../../app/main.slice';
 import {
   deleteOption,
   download,
@@ -12,19 +12,19 @@ import {
   edit,
   renameOption,
   dividerItem,
-} from "../../../common/components/menu/menuOptions";
-import { ElementId, ILocator } from "../../locators/types/locator.types";
-import { removeLocators } from "../../locators/locators.slice";
-import { removePageObject, setCurrentPageObj } from "../pageObject.slice";
-import { PageObject } from "../types/pageObjectSlice.types";
-import { generatePageObject, generatePageObjectPerfTest } from "../../pageObjects/utils/pageObject";
-import { RenamePageObjectDialog } from "./RenamePageObjDialog";
-import { checkLocatorsValidity } from "../../locators/reducers/checkLocatorValidity.thunk";
-import { useOnBoardingRef } from "../../onboarding/utils/useOnboardingRef";
-import { OnbrdStep } from "../../onboarding/types/constants";
-import { OnbrdTooltip } from "../../onboarding/components/OnbrdTooltip";
-import { OnboardingContext } from "../../onboarding/OnboardingProvider";
-import { AppDispatch } from "../../../app/store/store";
+} from '../../../common/components/menu/menuOptions';
+import { ElementId, ILocator } from '../../locators/types/locator.types';
+import { removeLocators } from '../../locators/locators.slice';
+import { removePageObject, setCurrentPageObj } from '../pageObject.slice';
+import { PageObject } from '../types/pageObjectSlice.types';
+import { generatePageObject, generatePageObjectPerfTest } from '../../pageObjects/utils/pageObject';
+import { RenamePageObjectDialog } from './RenamePageObjDialog';
+import { checkLocatorsValidity } from '../../locators/reducers/checkLocatorValidity.thunk';
+import { useOnBoardingRef } from '../../onboarding/utils/useOnboardingRef';
+import { OnbrdStep } from '../../onboarding/types/constants';
+import { OnbrdTooltip } from '../../onboarding/components/OnbrdTooltip';
+import { OnboardingContext } from '../../onboarding/OnboardingProvider';
+import { AppDispatch } from '../../../app/store/store';
 
 interface Props {
   pageObject: PageObject;
@@ -49,13 +49,13 @@ export const PageObjMenu: React.FC<Props> = ({ pageObject, elements }) => {
 
     const handleDownload = () => {
       generatePageObject(locatorObjects, pageObject).then(() =>
-        dispatch(pushNotification({ action: { type: "downloadFile" } }))
+        dispatch(pushNotification({ action: { type: 'downloadFile' } })),
       );
     };
 
     const handleDownloadPerfTest = () => {
       generatePageObjectPerfTest(locatorObjects, pageObject).then(() =>
-        dispatch(pushNotification({ action: { type: "downloadJSFile" } }))
+        dispatch(pushNotification({ action: { type: 'downloadJSFile' } })),
       );
     };
 
@@ -66,10 +66,10 @@ export const PageObjMenu: React.FC<Props> = ({ pageObject, elements }) => {
 
     const items = [
       renameOption(handleRename),
-      ...(size(locatorIds) ? [edit(handleEdit, "Edit Page Object")] : []),
+      ...(size(locatorIds) ? [edit(handleEdit, 'Edit Page Object')] : []),
       ...(size(locatorIds) ? [download(handleDownload)] : []),
       ...(size(locatorIds) && __DEV_ENVIRONMENT__ ? [downloadPerfTest(handleDownloadPerfTest)] : []),
-      dividerItem("11-1"),
+      dividerItem('11-1'),
       deleteOption(handleRemove),
     ];
 
@@ -84,7 +84,7 @@ export const PageObjMenu: React.FC<Props> = ({ pageObject, elements }) => {
         <Dropdown
           disabled={isOnboardingOpen}
           align={{ offset: [15, 0] }}
-          trigger={["click"]}
+          trigger={['click']}
           menu={getMenuItems(pageObject, locators, elements)}
           getPopupContainer={(triggerNode) => triggerNode}
           destroyPopupOnHide

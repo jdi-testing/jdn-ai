@@ -1,10 +1,10 @@
-import { Form, FormProps, Modal, ModalProps } from "antd";
-import { FormInstance } from "antd/es/form/Form";
-import React, { ReactNode, useContext, useEffect } from "react";
-import { showOverlay, removeOverlay } from "../../pageServices/pageDataHandlers";
-import { useOnBoardingRef } from "../../features/onboarding/utils/useOnboardingRef";
-import { OnbrdStep } from "../../features/onboarding/types/constants";
-import { OnboardingContext } from "../../features/onboarding/OnboardingProvider";
+import { Form, FormProps, Modal, ModalProps } from 'antd';
+import { FormInstance } from 'antd/es/form/Form';
+import React, { ReactNode, useContext, useEffect } from 'react';
+import { showOverlay, removeOverlay } from '../../pageServices/pageDataHandlers';
+import { useOnBoardingRef } from '../../features/onboarding/utils/useOnboardingRef';
+import { OnbrdStep } from '../../features/onboarding/types/constants';
+import { OnboardingContext } from '../../features/onboarding/OnboardingProvider';
 
 interface JDNModalProps extends ModalProps {
   setIsModalOpen: (value: boolean) => void;
@@ -52,7 +52,7 @@ export const DialogWithForm: React.FC<DialogFormProps> = ({ modalProps, formProp
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     e.stopPropagation();
-    if (e.key === "Enter" && !okButtonProps?.disabled) {
+    if (e.key === 'Enter' && !okButtonProps?.disabled) {
       onOk();
     }
   };
@@ -61,7 +61,7 @@ export const DialogWithForm: React.FC<DialogFormProps> = ({ modalProps, formProp
     <div onContextMenu={(e) => e.stopPropagation()} onKeyDown={handleKeyDown}>
       <Modal
         destroyOnClose
-        style={{ top: "24px" }}
+        style={{ top: '24px' }}
         onCancel={handleCancel}
         onOk={onOk}
         open={open}

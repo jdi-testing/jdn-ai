@@ -1,8 +1,8 @@
-import React, { FC } from "react";
-import Icon from "@ant-design/icons";
+import React, { FC } from 'react';
+import Icon from '@ant-design/icons';
 
-import PageBigSvg from "./page-big.svg";
-import { Typography } from "antd";
+import PageBigSvg from './page-big.svg';
+import { Typography } from 'antd';
 
 interface Props {
   children: React.ReactNode;

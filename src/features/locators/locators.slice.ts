@@ -1,17 +1,17 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { size } from "lodash";
-import { ElementClass, ElementLibrary } from "./types/generationClasses.types";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { size } from 'lodash';
+import { ElementClass, ElementLibrary } from './types/generationClasses.types';
 import {
   locatorsAdapter,
   simpleSelectLocatorById,
   simpleSelectLocatorByJdnHash,
   simpleSelectLocatorsByPageObject,
-} from "./selectors/locators.selectors";
-import { createLocatorsReducer } from "./reducers/createLocators.thunk";
-import { identifyElementsReducer } from "./reducers/identifyElements.thunk";
-import { rerunGenerationReducer } from "./reducers/rerunGeneration.thunk";
-import { stopGenerationReducer } from "./reducers/stopGeneration.thunk";
-import { stopGenerationGroupReducer } from "./reducers/stopGenerationGroup.thunk";
+} from './selectors/locators.selectors';
+import { createLocatorsReducer } from './reducers/createLocators.thunk';
+import { identifyElementsReducer } from './reducers/identifyElements.thunk';
+import { rerunGenerationReducer } from './reducers/rerunGeneration.thunk';
+import { stopGenerationReducer } from './reducers/stopGeneration.thunk';
+import { stopGenerationGroupReducer } from './reducers/stopGenerationGroup.thunk';
 import {
   LocatorsState,
   LocatorsGenerationStatus,
@@ -24,14 +24,14 @@ import {
   JDNHash,
   LocatorValue,
   LocatorValidationWarnings,
-} from "./types/locator.types";
-import { checkLocatorsValidityReducer } from "./reducers/checkLocatorValidity.thunk";
-import { LocatorType } from "../../common/types/common";
-import { addCustomLocatorReducer } from "./reducers/addCustomLocator.thunk";
-import { changeLocatorElementReducer } from "./reducers/changeLocatorElement.thunk";
-import { DEFAULT_ERROR, NETWORK_ERROR } from "./utils/constants";
-import { runLocatorsGenerationReducer } from "./reducers/runLocatorsGeneration.thunk";
-import { PageObject } from "../pageObjects/types/pageObjectSlice.types";
+} from './types/locator.types';
+import { checkLocatorsValidityReducer } from './reducers/checkLocatorValidity.thunk';
+import { LocatorType } from '../../common/types/common';
+import { addCustomLocatorReducer } from './reducers/addCustomLocator.thunk';
+import { changeLocatorElementReducer } from './reducers/changeLocatorElement.thunk';
+import { DEFAULT_ERROR, NETWORK_ERROR } from './utils/constants';
+import { runLocatorsGenerationReducer } from './reducers/runLocatorsGeneration.thunk';
+import { PageObject } from '../pageObjects/types/pageObjectSlice.types';
 
 const initialState: LocatorsState = {
   generationStatus: LocatorsGenerationStatus.noStatus,
@@ -52,7 +52,7 @@ export interface ChangeLocatorAttributesPayload {
 }
 
 const locatorsSlice = createSlice({
-  name: "locators",
+  name: 'locators',
   initialState: locatorsAdapter.getInitialState(initialState),
   reducers: {
     addLocators(state, { payload }) {
@@ -74,7 +74,7 @@ const locatorsSlice = createSlice({
         newValue.locator.xPath = locator;
       }
 
-      if (rest.message === LocatorValidationWarnings.NotFound) newValue.jdnHash = "";
+      if (rest.message === LocatorValidationWarnings.NotFound) newValue.jdnHash = '';
 
       locatorsAdapter.upsertOne(state, newValue);
     },
@@ -83,14 +83,14 @@ const locatorsSlice = createSlice({
     },
     elementGroupSetActive(
       state,
-      { payload }: PayloadAction<ILocator[] | { locators: ILocator[]; fromScript: boolean }>
+      { payload }: PayloadAction<ILocator[] | { locators: ILocator[]; fromScript: boolean }>,
     ) {
       const locators = Array.isArray(payload) ? payload : payload.locators;
       locatorsAdapter.upsertMany(state, locators.map(({ element_id }) => ({ element_id, active: true })) as ILocator[]);
     },
     elementGroupUnsetActive(
       state,
-      { payload }: PayloadAction<ILocator[] | { locators: ILocator[]; fromScript: boolean }>
+      { payload }: PayloadAction<ILocator[] | { locators: ILocator[]; fromScript: boolean }>,
     ) {
       const locators = Array.isArray(payload) ? payload : payload.locators;
       const newValue = locators.map(({ element_id }) => ({ element_id, active: false }));
@@ -132,13 +132,13 @@ const locatorsSlice = createSlice({
     },
     setActiveSingle(state, { payload: locator }: PayloadAction<ILocator>) {
       const newValue = simpleSelectLocatorsByPageObject(state, locator.pageObj).map((_loc) =>
-        _loc.element_id === locator.element_id ? { ..._loc, active: true } : { ..._loc, active: false }
+        _loc.element_id === locator.element_id ? { ..._loc, active: true } : { ..._loc, active: false },
       );
       locatorsAdapter.upsertMany(state, newValue);
     },
     setCalculationPriority(
       state,
-      { payload }: PayloadAction<{ element_id?: ElementId; priority: LocatorCalculationPriority; ids?: ElementId[] }>
+      { payload }: PayloadAction<{ element_id?: ElementId; priority: LocatorCalculationPriority; ids?: ElementId[] }>,
     ) {
       const { element_id, ids, priority } = payload;
       if (element_id) locatorsAdapter.upsertOne(state, { element_id, priority } as ILocator);
@@ -187,7 +187,7 @@ const locatorsSlice = createSlice({
     setScrollToLocator(state, { payload: element_id }: PayloadAction<ElementId>) {
       state.scrollToLocator = element_id;
     },
-    setValidity(state, { payload }: PayloadAction<{ element_id: ElementId; message: ILocator["message"] }>) {
+    setValidity(state, { payload }: PayloadAction<{ element_id: ElementId; message: ILocator['message'] }>) {
       locatorsAdapter.upsertOne(state, payload as ILocator);
     },
     toggleDeleted(state, { payload }: PayloadAction<string>) {
@@ -210,7 +210,7 @@ const locatorsSlice = createSlice({
     },
     toggleElementGeneration(state, { payload }: PayloadAction<string | ILocator>) {
       // TODO isGenerated refactoring
-      const locator = typeof payload === "string" ? simpleSelectLocatorById(state, payload) : payload;
+      const locator = typeof payload === 'string' ? simpleSelectLocatorById(state, payload) : payload;
       if (!locator) return;
       const { isGenerated, element_id } = locator;
       locatorsAdapter.upsertOne(state, { element_id, isGenerated: !isGenerated } as ILocator);
@@ -239,7 +239,7 @@ const locatorsSlice = createSlice({
       }: PayloadAction<{
         locators: { element_id?: ElementId; jdnHash?: JDNHash; locator: Partial<LocatorValue> }[];
         pageObject: PageObject;
-      }>
+      }>,
     ) {
       const { locators, pageObject } = payload;
       const newValue = locators.map(({ element_id, jdnHash, locator }) => {

@@ -16,20 +16,20 @@ export enum OnbrdStep {
 }
 
 export enum OnboardingPopupText {
-  Default = "Would you like to start the onboarding?",
+  Default = 'Would you like to start the onboarding?',
   InProgress = `Your Page Objects will be deleted and the current progress will not be saved.
   
   Are you sure you want to start the onboarding?`,
 }
 
 export enum OnboardingPopupButtons {
-  Ok = "Start",
-  Cancel = "No",
+  Ok = 'Start',
+  Cancel = 'No',
 }
 
 export enum OnboardingProviderTexts {
-  ModalTitle = "Welcome to Onboarding Tutorial!",
-  ModalText = "Discover all the features and possibilities of the extension with the onboarding tutorial.",
-  ModalOkButtonText = "Start",
-  ModalCancelButtonText = "Skip",
+  ModalTitle = 'Welcome to Onboarding Tutorial!',
+  ModalText = 'Discover all the features and possibilities of the extension with the onboarding tutorial.',
+  ModalOkButtonText = 'Start',
+  ModalCancelButtonText = 'Skip',
 }

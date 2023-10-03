@@ -1,12 +1,12 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { PageObjectId } from "../pageObjects/types/pageObjectSlice.types";
-import { Filter, FilterKey } from "./types/filter.types";
-import { filterAdapter } from "./filter.selectors";
-import { toggleClassFilterReducer } from "./reducers/toggleClassFilter.thunk";
-import { toggleClassFilterAllReducer } from "./reducers/toggleClassFilterAll.thunk";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { PageObjectId } from '../pageObjects/types/pageObjectSlice.types';
+import { Filter, FilterKey } from './types/filter.types';
+import { filterAdapter } from './filter.selectors';
+import { toggleClassFilterReducer } from './reducers/toggleClassFilter.thunk';
+import { toggleClassFilterAllReducer } from './reducers/toggleClassFilterAll.thunk';
 
 const filterSlice = createSlice({
-  name: "filter",
+  name: 'filter',
   initialState: filterAdapter.getInitialState({}),
   reducers: {
     removeAll(state) {

@@ -1,14 +1,14 @@
-import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
-import { ILocator, LocatorTaskStatus, LocatorsGenerationStatus, LocatorsState } from "../types/locator.types";
-import { runXpathGeneration } from "../utils/runXpathGeneration";
-import { MaxGenerationTime } from "../../../app/types/mainSlice.types";
-import { RootState } from "../../../app/store/store";
-import { runCssSelectorGeneration } from "../utils/runCssSelectorGeneration";
-import { updateLocatorGroup } from "../locators.slice";
-import { selectCurrentPageObject } from "../../pageObjects/selectors/pageObjects.selectors";
-import { filterLocatorsByClassFilter } from "../utils/filterLocators";
-import { LocalStorageKey, getLocalStorage } from "../../../common/utils/localStorage";
-import { selectClassFilterByPO } from "../../filter/filter.selectors";
+import { ActionReducerMapBuilder, createAsyncThunk } from '@reduxjs/toolkit';
+import { ILocator, LocatorTaskStatus, LocatorsGenerationStatus, LocatorsState } from '../types/locator.types';
+import { runXpathGeneration } from '../utils/runXpathGeneration';
+import { MaxGenerationTime } from '../../../app/types/mainSlice.types';
+import { RootState } from '../../../app/store/store';
+import { runCssSelectorGeneration } from '../utils/runCssSelectorGeneration';
+import { updateLocatorGroup } from '../locators.slice';
+import { selectCurrentPageObject } from '../../pageObjects/selectors/pageObjects.selectors';
+import { filterLocatorsByClassFilter } from '../utils/filterLocators';
+import { LocalStorageKey, getLocalStorage } from '../../../common/utils/localStorage';
+import { selectClassFilterByPO } from '../../filter/filter.selectors';
 
 interface Meta {
   locators: ILocator[];
@@ -23,7 +23,7 @@ It's used for initial locators generation, or can be called on demand for partic
 or with parameters.
 */
 export const runLocatorsGeneration = createAsyncThunk(
-  "locators/runLocatorsGeneration",
+  'locators/runLocatorsGeneration',
   async (meta: Meta, thunkAPI) => {
     const state = thunkAPI.getState() as RootState;
 
@@ -40,7 +40,7 @@ export const runLocatorsGeneration = createAsyncThunk(
         return locators;
       } else if (generateMissingLocator || generateXpath) {
         return filterLocatorsByClassFilter(locators, filter).filter(
-          ({ locator }) => !locator || !locator.xPath || locator.xPath === locator.fullXpath || !locator.fullXpath
+          ({ locator }) => !locator || !locator.xPath || locator.xPath === locator.fullXpath || !locator.fullXpath,
         );
       } else {
         return [];
@@ -78,7 +78,7 @@ export const runLocatorsGeneration = createAsyncThunk(
         updateLocatorGroup({
           locators: setPendingXpaths,
           pageObject: selectCurrentPageObject(state)!,
-        })
+        }),
       );
 
     if (setPendingCss.length)
@@ -86,11 +86,11 @@ export const runLocatorsGeneration = createAsyncThunk(
         updateLocatorGroup({
           locators: setPendingCss,
           pageObject: selectCurrentPageObject(state)!,
-        })
+        }),
       );
 
     return generations;
-  }
+  },
 );
 
 export const runLocatorsGenerationReducer = (builder: ActionReducerMapBuilder<LocatorsState>) => {

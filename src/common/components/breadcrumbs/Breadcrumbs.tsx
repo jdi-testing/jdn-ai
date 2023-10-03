@@ -1,9 +1,9 @@
-import { Tooltip, Typography } from "antd";
-import React, { ForwardedRef, ReactElement } from "react";
-import { useSelector } from "react-redux";
-import { selectCurrentPage } from "../../../app/main.selectors";
-import { PageType } from "../../../app/types/mainSlice.types";
-import { selectCurrentPageObject } from "../../../features/pageObjects/selectors/pageObjects.selectors";
+import { Tooltip, Typography } from 'antd';
+import React, { ForwardedRef, ReactElement } from 'react';
+import { useSelector } from 'react-redux';
+import { selectCurrentPage } from '../../../app/main.selectors';
+import { PageType } from '../../../app/types/mainSlice.types';
+import { selectCurrentPageObject } from '../../../features/pageObjects/selectors/pageObjects.selectors';
 
 export const Breadcrumbs = React.forwardRef((props, ref: ForwardedRef<HTMLDivElement>): ReactElement | null => {
   const currentPage = useSelector(selectCurrentPage);
@@ -14,9 +14,9 @@ export const Breadcrumbs = React.forwardRef((props, ref: ForwardedRef<HTMLDivEle
       <Tooltip title={pageObject?.url} placement="bottomLeft" getPopupContainer={(triggerNode) => triggerNode}>
         <Typography.Text type="secondary">{`${pageObject?.name} > `}</Typography.Text>
       </Tooltip>
-      <span>{currentPage.alreadyGenerated ? "Editing" : "Creating"}</span>
+      <span>{currentPage.alreadyGenerated ? 'Editing' : 'Creating'}</span>
     </div>
   ) : null;
 });
 
-Breadcrumbs.displayName = "Breadcrumbs";
+Breadcrumbs.displayName = 'Breadcrumbs';

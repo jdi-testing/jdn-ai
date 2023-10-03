@@ -1,9 +1,9 @@
-import React, { ReactNode, useState } from "react";
-import ReactDOM from "react-dom/client";
-import { ExclamationCircleOutlined } from "@ant-design/icons";
-import { Button, Modal, ModalProps } from "antd";
+import React, { ReactNode, useState } from 'react';
+import ReactDOM from 'react-dom/client';
+import { ExclamationCircleOutlined } from '@ant-design/icons';
+import { Button, Modal, ModalProps } from 'antd';
 
-import "../styles/customConfirm.less";
+import '../styles/customConfirm.less';
 
 interface Props extends ModalProps {
   confirmTitle: string;

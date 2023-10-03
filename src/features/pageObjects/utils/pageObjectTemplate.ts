@@ -1,11 +1,11 @@
-import { ElementLibrary } from "../../locators/types/generationClasses.types";
-import { camelCase, upperFirst } from "lodash";
-import transliterate from "@sindresorhus/transliterate";
-import { ILocator } from "../../locators/types/locator.types";
-import { getLocatorPrefix, getLocatorTemplateWithVividus } from "../../locators/utils/locatorOutput";
-import { AnnotationType, LocatorType } from "../../../common/types/common";
-import { hasAnnotationType } from "./hasAnnotationType";
-import { PageObject } from "../types/pageObjectSlice.types";
+import { ElementLibrary } from '../../locators/types/generationClasses.types';
+import { camelCase, upperFirst } from 'lodash';
+import transliterate from '@sindresorhus/transliterate';
+import { ILocator } from '../../locators/types/locator.types';
+import { getLocatorPrefix, getLocatorTemplateWithVividus } from '../../locators/utils/locatorOutput';
+import { AnnotationType, LocatorType } from '../../../common/types/common';
+import { hasAnnotationType } from './hasAnnotationType';
+import { PageObject } from '../types/pageObjectSlice.types';
 
 export const getClassName = (title: string) => {
   let className = transliterate(title);
@@ -15,13 +15,13 @@ export const getClassName = (title: string) => {
   className = upperFirst(className); // we isGenerated Java class name, so we always need a capital first letter
 
   if (className.length > 56) className = className.slice(0, 55);
-  if (className.length > 4 && className.slice(-4).toLowerCase() !== "page") className += "Page";
+  if (className.length > 4 && className.slice(-4).toLowerCase() !== 'page') className += 'Page';
   return className;
 };
 
-export const getPageObjectTemplateForVidus = (
+export const getPageObjectTemplateForVividus = (
   locators: ILocator[],
-  pageObject: PageObject
+  pageObject: PageObject,
 ): { pageCode: string; title: string } => {
   const { name, pathname, locatorType } = pageObject;
   let pageCode = `variables.${name}.url=(${pathname})\n`;
@@ -38,15 +38,15 @@ export const getPageObjectTemplateForVidus = (
 
 export const getPageObjectTemplateForJdi = (
   locators: ILocator[],
-  pageObject: PageObject
+  pageObject: PageObject,
 ): { pageCode: string; title: string } => {
   const { name: className, library } = pageObject;
 
   const locatorsCode = locators.map((loc) => {
-    const locatorEscaped = loc.locator.output?.replace(/\\/g, "\\\\").replace(/"/g, '\\"');
+    const locatorEscaped = loc.locator.output?.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
     return `    ${loc.annotationType}(${getLocatorPrefix(
       loc.annotationType,
-      loc.locatorType
+      loc.locatorType,
     )}"${locatorEscaped}")\n    public ${loc.type} ${loc.name};`;
   });
 
@@ -77,7 +77,7 @@ import com.epam.jdi.light.material.elements.navigation.steppers.*;
 import com.epam.jdi.light.material.elements.surfaces.*;
 import com.epam.jdi.light.material.elements.utils.*;
 `
-    : ""
+    : ''
 }${
     library === ElementLibrary.Vuetify
       ? `
@@ -92,10 +92,10 @@ import com.epam.jdi.light.vuetify.elements.complex.tables.*;
 import com.epam.jdi.light.vuetify.elements.complex.timelines.*;
 import com.epam.jdi.light.vuetify.elements.composite.*;
 `
-      : ""
-  }${hasFindByAnnotationType ? `import com.epam.jdi.light.elements.pageobjects.annotations.FindBy;\n` : ""}
+      : ''
+  }${hasFindByAnnotationType ? `import com.epam.jdi.light.elements.pageobjects.annotations.FindBy;\n` : ''}
 public class ${className} extends WebPage {
-${locatorsCode.join("\n\n")}
+${locatorsCode.join('\n\n')}
 }
 `;
   return { pageCode, title: className };

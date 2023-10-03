@@ -1,11 +1,11 @@
-import { ILocator } from "../../features/locators/types/locator.types";
-import { ScriptMsg } from "../scriptMsg.constants";
+import { ILocator } from '../../features/locators/types/locator.types';
+import { ScriptMsg } from '../scriptMsg.constants';
 
 export const assignDataLabels = () => {
   const assignDataLabel = (hashes: ILocator[]) => {
     hashes.forEach(({ jdnHash, predicted_label }) => {
       const element = document.querySelector(`[jdn-hash='${jdnHash}']`);
-      element?.setAttribute("data-label", predicted_label);
+      element?.setAttribute('data-label', predicted_label);
     });
   };
 

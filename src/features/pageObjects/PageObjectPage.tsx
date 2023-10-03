@@ -1,5 +1,5 @@
-import React from "react";
-import { PageObjList } from "./components/PageObjList";
+import React from 'react';
+import { PageObjList } from './components/PageObjList';
 
 interface Props {
   jdiTemplate?: Blob;

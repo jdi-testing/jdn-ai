@@ -1,16 +1,16 @@
-import { sendMessage } from "../../pageServices/connector";
+import { sendMessage } from '../../pageServices/connector';
 
 export const floatToPercent = (value: number) => {
   // wse need to show percents, but multiply float * 100 provides an unexpected result and leads to bugs
   return Math.trunc(value * 100);
 };
 
-export const isMacPlatform = (param: Window) => param.navigator?.userAgent.indexOf("Mac") != -1;
+export const isMacPlatform = (param: Window) => param.navigator?.userAgent.indexOf('Mac') != -1;
 
 export const findSubstringWithinTerms = (
   text: string,
   startSubstring: string,
-  endSubstring: string | RegExp
+  endSubstring: string | RegExp,
 ): string => {
   let startIndex = text.indexOf(startSubstring);
   if (startIndex !== -1) {
@@ -29,7 +29,7 @@ export const findSubstringWithinTerms = (
       return text.substring(text.indexOf(startSubstring), endIndex);
     }
   }
-  return "";
+  return '';
 };
 
 export const generateId = (): string => {
@@ -41,7 +41,7 @@ export const generateId = (): string => {
 };
 
 export const getElementFullXpath = async (foundHash: string): Promise<string> => {
-  let fullXpath = "";
+  let fullXpath = '';
 
   await sendMessage
     .getElementXpath(foundHash)
@@ -54,7 +54,7 @@ export const getElementFullXpath = async (foundHash: string): Promise<string> =>
 };
 
 export const isFilteredSelect = (input: string, option: any) =>
-  (option?.value?.toString() ?? "").toLowerCase().includes(input.toLowerCase());
+  (option?.value?.toString() ?? '').toLowerCase().includes(input.toLowerCase());
 
 export const isStringContainsNumbers = (string: string) => {
   const regex = /\d/; // Regular expression to match any digit (0-9)

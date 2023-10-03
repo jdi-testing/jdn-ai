@@ -1,9 +1,9 @@
-import React, { ReactNode, SyntheticEvent, useContext } from "react";
-import { Dropdown } from "antd";
-import { size } from "lodash";
-import { useDispatch } from "react-redux";
-import { MaxGenerationTime } from "../../../app/types/mainSlice.types";
-import { MenuItem } from "../../../common/components/menu/Menu";
+import React, { ReactNode, SyntheticEvent, useContext } from 'react';
+import { Dropdown } from 'antd';
+import { size } from 'lodash';
+import { useDispatch, useSelector } from 'react-redux';
+import { MaxGenerationTime } from '../../../app/types/mainSlice.types';
+import { MenuItem } from '../../../common/components/menu/Menu';
 import {
   advanced,
   deleteOption,
@@ -18,27 +18,27 @@ import {
   dividerItem,
   addToPO,
   removeFromPO,
-} from "../../../common/components/menu/menuOptions";
-import { locatorGenerationController } from "../utils/locatorGenerationController";
+} from '../../../common/components/menu/menuOptions';
+import { locatorGenerationController } from '../utils/locatorGenerationController';
 import {
   ILocator,
   LocatorCalculationPriority,
   ValidationStatus,
   LocatorValidationWarnings,
-} from "../types/locator.types";
+} from '../types/locator.types';
 import {
   setCalculationPriority,
   toggleDeleted,
   toggleDeletedGroup,
   toggleElementGroupGeneration,
-} from "../locators.slice";
-import { getCopyOptions, getLocatorValidationStatus } from "../utils/utils";
-import { rerunGeneration } from "../reducers/rerunGeneration.thunk";
-import { stopGenerationGroup } from "../reducers/stopGenerationGroup.thunk";
-import { stopGeneration } from "../reducers/stopGeneration.thunk";
-import { FrameworkType, LocatorType } from "../../../common/types/common";
-import { useSelector } from "react-redux";
-import { OnboardingContext } from "../../onboarding/OnboardingProvider";
+} from '../locators.slice';
+import { getCopyOptions, getLocatorValidationStatus } from '../utils/utils';
+import { rerunGeneration } from '../reducers/rerunGeneration.thunk';
+import { stopGenerationGroup } from '../reducers/stopGenerationGroup.thunk';
+import { stopGeneration } from '../reducers/stopGeneration.thunk';
+import { FrameworkType, LocatorType } from '../../../common/types/common';
+
+import { OnboardingContext } from '../../onboarding/OnboardingProvider';
 import {
   selectCalculatedActiveByPageObj,
   selectActiveNonGenerateByPO,
@@ -51,14 +51,14 @@ import {
   selectInProgressActiveNoPriorityByPageObject,
   selectInProgressActiveIncPriorityByPageObject,
   selectInProgressActiveDecPriorityByPageObject,
-} from "../selectors/locatorsFiltered.selectors";
-import { AppDispatch } from "../../../app/store/store";
-import { selectLastFrameworkType } from "../../pageObjects/selectors/pageObjects.selectors";
+} from '../selectors/locatorsFiltered.selectors';
+import { AppDispatch } from '../../../app/store/store';
+import { selectLastFrameworkType } from '../../pageObjects/selectors/pageObjects.selectors';
 
 interface Props {
   setIsEditModalOpen: (val: boolean) => void;
   children?: ReactNode;
-  trigger: Array<"click" | "hover" | "contextMenu">;
+  trigger: Array<'click' | 'hover' | 'contextMenu'>;
 }
 
 export const LocatorMenu: React.FC<Props> = ({ setIsEditModalOpen, children, trigger }) => {
@@ -103,7 +103,7 @@ export const LocatorMenu: React.FC<Props> = ({ setIsEditModalOpen, children, tri
       setCalculationPriority({
         ids,
         priority: LocatorCalculationPriority.Increased,
-      })
+      }),
     );
     locatorGenerationController.upPriority(hashes);
   };
@@ -115,7 +115,7 @@ export const LocatorMenu: React.FC<Props> = ({ setIsEditModalOpen, children, tri
       setCalculationPriority({
         ids,
         priority: LocatorCalculationPriority.Decreased,
-      })
+      }),
     );
     locatorGenerationController.downPriority(hashes);
   };
@@ -141,7 +141,7 @@ export const LocatorMenu: React.FC<Props> = ({ setIsEditModalOpen, children, tri
       rerunGeneration({
         generationData: calculatedActive.filter((el) => !isAdvancedCalculationDisabled(el)),
         maxGenerationTime: time,
-      })
+      }),
     );
 
   const handleAddToPO = () => {
@@ -180,12 +180,12 @@ export const LocatorMenu: React.FC<Props> = ({ setIsEditModalOpen, children, tri
                 getRerunGeneration(60),
                 getRerunGeneration(3600),
               ],
-              size(calculatedActive) === 1 && isAdvancedCalculationDisabled(calculatedActive[0])
+              size(calculatedActive) === 1 && isAdvancedCalculationDisabled(calculatedActive[0]),
             ),
           ]
         : []),
       ...(size(failedSelected) ? [retry(() => dispatch(rerunGeneration({ generationData: failedSelected })))] : []),
-      ...(size(actualSelected) ? [dividerItem("9-1")] : []),
+      ...(size(actualSelected) ? [dividerItem('9-1')] : []),
       ...(size(actualSelected) ? [deleteOption(handleDelete)] : []),
     ];
 

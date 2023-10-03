@@ -1,5 +1,5 @@
-import * as React from "react";
-import { Tag } from "antd";
+import * as React from 'react';
+import { Tag } from 'antd';
 
 interface Props {
   hidden: boolean;

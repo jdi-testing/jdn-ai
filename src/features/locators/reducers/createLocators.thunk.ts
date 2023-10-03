@@ -1,12 +1,12 @@
-import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
+import { ActionReducerMapBuilder, createAsyncThunk } from '@reduxjs/toolkit';
 
-import { RootState } from "../../../app/store/store";
-import { LocatorsState, PredictedEntity } from "../types/locator.types";
-import { addLocators } from "../locators.slice";
-import { addLocatorsToPageObj } from "../../pageObjects/pageObject.slice";
-import { ElementLibrary } from "../types/generationClasses.types";
-import { selectAutoGeneratingLocatorTypes } from "../../pageObjects/selectors/pageObjects.selectors";
-import { createLocatorAttributes } from "../utils/createLocatorAttributes";
+import { RootState } from '../../../app/store/store';
+import { LocatorsState, PredictedEntity } from '../types/locator.types';
+import { addLocators } from '../locators.slice';
+import { addLocatorsToPageObj } from '../../pageObjects/pageObject.slice';
+import { ElementLibrary } from '../types/generationClasses.types';
+import { selectAutoGeneratingLocatorTypes } from '../../pageObjects/selectors/pageObjects.selectors';
+import { createLocatorAttributes } from '../utils/createLocatorAttributes';
 
 interface Meta {
   predictedElements: PredictedEntity[];
@@ -15,7 +15,7 @@ interface Meta {
 
 /* this thunk collects data from page, needed for locators business logic,
 finds child-parent connections and then saves locators to state */
-export const createLocators = createAsyncThunk("locators/createLocators", async (payload: Meta, thunkAPI) => {
+export const createLocators = createAsyncThunk('locators/createLocators', async (payload: Meta, thunkAPI) => {
   const { predictedElements, library } = payload;
   const state = thunkAPI.getState();
   const isAutogenerating = selectAutoGeneratingLocatorTypes(state as RootState, predictedElements);

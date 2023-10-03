@@ -2,11 +2,11 @@
     avoid using any outer scope variables inside this function
  */
 
-import { ScriptMsg } from "../scriptMsg.constants";
-import { assignJdnHash } from "./utils";
-import { LocatorTaskStatus, LocatorElementStatus } from "../../features/locators/types/locator.types";
+import { ScriptMsg } from '../scriptMsg.constants';
+import { assignJdnHash } from './utils';
+import { LocatorTaskStatus, LocatorElementStatus } from '../../features/locators/types/locator.types';
 
-const ADD_ELEMENT_TO_PO = "To get data add element to Page Object";
+const ADD_ELEMENT_TO_PO = 'To get data add element to Page Object';
 
 /* global chrome */
 export const highlightOnPage = () => {
@@ -22,7 +22,7 @@ export const highlightOnPage = () => {
 
   const sendMessage = (message) =>
     chrome.runtime.sendMessage(message).catch((error) => {
-      if (error.message !== "The message port closed before a response was received.") throw new Error(error.message);
+      if (error.message !== 'The message port closed before a response was received.') throw new Error(error.message);
     });
 
   const clearState = () => {
@@ -70,8 +70,8 @@ export const highlightOnPage = () => {
   };
 
   const getClassName = (element) => {
-    return `jdn-highlight ${element.isGenerated ? "jdn-primary" : "jdn-secondary"} ${
-      element.active ? "jdn-active" : ""
+    return `jdn-highlight ${element.isGenerated ? 'jdn-primary' : 'jdn-secondary'} ${
+      element.active ? 'jdn-active' : ''
     }`;
   };
 
@@ -80,7 +80,7 @@ export const highlightOnPage = () => {
     if (!originDiv) return;
     const originDivRect = originDiv.getBoundingClientRect();
     if (!isInViewport(originDivRect) || isHiddenByOverflow(originDiv, originDivRect)) {
-      originDiv.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+      originDiv.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
     }
   };
 
@@ -105,10 +105,10 @@ export const highlightOnPage = () => {
 
     if (element.deleted) {
       if (div) {
-        div.setAttribute("jdn-status", LocatorElementStatus.DELETED);
+        div.setAttribute('jdn-status', LocatorElementStatus.DELETED);
       }
     } else {
-      div.setAttribute("jdn-status", element.locator.taskStatus);
+      div.setAttribute('jdn-status', element.locator.taskStatus);
       findAndHighlight();
     }
     toggleElement({ element, skipScroll: true });
@@ -131,22 +131,22 @@ export const highlightOnPage = () => {
 
   const changeElementName = (element) => {
     const div = updateElement(element);
-    div.querySelector(".jdn-class").textContent = element.name;
+    div.querySelector('.jdn-class').textContent = element.name;
   };
 
   const updateTooltipXpath = (element) => {
     if (
       element.locator.taskStatus === LocatorTaskStatus.SUCCESS &&
-      tooltip.getAttribute("jdn-element-hash") === element.element_id
+      tooltip.getAttribute('jdn-element-hash') === element.element_id
     ) {
-      tooltip.querySelector(".jdn-tooltip-xpath").innerHTML = element.locator.xPath;
+      tooltip.querySelector('.jdn-tooltip-xpath').innerHTML = element.locator.xPath;
     }
   };
 
   const changeGenerationStatus = (element) => {
     const div = updateElement(element);
     if (!div) return;
-    div.setAttribute("jdn-status", element.locator.taskStatus);
+    div.setAttribute('jdn-status', element.locator.taskStatus);
     updateTooltipXpath(element);
   };
 
@@ -177,8 +177,8 @@ export const highlightOnPage = () => {
     };
     const addTooltip = () => {
       if (tooltip) return;
-      tooltip = document.createElement("div");
-      tooltip.className = "jdn-tooltip jdn-tooltip-hidden";
+      tooltip = document.createElement('div');
+      tooltip.className = 'jdn-tooltip jdn-tooltip-hidden';
       document.body.appendChild(tooltip);
     };
 
@@ -191,22 +191,22 @@ export const highlightOnPage = () => {
       const clientWidth = document.body.clientWidth;
       const innerHeight = window.innerHeight;
       let right, left, top, bottom;
-      let classNames = ["jdn-tooltip"];
+      let classNames = ['jdn-tooltip'];
       if (x + window.pageXOffset + (maxTooltipWidth - xTooltipOffset) > clientWidth) {
         right = `${clientWidth - x - window.pageXOffset - xTooltipOffset}px`;
-        left = "unset";
-        classNames.push("jdn-tooltip-right");
+        left = 'unset';
+        classNames.push('jdn-tooltip-right');
       } else {
         left = `${x + window.pageXOffset - xTooltipOffset}px`;
-        right = "unset";
+        right = 'unset';
       }
       if (y + minTooltipHeight > window.innerHeight) {
         bottom = `${innerHeight - y - window.pageYOffset + yTooltipOffset}px`;
-        top = "unset";
-        classNames.push("jdn-tooltip-top");
+        top = 'unset';
+        classNames.push('jdn-tooltip-top');
       } else {
         top = `${y + window.pageYOffset + yTooltipOffset}px`;
-        bottom = "unset";
+        bottom = 'unset';
       }
       return {
         style: { top, left, right, bottom },
@@ -228,37 +228,37 @@ export const highlightOnPage = () => {
       Object.assign(tooltip.style, style);
       const el = predictedElements.find((e) => e.element_id === element_id);
       tooltip.innerHTML = tooltipInnerHTML(el);
-      tooltip.className = classNames.join(" ");
-      tooltip.setAttribute("jdn-element-hash", el.element_id);
+      tooltip.className = classNames.join(' ');
+      tooltip.setAttribute('jdn-element-hash', el.element_id);
     };
 
-    const div = document.createElement("div");
+    const div = document.createElement('div');
     div.id = jdnHash;
     div.className = getClassName(predictedElement);
-    div.setAttribute("jdn-highlight", true);
-    div.setAttribute("jdn-status", predictedElement.locator.taskStatus || LocatorTaskStatus.STARTED);
-    div.addEventListener("mouseover", () => {
+    div.setAttribute('jdn-highlight', true);
+    div.setAttribute('jdn-status', predictedElement.locator.taskStatus || LocatorTaskStatus.STARTED);
+    div.addEventListener('mouseover', () => {
       tooltipTimer = setTimeout(() => {
         showTooltip(coordinates);
       }, 2000);
     });
-    div.addEventListener("mouseout", () => {
+    div.addEventListener('mouseout', () => {
       clearTimeout(tooltipTimer);
-      tooltip.className = "jdn-tooltip jdn-tooltip-hidden";
+      tooltip.className = 'jdn-tooltip jdn-tooltip-hidden';
     });
 
-    const label = document.createElement("span");
-    label.className = "jdn-label";
+    const label = document.createElement('span');
+    label.className = 'jdn-label';
     label.innerHTML = `<span class="jdn-class">${predictedElement.name}</span>`;
 
     addTooltip();
-    label.addEventListener("click", (event) => {
+    label.addEventListener('click', (event) => {
       event.stopPropagation();
       showTooltip(event);
     });
 
     Object.assign(div.style, getDivPosition(elementRect));
-    div.insertAdjacentElement("afterBegin", label);
+    div.insertAdjacentElement('afterBegin', label);
 
     document.body.appendChild(div);
   };
@@ -266,7 +266,7 @@ export const highlightOnPage = () => {
   const clearContainer = (container) => {
     nodes.forEach((node) => {
       if (container.contains(node)) {
-        const jdnHash = node.getAttribute("jdn-hash");
+        const jdnHash = node.getAttribute('jdn-hash');
         const div = document.getElementById(jdnHash);
         if (div) div.remove();
       }
@@ -286,7 +286,7 @@ export const highlightOnPage = () => {
       if (deleted || isFilteredOut(type)) return;
       let node = findByHash(jdnHash);
       if (!node) {
-        const isHashAssigned = assignJdnHash({ locator: locator.xPath, jdnHash }) === "success";
+        const isHashAssigned = assignJdnHash({ locator: locator.xPath, jdnHash }) === 'success';
         if (isHashAssigned) node = findByHash(jdnHash);
       }
       if (!node) return; // for now we don't know cases that would lead to this
@@ -296,7 +296,7 @@ export const highlightOnPage = () => {
     nodes.forEach((element) => {
       const elementRect = element.getBoundingClientRect();
       if (isInViewport(elementRect) && !isHiddenByOverflow(element, elementRect)) {
-        const hash = element.getAttribute("jdn-hash");
+        const hash = element.getAttribute('jdn-hash');
         const highlightElement = document.getElementById(hash);
         const predicted = predictedElements.find((e) => e.jdnHash === hash);
         if (!highlightElement) {
@@ -325,7 +325,7 @@ export const highlightOnPage = () => {
   };
 
   const removeTooltip = () => {
-    const tooltip = document.querySelector(".jdn-tooltip");
+    const tooltip = document.querySelector('.jdn-tooltip');
     if (tooltip) tooltip.remove();
   };
 
@@ -346,15 +346,15 @@ export const highlightOnPage = () => {
     coordinates = { x, y };
   };
 
-  const events = ["scroll", "resize"];
+  const events = ['scroll', 'resize'];
   const removeEventListeners = () => {
     events.forEach((eventName) => {
       document.removeEventListener(eventName, scrollListenerCallback, true);
     });
 
-    document.removeEventListener("dblclick", onElementDblClick);
-    document.removeEventListener("click", onDocumentClick);
-    document.removeEventListener("mousemove", onMouseMove);
+    document.removeEventListener('dblclick', onElementDblClick);
+    document.removeEventListener('click', onDocumentClick);
+    document.removeEventListener('mousemove', onMouseMove);
 
     listenersAreSet = false;
   };
@@ -374,10 +374,10 @@ export const highlightOnPage = () => {
   };
 
   const onDocumentClick = (event) => {
-    const highlightTarget = event.target.closest(".jdn-label");
+    const highlightTarget = event.target.closest('.jdn-label');
     if (!highlightTarget) {
-      const tooltip = document.querySelector(".jdn-tooltip");
-      if (tooltip) tooltip.className = "jdn-tooltip jdn-tooltip-hidden";
+      const tooltip = document.querySelector('.jdn-tooltip');
+      if (tooltip) tooltip.className = 'jdn-tooltip jdn-tooltip-hidden';
       return;
     }
   };
@@ -387,23 +387,23 @@ export const highlightOnPage = () => {
       document.addEventListener(eventName, scrollListenerCallback, true);
     });
 
-    document.addEventListener("dblclick", onElementDblClick);
-    document.addEventListener("click", onDocumentClick);
-    document.addEventListener("mousemove", onMouseMove);
+    document.addEventListener('dblclick', onElementDblClick);
+    document.addEventListener('click', onDocumentClick);
+    document.addEventListener('mousemove', onMouseMove);
 
     listenersAreSet = true;
   };
 
   const detectScrollableContainers = () => {
-    const nodes = document.querySelectorAll("*");
+    const nodes = document.querySelectorAll('*');
 
     const hasVerticalScroll = (node) =>
       node.scrollHeight > node.clientHeight &&
-      (getComputedStyle(node).overflowY === "scroll" || getComputedStyle(node).overflowY == "auto");
+      (getComputedStyle(node).overflowY === 'scroll' || getComputedStyle(node).overflowY == 'auto');
     const hasHorizontalScroll = (node) =>
       node.scrollWidth > node.clientWidth &&
-      (getComputedStyle(node).overflowX === "scroll" || getComputedStyle(node).overflowX == "auto");
-    const isRootNode = (node) => node.parentElement === null || node.tagName === "BODY";
+      (getComputedStyle(node).overflowX === 'scroll' || getComputedStyle(node).overflowX == 'auto');
+    const isRootNode = (node) => node.parentElement === null || node.tagName === 'BODY';
 
     nodes.forEach((node) => {
       if ((hasVerticalScroll(node) || hasHorizontalScroll(node)) && !isRootNode(node)) {
@@ -418,7 +418,7 @@ export const highlightOnPage = () => {
     let needToDraw = false;
     predictedElements?.forEach((element) => {
       const div = document.getElementById(element.jdnHash);
-      if (div) div.setAttribute("jdn-filtered", classFilter[element.type] ? "true" : false);
+      if (div) div.setAttribute('jdn-filtered', classFilter[element.type] ? 'true' : false);
       else classFilter[element.type] && (needToDraw = true);
     });
     if (needToDraw) findAndHighlight();
@@ -473,7 +473,7 @@ export const highlightOnPage = () => {
   };
 
   const disconnectHandler = () => {
-    removeHighlight(() => console.log("JDN highlight has been killed"))();
+    removeHighlight(() => console.log('JDN highlight has been killed'))();
     chrome.storage.sync.set({ IS_DISCONNECTED: true });
   };
 

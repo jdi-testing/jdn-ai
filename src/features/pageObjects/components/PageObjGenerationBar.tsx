@@ -1,8 +1,8 @@
-import { Col, Row, Select, Space, Typography } from "antd";
-import React, { useContext, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { selectCurrentPageObject, selectPageObjects } from "../selectors/pageObjects.selectors";
-import { AppDispatch, RootState } from "../../../app/store/store";
+import { Col, Row, Select, Space, Typography } from 'antd';
+import React, { useContext, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectCurrentPageObject, selectPageObjects } from '../selectors/pageObjects.selectors';
+import { AppDispatch, RootState } from '../../../app/store/store';
 import {
   changeElementLibrary,
   removePageObject,
@@ -10,19 +10,19 @@ import {
   setLocatorType,
   setAnnotationType,
   changeFrameworkType,
-} from "../pageObject.slice";
-import { PageObjectId } from "../types/pageObjectSlice.types";
-import { ElementLibrary, libraryNames } from "../../locators/types/generationClasses.types";
-import { identifyElements } from "../../locators/reducers/identifyElements.thunk";
-import { LocatorType, FrameworkType, AnnotationType } from "../../../common/types/common";
-import { useOnBoardingRef } from "../../onboarding/utils/useOnboardingRef";
-import { OnbrdStep } from "../../onboarding/types/constants";
-import { LocalStorageKey, setLocalStorage } from "../../../common/utils/localStorage";
-import { Footnote } from "../../../common/components/footnote/Footnote";
-import { isIdentificationLoading } from "../../locators/utils/helpers";
-import { PageObjGenerationButton } from "./PageObjGenerationButton";
-import { OnboardingContext } from "../../onboarding/OnboardingProvider";
-import { IN_DEVELOPMENT_TITLE } from "../../../common/constants/constants";
+} from '../pageObject.slice';
+import { PageObjectId } from '../types/pageObjectSlice.types';
+import { ElementLibrary, libraryNames } from '../../locators/types/generationClasses.types';
+import { identifyElements } from '../../locators/reducers/identifyElements.thunk';
+import { LocatorType, FrameworkType, AnnotationType } from '../../../common/types/common';
+import { useOnBoardingRef } from '../../onboarding/utils/useOnboardingRef';
+import { OnbrdStep } from '../../onboarding/types/constants';
+import { LocalStorageKey, setLocalStorage } from '../../../common/utils/localStorage';
+import { Footnote } from '../../../common/components/footnote/Footnote';
+import { isIdentificationLoading } from '../../locators/utils/helpers';
+import { PageObjGenerationButton } from './PageObjGenerationButton';
+import { OnboardingContext } from '../../onboarding/OnboardingProvider';
+import { IN_DEVELOPMENT_TITLE } from '../../../common/constants/constants';
 
 interface Props {
   pageObj: PageObjectId;

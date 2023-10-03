@@ -1,18 +1,18 @@
-import { addLocatorsToPageObj, addLocatorToPageObj } from "../../features/pageObjects/pageObject.slice";
-import { selectPageObjById, selectPageObjects } from "../../features/pageObjects/selectors/pageObjects.selectors";
-import { store } from "../../app/store/store";
-import { addPageObj } from "../../features/pageObjects/reducers/addPageObject.thunk";
-import { clearAll } from "../../app/main.slice";
-import * as pageObject from "../../features/pageObjects/utils/pageObject";
+import { addLocatorsToPageObj, addLocatorToPageObj } from '../../features/pageObjects/pageObject.slice';
+import { selectPageObjById, selectPageObjects } from '../../features/pageObjects/selectors/pageObjects.selectors';
+import { store } from '../../app/store/store';
+import { addPageObj } from '../../features/pageObjects/reducers/addPageObject.thunk';
+import { clearAll } from '../../app/main.slice';
+import * as pageObject from '../../features/pageObjects/utils/pageObject';
 
-describe("pageObject reducers", () => {
+describe('pageObject reducers', () => {
   beforeAll(async () => {
     store.dispatch(clearAll());
 
     jest
-      .spyOn(pageObject, "getPageAttributes")
+      .spyOn(pageObject, 'getPageAttributes')
       .mockImplementation(() => [
-        { result: { title: "HomePage", url: "https://jdi-testing.github.io/jdi-light/contacts.html" } },
+        { result: { title: 'HomePage', url: 'https://jdi-testing.github.io/jdi-light/contacts.html' } },
       ]);
 
     store.dispatch(addPageObj());
@@ -20,18 +20,18 @@ describe("pageObject reducers", () => {
     store.dispatch(addPageObj());
   });
 
-  test("add locator to page object", () => {
+  test('add locator to page object', () => {
     const pageObjId = 1;
-    const locatorId = "8736312404689610766421832473";
+    const locatorId = '8736312404689610766421832473';
     store.dispatch(addLocatorToPageObj({ pageObjId, locatorId }));
 
     const pageObj = selectPageObjById(store.getState(), pageObjId);
     expect(pageObj.locators).toContain(locatorId);
   });
 
-  test("add many locators to page object", () => {
+  test('add many locators to page object', () => {
     const pageObjId = 2;
-    const locatorIds = ["8736312404689610766421832473", "2222222222", "333333333333333"];
+    const locatorIds = ['8736312404689610766421832473', '2222222222', '333333333333333'];
     store.dispatch(addLocatorsToPageObj(locatorIds));
 
     const pageObj = selectPageObjById(store.getState(), pageObjId);
@@ -41,7 +41,7 @@ describe("pageObject reducers", () => {
     expect(pageObj.locators).toContain(locatorIds[2]);
   });
 
-  test("select list of pageObjects", () => {
+  test('select list of pageObjects', () => {
     const pageObjList = selectPageObjects(store.getState());
     expect(pageObjList).toHaveLength(3);
   });

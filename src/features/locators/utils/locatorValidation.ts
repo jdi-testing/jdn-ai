@@ -1,5 +1,5 @@
-import { LocatorType } from "../../../common/types/common";
-import { CustomError } from "../../../common/utils/customError";
+import { LocatorType } from '../../../common/types/common';
+import { CustomError } from '../../../common/utils/customError';
 import {
   ILocator,
   LocatorValidationErrors,
@@ -7,8 +7,8 @@ import {
   LocatorValidationWarnings,
   JDNHash,
   ElementId,
-} from "../types/locator.types";
-import { checkDuplicates, evaluateCssSelector, evaluateXpath } from "./utils";
+} from '../types/locator.types';
+import { checkDuplicates, evaluateCssSelector, evaluateXpath } from './utils';
 
 export const validateLocator = async (
   locatorString: string,
@@ -16,13 +16,13 @@ export const validateLocator = async (
   jdnHash: JDNHash,
   locators: ILocator[],
   element_id: ElementId,
-  isCreatingForm?: boolean
+  isCreatingForm?: boolean,
 ): Promise<LocatorValidationErrorType | string> => {
   let length;
   let foundHash;
   let _element_id: ElementId;
   let _jdnHash;
-  let validationMessage = "";
+  let validationMessage = '';
 
   const locatorValue =
     locatorType === LocatorType.cssSelector
@@ -47,7 +47,7 @@ export const validateLocator = async (
       } else {
         validationMessage =
           isCreatingForm || !_jdnHash
-            ? "" //validationStatus: SUCCESS
+            ? '' //validationStatus: SUCCESS
             : LocatorValidationWarnings.NewElement; //validationStatus: WARNING
       }
     }

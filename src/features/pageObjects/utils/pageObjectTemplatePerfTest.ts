@@ -1,9 +1,9 @@
-import { ILocator } from "../../locators/types/locator.types";
-import { PageObject } from "../types/pageObjectSlice.types";
+import { ILocator } from '../../locators/types/locator.types';
+import { PageObject } from '../types/pageObjectSlice.types';
 
 export const pageObjectTemplatePerfTest = (
   locators: ILocator[],
-  pageObject: PageObject
+  pageObject: PageObject,
 ): { pageCode: string; name: string } => {
   const locatorsCode = locators.map((loc) => `    this.${loc.name} = new ${loc.type}("${loc.locator.output}", page)`);
 
@@ -19,7 +19,7 @@ class ${pageObject.name} extends Page {\n
   }\n
   init(page){
     super.init(page)
-${locatorsCode.join("\n")}
+${locatorsCode.join('\n')}
   }\n
 }\n
 module.exports = ${pageObject.name};

@@ -1,18 +1,18 @@
 export enum FrameworkType {
-  JdiLight = "JDI Light",
-  Selenium = "Selenium",
-  Selenide = "Selenide",
-  Vividus = "Vividus",
+  JdiLight = 'JDI Light',
+  Selenium = 'Selenium',
+  Selenide = 'Selenide',
+  Vividus = 'Vividus',
 }
 
 export enum AnnotationType {
-  UI = "@UI",
-  FindBy = "@FindBy",
+  UI = '@UI',
+  FindBy = '@FindBy',
 }
 
 export enum LocatorType {
-  cssSelector = "CSS selector",
-  xPath = "xPath",
+  cssSelector = 'CSS selector',
+  xPath = 'xPath',
 }
 
 export type SelectOption = {
@@ -21,6 +21,6 @@ export type SelectOption = {
 };
 
 export enum CopyTitle {
-  Copy = "Copy",
-  Copied = "Copied",
+  Copy = 'Copy',
+  Copied = 'Copied',
 }

@@ -37,8 +37,8 @@ export const locatorMocks = [
   },
 
   {
-    input: "\"//*[contains(text(), 'Jetzt: GenialCard + 25€-Gutschein!')]\"",
-    output: "\"//*[contains(text(), \\'Jetzt: GenialCard + 25€-Gutschein!\\')]\"",
+    input: '"//*[contains(text(), \'Jetzt: GenialCard + 25€-Gutschein!\')]"',
+    output: '"//*[contains(text(), \\\'Jetzt: GenialCard + 25€-Gutschein!\\\')]"',
   },
   {
     input: '"#\\35 8776894140b02029425a3e2 [style="display\\:\\ inline\\;"]"',
@@ -49,8 +49,8 @@ export const locatorMocks = [
     output: '"[jsname=\\\\"NNJLud\\\\"]:nth-child(3) [role=\\\\"menuitem\\\\"]"',
   },
   {
-    input: "\"//*[@data-ved='0ahUKEwjs1sqi4JqAAxUUSkEAHfQZDjgQ4dUDCAk']\"",
-    output: "\"//*[@data-ved=\\'0ahUKEwjs1sqi4JqAAxUUSkEAHfQZDjgQ4dUDCAk\\']\"",
+    input: '"//*[@data-ved=\'0ahUKEwjs1sqi4JqAAxUUSkEAHfQZDjgQ4dUDCAk\']"',
+    output: '"//*[@data-ved=\\\'0ahUKEwjs1sqi4JqAAxUUSkEAHfQZDjgQ4dUDCAk\\\']"',
   },
   {
     input: '".tm-navigation-filters__option:nth-child(6) > [tabindex="-\\31 "]"',

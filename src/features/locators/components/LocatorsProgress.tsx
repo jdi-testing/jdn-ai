@@ -1,19 +1,19 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { Button, Progress } from "antd";
-import { size } from "lodash";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../../app/store/store";
-import { Footnote } from "../../../common/components/footnote/Footnote";
-import { rerunGeneration } from "../reducers/rerunGeneration.thunk";
-import { LocatorsGenerationStatus } from "../types/locator.types";
-import { LocatorGenerationMessage } from "../types/locatorStatus.types";
+import React, { useEffect, useMemo, useState } from 'react';
+import { Button, Progress } from 'antd';
+import { size } from 'lodash';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../../app/store/store';
+import { Footnote } from '../../../common/components/footnote/Footnote';
+import { rerunGeneration } from '../reducers/rerunGeneration.thunk';
+import { LocatorsGenerationStatus } from '../types/locator.types';
+import { LocatorGenerationMessage } from '../types/locatorStatus.types';
 import {
   selectFilteredLocators,
   selectCalculatedByPageObj,
   selectInProgressByPageObj,
   selectDeletedByPageObj,
   selectFailedByPageObject,
-} from "../selectors/locatorsFiltered.selectors";
+} from '../selectors/locatorsFiltered.selectors';
 
 let timer: NodeJS.Timeout;
 
@@ -80,12 +80,12 @@ export const LocatorsProgress = () => {
             )}
           </div>
           <Progress
-            status={generationStatus === LocatorsGenerationStatus.failed ? "exception" : undefined}
+            status={generationStatus === LocatorsGenerationStatus.failed ? 'exception' : undefined}
             percent={readinessPercentage}
             className={
               readinessPercentage !== 100 && generationStatus !== LocatorsGenerationStatus.failed
-                ? "jdn__progress_hide-info"
-                : ""
+                ? 'jdn__progress_hide-info'
+                : ''
             }
           />
         </div>

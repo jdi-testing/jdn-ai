@@ -1,12 +1,12 @@
-import { ScriptMsg } from "../scriptMsg.constants";
+import { ScriptMsg } from '../scriptMsg.constants';
 
 export const pageData = () => {
   const getPageData = () => {
     chrome.runtime.sendMessage({ message: ScriptMsg.StartCollectData }).catch((error) => {
-      if (error.message !== "The message port closed before a response was received.") throw new Error(error.message);
+      if (error.message !== 'The message port closed before a response was received.') throw new Error(error.message);
     });
 
-    const hashAttribute = "jdn-hash";
+    const hashAttribute = 'jdn-hash';
     function gen_uuid(e) {
       let hashValue = e.getAttribute(hashAttribute);
       if (!hashValue) {
@@ -35,10 +35,10 @@ export const pageData = () => {
 
     function getTreeDataset() {
       return [...document.querySelectorAll('*:not([id^="jdn-overlay"])')].map((el) => {
-        const _x = pageXOffset + el.getBoundingClientRect()["x"];
-        const _y = pageYOffset + el.getBoundingClientRect()["y"];
-        const _width = el.getBoundingClientRect()["width"];
-        const _height = el.getBoundingClientRect()["height"];
+        const _x = pageXOffset + el.getBoundingClientRect().x;
+        const _y = pageYOffset + el.getBoundingClientRect().y;
+        const _width = el.getBoundingClientRect().width;
+        const _height = el.getBoundingClientRect().height;
         const _displayed = (_x < 0) | (_y < 0) | (_width <= 1) | (_height <= 1);
 
         return {

@@ -1,17 +1,17 @@
-import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
-import { LocatorTaskStatus, LocatorsState } from "../types/locator.types";
-import { locatorsAdapter, selectLocatorById } from "../selectors/locators.selectors";
-import { RootState } from "../../../app/store/store";
-import { ChangeLocatorAttributesPayload } from "../locators.slice";
-import { evaluateXpath, evaluateCssSelector, generateSelectorByHash } from "../utils/utils";
-import { generateId, getElementFullXpath } from "../../../common/utils/helpers";
-import { sendMessage } from "../../../pageServices/connector";
-import { LocatorType } from "../../../common/types/common";
+import { ActionReducerMapBuilder, createAsyncThunk } from '@reduxjs/toolkit';
+import { LocatorTaskStatus, LocatorsState } from '../types/locator.types';
+import { locatorsAdapter, selectLocatorById } from '../selectors/locators.selectors';
+import { RootState } from '../../../app/store/store';
+import { ChangeLocatorAttributesPayload } from '../locators.slice';
+import { evaluateXpath, evaluateCssSelector, generateSelectorByHash } from '../utils/utils';
+import { generateId, getElementFullXpath } from '../../../common/utils/helpers';
+import { sendMessage } from '../../../pageServices/connector';
+import { LocatorType } from '../../../common/types/common';
 
 type ChangeLocatorElementPayload = ChangeLocatorAttributesPayload;
 
 export const changeLocatorElement = createAsyncThunk(
-  "locators/changeLocatorElement",
+  'locators/changeLocatorElement',
   async (payload: ChangeLocatorElementPayload, thunkAPI) => {
     const { locator, element_id, locatorType, ...rest } = payload;
     const isCSSLocator = locatorType === LocatorType.cssSelector;
@@ -37,8 +37,8 @@ export const changeLocatorElement = createAsyncThunk(
       await sendMessage
         .assignJdnHash({ jdnHash: foundHash, locator, isCSSLocator })
         .then((res) => {
-          if (res === "success") return res;
-          else throw new Error("Failed to assign jdnHash");
+          if (res === 'success') return res;
+          else throw new Error('Failed to assign jdnHash');
         })
         .catch((err) => {
           console.log(err);
@@ -53,7 +53,7 @@ export const changeLocatorElement = createAsyncThunk(
       ..._locator,
       ...rest,
       locatorType,
-      elemText: foundElementText || "",
+      elemText: foundElementText || '',
       jdnHash: foundHash,
       locator: {
         ...(isCSSLocator ? { cssSelector: locator, xPath: fullXpath } : { xPath: locator, cssSelector }),
@@ -64,7 +64,7 @@ export const changeLocatorElement = createAsyncThunk(
     };
 
     return newValue;
-  }
+  },
 );
 
 export const changeLocatorElementReducer = (builder: ActionReducerMapBuilder<LocatorsState>) => {

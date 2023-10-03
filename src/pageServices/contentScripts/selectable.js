@@ -1,25 +1,25 @@
-import { ScriptMsg } from "../scriptMsg.constants";
+import { ScriptMsg } from '../scriptMsg.constants';
 
 export const selectable = () => {
   let selectables;
 
   const sendMessage = (message) =>
     chrome.runtime.sendMessage(message).catch((error) => {
-      if (error.message !== "The message port closed before a response was received.") throw new Error(error.message);
+      if (error.message !== 'The message port closed before a response was received.') throw new Error(error.message);
     });
 
   const runSelectable = () => {
-    const keyForMultiSelect = window.navigator?.userAgent.indexOf("Mac") != -1 ? "metaKey" : "ctrlKey";
+    const keyForMultiSelect = window.navigator?.userAgent.indexOf('Mac') != -1 ? 'metaKey' : 'ctrlKey';
     if (selectables) {
       selectables.disable();
       selectables.enable();
       return;
     }
     selectables = new Selectables({
-      elements: ".jdn-highlight",
+      elements: '.jdn-highlight',
       moreUsing: keyForMultiSelect,
-      zone: "body",
-      selectedClass: "jdn-active",
+      zone: 'body',
+      selectedClass: 'jdn-active',
       onSelect: (payload) => {
         sendMessage({ message: ScriptMsg.ElementGroupSetActive, param: payload });
       },
@@ -30,11 +30,11 @@ export const selectable = () => {
 
     Selectables.prototype.unselect = function (payload) {
       const opt = this.options;
-      let query = "";
+      let query = '';
 
       if (Array.isArray(payload)) {
         payload.forEach(({ jdnHash }) => {
-          query += `${!!query.length ? ", " : ""}[id='${jdnHash}']`;
+          query += `${!!query.length ? ', ' : ''}[id='${jdnHash}']`;
         });
       } else query = `[id='${payload.jdnHash}']`;
 
@@ -49,11 +49,11 @@ export const selectable = () => {
 
     Selectables.prototype.setSelect = function (payload) {
       const opt = this.options;
-      let query = "";
+      let query = '';
 
       if (Array.isArray(payload)) {
         payload.forEach(({ jdnHash }) => {
-          query += `${!!query.length ? ", " : ""}[id='${jdnHash}']`;
+          query += `${!!query.length ? ', ' : ''}[id='${jdnHash}']`;
         });
       } else query = `[id='${payload.jdnHash}']`;
 
@@ -92,8 +92,8 @@ export const selectable = () => {
   chrome.runtime.onMessage.addListener(messageHandler);
 
   chrome.storage.onChanged.addListener((event) => {
-    if (event.hasOwnProperty("JDN_HIGHLIGHT_IS_SET")) runSelectable();
-    if (event.hasOwnProperty("IS_DISCONNECTED")) selectables && (selectables = selectables.disable());
+    if (event.hasOwnProperty('JDN_HIGHLIGHT_IS_SET')) runSelectable();
+    if (event.hasOwnProperty('IS_DISCONNECTED')) selectables && (selectables = selectables.disable());
   });
 
   /*

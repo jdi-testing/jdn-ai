@@ -1,15 +1,15 @@
-import { ActionReducerMapBuilder, createAsyncThunk } from "@reduxjs/toolkit";
-import { AxiosResponse } from "axios";
-import { toInteger } from "lodash";
-import { BackendStatus, BaseUrl, MainState } from "../types/mainSlice.types";
-import { LocalUrl, RemoteUrl } from "../utils/constants";
-import { HttpEndpoint, request } from "../../services/backend";
-import { compatibleBuildVer, compatibleMajorVer, compatibleMinorVer } from "../utils/compatibleVersions";
+import { ActionReducerMapBuilder, createAsyncThunk } from '@reduxjs/toolkit';
+import { AxiosResponse } from 'axios';
+import { toInteger } from 'lodash';
+import { BackendStatus, BaseUrl, MainState } from '../types/mainSlice.types';
+import { LocalUrl, RemoteUrl } from '../utils/constants';
+import { HttpEndpoint, request } from '../../services/backend';
+import { compatibleBuildVer, compatibleMajorVer, compatibleMinorVer } from '../utils/compatibleVersions';
 
-export const defineServer = createAsyncThunk("main/defineServer", async () => {
+export const defineServer = createAsyncThunk('main/defineServer', async () => {
   const checkVersion = (request: Promise<AxiosResponse<BaseUrl>>, isRemote: boolean) =>
     request.then((response) => {
-      const [major, minor, build] = response.data.split(".").map(toInteger);
+      const [major, minor, build] = response.data.split('.').map(toInteger);
       if (compatibleMajorVer === major && compatibleMinorVer === minor && compatibleBuildVer <= build) {
         return JSON.parse(JSON.stringify(response));
       } else if (isRemote) {
@@ -36,7 +36,7 @@ export const defineServer = createAsyncThunk("main/defineServer", async () => {
       } else if (errorMessages.includes(BackendStatus.IncompatibleVersionRemote)) {
         throw new Error(BackendStatus.IncompatibleVersionRemote);
       } else throw new Error(BackendStatus.AccessFailed);
-    }
+    },
   );
 });
 
