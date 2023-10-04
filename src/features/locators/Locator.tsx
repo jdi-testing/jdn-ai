@@ -13,6 +13,8 @@ import {
   setActiveSingle,
   toggleLocatorIsChecked,
   setChildrenIsChecked,
+  toggleElementGeneration,
+  setChildrenGeneration,
 } from './locators.slice';
 
 import { size } from 'lodash';
@@ -53,8 +55,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const { isCustomLocatorFlow } = useContext(OnboardingContext);
 
-  const { element_id, type, name, locator, message, deleted, active, isCustomLocator, isChecked, isGenerated } =
-    element;
+  const { element_id, type, name, locator, message, deleted, active, isCustomLocator, isChecked } = element;
 
   const currentPageObject = useSelector(selectCurrentPageObject);
 
@@ -98,10 +99,10 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
   }, [searchString]);
 
   useEffect(() => {
-    const message = scriptMessage?.message;
+    const _message = scriptMessage?.message;
     const param = scriptMessage?.param;
 
-    switch (message) {
+    switch (_message) {
       case ScriptMsg.OpenEditLocator:
         if (param?.value.element_id !== element_id) return;
         setIsEditModalOpen(true);
@@ -112,10 +113,13 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
 
   const handleOnChange: React.MouseEventHandler<HTMLDivElement> = () => {
     dispatch(toggleLocatorIsChecked(element_id));
+    dispatch(toggleElementGeneration(element_id)); // TODO isGenerated refactoring
     if (allChildrenChecked && size(element.children)) {
       dispatch(setChildrenIsChecked({ locator: element, isChecked: false }));
+      dispatch(setChildrenGeneration({ locator: element, isGenerated: false })); // TODO isGenerated refactoring
     } else {
       dispatch(setChildrenIsChecked({ locator: element, isChecked: true }));
+      dispatch(setChildrenGeneration({ locator: element, isGenerated: true })); // TODO isGenerated refactoring
     }
   };
 

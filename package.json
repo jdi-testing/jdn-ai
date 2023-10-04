@@ -1,9 +1,9 @@
 {
   "name": "jdn-ai-chrome-extension",
-  "version": "3.14.18",
+  "version": "3.14.19",
   "description": "jdn-ai chrome extension",
   "scripts": {
-    "start": "webpack --watch --env devenv",
+  "start": "webpack --watch --env devenv",
     "start:prodenv": "webpack --watch",
     "start:reduxlog": "webpack --watch --env reduxlogenable devenv",
     "build": "webpack --mode production",

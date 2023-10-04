@@ -11,6 +11,7 @@ import {
   toggleDeletedGroup,
   toggleElementGeneration,
   toggleElementGroupGeneration,
+  toggleElementGroupIsChecked,
   updateLocatorGroup,
 } from '../features/locators/locators.slice';
 import connector from './connector';
@@ -94,6 +95,9 @@ export const updateMessageHandler = (
     },
     [ScriptMsg.ToggleElementGroup]: (payload) => {
       dispatch(toggleElementGroupGeneration(payload));
+    },
+    [ScriptMsg.ToggleElementGroupIsChecked]: (payload) => {
+      dispatch(toggleElementGroupIsChecked(payload));
     },
   };
 

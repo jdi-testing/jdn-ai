@@ -35,6 +35,7 @@ import {
   selectInProgressHashes,
   selectCalculatedAndCheckedByPageObj,
   selectDeletedCheckedByPageObj,
+  selectGenerateByPageObject,
 } from './selectors/locatorsFiltered.selectors';
 import { useNotifications } from '../../common/components/notification/useNotifications';
 import { selectCurrentPageObject } from '../pageObjects/selectors/pageObjects.selectors';
@@ -97,6 +98,23 @@ export const LocatorsPage = () => {
     } else pageBack();
   };
 
+  const handleOk = () => {
+    pageBack();
+  };
+
+  const handleDiscard = () => {
+    locatorGenerationController.revokeTasks(inProgressHashes);
+    if (!size(locatorsSnapshot)) {
+      dispatch(removeLocators(locatorIds));
+      dispatch(clearLocators(undefined));
+      dispatch(removeAllFilters());
+    } else {
+      dispatch(restoreLocators(locatorsSnapshot));
+      dispatch(setFilter({ pageObjectId: currentPOId!, JDIclassFilter: filterSnapshot }));
+    }
+    pageBack();
+  };
+
   const renderBackButton = () => {
     const handleBack = () => {
       if (!locators.length && !locatorsSnapshot.length) handleDiscard();
@@ -116,23 +134,6 @@ export const LocatorsPage = () => {
       }
     };
 
-    const handleOk = () => {
-      pageBack();
-    };
-
-    const handleDiscard = () => {
-      locatorGenerationController.revokeTasks(inProgressHashes);
-      if (!size(locatorsSnapshot)) {
-        dispatch(removeLocators(locatorIds));
-        dispatch(clearLocators(undefined));
-        dispatch(removeAllFilters());
-      } else {
-        dispatch(restoreLocators(locatorsSnapshot));
-        dispatch(setFilter({ pageObjectId: currentPOId!, JDIclassFilter: filterSnapshot }));
-      }
-      pageBack();
-    };
-
     return (
       <Button onClick={handleBack} className="jdn__buttons">
         Back
@@ -143,12 +144,13 @@ export const LocatorsPage = () => {
   const renderConfirmButton = () => {
     const saveLocatorsRef = useOnBoardingRef(OnbrdStep.SaveLocators, pageBack);
     const checkedLocators = useSelector(selectCheckedLocatorsByPageObject);
+    const generatedLocators = useSelector(selectGenerateByPageObject);
     const isDisabled = !inProgressGenerate.length && !calculatedAndChecked.length;
 
     const saveButtonLabel =
-      checkedLocators.length === 1
+      (checkedLocators.length || generatedLocators.length) === 1
         ? 'Save 1 locator'
-        : checkedLocators.length
+        : checkedLocators.length || generatedLocators.length
         ? `Save ${checkedLocators.length} locators`
         : 'Save';
 

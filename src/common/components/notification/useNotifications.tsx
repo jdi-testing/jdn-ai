@@ -1,7 +1,7 @@
-import { Button, notification } from 'antd';
-import { last } from 'lodash';
 import React, { useLayoutEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Button, notification } from 'antd';
+import { last } from 'lodash';
 import { AppDispatch, RootState } from '../../../app/store/store';
 
 import { Action } from './types/notification.types';
@@ -13,31 +13,6 @@ export const useNotifications = (container?: HTMLElement | null) => {
   const [bottom, setBottom] = React.useState(0);
   const dispatch = useDispatch<AppDispatch>();
   const lastNotification = useSelector((state: RootState) => last(state.main.notifications));
-
-  useLayoutEffect(() => {
-    const containerBottom = container?.getBoundingClientRect().bottom;
-    const docBottom = document.documentElement.getBoundingClientRect().bottom;
-    setBottom(containerBottom ? docBottom - containerBottom : 0);
-  }, [container]);
-
-  const renderCancelButton = (action: Action) =>
-    action ? (
-      <Button size="small" type="text" onClick={cancelNotification(action)}>
-        Cancel
-      </Button>
-    ) : null;
-
-  const cancelNotification = (action: Action) => () => {
-    if (Array.isArray(action)) {
-      action.forEach((_action) => {
-        //@ts-ignore
-        dispatch(_action);
-      });
-      //@ts-ignore
-    } else dispatch(action);
-    openNotification(messages().ACTION_CANCELLED, 'info');
-  };
-
   const openNotification = (
     message: string,
     type: keyof NotificationInstance,
@@ -45,6 +20,24 @@ export const useNotifications = (container?: HTMLElement | null) => {
     description?: string,
   ) => {
     notification.destroy();
+
+    const cancelNotification = (action: Action) => () => {
+      if (Array.isArray(action)) {
+        action.forEach((_action) => {
+          //@ts-ignore
+          dispatch(_action);
+        });
+        //@ts-ignore
+      } else dispatch(action);
+      openNotification(messages().ACTION_CANCELLED, 'info');
+    };
+
+    const renderCancelButton = (action: Action) =>
+      action ? (
+        <Button size="small" type="text" onClick={cancelNotification(action)}>
+          Cancel
+        </Button>
+      ) : null;
 
     const _message = description ? (
       message
@@ -63,6 +56,12 @@ export const useNotifications = (container?: HTMLElement | null) => {
       bottom,
     });
   };
+
+  useLayoutEffect(() => {
+    const containerBottom = container?.getBoundingClientRect().bottom;
+    const docBottom = document.documentElement.getBoundingClientRect().bottom;
+    setBottom(containerBottom ? docBottom - containerBottom : 0);
+  }, [container]);
 
   useNotificationController(lastNotification, openNotification);
 };

@@ -101,13 +101,13 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
     [currentPage, searchString, filteredLocators],
   );
 
-  const renderTreeNodes = (data: Array<LocatorTree>): Array<TreeNode> => {
-    const treeNodes: Array<TreeNode> = [];
+  const renderTreeNodes = (data: LocatorTree[]): TreeNode[] => {
+    const treeNodes: TreeNode[] = [];
     const map: Record<string, number> = {};
 
     // create tree
-    const createTree = (_data: Array<LocatorTree>): Array<TreeNode> => {
-      const childNodes: Array<TreeNode> = [];
+    const createTree = (_data: LocatorTree[]): TreeNode[] => {
+      const childNodes: TreeNode[] = [];
       _data.forEach((element, i) => {
         const { element_id, children, parent_id, jdnHash, searchState, depth } = element;
 

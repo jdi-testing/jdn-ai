@@ -318,6 +318,30 @@ export const runContextMenu = () => {
 
   /* menu */
 
+  const onAddedToPOHandler = () => {
+    sendMessage({
+      message: isGroup() ? ScriptMsg.ToggleElementGroup : ScriptMsg.ToggleElement,
+      param: predictedElements.filter((element) => !element.isGenerated),
+    });
+
+    sendMessage({
+      message: ScriptMsg.ToggleElementGroupIsChecked,
+      param: predictedElements.filter((element) => !element.isChecked),
+    });
+  };
+
+  const onRemoveFromPO = () => {
+    sendMessage({
+      message: isGroup() ? ScriptMsg.ToggleElementGroup : ScriptMsg.ToggleElement,
+      param: predictedElements.filter((element) => element.isGenerated),
+    });
+
+    sendMessage({
+      message: ScriptMsg.ToggleElementGroupIsChecked,
+      param: predictedElements.filter((element) => element.isChecked),
+    });
+  };
+
   const menuItems = () => {
     const menuItems = [
       ...(notAddedToPO()
@@ -326,11 +350,7 @@ export const runContextMenu = () => {
               text: 'Add to Page Object',
               icon: plusCircle,
               events: {
-                click: () =>
-                  sendMessage({
-                    message: isGroup() ? ScriptMsg.ToggleElementGroup : ScriptMsg.ToggleElement,
-                    param: predictedElements.filter((element) => !element.isGenerated),
-                  }),
+                click: onAddedToPOHandler,
               },
             },
           ]
@@ -341,11 +361,7 @@ export const runContextMenu = () => {
               text: 'Remove from Page Object',
               icon: minusCircle,
               events: {
-                click: () =>
-                  sendMessage({
-                    message: isGroup() ? ScriptMsg.ToggleElementGroup : ScriptMsg.ToggleElement,
-                    param: predictedElements.filter((element) => element.isGenerated),
-                  }),
+                click: onRemoveFromPO,
               },
             },
           ]

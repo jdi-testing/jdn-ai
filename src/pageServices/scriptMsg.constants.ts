@@ -44,6 +44,7 @@ export enum ScriptMsg {
   StartCollectData = 'StartCollectData',
   StopGroupGeneration = 'StopGroupGeneration',
   ToggleElementGroup = 'ToggleElementGroup',
+  ToggleElementGroupIsChecked = 'ToggleElementGroupIsChecked',
 }
 
 export const dispatchingMessages = [ScriptMsg.OpenEditLocator];

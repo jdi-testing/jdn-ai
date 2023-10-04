@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Chip } from '../../../common/components/Chip';
 import { CaretDown, DotsThree } from '@phosphor-icons/react';
 import { PlusOutlined } from '@ant-design/icons';
-import { elementGroupUnsetActive, toggleAllLocatorsIsChecked } from '../locators.slice';
+import { elementGroupUnsetActive, setElementGroupGeneration, toggleAllLocatorsIsChecked } from '../locators.slice';
 import { newLocatorStub } from '../utils/constants';
 import { LocatorsSearch } from './LocatorsSearch';
 import { LocatorEditDialog } from './LocatorEditDialog';
@@ -20,6 +20,7 @@ import {
   selectFilteredLocators,
   selectCheckedLocatorsByPageObject,
   selectActualActiveByPageObject,
+  selectGenerateByPageObject,
 } from '../selectors/locatorsFiltered.selectors';
 
 interface LocatorListHeaderProps {
@@ -42,6 +43,7 @@ export const LocatorListHeader = ({
   const [isAllLocatorsSelected, setIsAllLocatorsSelected] = useState<boolean>(false);
 
   const locators = useSelector(selectFilteredLocators);
+  const generatedLocators = useSelector(selectGenerateByPageObject);
   const checkedLocators = useSelector(selectCheckedLocatorsByPageObject);
   const active = useSelector(selectActiveLocators);
   const actualSelected = useSelector(selectActualActiveByPageObject);
@@ -49,16 +51,25 @@ export const LocatorListHeader = ({
   const { isOpen: isOnboardingOpen, isCustomLocatorFlow } = useContext(OnboardingContext);
 
   useEffect(() => {
-    if (checkedLocators.length > emptyLength && checkedLocators.length === locators.length) {
+    if (
+      checkedLocators.length > emptyLength &&
+      checkedLocators.length === locators.length &&
+      generatedLocators.length === locators.length
+    ) {
       setIsAllLocatorsSelected(true);
     }
   }, [checkedLocators.length]);
 
-  const partiallySelected = checkedLocators.length > emptyLength && checkedLocators.length < locators.length;
+  const partiallySelected =
+    checkedLocators.length > emptyLength &&
+    checkedLocators.length < locators.length &&
+    generatedLocators.length < locators.length; // TODO isGenerated refactoring
 
   const handleOnChange = () => {
     dispatch(toggleAllLocatorsIsChecked({ locators, isChecked: !isAllLocatorsSelected }));
     setIsAllLocatorsSelected((prev) => !prev);
+    // eslint-disable-next-line max-len
+    dispatch(setElementGroupGeneration({ locators, isGenerated: !isAllLocatorsSelected })); // TODO isGenerated refactoring
   };
 
   const ref = useOnBoardingRef(

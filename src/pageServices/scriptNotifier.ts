@@ -110,6 +110,12 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
         locator && sendMessage.toggle({ element: locator, skipScroll: true });
       });
       break;
+    case 'locators/toggleElementGroupIsChecked':
+      payload.forEach((element: ILocator) => {
+        const locator = selectLocatorById(state, element.element_id);
+        locator && sendMessage.toggle({ element: locator, skipScroll: true });
+      });
+      break;
     case 'locators/setChildrenGeneration': // TODO isGenerated refactoring
     case 'locators/setChildrenIsChecked': {
       const { locator } = payload;

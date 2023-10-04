@@ -31,6 +31,7 @@ import {
   toggleDeleted,
   toggleDeletedGroup,
   toggleElementGroupGeneration,
+  toggleElementGroupIsChecked,
 } from '../locators.slice';
 import { getCopyOptions, getLocatorValidationStatus } from '../utils/utils';
 import { rerunGeneration } from '../reducers/rerunGeneration.thunk';
@@ -90,11 +91,10 @@ export const LocatorMenu: React.FC<Props> = ({ setIsEditModalOpen, children, tri
     setIsEditModalOpen(true);
   };
 
-  const handleDelete = () => {
+  const handleDelete = () =>
     actualSelected.length > 1
       ? dispatch(toggleDeletedGroup(actualSelected))
       : dispatch(toggleDeleted(actualSelected[0].element_id));
-  };
 
   const handleUpPriority = () => {
     const hashes = [...decreasedPrioritySelected, ...noPrioritySelected].map((element) => element.jdnHash);
@@ -126,11 +126,10 @@ export const LocatorMenu: React.FC<Props> = ({ setIsEditModalOpen, children, tri
       : dispatch(stopGeneration(inProgressSelected[0].element_id));
   };
 
-  const handleRestore = () => {
+  const handleRestore = () =>
     deletedActive.length > 1
       ? dispatch(toggleDeletedGroup(deletedActive))
       : dispatch(toggleDeleted(deletedActive[0].element_id));
-  };
 
   const handleMenuClick = ({ domEvent }: { domEvent: SyntheticEvent }) => {
     domEvent.stopPropagation();
@@ -145,11 +144,17 @@ export const LocatorMenu: React.FC<Props> = ({ setIsEditModalOpen, children, tri
     );
 
   const handleAddToPO = () => {
-    setTimeout(() => dispatch(toggleElementGroupGeneration(activeNonGenerate)), 100);
+    setTimeout(() => {
+      dispatch(toggleElementGroupGeneration(activeNonGenerate));
+      dispatch(toggleElementGroupIsChecked(activeNonGenerate));
+    }, 100);
   };
 
   const handleRemoveFromPO = () => {
-    setTimeout(() => dispatch(toggleElementGroupGeneration(activeGenerate)), 100);
+    setTimeout(() => {
+      dispatch(toggleElementGroupGeneration(activeGenerate));
+      dispatch(toggleElementGroupIsChecked(activeNonGenerate));
+    }, 100);
   };
 
   const getMenuItems = () => {

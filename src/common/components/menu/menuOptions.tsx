@@ -1,3 +1,4 @@
+import React from 'react';
 import { Typography } from 'antd';
 import {
   ArrowClockwise,
@@ -15,7 +16,6 @@ import {
   MinusCircle,
   PlusCircle,
 } from '@phosphor-icons/react';
-import React from 'react';
 import { MenuItem } from './Menu';
 import { LocatorOption } from '../../../features/locators/utils/constants';
 
@@ -150,6 +150,12 @@ export const removeFromPO = (onClick: () => void) => ({
   label: <Typography.Text>Remove from Page Object</Typography.Text>,
 });
 
+export const dividerItem = (key: string) => ({
+  key,
+  type: 'divider',
+  label: null,
+});
+
 export const copyLocatorOption = (onClick: Record<LocatorOption, () => void>) => ({
   key: '6',
   icon: <CopySimple size={12} />,
@@ -194,10 +200,4 @@ export const copyLocatorOption = (onClick: Record<LocatorOption, () => void>) =>
       label: LocatorOption.FullCode,
     },
   ],
-});
-
-export const dividerItem = (key: string) => ({
-  key,
-  type: 'divider',
-  label: null,
 });
