@@ -157,15 +157,11 @@ export const LocatorsPage = () => {
         overlayClassName="jdn__button-tooltip"
         title={isDisabled ? 'Please select locators for your current page object.' : ''}
       >
-        <Button
-          ref={saveLocatorsRef}
-          type="primary"
-          onClick={handleConfirm}
-          className="jdn__buttons"
-          disabled={isDisabled}
-        >
-          {saveButtonLabel}
-        </Button>
+        <div ref={saveLocatorsRef}>
+          <Button type="primary" onClick={handleConfirm} className="jdn__buttons" disabled={isDisabled}>
+            {saveButtonLabel}
+          </Button>
+        </div>
       </Tooltip>
     );
   };
