@@ -59,21 +59,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
 
   const currentPageObject = useSelector(selectCurrentPageObject);
 
-  if (!currentPageObject) return null;
-
-  const {
-    name: pageObjectName,
-    framework,
-    annotationType: pageObjectAnnotationType,
-    locatorType: pageObjectLocatorType,
-  } = currentPageObject;
-
-  const annotationType = element?.annotationType || pageObjectAnnotationType || AnnotationType.UI;
-  const locatorType = element?.locatorType || pageObjectLocatorType || LocatorType.xPath;
-
   const ref = useRef<HTMLDivElement>(null);
-
-  const isVividusFramework = framework === FrameworkType.Vividus;
 
   const isFirstLocator = useSelector(selectFirstLocatorIdByPO) === element_id;
   const menuRef = useOnBoardingRef(
@@ -82,6 +68,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
     undefined,
     !(isFirstLocator && !isCustomLocatorFlow),
   );
+
   const addToPORef = useOnBoardingRef(OnbrdStep.AddToPO, undefined, undefined, !isFirstLocator);
 
   const indeterminate = useSelector((state: RootState) => isLocatorIndeterminate(state, element_id));
@@ -90,9 +77,6 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
   const calculatedActive: ILocator[] = useSelector(selectCalculatedActiveByPageObj);
   const waitingActive = useSelector(selectWaitingActiveByPageObj);
   const actualSelected = useMemo(() => [...calculatedActive, ...waitingActive], [calculatedActive, waitingActive]);
-
-  let timer: NodeJS.Timeout;
-  useEffect(() => clearTimeout(timer), []);
 
   useEffect(() => {
     ref && depth && setIndents(ref, depth);
@@ -110,6 +94,20 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
         break;
     }
   }, [scriptMessage]);
+
+  if (!currentPageObject) return null;
+
+  const {
+    name: pageObjectName,
+    framework,
+    annotationType: pageObjectAnnotationType,
+    locatorType: pageObjectLocatorType,
+  } = currentPageObject;
+
+  const annotationType = element?.annotationType || pageObjectAnnotationType || AnnotationType.UI;
+  const locatorType = element?.locatorType || pageObjectLocatorType || LocatorType.xPath;
+
+  const isVividusFramework = framework === FrameworkType.Vividus;
 
   const handleOnChange: React.MouseEventHandler<HTMLDivElement> = () => {
     dispatch(toggleLocatorIsChecked(element_id));
