@@ -24,7 +24,7 @@ export const getPageObjectTemplateForVividus = (
   pageObject: PageObject,
 ): { pageCode: string; title: string } => {
   const { name, pathname, locatorType } = pageObject;
-  let pageCode = `variables.${name}.url=(${pathname})\n`;
+  let pageCode = `variables.${name}.url=${pathname}\n`;
 
   locators.forEach((it) => {
     const currentLocatorType = it.locatorType || locatorType || LocatorType.xPath;

@@ -453,7 +453,7 @@ public class HomePage extends WebPage {
 }
 `;
 
-export const pageObjectVividus = `variables.HomePage.url=(/jdi-light/index.html)
+export const pageObjectVividus = `variables.HomePage.url=/jdi-light/index.html
 variables.HomePage.Label.simpleTable=By.cssSelector([index="\\33 "] [index="\\34 "] > a)
 variables.HomePage.Label.userTable=By.xPath(//*[contains(text(), 'User Table ')])
 variables.HomePage.TextArea.password=By.cssSelector(#password)
