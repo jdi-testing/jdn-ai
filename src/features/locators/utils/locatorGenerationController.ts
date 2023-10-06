@@ -1,7 +1,7 @@
 import { WebSocketMessage } from '../../../services/backend';
 import { JDNHash, ILocator, LocatorTaskStatus } from '../types/locator.types';
 import { webSocketController } from '../../../services/webSocketController';
-import { getDocument } from '../../../common/utils/getDocument';
+import { getFullDocument } from '../../../common/utils/getFullDocument';
 import { MainState, MaxGenerationTime } from '../../../app/types/mainSlice.types';
 import { PageObject } from '../../pageObjects/types/pageObjectSlice.types';
 
@@ -29,7 +29,7 @@ class LocatorGenerationController {
     maxGenerationTime?: MaxGenerationTime,
   ) {
     if (pageObject) this.pageObject = pageObject;
-    this.document = await getDocument();
+    this.document = await getFullDocument();
 
     const hashes = elements.map((element) => element.jdnHash);
 

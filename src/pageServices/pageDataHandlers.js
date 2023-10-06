@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 import connector, { sendMessage } from './connector';
 import { request } from '../services/backend';
 import { createOverlay } from './contentScripts/createOverlay';
+import { getFullDocument } from '../common/utils/getFullDocument';
 /* global chrome*/
 
 let overlayID;
@@ -34,11 +36,10 @@ And then tha data is sent to endpoint, according to selected library.
 Function returns predicted elements. */
 export const predictElements = (endpoint) => {
   let pageData;
-  return sendMessage
-    .getPageData()
-    .then((data) => {
+  return Promise.all([sendMessage.getPageData(), getFullDocument()])
+    .then(([data, document]) => {
       pageData = data[0];
-      return sendToModel(pageData, endpoint);
+      return sendToModel({ elements: pageData, document }, endpoint);
     })
     .then(
       (response) => {
