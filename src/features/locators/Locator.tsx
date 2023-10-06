@@ -55,9 +55,57 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const { isCustomLocatorFlow } = useContext(OnboardingContext);
 
-  const { element_id, type, name, locator, message, deleted, active, isCustomLocator, isChecked } = element;
+  const {
+    element_id,
+    type,
+    name,
+    locator,
+    message: elementMessage,
+    deleted,
+    active,
+    isCustomLocator,
+    isChecked,
+  } = element;
 
   const currentPageObject = useSelector(selectCurrentPageObject);
+
+  const ref = useRef<HTMLDivElement>(null);
+
+  const isFirstLocator = useSelector(selectFirstLocatorIdByPO) === element_id;
+  const menuRef = useOnBoardingRef(
+    OnbrdStep.EditLocator,
+    undefined,
+    undefined,
+    !(isFirstLocator && !isCustomLocatorFlow),
+  );
+
+  const addToPORef = useOnBoardingRef(OnbrdStep.AddToPO, undefined, undefined, !isFirstLocator);
+
+  const indeterminate = useSelector((state: RootState) => isLocatorIndeterminate(state, element_id));
+  const allChildrenChecked = useSelector((state: RootState) => areChildrenChecked(state, element_id));
+  const scriptMessage = useSelector((_state: RootState) => _state.main.scriptMessage);
+  const calculatedActive: ILocator[] = useSelector(selectCalculatedActiveByPageObj);
+  const waitingActive = useSelector(selectWaitingActiveByPageObj);
+  const actualSelected = useMemo(() => [...calculatedActive, ...waitingActive], [calculatedActive, waitingActive]);
+
+  useEffect(() => {
+    if (ref && depth) {
+      setIndents(ref, depth);
+    }
+  }, [searchString]);
+
+  useEffect(() => {
+    const message = scriptMessage?.message;
+    const param = scriptMessage?.param;
+
+    switch (message) {
+      case ScriptMsg.OpenEditLocator:
+        if (param?.value.element_id !== element_id) return;
+        setIsEditModalOpen(true);
+        dispatch(setScriptMessage({}));
+        break;
+    }
+  }, [scriptMessage]);
 
   if (!currentPageObject) return null;
 
@@ -71,45 +119,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
   const annotationType = element?.annotationType || pageObjectAnnotationType || AnnotationType.UI;
   const locatorType = element?.locatorType || pageObjectLocatorType || LocatorType.xPath;
 
-  const ref = useRef<HTMLDivElement>(null);
-
   const isVividusFramework = framework === FrameworkType.Vividus;
-
-  const isFirstLocator = useSelector(selectFirstLocatorIdByPO) === element_id;
-  const menuRef = useOnBoardingRef(
-    OnbrdStep.EditLocator,
-    undefined,
-    undefined,
-    !(isFirstLocator && !isCustomLocatorFlow),
-  );
-  const addToPORef = useOnBoardingRef(OnbrdStep.AddToPO, undefined, undefined, !isFirstLocator);
-
-  const indeterminate = useSelector((state: RootState) => isLocatorIndeterminate(state, element_id));
-  const allChildrenChecked = useSelector((state: RootState) => areChildrenChecked(state, element_id));
-  const scriptMessage = useSelector((_state: RootState) => _state.main.scriptMessage);
-  const calculatedActive: ILocator[] = useSelector(selectCalculatedActiveByPageObj);
-  const waitingActive = useSelector(selectWaitingActiveByPageObj);
-  const actualSelected = useMemo(() => [...calculatedActive, ...waitingActive], [calculatedActive, waitingActive]);
-
-  let timer: NodeJS.Timeout;
-  useEffect(() => clearTimeout(timer), []);
-
-  useEffect(() => {
-    ref && depth && setIndents(ref, depth);
-  }, [searchString]);
-
-  useEffect(() => {
-    const _message = scriptMessage?.message;
-    const param = scriptMessage?.param;
-
-    switch (_message) {
-      case ScriptMsg.OpenEditLocator:
-        if (param?.value.element_id !== element_id) return;
-        setIsEditModalOpen(true);
-        dispatch(setScriptMessage({}));
-        break;
-    }
-  }, [scriptMessage]);
 
   const handleOnChange: React.MouseEventHandler<HTMLDivElement> = () => {
     dispatch(toggleLocatorIsChecked(element_id));
@@ -198,7 +208,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
                   searchState === SearchState.Hidden ? ' jdn__xpath_item--disabled' : ''
                 }`}
               >
-                <LocatorIcon {...{ message, locator, deleted, isCustomLocator }} />
+                <LocatorIcon {...{ message: elementMessage, locator, deleted, isCustomLocator }} />
                 {renderColorizedString()}
               </Text>
               {searchState !== SearchState.Hidden ? (
