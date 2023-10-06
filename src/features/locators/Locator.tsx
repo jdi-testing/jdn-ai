@@ -55,7 +55,17 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const { isCustomLocatorFlow } = useContext(OnboardingContext);
 
-  const { element_id, type, name, locator, message, deleted, active, isCustomLocator, isChecked } = element;
+  const {
+    element_id,
+    type,
+    name,
+    locator,
+    message: elementMessage,
+    deleted,
+    active,
+    isCustomLocator,
+    isChecked,
+  } = element;
 
   const currentPageObject = useSelector(selectCurrentPageObject);
 
@@ -79,14 +89,16 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
   const actualSelected = useMemo(() => [...calculatedActive, ...waitingActive], [calculatedActive, waitingActive]);
 
   useEffect(() => {
-    ref && depth && setIndents(ref, depth);
+    if (ref && depth) {
+      setIndents(ref, depth);
+    }
   }, [searchString]);
 
   useEffect(() => {
-    const _message = scriptMessage?.message;
+    const message = scriptMessage?.message;
     const param = scriptMessage?.param;
 
-    switch (_message) {
+    switch (message) {
       case ScriptMsg.OpenEditLocator:
         if (param?.value.element_id !== element_id) return;
         setIsEditModalOpen(true);
@@ -196,7 +208,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
                   searchState === SearchState.Hidden ? ' jdn__xpath_item--disabled' : ''
                 }`}
               >
-                <LocatorIcon {...{ message, locator, deleted, isCustomLocator }} />
+                <LocatorIcon {...{ message: elementMessage, locator, deleted, isCustomLocator }} />
                 {renderColorizedString()}
               </Text>
               {searchState !== SearchState.Hidden ? (
