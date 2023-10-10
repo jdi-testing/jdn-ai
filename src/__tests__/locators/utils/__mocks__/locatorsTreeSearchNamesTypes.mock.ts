@@ -7,6 +7,7 @@ export const locatorsTreeMockSearchTypesNames = [
     depth: 0,
     searchState: SearchState.Hidden,
     element_id: '7967190244322359771369749968_0',
+    is_shown: true,
     parent_id: '',
     jdnHash: '7967190244322359771369749968',
     locator: {
@@ -31,6 +32,7 @@ export const locatorsTreeMockSearchTypesNames = [
         depth: 2,
         searchState: 'none',
         element_id: '4829071593322359778594168519_0',
+        is_shown: true,
         parent_id: '4899732051322359779677566872',
         jdnHash: '4829071593322359778594168519',
         locator: {
@@ -55,6 +57,7 @@ export const locatorsTreeMockSearchTypesNames = [
             depth: 3,
             searchState: 'none',
             element_id: '9636042053322359773245578788_0',
+            is_shown: true,
             parent_id: '4829071593322359778594168519',
             jdnHash: '9636042053322359773245578788',
             locator: {
@@ -80,6 +83,7 @@ export const locatorsTreeMockSearchTypesNames = [
             depth: 3,
             searchState: 'none',
             element_id: '8381553594322359777170267551_0',
+            is_shown: true,
             parent_id: '4829071593322359778594168519',
             jdnHash: '8381553594322359777170267551',
             locator: {
@@ -107,6 +111,7 @@ export const locatorsTreeMockSearchTypesNames = [
         depth: 2,
         searchState: 'none',
         element_id: '4829071593322359778594168522_0',
+        is_shown: true,
         parent_id: '4899732051322359779677566873',
         jdnHash: '4829071593322359778594168522',
         locator: {
@@ -131,6 +136,7 @@ export const locatorsTreeMockSearchTypesNames = [
             depth: 3,
             searchState: 'none',
             element_id: '9636042053322359773245578777_0',
+            is_shown: true,
             parent_id: '4829071593322359778594168522',
             jdnHash: '9636042053322359773245578777',
             locator: {
@@ -156,6 +162,7 @@ export const locatorsTreeMockSearchTypesNames = [
             depth: 3,
             searchState: 'none',
             element_id: '8381553594322359777170267550_0',
+            is_shown: true,
             parent_id: '4829071593322359778594168522',
             jdnHash: '8381553594322359777170267550',
             locator: {

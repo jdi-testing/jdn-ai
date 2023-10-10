@@ -27,6 +27,7 @@ describe('changeLocatorAttributes reducer', () => {
     store.dispatch(
       changeLocatorAttributes({
         element_id: '8736312404689610766421832473',
+        is_shown: true,
         locator: "//*[@class='sidebar-menu left']",
         name: 'myAwesomeLocator',
         type: 'ProgressBar',
@@ -45,6 +46,7 @@ describe('changeLocatorAttributes reducer', () => {
     store.dispatch(
       changeLocatorAttributes({
         element_id: '8736312404689610766421832473',
+        is_shown: true,
         locator: "//*[@class='sidebar-menu left']",
         name: 'myAwesomeLocator',
         type: 'ProgressBar',
@@ -63,6 +65,7 @@ describe('changeLocatorAttributes reducer', () => {
     store.dispatch(
       changeLocatorAttributes({
         element_id: '8736312404689610766421832473',
+        is_shown: true,
         locator: "//*[@class='sidebar-menu left']",
         name: 'myAwesomeLocator',
         message: '',
@@ -81,6 +84,7 @@ describe('changeLocatorAttributes reducer', () => {
     store.dispatch(
       changeLocatorAttributes({
         element_id: '8736312404689610766421832473',
+        is_shown: true,
         locator: "//*[@class='any-class']",
         locatorType: LocatorType.xPath,
         name: 'myAwesomeLocator',
@@ -104,6 +108,7 @@ describe('changeLocatorAttributes reducer', () => {
     store.dispatch(
       changeLocatorAttributes({
         element_id: '8736312404689610766421832473',
+        is_shown: true,
         locator: "//*[@class='any-class112']",
         name: 'myAwesomeLocator',
         type: 'Dialog',

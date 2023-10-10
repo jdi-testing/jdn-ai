@@ -59,6 +59,7 @@ export const getRootState = (_pageObject: PageObject) => ({
       entities: {
         '7524916072510597399809892823_0': {
           element_id: '7524916072510597399809892823_0',
+          is_shown: true,
           predicted_label: 'dialog',
           jdnHash: '7524916072510597399809892823',
           pageObj: 0,
@@ -82,6 +83,7 @@ export const getRootState = (_pageObject: PageObject) => ({
         },
         '2075611903510597386448924232_0': {
           element_id: '2075611903510597386448924232_0',
+          is_shown: true,
           predicted_label: 'list',
           jdnHash: '2075611903510597386448924232',
           pageObj: 0,
@@ -108,6 +110,7 @@ export const getRootState = (_pageObject: PageObject) => ({
         },
         '4138940493550098806301857686_0': {
           element_id: '4138940493550098806301857686_0',
+          is_shown: true,
           predicted_label: 'menu',
           jdnHash: '4138940493550098806301857686',
           pageObj: 0,
@@ -138,6 +141,7 @@ export const getRootState = (_pageObject: PageObject) => ({
 export const selectMockedLocators = (pageObject: PageObject) => [
   {
     element_id: '7524916072510597399809892823_0',
+    is_shown: true,
     predicted_label: 'dialog',
     jdnHash: '7524916072510597399809892823',
     pageObj: 0,
@@ -162,6 +166,7 @@ export const selectMockedLocators = (pageObject: PageObject) => [
   },
   {
     element_id: '2075611903510597386448924232_0',
+    is_shown: true,
     predicted_label: 'list',
     jdnHash: '2075611903510597386448924232',
     pageObj: 0,
@@ -193,6 +198,7 @@ export const selectMockedLocators = (pageObject: PageObject) => [
   },
   {
     element_id: '4138940493550098806301857686_0',
+    is_shown: true,
     predicted_label: 'menu',
     jdnHash: '4138940493550098806301857686',
     pageObj: 0,

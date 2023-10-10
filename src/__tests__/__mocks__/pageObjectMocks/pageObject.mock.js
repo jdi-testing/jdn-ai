@@ -5,6 +5,7 @@ export const getLocatorsByAnnotationType = (value) => {
     {
       attrId: '',
       element_id: '0955274655778840492142094709',
+      is_shown: true,
       height: 60,
       locator: {
         fullXpath: '/html/body/header/div/nav/ul[1]',
@@ -27,6 +28,7 @@ export const getLocatorsByAnnotationType = (value) => {
     {
       attrId: '',
       element_id: '2022378243778840502461724770',
+      is_shown: true,
       height: 15.3333339691,
       locator: {
         fullXpath: '/html/body/footer/div/div/ul',
@@ -49,6 +51,7 @@ export const getLocatorsByAnnotationType = (value) => {
     {
       attrId: '',
       element_id: '2713188863778840498565585241',
+      is_shown: true,
       height: 38.6666679382,
       locator: {
         fullXpath: '/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[1]/a',
@@ -74,6 +77,7 @@ export const locators = [
   {
     attrId: '',
     element_id: '0955274655778840492142094709',
+    is_shown: true,
     height: 60,
     locator: {
       fullXpath: '/html/body/header/div/nav/ul[1]',
@@ -96,6 +100,7 @@ export const locators = [
   {
     attrId: '',
     element_id: '2022378243778840502461724770',
+    is_shown: true,
     height: 15.3333339691,
     locator: {
       fullXpath: '/html/body/footer/div/div/ul',
@@ -118,6 +123,7 @@ export const locators = [
   {
     attrId: '',
     element_id: '2713188863778840498565585241',
+    is_shown: true,
     height: 38.6666679382,
     locator: {
       fullXpath: '/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[1]/a',
@@ -142,6 +148,7 @@ export const locatorsWithFindBy = [
   {
     attrId: '',
     element_id: '0955274655778840492142094709',
+    is_shown: true,
     height: 60,
     locator: {
       fullXpath: '/html/body/header/div/nav/ul[1]',
@@ -164,6 +171,7 @@ export const locatorsWithFindBy = [
   {
     attrId: '',
     element_id: '2022378243778840502461724770',
+    is_shown: true,
     height: 15.3333339691,
     locator: {
       fullXpath: '/html/body/footer/div/div/ul',
@@ -186,6 +194,7 @@ export const locatorsWithFindBy = [
   {
     attrId: '',
     element_id: '2713188863778840498565585241',
+    is_shown: true,
     height: 38.6666679382,
     locator: {
       fullXpath: '/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[1]/a',
@@ -209,6 +218,7 @@ export const locatorsWithFindBy = [
 export const locatorsVividus = [
   {
     element_id: '0057770603115098154872149076_0',
+    is_shown: true,
     predicted_label: 'label',
     childs: ['1052464727115098158766915230'],
     displayed: false,
@@ -238,6 +248,7 @@ export const locatorsVividus = [
   },
   {
     element_id: '0735357117115098156691382591_0',
+    is_shown: true,
     predicted_label: 'label',
     childs: null,
     displayed: false,
@@ -271,6 +282,7 @@ export const locatorsVividus = [
   },
   {
     element_id: '0790139442115098150038335533_0',
+    is_shown: true,
     predicted_label: 'textarea',
     childs: null,
     displayed: false,
@@ -304,6 +316,7 @@ export const locatorsVividus = [
   },
   {
     element_id: '0928942213115098152027249027_0',
+    is_shown: true,
     predicted_label: 'label',
     childs: null,
     displayed: false,
