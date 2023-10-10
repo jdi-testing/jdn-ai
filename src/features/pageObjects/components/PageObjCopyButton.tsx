@@ -31,7 +31,7 @@ export const PageObjCopyButton: FC<Props> = ({ framework, elements }) => {
     e.stopPropagation();
 
     const pageObject = getPageObjectForCopying(elements);
-    copyLocatorsToClipboard(pageObject);
+    copyLocatorsToClipboard(pageObject, isVividusFramework);
 
     setTooltipTitle(CopyTitle.Copied);
   };
