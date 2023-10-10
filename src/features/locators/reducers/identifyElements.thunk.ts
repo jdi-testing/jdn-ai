@@ -37,12 +37,14 @@ export const identifyElements = createAsyncThunk('locators/identifyElements', as
     const endpoint = predictEndpoints[library];
     const { data: res, pageData } =
       library !== ElementLibrary.Vuetify ? await predictElements(endpoint) : await findByRules();
-    const locators = res.map((el: PredictedEntity) => ({
-      ...el,
-      element_id: `${el.element_id}_${pageObj}`,
-      jdnHash: el.element_id,
-      pageObj: pageObj,
-    }));
+    const locators = res
+      .filter((el: PredictedEntity) => el.is_shown)
+      .map((el: PredictedEntity) => ({
+        ...el,
+        element_id: `${el.element_id}_${pageObj}`,
+        jdnHash: el.element_id,
+        pageObj: pageObj,
+      }));
 
     thunkAPI.dispatch(setPageData({ id: pageObj, pageData }));
     thunkAPI.dispatch(createLocators({ predictedElements: locators, library }));
