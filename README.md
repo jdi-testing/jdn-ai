@@ -138,5 +138,3 @@ To manage a locator, click the three dots button next to it and choose an action
 [Frequently asked questions](https://jdi-family.atlassian.net/l/cp/cV133esQ)
 ## Support
 Support chat in [Skype](https://join.skype.com/clvyVvnZvWqc)
-
-DELETE THIS LINE
