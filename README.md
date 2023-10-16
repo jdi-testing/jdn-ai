@@ -139,3 +139,4 @@ To manage a locator, click the three dots button next to it and choose an action
 ## Support
 Support chat in [Skype](https://join.skype.com/clvyVvnZvWqc)
 
+DELETE THIS LINE
