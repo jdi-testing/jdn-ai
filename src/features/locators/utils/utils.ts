@@ -110,7 +110,7 @@ export const copyLocator =
         });
     }
 
-    copyLocatorsToClipboard(value);
+    copyLocatorsToClipboard(value, isVividusFramework);
   };
 
 export const getCopyOptions = (framework: FrameworkType, selectedLocators: ILocator[]) => {

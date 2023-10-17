@@ -3,8 +3,8 @@ import { CopySimple } from '@phosphor-icons/react';
 import React, { useState, MouseEvent } from 'react';
 import { CopyTitle, FrameworkType, LocatorType } from '../../../common/types/common';
 import { getLocatorString, getFullLocatorVividusString } from '../utils/locatorOutput';
-import { copyLocatorToClipboard } from '../utils/copyLocatorToClipboard';
 import { ILocator } from '../types/locator.types';
+import { copyToClipboard } from '../../../common/utils/copyToClipboard';
 
 interface Props {
   framework: FrameworkType;
@@ -24,7 +24,7 @@ export const LocatorCopyButton: React.FC<Props> = ({ framework, element }) => {
       ? getFullLocatorVividusString(name, locatorType, element)
       : getLocatorString(annotationType, locatorType, locator, type, name);
 
-    copyLocatorToClipboard(locatorString);
+    copyToClipboard(locatorString);
     setTooltipTitle(CopyTitle.Copied);
   };
 
