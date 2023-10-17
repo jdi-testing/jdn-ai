@@ -6,6 +6,7 @@ export const locatorsTreeMockSearch = [
     depth: 0,
     searchState: 'hidden',
     element_id: '7967190244322359771369749968_0',
+    is_shown: true,
     parent_id: '',
     jdnHash: '7967190244322359771369749968',
     locator: {
@@ -30,6 +31,7 @@ export const locatorsTreeMockSearch = [
         depth: 2,
         searchState: 'none',
         element_id: '9636042053322359773245578777_0',
+        is_shown: true,
         parent_id: '4829071593322359778594168522',
         jdnHash: '9636042053322359773245578777',
         locator: {
@@ -57,6 +59,7 @@ export const locatorsTreeMockSearch = [
     depth: 0,
     searchState: 'none',
     element_id: '796719024432235977136974900_0',
+    is_shown: true,
     parent_id: '',
     jdnHash: '796719024432235977136974900',
     locator: {

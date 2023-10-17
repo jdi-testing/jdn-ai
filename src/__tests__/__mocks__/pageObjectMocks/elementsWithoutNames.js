@@ -1,6 +1,7 @@
 export const elementsWithoutNames = [
   {
     element_id: '7824983223872788250093302805',
+    is_shown: true,
     predicted_label: 'radiogroup',
     elemId: 'radio79',
     elemName: 'radio78',
@@ -11,6 +12,7 @@ export const elementsWithoutNames = [
   },
   {
     element_id: '3976799717872788243800691939',
+    is_shown: true,
     predicted_label: 'list',
     elemId: 'radio79',
     elemName: 'radio78',
@@ -21,6 +23,7 @@ export const elementsWithoutNames = [
   },
   {
     element_id: '2531946027872788259730157905',
+    is_shown: true,
     predicted_label: 'list',
     elemId: 'radio79',
     elemName: 'radio78',
@@ -31,6 +34,7 @@ export const elementsWithoutNames = [
   },
   {
     element_id: '1788878284872788254954433922',
+    is_shown: true,
     predicted_label: 'badge',
     elemId: 'anyNymber',
     elemName: '',
@@ -41,6 +45,7 @@ export const elementsWithoutNames = [
   },
   {
     element_id: '8073262067872788257041578300',
+    is_shown: true,
     predicted_label: 'chip',
     elemId: '',
     elemName: 'chipOfTheChips',
@@ -51,6 +56,7 @@ export const elementsWithoutNames = [
   },
   {
     element_id: '8162387396872788255600213565',
+    is_shown: true,
     predicted_label: 'chip',
     elemId: '',
     elemName: 'chipOfTheChips',
@@ -61,6 +67,7 @@ export const elementsWithoutNames = [
   },
   {
     element_id: '3824832072872788248203820469',
+    is_shown: true,
     predicted_label: 'badge',
     elemId: 'anyNymber',
     elemName: '',
@@ -71,6 +78,7 @@ export const elementsWithoutNames = [
   },
   {
     element_id: '1195797979872788259469412332',
+    is_shown: true,
     predicted_label: 'list',
     elemId: '',
     elemName: '',
@@ -81,6 +89,7 @@ export const elementsWithoutNames = [
   },
   {
     element_id: '1195797979872788259469412444',
+    is_shown: true,
     predicted_label: 'list',
     elemId: '',
     elemName: '',
@@ -91,6 +100,7 @@ export const elementsWithoutNames = [
   },
   {
     element_id: '3265985627872788257228708643',
+    is_shown: true,
     predicted_label: 'button',
     locator: {
       fullXpath: '/html/body/header/div/nav/ul[2]/li/div/div/button',
@@ -98,6 +108,7 @@ export const elementsWithoutNames = [
   },
   {
     element_id: '3901491381872788252561828171',
+    is_shown: true,
     predicted_label: 'button',
     elemId: '1001loginButton',
     locator: {
@@ -106,6 +117,7 @@ export const elementsWithoutNames = [
   },
   {
     element_id: '9384531537872788240323543297',
+    is_shown: true,
     predicted_label: 'menu',
     elemId: '   menu Foo  ',
     locator: {
@@ -114,6 +126,7 @@ export const elementsWithoutNames = [
   },
   {
     element_id: '3901491381872788252561828179',
+    is_shown: true,
     predicted_label: 'button',
     elemId: '1001loginButton',
     locator: {
@@ -122,6 +135,7 @@ export const elementsWithoutNames = [
   },
   {
     element_id: '1195797979872788259469412450',
+    is_shown: true,
     predicted_label: 'list',
     elemId: '',
     elemName: '',
@@ -132,6 +146,7 @@ export const elementsWithoutNames = [
   },
   {
     element_id: '1195797979872788259469412460',
+    is_shown: true,
     predicted_label: 'list',
     elemId: '',
     elemName: '',
@@ -142,6 +157,7 @@ export const elementsWithoutNames = [
   },
   {
     element_id: '1195797979872788259469412460',
+    is_shown: true,
     predicted_label: 'list',
     elemId: '',
     elemName: '',
@@ -152,6 +168,7 @@ export const elementsWithoutNames = [
   },
   {
     element_id: '1195797979872788259469412000',
+    is_shown: true,
     predicted_label: 'list',
     elemId: '',
     elemName: '',
@@ -162,6 +179,7 @@ export const elementsWithoutNames = [
   },
   {
     element_id: '7824983223872788250093302',
+    is_shown: true,
     predicted_label: 'radiogroup',
     elemAriaLabel: 'Click this control',
     elemId: 'radio79',
@@ -171,6 +189,7 @@ export const elementsWithoutNames = [
   },
   {
     element_id: '78249832238727882500933021',
+    is_shown: true,
     predicted_label: 'radiogroup',
     elemAriaLabel: 'Click this control with very long text text text text text text text text text 123',
     elemId: 'radio79',
@@ -180,6 +199,7 @@ export const elementsWithoutNames = [
   },
   {
     element_id: '78249832238727882500933022',
+    is_shown: true,
     predicted_label: 'radiogroup',
     elemAriaLabel: 'Click this control with very long text text text text text text text text text 123',
     elemId: 'radio79',
@@ -189,6 +209,7 @@ export const elementsWithoutNames = [
   },
   {
     element_id: '782498322387278825009330223',
+    is_shown: true,
     predicted_label: 'radiogroup',
     elemAriaLabel: 'Кнопка вызова единорога',
     elemId: 'unicorn',
@@ -198,6 +219,7 @@ export const elementsWithoutNames = [
   },
   {
     element_id: '782498322387278825009330200',
+    is_shown: true,
     predicted_label: 'radiogroup',
     elemText: 'A string with non-latin (любой) unicode character ’ we expect to exclude ',
     elemId: 'unicorn',

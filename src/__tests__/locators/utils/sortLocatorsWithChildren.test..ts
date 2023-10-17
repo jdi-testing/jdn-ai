@@ -5,29 +5,35 @@ describe('sortLocatorsWithChildren', () => {
   const input = [
     {
       element_id: '1',
+      is_shown: true,
       children: ['2', '5'],
     },
     {
       element_id: '4',
+      is_shown: true,
       children: [],
     },
     {
       element_id: '2',
+      is_shown: true,
       children: ['3'],
       parent_id: '1',
     },
     {
       element_id: '3',
+      is_shown: true,
       children: [],
       parent_id: '2',
     },
     {
       element_id: '5',
+      is_shown: true,
       children: ['8'],
       parent_id: '1',
     },
     {
       element_id: '6',
+      is_shown: true,
       children: [],
       parent_id: '7',
     },
@@ -35,29 +41,35 @@ describe('sortLocatorsWithChildren', () => {
   const expectedOutput = [
     {
       element_id: '1',
+      is_shown: true,
       children: ['2', '5'],
     },
     {
       element_id: '2',
+      is_shown: true,
       children: ['3'],
       parent_id: '1',
     },
     {
       element_id: '3',
+      is_shown: true,
       children: [],
       parent_id: '2',
     },
     {
       element_id: '5',
+      is_shown: true,
       children: ['8'],
       parent_id: '1',
     },
     {
       element_id: '4',
+      is_shown: true,
       children: [],
     },
     {
       element_id: '6',
+      is_shown: true,
       children: [],
       parent_id: '7',
     },

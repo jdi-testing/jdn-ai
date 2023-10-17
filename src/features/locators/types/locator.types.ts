@@ -108,4 +108,5 @@ export interface ILocator extends PredictedEntity {
 export interface PredictedEntity {
   element_id: ElementId;
   predicted_label: string;
+  is_shown: boolean;
 }
