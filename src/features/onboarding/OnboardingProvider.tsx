@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 import React, { FC, MutableRefObject, ReactNode, createContext, useEffect, useState } from 'react';
 import { OnboardingStep, OnboardingProviderTexts } from './types/constants';
 import { Onboarding } from './Onboarding';
@@ -21,20 +22,20 @@ export const OnboardingContext = createContext({ isOpen: false } as ContextType)
 
 export const OnboardingProvider: FC<Props> = ({ children }) => {
   const [stepRefs, setStepRefs] = useState<Record<OnboardingStep, StepRef>>({} as Record<OnboardingStep, StepRef>);
-  const [isOnbrdOpen, setIsOnbrdOpen] = useState(false);
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCustomLocatorFlow, setIsCustomLocatorFlow] = useState(false);
 
-  const _isOnboardingPassed = getLocalStorage(LocalStorageKey.IsOnboardingPassed);
+  const isOnboardingPassed = getLocalStorage(LocalStorageKey.IsOnboardingPassed);
   const isBackendAvailable = useSelector((state: RootState) => state.main.backendAvailable) === BackendStatus.Accessed;
   const isDefaultState: boolean = useSelector<RootState>(selectIsDefaultState) as boolean;
   const isSessionUnique = useSelector((state: RootState) => state.main.isSessionUnique);
-  const isOnboardingAvailable = isBackendAvailable && !isOnbrdOpen;
+  const isOnboardingAvailable = isBackendAvailable && !isOnboardingOpen;
 
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    if (!_isOnboardingPassed && isBackendAvailable && isSessionUnique) {
+    if (!isOnboardingPassed && isBackendAvailable && isSessionUnique) {
       setIsModalOpen(true);
       setLocalStorage(LocalStorageKey.IsOnboardingPassed, true);
     } else {
@@ -48,7 +49,7 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
   };
 
   const closeOnboarding = () => {
-    setIsOnbrdOpen(false);
+    setIsOnboardingOpen(false);
   };
   const addRef = (
     name: OnboardingStep,
@@ -92,7 +93,7 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
 
   const handleConfirmModal = () => {
     setIsModalOpen(false);
-    setIsOnbrdOpen(true);
+    setIsOnboardingOpen(true);
   };
 
   // selectors for step change
@@ -134,7 +135,7 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
     <OnboardingContext.Provider
       value={{
         defaultStep,
-        isOpen: isOnbrdOpen,
+        isOpen: isOnboardingOpen,
         isOnboardingAvailable,
         tourSteps,
         isCustomLocatorFlow,
