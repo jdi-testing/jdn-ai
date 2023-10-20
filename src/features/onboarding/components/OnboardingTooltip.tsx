@@ -6,7 +6,7 @@ interface Props {
   children: React.ReactNode;
 }
 
-export const OnbrdTooltip: FC<Props> = ({ children }) => {
+export const OnboardingTooltip: FC<Props> = ({ children }) => {
   const { isOpen: isOnboardingOpen } = useContext(OnboardingContext);
 
   return (

@@ -8,7 +8,7 @@ import { RootState } from '../app/store/store';
 import { PageType } from '../app/types/mainSlice.types';
 import { selectClassFilterByPO } from '../features/filter/filter.selectors';
 import { selectPresentLocatorsByPO, selectValidLocators } from '../features/locators/selectors/locatorsByPO.selectors';
-import { isPageObjectPage } from '../app/utils/heplers';
+import { isPageObjectPage } from '../app/utils/helpers';
 
 const notify = (state: RootState, action: any, prevState: RootState) => {
   let { type, payload } = action;

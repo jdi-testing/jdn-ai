@@ -14,7 +14,7 @@ import { AppDispatch, RootState } from '../../../app/store/store';
 import { selectLocatorsToGenerate } from '../../locators/selectors/locators.selectors';
 import { generateAndDownloadZip } from '../utils/projectTemplate';
 import { useOnBoardingRef } from '../../onboarding/utils/useOnboardingRef';
-import { OnbrdStep } from '../../onboarding/types/constants';
+import { OnboardingStep } from '../../onboarding/types/constants';
 import { checkLocatorsValidity } from '../../locators/reducers/checkLocatorValidity.thunk';
 import { useAddPageObject } from '../utils/useAddPageObject';
 
@@ -62,8 +62,8 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
     });
   };
 
-  const newPoRef = useOnBoardingRef(OnbrdStep.NewPageObject, handleAddPageObject);
-  const downloadRef = useOnBoardingRef(OnbrdStep.DownloadPO, undefined, () => dispatch(checkLocatorsValidity()));
+  const newPoRef = useOnBoardingRef(OnboardingStep.NewPageObject, handleAddPageObject);
+  const downloadRef = useOnBoardingRef(OnboardingStep.DownloadPO, undefined, () => dispatch(checkLocatorsValidity()));
 
   return (
     <Row className="jdn__itemsList-header" justify="space-between">

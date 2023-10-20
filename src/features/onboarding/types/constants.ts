@@ -1,4 +1,4 @@
-export enum OnbrdStep {
+export enum OnboardingStep {
   NewPageObject, //0
   POsettings, //1
   Generate, //2

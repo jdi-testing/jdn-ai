@@ -1,5 +1,5 @@
 import { MutableRefObject } from 'react';
-import { OnbrdStep } from './constants';
+import { OnboardingStep } from './constants';
 import { TourProps } from 'antd';
 
 export interface OnboardingContext {
@@ -11,13 +11,13 @@ export interface OnboardingContext {
   isOnboardingAvailable: boolean;
   tourSteps: TourProps['steps'];
   addRef: (
-    name: OnbrdStep,
+    name: OnboardingStep,
     ref?: MutableRefObject<any>,
     onClickNext?: (...args: any) => void,
     onClickPrev?: (...args: any) => void,
   ) => void;
   updateRef: (
-    name: OnbrdStep,
+    name: OnboardingStep,
     ref?: MutableRefObject<any>,
     onClickNext?: (...args: any) => void,
     onClickPrev?: (...args: any) => void,

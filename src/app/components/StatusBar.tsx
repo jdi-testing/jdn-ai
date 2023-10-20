@@ -12,7 +12,7 @@ import { readmeLinkAddress } from '../../common/constants/constants';
 import { ReportProblem } from './ReportProblem';
 import { LocatorsGenerationStatus } from '../../features/locators/types/locator.types';
 import { useOnBoardingRef } from '../../features/onboarding/utils/useOnboardingRef';
-import { OnbrdStep } from '../../features/onboarding/types/constants';
+import { OnboardingStep } from '../../features/onboarding/types/constants';
 import { OnboardingButton } from './OnboardingButton';
 
 export const StatusBar = () => {
@@ -56,8 +56,8 @@ export const StatusBar = () => {
     ) : null;
   };
 
-  const readmeRef = useOnBoardingRef(OnbrdStep.Readme);
-  const connectionRef = useOnBoardingRef(OnbrdStep.Connection);
+  const readmeRef = useOnBoardingRef(OnboardingStep.Readme);
+  const connectionRef = useOnBoardingRef(OnboardingStep.Connection);
 
   return (
     <>

@@ -29,12 +29,12 @@ import { LocatorMenu } from './components/LocatorMenu';
 import { setIndents } from './utils/utils';
 import { setScriptMessage } from '../../app/main.slice';
 import { useOnBoardingRef } from '../onboarding/utils/useOnboardingRef';
-import { OnbrdStep } from '../onboarding/types/constants';
-import { OnbrdTooltip } from '../onboarding/components/OnbrdTooltip';
+import { OnboardingStep } from '../onboarding/types/constants';
+import { OnboardingTooltip } from '../onboarding/components/OnboardingTooltip';
 import { OnboardingContext } from '../onboarding/OnboardingProvider';
 import { selectFirstLocatorIdByPO } from './selectors/locatorsByPO.selectors';
 import { selectCalculatedActiveByPageObj, selectWaitingActiveByPageObj } from './selectors/locatorsFiltered.selectors';
-import { isLocatorListPage } from '../../app/utils/heplers';
+import { isLocatorListPage } from '../../app/utils/helpers';
 import { selectCurrentPageObject } from '../pageObjects/selectors/pageObjects.selectors';
 import { AnnotationType, FrameworkType, LocatorType } from '../../common/types/common';
 import { getLocatorPrefix, getLocatorTemplateWithVividus } from './utils/locatorOutput';
@@ -73,13 +73,13 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
 
   const isFirstLocator = useSelector(selectFirstLocatorIdByPO) === element_id;
   const menuRef = useOnBoardingRef(
-    OnbrdStep.EditLocator,
+    OnboardingStep.EditLocator,
     undefined,
     undefined,
     !(isFirstLocator && !isCustomLocatorFlow),
   );
 
-  const addToPORef = useOnBoardingRef(OnbrdStep.AddToPO, undefined, undefined, !isFirstLocator);
+  const addToPORef = useOnBoardingRef(OnboardingStep.AddToPO, undefined, undefined, !isFirstLocator);
 
   const indeterminate = useSelector((state: RootState) => isLocatorIndeterminate(state, element_id));
   const allChildrenChecked = useSelector((state: RootState) => areChildrenChecked(state, element_id));
@@ -214,7 +214,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
               {searchState !== SearchState.Hidden ? (
                 <div onContextMenu={handleLocatorRightClick} className="jdn__xpath_buttons">
                   <LocatorCopyButton {...{ framework, element }} />
-                  <OnbrdTooltip>
+                  <OnboardingTooltip>
                     <LocatorMenu {...{ setIsEditModalOpen, trigger: ['click', 'contextMenu'] }}>
                       <Button
                         ref={menuRef}
@@ -222,7 +222,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
                         icon={<DotsThree size={18} onClick={(e) => e.preventDefault()} />}
                       />
                     </LocatorMenu>
-                  </OnbrdTooltip>
+                  </OnboardingTooltip>
                 </div>
               ) : null}
             </div>

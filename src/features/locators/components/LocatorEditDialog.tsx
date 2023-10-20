@@ -30,7 +30,7 @@ import { CALCULATING, newLocatorStub } from '../utils/constants';
 import { changeLocatorElement } from '../reducers/changeLocatorElement.thunk';
 import { addCustomLocator } from '../reducers/addCustomLocator.thunk';
 import { OnboardingContext } from '../../onboarding/OnboardingProvider';
-import { OnbrdStep } from '../../onboarding/types/constants';
+import { OnboardingStep } from '../../onboarding/types/constants';
 import { selectPresentLocatorsByPO } from '../selectors/locatorsByPO.selectors';
 import { LocatorMessageForDuplicate } from './LocatorMessageForDuplicate';
 
@@ -234,7 +234,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
     isLocatorTypeChanged && onLocatorTypeChange();
     const isOkButtonDisabled = computeIsOkButtonDisabled();
     setIsOkButtonDisabled(isOkButtonDisabled);
-    updateRef(OnbrdStep.EditLocator, undefined, isOkButtonDisabled ? undefined : handleCreateCustomLocator);
+    updateRef(OnboardingStep.EditLocator, undefined, isOkButtonDisabled ? undefined : handleCreateCustomLocator);
   };
 
   const renderValidationMessage = () => {

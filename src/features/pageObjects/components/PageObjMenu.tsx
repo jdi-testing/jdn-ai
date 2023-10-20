@@ -21,8 +21,8 @@ import { generatePageObject, generatePageObjectPerfTest } from '../../pageObject
 import { RenamePageObjectDialog } from './RenamePageObjDialog';
 import { checkLocatorsValidity } from '../../locators/reducers/checkLocatorValidity.thunk';
 import { useOnBoardingRef } from '../../onboarding/utils/useOnboardingRef';
-import { OnbrdStep } from '../../onboarding/types/constants';
-import { OnbrdTooltip } from '../../onboarding/components/OnbrdTooltip';
+import { OnboardingStep } from '../../onboarding/types/constants';
+import { OnboardingTooltip } from '../../onboarding/components/OnboardingTooltip';
 import { OnboardingContext } from '../../onboarding/OnboardingProvider';
 import { AppDispatch } from '../../../app/store/store';
 
@@ -76,11 +76,11 @@ export const PageObjMenu: React.FC<Props> = ({ pageObject, elements }) => {
     return { ...{ items } };
   };
 
-  const menuRef = useOnBoardingRef(OnbrdStep.EditPO);
+  const menuRef = useOnBoardingRef(OnboardingStep.EditPO);
 
   return (
     <div onClick={(e) => e.stopPropagation()}>
-      <OnbrdTooltip>
+      <OnboardingTooltip>
         <Dropdown
           disabled={isOnboardingOpen}
           align={{ offset: [15, 0] }}
@@ -97,7 +97,7 @@ export const PageObjMenu: React.FC<Props> = ({ pageObject, elements }) => {
             icon={<DotsThree size={18} />}
           ></Button>
         </Dropdown>
-      </OnbrdTooltip>
+      </OnboardingTooltip>
       <RenamePageObjectDialog
         isModalOpen={isRenameModalOpen}
         setIsModalOpen={setIsRenameModalOpen}

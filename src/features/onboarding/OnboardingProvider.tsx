@@ -1,5 +1,5 @@
 import React, { FC, MutableRefObject, ReactNode, createContext, useEffect, useState } from 'react';
-import { OnbrdStep, OnboardingProviderTexts } from './types/constants';
+import { OnboardingStep, OnboardingProviderTexts } from './types/constants';
 import { Onboarding } from './Onboarding';
 import { OnboardingContext as ContextType, StepRef } from './types/context.types';
 import { useDispatch, useSelector } from 'react-redux';
@@ -20,7 +20,7 @@ interface Props {
 export const OnboardingContext = createContext({ isOpen: false } as ContextType);
 
 export const OnboardingProvider: FC<Props> = ({ children }) => {
-  const [stepRefs, setStepRefs] = useState<Record<OnbrdStep, StepRef>>({} as Record<OnbrdStep, StepRef>);
+  const [stepRefs, setStepRefs] = useState<Record<OnboardingStep, StepRef>>({} as Record<OnboardingStep, StepRef>);
   const [isOnbrdOpen, setIsOnbrdOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCustomLocatorFlow, setIsCustomLocatorFlow] = useState(false);
@@ -51,7 +51,7 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
     setIsOnbrdOpen(false);
   };
   const addRef = (
-    name: OnbrdStep,
+    name: OnboardingStep,
     ref?: MutableRefObject<any>,
     onClickNext?: (...args: any) => void,
     onClickPrev?: (...args: any) => void,
@@ -69,7 +69,7 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
   };
 
   const updateRef = (
-    name: OnbrdStep,
+    name: OnboardingStep,
     ref?: MutableRefObject<any>,
     onClickNext?: (...args: any) => void,
     onClickPrev?: (...args: any) => void,
@@ -111,22 +111,22 @@ export const OnboardingProvider: FC<Props> = ({ children }) => {
   // and Onboarding step should be changed programmatically
   const defaultStep =
     isPoPage && poHasLocators
-      ? OnbrdStep.DownloadPO
+      ? OnboardingStep.DownloadPO
       : !isPoPage && isCustomLocatorFlow && poHasLocators
-      ? OnbrdStep.AddToPO
-      : !isPoPage && isCustomLocatorFlow && stepRefs[OnbrdStep.EditLocator]?.target?.current
-      ? OnbrdStep.EditLocator
+      ? OnboardingStep.AddToPO
+      : !isPoPage && isCustomLocatorFlow && stepRefs[OnboardingStep.EditLocator]?.target?.current
+      ? OnboardingStep.EditLocator
       : !isPoPage
-      ? OnbrdStep.CustomLocator
+      ? OnboardingStep.CustomLocator
       : isIdentificationInProgress
-      ? OnbrdStep.Generating
+      ? OnboardingStep.Generating
       : isNewPageObject
-      ? OnbrdStep.POsettings
-      : OnbrdStep.NewPageObject;
+      ? OnboardingStep.POsettings
+      : OnboardingStep.NewPageObject;
 
   const tourSteps = getPOPageSteps(stepRefs, isCustomLocatorFlow);
 
-  if (defaultStep === OnbrdStep.CustomLocator && locatorsGenerated && !poHasLocators && !isCustomLocatorFlow) {
+  if (defaultStep === OnboardingStep.CustomLocator && locatorsGenerated && !poHasLocators && !isCustomLocatorFlow) {
     setIsCustomLocatorFlow(true);
   }
 

@@ -1,13 +1,13 @@
 import { useContext, useLayoutEffect, useRef } from 'react';
 import { OnboardingContext } from '../OnboardingProvider';
-import { OnbrdStep } from '../types/constants';
+import { OnboardingStep } from '../types/constants';
 import { useSelector } from 'react-redux';
 import { selectFirstLocatorByPO } from '../../locators/selectors/locatorsByPO.selectors';
 
-const locatorPageSteps = [OnbrdStep.CustomLocator, OnbrdStep.EditLocator, OnbrdStep.AddToPO, OnbrdStep.SaveLocators];
+const locatorPageSteps = [OnboardingStep.CustomLocator, OnboardingStep.EditLocator, OnboardingStep.AddToPO, OnboardingStep.SaveLocators];
 
 export const useOnBoardingRef = (
-  refName: OnbrdStep,
+  refName: OnboardingStep,
   onClickNext?: (...args: any) => void,
   onClickPrev?: (...args: any) => void,
   isSkipHook?: boolean,
@@ -21,7 +21,7 @@ export const useOnBoardingRef = (
 
   useLayoutEffect(() => {
     const _ref =
-      refName === OnbrdStep.EditLocator && isCustomLocatorFlow && ref.current
+      refName === OnboardingStep.EditLocator && isCustomLocatorFlow && ref.current
         ? { current: ref.current.closest('.ant-modal-content') }
         : ref;
     !isSkipHook && !isRedundantStep && addRef(refName, _ref, onClickNext, onClickPrev);

@@ -3,7 +3,7 @@ import { FormInstance } from 'antd/es/form/Form';
 import React, { ReactNode, useContext, useEffect } from 'react';
 import { showOverlay, removeOverlay } from '../../pageServices/pageDataHandlers';
 import { useOnBoardingRef } from '../../features/onboarding/utils/useOnboardingRef';
-import { OnbrdStep } from '../../features/onboarding/types/constants';
+import { OnboardingStep } from '../../features/onboarding/types/constants';
 import { OnboardingContext } from '../../features/onboarding/OnboardingProvider';
 
 interface JDNModalProps extends ModalProps {
@@ -39,7 +39,7 @@ export const DialogWithForm: React.FC<DialogFormProps> = ({ modalProps, formProp
     setIsModalOpen(false);
     cancelCallback && cancelCallback();
     setTimeout(() => {
-      addRef(OnbrdStep.EditLocator);
+      addRef(OnboardingStep.EditLocator);
     }, 100);
   };
 
@@ -48,7 +48,7 @@ export const DialogWithForm: React.FC<DialogFormProps> = ({ modalProps, formProp
     handleCancel();
   };
 
-  const modalRef = useOnBoardingRef(OnbrdStep.EditLocator, undefined, onbrdPrevHandler);
+  const modalRef = useOnBoardingRef(OnboardingStep.EditLocator, undefined, onbrdPrevHandler);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     e.stopPropagation();

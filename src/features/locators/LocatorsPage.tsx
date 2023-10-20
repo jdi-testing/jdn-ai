@@ -18,7 +18,7 @@ import { RootState } from '../../app/store/store';
 import { IdentificationStatus } from './types/locator.types';
 import { LocatorTreeSpinner } from './components/LocatorTreeSpinner';
 import { useOnBoardingRef } from '../onboarding/utils/useOnboardingRef';
-import { OnbrdStep } from '../onboarding/types/constants';
+import { OnboardingStep } from '../onboarding/types/constants';
 import { removeAll as removeAllFilters, setFilter } from '../filter/filter.slice';
 import { selectIfUnselectedAll, selectClassFilterByPO } from '../filter/filter.selectors';
 
@@ -142,7 +142,7 @@ export const LocatorsPage = () => {
   };
 
   const renderConfirmButton = () => {
-    const saveLocatorsRef = useOnBoardingRef(OnbrdStep.SaveLocators, pageBack);
+    const saveLocatorsRef = useOnBoardingRef(OnboardingStep.SaveLocators, pageBack);
     const checkedLocators = useSelector(selectCheckedLocatorsByPageObject);
     const generatedLocators = useSelector(selectGenerateByPageObject);
     const isDisabled = !inProgressGenerate.length && !calculatedAndChecked.length;

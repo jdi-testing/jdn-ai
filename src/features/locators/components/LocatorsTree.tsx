@@ -14,7 +14,7 @@ import { Locator } from '../Locator';
 import { selectCurrentPageObject } from '../../pageObjects/selectors/pageObjects.selectors';
 import { selectPresentLocatorsByPO } from '../selectors/locatorsByPO.selectors';
 import { selectFilteredLocators } from '../selectors/locatorsFiltered.selectors';
-import { isLocatorListPage } from '../../../app/utils/heplers';
+import { isLocatorListPage } from '../../../app/utils/helpers';
 
 export enum SearchState {
   None = 'none',

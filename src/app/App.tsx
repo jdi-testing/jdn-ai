@@ -21,7 +21,7 @@ import { setIsSessionUnique } from './main.slice';
 import { LocatorsPage } from '../features/locators/LocatorsPage';
 import { PageObjectPage } from '../features/pageObjects/PageObjectPage';
 import { OnboardingProvider } from '../features/onboarding/OnboardingProvider';
-import { isPageObjectPage } from './utils/heplers';
+import { isPageObjectPage } from './utils/helpers';
 
 const App = () => {
   const [jdiTemplate, setJdiTemplate] = useState<Blob | undefined>(undefined);

@@ -10,9 +10,9 @@ import { newLocatorStub } from '../utils/constants';
 import { LocatorsSearch } from './LocatorsSearch';
 import { LocatorEditDialog } from './LocatorEditDialog';
 import { useOnBoardingRef } from '../../onboarding/utils/useOnboardingRef';
-import { OnbrdStep } from '../../onboarding/types/constants';
+import { OnboardingStep } from '../../onboarding/types/constants';
 import { OnboardingContext } from '../../onboarding/OnboardingProvider';
-import { OnbrdTooltip } from '../../onboarding/components/OnbrdTooltip';
+import { OnboardingTooltip } from '../../onboarding/components/OnboardingTooltip';
 import { LocatorMenu } from './LocatorMenu';
 import { LocatorTreeProps, ExpandState } from './LocatorsTree';
 import {
@@ -73,7 +73,7 @@ export const LocatorListHeader = ({
   };
 
   const ref = useOnBoardingRef(
-    OnbrdStep.CustomLocator,
+    OnboardingStep.CustomLocator,
     isCustomLocatorFlow ? () => setIsEditModalOpen(true) : undefined,
   );
 
@@ -81,7 +81,7 @@ export const LocatorListHeader = ({
     <>
       <Row justify="space-between" align="bottom">
         <LocatorsSearch value={searchString} onChange={setSearchString} />
-        <OnbrdTooltip>
+        <OnboardingTooltip>
           <Button
             disabled={isOnboardingOpen && !!size(locators)}
             ref={ref}
@@ -91,7 +91,7 @@ export const LocatorListHeader = ({
           >
             Custom locator
           </Button>
-        </OnbrdTooltip>
+        </OnboardingTooltip>
       </Row>
       <Row className="jdn__itemsList-header">
         <span className="jdn__itemsList-header-title">

@@ -16,7 +16,7 @@ import { ElementLibrary, libraryNames } from '../../locators/types/generationCla
 import { identifyElements } from '../../locators/reducers/identifyElements.thunk';
 import { LocatorType, FrameworkType, AnnotationType } from '../../../common/types/common';
 import { useOnBoardingRef } from '../../onboarding/utils/useOnboardingRef';
-import { OnbrdStep } from '../../onboarding/types/constants';
+import { OnboardingStep } from '../../onboarding/types/constants';
 import { LocalStorageKey, setLocalStorage } from '../../../common/utils/localStorage';
 import { Footnote } from '../../../common/components/footnote/Footnote';
 import { isIdentificationLoading } from '../../locators/utils/helpers';
@@ -103,7 +103,7 @@ export const PageObjGenerationBar: React.FC<Props> = ({ pageObj, library, url })
     dispatch(identifyElements({ library, pageObj }));
   };
 
-  const refSettings = useOnBoardingRef(OnbrdStep.POsettings, undefined, () => dispatch(removePageObject(pageObj)));
+  const refSettings = useOnBoardingRef(OnboardingStep.POsettings, undefined, () => dispatch(removePageObject(pageObj)));
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -216,7 +216,7 @@ export const PageObjGenerationBar: React.FC<Props> = ({ pageObj, library, url })
         </Space>
         <Space>
           <PageObjGenerationButton
-            refFn={() => useOnBoardingRef(OnbrdStep.Generate, () => dispatch(identifyElements({ library, pageObj })))}
+            refFn={() => useOnBoardingRef(OnboardingStep.Generate, () => dispatch(identifyElements({ library, pageObj })))}
             type="primary"
             loading={isGenerateAllLoading()}
             onClick={handleGenerate}

@@ -10,7 +10,7 @@ import { isValidLocator } from '../utils/utils';
 import { LocatorType } from '../../../common/types/common';
 import { filterInProgress } from '../utils/helpers';
 import { selectCurrentPage } from '../../../app/main.selectors';
-import { isLocatorListPage } from '../../../app/utils/heplers';
+import { isLocatorListPage } from '../../../app/utils/helpers';
 
 export const getLocatorsIdsByPO = (state: RootState, pageObjId?: PageObjectId) => {
   pageObjId = isNil(pageObjId) ? selectCurrentPageObject(state)?.id : pageObjId;
