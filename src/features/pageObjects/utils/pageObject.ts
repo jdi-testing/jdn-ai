@@ -19,7 +19,7 @@ export const isStringMatchesReservedWordPerfTest = (string: string) => perfReser
 export const isNameUnique = (elements: ILocator[], element_id: ElementId, newName: string) =>
   !elements.find((elem) => elem.name === newName && elem.element_id !== element_id);
 
-export const isPONameUnique = (elements: Array<PageObject>, id: PageObjectId, newName: string) =>
+export const isPONameUnique = (elements: PageObject[], id: PageObjectId, newName: string) =>
   !elements.find((elem) => toLower(elem.name) === toLower(newName) && elem.id !== id);
 
 export const createElementName = (

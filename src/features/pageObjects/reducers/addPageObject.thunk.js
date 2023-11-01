@@ -16,6 +16,8 @@ import { LocalStorageKey, getLocalStorage } from '../../../common/utils/localSto
 import { AnnotationType, LocatorType, FrameworkType } from '../../../common/types/common';
 
 export const addPageObj = createAsyncThunk('pageObject/addPageObj', async (payload, { getState }) => {
+  console.log('addPageObj');
+
   const res = await getPageAttributes();
   const { title, url } = res[0].result;
   const className = getClassName(title);
@@ -29,6 +31,15 @@ export const addPageObj = createAsyncThunk('pageObject/addPageObj', async (paylo
   const lastSelectedLocatorType = getLocalStorage(LocalStorageKey.LocatorType) || selectLastLocatorType(state);
   const lastSelectedAnnotationType =
     getLocalStorage(LocalStorageKey.AnnotationType) || selectLastAnnotationType(state) || AnnotationType.UI;
+
+  // console.log('++++++ addPageObj: ', {
+  //   className,
+  //   url,
+  //   lastSelectedFrameworkType,
+  //   lastSelectedLibrary,
+  //   lastSelectedLocatorType,
+  //   lastSelectedAnnotationType,
+  // });
 
   return {
     className,
@@ -59,7 +70,7 @@ export const addPageObjReducer = (builder) => {
       const names = map(pageObjects, 'name');
       let name = className;
 
-      for (let index = 0; !isPONameUnique(pageObjects, null, name); index++) {
+      for (let index = 0; !isPONameUnique(pageObjects, 0, name); index++) {
         const repeats = size(
           names.filter((_name) => {
             const res = toLower(_name).includes(toLower(className));

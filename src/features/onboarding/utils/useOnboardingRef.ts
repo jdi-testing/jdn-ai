@@ -1,31 +1,35 @@
-import { useContext, useLayoutEffect, useRef } from 'react';
-import { OnboardingContext } from '../OnboardingProvider';
-import { OnboardingStep } from '../types/constants';
-import { useSelector } from 'react-redux';
-import { selectFirstLocatorByPO } from '../../locators/selectors/locatorsByPO.selectors';
+// import { useLayoutEffect, useRef } from 'react';
+// import { OnboardingStep } from '../constants';
+// import { useSelector } from 'react-redux';
+// import { selectFirstLocatorByPO } from '../../locators/selectors/locatorsByPO.selectors';
 
-const locatorPageSteps = [OnboardingStep.CustomLocator, OnboardingStep.EditLocator, OnboardingStep.AddToPO, OnboardingStep.SaveLocators];
+// const locatorPageSteps = [
+//   OnboardingStep.CustomLocator,
+//   OnboardingStep.EditLocator,
+//   OnboardingStep.AddToPO,
+//   OnboardingStep.SaveLocators,
+// ];
 
-export const useOnBoardingRef = (
-  refName: OnboardingStep,
-  onClickNext?: (...args: any) => void,
-  onClickPrev?: (...args: any) => void,
-  isSkipHook?: boolean,
-) => {
-  const ref = useRef<HTMLDivElement>(null);
+// export const useOnBoardingRef = (
+//   refName: OnboardingStep,
+//   onClickNext?: (...args: any) => void,
+//   onClickPrev?: (...args: any) => void,
+//   isSkipHook?: boolean,
+// ) => {
+//   const ref = useRef<HTMLDivElement>(null);
 
-  const { addRef, isCustomLocatorFlow, isOpen } = useContext(OnboardingContext);
-  const isFirstLocatorChecked = useSelector(selectFirstLocatorByPO)?.isGenerated;
-  /* if onboarding is closed, no need to save these refs */
-  const isRedundantStep = !isOpen && locatorPageSteps.includes(refName);
+//   const { addRef, isCustomLocatorFlow, isOpen } = useContext(OnboardingContext);
+//   const isFirstLocatorChecked = useSelector(selectFirstLocatorByPO)?.isGenerated;
+//   /* if onboarding is closed, no need to save these refs */
+//   const isRedundantStep = !isOpen && locatorPageSteps.includes(refName);
 
-  useLayoutEffect(() => {
-    const _ref =
-      refName === OnboardingStep.EditLocator && isCustomLocatorFlow && ref.current
-        ? { current: ref.current.closest('.ant-modal-content') }
-        : ref;
-    !isSkipHook && !isRedundantStep && addRef(refName, _ref, onClickNext, onClickPrev);
-  }, [ref, isFirstLocatorChecked]);
+//   useLayoutEffect(() => {
+//     const _ref =
+//       refName === OnboardingStep.EditLocator && isCustomLocatorFlow && ref.current
+//         ? { current: ref.current.closest('.ant-modal-content') }
+//         : ref;
+//     !isSkipHook && !isRedundantStep && addRef(refName, _ref, onClickNext, onClickPrev);
+//   }, [ref, isFirstLocatorChecked]);
 
-  return !isSkipHook && !isRedundantStep ? ref : null;
-};
+//   return !isSkipHook && !isRedundantStep ? ref : null;
+// };

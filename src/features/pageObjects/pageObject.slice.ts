@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { isNil } from 'lodash';
 import { pageObjAdapter, simpleSelectPageObjById } from './selectors/pageObjects.selectors';
 import { PageObjectState, PageObject, PageObjectId } from './types/pageObjectSlice.types';
@@ -41,6 +41,8 @@ const pageObjSlice = createSlice({
     },
     clearLocators(state, { payload }) {
       const id = payload || state.currentPageObject;
+      // console.log('payload: ', payload);
+      // console.log('state.currentPageObject: ', state.currentPageObject);
       pageObjAdapter.upsertOne(state, { id, locators: undefined } as PageObject);
     },
     removeAll(state) {

@@ -5,12 +5,8 @@ import { useAddPageObject } from '../utils/useAddPageObject';
 import { Button } from 'antd';
 import { OnboardingPopup } from '../../onboarding/components/OnboardingPopup';
 
-interface Props {
-  setActivePanel: (pageObjectId: string[] | undefined) => void;
-}
-
-export const PageObjectPlaceholder: React.FC<Props> = ({ setActivePanel }) => {
-  const handleAddPageObject = useAddPageObject(setActivePanel);
+export const PageObjectPlaceholder: React.FC = () => {
+  const handleAddPageObject = useAddPageObject();
 
   return (
     <EmptyListInfo>

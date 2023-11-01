@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import readme from '../../../../README.md';
 import { BackendStatus } from '../../types/mainSlice.types';
 import { AppDispatch, RootState } from '../../store/store';
-import { useGuideRehype } from '../../utils/useGuideRehype';
+import { useGuideRehype } from '../../utils/hooks/useGuideRehype';
 import { redefineServer } from '../../reducers/redefineServer.thunk';
 import { GuideText } from './text.constants';
 import { AlertStatus, getSteps, pluginGuide, serverGuide, splitMD } from './utils';

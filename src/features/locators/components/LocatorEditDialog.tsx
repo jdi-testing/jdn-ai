@@ -29,8 +29,8 @@ import { isFilteredSelect } from '../../../common/utils/helpers';
 import { CALCULATING, newLocatorStub } from '../utils/constants';
 import { changeLocatorElement } from '../reducers/changeLocatorElement.thunk';
 import { addCustomLocator } from '../reducers/addCustomLocator.thunk';
-import { OnboardingContext } from '../../onboarding/OnboardingProvider';
-import { OnboardingStep } from '../../onboarding/types/constants';
+// import { OnboardingContext } from '../../onboarding/OnboardingProvider';
+import { OnboardingStep } from '../../onboarding/constants';
 import { selectPresentLocatorsByPO } from '../selectors/locatorsByPO.selectors';
 import { LocatorMessageForDuplicate } from './LocatorMessageForDuplicate';
 
@@ -78,7 +78,9 @@ export const LocatorEditDialog: React.FC<Props> = ({
   const [validationErrorOptions, setValidationErrorOptions] = useState<{ duplicates?: ILocator[] }>({});
   const [isEditedName, setIsEditedName] = useState<boolean>(isCustomName);
 
-  const { updateRef } = useContext(OnboardingContext);
+  // const { updateRef } = useContext(OnboardingContext);
+  const updateRef = (arg1: OnboardingStep, arg2: undefined, arg3: (() => Promise<void>) | undefined) =>
+    console.log('updateRef mock: ', arg1, arg2, arg3); // заменить на настоящую функцию
 
   const [form] = Form.useForm<FormValues>();
   const isCurrentFrameworkVividus = pageObjectFramework === FrameworkType.Vividus;

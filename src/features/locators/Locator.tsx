@@ -1,4 +1,6 @@
-import React, { useContext, useEffect, useRef, useState, useMemo } from 'react';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/naming-convention */
+import React, { useEffect, useRef, useState, useMemo, FC, useLayoutEffect } from 'react';
 import { Checkbox, Button } from 'antd';
 import { DotsThree } from '@phosphor-icons/react';
 import Text from 'antd/lib/typography/Text';
@@ -28,17 +30,15 @@ import { LocatorIcon } from './components/LocatorIcon';
 import { LocatorMenu } from './components/LocatorMenu';
 import { setIndents } from './utils/utils';
 import { setScriptMessage } from '../../app/main.slice';
-import { useOnBoardingRef } from '../onboarding/utils/useOnboardingRef';
-import { OnboardingStep } from '../onboarding/types/constants';
 import { OnboardingTooltip } from '../onboarding/components/OnboardingTooltip';
-import { OnboardingContext } from '../onboarding/OnboardingProvider';
-import { selectFirstLocatorIdByPO } from './selectors/locatorsByPO.selectors';
 import { selectCalculatedActiveByPageObj, selectWaitingActiveByPageObj } from './selectors/locatorsFiltered.selectors';
 import { isLocatorListPage } from '../../app/utils/helpers';
 import { selectCurrentPageObject } from '../pageObjects/selectors/pageObjects.selectors';
 import { AnnotationType, FrameworkType, LocatorType } from '../../common/types/common';
 import { getLocatorPrefix, getLocatorTemplateWithVividus } from './utils/locatorOutput';
 import { ScriptMsg } from '../../pageServices/scriptMsg.constants';
+import { OnboardingStep } from '../onboarding/constants';
+import { useOnboardingContext } from '../onboarding/OnboardingProvider';
 
 interface Props {
   element: ILocator;
@@ -47,13 +47,13 @@ interface Props {
   searchState?: SearchState;
   depth?: number;
   searchString?: string;
+  index?: number;
 }
 
-export const Locator: React.FC<Props> = ({ element, currentPage, searchState, depth, searchString }) => {
+export const Locator: FC<Props> = ({ element, currentPage, searchState, depth, searchString, index }) => {
   const dispatch = useDispatch();
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const { isCustomLocatorFlow } = useContext(OnboardingContext);
 
   const {
     element_id,
@@ -71,15 +71,44 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
 
   const ref = useRef<HTMLDivElement>(null);
 
-  const isFirstLocator = useSelector(selectFirstLocatorIdByPO) === element_id;
-  const menuRef = useOnBoardingRef(
-    OnboardingStep.EditLocator,
-    undefined,
-    undefined,
-    !(isFirstLocator && !isCustomLocatorFlow),
-  );
+  // const isFirstLocator = useSelector(selectFirstLocatorIdByPO) === element_id;
+  // console.log('index: ', index);
 
-  const addToPORef = useOnBoardingRef(OnboardingStep.AddToPO, undefined, undefined, !isFirstLocator);
+  const isFirstLocator = index === 0;
+
+  // const menuRef = useOnBoardingRef(
+  //   OnboardingStep.EditLocator,
+  //   undefined,
+  //   undefined,
+  //   !(isFirstLocator && !isCustomLocatorFlow),
+  // );
+
+  const menuRef = isFirstLocator ? React.createRef<HTMLElement>() : null;
+  // const addToPORef = React.createRef<HTMLInputElement>();
+  // console.log('checkbox ref: ', addToPORef);
+
+  const { updateStepRefs, modifyStepRefByKey } = useOnboardingContext();
+
+  useEffect(() => {
+    if (!isFirstLocator) return;
+    // console.log('isFirstLocator ContextMenu: ', isFirstLocator, element_id);
+    // eslint-disable-next-line max-len
+    if (menuRef) updateStepRefs(OnboardingStep.ContextMenu, menuRef); // поправить логику под !(isFirstLocator && !isCustomLocatorFlow)
+    // const addToPORef = useOnBoardingRef(OnboardingStep.AddToPO, undefined, undefined, !isFirstLocator);
+    // updateStepRefs(OnboardingStep.AddToPO, addToPORef); // и тут тоже
+  }, []);
+
+  const addToPORef = React.createRef<HTMLInputElement>();
+  // console.log('checkbox ref: ', addToPORef);
+
+  // useMemo(() => modifyStepRefByKey(OnboardingStep.AddToPO, addToPORef, { disabled: !isChecked }), [isChecked]);
+
+  useLayoutEffect(() => {
+    if (!isFirstLocator) return;
+    modifyStepRefByKey(OnboardingStep.AddToPO, addToPORef, { disabled: !isChecked });
+    // console.log('isFirstLocator AddToPO: ', isFirstLocator, addToPORef);
+    if (addToPORef) updateStepRefs(OnboardingStep.AddToPO, addToPORef);
+  }, [isChecked]);
 
   const indeterminate = useSelector((state: RootState) => isLocatorIndeterminate(state, element_id));
   const allChildrenChecked = useSelector((state: RootState) => areChildrenChecked(state, element_id));
@@ -195,7 +224,11 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
         {isLocatorListPage(currentPage) ? (
           <LocatorMenu {...{ setIsEditModalOpen, trigger: ['contextMenu'] }}>
             <div className="jdn__xpath_locators">
-              <div ref={addToPORef} onContextMenu={(e) => e.stopPropagation()} className="jdn__xpath_checkbox_wrapper">
+              <div
+                ref={addToPORef as React.LegacyRef<HTMLDivElement>}
+                onContextMenu={(e) => e.stopPropagation()}
+                className="jdn__xpath_checkbox_wrapper"
+              >
                 <Checkbox
                   checked={isChecked}
                   indeterminate={indeterminate}

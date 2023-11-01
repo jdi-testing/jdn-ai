@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Button, Modal, Tooltip, Row } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -17,8 +17,6 @@ import { useCalculateHeaderSize } from './utils/useCalculateHeaderSize';
 import { RootState } from '../../app/store/store';
 import { IdentificationStatus } from './types/locator.types';
 import { LocatorTreeSpinner } from './components/LocatorTreeSpinner';
-import { useOnBoardingRef } from '../onboarding/utils/useOnboardingRef';
-import { OnboardingStep } from '../onboarding/types/constants';
 import { removeAll as removeAllFilters, setFilter } from '../filter/filter.slice';
 import { selectIfUnselectedAll, selectClassFilterByPO } from '../filter/filter.selectors';
 
@@ -41,6 +39,8 @@ import { useNotifications } from '../../common/components/notification/useNotifi
 import { selectCurrentPageObject } from '../pageObjects/selectors/pageObjects.selectors';
 import { EmptyListModal } from './text.constants';
 import { LocatorsEmptyListInfo } from './components/LocatorsEmptyListInfo';
+import { useOnboardingContext } from '../onboarding/OnboardingProvider';
+import { OnboardingStep } from '../onboarding/constants';
 
 const { confirm } = Modal;
 
@@ -142,7 +142,14 @@ export const LocatorsPage = () => {
   };
 
   const renderConfirmButton = () => {
-    const saveLocatorsRef = useOnBoardingRef(OnboardingStep.SaveLocators, pageBack);
+    const saveLocatorsRef = useRef<HTMLElement | null>(null);
+    const { updateStepRefs } = useOnboardingContext();
+    useEffect(() => {
+      if (saveLocatorsRef.current) {
+        updateStepRefs(OnboardingStep.SaveLocators, saveLocatorsRef, pageBack);
+      }
+    }, []);
+
     const checkedLocators = useSelector(selectCheckedLocatorsByPageObject);
     const generatedLocators = useSelector(selectGenerateByPageObject);
     const isDisabled = !inProgressGenerate.length && !calculatedAndChecked.length;
@@ -159,7 +166,7 @@ export const LocatorsPage = () => {
         overlayClassName="jdn__button-tooltip"
         title={isDisabled ? 'Please select locators for your current page object.' : ''}
       >
-        <div ref={saveLocatorsRef}>
+        <div ref={saveLocatorsRef as React.LegacyRef<HTMLDivElement>}>
           <Button type="primary" onClick={handleConfirm} className="jdn__buttons" disabled={isDisabled}>
             {saveButtonLabel}
           </Button>

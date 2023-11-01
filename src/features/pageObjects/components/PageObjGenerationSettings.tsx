@@ -1,5 +1,5 @@
+import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import { Col, Row, Select, Space, Typography } from 'antd';
-import React, { useContext, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCurrentPageObject, selectPageObjects } from '../selectors/pageObjects.selectors';
 import { AppDispatch, RootState } from '../../../app/store/store';
@@ -15,14 +15,14 @@ import { PageObjectId } from '../types/pageObjectSlice.types';
 import { ElementLibrary, libraryNames } from '../../locators/types/generationClasses.types';
 import { identifyElements } from '../../locators/reducers/identifyElements.thunk';
 import { LocatorType, FrameworkType, AnnotationType } from '../../../common/types/common';
-import { useOnBoardingRef } from '../../onboarding/utils/useOnboardingRef';
-import { OnboardingStep } from '../../onboarding/types/constants';
 import { LocalStorageKey, setLocalStorage } from '../../../common/utils/localStorage';
 import { Footnote } from '../../../common/components/footnote/Footnote';
 import { isIdentificationLoading } from '../../locators/utils/helpers';
 import { PageObjGenerationButton } from './PageObjGenerationButton';
-import { OnboardingContext } from '../../onboarding/OnboardingProvider';
 import { IN_DEVELOPMENT_TITLE } from '../../../common/constants/constants';
+
+import { useOnboardingContext } from '../../onboarding/OnboardingProvider';
+import { OnboardingStep } from '../../onboarding/constants';
 
 interface Props {
   pageObj: PageObjectId;
@@ -30,6 +30,7 @@ interface Props {
   url: string;
 }
 
+// To Do move to constants
 const libraryOptions = [
   {
     value: ElementLibrary.HTML5,
@@ -92,29 +93,43 @@ const locatorTypeOptions = [
   },
 ];
 
-export const PageObjGenerationBar: React.FC<Props> = ({ pageObj, library, url }) => {
+export const PageObjGenerationSettings: React.FC<Props> = ({ pageObj, library, url }) => {
   const status = useSelector((state: RootState) => state.locators.present.status);
   const currentPageObject = useSelector(selectCurrentPageObject);
   const pageObjects = useSelector(selectPageObjects);
-  const { isOpen: isOnboardingOpen } = useContext(OnboardingContext);
+  const isOnboardingOpen = useSelector((state: RootState) => state.onboarding.isOnboardingOpen);
+
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleGenerate = () => {
     dispatch(setHideUnadded({ id: pageObj, hideUnadded: false }));
     dispatch(identifyElements({ library, pageObj }));
   };
 
-  const refSettings = useOnBoardingRef(OnboardingStep.POsettings, undefined, () => dispatch(removePageObject(pageObj)));
+  const refSettings = useRef<HTMLElement | null>(null);
+  const generationButtonRef = useRef<HTMLElement | null>(null);
+  const { updateStepRefs } = useOnboardingContext();
 
-  const dispatch = useDispatch<AppDispatch>();
+  useLayoutEffect(() => {
+    if (refSettings.current) {
+      updateStepRefs(OnboardingStep.POsettings, refSettings);
+    }
+  }, []);
+
+  useLayoutEffect(() => {
+    if (generationButtonRef.current) {
+      updateStepRefs(OnboardingStep.Generate, generationButtonRef, handleGenerate);
+    }
+  }, []);
 
   const currentLibrary = currentPageObject?.library;
   const isMoreThanOnePageObject = pageObjects?.length > 1;
   const currentAnnotation = currentPageObject?.annotationType;
   const isCurrentFrameworkVividus = currentPageObject?.framework === FrameworkType.Vividus;
 
-  const onLibraryChange = (library: ElementLibrary) => {
-    dispatch(changeElementLibrary({ id: pageObj, library }));
-    setLocalStorage(LocalStorageKey.Library, library);
+  const onLibraryChange = (selectedLibrary: ElementLibrary) => {
+    dispatch(changeElementLibrary({ id: pageObj, library: selectedLibrary }));
+    setLocalStorage(LocalStorageKey.Library, selectedLibrary);
   };
 
   const onAnnotationTypeChange = (annotationType: AnnotationType) => {
@@ -122,7 +137,7 @@ export const PageObjGenerationBar: React.FC<Props> = ({ pageObj, library, url })
     setLocalStorage(LocalStorageKey.AnnotationType, annotationType);
   };
 
-  const onFrameworkChange = async (framework: FrameworkType) => {
+  const onFrameworkChange = (framework: FrameworkType) => {
     dispatch(changeFrameworkType({ id: pageObj, framework }));
     setLocalStorage(LocalStorageKey.Framework, framework);
 
@@ -151,7 +166,10 @@ export const PageObjGenerationBar: React.FC<Props> = ({ pageObj, library, url })
       <Footnote className="jdn__pageObject__settings-url">{url}</Footnote>
       <div className="jdn__generationButtons">
         <Space direction="vertical" size={16}>
-          <div ref={refSettings} className="jdn__generationButtons_onboardingMask"></div>
+          <div
+            ref={refSettings as React.LegacyRef<HTMLDivElement>}
+            className="jdn__generationButtons_onboardingMask"
+          ></div>
           <Row>
             <Col flex="104px">
               <Typography.Text>Framework:</Typography.Text>
@@ -214,9 +232,18 @@ export const PageObjGenerationBar: React.FC<Props> = ({ pageObj, library, url })
             </Col>
           </Row>
         </Space>
-        <Space>
+        <div
+          ref={generationButtonRef as React.LegacyRef<HTMLDivElement>}
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginTop: '16px',
+            width: '275px',
+          }}
+        >
           <PageObjGenerationButton
-            refFn={() => useOnBoardingRef(OnboardingStep.Generate, () => dispatch(identifyElements({ library, pageObj })))}
+            // refFn={() => dispatch(identifyElements({ library, pageObj }))}
             type="primary"
             loading={isGenerateAllLoading()}
             onClick={handleGenerate}
@@ -224,14 +251,14 @@ export const PageObjGenerationBar: React.FC<Props> = ({ pageObj, library, url })
             Generate All
           </PageObjGenerationButton>
           <PageObjGenerationButton
-            refFn={() => useRef<HTMLDivElement>(null)} // TODO: change with onboarding step when design is ready
+            // refFn={() => useRef<HTMLDivElement>(null)} // TODO: change with onboarding step when design is ready
             loading={isGenerateEmptyLoading()}
             onClick={handleEmptyPO}
             disabled={isOnboardingOpen}
           >
             Empty Page Object
           </PageObjGenerationButton>
-        </Space>
+        </div>
       </div>
     </div>
   );

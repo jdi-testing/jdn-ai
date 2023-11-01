@@ -1,4 +1,4 @@
-import React, { ReactNode, useContext, useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import { size } from 'lodash';
 import { Button, Checkbox, Row } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,9 +9,6 @@ import { elementGroupUnsetActive, setElementGroupGeneration, toggleAllLocatorsIs
 import { newLocatorStub } from '../utils/constants';
 import { LocatorsSearch } from './LocatorsSearch';
 import { LocatorEditDialog } from './LocatorEditDialog';
-import { useOnBoardingRef } from '../../onboarding/utils/useOnboardingRef';
-import { OnboardingStep } from '../../onboarding/types/constants';
-import { OnboardingContext } from '../../onboarding/OnboardingProvider';
 import { OnboardingTooltip } from '../../onboarding/components/OnboardingTooltip';
 import { LocatorMenu } from './LocatorMenu';
 import { LocatorTreeProps, ExpandState } from './LocatorsTree';
@@ -22,6 +19,9 @@ import {
   selectActualActiveByPageObject,
   selectGenerateByPageObject,
 } from '../selectors/locatorsFiltered.selectors';
+import { RootState } from '../../../app/store/store';
+import { useOnboardingContext } from '../../onboarding/OnboardingProvider';
+import { OnboardingStep } from '../../onboarding/constants';
 
 interface LocatorListHeaderProps {
   render: (viewProps: LocatorTreeProps['viewProps']) => ReactNode;
@@ -48,7 +48,8 @@ export const LocatorListHeader = ({
   const active = useSelector(selectActiveLocators);
   const actualSelected = useSelector(selectActualActiveByPageObject);
 
-  const { isOpen: isOnboardingOpen, isCustomLocatorFlow } = useContext(OnboardingContext);
+  const isCustomLocatorFlow = false; // To Do переписать на данные из slice
+  const isOnboardingOpen = useSelector((state: RootState) => state.onboarding.isOnboardingOpen);
 
   useEffect(() => {
     if (
@@ -72,10 +73,18 @@ export const LocatorListHeader = ({
     dispatch(setElementGroupGeneration({ locators, isGenerated: !isAllLocatorsSelected })); // TODO isGenerated refactoring
   };
 
-  const ref = useOnBoardingRef(
-    OnboardingStep.CustomLocator,
-    isCustomLocatorFlow ? () => setIsEditModalOpen(true) : undefined,
-  );
+  const customLocatorRef = useRef<HTMLElement | null>(null);
+  const { updateStepRefs } = useOnboardingContext();
+
+  useEffect(() => {
+    if (customLocatorRef.current) {
+      updateStepRefs(
+        OnboardingStep.CustomLocator,
+        customLocatorRef,
+        isCustomLocatorFlow ? () => setIsEditModalOpen(true) : undefined,
+      );
+    }
+  }, []);
 
   return (
     <>
@@ -84,7 +93,7 @@ export const LocatorListHeader = ({
         <OnboardingTooltip>
           <Button
             disabled={isOnboardingOpen && !!size(locators)}
-            ref={ref}
+            ref={customLocatorRef}
             icon={<PlusOutlined size={14} />}
             size="small"
             onClick={() => (setIsCreatingForm(true), setIsEditModalOpen(true))}

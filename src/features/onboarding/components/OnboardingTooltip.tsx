@@ -1,21 +1,21 @@
-import React, { FC, useContext } from 'react';
-import { OnboardingContext } from '../OnboardingProvider';
+import React, { FC } from 'react';
 import { Tooltip } from 'antd';
+import { RootState } from '../../../app/store/store';
+import { useSelector } from 'react-redux';
 
 interface Props {
   children: React.ReactNode;
 }
 
 export const OnboardingTooltip: FC<Props> = ({ children }) => {
-  const { isOpen: isOnboardingOpen } = useContext(OnboardingContext);
-
+  const isOnboardingOpen = useSelector((state: RootState) => state.onboarding.isOnboardingOpen);
   return (
-    <React.Fragment>
+    <>
       {isOnboardingOpen ? (
         <Tooltip title="Available only after completing the onboarding">{children}</Tooltip>
       ) : (
         children
       )}
-    </React.Fragment>
+    </>
   );
 };

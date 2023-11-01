@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-misused-promises */
+/* eslint-disable @typescript-eslint/no-floating-promises */
 import React, { useEffect, useState } from 'react';
 import { Provider as ReduxProvider, useDispatch, useSelector } from 'react-redux';
 
@@ -11,17 +14,21 @@ import { HttpEndpoint, request } from '../services/backend';
 import { checkSession, initLocatorSocketController } from './utils/appUtils';
 import { selectCurrentPage } from './main.selectors';
 import { AppDispatch, RootState, store } from './store/store';
-import { useOnDisconnect } from './utils/useOnDisconnect';
+import { useOnDisconnect } from './utils/hooks/useOnDisconnect';
 
 import { defineServer } from './reducers/defineServer.thunk';
 import { Guide } from './components/guide/Guide';
-import './styles/index.less';
 import { BackendStatus } from './types/mainSlice.types';
 import { setIsSessionUnique } from './main.slice';
 import { LocatorsPage } from '../features/locators/LocatorsPage';
 import { PageObjectPage } from '../features/pageObjects/PageObjectPage';
-import { OnboardingProvider } from '../features/onboarding/OnboardingProvider';
+// import { OnboardingProvider, useOnboardingContext } from '../features/onboarding/OnboardingProvider2';
 import { isPageObjectPage } from './utils/helpers';
+import './styles/index.less';
+// import { Modal } from 'antd';
+// import { OnboardingProviderTexts } from '../features/onboarding/types/constants';
+import { Onboarding, useOnboarding } from '../features/onboarding/useOnboarding';
+import { OnboardingProvider, useOnboardingContext } from '../features/onboarding/OnboardingProvider';
 
 const App = () => {
   const [jdiTemplate, setJdiTemplate] = useState<Blob | undefined>(undefined);
@@ -31,6 +38,8 @@ const App = () => {
   const currentPage = useSelector(selectCurrentPage);
   const dispatch = useDispatch<AppDispatch>();
   const isSessionUnique = useSelector((state: RootState) => state.main.isSessionUnique);
+
+  const { stepsRef } = useOnboardingContext();
 
   useOnDisconnect();
   const updateIsSessionUnique = (isInvalidSession: boolean) => {
@@ -56,31 +65,51 @@ const App = () => {
 
   const renderPage = () => {
     const { page } = currentPage;
+    // console.log(page, 'isPO page?: ', isPageObjectPage(page));
     return isPageObjectPage(page) ? <PageObjectPage {...{ jdiTemplate, vividusTemplate }} /> : <LocatorsPage />;
   };
 
+  const {
+    isOnboardingOpen,
+    currentStep,
+    handleCloseOnboarding,
+    handleOnChange,
+    welcomeModal: welcomeOnboardingModal,
+  } = useOnboarding();
+
   return (
-    <div>
-      <Backdrop />
-      <Layout className="jdn__app">
-        <Header className="jdn__header">
-          <StatusBar />
-        </Header>
-        <Content className="jdn__content">
-          {backendAvailable === BackendStatus.Accessed ? (
-            !isSessionUnique ? (
-              <SeveralTabsWarning {...{ checkSession: () => checkSession(updateIsSessionUnique) }} />
+    <>
+      <div>
+        <Backdrop />
+        <Layout className="jdn__app">
+          <Header className="jdn__header">
+            <StatusBar />
+          </Header>
+          <Content className="jdn__content">
+            {backendAvailable === BackendStatus.Accessed ? (
+              !isSessionUnique ? (
+                <SeveralTabsWarning {...{ checkSession: () => checkSession(updateIsSessionUnique) }} />
+              ) : (
+                renderPage()
+              )
+            ) : backendAvailable === BackendStatus.TryToAccess ? (
+              BackendStatus.TryToAccess
             ) : (
-              renderPage()
-            )
-          ) : backendAvailable === BackendStatus.TryToAccess ? (
-            BackendStatus.TryToAccess
-          ) : (
-            <Guide />
-          )}
-        </Content>
-      </Layout>
-    </div>
+              <Guide />
+            )}
+          </Content>
+        </Layout>
+      </div>
+      {/* {onboarding} */}
+      <Onboarding
+        isOpen={isOnboardingOpen}
+        steps={stepsRef}
+        currentStep={currentStep}
+        onClose={handleCloseOnboarding}
+        onChange={handleOnChange}
+      />
+      {welcomeOnboardingModal}
+    </>
   );
 };
 

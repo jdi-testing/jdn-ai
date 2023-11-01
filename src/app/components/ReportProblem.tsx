@@ -1,9 +1,9 @@
+import React, { useEffect, useState } from 'react';
 import { Button, Form, Input, Modal, Tooltip, Upload, UploadFile } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import { UploadChangeParam } from 'antd/lib/upload';
 import { RcFile, UploadFileStatus } from 'antd/lib/upload/interface';
 import { UploadSimple, Warning } from '@phosphor-icons/react';
-import React, { useContext, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { selectCurrentPage } from '../main.selectors';
 import { PageType } from '../types/mainSlice.types';
@@ -18,9 +18,9 @@ import {
   MAX_FILES_SIZE_MB,
 } from '../utils/reportProblem';
 import { selectCurrentPageObject } from '../../features/pageObjects/selectors/pageObjects.selectors';
-import { useOnBoardingRef } from '../../features/onboarding/utils/useOnboardingRef';
-import { OnboardingStep } from '../../features/onboarding/types/constants';
-import { OnboardingContext } from '../../features/onboarding/OnboardingProvider';
+import { RootState } from '../store/store';
+import { useOnboardingContext } from '../../features/onboarding/OnboardingProvider';
+import { OnboardingStep } from '../../features/onboarding/constants';
 
 const { info } = Modal;
 
@@ -62,7 +62,7 @@ export const ReportProblem = () => {
     if (files) files.scrollTop = files.scrollHeight;
   }, [fileList]);
 
-  const { isOpen: isOnboardingOpen } = useContext(OnboardingContext);
+  const isOnboardingOpen = useSelector((state: RootState) => state.onboarding.isOnboardingOpen);
 
   const showExceptionConfirm = () =>
     info({
@@ -159,7 +159,7 @@ export const ReportProblem = () => {
     return e?.fileList;
   };
 
-  //create enum with errors messages
+  // ToDo: create enum with errors messages
   const getTextForUploadButtonTooltip = () => {
     switch (true) {
       case fileList.length >= MAX_COUNT_FILES && filesSize >= MAX_FILES_SIZE_MB:
@@ -173,7 +173,12 @@ export const ReportProblem = () => {
     }
   };
 
-  const reportRef = useOnBoardingRef(OnboardingStep.Report);
+  const reportRef = React.createRef<HTMLElement>();
+  const { updateStepRefs } = useOnboardingContext();
+
+  useEffect(() => {
+    updateStepRefs(OnboardingStep.Report, reportRef);
+  }, []);
 
   return (
     <div className="jdn__reportProblem">

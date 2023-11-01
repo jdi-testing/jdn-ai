@@ -5,7 +5,7 @@ import { useRemark } from 'react-remark';
 import rehypeRaw from 'rehype-raw';
 import remarkEmoji from 'remark-emoji';
 import rehypeSanitize from 'rehype-sanitize';
-import { CopyButton } from '../../common/components/CopyButton';
+import { CopyButton } from '../../../common/components/CopyButton';
 
 export const useGuideRehype = () =>
   useRemark({

@@ -39,7 +39,7 @@ import { stopGenerationGroup } from '../reducers/stopGenerationGroup.thunk';
 import { stopGeneration } from '../reducers/stopGeneration.thunk';
 import { FrameworkType, LocatorType } from '../../../common/types/common';
 
-import { OnboardingContext } from '../../onboarding/OnboardingProvider';
+// import { OnboardingContext } from '../../onboarding/OnboardingProvider';
 import {
   selectCalculatedActiveByPageObj,
   selectActiveNonGenerateByPO,
@@ -53,7 +53,7 @@ import {
   selectInProgressActiveIncPriorityByPageObject,
   selectInProgressActiveDecPriorityByPageObject,
 } from '../selectors/locatorsFiltered.selectors';
-import { AppDispatch } from '../../../app/store/store';
+import { AppDispatch, RootState } from '../../../app/store/store';
 import { selectLastFrameworkType } from '../../pageObjects/selectors/pageObjects.selectors';
 
 interface Props {
@@ -197,7 +197,7 @@ export const LocatorMenu: React.FC<Props> = ({ setIsEditModalOpen, children, tri
     return items;
   };
 
-  const { isOpen: isOnboardingOpen } = useContext(OnboardingContext);
+  const isOnboardingOpen = useSelector((state: RootState) => state.onboarding.isOnboardingOpen);
 
   return (
     <Dropdown

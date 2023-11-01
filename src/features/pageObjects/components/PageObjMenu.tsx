@@ -1,6 +1,6 @@
 import { Button, Dropdown } from 'antd';
-import React, { useContext, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useEffect, useRef, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { size } from 'lodash';
 import { DotsThree } from '@phosphor-icons/react';
@@ -20,11 +20,11 @@ import { PageObject } from '../types/pageObjectSlice.types';
 import { generatePageObject, generatePageObjectPerfTest } from '../../pageObjects/utils/pageObject';
 import { RenamePageObjectDialog } from './RenamePageObjDialog';
 import { checkLocatorsValidity } from '../../locators/reducers/checkLocatorValidity.thunk';
-import { useOnBoardingRef } from '../../onboarding/utils/useOnboardingRef';
-import { OnboardingStep } from '../../onboarding/types/constants';
+import { OnboardingStep } from '../../onboarding/constants';
 import { OnboardingTooltip } from '../../onboarding/components/OnboardingTooltip';
-import { OnboardingContext } from '../../onboarding/OnboardingProvider';
-import { AppDispatch } from '../../../app/store/store';
+// import { OnboardingContext } from '../../onboarding/OnboardingProvider';
+import { AppDispatch, RootState } from '../../../app/store/store';
+import { useOnboardingContext } from '../../onboarding/OnboardingProvider';
 
 interface Props {
   pageObject: PageObject;
@@ -37,7 +37,7 @@ export const PageObjMenu: React.FC<Props> = ({ pageObject, elements }) => {
 
   const [isRenameModalOpen, setIsRenameModalOpen] = useState(false);
 
-  const { isOpen: isOnboardingOpen } = useContext(OnboardingContext);
+  const isOnboardingOpen = useSelector((state: RootState) => state.onboarding.isOnboardingOpen);
 
   const getMenuItems = (pageObject: PageObject, locatorIds: ElementId[] | undefined, locatorObjects: ILocator[]) => {
     const handleRename = () => setIsRenameModalOpen(true);
@@ -76,7 +76,13 @@ export const PageObjMenu: React.FC<Props> = ({ pageObject, elements }) => {
     return { ...{ items } };
   };
 
-  const menuRef = useOnBoardingRef(OnboardingStep.EditPO);
+  const menuRef = useRef<HTMLElement | null>(null);
+  const { updateStepRefs } = useOnboardingContext();
+  useEffect(() => {
+    if (menuRef.current) {
+      updateStepRefs(OnboardingStep.EditPO, menuRef);
+    }
+  }, []);
 
   return (
     <div onClick={(e) => e.stopPropagation()}>
