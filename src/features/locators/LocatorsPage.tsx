@@ -72,7 +72,7 @@ export const LocatorsPage = () => {
   const containerRef = useRef(null);
   useNotifications(containerRef?.current);
 
-  const { handleOnChangeStep } = useOnboarding();
+  const { handleOnChangeStep, isOnboardingOpen } = useOnboarding();
 
   useEffect(() => {
     // The timer is needed so that the step closes automatically, but the animation is not too fast
@@ -85,9 +85,12 @@ export const LocatorsPage = () => {
     };
   }, []);
 
+  // ToDo cb naming - ???
   const pageBack = () => {
     dispatch(setScriptMessage({}));
     dispatch(changePageBack());
+
+    if (isOnboardingOpen) handleOnChangeStep(OnboardingStep.DownloadPO);
   };
 
   const handleConfirm = () => {

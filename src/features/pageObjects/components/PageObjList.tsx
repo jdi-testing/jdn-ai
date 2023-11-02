@@ -134,7 +134,7 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
                         align={{ offset: [-28, 0] }}
                       >
                         <Icon component={PageSvg} className="jdn__itemsList-status" />
-                        <Typography.Text className="jdn__pageObject-content-text">{`${name} ${id}`}</Typography.Text>
+                        <Typography.Text className="jdn__pageObject-content-text">{name}</Typography.Text>
                       </Tooltip>
                     }
                     extra={
@@ -153,7 +153,7 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
         ) : (
           <PageObjectPlaceholder addPageObjectCallback={setActivePanel} />
         )}
-        {/* <Notifications /> */}
+        {/* <Notifications /> ToDo */}
       </div>
     </div>
   );

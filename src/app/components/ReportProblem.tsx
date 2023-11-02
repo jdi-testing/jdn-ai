@@ -18,9 +18,9 @@ import {
   MAX_FILES_SIZE_MB,
 } from '../utils/reportProblem';
 import { selectCurrentPageObject } from '../../features/pageObjects/selectors/pageObjects.selectors';
-import { RootState } from '../store/store';
 import { useOnboardingContext } from '../../features/onboarding/OnboardingProvider';
 import { OnboardingStep } from '../../features/onboarding/constants';
+import { useOnboarding } from '../../features/onboarding/useOnboarding';
 
 const { info } = Modal;
 
@@ -62,7 +62,7 @@ export const ReportProblem = () => {
     if (files) files.scrollTop = files.scrollHeight;
   }, [fileList]);
 
-  const isOnboardingOpen = useSelector((state: RootState) => state.onboarding.isOnboardingOpen);
+  const { isOnboardingOpen } = useOnboarding();
 
   const showExceptionConfirm = () =>
     info({

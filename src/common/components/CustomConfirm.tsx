@@ -36,8 +36,6 @@ const CustomConfirm: React.FC<Props> = ({
   const handleAltAndClose = () => {
     onAlt();
     setIsModalOpen(false);
-    console.log('handleDeleteCurrentPO раньше удаляли тут current PO');
-
     if (destroy) destroy();
   };
 

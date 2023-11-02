@@ -22,6 +22,7 @@ import { IN_DEVELOPMENT_TITLE } from '../../../common/constants/constants';
 
 import { useOnboardingContext } from '../../onboarding/OnboardingProvider';
 import { OnboardingStep } from '../../onboarding/constants';
+import { useOnboarding } from '../../onboarding/useOnboarding';
 
 interface Props {
   pageObj: PageObjectId;
@@ -96,11 +97,13 @@ export const PageObjGenerationSettings: React.FC<Props> = ({ pageObj, library, u
   const status = useSelector((state: RootState) => state.locators.present.status);
   const currentPageObject = useSelector(selectCurrentPageObject);
   const pageObjects = useSelector(selectPageObjects);
-  const isOnboardingOpen = useSelector((state: RootState) => state.onboarding.isOnboardingOpen);
+
+  const { isOnboardingOpen, handleOnChangeStep } = useOnboarding();
 
   const dispatch = useDispatch<AppDispatch>();
 
   const handleGenerate = () => {
+    if (isOnboardingOpen) handleOnChangeStep(OnboardingStep.Generating);
     dispatch(setHideUnadded({ id: pageObj, hideUnadded: false }));
     dispatch(identifyElements({ library, pageObj }));
   };
@@ -112,6 +115,9 @@ export const PageObjGenerationSettings: React.FC<Props> = ({ pageObj, library, u
   useEffect(() => {
     if (generationButtonRef.current) {
       updateStepRefs(OnboardingStep.Generate, generationButtonRef, handleGenerate);
+    }
+    if (refSettings.current) {
+      updateStepRefs(OnboardingStep.POsettings, refSettings);
     }
   }, []);
 
