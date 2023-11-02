@@ -1,29 +1,23 @@
 import { useDispatch } from 'react-redux';
 import { addPageObj } from '../reducers/addPageObject.thunk';
 import { AppDispatch } from '../../../app/store/store';
+import { PageObject } from '../types/pageObjectSlice.types';
 
-export const useAddPageObject = () => {
+type TSetActivePanel = (pageObjectId: string[] | undefined) => void;
+
+export const useAddPageObject = (setActivePanel: TSetActivePanel, hasDraftPageObject: PageObject | undefined) => {
   const dispatch = useDispatch<AppDispatch>();
 
   return async () => {
-    try {
-      await dispatch(addPageObj());
-    } catch (error) {
-      console.error('Execution error addPageObj:', error);
+    if (hasDraftPageObject) {
+      setActivePanel([hasDraftPageObject.id.toString()]);
+    } else {
+      setActivePanel([]);
+      try {
+        await dispatch(addPageObj());
+      } catch (error) {
+        console.error('Execution error addPageObj:', error);
+      }
     }
   };
 };
-
-// export const useAddPageObject = (setActivePanel: (pageObjectId: string[] | undefined) => void) => {
-//   const pageObjects = useSelector(selectPageObjects);
-//   const newPOstub = pageObjects.find((pageObject) => !pageObject.locators?.length);
-//   const dispatch = useDispatch<AppDispatch>();
-
-//   return () => {
-//     if (newPOstub) {
-//       return setActivePanel([newPOstub.id.toString()]);
-//     }
-
-//     dispatch(addPageObj());
-//   };
-// };

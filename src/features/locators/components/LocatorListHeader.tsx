@@ -48,7 +48,7 @@ export const LocatorListHeader = ({
   const active = useSelector(selectActiveLocators);
   const actualSelected = useSelector(selectActualActiveByPageObject);
 
-  const isCustomLocatorFlow = false; // To Do переписать на данные из slice
+  const isCustomLocatorFlow = false; // ToDo rewrite mock to data from slice
   const isOnboardingOpen = useSelector((state: RootState) => state.onboarding.isOnboardingOpen);
 
   useEffect(() => {

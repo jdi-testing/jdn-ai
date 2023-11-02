@@ -1,11 +1,10 @@
-import React, { useEffect, useLayoutEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Col, Row, Select, Space, Typography } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCurrentPageObject, selectPageObjects } from '../selectors/pageObjects.selectors';
 import { AppDispatch, RootState } from '../../../app/store/store';
 import {
   changeElementLibrary,
-  removePageObject,
   setHideUnadded,
   setLocatorType,
   setAnnotationType,
@@ -30,7 +29,7 @@ interface Props {
   url: string;
 }
 
-// To Do move to constants
+// ToDo move to constants
 const libraryOptions = [
   {
     value: ElementLibrary.HTML5,
@@ -110,13 +109,7 @@ export const PageObjGenerationSettings: React.FC<Props> = ({ pageObj, library, u
   const generationButtonRef = useRef<HTMLElement | null>(null);
   const { updateStepRefs } = useOnboardingContext();
 
-  useLayoutEffect(() => {
-    if (refSettings.current) {
-      updateStepRefs(OnboardingStep.POsettings, refSettings);
-    }
-  }, []);
-
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (generationButtonRef.current) {
       updateStepRefs(OnboardingStep.Generate, generationButtonRef, handleGenerate);
     }
@@ -242,16 +235,10 @@ export const PageObjGenerationSettings: React.FC<Props> = ({ pageObj, library, u
             width: '275px',
           }}
         >
-          <PageObjGenerationButton
-            // refFn={() => dispatch(identifyElements({ library, pageObj }))}
-            type="primary"
-            loading={isGenerateAllLoading()}
-            onClick={handleGenerate}
-          >
+          <PageObjGenerationButton type="primary" loading={isGenerateAllLoading()} onClick={handleGenerate}>
             Generate All
           </PageObjGenerationButton>
           <PageObjGenerationButton
-            // refFn={() => useRef<HTMLDivElement>(null)} // TODO: change with onboarding step when design is ready
             loading={isGenerateEmptyLoading()}
             onClick={handleEmptyPO}
             disabled={isOnboardingOpen}

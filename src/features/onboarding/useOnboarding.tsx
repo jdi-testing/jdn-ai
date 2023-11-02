@@ -1,32 +1,23 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import React, { useRef, useState } from 'react';
+import React, { FC, useEffect } from 'react';
 import { Modal, Tour } from 'antd';
-import { TourProps, TourStepProps } from 'antd/lib/tour/interface';
+import { TourStepProps } from 'antd/lib/tour/interface';
 import { StepIndicator } from './components/stepIndicator';
-import {
-  IOnboardingStep,
-  IOnboardingSteps,
-  OnboardingProviderTexts,
-  OnboardingStep,
-  onboardingMap,
-  onboardingSteps,
-} from './constants';
+import { OnboardingProviderTexts, OnboardingStep } from './constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../app/store/store';
-// eslint-disable-next-line import/namespace
-import { closeModal, openModal, openOnboarding, closeOnboarding } from './onboarding.slice';
-// import { selectOnboarding } from './onboarding.selectors';
+import { closeModal, openModal, openOnboarding, closeOnboarding, setCurrentStep } from './onboarding.slice';
+import { LocalStorageKey, getLocalStorage, setLocalStorage } from '../../common/utils/localStorage';
+import { BackendStatus } from '../../app/types/mainSlice.types';
 
-export const Onboarding: React.FC<{
+type TOnboarding = {
   isOpen: boolean;
   steps: TourStepProps[];
   currentStep: number;
   onClose: () => void;
   onChange: (newStep: number) => void;
-}> = ({ isOpen, steps, currentStep, onClose, onChange }) => {
-  // console.log('is ***Onboarding*** Open: ', isOpen, currentStep);
-  // console.log(steps);
+};
 
+export const Onboarding: FC<TOnboarding> = ({ isOpen, steps, currentStep, onClose, onChange }) => {
   const handleOnChange = (newStep: number) => {
     onChange(newStep);
   };
@@ -39,14 +30,6 @@ export const Onboarding: React.FC<{
       onClose={onClose}
       onChange={handleOnChange}
       indicatorsRender={(current, total) => <StepIndicator {...{ current, total }} />}
-      // update={currentStep}
-      // disableFocusLock
-      // showButtons={true}
-      // showNavigation={true}
-      // accentColor="#007bff"
-      // onAfterOpen={() => {
-      //   // Действия после открытия onboarding
-      // }}
     />
   );
 };
@@ -55,8 +38,11 @@ export const useOnboarding = () => {
   const dispatch = useDispatch();
   const isModalOpen = useSelector((state: RootState) => state.onboarding.isWelcomeModalOpen);
   const isOnboardingOpen = useSelector((state: RootState) => state.onboarding.isOnboardingOpen);
-  const [currentStep, setCurrentStep] = useState<number>(0);
-  // const [steps, setSteps] = useState<TourStepProps[]>(convertOnboardingStepsToTourSteps(onboardingMap));
+  const currentStep = useSelector((state: RootState) => state.onboarding.currentStep);
+
+  const isOnboardingPassed = getLocalStorage(LocalStorageKey.IsOnboardingPassed);
+  const isBackendAvailable = useSelector((state: RootState) => state.main.backendAvailable) === BackendStatus.Accessed;
+  const isSessionUnique = useSelector((state: RootState) => state.main.isSessionUnique);
 
   const openModalHandler = () => {
     dispatch(openModal());
@@ -66,61 +52,23 @@ export const useOnboarding = () => {
     dispatch(closeModal());
   };
 
+  useEffect(() => {
+    if (!isOnboardingPassed && isBackendAvailable && isSessionUnique) {
+      openModalHandler();
+      setLocalStorage(LocalStorageKey.IsOnboardingPassed, true);
+    } else {
+      closeModalHandler();
+    }
+  }, [isBackendAvailable, isSessionUnique]);
+
   const openOnboardingHandler = () => {
     dispatch(openOnboarding());
   };
 
   const closeOnboardingHandler = () => {
     dispatch(closeOnboarding());
-    setCurrentStep(0);
+    dispatch(setCurrentStep(0));
   };
-
-  // move to utils
-  // const convertOnboardingStepsToTourSteps = (
-  //   onboardingStepsMap: Map<OnboardingStep, IOnboardingStep>,
-  // ): TourStepProps[] => {
-  //   const steps: TourStepProps[] = [];
-  //   onboardingStepsMap.forEach((stepData) => {
-  //     steps.push({
-  //       // order: stepData.order,
-  //       title: stepData.title,
-  //       description: stepData.description,
-  //       target: stepData.target?.current,
-  //       nextButtonProps: stepData.nextButtonProps,
-  //     });
-  //   });
-  //   return steps;
-  // };
-
-  // const updateStepRefs = (
-  //   key: OnboardingStep,
-  //   stepRef: React.RefObject<HTMLElement> | null,
-  //   onClick?: (() => void) | undefined,
-  //   onboardingStepsMap: Map<OnboardingStep, IOnboardingStep> = onboardingMap,
-  // ): TourStepProps[] => {
-  //   const updatedSteps: TourStepProps[] = Array.from(onboardingStepsMap.values()).map((stepData) => {
-  //     if (key === stepData.order) {
-  //       if (stepData.nextButtonProps) {
-  //         stepData.target = stepRef;
-  //         stepData.nextButtonProps.onClick = onClick;
-  //       }
-  //     }
-  //     return {
-  //       title: stepData.title,
-  //       description: stepData.description,
-  //       target: stepData.target?.current,
-  //       nextButtonProps: stepData.nextButtonProps,
-  //     };
-  //   });
-  //   console.log('updateStepRefs: ', key, updatedSteps);
-
-  //   // setSteps(updatedSteps);
-  //   // обновлять steps из Context
-  //   return updatedSteps;
-  // };
-
-  // const steps: TourProps['steps'] = convertOnboardingStepsToTourSteps(onboardingMap);
-  // console.log(steps);
 
   const handleConfirmModal = () => {
     closeModalHandler();
@@ -131,19 +79,9 @@ export const useOnboarding = () => {
     closeOnboardingHandler();
   };
 
-  const handleOnChange = (newStep: number) => {
-    setCurrentStep(newStep);
+  const handleOnChangeStep = (newStep: OnboardingStep) => {
+    dispatch(setCurrentStep(newStep));
   };
-
-  // const onboarding = (
-  //   <Onboarding
-  //     isOpen={isOnboardingOpen}
-  //     steps={steps}
-  //     currentStep={currentStep}
-  //     onClose={handleCloseOnboarding}
-  //     onChange={handleOnChange}
-  //   />
-  // );
 
   const welcomeModal = (
     <Modal
@@ -158,24 +96,18 @@ export const useOnboarding = () => {
     </Modal>
   );
 
-  // console.log(isModalOpen);
-
   return {
     isModalOpen,
     openModal: openModalHandler,
     closeModal: closeModalHandler,
     handleCloseOnboarding,
-    handleOnChange,
+    handleOnChangeStep,
     handleConfirmModal,
     isOnboardingOpen,
     openOnboarding: openOnboardingHandler,
     closeOnboarding: closeOnboardingHandler,
-    // onboarding,
-    // steps,
     currentStep,
-    // setSteps,
     welcomeModal,
-    // updateStepRefs,
   };
 };
 

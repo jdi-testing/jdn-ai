@@ -1,13 +1,16 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { OnboardingStep } from './constants';
 
 interface IOnboardingState {
   isWelcomeModalOpen: boolean;
   isOnboardingOpen: boolean;
+  currentStep: number;
 }
 
 const initialState: IOnboardingState = {
   isWelcomeModalOpen: false,
   isOnboardingOpen: false,
+  currentStep: 0,
 };
 
 const modalReducers = {
@@ -26,6 +29,9 @@ const onboardingReducers = {
   closeOnboarding: (state: IOnboardingState) => {
     state.isOnboardingOpen = false;
   },
+  setCurrentStep: (state: IOnboardingState, action: PayloadAction<OnboardingStep>) => {
+    state.currentStep = action.payload;
+  },
 };
 
 const onboardingSlice = createSlice({
@@ -37,5 +43,5 @@ const onboardingSlice = createSlice({
   },
 });
 
-export const { openModal, closeModal, openOnboarding, closeOnboarding } = onboardingSlice.actions;
+export const { openModal, closeModal, openOnboarding, closeOnboarding, setCurrentStep } = onboardingSlice.actions;
 export default onboardingSlice.reducer;

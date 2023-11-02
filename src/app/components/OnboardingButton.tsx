@@ -20,7 +20,6 @@ export const OnboardingButton = () => {
   const onboardingButtonRef = React.createRef<HTMLElement>();
 
   useEffect(() => {
-    console.log('onboardingButtonRef: ', onboardingButtonRef);
     if (onboardingButtonRef.current) {
       updateStepRefs(OnboardingStep.Onboarding, onboardingButtonRef);
     }

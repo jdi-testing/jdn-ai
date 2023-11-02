@@ -1,5 +1,5 @@
-import { Button, Dropdown } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
+import { Button, Dropdown } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { size } from 'lodash';
@@ -22,7 +22,6 @@ import { RenamePageObjectDialog } from './RenamePageObjDialog';
 import { checkLocatorsValidity } from '../../locators/reducers/checkLocatorValidity.thunk';
 import { OnboardingStep } from '../../onboarding/constants';
 import { OnboardingTooltip } from '../../onboarding/components/OnboardingTooltip';
-// import { OnboardingContext } from '../../onboarding/OnboardingProvider';
 import { AppDispatch, RootState } from '../../../app/store/store';
 import { useOnboardingContext } from '../../onboarding/OnboardingProvider';
 

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { ReactNode, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
@@ -35,6 +36,8 @@ const CustomConfirm: React.FC<Props> = ({
   const handleAltAndClose = () => {
     onAlt();
     setIsModalOpen(false);
+    console.log('handleDeleteCurrentPO раньше удаляли тут current PO');
+
     if (destroy) destroy();
   };
 

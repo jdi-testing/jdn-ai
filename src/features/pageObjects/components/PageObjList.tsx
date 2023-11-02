@@ -16,7 +16,7 @@ import { PageObjListHeader } from './PageObjListHeader';
 import { useNotifications } from '../../../common/components/notification/useNotifications';
 import { RootState } from '../../../app/store/store';
 import { ILocator } from '../../locators/types/locator.types';
-import { PageObjectId } from '../types/pageObjectSlice.types';
+import { PageObject, PageObjectId } from '../types/pageObjectSlice.types';
 import { ElementLibrary } from '../../locators/types/generationClasses.types';
 import { PageType } from '../../../app/types/mainSlice.types';
 import { selectConfirmedLocators } from '../../locators/selectors/locatorsFiltered.selectors';
@@ -31,14 +31,13 @@ const DEFAULT_ACTIVE_KEY = '0';
 
 export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) => {
   const state = useSelector((_state: RootState) => _state);
-  // console.log('PageObjListState: ', state);
 
   // due to antd types: onChange?: (key: string | string[]) => void;
   const currentPageObjectIndex = useSelector(
     (_state: RootState): string | undefined => _state.pageObject.present.currentPageObject?.toString(),
   );
   const framework = useSelector(selectLastFrameworkType) || FrameworkType.JdiLight;
-  const pageObjects = useSelector(selectPageObjects);
+  const pageObjects: PageObject[] = useSelector(selectPageObjects);
   const [activePanel, setActivePanel] = useState<string[] | undefined>([DEFAULT_ACTIVE_KEY]);
 
   const contentRef = useRef<HTMLDivElement>(null);
@@ -47,23 +46,12 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
   const isExpanded = !!size(activePanel);
 
   useEffect(() => {
-    // console.log('index: ', currentPageObjectIndex);
-    // console.log('object: ');
-
     if (currentPageObjectIndex) {
       setActivePanel([currentPageObjectIndex]);
     } else {
       setActivePanel([DEFAULT_ACTIVE_KEY]);
     }
   }, [currentPageObjectIndex]);
-
-  // useEffect(() => {
-  //   console.log('activePanel: ', activePanel);
-  // }, [activePanel]);
-
-  // useEffect(() => {
-  //   console.log('pageObjects: ', ...pageObjects);
-  // }, [pageObjects]);
 
   const renderLocators = (elements: ILocator[], library: ElementLibrary) => {
     if (size(elements)) {
@@ -82,14 +70,9 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
     library: ElementLibrary,
     isPageObjectNotEmpty: boolean,
   ) => {
-    // console.log('render for settings page: ', !isPageObjectNotEmpty);
-
     if (isPageObjectNotEmpty) {
-      // console.log('------------- renderLocators', renderLocators);
-
       return renderLocators(elements, library);
     } else {
-      // console.log('------------- PageObjGenerationSettings');
       return <PageObjGenerationSettings pageObj={pageObjId} {...{ library, url }} />;
     }
   };
@@ -99,7 +82,7 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
       setActivePanel([]);
     } else {
       const keys = pageObjects.map(
-        (po) => po.id.toString(), // due to antd types: onChange?: (key: string | string[]) => void;
+        (pageObject) => pageObject.id.toString(), // due to antd types: onChange?: (key: string | string[]) => void;
       );
       setActivePanel(keys);
     }
@@ -137,7 +120,6 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
             >
               {pageObjects.map((pageObject) => {
                 const { id, locators, url, name, library } = pageObject;
-                // console.log('State in PageObjList: ', state);
 
                 const elements = selectConfirmedLocators(state, id);
                 const isPageObjectNotEmpty = !!size(locators);
@@ -152,7 +134,7 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
                         align={{ offset: [-28, 0] }}
                       >
                         <Icon component={PageSvg} className="jdn__itemsList-status" />
-                        <Typography.Text className="jdn__pageObject-content-text">{name}</Typography.Text>
+                        <Typography.Text className="jdn__pageObject-content-text">{`${name} ${id}`}</Typography.Text>
                       </Tooltip>
                     }
                     extra={
@@ -169,7 +151,7 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
             </Collapse>
           </React.Fragment>
         ) : (
-          <PageObjectPlaceholder />
+          <PageObjectPlaceholder addPageObjectCallback={setActivePanel} />
         )}
         {/* <Notifications /> */}
       </div>

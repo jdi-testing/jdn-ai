@@ -1,11 +1,11 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import React, { FC, useEffect, useMemo, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Button, Modal, Row, Space, Tooltip } from 'antd';
 import { CaretDown, Plus, Trash } from '@phosphor-icons/react';
 
 import { pushNotification } from '../../../app/main.slice';
 import { size } from 'lodash';
-import { selectPageObjects } from '../selectors/pageObjects.selectors';
+import { selectCurrentPageObject, selectPageObjects } from '../selectors/pageObjects.selectors';
 
 import { removeAll as removeAllLocators } from '../../locators/locators.slice';
 import { removeAll as removeAllPageObjects } from '../pageObject.slice';
@@ -17,6 +17,7 @@ import { OnboardingStep } from '../../onboarding/constants';
 import { checkLocatorsValidity } from '../../locators/reducers/checkLocatorValidity.thunk';
 import { useAddPageObject } from '../utils/useAddPageObject';
 import { useOnboardingContext } from '../../onboarding/OnboardingProvider';
+import { PageObject } from '../types/pageObjectSlice.types';
 
 const { confirm } = Modal;
 
@@ -27,15 +28,16 @@ interface Props {
   isExpanded: boolean;
 }
 
-export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isExpanded }) => {
+export const PageObjListHeader: FC<Props> = ({ template, toggleExpand, isExpanded, setActivePanel }) => {
   const state = useSelector((rootState) => rootState) as RootState;
   const pageObjects = useSelector(selectPageObjects);
   const locatorsToGenerate = useSelector(selectLocatorsToGenerate);
   const enableDownload = useMemo(() => !!size(locatorsToGenerate), [locatorsToGenerate]);
-  const newPOstub = pageObjects.find((pageObject) => !pageObject.locators?.length);
+  const hasDraftPageObject: PageObject | undefined = pageObjects.find((pageObject) => !pageObject.locators?.length);
 
   const dispatch = useDispatch<AppDispatch>();
-  const handleAddPageObject = useAddPageObject();
+
+  const handleAddPageObject = useAddPageObject(setActivePanel, hasDraftPageObject);
 
   const handleDownload = () => {
     dispatch(pushNotification({ action: { type: 'downloadTemplate' } }));
@@ -65,6 +67,7 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
   const downloadRef = useRef<HTMLElement | null>(null);
   const newPOButtonRef = useRef<HTMLElement | null>(null);
   const { updateStepRefs } = useOnboardingContext();
+
   useEffect(() => {
     if (newPOButtonRef.current) {
       updateStepRefs(OnboardingStep.NewPageObject, newPOButtonRef, handleAddPageObject);
@@ -72,7 +75,8 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
     if (downloadRef.current) {
       updateStepRefs(OnboardingStep.DownloadPO, downloadRef, () => dispatch(checkLocatorsValidity()));
     }
-  }, []);
+  }, [pageObjects, newPOButtonRef.current]);
+
   return (
     <Row className="jdn__itemsList-header" justify="space-between">
       <CaretDown
@@ -107,8 +111,8 @@ export const PageObjListHeader: React.FC<Props> = ({ template, toggleExpand, isE
           type="primary"
           size="small"
           onClick={handleAddPageObject}
-          disabled={!!newPOstub}
-          icon={<Plus size={16} color={newPOstub ? '#00000040' : '#fff'} />}
+          disabled={!!hasDraftPageObject}
+          icon={<Plus size={16} color={hasDraftPageObject ? '#00000040' : '#fff'} />}
         >
           Page Object
         </Button>

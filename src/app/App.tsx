@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/no-floating-promises */
 import React, { useEffect, useState } from 'react';
 import { Provider as ReduxProvider, useDispatch, useSelector } from 'react-redux';
 
@@ -22,11 +19,8 @@ import { BackendStatus } from './types/mainSlice.types';
 import { setIsSessionUnique } from './main.slice';
 import { LocatorsPage } from '../features/locators/LocatorsPage';
 import { PageObjectPage } from '../features/pageObjects/PageObjectPage';
-// import { OnboardingProvider, useOnboardingContext } from '../features/onboarding/OnboardingProvider2';
 import { isPageObjectPage } from './utils/helpers';
 import './styles/index.less';
-// import { Modal } from 'antd';
-// import { OnboardingProviderTexts } from '../features/onboarding/types/constants';
 import { Onboarding, useOnboarding } from '../features/onboarding/useOnboarding';
 import { OnboardingProvider, useOnboardingContext } from '../features/onboarding/OnboardingProvider';
 
@@ -65,7 +59,6 @@ const App = () => {
 
   const renderPage = () => {
     const { page } = currentPage;
-    // console.log(page, 'isPO page?: ', isPageObjectPage(page));
     return isPageObjectPage(page) ? <PageObjectPage {...{ jdiTemplate, vividusTemplate }} /> : <LocatorsPage />;
   };
 
@@ -73,7 +66,7 @@ const App = () => {
     isOnboardingOpen,
     currentStep,
     handleCloseOnboarding,
-    handleOnChange,
+    handleOnChangeStep,
     welcomeModal: welcomeOnboardingModal,
   } = useOnboarding();
 
@@ -106,7 +99,7 @@ const App = () => {
         steps={stepsRef}
         currentStep={currentStep}
         onClose={handleCloseOnboarding}
-        onChange={handleOnChange}
+        onChange={handleOnChangeStep}
       />
       {welcomeOnboardingModal}
     </>

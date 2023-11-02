@@ -5,22 +5,11 @@ import { IOnboardingStep, OnboardingStep, TNextButtonProps, TPrevButtonProps, on
 import { IOnboardingContext } from './types/context.types';
 import { TourStepProps } from 'antd/lib';
 
-const initialContext = {
-  stepsRef: [],
-  updateStepRefs: () => [],
-  modifyStepRefByKey: () => [],
-};
-const OnboardingContext = createContext(initialContext as IOnboardingContext);
-
-export const useOnboardingContext = () => useContext(OnboardingContext);
-
-// To Do move to utils
+// ToDo move to utils
 const convertUpdatedStepsToTourSteps = (
   updatedSteps: IOnboardingStep[],
   isCustomLocatorFlow: boolean,
 ): TourStepProps[] => {
-  // console.log('convertUpdatedStepsToTourSteps: ', updatedSteps);
-
   const result: IOnboardingStep[] = !isCustomLocatorFlow
     ? updatedSteps.filter((stepData) => stepData.order !== OnboardingStep.EditLocator)
     : updatedSteps;
@@ -48,9 +37,17 @@ const convertUpdatedStepsToTourSteps = (
     };
   });
 
-  // console.log('converted tourSteps:', tourSteps);
   return tourSteps;
 };
+
+const initialContext = {
+  stepsRef: [],
+  updateStepRefs: () => [],
+  modifyStepRefByKey: () => [],
+};
+const OnboardingContext = createContext(initialContext as IOnboardingContext);
+
+export const useOnboardingContext = () => useContext(OnboardingContext);
 
 export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
   const [steps, setSteps] = useState<TourStepProps[]>(convertOnboardingStepsToTourSteps(onboardingMap));
@@ -82,7 +79,7 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
       return res;
     });
 
-    setSteps(convertUpdatedStepsToTourSteps(updatedSteps, false)); // вместо true передать isCustomLocatorFlow из слайса
+    setSteps(convertUpdatedStepsToTourSteps(updatedSteps, false)); // ToDo rewrite hardcode to data from slice(isCustomLocatorFlow)
   };
 
   const modifyStepRefByKey = (
@@ -93,10 +90,6 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
     onboardingStepsMap: Map<OnboardingStep, IOnboardingStep> = onboardingMap,
   ): IOnboardingStep[] => {
     const updatedSteps = [...onboardingStepsMap.values()].map((stepData) => {
-      if (key === OnboardingStep.Onboarding) {
-        console.log('modifyStepRefByKey: ', stepRef);
-      }
-
       if (key === stepData.order) {
         stepData.target = stepRef;
         if (nextButtonProps) {
@@ -109,7 +102,7 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
       return stepData;
     });
 
-    setSteps(convertUpdatedStepsToTourSteps(updatedSteps, false)); // вместо true передать isCustomLocatorFlow из слайса
+    setSteps(convertUpdatedStepsToTourSteps(updatedSteps, false)); // ToDo rewrite hardcode to data from slice(isCustomLocatorFlow)
 
     return updatedSteps;
   };

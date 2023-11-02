@@ -68,45 +68,21 @@ export const Locator: FC<Props> = ({ element, currentPage, searchState, depth, s
   } = element;
 
   const currentPageObject = useSelector(selectCurrentPageObject);
+  const { updateStepRefs, modifyStepRefByKey } = useOnboardingContext();
+  const isFirstLocator = index === 0;
 
   const ref = useRef<HTMLDivElement>(null);
 
-  // const isFirstLocator = useSelector(selectFirstLocatorIdByPO) === element_id;
-  // console.log('index: ', index);
-
-  const isFirstLocator = index === 0;
-
-  // const menuRef = useOnBoardingRef(
-  //   OnboardingStep.EditLocator,
-  //   undefined,
-  //   undefined,
-  //   !(isFirstLocator && !isCustomLocatorFlow),
-  // );
-
   const menuRef = isFirstLocator ? React.createRef<HTMLElement>() : null;
-  // const addToPORef = React.createRef<HTMLInputElement>();
-  // console.log('checkbox ref: ', addToPORef);
-
-  const { updateStepRefs, modifyStepRefByKey } = useOnboardingContext();
-
   useEffect(() => {
     if (!isFirstLocator) return;
-    // console.log('isFirstLocator ContextMenu: ', isFirstLocator, element_id);
-    // eslint-disable-next-line max-len
-    if (menuRef) updateStepRefs(OnboardingStep.ContextMenu, menuRef); // поправить логику под !(isFirstLocator && !isCustomLocatorFlow)
-    // const addToPORef = useOnBoardingRef(OnboardingStep.AddToPO, undefined, undefined, !isFirstLocator);
-    // updateStepRefs(OnboardingStep.AddToPO, addToPORef); // и тут тоже
+    if (menuRef) updateStepRefs(OnboardingStep.ContextMenu, menuRef);
   }, []);
 
   const addToPORef = React.createRef<HTMLInputElement>();
-  // console.log('checkbox ref: ', addToPORef);
-
-  // useMemo(() => modifyStepRefByKey(OnboardingStep.AddToPO, addToPORef, { disabled: !isChecked }), [isChecked]);
-
   useLayoutEffect(() => {
     if (!isFirstLocator) return;
     modifyStepRefByKey(OnboardingStep.AddToPO, addToPORef, { disabled: !isChecked });
-    // console.log('isFirstLocator AddToPO: ', isFirstLocator, addToPORef);
     if (addToPORef) updateStepRefs(OnboardingStep.AddToPO, addToPORef);
   }, [isChecked]);
 

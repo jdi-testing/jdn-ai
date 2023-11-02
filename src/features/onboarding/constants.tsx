@@ -23,6 +23,7 @@ export enum OnboardingStep {
 }
 
 export type TNextButtonProps = {
+  style?: { display: string };
   disabled?: boolean;
   children?: string;
   onClick?: () => void;
@@ -48,8 +49,6 @@ export interface IOnboardingSteps {
   [key: string]: IOnboardingStep;
 }
 
-// const isCustomLocatorFlow = false; // To Do заменить на данные из слайса
-
 export const onboardingSteps: IOnboardingSteps = {
   NewPageObject: {
     order: OnboardingStep.NewPageObject,
@@ -58,7 +57,7 @@ export const onboardingSteps: IOnboardingSteps = {
     target: undefined,
     nextButtonProps: {
       children: 'Create Page Object',
-      onClick: undefined, // newPageObjectNextClick(refs),
+      onClick: undefined,
     },
   },
   POsettings: {
@@ -68,7 +67,7 @@ export const onboardingSteps: IOnboardingSteps = {
     locators for your convenience. Later you can modify these characteristics.`,
     target: undefined,
     nextButtonProps: {
-      onClick: undefined, // refs[OnboardingStep.POsettings]?.onClickPrev,
+      onClick: undefined,
     },
   },
   Generate: {
@@ -81,7 +80,7 @@ export const onboardingSteps: IOnboardingSteps = {
     target: undefined,
     nextButtonProps: {
       children: 'Generate',
-      onClick: undefined, // refs[OnboardingStep.Generate]?.onClickNext,
+      onClick: undefined,
     },
   },
   Generating: {
@@ -89,14 +88,16 @@ export const onboardingSteps: IOnboardingSteps = {
     title: 'Creating locators...',
     target: undefined,
     nextButtonProps: {
-      disabled: false, // To Do  изначально true и изменяется после генерации локаторов
+      disabled: true,
+      style: { display: 'none' },
     },
     prevButtonProps: {
       disabled: true,
+      style: { display: 'none' },
     },
   },
   CustomLocator: {
-    // isCustomLocatorFlow
+    // ToDo isCustomLocatorFlow
     order: OnboardingStep.CustomLocator,
     title: 'Create Custom locator',
     description:
@@ -107,8 +108,7 @@ export const onboardingSteps: IOnboardingSteps = {
     },
     nextButtonProps: {
       children: undefined,
-      // isCustomLocatorFlow ? 'Create custom locator' : 'Next',
-      onClick: undefined, // refs[OnboardingStep.CustomLocator]?.onClickNext,
+      onClick: undefined,
     },
   },
   EditLocator: {
@@ -117,23 +117,15 @@ export const onboardingSteps: IOnboardingSteps = {
     description: 'Fill in all the fields and add the new locator to the list',
     target: undefined,
     prevButtonProps: {
-      onClick: undefined, // refs[OnboardingStep.EditLocator]?.onClickPrev,
+      onClick: undefined,
     },
     nextButtonProps: {
       children: 'Add to the list',
-      onClick: undefined, // refs[OnboardingStep.EditLocator]?.onClickNext;,
-      // ...(onClick ? {} : { disabled: true }),
+      onClick: undefined,
     },
   },
-  // const contextMenu = (refs: Record<OnboardingStep, StepRef>) => ({
-  //   title: 'Context menu',
-  //   description:
-  //     'You can modify the name, type, or locator itself by selecting the "Edit" option from the context menu.' +
-  //     '\n Additionally, you can copy an already optimized locator in your preferred format by accessing the context menu or by right-clicking on the locator.',
-  //   target: refs[OnboardingStep.EditLocator]?.target?.current,
-  // });
   ContextMenu: {
-    order: OnboardingStep.ContextMenu, // ??
+    order: OnboardingStep.ContextMenu,
     title: 'Context menu',
     description:
       'You can modify the name, type, or locator itself by selecting the "Edit" option from the context menu.' +
@@ -148,7 +140,7 @@ export const onboardingSteps: IOnboardingSteps = {
     target: undefined,
     prevButtonProps: {
       style: undefined,
-      // { display: isCustomLocatorFlow ? 'none' : 'inline-block' },
+      // ToDo { display: isCustomLocatorFlow ? 'none' : 'inline-block' },
     },
     nextButtonProps: {
       disabled: true,
@@ -161,7 +153,7 @@ export const onboardingSteps: IOnboardingSteps = {
     target: undefined,
     nextButtonProps: {
       children: 'Save Page Object',
-      onClick: undefined, // refs[OnboardingStep.SaveLocators]?.onClickNext,
+      onClick: undefined,
     },
   },
   DownloadPO: {
@@ -171,7 +163,7 @@ export const onboardingSteps: IOnboardingSteps = {
       'After saving the required locators, the Page Object is ready. \n You can download all Page Objects as a .zip file.',
     target: undefined,
     prevButtonProps: {
-      onClick: undefined, // refs[OnboardingStep.DownloadPO]?.onClickPrev,
+      style: { display: 'none' },
     },
   },
   EditPO: {
@@ -201,7 +193,6 @@ export const onboardingSteps: IOnboardingSteps = {
     ),
     target: undefined,
     nextButtonProps: {
-      // children: 'Create Page Object',
       onClick: undefined,
     },
   },

@@ -1,22 +1,22 @@
-import React, { FC, useContext } from 'react';
+import React, { FC } from 'react';
 import { useSelector } from 'react-redux';
 import { Popconfirm } from 'antd';
 import { RootState } from '../../../app/store/store';
 import { selectIsDefaultState } from '../../../app/main.selectors';
-// import { OnboardingContext } from '../OnboardingProvider';
 import { OnboardingPopupText, OnboardingPopupButtons } from '../constants';
 import { useOnboarding } from '../useOnboarding';
+import { BackendStatus } from '../../../app/types/mainSlice.types';
 
 interface Props {
   children: React.ReactNode;
 }
 
 export const OnboardingPopup: FC<Props> = ({ children }) => {
-  const { openModal } = useOnboarding();
-  // const { openOnboarding } = useContext(OnboardingContext);
+  const { openOnboarding } = useOnboarding();
   const isDefaultState = useSelector<RootState>(selectIsDefaultState);
-  // const { isOnboardingAvailable } = useContext(OnboardingContext);
-  const isOnboardingAvailable = true; // fix for real cases
+  const isBackendAvailable = useSelector((state: RootState) => state.main.backendAvailable) === BackendStatus.Accessed;
+  const { isOnboardingOpen } = useOnboarding();
+  const isOnboardingAvailable = isBackendAvailable && !isOnboardingOpen;
 
   return (
     <Popconfirm
@@ -27,7 +27,7 @@ export const OnboardingPopup: FC<Props> = ({ children }) => {
       icon={false}
       disabled={!isOnboardingAvailable}
       title={isDefaultState ? OnboardingPopupText.Default : OnboardingPopupText.InProgress}
-      onConfirm={openModal}
+      onConfirm={openOnboarding}
       okText={OnboardingPopupButtons.Ok}
       cancelText={OnboardingPopupButtons.Cancel}
     >

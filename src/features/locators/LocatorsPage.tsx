@@ -41,6 +41,7 @@ import { EmptyListModal } from './text.constants';
 import { LocatorsEmptyListInfo } from './components/LocatorsEmptyListInfo';
 import { useOnboardingContext } from '../onboarding/OnboardingProvider';
 import { OnboardingStep } from '../onboarding/constants';
+import { useOnboarding } from '../onboarding/useOnboarding';
 
 const { confirm } = Modal;
 
@@ -57,18 +58,32 @@ export const LocatorsPage = () => {
   const inProgressHashes = useSelector(selectInProgressHashes);
   const calculatedAndChecked = useSelector(selectCalculatedAndCheckedByPageObj);
   const deletedChecked = useSelector(selectDeletedCheckedByPageObj);
-  const { id: currentPOId } = useSelector(selectCurrentPageObject) ?? {};
+  const currentPO = useSelector(selectCurrentPageObject);
 
   const breadcrumbsRef = useRef(null);
+
   const [locatorsSnapshot] = useState(useSelector(selectLocatorsByPageObject));
   const [filterSnapshot] = useState(useSelector(selectClassFilterByPO));
   const [isEmptyListModalOpen, setIsEmptyListModalOpen] = useState(!!locators.length);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
   // For changing locatorsList-content height depends on header height
   const containerHeight = useCalculateHeaderSize(breadcrumbsRef);
-
   const containerRef = useRef(null);
   useNotifications(containerRef?.current);
+
+  const { handleOnChangeStep } = useOnboarding();
+
+  useEffect(() => {
+    // The timer is needed so that the step closes automatically, but the animation is not too fast
+    const timeoutId = setTimeout(() => {
+      handleOnChangeStep(OnboardingStep.CustomLocator);
+    }, 300);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, []);
 
   const pageBack = () => {
     dispatch(setScriptMessage({}));
@@ -110,7 +125,7 @@ export const LocatorsPage = () => {
       dispatch(removeAllFilters());
     } else {
       dispatch(restoreLocators(locatorsSnapshot));
-      dispatch(setFilter({ pageObjectId: currentPOId!, JDIclassFilter: filterSnapshot }));
+      if (currentPO) dispatch(setFilter({ pageObjectId: currentPO.id, JDIclassFilter: filterSnapshot }));
     }
     pageBack();
   };
