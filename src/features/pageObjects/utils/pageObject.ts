@@ -30,6 +30,15 @@ export const createElementName = (
 ) => {
   const { elemName, elemId, elemText, predicted_label, elemAriaLabel } = element;
 
+  const concat = (origin: string) => (append: string) => {
+    const _origin = origin;
+    if (_origin)
+      return truncate(_origin, { length: subtract(60, size(append)), omission: '' }).concat(upperFirst(append));
+    else return append;
+  };
+
+  const isUnique = (_name: string) => uniqueNames.indexOf(_name) === -1;
+
   const uniqueIndex = (name: string) => {
     let index = 1;
 
@@ -44,15 +53,6 @@ export const createElementName = (
 
   const normalizeString = (string: string) =>
     chain(string).trim().camelCase().truncate({ length: MAX_LOCATOR_NAME_LENGTH, omission: '' }).value();
-
-  const isUnique = (_name: string) => uniqueNames.indexOf(_name) === -1;
-
-  const concat = (origin: string) => (append: string) => {
-    const _origin = origin;
-    if (_origin)
-      return truncate(_origin, { length: subtract(60, size(append)), omission: '' }).concat(upperFirst(append));
-    else return append;
-  };
 
   const getName = () => (elemName ? normalizeString(elemName) : '');
   const getText = () => (elemText ? normalizeString(returnLatinCodePoints(elemText)) : '');

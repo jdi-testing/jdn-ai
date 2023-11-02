@@ -108,8 +108,6 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
 
     // create tree
     const createTree = (_data: LocatorTree[]): TreeNode[] => {
-      // console.log('createTree: ', _data);
-
       const childNodes: TreeNode[] = [];
       _data.forEach((element, i) => {
         const { element_id, children, parent_id, jdnHash, searchState, depth } = element;
@@ -163,7 +161,6 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
       }, 500);
     }
   }, [expandedKeys]);
-  // console.log('treeNodes: ', treeNodes);
 
   return (
     <>

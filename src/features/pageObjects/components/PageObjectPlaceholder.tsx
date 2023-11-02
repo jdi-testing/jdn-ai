@@ -1,12 +1,16 @@
-import React from 'react';
+import React, { FC } from 'react';
 
 import { EmptyListInfo } from '../../../common/components/emptyListInfo/EmptyListInfo';
 import { useAddPageObject } from '../utils/useAddPageObject';
 import { Button } from 'antd';
 import { OnboardingPopup } from '../../onboarding/components/OnboardingPopup';
 
-export const PageObjectPlaceholder: React.FC = () => {
-  const handleAddPageObject = useAddPageObject();
+type TPageObjectPlaceholder = {
+  addPageObjectCallback: (pageObjectId: string[] | undefined) => void;
+};
+
+export const PageObjectPlaceholder: FC<TPageObjectPlaceholder> = ({ addPageObjectCallback }) => {
+  const handleAddPageObject = useAddPageObject(addPageObjectCallback, undefined);
 
   return (
     <EmptyListInfo>

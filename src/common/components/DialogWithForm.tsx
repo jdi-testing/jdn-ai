@@ -38,6 +38,8 @@ export const DialogWithForm: React.FC<DialogFormProps> = ({ modalProps, formProp
     form.resetFields();
     setIsModalOpen(false);
     cancelCallback && cancelCallback();
+    console.log('Загадочная функция');
+
     setTimeout(() => {
       addRef(OnboardingStep.EditLocator);
     }, 100);

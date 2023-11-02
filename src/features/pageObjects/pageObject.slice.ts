@@ -41,8 +41,6 @@ const pageObjSlice = createSlice({
     },
     clearLocators(state, { payload }) {
       const id = payload || state.currentPageObject;
-      // console.log('payload: ', payload);
-      // console.log('state.currentPageObject: ', state.currentPageObject);
       pageObjAdapter.upsertOne(state, { id, locators: undefined } as PageObject);
     },
     removeAll(state) {

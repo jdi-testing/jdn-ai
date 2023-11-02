@@ -1,13 +1,13 @@
+import React, { FC } from 'react';
 import { Input } from 'antd';
 import { MagnifyingGlass } from '@phosphor-icons/react';
-import React from 'react';
 
 interface Props {
   value: string;
   onChange: (e: string) => void;
 }
 
-export const LocatorsSearch: React.FC<Props> = ({ value, onChange }) => {
+export const LocatorsSearch: FC<Props> = ({ value, onChange }) => {
   return (
     <Input
       size="small"

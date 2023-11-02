@@ -1,4 +1,4 @@
-import React, { ReactNode, SyntheticEvent, useContext } from 'react';
+import React, { ReactNode, SyntheticEvent } from 'react';
 import { Dropdown } from 'antd';
 import { size } from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
@@ -39,7 +39,6 @@ import { stopGenerationGroup } from '../reducers/stopGenerationGroup.thunk';
 import { stopGeneration } from '../reducers/stopGeneration.thunk';
 import { FrameworkType, LocatorType } from '../../../common/types/common';
 
-// import { OnboardingContext } from '../../onboarding/OnboardingProvider';
 import {
   selectCalculatedActiveByPageObj,
   selectActiveNonGenerateByPO,

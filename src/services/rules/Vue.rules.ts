@@ -183,12 +183,6 @@ export const VueRules: RulesMap[] = [
       classes: ['v-divider'],
     },
   },
-  // {
-  //   jdnLabel: "expansionPanel",
-  //   rules: {
-  //     classes: ["v-expansion-panel"],
-  //   },
-  // },
   {
     jdnLabel: 'expansionPanels',
     rules: {
