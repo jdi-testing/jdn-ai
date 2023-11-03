@@ -1,14 +1,14 @@
 import React, { FC } from 'react';
 import { Tooltip } from 'antd';
-import { RootState } from '../../../app/store/store';
 import { useSelector } from 'react-redux';
+import { selectIsOnboardingOpen } from '../store/onboarding.selectors';
 
 interface Props {
   children: React.ReactNode;
 }
 
 export const OnboardingTooltip: FC<Props> = ({ children }) => {
-  const isOnboardingOpen = useSelector((state: RootState) => state.onboarding.isOnboardingOpen);
+  const isOnboardingOpen = useSelector(selectIsOnboardingOpen);
   return (
     <>
       {isOnboardingOpen ? (

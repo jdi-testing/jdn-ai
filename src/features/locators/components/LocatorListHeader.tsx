@@ -19,9 +19,9 @@ import {
   selectActualActiveByPageObject,
   selectGenerateByPageObject,
 } from '../selectors/locatorsFiltered.selectors';
-import { RootState } from '../../../app/store/store';
 import { useOnboardingContext } from '../../onboarding/OnboardingProvider';
 import { OnboardingStep } from '../../onboarding/constants';
+import { selectIsCustomLocatorFlow, selectIsOnboardingOpen } from '../../onboarding/store/onboarding.selectors';
 
 interface LocatorListHeaderProps {
   render: (viewProps: LocatorTreeProps['viewProps']) => ReactNode;
@@ -48,8 +48,8 @@ export const LocatorListHeader = ({
   const active = useSelector(selectActiveLocators);
   const actualSelected = useSelector(selectActualActiveByPageObject);
 
-  const isCustomLocatorFlow = false; // ToDo rewrite mock to data from slice
-  const isOnboardingOpen = useSelector((state: RootState) => state.onboarding.isOnboardingOpen);
+  const isCustomLocatorFlow = useSelector(selectIsCustomLocatorFlow);
+  const isOnboardingOpen = useSelector(selectIsOnboardingOpen);
 
   useEffect(() => {
     if (

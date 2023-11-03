@@ -4,7 +4,7 @@ import undoable from 'redux-undo';
 import mainSlice from '../main.slice';
 import filterSlice from '../../features/filter/filter.slice';
 import locatorsSlice from '../../features/locators/locators.slice';
-import onboardingSlice from '../../features/onboarding/onboarding.slice';
+import onboardingSlice from '../../features/onboarding/store/onboarding.slice';
 import pageObjectSlice from '../../features/pageObjects/pageObject.slice';
 
 import { scriptNotifier } from '../../pageServices/scriptNotifier';

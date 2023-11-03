@@ -5,9 +5,10 @@ import { StepIndicator } from './components/stepIndicator';
 import { OnboardingProviderTexts, OnboardingStep } from './constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../app/store/store';
-import { closeModal, openModal, openOnboarding, closeOnboarding, setCurrentStep } from './onboarding.slice';
+import { closeModal, openModal, openOnboarding, closeOnboarding, setCurrentStep } from './store/onboarding.slice';
 import { LocalStorageKey, getLocalStorage, setLocalStorage } from '../../common/utils/localStorage';
 import { BackendStatus } from '../../app/types/mainSlice.types';
+import { selectCurrentStep, selectIsOnboardingOpen, selectIsWelcomeModalOpen } from './store/onboarding.selectors';
 
 type TOnboarding = {
   isOpen: boolean;
@@ -36,9 +37,9 @@ export const Onboarding: FC<TOnboarding> = ({ isOpen, steps, currentStep, onClos
 
 export const useOnboarding = () => {
   const dispatch = useDispatch();
-  const isModalOpen = useSelector((state: RootState) => state.onboarding.isWelcomeModalOpen);
-  const isOnboardingOpen = useSelector((state: RootState) => state.onboarding.isOnboardingOpen);
-  const currentStep = useSelector((state: RootState) => state.onboarding.currentStep);
+  const isModalOpen = useSelector(selectIsWelcomeModalOpen);
+  const isOnboardingOpen = useSelector(selectIsOnboardingOpen);
+  const currentStep = useSelector(selectCurrentStep);
 
   const isOnboardingPassed = getLocalStorage(LocalStorageKey.IsOnboardingPassed);
   const isBackendAvailable = useSelector((state: RootState) => state.main.backendAvailable) === BackendStatus.Accessed;

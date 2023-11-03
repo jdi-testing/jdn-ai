@@ -1,16 +1,19 @@
+// eslint-disable-next-line import/named
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
-import { OnboardingStep } from './constants';
+import { OnboardingStep } from '../constants';
 
 interface IOnboardingState {
   isWelcomeModalOpen: boolean;
   isOnboardingOpen: boolean;
   currentStep: number;
+  isCustomLocatorFlow: boolean;
 }
 
 const initialState: IOnboardingState = {
   isWelcomeModalOpen: false,
   isOnboardingOpen: false,
   currentStep: 0,
+  isCustomLocatorFlow: false,
 };
 
 const modalReducers = {
@@ -32,6 +35,9 @@ const onboardingReducers = {
   setCurrentStep: (state: IOnboardingState, action: PayloadAction<OnboardingStep>) => {
     state.currentStep = action.payload;
   },
+  setIsCustomLocatorFlow: (state: IOnboardingState, action: PayloadAction<boolean>) => {
+    state.isCustomLocatorFlow = action.payload;
+  },
 };
 
 const onboardingSlice = createSlice({
@@ -43,5 +49,6 @@ const onboardingSlice = createSlice({
   },
 });
 
-export const { openModal, closeModal, openOnboarding, closeOnboarding, setCurrentStep } = onboardingSlice.actions;
+export const { openModal, closeModal, openOnboarding, closeOnboarding, setCurrentStep, setIsCustomLocatorFlow } =
+  onboardingSlice.actions;
 export default onboardingSlice.reducer;

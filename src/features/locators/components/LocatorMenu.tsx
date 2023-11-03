@@ -52,8 +52,9 @@ import {
   selectInProgressActiveIncPriorityByPageObject,
   selectInProgressActiveDecPriorityByPageObject,
 } from '../selectors/locatorsFiltered.selectors';
-import { AppDispatch, RootState } from '../../../app/store/store';
+import { AppDispatch } from '../../../app/store/store';
 import { selectLastFrameworkType } from '../../pageObjects/selectors/pageObjects.selectors';
+import { selectIsOnboardingOpen } from '../../onboarding/store/onboarding.selectors';
 
 interface Props {
   setIsEditModalOpen: (val: boolean) => void;
@@ -196,7 +197,7 @@ export const LocatorMenu: React.FC<Props> = ({ setIsEditModalOpen, children, tri
     return items;
   };
 
-  const isOnboardingOpen = useSelector((state: RootState) => state.onboarding.isOnboardingOpen);
+  const isOnboardingOpen = useSelector(selectIsOnboardingOpen);
 
   return (
     <Dropdown

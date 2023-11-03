@@ -22,8 +22,9 @@ import { RenamePageObjectDialog } from './RenamePageObjDialog';
 import { checkLocatorsValidity } from '../../locators/reducers/checkLocatorValidity.thunk';
 import { OnboardingStep } from '../../onboarding/constants';
 import { OnboardingTooltip } from '../../onboarding/components/OnboardingTooltip';
-import { AppDispatch, RootState } from '../../../app/store/store';
+import { AppDispatch } from '../../../app/store/store';
 import { useOnboardingContext } from '../../onboarding/OnboardingProvider';
+import { selectIsOnboardingOpen } from '../../onboarding/store/onboarding.selectors';
 
 interface Props {
   pageObject: PageObject;
@@ -36,7 +37,7 @@ export const PageObjMenu: React.FC<Props> = ({ pageObject, elements }) => {
 
   const [isRenameModalOpen, setIsRenameModalOpen] = useState(false);
 
-  const isOnboardingOpen = useSelector((state: RootState) => state.onboarding.isOnboardingOpen);
+  const isOnboardingOpen = useSelector(selectIsOnboardingOpen);
 
   const getMenuItems = (pageObject: PageObject, locatorIds: ElementId[] | undefined, locatorObjects: ILocator[]) => {
     const handleRename = () => setIsRenameModalOpen(true);
