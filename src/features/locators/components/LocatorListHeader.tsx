@@ -66,13 +66,13 @@ export const LocatorListHeader = ({
   const partiallySelected =
     checkedLocators.length > emptyLength &&
     checkedLocators.length < locators.length &&
-    generatedLocators.length < locators.length; // TODO isGenerated refactoring
+    generatedLocators.length < locators.length; // ToDo isGenerated refactoring
 
   const handleOnChange = () => {
     dispatch(toggleAllLocatorsIsChecked({ locators, isChecked: !isAllLocatorsSelected }));
     setIsAllLocatorsSelected((prev) => !prev);
     // eslint-disable-next-line max-len
-    dispatch(setElementGroupGeneration({ locators, isGenerated: !isAllLocatorsSelected })); // TODO isGenerated refactoring
+    dispatch(setElementGroupGeneration({ locators, isGenerated: !isAllLocatorsSelected })); // ToDo isGenerated refactoring
   };
 
   const customLocatorRef = useRef<HTMLElement | null>(null);

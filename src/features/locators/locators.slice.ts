@@ -148,7 +148,7 @@ const locatorsSlice = createSlice({
       }
     },
     setChildrenGeneration(state, { payload }: PayloadAction<{ locator: ILocator; isGenerated: boolean }>) {
-      // TODO isGenerated refactoring
+      // ToDo isGenerated refactoring
       const { locator, isGenerated } = payload;
       const newValue: Partial<ILocator>[] = [];
       const toggleGenerate = (_locator: ILocator) => {
@@ -209,7 +209,7 @@ const locatorsSlice = createSlice({
       locatorsAdapter.upsertMany(state, newValue as ILocator[]);
     },
     toggleElementGeneration(state, { payload }: PayloadAction<string | ILocator>) {
-      // TODO isGenerated refactoring
+      // ToDo isGenerated refactoring
       const locator = typeof payload === 'string' ? simpleSelectLocatorById(state, payload) : payload;
       if (!locator) return;
       const { isGenerated, element_id } = locator;

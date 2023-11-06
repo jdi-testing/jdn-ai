@@ -132,13 +132,13 @@ export const Locator: FC<Props> = ({ element, currentPage, searchState, depth, s
 
   const handleOnChange: React.MouseEventHandler<HTMLDivElement> = () => {
     dispatch(toggleLocatorIsChecked(element_id));
-    dispatch(toggleElementGeneration(element_id)); // TODO isGenerated refactoring
+    dispatch(toggleElementGeneration(element_id)); // ToDo isGenerated refactoring
     if (allChildrenChecked && size(element.children)) {
       dispatch(setChildrenIsChecked({ locator: element, isChecked: false }));
-      dispatch(setChildrenGeneration({ locator: element, isGenerated: false })); // TODO isGenerated refactoring
+      dispatch(setChildrenGeneration({ locator: element, isGenerated: false })); // ToDo isGenerated refactoring
     } else {
       dispatch(setChildrenIsChecked({ locator: element, isChecked: true }));
-      dispatch(setChildrenGeneration({ locator: element, isGenerated: true })); // TODO isGenerated refactoring
+      dispatch(setChildrenGeneration({ locator: element, isGenerated: true })); // ToDo isGenerated refactoring
     }
   };
 
