@@ -4,6 +4,7 @@ import undoable from 'redux-undo';
 import mainSlice from '../main.slice';
 import filterSlice from '../../features/filter/filter.slice';
 import locatorsSlice from '../../features/locators/locators.slice';
+import customLocatorSlice from '../../features/locators/customLocator.slice';
 import onboardingSlice from '../../features/onboarding/store/onboarding.slice';
 import pageObjectSlice from '../../features/pageObjects/pageObject.slice';
 
@@ -27,6 +28,7 @@ const rootReducer = {
   locators: undoable(locatorsSlice, { undoType: 'LOCATOR_UNDO', jumpType: 'LOCATOR_JUMP' }),
   pageObject: undoable(pageObjectSlice, { undoType: 'PAGEOBJECT_UNDO' }),
   onboarding: onboardingSlice,
+  customLocator: customLocatorSlice,
 };
 
 export const store = configureStore({

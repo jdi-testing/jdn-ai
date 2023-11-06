@@ -42,6 +42,9 @@ import { LocatorsEmptyListInfo } from './components/LocatorsEmptyListInfo';
 import { useOnboardingContext } from '../onboarding/OnboardingProvider';
 import { OnboardingStep } from '../onboarding/constants';
 import { useOnboarding } from '../onboarding/useOnboarding';
+import { setIsCustomLocatorFlow } from '../onboarding/store/onboarding.slice';
+import { selectIsEditModalOpen } from './selectors/customLocator.selectors';
+import { setIsEditModalOpen } from './customLocator.slice';
 
 const { confirm } = Modal;
 
@@ -65,16 +68,28 @@ export const LocatorsPage = () => {
   const [locatorsSnapshot] = useState(useSelector(selectLocatorsByPageObject));
   const [filterSnapshot] = useState(useSelector(selectClassFilterByPO));
   const [isEmptyListModalOpen, setIsEmptyListModalOpen] = useState(!!locators.length);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const isEditModalOpen = useSelector(selectIsEditModalOpen);
 
   // For changing locatorsList-content height depends on header height
   const containerHeight = useCalculateHeaderSize(breadcrumbsRef);
   const containerRef = useRef(null);
   useNotifications(containerRef?.current);
 
+  const isNoPageLocators = isEmpty(useSelector(selectPresentLocatorsByPO));
+
   const { handleOnChangeStep, isOnboardingOpen } = useOnboarding();
 
+  const handleSetIsEditModalOpen = (payload: boolean) => dispatch(setIsEditModalOpen(payload));
+
+  const locatorsGenerated = useSelector(
+    (state: RootState) =>
+      state.locators.present.status === IdentificationStatus.noStatus ||
+      state.locators.present.status === IdentificationStatus.noElements,
+  );
   useEffect(() => {
+    if (isNoPageLocators && locatorsGenerated) {
+      dispatch(setIsCustomLocatorFlow(true));
+    }
     // The timer is needed so that the step closes automatically, but the animation is not too fast
     const timeoutId = setTimeout(() => {
       handleOnChangeStep(OnboardingStep.CustomLocator);
@@ -193,8 +208,6 @@ export const LocatorsPage = () => {
     );
   };
 
-  const isNoPageLocators = isEmpty(useSelector(selectPresentLocatorsByPO));
-
   return (
     <>
       <div className="jdn__locatorsList">
@@ -204,7 +217,7 @@ export const LocatorsPage = () => {
         </Row>
         <LocatorListHeader
           isEditModalOpen={isEditModalOpen}
-          setIsEditModalOpen={setIsEditModalOpen}
+          setIsEditModalOpen={handleSetIsEditModalOpen}
           render={(viewProps: LocatorTreeProps['viewProps']) => (
             <div
               ref={containerRef}
@@ -230,7 +243,7 @@ export const LocatorsPage = () => {
                   )}
                   <LocatorsEmptyListInfo
                     isNoPageLocators={isNoPageLocators}
-                    setIsEditModalOpen={setIsEditModalOpen}
+                    setIsEditModalOpen={handleSetIsEditModalOpen}
                   ></LocatorsEmptyListInfo>
                 </>
               )}

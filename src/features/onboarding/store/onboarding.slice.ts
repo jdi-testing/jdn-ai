@@ -1,3 +1,4 @@
+// for PayloadAction
 // eslint-disable-next-line import/named
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { OnboardingStep } from '../constants';
@@ -31,6 +32,9 @@ const onboardingReducers = {
   },
   closeOnboarding: (state: IOnboardingState) => {
     state.isOnboardingOpen = false;
+
+    state.currentStep = 0;
+    state.isCustomLocatorFlow = false;
   },
   setCurrentStep: (state: IOnboardingState, action: PayloadAction<OnboardingStep>) => {
     state.currentStep = action.payload;

@@ -29,9 +29,9 @@ import { isFilteredSelect } from '../../../common/utils/helpers';
 import { CALCULATING, newLocatorStub } from '../utils/constants';
 import { changeLocatorElement } from '../reducers/changeLocatorElement.thunk';
 import { addCustomLocator } from '../reducers/addCustomLocator.thunk';
-import { OnboardingStep } from '../../onboarding/constants';
 import { selectPresentLocatorsByPO } from '../selectors/locatorsByPO.selectors';
 import { LocatorMessageForDuplicate } from './LocatorMessageForDuplicate';
+import { useOnboardingContext } from '../../onboarding/OnboardingProvider';
 
 interface Props extends ILocator {
   isModalOpen: boolean;
@@ -76,10 +76,6 @@ export const LocatorEditDialog: React.FC<Props> = ({
   const [validationMessage, setValidationMessage] = useState<LocatorValidationErrorType>(message || '');
   const [validationErrorOptions, setValidationErrorOptions] = useState<{ duplicates?: ILocator[] }>({});
   const [isEditedName, setIsEditedName] = useState<boolean>(isCustomName);
-
-  // const { updateRef } = useContext(OnboardingContext);
-  const updateRef = (arg1: OnboardingStep, arg2: undefined, arg3: (() => Promise<void>) | undefined) =>
-    console.log('updateRef mock: ', arg1, arg2, arg3); // заменить на настоящую функцию
 
   const [form] = Form.useForm<FormValues>();
   const isCurrentFrameworkVividus = pageObjectFramework === FrameworkType.Vividus;
@@ -233,9 +229,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
   const onFieldsChange = async (changedValues: FieldData[]) => {
     const isLocatorTypeChanged = changedValues.some((value) => value.name.toString().includes('locatorType'));
     isLocatorTypeChanged && onLocatorTypeChange();
-    const isOkButtonDisabled = computeIsOkButtonDisabled();
-    setIsOkButtonDisabled(isOkButtonDisabled);
-    updateRef(OnboardingStep.EditLocator, undefined, isOkButtonDisabled ? undefined : handleCreateCustomLocator);
+    setIsOkButtonDisabled(computeIsOkButtonDisabled());
   };
 
   const renderValidationMessage = () => {
@@ -250,6 +244,10 @@ export const LocatorEditDialog: React.FC<Props> = ({
 
   return (
     <DialogWithForm
+      onboardingRefProps={{
+        onNextClickHandler: handleCreateCustomLocator,
+        isOkButtonDisabled: isOkButtonDisabled,
+      }}
       modalProps={{
         title: isCreatingForm ? 'Create custom locator' : 'Edit locator',
         open: isModalOpen,

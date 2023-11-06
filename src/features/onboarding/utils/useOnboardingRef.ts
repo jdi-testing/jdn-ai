@@ -18,7 +18,7 @@
 // ) => {
 //   const ref = useRef<HTMLDivElement>(null);
 
-//   const { addRef, isCustomLocatorFlow, isOpen } = useContext(OnboardingContext);
+//   const { addRef, isOpen } = useContext(OnboardingContext);
 //   const isFirstLocatorChecked = useSelector(selectFirstLocatorByPO)?.isGenerated;
 //   /* if onboarding is closed, no need to save these refs */
 //   const isRedundantStep = !isOpen && locatorPageSteps.includes(refName);

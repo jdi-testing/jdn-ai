@@ -17,17 +17,21 @@ interface JDNFormProps extends FormProps {
   form: FormInstance;
 }
 
+interface OnboardingRefProps {
+  onNextClickHandler: () => void;
+  isOkButtonDisabled: boolean;
+}
 interface DialogFormProps {
   modalProps: JDNModalProps;
   children?: ReactNode;
   formProps: JDNFormProps;
+  onboardingRefProps?: OnboardingRefProps;
 }
 
-export const DialogWithForm: React.FC<DialogFormProps> = ({ modalProps, formProps, children }) => {
+export const DialogWithForm: React.FC<DialogFormProps> = ({ modalProps, formProps, children, onboardingRefProps }) => {
   const { form, ...restForm } = formProps;
   const { open, setIsModalOpen, cancelCallback, enableOverlay = false, onOk, okButtonProps, ...restModal } = modalProps;
-
-  const addRef = (arg: any) => console.log('DialogWithForm: ', `${arg}`); // поставить настоящую функцию
+  const { onNextClickHandler, isOkButtonDisabled } = onboardingRefProps || {};
 
   useEffect(() => {
     if (enableOverlay) showOverlay();
@@ -38,11 +42,6 @@ export const DialogWithForm: React.FC<DialogFormProps> = ({ modalProps, formProp
     form.resetFields();
     setIsModalOpen(false);
     cancelCallback && cancelCallback();
-    console.log('Загадочная функция');
-
-    setTimeout(() => {
-      addRef(OnboardingStep.EditLocator);
-    }, 100);
   };
 
   const onbrdPrevHandler = () => {
@@ -51,10 +50,18 @@ export const DialogWithForm: React.FC<DialogFormProps> = ({ modalProps, formProp
   };
 
   const modalRef = React.createRef<HTMLElement>();
-  const { updateStepRefs } = useOnboardingContext();
+  const { updateStepRefs, modifyStepRefByKey } = useOnboardingContext();
   useEffect(() => {
-    updateStepRefs(OnboardingStep.EditLocator, modalRef, onbrdPrevHandler);
+    if (!modalRef.current) return;
+    updateStepRefs(OnboardingStep.EditLocator, modalRef, onNextClickHandler, onbrdPrevHandler);
   }, []);
+
+  useEffect(() => {
+    modifyStepRefByKey(OnboardingStep.EditLocator, modalRef, {
+      onClick: onNextClickHandler,
+      disabled: isOkButtonDisabled,
+    });
+  }, [isOkButtonDisabled]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     e.stopPropagation();

@@ -14,6 +14,7 @@ import { LocatorsGenerationStatus } from '../../features/locators/types/locator.
 import { OnboardingButton } from './OnboardingButton';
 import { OnboardingStep } from '../../features/onboarding/constants';
 import { useOnboardingContext } from '../../features/onboarding/OnboardingProvider';
+import { selectIsCustomLocatorFlow } from '../../features/onboarding/store/onboarding.selectors';
 
 type TServerIndicator = {
   backendAvailable: BackendStatus;

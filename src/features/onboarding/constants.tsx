@@ -118,10 +118,12 @@ export const onboardingSteps: IOnboardingSteps = {
     target: undefined,
     prevButtonProps: {
       onClick: undefined,
+      disabled: false,
     },
     nextButtonProps: {
       children: 'Add to the list',
       onClick: undefined,
+      disabled: true,
     },
   },
   ContextMenu: {
@@ -131,6 +133,9 @@ export const onboardingSteps: IOnboardingSteps = {
       'You can modify the name, type, or locator itself by selecting the "Edit" option from the context menu.' +
       '\n Additionally, you can copy an already optimized locator in your preferred format by accessing the context menu or by right-clicking on the locator.',
     target: undefined,
+    prevButtonProps: {
+      style: { display: 'inline-block' },
+    },
   },
   AddToPO: {
     order: OnboardingStep.AddToPO,
@@ -140,7 +145,6 @@ export const onboardingSteps: IOnboardingSteps = {
     target: undefined,
     prevButtonProps: {
       style: undefined,
-      // ToDo { display: isCustomLocatorFlow ? 'none' : 'inline-block' },
     },
     nextButtonProps: {
       disabled: true,

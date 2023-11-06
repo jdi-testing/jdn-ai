@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+// ToDo fix naming according to naming-convention
 /* eslint-disable @typescript-eslint/naming-convention */
 import React, { useEffect, useRef, useState, useMemo, FC, useLayoutEffect } from 'react';
 import { Checkbox, Button } from 'antd';
@@ -76,14 +76,18 @@ export const Locator: FC<Props> = ({ element, currentPage, searchState, depth, s
   const menuRef = isFirstLocator ? React.createRef<HTMLElement>() : null;
   useEffect(() => {
     if (!isFirstLocator) return;
-    if (menuRef) updateStepRefs(OnboardingStep.ContextMenu, menuRef);
+    if (menuRef?.current) {
+      updateStepRefs(OnboardingStep.ContextMenu, menuRef);
+    }
   }, []);
 
   const addToPORef = React.createRef<HTMLInputElement>();
   useLayoutEffect(() => {
     if (!isFirstLocator) return;
     modifyStepRefByKey(OnboardingStep.AddToPO, addToPORef, { disabled: !isChecked });
-    if (addToPORef) updateStepRefs(OnboardingStep.AddToPO, addToPORef);
+    if (addToPORef.current) {
+      updateStepRefs(OnboardingStep.AddToPO, addToPORef);
+    }
   }, [isChecked]);
 
   const indeterminate = useSelector((state: RootState) => isLocatorIndeterminate(state, element_id));

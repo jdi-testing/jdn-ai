@@ -21,7 +21,10 @@ import {
 } from '../selectors/locatorsFiltered.selectors';
 import { useOnboardingContext } from '../../onboarding/OnboardingProvider';
 import { OnboardingStep } from '../../onboarding/constants';
-import { selectIsCustomLocatorFlow, selectIsOnboardingOpen } from '../../onboarding/store/onboarding.selectors';
+import { selectIsOnboardingOpen } from '../../onboarding/store/onboarding.selectors';
+import { useOnboarding } from '../../onboarding/useOnboarding';
+import { selectIsCreatingFormOpen } from '../selectors/customLocator.selectors';
+import { setIsCreatingFormOpen } from '../customLocator.slice';
 
 interface LocatorListHeaderProps {
   render: (viewProps: LocatorTreeProps['viewProps']) => ReactNode;
@@ -38,7 +41,6 @@ export const LocatorListHeader = ({
 }: LocatorListHeaderProps): JSX.Element => {
   const dispatch = useDispatch();
   const [expandAll, setExpandAll] = useState(ExpandState.Expanded);
-  const [isCreatingForm, setIsCreatingForm] = useState(false);
   const [searchString, setSearchString] = useState('');
   const [isAllLocatorsSelected, setIsAllLocatorsSelected] = useState<boolean>(false);
 
@@ -48,8 +50,8 @@ export const LocatorListHeader = ({
   const active = useSelector(selectActiveLocators);
   const actualSelected = useSelector(selectActualActiveByPageObject);
 
-  const isCustomLocatorFlow = useSelector(selectIsCustomLocatorFlow);
   const isOnboardingOpen = useSelector(selectIsOnboardingOpen);
+  const isCreatingForm = useSelector(selectIsCreatingFormOpen);
 
   useEffect(() => {
     if (
@@ -75,14 +77,17 @@ export const LocatorListHeader = ({
 
   const customLocatorRef = useRef<HTMLElement | null>(null);
   const { updateStepRefs } = useOnboardingContext();
+  const { handleOnChangeStep } = useOnboarding();
+
+  const addCustomLocatorHandler = () => {
+    dispatch(setIsCreatingFormOpen(true));
+    setIsEditModalOpen(true);
+    if (isOnboardingOpen) handleOnChangeStep(OnboardingStep.EditLocator);
+  };
 
   useEffect(() => {
     if (customLocatorRef.current) {
-      updateStepRefs(
-        OnboardingStep.CustomLocator,
-        customLocatorRef,
-        isCustomLocatorFlow ? () => setIsEditModalOpen(true) : undefined,
-      );
+      updateStepRefs(OnboardingStep.CustomLocator, customLocatorRef, addCustomLocatorHandler);
     }
   }, []);
 
@@ -96,7 +101,7 @@ export const LocatorListHeader = ({
             ref={customLocatorRef}
             icon={<PlusOutlined size={14} />}
             size="small"
-            onClick={() => (setIsCreatingForm(true), setIsEditModalOpen(true))}
+            onClick={addCustomLocatorHandler}
           >
             Custom locator
           </Button>

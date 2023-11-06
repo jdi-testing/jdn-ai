@@ -18,6 +18,7 @@ import { checkLocatorsValidity } from '../../locators/reducers/checkLocatorValid
 import { useAddPageObject } from '../utils/useAddPageObject';
 import { useOnboardingContext } from '../../onboarding/OnboardingProvider';
 import { PageObject } from '../types/pageObjectSlice.types';
+import { selectIsCustomLocatorFlow } from '../../onboarding/store/onboarding.selectors';
 
 const { confirm } = Modal;
 
