@@ -8,7 +8,7 @@ import { RootState } from '../app/store/store';
 import { PageType } from '../app/types/mainSlice.types';
 import { selectClassFilterByPO } from '../features/filter/filter.selectors';
 import { selectPresentLocatorsByPO, selectValidLocators } from '../features/locators/selectors/locatorsByPO.selectors';
-import { isPageObjectPage } from '../app/utils/heplers';
+import { isPageObjectPage } from '../app/utils/helpers';
 
 const notify = (state: RootState, action: any, prevState: RootState) => {
   let { type, payload } = action;
@@ -98,7 +98,7 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
       });
       break;
     }
-    case 'locators/toggleElementGeneration': // TODO isGenerated refactoring
+    case 'locators/toggleElementGeneration': // ToDo isGenerated refactoring
     case 'locators/toggleLocatorIsChecked': {
       const element = selectLocatorById(state, typeof payload === 'string' ? payload : payload.element_id);
       element && sendMessage.toggle({ element });
@@ -116,7 +116,7 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
         locator && sendMessage.toggle({ element: locator, skipScroll: true });
       });
       break;
-    case 'locators/setChildrenGeneration': // TODO isGenerated refactoring
+    case 'locators/setChildrenGeneration': // ToDo isGenerated refactoring
     case 'locators/setChildrenIsChecked': {
       const { locator } = payload;
       const iterateChildren = (_locator: ILocator | undefined) => {

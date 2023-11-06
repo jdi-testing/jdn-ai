@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Button, Space, Tooltip, Typography } from 'antd';
 
@@ -11,53 +11,75 @@ import DesktopSlash from '../assets/desktopTowerSlash.svg';
 import { readmeLinkAddress } from '../../common/constants/constants';
 import { ReportProblem } from './ReportProblem';
 import { LocatorsGenerationStatus } from '../../features/locators/types/locator.types';
-import { useOnBoardingRef } from '../../features/onboarding/utils/useOnboardingRef';
-import { OnbrdStep } from '../../features/onboarding/types/constants';
 import { OnboardingButton } from './OnboardingButton';
+import { OnboardingStep } from '../../features/onboarding/constants';
+import { useOnboardingContext } from '../../features/onboarding/OnboardingProvider';
+
+type TServerIndicator = {
+  backendAvailable: BackendStatus;
+  serverLocation: string;
+  generationStatus: LocatorsGenerationStatus;
+};
+
+const ServerIndicator: FC<TServerIndicator> = ({ backendAvailable, serverLocation, generationStatus }) => {
+  const locationIcon =
+    serverLocation === LocalUrl ? <DesktopTower size={16} color="#8C8C8C" /> : <CloudCheck size={16} color="#8C8C8C" />;
+  const errorLocationIcon = serverLocation === LocalUrl ? <DesktopSlash /> : <CloudSlash size={16} color="#8C8C8C" />;
+
+  const connectionRef = React.createRef<HTMLElement>();
+  const { updateStepRefs } = useOnboardingContext();
+
+  useEffect(() => {
+    if (connectionRef.current) {
+      updateStepRefs(OnboardingStep.Connection, connectionRef);
+    }
+  }, [backendAvailable, serverLocation, generationStatus]);
+
+  const title =
+    generationStatus === LocatorsGenerationStatus.failed
+      ? componentsTexts.StatusBarServerNoConnection
+      : serverLocation === LocalUrl
+      ? componentsTexts.StatusBarLocalServer
+      : componentsTexts.StatusBarRemoteServer;
+
+  return backendAvailable === BackendStatus.Accessed ? (
+    <Tooltip placement="bottomRight" align={{ offset: [12, 0] }} title={title}>
+      <Button
+        ref={connectionRef}
+        type="link"
+        icon={
+          generationStatus === LocatorsGenerationStatus.failed ? (
+            <Typography.Text type="danger">{errorLocationIcon}</Typography.Text>
+          ) : (
+            locationIcon
+          )
+        }
+      ></Button>
+    </Tooltip>
+  ) : (
+    <></>
+  );
+};
 
 export const StatusBar = () => {
-  const backendVer = useSelector<RootState>((_state) => _state.main.serverVersion);
-  const backendAvailable = useSelector<RootState>((_state) => _state.main.backendAvailable);
-  const serverLocation = useSelector<RootState>((_state) => _state.main.baseUrl);
-  const generationStatus = useSelector<RootState>((_state) => _state.locators.present.generationStatus);
+  const backendVer = useSelector<RootState, string>((_state) => _state.main.serverVersion ?? '');
+  const backendAvailable = useSelector<RootState, BackendStatus>((_state) => _state.main.backendAvailable);
+  const serverLocation = useSelector<RootState, string>((_state) => _state.main.baseUrl ?? '');
+  const generationStatus = useSelector<RootState, LocatorsGenerationStatus>(
+    (_state) => _state.locators.present.generationStatus,
+  );
+
   const manifest = chrome.runtime.getManifest();
   const pluginVer = manifest.version;
   const isSessionUnique = useSelector((state: RootState) => state.main.isSessionUnique);
 
-  const renderServerIndicator = () => {
-    const locationIcon =
-      serverLocation === LocalUrl ? (
-        <DesktopTower size={16} color="#8C8C8C" />
-      ) : (
-        <CloudCheck size={16} color="#8C8C8C" />
-      );
-    const errorLocationIcon = serverLocation === LocalUrl ? <DesktopSlash /> : <CloudSlash size={16} color="#8C8C8C" />;
+  const readmeRef = React.createRef<HTMLElement>();
 
-    const title =
-      generationStatus === LocatorsGenerationStatus.failed
-        ? componentsTexts.StatusBarServerNoConnection
-        : serverLocation === LocalUrl
-        ? componentsTexts.StatusBarLocalServer
-        : componentsTexts.StatusBarRemoteServer;
+  const { updateStepRefs } = useOnboardingContext();
 
-    return backendAvailable === BackendStatus.Accessed ? (
-      <Tooltip placement="bottomRight" align={{ offset: [12, 0] }} title={title}>
-        <Button
-          type="link"
-          icon={
-            generationStatus === LocatorsGenerationStatus.failed ? (
-              <Typography.Text type="danger">{errorLocationIcon}</Typography.Text>
-            ) : (
-              locationIcon
-            )
-          }
-        ></Button>
-      </Tooltip>
-    ) : null;
-  };
-
-  const readmeRef = useOnBoardingRef(OnbrdStep.Readme);
-  const connectionRef = useOnBoardingRef(OnbrdStep.Connection);
+  useEffect(() => {
+    updateStepRefs(OnboardingStep.Readme, readmeRef);
+  }, []);
 
   return (
     <>
@@ -78,9 +100,11 @@ export const StatusBar = () => {
           />
         </Tooltip>
         <ReportProblem />
-        <div ref={connectionRef} className="jdn_header-connection">
-          {renderServerIndicator()}
-        </div>
+        <ServerIndicator
+          backendAvailable={backendAvailable}
+          serverLocation={serverLocation}
+          generationStatus={generationStatus}
+        />
       </Space>
     </>
   );

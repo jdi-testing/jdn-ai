@@ -1,10 +1,9 @@
+import React, { ReactNode, useEffect } from 'react';
 import { Form, FormProps, Modal, ModalProps } from 'antd';
 import { FormInstance } from 'antd/es/form/Form';
-import React, { ReactNode, useContext, useEffect } from 'react';
 import { showOverlay, removeOverlay } from '../../pageServices/pageDataHandlers';
-import { useOnBoardingRef } from '../../features/onboarding/utils/useOnboardingRef';
-import { OnbrdStep } from '../../features/onboarding/types/constants';
-import { OnboardingContext } from '../../features/onboarding/OnboardingProvider';
+import { OnboardingStep } from '../../features/onboarding/constants';
+import { useOnboardingContext } from '../../features/onboarding/OnboardingProvider';
 
 interface JDNModalProps extends ModalProps {
   setIsModalOpen: (value: boolean) => void;
@@ -18,16 +17,21 @@ interface JDNFormProps extends FormProps {
   form: FormInstance;
 }
 
+interface OnboardingRefProps {
+  onNextClickHandler: () => void;
+  isOkButtonDisabled: boolean;
+}
 interface DialogFormProps {
   modalProps: JDNModalProps;
   children?: ReactNode;
   formProps: JDNFormProps;
+  onboardingRefProps?: OnboardingRefProps;
 }
 
-export const DialogWithForm: React.FC<DialogFormProps> = ({ modalProps, formProps, children }) => {
+export const DialogWithForm: React.FC<DialogFormProps> = ({ modalProps, formProps, children, onboardingRefProps }) => {
   const { form, ...restForm } = formProps;
   const { open, setIsModalOpen, cancelCallback, enableOverlay = false, onOk, okButtonProps, ...restModal } = modalProps;
-  const { addRef } = useContext(OnboardingContext);
+  const { onNextClickHandler, isOkButtonDisabled } = onboardingRefProps || {};
 
   useEffect(() => {
     if (enableOverlay) showOverlay();
@@ -38,9 +42,6 @@ export const DialogWithForm: React.FC<DialogFormProps> = ({ modalProps, formProp
     form.resetFields();
     setIsModalOpen(false);
     cancelCallback && cancelCallback();
-    setTimeout(() => {
-      addRef(OnbrdStep.EditLocator);
-    }, 100);
   };
 
   const onbrdPrevHandler = () => {
@@ -48,7 +49,19 @@ export const DialogWithForm: React.FC<DialogFormProps> = ({ modalProps, formProp
     handleCancel();
   };
 
-  const modalRef = useOnBoardingRef(OnbrdStep.EditLocator, undefined, onbrdPrevHandler);
+  const modalRef = React.createRef<HTMLElement>();
+  const { updateStepRefs, modifyStepRefByKey } = useOnboardingContext();
+  useEffect(() => {
+    if (!modalRef.current) return;
+    updateStepRefs(OnboardingStep.EditLocator, modalRef, onNextClickHandler, onbrdPrevHandler);
+  }, []);
+
+  useEffect(() => {
+    modifyStepRefByKey(OnboardingStep.EditLocator, modalRef, {
+      onClick: onNextClickHandler,
+      disabled: isOkButtonDisabled,
+    });
+  }, [isOkButtonDisabled]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
     e.stopPropagation();
@@ -69,7 +82,7 @@ export const DialogWithForm: React.FC<DialogFormProps> = ({ modalProps, formProp
         {...{ ...restModal }}
       >
         {open ? (
-          <div className="jdn-test" ref={modalRef}>
+          <div className="jdn-test" ref={modalRef as React.LegacyRef<HTMLDivElement>}>
             <Form labelCol={{ span: 4 }} wrapperCol={{ span: 20 }} {...{ form }} {...{ ...restForm }}>
               {children}
             </Form>

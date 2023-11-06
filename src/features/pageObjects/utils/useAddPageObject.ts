@@ -1,18 +1,44 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { addPageObj } from '../reducers/addPageObject.thunk';
-import { selectPageObjects } from '../selectors/pageObjects.selectors';
 import { AppDispatch } from '../../../app/store/store';
+import { PageObject } from '../types/pageObjectSlice.types';
+import { useOnboarding } from '../../onboarding/useOnboarding';
+import { OnboardingStep } from '../../onboarding/constants';
 
-export const useAddPageObject = (setActivePanel: (pageObjectId: string[] | undefined) => void) => {
-  const pageObjects = useSelector(selectPageObjects);
-  const newPOstub = pageObjects.find((pageObject) => !pageObject.locators?.length);
+type TSetActivePanel = (pageObjectId: string[] | undefined) => void;
+
+export const useAddPageObject = (setActivePanel: TSetActivePanel, hasDraftPageObject: PageObject | undefined) => {
   const dispatch = useDispatch<AppDispatch>();
 
-  return () => {
-    if (newPOstub) {
-      return setActivePanel([newPOstub.id.toString()]);
-    }
+  const { handleOnChangeStep, isOnboardingOpen } = useOnboarding();
+  // ToDo refactoring DRY
+  if (isOnboardingOpen) {
+    return async () => {
+      if (hasDraftPageObject) {
+        setActivePanel([hasDraftPageObject.id.toString()]);
+        handleOnChangeStep(OnboardingStep.POsettings);
+      } else {
+        setActivePanel([]);
+        try {
+          await dispatch(addPageObj());
+          handleOnChangeStep(OnboardingStep.POsettings);
+        } catch (error) {
+          console.error('Execution error addPageObj:', error);
+        }
+      }
+    };
+  }
 
-    dispatch(addPageObj());
+  return async () => {
+    if (hasDraftPageObject) {
+      setActivePanel([hasDraftPageObject.id.toString()]);
+    } else {
+      setActivePanel([]);
+      try {
+        await dispatch(addPageObj());
+      } catch (error) {
+        console.error('Execution error addPageObj:', error);
+      }
+    }
   };
 };

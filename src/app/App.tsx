@@ -11,17 +11,18 @@ import { HttpEndpoint, request } from '../services/backend';
 import { checkSession, initLocatorSocketController } from './utils/appUtils';
 import { selectCurrentPage } from './main.selectors';
 import { AppDispatch, RootState, store } from './store/store';
-import { useOnDisconnect } from './utils/useOnDisconnect';
+import { useOnDisconnect } from './utils/hooks/useOnDisconnect';
 
 import { defineServer } from './reducers/defineServer.thunk';
 import { Guide } from './components/guide/Guide';
-import './styles/index.less';
 import { BackendStatus } from './types/mainSlice.types';
 import { setIsSessionUnique } from './main.slice';
 import { LocatorsPage } from '../features/locators/LocatorsPage';
 import { PageObjectPage } from '../features/pageObjects/PageObjectPage';
-import { OnboardingProvider } from '../features/onboarding/OnboardingProvider';
-import { isPageObjectPage } from './utils/heplers';
+import { isPageObjectPage } from './utils/helpers';
+import './styles/index.less';
+import { Onboarding, useOnboarding } from '../features/onboarding/useOnboarding';
+import { OnboardingProvider, useOnboardingContext } from '../features/onboarding/OnboardingProvider';
 
 const App = () => {
   const [jdiTemplate, setJdiTemplate] = useState<Blob | undefined>(undefined);
@@ -31,6 +32,8 @@ const App = () => {
   const currentPage = useSelector(selectCurrentPage);
   const dispatch = useDispatch<AppDispatch>();
   const isSessionUnique = useSelector((state: RootState) => state.main.isSessionUnique);
+
+  const { stepsRef } = useOnboardingContext();
 
   useOnDisconnect();
   const updateIsSessionUnique = (isInvalidSession: boolean) => {
@@ -59,28 +62,47 @@ const App = () => {
     return isPageObjectPage(page) ? <PageObjectPage {...{ jdiTemplate, vividusTemplate }} /> : <LocatorsPage />;
   };
 
+  const {
+    isOnboardingOpen,
+    currentStep,
+    handleCloseOnboarding,
+    handleOnChangeStep,
+    welcomeModal: welcomeOnboardingModal,
+  } = useOnboarding();
+
   return (
-    <div>
-      <Backdrop />
-      <Layout className="jdn__app">
-        <Header className="jdn__header">
-          <StatusBar />
-        </Header>
-        <Content className="jdn__content">
-          {backendAvailable === BackendStatus.Accessed ? (
-            !isSessionUnique ? (
-              <SeveralTabsWarning {...{ checkSession: () => checkSession(updateIsSessionUnique) }} />
+    <>
+      <div>
+        <Backdrop />
+        <Layout className="jdn__app">
+          <Header className="jdn__header">
+            <StatusBar />
+          </Header>
+          <Content className="jdn__content">
+            {backendAvailable === BackendStatus.Accessed ? (
+              !isSessionUnique ? (
+                <SeveralTabsWarning {...{ checkSession: () => checkSession(updateIsSessionUnique) }} />
+              ) : (
+                renderPage()
+              )
+            ) : backendAvailable === BackendStatus.TryToAccess ? (
+              BackendStatus.TryToAccess
             ) : (
-              renderPage()
-            )
-          ) : backendAvailable === BackendStatus.TryToAccess ? (
-            BackendStatus.TryToAccess
-          ) : (
-            <Guide />
-          )}
-        </Content>
-      </Layout>
-    </div>
+              <Guide />
+            )}
+          </Content>
+        </Layout>
+      </div>
+      {/* {onboarding} */}
+      <Onboarding
+        isOpen={isOnboardingOpen}
+        steps={stepsRef}
+        currentStep={currentStep}
+        onClose={handleCloseOnboarding}
+        onChange={handleOnChangeStep}
+      />
+      {welcomeOnboardingModal}
+    </>
   );
 };
 

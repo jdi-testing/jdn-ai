@@ -1,29 +1,23 @@
 import { MutableRefObject } from 'react';
-import { OnbrdStep } from './constants';
-import { TourProps } from 'antd';
+import { IOnboardingStep, OnboardingStep, TNextButtonProps, TPrevButtonProps } from '../constants';
+import { TourStepProps } from 'antd/lib/tour/interface';
 
-export interface OnboardingContext {
-  // a step, that is set to Onboarding based on a state,
-  // when user makes action that changes state and onboarding step should be changed
-  defaultStep?: number;
-  isCustomLocatorFlow: boolean;
-  isOpen: boolean;
-  isOnboardingAvailable: boolean;
-  tourSteps: TourProps['steps'];
-  addRef: (
-    name: OnbrdStep,
-    ref?: MutableRefObject<any>,
-    onClickNext?: (...args: any) => void,
-    onClickPrev?: (...args: any) => void,
+export interface IOnboardingContext {
+  stepsRef: TourStepProps[];
+  updateStepRefs: (
+    key: OnboardingStep,
+    stepRef: React.RefObject<HTMLElement> | null,
+    onClickNext?: (() => void) | undefined,
+    onClickPrev?: (() => void) | undefined,
+    onboardingStepsMap?: Map<OnboardingStep, IOnboardingStep>,
   ) => void;
-  updateRef: (
-    name: OnbrdStep,
-    ref?: MutableRefObject<any>,
-    onClickNext?: (...args: any) => void,
-    onClickPrev?: (...args: any) => void,
+  modifyStepRefByKey: (
+    key: OnboardingStep,
+    stepRef?: React.RefObject<HTMLElement> | null,
+    nextButtonProps?: TNextButtonProps,
+    prevButtonProps?: TPrevButtonProps,
+    onboardingStepsMap?: Map<OnboardingStep, IOnboardingStep>,
   ) => void;
-  openOnboarding: () => void;
-  closeOnboarding: () => void;
 }
 
 export interface StepRef {

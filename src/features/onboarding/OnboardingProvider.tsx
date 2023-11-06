@@ -1,161 +1,144 @@
-import React, { FC, MutableRefObject, ReactNode, createContext, useEffect, useState } from 'react';
-import { OnbrdStep, OnboardingProviderTexts } from './types/constants';
-import { Onboarding } from './Onboarding';
-import { OnboardingContext as ContextType, StepRef } from './types/context.types';
+// For AnyAction, Dispatch:
+/* eslint-disable import/named */
+import React, { ReactNode, createContext, useContext, useEffect, useState } from 'react';
+import { IOnboardingStep, OnboardingStep, TNextButtonProps, TPrevButtonProps, onboardingMap } from './constants';
+import { IOnboardingContext } from './types/context.types';
+import { TourStepProps } from 'antd/lib';
 import { useDispatch, useSelector } from 'react-redux';
-import { selectCurrentPageObject, selectPageObjects } from '../pageObjects/selectors/pageObjects.selectors';
-import { AppDispatch, RootState } from '../../app/store/store';
-import { IdentificationStatus } from '../locators/types/locator.types';
-import { getPOPageSteps } from './utils/tourSteps';
-import { selectCurrentPage, selectIsDefaultState } from '../../app/main.selectors';
-import { BackendStatus, PageType } from '../../app/types/mainSlice.types';
-import { LocalStorageKey, getLocalStorage, setLocalStorage } from '../../common/utils/localStorage';
-import { Modal } from 'antd';
-import { removeAll } from '../../app/reducers/removeAll.thunk';
+import { selectIsCustomLocatorFlow } from './store/onboarding.selectors';
+import { setIsCreatingFormOpen, setIsEditModalOpen } from '../locators/customLocator.slice';
+import { AnyAction, Dispatch } from '@reduxjs/toolkit';
 
-interface Props {
-  children: ReactNode;
-}
+// ToDo move to utils
+const generateSteps = (
+  stepsData: IOnboardingStep[],
+  isCustomLocatorFlow: boolean,
+  dispatch: Dispatch<AnyAction>,
+): TourStepProps[] => {
+  const result: IOnboardingStep[] = !isCustomLocatorFlow
+    ? stepsData.filter((stepData) => stepData.order !== OnboardingStep.EditLocator)
+    : stepsData;
 
-export const OnboardingContext = createContext({ isOpen: false } as ContextType);
-
-export const OnboardingProvider: FC<Props> = ({ children }) => {
-  const [stepRefs, setStepRefs] = useState<Record<OnbrdStep, StepRef>>({} as Record<OnbrdStep, StepRef>);
-  const [isOnbrdOpen, setIsOnbrdOpen] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isCustomLocatorFlow, setIsCustomLocatorFlow] = useState(false);
-
-  const _isOnboardingPassed = getLocalStorage(LocalStorageKey.IsOnboardingPassed);
-  const isBackendAvailable = useSelector((state: RootState) => state.main.backendAvailable) === BackendStatus.Accessed;
-  const isDefaultState: boolean = useSelector<RootState>(selectIsDefaultState) as boolean;
-  const isSessionUnique = useSelector((state: RootState) => state.main.isSessionUnique);
-  const isOnboardingAvailable = isBackendAvailable && !isOnbrdOpen;
-
-  const dispatch = useDispatch<AppDispatch>();
-
-  useEffect(() => {
-    if (!_isOnboardingPassed && isBackendAvailable && isSessionUnique) {
-      setIsModalOpen(true);
-      setLocalStorage(LocalStorageKey.IsOnboardingPassed, true);
-    } else {
-      setIsModalOpen(false);
+  const tourSteps = result.map((stepData) => {
+    const { order, title, description, target } = stepData;
+    if (order === OnboardingStep.CustomLocator) {
+      const addCustomLocatorHandler = () => {
+        dispatch(setIsCreatingFormOpen(true));
+        dispatch(setIsEditModalOpen(true));
+      };
+      if (stepData.nextButtonProps) {
+        stepData.nextButtonProps.children = isCustomLocatorFlow ? 'Create custom locator' : 'Next';
+        stepData.nextButtonProps.onClick = isCustomLocatorFlow ? addCustomLocatorHandler : undefined;
+      }
     }
-  }, [isBackendAvailable, isSessionUnique]);
 
-  const openOnboarding = () => {
-    if (!isDefaultState) dispatch(removeAll());
-    setIsModalOpen(true);
-  };
-
-  const closeOnboarding = () => {
-    setIsOnbrdOpen(false);
-  };
-  const addRef = (
-    name: OnbrdStep,
-    ref?: MutableRefObject<any>,
-    onClickNext?: (...args: any) => void,
-    onClickPrev?: (...args: any) => void,
-  ) => {
-    setStepRefs((prevRefs) => {
-      return {
-        ...prevRefs,
-        [name]: {
-          target: ref,
-          onClickNext,
-          onClickPrev,
-        },
+    if (stepData.order === OnboardingStep.AddToPO) {
+      stepData.prevButtonProps = {
+        style: { display: isCustomLocatorFlow ? 'none' : 'inline-block' },
       };
-    });
-  };
+    }
 
-  const updateRef = (
-    name: OnbrdStep,
-    ref?: MutableRefObject<any>,
-    onClickNext?: (...args: any) => void,
-    onClickPrev?: (...args: any) => void,
-  ) => {
-    setStepRefs((prevRefs) => {
-      /* case for skipped step, see `locatorPageSteps` at useOnBoardingRef.ts */
-      if (!prevRefs[name]) return prevRefs;
-
-      const { target: currentTarget, onClickNext: currentNext, onClickPrev: currentPrev } = prevRefs[name];
-      return {
-        ...prevRefs,
-        [name]: {
-          target: ref || currentTarget,
-          onClickNext: onClickNext || currentNext,
-          onClickPrev: onClickPrev || currentPrev,
-        },
+    if (stepData.order === OnboardingStep.ContextMenu) {
+      stepData.prevButtonProps = {
+        style: { display: isCustomLocatorFlow ? 'none' : 'inline-block' },
       };
-    });
-  };
+    }
 
-  const handleConfirmModal = () => {
-    setIsModalOpen(false);
-    setIsOnbrdOpen(true);
-  };
+    return {
+      title,
+      description,
+      target: target?.current,
+      nextButtonProps: stepData.nextButtonProps,
+      prevButtonProps: stepData.prevButtonProps,
+    };
+  });
 
-  // selectors for step change
-  const isNewPageObject = useSelector(selectPageObjects).length > 0;
-  const isIdentificationInProgress =
-    useSelector((state: RootState) => state.locators.present.status) === IdentificationStatus.loading;
-  const isPoPage = useSelector(selectCurrentPage).page === PageType.PageObject;
-  const poHasLocators = !!useSelector(selectCurrentPageObject)?.locators?.length;
-  const locatorsGenerated = useSelector(
-    (state: RootState) =>
-      state.locators.present.status === IdentificationStatus.noStatus ||
-      state.locators.present.status === IdentificationStatus.noElements,
+  return tourSteps;
+};
+
+const initialContext = {
+  stepsRef: [],
+  updateStepRefs: () => [],
+  modifyStepRefByKey: () => [],
+};
+const OnboardingContext = createContext(initialContext as IOnboardingContext);
+
+export const useOnboardingContext = () => useContext(OnboardingContext);
+
+export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
+  const isCustomLocatorFlow = useSelector(selectIsCustomLocatorFlow);
+  const dispatch = useDispatch();
+  const [steps, setSteps] = useState(() =>
+    generateSteps(Array.from(onboardingMap.values()), isCustomLocatorFlow, dispatch),
   );
 
-  // for a case when by any user's actions state is changed
-  // and Onboarding step should be changed programmatically
-  const defaultStep =
-    isPoPage && poHasLocators
-      ? OnbrdStep.DownloadPO
-      : !isPoPage && isCustomLocatorFlow && poHasLocators
-      ? OnbrdStep.AddToPO
-      : !isPoPage && isCustomLocatorFlow && stepRefs[OnbrdStep.EditLocator]?.target?.current
-      ? OnbrdStep.EditLocator
-      : !isPoPage
-      ? OnbrdStep.CustomLocator
-      : isIdentificationInProgress
-      ? OnbrdStep.Generating
-      : isNewPageObject
-      ? OnbrdStep.POsettings
-      : OnbrdStep.NewPageObject;
+  useEffect(() => {
+    setSteps(generateSteps(Array.from(onboardingMap.values()), isCustomLocatorFlow, dispatch));
+  }, [isCustomLocatorFlow]);
 
-  const tourSteps = getPOPageSteps(stepRefs, isCustomLocatorFlow);
+  const updateStepRefs = (
+    key: OnboardingStep,
+    stepRef: React.RefObject<HTMLElement> | null,
+    onClickNext?: (() => void) | undefined,
+    onClickPrev?: (() => void) | undefined,
+    onboardingStepsMap: Map<OnboardingStep, IOnboardingStep> = onboardingMap,
+  ): void => {
+    const updatedSteps: IOnboardingStep[] = Array.from(onboardingStepsMap.values()).map((stepData) => {
+      let target: React.RefObject<HTMLElement> | null | undefined = undefined;
+      if (key === stepData.order) {
+        stepData.target = stepRef;
+        if (stepData.nextButtonProps) {
+          stepData.nextButtonProps.onClick = onClickNext;
+        }
+        if (stepData.prevButtonProps) {
+          stepData.prevButtonProps.onClick = onClickPrev;
+        }
+        target = stepData.target ?? stepRef;
+      }
 
-  if (defaultStep === OnbrdStep.CustomLocator && locatorsGenerated && !poHasLocators && !isCustomLocatorFlow) {
-    setIsCustomLocatorFlow(true);
-  }
+      const res: IOnboardingStep = {
+        order: stepData.order,
+        title: stepData.title,
+        description: stepData.description,
+        target: target ?? stepData.target,
+        nextButtonProps: stepData.nextButtonProps,
+        prevButtonProps: stepData.prevButtonProps,
+      };
+      return res;
+    });
+
+    setSteps(generateSteps(updatedSteps, isCustomLocatorFlow, dispatch));
+  };
+
+  const modifyStepRefByKey = (
+    key: OnboardingStep,
+    stepRef?: React.RefObject<HTMLElement> | null | undefined,
+    nextButtonProps?: TNextButtonProps,
+    prevButtonProps?: TPrevButtonProps,
+    onboardingStepsMap: Map<OnboardingStep, IOnboardingStep> = onboardingMap,
+  ): IOnboardingStep[] => {
+    const updatedSteps = [...onboardingStepsMap.values()].map((stepData) => {
+      if (key === stepData.order) {
+        if (stepRef) stepData.target = stepRef;
+
+        if (nextButtonProps) {
+          stepData.nextButtonProps = nextButtonProps;
+        }
+        if (prevButtonProps) {
+          stepData.prevButtonProps = prevButtonProps;
+        }
+      }
+      return stepData;
+    });
+
+    setSteps(generateSteps(updatedSteps, isCustomLocatorFlow, dispatch));
+
+    return updatedSteps;
+  };
 
   return (
-    <OnboardingContext.Provider
-      value={{
-        defaultStep,
-        isOpen: isOnbrdOpen,
-        isOnboardingAvailable,
-        tourSteps,
-        isCustomLocatorFlow,
-        addRef,
-        updateRef,
-        openOnboarding,
-        closeOnboarding,
-      }}
-    >
+    <OnboardingContext.Provider value={{ stepsRef: steps, updateStepRefs, modifyStepRefByKey }}>
       {children}
-      <Onboarding />
-      <Modal
-        title={OnboardingProviderTexts.ModalTitle}
-        open={isModalOpen}
-        onCancel={() => setIsModalOpen(false)}
-        onOk={handleConfirmModal}
-        okText={OnboardingProviderTexts.ModalOkButtonText}
-        cancelText={OnboardingProviderTexts.ModalCancelButtonText}
-      >
-        {OnboardingProviderTexts.ModalText}
-      </Modal>
     </OnboardingContext.Provider>
   );
 };

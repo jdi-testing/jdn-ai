@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { Tree } from 'antd';
 import { size } from 'lodash';
 import React, { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
@@ -14,7 +15,7 @@ import { Locator } from '../Locator';
 import { selectCurrentPageObject } from '../../pageObjects/selectors/pageObjects.selectors';
 import { selectPresentLocatorsByPO } from '../selectors/locatorsByPO.selectors';
 import { selectFilteredLocators } from '../selectors/locatorsFiltered.selectors';
-import { isLocatorListPage } from '../../../app/utils/heplers';
+import { isLocatorListPage } from '../../../app/utils/helpers';
 
 export enum SearchState {
   None = 'none',
@@ -125,6 +126,7 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
                 depth,
                 searchState,
                 searchString,
+                index: i,
               }}
             />
           ),

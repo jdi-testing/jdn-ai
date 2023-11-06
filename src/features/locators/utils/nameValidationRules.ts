@@ -15,7 +15,7 @@ export const createNameValidationRules = (isNameUnique: (value: string) => boole
         if (
           !isValidJavaVariable(value) ||
           isStringMatchesReservedWord(value)
-          // || isStringMatchesReservedWordPerfTest(value) TODO: uncomment with validation rework, see issue #1176
+          // || isStringMatchesReservedWordPerfTest(value) ToDo: uncomment with validation rework, see issue #1176
         ) {
           return Promise.reject(new Error(LocatorValidationErrors.InvalidName));
         } else if (isNameUnique(value)) {

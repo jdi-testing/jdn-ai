@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Button, Modal, Tooltip, Row } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -17,8 +17,6 @@ import { useCalculateHeaderSize } from './utils/useCalculateHeaderSize';
 import { RootState } from '../../app/store/store';
 import { IdentificationStatus } from './types/locator.types';
 import { LocatorTreeSpinner } from './components/LocatorTreeSpinner';
-import { useOnBoardingRef } from '../onboarding/utils/useOnboardingRef';
-import { OnbrdStep } from '../onboarding/types/constants';
 import { removeAll as removeAllFilters, setFilter } from '../filter/filter.slice';
 import { selectIfUnselectedAll, selectClassFilterByPO } from '../filter/filter.selectors';
 
@@ -41,6 +39,13 @@ import { useNotifications } from '../../common/components/notification/useNotifi
 import { selectCurrentPageObject } from '../pageObjects/selectors/pageObjects.selectors';
 import { EmptyListModal } from './text.constants';
 import { LocatorsEmptyListInfo } from './components/LocatorsEmptyListInfo';
+import { useOnboardingContext } from '../onboarding/OnboardingProvider';
+import { OnboardingStep } from '../onboarding/constants';
+import { useOnboarding } from '../onboarding/useOnboarding';
+import { setIsCustomLocatorFlow } from '../onboarding/store/onboarding.slice';
+import { selectIsEditModalOpen } from './selectors/customLocator.selectors';
+import { setIsEditModalOpen } from './customLocator.slice';
+import { selectIsCustomLocatorFlow } from '../onboarding/store/onboarding.selectors';
 
 const { confirm } = Modal;
 
@@ -57,25 +62,62 @@ export const LocatorsPage = () => {
   const inProgressHashes = useSelector(selectInProgressHashes);
   const calculatedAndChecked = useSelector(selectCalculatedAndCheckedByPageObj);
   const deletedChecked = useSelector(selectDeletedCheckedByPageObj);
-  const { id: currentPOId } = useSelector(selectCurrentPageObject) ?? {};
+  const currentPO = useSelector(selectCurrentPageObject);
 
   const breadcrumbsRef = useRef(null);
+
   const [locatorsSnapshot] = useState(useSelector(selectLocatorsByPageObject));
   const [filterSnapshot] = useState(useSelector(selectClassFilterByPO));
   const [isEmptyListModalOpen, setIsEmptyListModalOpen] = useState(!!locators.length);
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const isEditModalOpen = useSelector(selectIsEditModalOpen);
+
   // For changing locatorsList-content height depends on header height
   const containerHeight = useCalculateHeaderSize(breadcrumbsRef);
-
   const containerRef = useRef(null);
   useNotifications(containerRef?.current);
 
+  const isNoPageLocators = isEmpty(useSelector(selectPresentLocatorsByPO));
+
+  const { handleOnChangeStep, isOnboardingOpen } = useOnboarding();
+
+  const handleSetIsEditModalOpen = (payload: boolean) => dispatch(setIsEditModalOpen(payload));
+
+  const locatorsGenerated = useSelector(
+    (state: RootState) =>
+      state.locators.present.status === IdentificationStatus.noStatus ||
+      state.locators.present.status === IdentificationStatus.noElements,
+  );
+  useEffect(() => {
+    if (isNoPageLocators && locatorsGenerated) {
+      dispatch(setIsCustomLocatorFlow(true));
+    }
+    // The timer is needed so that the step closes automatically, but the animation is not too fast
+    const timeoutId = setTimeout(() => {
+      handleOnChangeStep(OnboardingStep.CustomLocator);
+    }, 300);
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, []);
+
+  // ToDo cb naming - ???
   const pageBack = () => {
     dispatch(setScriptMessage({}));
     dispatch(changePageBack());
   };
 
+  const isCustomLocatorFlow = useSelector(selectIsCustomLocatorFlow);
+
   const handleConfirm = () => {
+    if (isOnboardingOpen) {
+      const DownloadPOStepNumberInDefaultOnboardingMode = 8;
+      const DownloadPOStepNumberInCustomLocatorOnboardingMode = 9;
+      pageBack();
+      if (isCustomLocatorFlow) {
+        handleOnChangeStep(DownloadPOStepNumberInCustomLocatorOnboardingMode);
+      } else handleOnChangeStep(DownloadPOStepNumberInDefaultOnboardingMode);
+    }
     if (inProgressGenerate.length) {
       confirm({
         title: 'Confirm this locators list',
@@ -110,39 +152,45 @@ export const LocatorsPage = () => {
       dispatch(removeAllFilters());
     } else {
       dispatch(restoreLocators(locatorsSnapshot));
-      dispatch(setFilter({ pageObjectId: currentPOId!, JDIclassFilter: filterSnapshot }));
+      if (currentPO) dispatch(setFilter({ pageObjectId: currentPO.id, JDIclassFilter: filterSnapshot }));
     }
     pageBack();
   };
 
+  const backButtonHandler = () => {
+    if (!locators.length && !locatorsSnapshot.length) handleDiscard();
+    if (isEqual(locators, locatorsSnapshot)) pageBack();
+    else {
+      const isOkButtonEnabled = !!(inProgressGenerate.length || calculatedAndChecked.length);
+
+      customConfirm({
+        onAlt: handleDiscard,
+        altText: 'Discard',
+        onOk: handleOk,
+        isOkButtonEnabled,
+        confirmTitle: 'Save this locators list?',
+        confirmContent: 'The list has been edited and the changes have not been accepted. Do you want to save changes?',
+      });
+    }
+  };
+
   const renderBackButton = () => {
-    const handleBack = () => {
-      if (!locators.length && !locatorsSnapshot.length) handleDiscard();
-      if (isEqual(locators, locatorsSnapshot)) pageBack();
-      else {
-        const isOkButtonEnabled = !!(inProgressGenerate.length || calculatedAndChecked.length);
-
-        customConfirm({
-          onAlt: handleDiscard,
-          altText: 'Discard',
-          onOk: handleOk,
-          isOkButtonEnabled,
-          confirmTitle: 'Save this locators list?',
-          confirmContent:
-            'The list has been edited and the changes have not been accepted. Do you want to save changes?',
-        });
-      }
-    };
-
     return (
-      <Button onClick={handleBack} className="jdn__buttons">
+      <Button onClick={backButtonHandler} className="jdn__buttons">
         Back
       </Button>
     );
   };
 
   const renderConfirmButton = () => {
-    const saveLocatorsRef = useOnBoardingRef(OnbrdStep.SaveLocators, pageBack);
+    const saveLocatorsRef = useRef<HTMLElement | null>(null);
+    const { updateStepRefs } = useOnboardingContext();
+    useEffect(() => {
+      if (saveLocatorsRef.current) {
+        updateStepRefs(OnboardingStep.SaveLocators, saveLocatorsRef, pageBack);
+      }
+    }, []);
+
     const checkedLocators = useSelector(selectCheckedLocatorsByPageObject);
     const generatedLocators = useSelector(selectGenerateByPageObject);
     const isDisabled = !inProgressGenerate.length && !calculatedAndChecked.length;
@@ -159,7 +207,7 @@ export const LocatorsPage = () => {
         overlayClassName="jdn__button-tooltip"
         title={isDisabled ? 'Please select locators for your current page object.' : ''}
       >
-        <div ref={saveLocatorsRef}>
+        <div ref={saveLocatorsRef as React.LegacyRef<HTMLDivElement>}>
           <Button type="primary" onClick={handleConfirm} className="jdn__buttons" disabled={isDisabled}>
             {saveButtonLabel}
           </Button>
@@ -167,8 +215,6 @@ export const LocatorsPage = () => {
       </Tooltip>
     );
   };
-
-  const isNoPageLocators = isEmpty(useSelector(selectPresentLocatorsByPO));
 
   return (
     <>
@@ -179,7 +225,7 @@ export const LocatorsPage = () => {
         </Row>
         <LocatorListHeader
           isEditModalOpen={isEditModalOpen}
-          setIsEditModalOpen={setIsEditModalOpen}
+          setIsEditModalOpen={handleSetIsEditModalOpen}
           render={(viewProps: LocatorTreeProps['viewProps']) => (
             <div
               ref={containerRef}
@@ -205,7 +251,7 @@ export const LocatorsPage = () => {
                   )}
                   <LocatorsEmptyListInfo
                     isNoPageLocators={isNoPageLocators}
-                    setIsEditModalOpen={setIsEditModalOpen}
+                    setIsEditModalOpen={handleSetIsEditModalOpen}
                   ></LocatorsEmptyListInfo>
                 </>
               )}

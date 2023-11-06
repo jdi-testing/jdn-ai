@@ -1,4 +1,4 @@
-import React, { ReactNode, useContext, useEffect, useState } from 'react';
+import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import { size } from 'lodash';
 import { Button, Checkbox, Row } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,10 +9,7 @@ import { elementGroupUnsetActive, setElementGroupGeneration, toggleAllLocatorsIs
 import { newLocatorStub } from '../utils/constants';
 import { LocatorsSearch } from './LocatorsSearch';
 import { LocatorEditDialog } from './LocatorEditDialog';
-import { useOnBoardingRef } from '../../onboarding/utils/useOnboardingRef';
-import { OnbrdStep } from '../../onboarding/types/constants';
-import { OnboardingContext } from '../../onboarding/OnboardingProvider';
-import { OnbrdTooltip } from '../../onboarding/components/OnbrdTooltip';
+import { OnboardingTooltip } from '../../onboarding/components/OnboardingTooltip';
 import { LocatorMenu } from './LocatorMenu';
 import { LocatorTreeProps, ExpandState } from './LocatorsTree';
 import {
@@ -22,6 +19,12 @@ import {
   selectActualActiveByPageObject,
   selectGenerateByPageObject,
 } from '../selectors/locatorsFiltered.selectors';
+import { useOnboardingContext } from '../../onboarding/OnboardingProvider';
+import { OnboardingStep } from '../../onboarding/constants';
+import { selectIsOnboardingOpen } from '../../onboarding/store/onboarding.selectors';
+import { useOnboarding } from '../../onboarding/useOnboarding';
+import { selectIsCreatingFormOpen } from '../selectors/customLocator.selectors';
+import { setIsCreatingFormOpen } from '../customLocator.slice';
 
 interface LocatorListHeaderProps {
   render: (viewProps: LocatorTreeProps['viewProps']) => ReactNode;
@@ -38,7 +41,6 @@ export const LocatorListHeader = ({
 }: LocatorListHeaderProps): JSX.Element => {
   const dispatch = useDispatch();
   const [expandAll, setExpandAll] = useState(ExpandState.Expanded);
-  const [isCreatingForm, setIsCreatingForm] = useState(false);
   const [searchString, setSearchString] = useState('');
   const [isAllLocatorsSelected, setIsAllLocatorsSelected] = useState<boolean>(false);
 
@@ -48,7 +50,8 @@ export const LocatorListHeader = ({
   const active = useSelector(selectActiveLocators);
   const actualSelected = useSelector(selectActualActiveByPageObject);
 
-  const { isOpen: isOnboardingOpen, isCustomLocatorFlow } = useContext(OnboardingContext);
+  const isOnboardingOpen = useSelector(selectIsOnboardingOpen);
+  const isCreatingForm = useSelector(selectIsCreatingFormOpen);
 
   useEffect(() => {
     if (
@@ -63,35 +66,46 @@ export const LocatorListHeader = ({
   const partiallySelected =
     checkedLocators.length > emptyLength &&
     checkedLocators.length < locators.length &&
-    generatedLocators.length < locators.length; // TODO isGenerated refactoring
+    generatedLocators.length < locators.length; // ToDo isGenerated refactoring
 
   const handleOnChange = () => {
     dispatch(toggleAllLocatorsIsChecked({ locators, isChecked: !isAllLocatorsSelected }));
     setIsAllLocatorsSelected((prev) => !prev);
     // eslint-disable-next-line max-len
-    dispatch(setElementGroupGeneration({ locators, isGenerated: !isAllLocatorsSelected })); // TODO isGenerated refactoring
+    dispatch(setElementGroupGeneration({ locators, isGenerated: !isAllLocatorsSelected })); // ToDo isGenerated refactoring
   };
 
-  const ref = useOnBoardingRef(
-    OnbrdStep.CustomLocator,
-    isCustomLocatorFlow ? () => setIsEditModalOpen(true) : undefined,
-  );
+  const customLocatorRef = useRef<HTMLElement | null>(null);
+  const { updateStepRefs } = useOnboardingContext();
+  const { handleOnChangeStep } = useOnboarding();
+
+  const addCustomLocatorHandler = () => {
+    dispatch(setIsCreatingFormOpen(true));
+    setIsEditModalOpen(true);
+    if (isOnboardingOpen) handleOnChangeStep(OnboardingStep.EditLocator);
+  };
+
+  useEffect(() => {
+    if (customLocatorRef.current) {
+      updateStepRefs(OnboardingStep.CustomLocator, customLocatorRef, addCustomLocatorHandler);
+    }
+  }, []);
 
   return (
     <>
       <Row justify="space-between" align="bottom">
         <LocatorsSearch value={searchString} onChange={setSearchString} />
-        <OnbrdTooltip>
+        <OnboardingTooltip>
           <Button
             disabled={isOnboardingOpen && !!size(locators)}
-            ref={ref}
+            ref={customLocatorRef}
             icon={<PlusOutlined size={14} />}
             size="small"
-            onClick={() => (setIsCreatingForm(true), setIsEditModalOpen(true))}
+            onClick={addCustomLocatorHandler}
           >
             Custom locator
           </Button>
-        </OnbrdTooltip>
+        </OnboardingTooltip>
       </Row>
       <Row className="jdn__itemsList-header">
         <span className="jdn__itemsList-header-title">

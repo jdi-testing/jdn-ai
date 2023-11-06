@@ -1,4 +1,6 @@
-import React, { useContext, useEffect, useRef, useState, useMemo } from 'react';
+// ToDo fix naming according to naming-convention
+/* eslint-disable @typescript-eslint/naming-convention */
+import React, { useEffect, useRef, useState, useMemo, FC, useLayoutEffect } from 'react';
 import { Checkbox, Button } from 'antd';
 import { DotsThree } from '@phosphor-icons/react';
 import Text from 'antd/lib/typography/Text';
@@ -28,17 +30,15 @@ import { LocatorIcon } from './components/LocatorIcon';
 import { LocatorMenu } from './components/LocatorMenu';
 import { setIndents } from './utils/utils';
 import { setScriptMessage } from '../../app/main.slice';
-import { useOnBoardingRef } from '../onboarding/utils/useOnboardingRef';
-import { OnbrdStep } from '../onboarding/types/constants';
-import { OnbrdTooltip } from '../onboarding/components/OnbrdTooltip';
-import { OnboardingContext } from '../onboarding/OnboardingProvider';
-import { selectFirstLocatorIdByPO } from './selectors/locatorsByPO.selectors';
+import { OnboardingTooltip } from '../onboarding/components/OnboardingTooltip';
 import { selectCalculatedActiveByPageObj, selectWaitingActiveByPageObj } from './selectors/locatorsFiltered.selectors';
-import { isLocatorListPage } from '../../app/utils/heplers';
+import { isLocatorListPage } from '../../app/utils/helpers';
 import { selectCurrentPageObject } from '../pageObjects/selectors/pageObjects.selectors';
 import { AnnotationType, FrameworkType, LocatorType } from '../../common/types/common';
 import { getLocatorPrefix, getLocatorTemplateWithVividus } from './utils/locatorOutput';
 import { ScriptMsg } from '../../pageServices/scriptMsg.constants';
+import { OnboardingStep } from '../onboarding/constants';
+import { useOnboardingContext } from '../onboarding/OnboardingProvider';
 
 interface Props {
   element: ILocator;
@@ -47,13 +47,13 @@ interface Props {
   searchState?: SearchState;
   depth?: number;
   searchString?: string;
+  index?: number;
 }
 
-export const Locator: React.FC<Props> = ({ element, currentPage, searchState, depth, searchString }) => {
+export const Locator: FC<Props> = ({ element, currentPage, searchState, depth, searchString, index }) => {
   const dispatch = useDispatch();
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const { isCustomLocatorFlow } = useContext(OnboardingContext);
 
   const {
     element_id,
@@ -68,18 +68,27 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
   } = element;
 
   const currentPageObject = useSelector(selectCurrentPageObject);
+  const { updateStepRefs, modifyStepRefByKey } = useOnboardingContext();
+  const isFirstLocator = index === 0;
 
   const ref = useRef<HTMLDivElement>(null);
 
-  const isFirstLocator = useSelector(selectFirstLocatorIdByPO) === element_id;
-  const menuRef = useOnBoardingRef(
-    OnbrdStep.EditLocator,
-    undefined,
-    undefined,
-    !(isFirstLocator && !isCustomLocatorFlow),
-  );
+  const menuRef = isFirstLocator ? React.createRef<HTMLElement>() : null;
+  useEffect(() => {
+    if (!isFirstLocator) return;
+    if (menuRef?.current) {
+      updateStepRefs(OnboardingStep.ContextMenu, menuRef);
+    }
+  }, []);
 
-  const addToPORef = useOnBoardingRef(OnbrdStep.AddToPO, undefined, undefined, !isFirstLocator);
+  const addToPORef = React.createRef<HTMLInputElement>();
+  useLayoutEffect(() => {
+    if (!isFirstLocator) return;
+    modifyStepRefByKey(OnboardingStep.AddToPO, addToPORef, { disabled: !isChecked });
+    if (addToPORef.current) {
+      updateStepRefs(OnboardingStep.AddToPO, addToPORef);
+    }
+  }, [isChecked]);
 
   const indeterminate = useSelector((state: RootState) => isLocatorIndeterminate(state, element_id));
   const allChildrenChecked = useSelector((state: RootState) => areChildrenChecked(state, element_id));
@@ -123,13 +132,13 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
 
   const handleOnChange: React.MouseEventHandler<HTMLDivElement> = () => {
     dispatch(toggleLocatorIsChecked(element_id));
-    dispatch(toggleElementGeneration(element_id)); // TODO isGenerated refactoring
+    dispatch(toggleElementGeneration(element_id)); // ToDo isGenerated refactoring
     if (allChildrenChecked && size(element.children)) {
       dispatch(setChildrenIsChecked({ locator: element, isChecked: false }));
-      dispatch(setChildrenGeneration({ locator: element, isGenerated: false })); // TODO isGenerated refactoring
+      dispatch(setChildrenGeneration({ locator: element, isGenerated: false })); // ToDo isGenerated refactoring
     } else {
       dispatch(setChildrenIsChecked({ locator: element, isChecked: true }));
-      dispatch(setChildrenGeneration({ locator: element, isGenerated: true })); // TODO isGenerated refactoring
+      dispatch(setChildrenGeneration({ locator: element, isGenerated: true })); // ToDo isGenerated refactoring
     }
   };
 
@@ -195,7 +204,11 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
         {isLocatorListPage(currentPage) ? (
           <LocatorMenu {...{ setIsEditModalOpen, trigger: ['contextMenu'] }}>
             <div className="jdn__xpath_locators">
-              <div ref={addToPORef} onContextMenu={(e) => e.stopPropagation()} className="jdn__xpath_checkbox_wrapper">
+              <div
+                ref={addToPORef as React.LegacyRef<HTMLDivElement>}
+                onContextMenu={(e) => e.stopPropagation()}
+                className="jdn__xpath_checkbox_wrapper"
+              >
                 <Checkbox
                   checked={isChecked}
                   indeterminate={indeterminate}
@@ -214,7 +227,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
               {searchState !== SearchState.Hidden ? (
                 <div onContextMenu={handleLocatorRightClick} className="jdn__xpath_buttons">
                   <LocatorCopyButton {...{ framework, element }} />
-                  <OnbrdTooltip>
+                  <OnboardingTooltip>
                     <LocatorMenu {...{ setIsEditModalOpen, trigger: ['click', 'contextMenu'] }}>
                       <Button
                         ref={menuRef}
@@ -222,7 +235,7 @@ export const Locator: React.FC<Props> = ({ element, currentPage, searchState, de
                         icon={<DotsThree size={18} onClick={(e) => e.preventDefault()} />}
                       />
                     </LocatorMenu>
-                  </OnbrdTooltip>
+                  </OnboardingTooltip>
                 </div>
               ) : null}
             </div>

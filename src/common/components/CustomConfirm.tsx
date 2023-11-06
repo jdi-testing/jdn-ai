@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { ReactNode, useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import { ExclamationCircleOutlined } from '@ant-design/icons';
-import { Button, Modal, ModalProps } from 'antd';
-
+import { Button, Modal } from 'antd';
 import '../styles/customConfirm.less';
+import { ModalProps } from 'antd/lib/modal/interface';
 
 interface Props extends ModalProps {
   confirmTitle: string;
@@ -14,18 +15,9 @@ interface Props extends ModalProps {
   destroy?: () => void;
 }
 
-export const customConfirm = (props: Props) => {
-  const container = ReactDOM.createRoot(document.createDocumentFragment());
-
-  const destroy = () => container.unmount();
-
-  container.render(<CustomConfirm {...props} {...{ destroy }} />);
-};
-
-export const CustomConfirm: React.FC<Props> = ({
+const CustomConfirm: React.FC<Props> = ({
   confirmTitle,
   confirmContent,
-  onOk,
   isOkButtonEnabled,
   onCancel,
   onAlt,
@@ -35,24 +27,16 @@ export const CustomConfirm: React.FC<Props> = ({
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(true);
 
-  const handleOk = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    //@ts-ignore
-    onOk && onOk(e);
+  const handleClose = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    if (onCancel) onCancel(e);
     setIsModalOpen(false);
-    destroy && destroy();
+    if (destroy) destroy();
   };
 
-  const handleCancel = (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    //@ts-ignore
-    onCancel && onCancel(e);
-    setIsModalOpen(false);
-    destroy && destroy();
-  };
-
-  const handleAlt = () => {
+  const handleAltAndClose = () => {
     onAlt();
     setIsModalOpen(false);
-    destroy && destroy();
+    if (destroy) destroy();
   };
 
   return (
@@ -61,17 +45,17 @@ export const CustomConfirm: React.FC<Props> = ({
       open={isModalOpen}
       closable={false}
       footer={[
-        <Button key="cancel" onClick={handleCancel}>
+        <Button key="cancel" onClick={handleClose}>
           Cancel
         </Button>,
-        <Button key="alt" danger onClick={handleAlt}>
+        <Button key="alt" danger onClick={handleAltAndClose}>
           {altText}
         </Button>,
-        <Button key="ok" type="primary" disabled={!isOkButtonEnabled} onClick={handleOk}>
+        <Button key="ok" type="primary" disabled={!isOkButtonEnabled} onClick={handleClose}>
           Save
         </Button>,
       ]}
-      {...{ rest }}
+      {...rest}
     >
       <div className="ant-modal-confirm-body">
         <ExclamationCircleOutlined className="custom-confirm__icon" />
@@ -81,3 +65,13 @@ export const CustomConfirm: React.FC<Props> = ({
     </Modal>
   );
 };
+
+export const customConfirm = (props: Props) => {
+  const container = ReactDOM.createRoot(document.createDocumentFragment());
+
+  const destroy = () => container.unmount();
+
+  container.render(<CustomConfirm {...props} destroy={destroy} />);
+};
+
+export default CustomConfirm;

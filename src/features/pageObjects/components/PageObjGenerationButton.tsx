@@ -1,13 +1,10 @@
 import React, { FC } from 'react';
-import { Button, ButtonProps } from 'antd';
+import { Button } from 'antd';
+import { ButtonProps } from 'antd/lib';
 
-interface Props extends ButtonProps {
-  refFn?: () => React.RefObject<HTMLDivElement> | null;
-}
-export const PageObjGenerationButton: FC<Props> = ({ children, refFn, ...rest }) => {
-  const ref = refFn ? refFn() : null;
+export const PageObjGenerationButton: FC<ButtonProps> = ({ children, ...rest }) => {
   return (
-    <Button {...{ ...(ref ? { ref } : {}), ...rest }} className="jdn__buttons jdn__generationButtons_generate">
+    <Button {...{ ...rest }} className="jdn__buttons jdn__generationButtons_generate" style={{ marginRight: '10px' }}>
       {children}
     </Button>
   );

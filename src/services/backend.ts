@@ -5,7 +5,7 @@ export enum HttpEndpoint {
   BUILD = 'build',
   MUI_PREDICT = 'mui-predict',
   HTML5_PREDICT = 'html5-predict',
-  NGMAT_PREDICT = 'angular-predict', // TODO: check when implemented at BE
+  NGMAT_PREDICT = 'angular-predict', // ToDo: check when implemented at BE
   REPORT_PROBLEM = 'report_problem',
   DOWNLOAD_TEMPLATE = 'download_template',
   DOWNLOAD_TEMPLATE_VIVIDUS = 'download_template?repo_zip_url=https://github.com/vividus-framework/vividus-sample-tests/archive/refs/heads/main.zip',

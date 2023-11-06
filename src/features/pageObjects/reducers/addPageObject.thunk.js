@@ -59,7 +59,7 @@ export const addPageObjReducer = (builder) => {
       const names = map(pageObjects, 'name');
       let name = className;
 
-      for (let index = 0; !isPONameUnique(pageObjects, null, name); index++) {
+      for (let index = 0; !isPONameUnique(pageObjects, 0, name); index++) {
         const repeats = size(
           names.filter((_name) => {
             const res = toLower(_name).includes(toLower(className));

@@ -1,10 +1,10 @@
+import React, { useState } from 'react';
 import { Form, Input, Select } from 'antd';
 import Icon from '@ant-design/icons';
 import WarningFilled from '../assets/warning-filled.svg';
+import { FieldData } from 'rc-field-form/lib/interface';
 import { Footnote } from '../../../common/components/footnote/Footnote';
 import { Rule } from 'antd/lib/form';
-import { FieldData } from 'rc-field-form/lib/interface';
-import React, { useContext, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../app/store/store';
 import { DialogWithForm } from '../../../common/components/DialogWithForm';
@@ -29,10 +29,9 @@ import { isFilteredSelect } from '../../../common/utils/helpers';
 import { CALCULATING, newLocatorStub } from '../utils/constants';
 import { changeLocatorElement } from '../reducers/changeLocatorElement.thunk';
 import { addCustomLocator } from '../reducers/addCustomLocator.thunk';
-import { OnboardingContext } from '../../onboarding/OnboardingProvider';
-import { OnbrdStep } from '../../onboarding/types/constants';
 import { selectPresentLocatorsByPO } from '../selectors/locatorsByPO.selectors';
 import { LocatorMessageForDuplicate } from './LocatorMessageForDuplicate';
+import { useOnboardingContext } from '../../onboarding/OnboardingProvider';
 
 interface Props extends ILocator {
   isModalOpen: boolean;
@@ -77,8 +76,6 @@ export const LocatorEditDialog: React.FC<Props> = ({
   const [validationMessage, setValidationMessage] = useState<LocatorValidationErrorType>(message || '');
   const [validationErrorOptions, setValidationErrorOptions] = useState<{ duplicates?: ILocator[] }>({});
   const [isEditedName, setIsEditedName] = useState<boolean>(isCustomName);
-
-  const { updateRef } = useContext(OnboardingContext);
 
   const [form] = Form.useForm<FormValues>();
   const isCurrentFrameworkVividus = pageObjectFramework === FrameworkType.Vividus;
@@ -232,9 +229,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
   const onFieldsChange = async (changedValues: FieldData[]) => {
     const isLocatorTypeChanged = changedValues.some((value) => value.name.toString().includes('locatorType'));
     isLocatorTypeChanged && onLocatorTypeChange();
-    const isOkButtonDisabled = computeIsOkButtonDisabled();
-    setIsOkButtonDisabled(isOkButtonDisabled);
-    updateRef(OnbrdStep.EditLocator, undefined, isOkButtonDisabled ? undefined : handleCreateCustomLocator);
+    setIsOkButtonDisabled(computeIsOkButtonDisabled());
   };
 
   const renderValidationMessage = () => {
@@ -249,6 +244,10 @@ export const LocatorEditDialog: React.FC<Props> = ({
 
   return (
     <DialogWithForm
+      onboardingRefProps={{
+        onNextClickHandler: handleCreateCustomLocator,
+        isOkButtonDisabled: isOkButtonDisabled,
+      }}
       modalProps={{
         title: isCreatingForm ? 'Create custom locator' : 'Edit locator',
         open: isModalOpen,

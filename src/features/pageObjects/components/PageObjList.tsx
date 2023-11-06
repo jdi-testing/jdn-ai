@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import { CaretDown } from '@phosphor-icons/react';
 import PageSvg from '../assets/page.svg';
 import { selectPageObjects, selectLastFrameworkType } from '../selectors/pageObjects.selectors';
-import { PageObjGenerationBar } from './PageObjGenerationBar';
+import { PageObjGenerationSettings } from './PageObjGenerationSettings';
 import { PageObjectPlaceholder } from './PageObjectPlaceholder';
 import { PageObjCopyButton } from './PageObjCopyButton';
 import { Locator } from '../../locators/Locator';
@@ -16,7 +16,7 @@ import { PageObjListHeader } from './PageObjListHeader';
 import { useNotifications } from '../../../common/components/notification/useNotifications';
 import { RootState } from '../../../app/store/store';
 import { ILocator } from '../../locators/types/locator.types';
-import { PageObjectId } from '../types/pageObjectSlice.types';
+import { PageObject, PageObjectId } from '../types/pageObjectSlice.types';
 import { ElementLibrary } from '../../locators/types/generationClasses.types';
 import { PageType } from '../../../app/types/mainSlice.types';
 import { selectConfirmedLocators } from '../../locators/selectors/locatorsFiltered.selectors';
@@ -30,13 +30,14 @@ interface Props {
 const DEFAULT_ACTIVE_KEY = '0';
 
 export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) => {
-  const state = useSelector((state) => state);
+  const state = useSelector((_state: RootState) => _state);
+
   // due to antd types: onChange?: (key: string | string[]) => void;
   const currentPageObjectIndex = useSelector(
-    (state: RootState): string | undefined => state.pageObject.present.currentPageObject?.toString(),
+    (_state: RootState): string | undefined => _state.pageObject.present.currentPageObject?.toString(),
   );
   const framework = useSelector(selectLastFrameworkType) || FrameworkType.JdiLight;
-  const pageObjects = useSelector(selectPageObjects);
+  const pageObjects: PageObject[] = useSelector(selectPageObjects);
   const [activePanel, setActivePanel] = useState<string[] | undefined>([DEFAULT_ACTIVE_KEY]);
 
   const contentRef = useRef<HTMLDivElement>(null);
@@ -72,7 +73,7 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
     if (isPageObjectNotEmpty) {
       return renderLocators(elements, library);
     } else {
-      return <PageObjGenerationBar pageObj={pageObjId} {...{ library, url }} />;
+      return <PageObjGenerationSettings pageObj={pageObjId} {...{ library, url }} />;
     }
   };
 
@@ -81,7 +82,7 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
       setActivePanel([]);
     } else {
       const keys = pageObjects.map(
-        (po) => po.id.toString(), // due to antd types: onChange?: (key: string | string[]) => void;
+        (pageObject) => pageObject.id.toString(), // due to antd types: onChange?: (key: string | string[]) => void;
       );
       setActivePanel(keys);
     }
@@ -119,7 +120,8 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
             >
               {pageObjects.map((pageObject) => {
                 const { id, locators, url, name, library } = pageObject;
-                const elements = selectConfirmedLocators(state as RootState, id);
+
+                const elements = selectConfirmedLocators(state, id);
                 const isPageObjectNotEmpty = !!size(locators);
                 return (
                   <Collapse.Panel
@@ -149,9 +151,9 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
             </Collapse>
           </React.Fragment>
         ) : (
-          <PageObjectPlaceholder {...{ setActivePanel }} />
+          <PageObjectPlaceholder addPageObjectCallback={setActivePanel} />
         )}
-        {/* <Notifications /> */}
+        {/* <Notifications /> ToDo */}
       </div>
     </div>
   );

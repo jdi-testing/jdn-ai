@@ -54,7 +54,7 @@ export const selectAutoGeneratingLocatorTypes = createSelector(
 
     locators = locators || pageObj.locators;
 
-    // TODO: rewrite with normal condition:
+    // ToDo: rewrite with normal condition:
     const isLessThanMinLocatorsThreshold: boolean = (locators?.length || 0) <= AUTO_GENERATION_THRESHOLD;
 
     const isAutoGenerating = {

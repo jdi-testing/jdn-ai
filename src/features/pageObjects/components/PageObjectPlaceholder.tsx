@@ -1,16 +1,16 @@
-import React from 'react';
+import React, { FC } from 'react';
 
 import { EmptyListInfo } from '../../../common/components/emptyListInfo/EmptyListInfo';
 import { useAddPageObject } from '../utils/useAddPageObject';
 import { Button } from 'antd';
 import { OnboardingPopup } from '../../onboarding/components/OnboardingPopup';
 
-interface Props {
-  setActivePanel: (pageObjectId: string[] | undefined) => void;
-}
+type TPageObjectPlaceholder = {
+  addPageObjectCallback: (pageObjectId: string[] | undefined) => void;
+};
 
-export const PageObjectPlaceholder: React.FC<Props> = ({ setActivePanel }) => {
-  const handleAddPageObject = useAddPageObject(setActivePanel);
+export const PageObjectPlaceholder: FC<TPageObjectPlaceholder> = ({ addPageObjectCallback }) => {
+  const handleAddPageObject = useAddPageObject(addPageObjectCallback, undefined);
 
   return (
     <EmptyListInfo>

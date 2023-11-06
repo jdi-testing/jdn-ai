@@ -1,6 +1,6 @@
+import React, { useEffect, useRef, useState } from 'react';
 import { Button, Dropdown } from 'antd';
-import React, { useContext, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { size } from 'lodash';
 import { DotsThree } from '@phosphor-icons/react';
@@ -20,11 +20,11 @@ import { PageObject } from '../types/pageObjectSlice.types';
 import { generatePageObject, generatePageObjectPerfTest } from '../../pageObjects/utils/pageObject';
 import { RenamePageObjectDialog } from './RenamePageObjDialog';
 import { checkLocatorsValidity } from '../../locators/reducers/checkLocatorValidity.thunk';
-import { useOnBoardingRef } from '../../onboarding/utils/useOnboardingRef';
-import { OnbrdStep } from '../../onboarding/types/constants';
-import { OnbrdTooltip } from '../../onboarding/components/OnbrdTooltip';
-import { OnboardingContext } from '../../onboarding/OnboardingProvider';
+import { OnboardingStep } from '../../onboarding/constants';
+import { OnboardingTooltip } from '../../onboarding/components/OnboardingTooltip';
 import { AppDispatch } from '../../../app/store/store';
+import { useOnboardingContext } from '../../onboarding/OnboardingProvider';
+import { selectIsOnboardingOpen } from '../../onboarding/store/onboarding.selectors';
 
 interface Props {
   pageObject: PageObject;
@@ -37,7 +37,7 @@ export const PageObjMenu: React.FC<Props> = ({ pageObject, elements }) => {
 
   const [isRenameModalOpen, setIsRenameModalOpen] = useState(false);
 
-  const { isOpen: isOnboardingOpen } = useContext(OnboardingContext);
+  const isOnboardingOpen = useSelector(selectIsOnboardingOpen);
 
   const getMenuItems = (pageObject: PageObject, locatorIds: ElementId[] | undefined, locatorObjects: ILocator[]) => {
     const handleRename = () => setIsRenameModalOpen(true);
@@ -76,11 +76,17 @@ export const PageObjMenu: React.FC<Props> = ({ pageObject, elements }) => {
     return { ...{ items } };
   };
 
-  const menuRef = useOnBoardingRef(OnbrdStep.EditPO);
+  const menuRef = useRef<HTMLElement | null>(null);
+  const { updateStepRefs } = useOnboardingContext();
+  useEffect(() => {
+    if (menuRef.current) {
+      updateStepRefs(OnboardingStep.EditPO, menuRef);
+    }
+  }, []);
 
   return (
     <div onClick={(e) => e.stopPropagation()}>
-      <OnbrdTooltip>
+      <OnboardingTooltip>
         <Dropdown
           disabled={isOnboardingOpen}
           align={{ offset: [15, 0] }}
@@ -97,7 +103,7 @@ export const PageObjMenu: React.FC<Props> = ({ pageObject, elements }) => {
             icon={<DotsThree size={18} />}
           ></Button>
         </Dropdown>
-      </OnbrdTooltip>
+      </OnboardingTooltip>
       <RenamePageObjectDialog
         isModalOpen={isRenameModalOpen}
         setIsModalOpen={setIsRenameModalOpen}
