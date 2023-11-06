@@ -148,27 +148,26 @@ export const LocatorsPage = () => {
     pageBack();
   };
 
+  const backButtonHandler = () => {
+    if (!locators.length && !locatorsSnapshot.length) handleDiscard();
+    if (isEqual(locators, locatorsSnapshot)) pageBack();
+    else {
+      const isOkButtonEnabled = !!(inProgressGenerate.length || calculatedAndChecked.length);
+
+      customConfirm({
+        onAlt: handleDiscard,
+        altText: 'Discard',
+        onOk: handleOk,
+        isOkButtonEnabled,
+        confirmTitle: 'Save this locators list?',
+        confirmContent: 'The list has been edited and the changes have not been accepted. Do you want to save changes?',
+      });
+    }
+  };
+
   const renderBackButton = () => {
-    const handleBack = () => {
-      if (!locators.length && !locatorsSnapshot.length) handleDiscard();
-      if (isEqual(locators, locatorsSnapshot)) pageBack();
-      else {
-        const isOkButtonEnabled = !!(inProgressGenerate.length || calculatedAndChecked.length);
-
-        customConfirm({
-          onAlt: handleDiscard,
-          altText: 'Discard',
-          onOk: handleOk,
-          isOkButtonEnabled,
-          confirmTitle: 'Save this locators list?',
-          confirmContent:
-            'The list has been edited and the changes have not been accepted. Do you want to save changes?',
-        });
-      }
-    };
-
     return (
-      <Button onClick={handleBack} className="jdn__buttons">
+      <Button onClick={backButtonHandler} className="jdn__buttons">
         Back
       </Button>
     );
@@ -179,7 +178,7 @@ export const LocatorsPage = () => {
     const { updateStepRefs } = useOnboardingContext();
     useEffect(() => {
       if (saveLocatorsRef.current) {
-        updateStepRefs(OnboardingStep.SaveLocators, saveLocatorsRef, pageBack);
+        updateStepRefs(OnboardingStep.SaveLocators, saveLocatorsRef, handleConfirm);
       }
     }, []);
 
