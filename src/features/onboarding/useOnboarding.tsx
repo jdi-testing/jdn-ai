@@ -7,8 +7,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../app/store/store';
 import { closeModal, openModal, openOnboarding, closeOnboarding, setCurrentStep } from './store/onboarding.slice';
 import { LocalStorageKey, getLocalStorage, setLocalStorage } from '../../common/utils/localStorage';
-import { BackendStatus } from '../../app/types/mainSlice.types';
+import { BackendStatus, PageType } from '../../app/types/mainSlice.types';
 import { selectCurrentStep, selectIsOnboardingOpen, selectIsWelcomeModalOpen } from './store/onboarding.selectors';
+import { changePage } from '../../app/main.slice';
+import { removePageObject } from '../pageObjects/pageObject.slice';
+import { selectCurrentPageObject } from '../pageObjects/selectors/pageObjects.selectors';
+import { removeLocators } from '../locators/locators.slice';
+import { selectCurrentPage } from '../../app/main.selectors';
+import { isPageObjectPage } from '../../app/utils/helpers';
 
 type TOnboarding = {
   isOpen: boolean;
@@ -45,6 +51,9 @@ export const useOnboarding = () => {
   const isBackendAvailable = useSelector((state: RootState) => state.main.backendAvailable) === BackendStatus.Accessed;
   const isSessionUnique = useSelector((state: RootState) => state.main.isSessionUnique);
 
+  const currentPageObject = useSelector(selectCurrentPageObject);
+  const currentPage = useSelector(selectCurrentPage);
+
   const openModalHandler = () => {
     dispatch(openModal());
   };
@@ -63,6 +72,22 @@ export const useOnboarding = () => {
   }, [isBackendAvailable, isSessionUnique]);
 
   const openOnboardingHandler = () => {
+    dispatch(setCurrentStep(0));
+
+    if (!isPageObjectPage(currentPage.page)) {
+      if (currentPageObject) {
+        // remove current PO and it's locators:
+        dispatch(removePageObject(currentPageObject.id));
+        dispatch(removeLocators(currentPageObject.locators));
+      }
+      dispatch(
+        changePage({
+          page: PageType.PageObject,
+          alreadyGenerated: true,
+        }),
+      );
+    }
+
     dispatch(openOnboarding());
   };
 
@@ -106,7 +131,6 @@ export const useOnboarding = () => {
     handleConfirmModal,
     isOnboardingOpen,
     openOnboarding: openOnboardingHandler,
-    closeOnboarding: closeOnboardingHandler,
     currentStep,
     welcomeModal,
   };
