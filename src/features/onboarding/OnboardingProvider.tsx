@@ -1,3 +1,5 @@
+// For AnyAction, Dispatch:
+/* eslint-disable import/named */
 import React, { ReactNode, createContext, useContext, useEffect, useState } from 'react';
 import { IOnboardingStep, OnboardingStep, TNextButtonProps, TPrevButtonProps, onboardingMap } from './constants';
 import { IOnboardingContext } from './types/context.types';

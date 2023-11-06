@@ -23,7 +23,6 @@ import { IN_DEVELOPMENT_TITLE } from '../../../common/constants/constants';
 import { useOnboardingContext } from '../../onboarding/OnboardingProvider';
 import { OnboardingStep } from '../../onboarding/constants';
 import { useOnboarding } from '../../onboarding/useOnboarding';
-import { selectIsCustomLocatorFlow } from '../../onboarding/store/onboarding.selectors';
 
 interface Props {
   pageObj: PageObjectId;

@@ -5,7 +5,7 @@ import { CaretDown, Plus, Trash } from '@phosphor-icons/react';
 
 import { pushNotification } from '../../../app/main.slice';
 import { size } from 'lodash';
-import { selectCurrentPageObject, selectPageObjects } from '../selectors/pageObjects.selectors';
+import { selectPageObjects } from '../selectors/pageObjects.selectors';
 
 import { removeAll as removeAllLocators } from '../../locators/locators.slice';
 import { removeAll as removeAllPageObjects } from '../pageObject.slice';
@@ -18,7 +18,6 @@ import { checkLocatorsValidity } from '../../locators/reducers/checkLocatorValid
 import { useAddPageObject } from '../utils/useAddPageObject';
 import { useOnboardingContext } from '../../onboarding/OnboardingProvider';
 import { PageObject } from '../types/pageObjectSlice.types';
-import { selectIsCustomLocatorFlow } from '../../onboarding/store/onboarding.selectors';
 
 const { confirm } = Modal;
 
@@ -73,10 +72,13 @@ export const PageObjListHeader: FC<Props> = ({ template, toggleExpand, isExpande
     if (newPOButtonRef.current) {
       updateStepRefs(OnboardingStep.NewPageObject, newPOButtonRef, handleAddPageObject);
     }
+  }, [pageObjects, newPOButtonRef.current]);
+
+  useEffect(() => {
     if (downloadRef.current) {
       updateStepRefs(OnboardingStep.DownloadPO, downloadRef, () => dispatch(checkLocatorsValidity()));
     }
-  }, [pageObjects, newPOButtonRef.current]);
+  }, [enableDownload]);
 
   return (
     <Row className="jdn__itemsList-header" justify="space-between">

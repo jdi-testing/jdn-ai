@@ -45,6 +45,7 @@ import { useOnboarding } from '../onboarding/useOnboarding';
 import { setIsCustomLocatorFlow } from '../onboarding/store/onboarding.slice';
 import { selectIsEditModalOpen } from './selectors/customLocator.selectors';
 import { setIsEditModalOpen } from './customLocator.slice';
+import { selectIsCustomLocatorFlow } from '../onboarding/store/onboarding.selectors';
 
 const { confirm } = Modal;
 
@@ -104,11 +105,19 @@ export const LocatorsPage = () => {
   const pageBack = () => {
     dispatch(setScriptMessage({}));
     dispatch(changePageBack());
-
-    if (isOnboardingOpen) handleOnChangeStep(OnboardingStep.DownloadPO);
   };
 
+  const isCustomLocatorFlow = useSelector(selectIsCustomLocatorFlow);
+
   const handleConfirm = () => {
+    if (isOnboardingOpen) {
+      const DownloadPOStepNumberInDefaultOnboardingMode = 8;
+      const DownloadPOStepNumberInCustomLocatorOnboardingMode = 9;
+      pageBack();
+      if (isCustomLocatorFlow) {
+        handleOnChangeStep(DownloadPOStepNumberInCustomLocatorOnboardingMode);
+      } else handleOnChangeStep(DownloadPOStepNumberInDefaultOnboardingMode);
+    }
     if (inProgressGenerate.length) {
       confirm({
         title: 'Confirm this locators list',
@@ -178,7 +187,7 @@ export const LocatorsPage = () => {
     const { updateStepRefs } = useOnboardingContext();
     useEffect(() => {
       if (saveLocatorsRef.current) {
-        updateStepRefs(OnboardingStep.SaveLocators, saveLocatorsRef, handleConfirm);
+        updateStepRefs(OnboardingStep.SaveLocators, saveLocatorsRef, pageBack);
       }
     }, []);
 
