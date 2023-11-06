@@ -11,7 +11,7 @@ export enum OnboardingStep {
   Generating, //3
   CustomLocator, //4
   EditLocator, //5
-  ContextMenu, // 6
+  ContextMenu, //6
   AddToPO, //7
   SaveLocators, //8
   DownloadPO, //9
@@ -97,7 +97,6 @@ export const onboardingSteps: IOnboardingSteps = {
     },
   },
   CustomLocator: {
-    // ToDo isCustomLocatorFlow
     order: OnboardingStep.CustomLocator,
     title: 'Create Custom locator',
     description:
