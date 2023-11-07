@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import { CloudCheck, DesktopTower } from '@phosphor-icons/react';
-import { Col, Row } from 'antd';
+import { Col, Row, Spin } from 'antd';
 import Link from 'antd/lib/typography/Link';
 import React from 'react';
 
@@ -63,8 +63,15 @@ export const onboardingSteps: IOnboardingSteps = {
   POsettings: {
     order: OnboardingStep.POsettings,
     title: 'Basic settings',
-    description: `At the start of the creation process, you can specify certain characteristics of the Page Object 
-    locators for your convenience. Later you can modify these characteristics.`,
+    description: (
+      <React.Fragment>
+        <p style={{ marginBottom: '0px' }}>
+          At the start of the creation process, you can specify certain characteristics of the Page Object locators for
+          your convenience.
+        </p>
+        <p>Later you can modify these characteristics.</p>
+      </React.Fragment>
+    ),
     target: undefined,
     nextButtonProps: {
       onClick: undefined,
@@ -73,10 +80,15 @@ export const onboardingSteps: IOnboardingSteps = {
   Generate: {
     order: OnboardingStep.Generate,
     title: 'Start creating',
-    description: `After clicking this button, the page will be scanned and locators will be generated.
-    Please make sure that you have opened the required web page before proceeding.
-        
-    Also, you can create an Empty Page Object and then select the elements you need for generation.`,
+    description: (
+      <React.Fragment>
+        <p>
+          After clicking this button, the page will be scanned and locators will be generated. Please make sure that you
+          have opened the required web page before proceeding.
+        </p>
+        <p>Also, you can create an Empty Page Object and then select the elements you need for generation.</p>
+      </React.Fragment>
+    ),
     target: undefined,
     nextButtonProps: {
       children: 'Generate',
@@ -86,6 +98,11 @@ export const onboardingSteps: IOnboardingSteps = {
   Generating: {
     order: OnboardingStep.Generating,
     title: 'Creating locators...',
+    description: (
+      <React.Fragment>
+        <Spin style={{ display: 'block' }} />
+      </React.Fragment>
+    ),
     target: undefined,
     nextButtonProps: {
       disabled: true,
