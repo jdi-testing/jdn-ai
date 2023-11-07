@@ -69,14 +69,14 @@ export const Locator: FC<Props> = ({ element, currentPage, searchState, depth, s
 
   const currentPageObject = useSelector(selectCurrentPageObject);
   const { updateStepRefs, modifyStepRefByKey } = useOnboardingContext();
-  const isFirstLocator = index === 0;
+  const isFirstLocator = (index ?? 0) + (depth ?? 0) === 0;
 
   const ref = useRef<HTMLDivElement>(null);
 
   const menuRef = isFirstLocator ? React.createRef<HTMLElement>() : null;
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!isFirstLocator) return;
-    if (menuRef?.current) {
+    if (menuRef) {
       updateStepRefs(OnboardingStep.ContextMenu, menuRef);
     }
   }, []);
