@@ -208,16 +208,17 @@ export const onboardingSteps: IOnboardingSteps = {
   },
   Connection: {
     order: OnboardingStep.Connection,
-    title: 'Connection to the server',
+    title: 'Server connection type',
     description: (
       <React.Fragment>
-        Displays the current type of connection being used by JDN, whether it&apos;s a local server or a cloud server.
+        Displays the current type of connection being used by JDN, whether it`&apos;`s the local server or the cloud
+        server.
         <Col className="jdn__onboarding_connection">
           <Row>
-            <CloudCheck size={16} color="#8C8C8C" /> &ndash; you are connected to a cloud server
+            <CloudCheck size={16} color="#8C8C8C" /> &ndash; you are connected to the cloud server
           </Row>
           <Row>
-            <DesktopTower size={16} color="#8C8C8C" /> &ndash; you are connected to a local server
+            <DesktopTower size={16} color="#8C8C8C" /> &ndash; you are connected to the local server
           </Row>
         </Col>
       </React.Fragment>
