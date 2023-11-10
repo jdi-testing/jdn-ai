@@ -3,6 +3,7 @@
   "version": "3.14.24",
   "description": "jdn-ai chrome extension",
   "scripts": {
+    "dev": "vite build --watch --mode development",
     "start": "webpack --watch --env devenv",
     "start:prodenv": "webpack --watch",
     "start:reduxlog": "webpack --watch --env reduxlogenable devenv",
@@ -91,6 +92,7 @@
     "@types/redux-mock-store": "^1.0.3",
     "@typescript-eslint/eslint-plugin": "^6.7.3",
     "@typescript-eslint/parser": "^6.7.3",
+    "@vitejs/plugin-react": "^4.1.1",
     "babel-jest": "^29.6.4",
     "babel-loader": "9.1.3",
     "css-loader": "6.8.1",
@@ -127,6 +129,7 @@
     "ts-jest": "^29.1.1",
     "ts-loader": "^9.3.1",
     "typescript": "^4.7.4",
+    "vite": "^4.5.0",
     "webpack": "^5.83.1",
     "webpack-cli": "5.1.4"
   }
