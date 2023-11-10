@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 /* eslint-disable-next-line */
 // @ts-ignore
 // since webpack works fine with it
-import readme from '../../../../README.md';
+import readme from '../../../../README.md?raw';
 import { BackendStatus } from '../../types/mainSlice.types';
 import { AppDispatch, RootState } from '../../store/store';
 import { useGuideRehype } from '../../utils/hooks/useGuideRehype';

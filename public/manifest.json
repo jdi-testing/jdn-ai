@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "JDN",
+  "description": "JDN – helps Test Automation Engineer to create Page Objects in the test automation framework and speed up test development",
+  "devtools_page": "index.html",
+  "version": "3.14.24",
+  "icons": {
+    "128": "icon128.png"
+  },
+  "permissions": [
+    "scripting",
+    "storage",
+    "clipboardWrite"
+  ],
+  "host_permissions": [
+    "http://*/*",
+    "https://*/*",
+    "file://*"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com;"
+  }
+}
