@@ -1,4 +1,5 @@
 import { LocatorType, AnnotationType } from '../../../common/types/common';
+import { ElementAttributes } from '../../../pageServices/contentScripts/utils';
 import { PageObjectId } from '../../pageObjects/types/pageObjectSlice.types';
 import { ElementClass } from './generationClasses.types';
 
@@ -57,6 +58,7 @@ export type ElementId = string;
 export interface LocatorValue {
   fullXpath?: string;
   xPath: string;
+  attributes: ElementAttributes;
   cssSelector: string;
   cssSelectorStatus?: LocatorTaskStatus; // status of cssSelector calculation
   xPathStatus?: LocatorTaskStatus; // status of xPath calculation

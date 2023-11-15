@@ -28,6 +28,7 @@ export const newLocatorStub: ILocator = {
   locator: {
     xPath: '',
     cssSelector: '',
+    attributes: {},
     taskStatus: LocatorTaskStatus.SUCCESS,
   },
   annotationType: '' as AnnotationType,

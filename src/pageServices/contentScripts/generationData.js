@@ -1,7 +1,7 @@
 import getCssSelector from 'css-selector-generator';
 import { finder } from '@medv/finder';
 import { ScriptMsg } from '../scriptMsg.constants';
-import { sendMessage } from './utils';
+import { sendMessage, getElementAttributes } from './utils';
 import { LocatorTaskStatus } from '../../features/locators/types/locator.types';
 
 export const getGenerationAttributes = () => {
@@ -153,7 +153,7 @@ export const getGenerationAttributes = () => {
       return string;
     }
     const regex = /(_|-)([a-z])/g;
-    const toCamelCase = (string) => string[1].toUpperCase();
+    const toCamelCase = (valueString) => valueString[1].toUpperCase();
     return string.toLowerCase().replace(regex, toCamelCase).replaceAll('-', '_');
   };
 
@@ -165,12 +165,14 @@ export const getGenerationAttributes = () => {
           return;
         }
         const xPath = getElementTreeXPath(element);
+        const elementAttributes = getElementAttributes(element);
         const attrName = element.getAttribute('name');
         predictedElement.elemName = attrName ? camelCase(attrName) : '';
         predictedElement.elemId = element.id && typeof element.id === 'string' ? camelCase(element.id) : '';
         predictedElement.elemText = element.textContent;
         predictedElement.elemAriaLabel = element.getAttribute('aria-label');
         predictedElement.locator = {
+          attributes: elementAttributes,
           xPath,
           fullXpath: xPath,
           ...(generateCss
