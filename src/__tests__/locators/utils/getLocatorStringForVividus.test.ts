@@ -5,6 +5,6 @@ import { ILocator } from '../../../features/locators/types/locator.types';
 test('get full locator string for Vividus', () => {
   locatorsListMockForVividus.forEach((locator) => {
     const { poName, locatorType, vividusOutput } = locator;
-    expect(getFullLocatorVividusString(poName, locatorType, locator as ILocator)).toBe(vividusOutput);
+    expect(getFullLocatorVividusString(poName, locatorType, locator as unknown as ILocator)).toBe(vividusOutput);
   });
 });
