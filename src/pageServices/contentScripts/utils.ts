@@ -78,3 +78,57 @@ export const sendMessage = (msg: { message: ScriptMsg; param: any }) =>
   chrome.runtime.sendMessage(msg).catch((error) => {
     if (error.message !== 'The message port closed before a response was received.') throw new Error(error.message);
   });
+
+export interface ElementAttributes {
+  id?: string | null;
+  name?: string | null;
+  tagName?: string | null;
+  className?: string | null;
+  linkText?: string | null;
+  partialLinkText?: string | null;
+  dataAttributes?: { [key: string]: string | null } | null;
+}
+
+export const getElementAttributes = (element: HTMLElement): ElementAttributes => {
+  let attributes: ElementAttributes = {};
+
+  if (element.id) {
+    attributes.id = element.id;
+  }
+  // ignore for name attribute:
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  if (element.name) {
+    attributes.name = element.getAttribute('name') ?? null;
+  }
+
+  if (element.innerText) {
+    // attributes.linkText = element.innerText; // не включает скрытый текст (например, скрытый CSS)
+    attributes.linkText = element.textContent?.trim(); // возвращает текстовое
+    // содержимое элемента, включая все его потомки. Оно возвращает все текстовые узлы,
+    // включая скрытые элементы.
+    // if (attributes.linkText) {  // пока убрать
+    //   attributes.partialLinkText = attributes.linkText.slice(0, Math.floor(attributes.linkText.length / 2));
+    // }
+  }
+
+  if (element.tagName) {
+    attributes.tagName = element.tagName.toLowerCase();
+  }
+
+  if (element.className) {
+    attributes.className = element.className;
+  }
+
+  // Get data attributes
+  const dataAttributes: { [key: string]: string } = {};
+  for (let i = 0; i < element.attributes.length; i++) {
+    const attribute = element.attributes[i];
+    if (attribute.name.startsWith('data-')) {
+      dataAttributes[attribute.name.replace('data-', '')] = attribute.value;
+    }
+  }
+  if (!!Object.keys(dataAttributes).length) attributes = { ...attributes, ...dataAttributes };
+
+  return attributes;
+};
