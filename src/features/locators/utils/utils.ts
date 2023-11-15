@@ -38,10 +38,10 @@ export const evaluateCssSelector = (selector: string, element_id?: ElementId, or
 export const generateSelectorByHash = (element_id: ElementId, jdnHash: string) =>
   sendMessage.generateSelectorByHash({ element_id, jdnHash });
 
-export const checkDuplicates = (jdnHash: string, locators: ILocator[], element_id: ElementId) =>
+export const checkDuplicates = (foundHash: string, locators: ILocator[], element_id: ElementId) =>
   locators.filter(
-    ({ jdnHash: _jdnHash, message, element_id: _element_id }) =>
-      _jdnHash === jdnHash && isValidLocator(message) && _element_id !== element_id,
+    ({ jdnHash, message, element_id: _element_id }) =>
+      jdnHash === foundHash && isValidLocator(message) && _element_id !== element_id,
   );
 
 export const createNewName = (
