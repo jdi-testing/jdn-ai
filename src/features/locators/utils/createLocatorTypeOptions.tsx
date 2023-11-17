@@ -3,10 +3,12 @@ import { ElementAttributes, ExtendedElementAttributes } from '../../../pageServi
 import { ILocator, LocatorValue } from '../types/locator.types';
 import { locatorAttributesInitialState } from '../../../common/types/common';
 import { mergeObjects } from './mergeObjects';
+import { Tooltip } from 'antd';
 
 interface IOptionsWithLabel {
   label: React.JSX.Element;
   value: string;
+  disabled?: boolean;
 }
 
 interface ILocatorTypeOptions {
@@ -15,16 +17,29 @@ interface ILocatorTypeOptions {
 }
 
 const generateOptionsWithLabel = (attributes: ElementAttributes): IOptionsWithLabel[] => {
-  const generateLabel = (key: string, attribute: string) => (
-    // ToDo add styles
-    <>
-      {key} <b>{attribute}</b>
-    </>
-  );
-  return Object.keys(attributes).map((key) => ({
-    label: generateLabel(key, attributes[key as keyof ElementAttributes] as string),
-    value: key,
-  }));
+  const generateLabel = (key: string, attribute: string | null) => {
+    if (attribute === null) {
+      return <Tooltip title="Disabled because no data">{key}</Tooltip>;
+    }
+
+    return (
+      <>
+        {key} <span style={{ color: 'rgba(0, 0, 0, 0.45)' }}>{attribute}</span>
+      </>
+    );
+  };
+  return Object.keys(attributes).map((key) => {
+    const option: IOptionsWithLabel = {
+      label: generateLabel(key, attributes[key as keyof ElementAttributes] as string),
+      value: key,
+    };
+
+    if (attributes[key as keyof ElementAttributes] === null) {
+      option.disabled = true;
+    }
+
+    return option;
+  });
 };
 
 const addRestAttributes = (
