@@ -31,7 +31,7 @@ import { changeLocatorElement } from '../reducers/changeLocatorElement.thunk';
 import { addCustomLocator } from '../reducers/addCustomLocator.thunk';
 import { selectPresentLocatorsByPO } from '../selectors/locatorsByPO.selectors';
 import { LocatorMessageForDuplicate } from './LocatorMessageForDuplicate';
-import { useOnboardingContext } from '../../onboarding/OnboardingProvider';
+import { createLocatorTypeOptions } from '../utils/createLocatorTypeOptions';
 
 interface Props extends ILocator {
   isModalOpen: boolean;
@@ -46,6 +46,16 @@ interface FormValues {
   annotationType: AnnotationType;
   locator: string;
 }
+
+// ToDo move to utils
+const annotationTypeOptions: { value: AnnotationType; label: AnnotationType }[] = Object.values(AnnotationType).map(
+  (type) => {
+    return {
+      value: type,
+      label: type,
+    };
+  },
+);
 
 export const LocatorEditDialog: React.FC<Props> = ({
   isModalOpen,
@@ -65,7 +75,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
   annotationType,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const locators = useSelector(selectPresentLocatorsByPO);
+  const locators: ILocator[] = useSelector(selectPresentLocatorsByPO);
   const types = useSelector((_state: RootState) => selectAvailableClasses(_state));
   const pageObjectFramework = useSelector(selectCurrentPageObject)?.framework;
   const pageObjectLocatorType = useSelector(selectCurrentPageObject)?.locatorType;
@@ -138,7 +148,8 @@ export const LocatorEditDialog: React.FC<Props> = ({
     const isLocatorFieldTouched = form.isFieldTouched('locator');
     // in case if user didn't touch locator field to avoid forceUpdate
     const locatorMessage = isLocatorFieldTouched ? validationMessage : LocatorValidationWarnings.NotFound;
-
+    // ToDo: fix legacy:
+    // eslint-disable-next-line @typescript-eslint/no-shadow
     const { name, type, locator, locatorType, annotationType } = await form.validateFields();
     const isCSSLocator = locatorType === LocatorType.cssSelector;
     newLocator = {
@@ -157,6 +168,8 @@ export const LocatorEditDialog: React.FC<Props> = ({
   };
 
   const handleEditLocator = async () => {
+    // ToDo: fix legacy
+    // eslint-disable-next-line @typescript-eslint/no-shadow
     const { name, type, locator, locatorType, annotationType } = await form.validateFields();
     const updatedLocator = {
       name,
@@ -242,6 +255,8 @@ export const LocatorEditDialog: React.FC<Props> = ({
 
   const isLocatorDisabled = form.getFieldValue('locator') === CALCULATING;
 
+  const locatorTypeOptions = createLocatorTypeOptions(locator, locators, element_id);
+
   return (
     <DialogWithForm
       onboardingRefProps={{
@@ -287,38 +302,14 @@ export const LocatorEditDialog: React.FC<Props> = ({
         />
       </Form.Item>
       <FormItem name="locatorType" label="Locator" style={{ marginBottom: '8px' }}>
-        <Select
-          disabled={!isValidLocator(validationMessage)}
-          options={[
-            {
-              value: LocatorType.xPath,
-              label: LocatorType.xPath,
-            },
-            {
-              value: LocatorType.cssSelector,
-              label: LocatorType.cssSelector,
-            },
-          ]}
-        />
+        <Select disabled={!isValidLocator(validationMessage)} options={locatorTypeOptions} />
       </FormItem>
       <FormItem
         wrapperCol={{ span: 24, xs: { offset: 0 }, sm: { offset: 4 } }}
         name="annotationType"
         style={{ marginBottom: '8px' }}
       >
-        <Select
-          disabled={isCurrentFrameworkVividus}
-          options={[
-            {
-              value: AnnotationType.UI,
-              label: AnnotationType.UI,
-            },
-            {
-              value: AnnotationType.FindBy,
-              label: AnnotationType.FindBy,
-            },
-          ]}
-        />
+        <Select disabled={isCurrentFrameworkVividus} options={annotationTypeOptions} />
       </FormItem>
       <Form.Item
         wrapperCol={{ span: 24, xs: { offset: 0 }, sm: { offset: 4 } }}

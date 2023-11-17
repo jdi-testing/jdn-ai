@@ -85,8 +85,12 @@ export interface ElementAttributes {
   tagName?: string | null;
   className?: string | null;
   linkText?: string | null;
-  partialLinkText?: string | null;
   dataAttributes?: { [key: string]: string | null } | null;
+}
+
+export interface ExtendedElementAttributes extends ElementAttributes {
+  cssSelector: string;
+  xPath: string;
 }
 
 export const getElementAttributes = (element: HTMLElement): ElementAttributes => {
@@ -107,9 +111,6 @@ export const getElementAttributes = (element: HTMLElement): ElementAttributes =>
     attributes.linkText = element.textContent?.trim(); // возвращает текстовое
     // содержимое элемента, включая все его потомки. Оно возвращает все текстовые узлы,
     // включая скрытые элементы.
-    // if (attributes.linkText) {  // пока убрать
-    //   attributes.partialLinkText = attributes.linkText.slice(0, Math.floor(attributes.linkText.length / 2));
-    // }
   }
 
   if (element.tagName) {
@@ -125,10 +126,10 @@ export const getElementAttributes = (element: HTMLElement): ElementAttributes =>
   for (let i = 0; i < element.attributes.length; i++) {
     const attribute = element.attributes[i];
     if (attribute.name.startsWith('data-')) {
-      dataAttributes[attribute.name.replace('data-', '')] = attribute.value;
+      dataAttributes[attribute.name] = attribute.value;
     }
   }
-  if (!!Object.keys(dataAttributes).length) attributes = { ...attributes, ...dataAttributes };
+  if (!!Object.keys(dataAttributes).length) attributes = { ...attributes, dataAttributes };
 
   return attributes;
 };

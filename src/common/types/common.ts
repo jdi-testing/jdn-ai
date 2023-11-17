@@ -15,6 +15,14 @@ export enum LocatorType {
   xPath = 'xPath',
 }
 
+export const locatorAttributesInitialState = {
+  className: null,
+  id: null,
+  linkText: null,
+  name: null,
+  tagName: null,
+};
+
 export type SelectOption = {
   value: string | null;
   label: string | null;
