@@ -70,8 +70,12 @@ const getLocatorTypeOptions = (
 ): ILocatorTypeOptions[] => {
   const [updatedUniqueAttributes, updatedNonUniqueAttributes] = addRestAttributes(attributes, cssSelector, xPath);
 
-  const uniqueOptions = generateOptionsWithLabel(updatedUniqueAttributes);
-  const nonUniqueOptions = generateOptionsWithLabel(updatedNonUniqueAttributes);
+  const uniqueOptions = generateOptionsWithLabel(updatedUniqueAttributes)
+    .slice()
+    .sort((a, b) => a.value.localeCompare(b.value));
+  const nonUniqueOptions = generateOptionsWithLabel(updatedNonUniqueAttributes)
+    .slice()
+    .sort((a, b) => a.value.localeCompare(b.value));
 
   return [
     {
