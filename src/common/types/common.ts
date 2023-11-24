@@ -11,11 +11,42 @@ export enum AnnotationType {
 }
 
 export enum LocatorType {
-  cssSelector = 'CSS selector',
+  cssSelector = 'cssSelector',
   xPath = 'xPath',
+  id = 'id',
+  name = 'name',
+  tagName = 'tagName',
+  className = 'className',
+  linkText = 'linkText',
+  dataAttributes = 'dataAttributes',
 }
 
-export const locatorAttributesInitialState = {
+export const locatorTypes: { [key in LocatorType]: string } = {
+  [LocatorType.cssSelector]: 'CSS selector',
+  [LocatorType.xPath]: 'xPath',
+  [LocatorType.id]: 'id',
+  [LocatorType.name]: 'name',
+  [LocatorType.tagName]: 'tag name',
+  [LocatorType.className]: 'class name',
+  [LocatorType.linkText]: 'link text',
+  [LocatorType.dataAttributes]: 'data attributes',
+};
+
+export interface ElementAttributes {
+  id?: string | null;
+  name?: string | null;
+  tagName?: string | null;
+  className?: string | null;
+  linkText?: string | null;
+  dataAttributes?: { [key: string]: string | null } | null;
+}
+
+export interface ExtendedElementAttributes extends ElementAttributes {
+  cssSelector: string;
+  xPath: string;
+}
+
+export const locatorAttributesInitialState: ElementAttributes = {
   className: null,
   id: null,
   linkText: null,

@@ -1,7 +1,11 @@
 import React from 'react';
-import { ElementAttributes, ExtendedElementAttributes } from '../../../pageServices/contentScripts/utils';
+
 import { ILocator, LocatorValue } from '../types/locator.types';
-import { locatorAttributesInitialState } from '../../../common/types/common';
+import {
+  ElementAttributes,
+  ExtendedElementAttributes,
+  locatorAttributesInitialState,
+} from '../../../common/types/common';
 import { mergeObjects } from './mergeObjects';
 import { Tooltip } from 'antd';
 

@@ -1,3 +1,4 @@
+import { ElementAttributes } from '../../common/types/common';
 import { ScriptMsg } from '../scriptMsg.constants';
 
 export const evaluateXpath = ({ xPath, element_id, originJdnHash }: Record<string, string>) => {
@@ -79,20 +80,6 @@ export const sendMessage = (msg: { message: ScriptMsg; param: any }) =>
     if (error.message !== 'The message port closed before a response was received.') throw new Error(error.message);
   });
 
-export interface ElementAttributes {
-  id?: string | null;
-  name?: string | null;
-  tagName?: string | null;
-  className?: string | null;
-  linkText?: string | null;
-  dataAttributes?: { [key: string]: string | null } | null;
-}
-
-export interface ExtendedElementAttributes extends ElementAttributes {
-  cssSelector: string;
-  xPath: string;
-}
-
 export const getElementAttributes = (element: HTMLElement): ElementAttributes => {
   let attributes: ElementAttributes = {};
 
@@ -107,10 +94,7 @@ export const getElementAttributes = (element: HTMLElement): ElementAttributes =>
   }
 
   if (element.innerText) {
-    // attributes.linkText = element.innerText; // не включает скрытый текст (например, скрытый CSS)
-    attributes.linkText = element.textContent?.trim(); // возвращает текстовое
-    // содержимое элемента, включая все его потомки. Оно возвращает все текстовые узлы,
-    // включая скрытые элементы.
+    attributes.linkText = element.textContent?.trim();
   }
 
   if (element.tagName) {
