@@ -1,3 +1,4 @@
+/* eslint-disable jest/no-mocks-import */
 import { selectLocatorsByPageObject } from '../../features/locators/selectors/locatorsByPO.selectors';
 import {
   getRootState,
@@ -9,17 +10,17 @@ import {
 
 describe('selectLocatorsByPageObject', () => {
   test('for pageObject.locatorType set to undefined', () => {
-    const _result = selectLocatorsByPageObject(getRootState(pageObject0));
-    expect(_result).toStrictEqual(selectMockedLocators(pageObject0));
+    const result = selectLocatorsByPageObject(getRootState(pageObject0));
+    expect(result).toStrictEqual(selectMockedLocators(pageObject0));
   });
 
   test('for pageObject.locatorType set to cssSelector', () => {
-    const _result = selectLocatorsByPageObject(getRootState(pageObjectCssSelector));
-    expect(_result).toStrictEqual(selectMockedLocators(pageObjectCssSelector));
+    const result = selectLocatorsByPageObject(getRootState(pageObjectCssSelector));
+    expect(result).toStrictEqual(selectMockedLocators(pageObjectCssSelector));
   });
 
   test('for pageObject.locatorType set to xPath', () => {
-    const _result = selectLocatorsByPageObject(getRootState(pageObjectXpath));
-    expect(_result).toStrictEqual(selectMockedLocators(pageObjectXpath));
+    const result = selectLocatorsByPageObject(getRootState(pageObjectXpath));
+    expect(result).toStrictEqual(selectMockedLocators(pageObjectXpath));
   });
 });
