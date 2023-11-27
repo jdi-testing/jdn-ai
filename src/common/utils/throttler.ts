@@ -22,7 +22,7 @@ class Throttler {
         fn(this.accumulatedArgs);
       } catch (error) {
         this.quitThrottler();
-        if (__DEV_ENVIRONMENT__) console.log("Can't invoke throttled function:", error);
+        if (__DEV_ENVIRONMENT__) console.warn("Can't invoke throttled function:", error);
       }
       this.accumulatedArgs = [];
     };
