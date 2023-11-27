@@ -82,7 +82,7 @@ export const DialogWithForm: React.FC<DialogFormProps> = ({ modalProps, formProp
         {...{ ...restModal }}
       >
         {open ? (
-          <div className="jdn-test" ref={modalRef as React.LegacyRef<HTMLDivElement>}>
+          <div className="jdn__dialog-with-form" ref={modalRef as React.LegacyRef<HTMLDivElement>}>
             <Form labelCol={{ span: 4 }} wrapperCol={{ span: 20 }} {...{ form }} {...{ ...restForm }}>
               {children}
             </Form>
