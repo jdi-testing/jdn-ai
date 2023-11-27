@@ -1,5 +1,4 @@
-import { LocatorType, AnnotationType } from '../../../common/types/common';
-import { ElementAttributes } from '../../../pageServices/contentScripts/utils';
+import { LocatorType, AnnotationType, ElementAttributes } from '../../../common/types/common';
 import { PageObjectId } from '../../pageObjects/types/pageObjectSlice.types';
 import { ElementClass } from './generationClasses.types';
 
@@ -98,8 +97,8 @@ export interface ILocator extends PredictedEntity {
   active?: boolean;
   isCustomName?: boolean;
   isCustomLocator?: boolean;
-  annotationType?: AnnotationType;
-  locatorType?: LocatorType;
+  annotationType: AnnotationType;
+  locatorType: LocatorType;
   message: LocatorValidationErrorType;
   pageObj: PageObjectId;
   parent_id: JDNHash;
