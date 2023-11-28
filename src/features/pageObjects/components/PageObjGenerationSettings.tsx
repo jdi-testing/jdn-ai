@@ -13,7 +13,7 @@ import {
 import { PageObjectId } from '../types/pageObjectSlice.types';
 import { ElementLibrary, libraryNames } from '../../locators/types/generationClasses.types';
 import { identifyElements } from '../../locators/reducers/identifyElements.thunk';
-import { LocatorType, FrameworkType, AnnotationType } from '../../../common/types/common';
+import { LocatorType, FrameworkType, AnnotationType, locatorTypes } from '../../../common/types/common';
 import { LocalStorageKey, setLocalStorage } from '../../../common/utils/localStorage';
 import { Footnote } from '../../../common/components/footnote/Footnote';
 import { isIdentificationLoading } from '../../locators/utils/helpers';
@@ -223,7 +223,7 @@ export const PageObjGenerationSettings: React.FC<Props> = ({ pageObj, library, u
             <Col flex="auto">
               <Select
                 id="locatorType"
-                defaultValue={currentPageObject?.locatorType || LocatorType.xPath}
+                defaultValue={locatorTypes[currentPageObject?.locatorType || LocatorType.xPath]}
                 className="jdn__select"
                 onChange={onLocatorTypeChange}
                 options={locatorTypeOptions}
