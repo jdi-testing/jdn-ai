@@ -5,7 +5,11 @@ import { ILocator, LocatorValue } from '../types/locator.types';
 import { CALCULATING } from './constants';
 import { camelCase } from 'lodash';
 
-const getLocatorAnnotationStringByType = (value: string, locatorType: LocatorType, annotationType: AnnotationType) => {
+export const getLocatorAnnotationStringByType = (
+  value: string,
+  locatorType: LocatorType,
+  annotationType: AnnotationType,
+) => {
   if (annotationType === AnnotationType.FindBy) return value;
   // else return annotation string for UI Annotation Type:
   const annotations = {
@@ -22,7 +26,7 @@ const getLocatorAnnotationStringByType = (value: string, locatorType: LocatorTyp
   return annotations[locatorType];
 };
 
-const getLocatorValueByType = (locatorValue: LocatorValue, type: LocatorType): string => {
+export const getLocatorValueByType = (locatorValue: LocatorValue, type: LocatorType): string => {
   let dataAttribute = '';
 
   const value = {
@@ -91,7 +95,7 @@ export const getLocatorString = (
   type: ElementLibrary | ElementClass,
   name: string,
 ): string => {
-  const locatorOutput = annotationType === AnnotationType.FindBy ? `"${locator.output}"` : locator.output;
+  const locatorOutput = `'${locator.output}'`;
 
   return `${annotationType}(${getLocatorPrefix(annotationType, locatorType)}${locatorOutput})\npublic ${type} ${name};`;
 };

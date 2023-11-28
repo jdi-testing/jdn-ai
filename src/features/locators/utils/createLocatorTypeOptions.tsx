@@ -28,7 +28,7 @@ const generateOptionsWithLabel = (attributes: ElementAttributes): IOptionsWithLa
 
     return (
       <>
-        {key} <span style={{ color: 'rgba(0, 0, 0, 0.45)' }}>{attribute}</span>
+        {key} <span style={{ color: 'rgba(0, 0, 0, 0.45)' }}>{`"${attribute}"`}</span>
       </>
     );
   };
