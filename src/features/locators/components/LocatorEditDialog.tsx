@@ -311,6 +311,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
           disabled={!isValidLocator(validationMessage)}
           options={locatorTypeOptions}
           popupClassName="custom-divider-for-dropdown"
+          virtual={false}
         />
       </FormItem>
       <FormItem
