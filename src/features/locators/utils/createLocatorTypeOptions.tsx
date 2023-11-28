@@ -33,12 +33,14 @@ const generateOptionsWithLabel = (attributes: ElementAttributes): IOptionsWithLa
     );
   };
   return Object.keys(attributes).map((key) => {
+    let locatorType = key;
+    if (locatorType === 'cssSelector') locatorType = 'CSS Selector';
     const option: IOptionsWithLabel = {
-      label: generateLabel(key, attributes[key as keyof ElementAttributes] as string),
-      value: key,
+      label: generateLabel(locatorType, attributes[locatorType as keyof ElementAttributes] as string),
+      value: locatorType,
     };
 
-    if (attributes[key as keyof ElementAttributes] === null) {
+    if (attributes[locatorType as keyof ElementAttributes] === null) {
       option.disabled = true;
     }
 
