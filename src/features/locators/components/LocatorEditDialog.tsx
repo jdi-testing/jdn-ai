@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Form, Input, Select } from 'antd';
 import Icon from '@ant-design/icons';
 import WarningFilled from '../assets/warning-filled.svg';
-import { FieldData } from 'rc-field-form/lib/interface';
+import { FieldData, FormInstance } from 'rc-field-form/lib/interface';
 import { Footnote } from '../../../common/components/footnote/Footnote';
 import { Rule } from 'antd/lib/form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -42,7 +42,7 @@ interface Props extends ILocator {
 interface FormValues {
   name: string;
   type: ElementClass;
-  locatorType: string;
+  locatorType: LocatorType;
   annotationType: AnnotationType;
   locator: string;
 }
@@ -90,7 +90,9 @@ export const LocatorEditDialog: React.FC<Props> = ({
 
   const [form] = Form.useForm<FormValues>();
   const isCurrentFrameworkVividus = pageObjectFramework === FrameworkType.Vividus;
-  const defaultLocatorType = locatorTypes[locatorType] || pageObjectLocatorType || LocatorType.xPath;
+  // ToDo rewrite all related logic and tests for defaultLocatorType: string (because it's string)
+  const defaultLocatorType: LocatorType =
+    (locatorTypes[locatorType] as LocatorType) || pageObjectLocatorType || LocatorType.xPath;
   const defaultAnnotationType = annotationType || pageObjectAnnotationType || AnnotationType.UI;
   const initialValues: FormValues = {
     type,
@@ -238,7 +240,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
         element_id,
         jdnHash,
         locator,
-        form,
+        form as FormInstance<FormValues>,
       );
       form.setFieldValue('locator', newLocatorValue);
     }
