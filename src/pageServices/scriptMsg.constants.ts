@@ -10,7 +10,7 @@ export enum ScriptMsg {
   CheckSession = 'CheckSession',
   DefineTabId = 'DefineTabId',
   EvaluateXpath = 'EvaluateXpath',
-  EvaluateCssSelector = 'EvaluateCssSelector',
+  EvaluateStandardLocator = 'EvaluateStandardLocator',
   FindBySelectors = 'FindBySelectors',
   GenerateAttributes = 'GenerateAttributes',
   GenerateSelectorByHash = 'GenerateSelectorByHash',
