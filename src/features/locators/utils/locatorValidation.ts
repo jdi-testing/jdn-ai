@@ -8,8 +8,29 @@ import {
   JDNHash,
   ElementId,
 } from '../types/locator.types';
-import { checkDuplicates, evaluateCssSelector, evaluateXpath } from './utils';
+import { checkDuplicates, evaluateStandardLocator, evaluateXpath } from './utils';
 
+const prepareLocatorStringForEvaluation = (type: LocatorType, string: string): string => {
+  if (type === LocatorType.id) return `#${string}`;
+  if (type === LocatorType.className) return `.${string}`;
+  if (type === LocatorType.name) return `[name="${string}"]`;
+  return string;
+};
+
+const evaluateLocator = async (
+  locatorString: string,
+  elementId: ElementId,
+  jdnHash: string,
+  locatorType: LocatorType,
+) => {
+  const isLinkTextLocator = locatorType === LocatorType.linkText;
+  if (locatorType === LocatorType.xPath) return evaluateXpath(locatorString, elementId, jdnHash);
+  else {
+    const preparedValue = prepareLocatorStringForEvaluation(locatorType, locatorString);
+    return evaluateStandardLocator(preparedValue, elementId, jdnHash, isLinkTextLocator);
+  }
+};
+// ToDo: logic refactoring needed
 export const validateLocator = async (
   locatorString: string,
   locatorType: LocatorType,
@@ -20,33 +41,32 @@ export const validateLocator = async (
 ): Promise<LocatorValidationErrorType | string> => {
   let length;
   let foundHash;
-  let _element_id: ElementId;
-  let _jdnHash;
+  let validatedElementId: ElementId;
+  let validatedJdnHash;
   let validationMessage = '';
 
-  const locatorValue =
-    locatorType === LocatorType.cssSelector
-      ? await evaluateCssSelector(locatorString, element_id, jdnHash)
-      : await evaluateXpath(locatorString, element_id, jdnHash);
+  const locatorValue = await evaluateLocator(locatorString, element_id, jdnHash, locatorType);
 
   if (locatorValue === LocatorValidationWarnings.NotFound || !locatorValue) {
     validationMessage = LocatorValidationWarnings.NotFound; //validationStatus: WARNING
   } else {
     ({ length, foundHash } = JSON.parse(locatorValue));
-    _element_id = JSON.parse(locatorValue).element_id || element_id;
-    _jdnHash = JSON.parse(locatorValue).originJdnHash || jdnHash;
+    validatedElementId = JSON.parse(locatorValue).element_id || element_id;
+    validatedJdnHash = JSON.parse(locatorValue).originJdnHash || jdnHash;
+
     if (length === 0) {
       validationMessage = LocatorValidationWarnings.NotFound; //validationStatus: WARNING
     } else if (length > 1) {
       const err = `${length} ${LocatorValidationErrors.MultipleElements}` as LocatorValidationErrorType; //validationStatus: ERROR;
       throw new Error(err);
-    } else if (length === 1 && _jdnHash !== foundHash) {
-      const duplicates = checkDuplicates(foundHash, locators, _element_id);
+    } else if (length === 1 && validatedJdnHash !== foundHash) {
+      const duplicates = checkDuplicates(foundHash, locators, validatedElementId);
+
       if (foundHash && duplicates.length) {
         throw new CustomError(LocatorValidationErrors.DuplicatedLocator, { duplicates }); //validationStatus: ERROR
       } else {
         validationMessage =
-          isCreatingForm || !_jdnHash
+          isCreatingForm || !validatedJdnHash
             ? '' //validationStatus: SUCCESS
             : LocatorValidationWarnings.NewElement; //validationStatus: WARNING
       }
