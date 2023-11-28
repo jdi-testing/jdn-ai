@@ -1,4 +1,5 @@
 import { ElementAttributes } from '../../common/types/common';
+import { LocatorValidationWarnings } from '../../features/locators/types/locator.types';
 import { ScriptMsg } from '../scriptMsg.constants';
 
 export const evaluateXpath = ({ xPath, element_id, originJdnHash }: Record<string, string>) => {
@@ -10,19 +11,31 @@ export const evaluateXpath = ({ xPath, element_id, originJdnHash }: Record<strin
     const foundElementText = foundElement && foundElement.textContent;
     return JSON.stringify({ length, foundHash, element_id, foundElementText, originJdnHash });
   } catch (error) {
-    return 'The locator was not found on the page.';
+    return LocatorValidationWarnings.NotFound;
   }
 };
 
-export const evaluateCssSelector = ({ selector, element_id, originJdnHash }: Record<string, string>) => {
+export const evaluateStandardLocator = ({
+  selector,
+  elementId,
+  originJdnHash,
+  isLinkTextLocator,
+}: Record<string, string>) => {
   try {
-    const foundElements = document.querySelectorAll(selector);
+    let foundElements;
+    if (isLinkTextLocator) {
+      foundElements = Array.from(document.querySelectorAll('a')).filter(
+        (element) => element.textContent && element.textContent.includes(selector),
+      );
+    } else {
+      foundElements = document.querySelectorAll(selector);
+    }
     const length = foundElements.length;
     const foundHash = foundElements && foundElements[0].getAttribute('jdn-hash');
     const foundElementText = foundElements && foundElements[0].textContent;
-    return JSON.stringify({ length, foundHash, element_id, foundElementText, originJdnHash });
+    return JSON.stringify({ length, foundHash, elementId, foundElementText, originJdnHash });
   } catch (error) {
-    return 'The locator was not found on the page.';
+    return LocatorValidationWarnings.NotFound;
   }
 };
 
@@ -50,10 +63,10 @@ export const assignJdnHash = ({
       foundElement.setAttribute('jdn-hash', jdnHash);
       return 'success';
     } else {
-      return 'The locator was not found on the page.';
+      return LocatorValidationWarnings.NotFound;
     }
   } catch (error) {
-    return 'The locator was not found on the page.';
+    return LocatorValidationWarnings.NotFound;
   }
 };
 
@@ -63,8 +76,8 @@ export const utilityScript = () => {
       case ScriptMsg.EvaluateXpath:
         sendResponse(evaluateXpath(param));
         break;
-      case ScriptMsg.EvaluateCssSelector:
-        sendResponse(evaluateCssSelector(param));
+      case ScriptMsg.EvaluateStandardLocator:
+        sendResponse(evaluateStandardLocator(param));
         break;
       case ScriptMsg.AssignJdnHash:
         sendResponse(assignJdnHash(param));
