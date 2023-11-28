@@ -26,10 +26,10 @@ export const locatorTypes: { [key in LocatorType]: string } = {
   [LocatorType.xPath]: 'xPath',
   [LocatorType.id]: 'id',
   [LocatorType.name]: 'name',
-  [LocatorType.tagName]: 'tag name',
-  [LocatorType.className]: 'class name',
-  [LocatorType.linkText]: 'link text',
-  [LocatorType.dataAttributes]: 'data attributes',
+  [LocatorType.tagName]: 'tagName',
+  [LocatorType.className]: 'className',
+  [LocatorType.linkText]: 'linkText',
+  [LocatorType.dataAttributes]: 'dataAttributes',
 };
 
 export interface ElementAttributes {
