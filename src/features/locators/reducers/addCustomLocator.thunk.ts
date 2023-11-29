@@ -40,7 +40,7 @@ export const addCustomLocator = createAsyncThunk(
       try {
         if (isCSSLocator) {
           ({ foundHash, foundElementText } = JSON.parse(
-            await await evaluateStandardLocator(locator.cssSelector, LocatorType.cssSelector, element_id),
+            await evaluateStandardLocator(locator.cssSelector, LocatorType.cssSelector, element_id),
           ));
         } else {
           ({ foundHash, foundElementText } = JSON.parse(await evaluateXpath(locator.xPath, element_id)));

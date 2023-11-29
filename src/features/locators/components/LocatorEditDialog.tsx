@@ -157,7 +157,6 @@ export const LocatorEditDialog: React.FC<Props> = ({
     const { name, type, locator, locatorType, annotationType } = await form.validateFields();
     const isCSSLocator = locatorType === LocatorType.cssSelector;
 
-    // ToDo: check this logic and fix for multi options:
     newLocator = {
       ...newLocator,
       locator: { ...newLocator.locator, ...{ [isCSSLocator ? 'cssSelector' : 'xPath']: locator } },
