@@ -17,14 +17,16 @@ import { getElementFullXpath, isStringContainsNumbers } from '../../../common/ut
 import { LocatorOption } from './constants';
 import { FrameworkType, LocatorType } from '../../../common/types/common';
 
-import { FormInstance } from 'antd/es/form/Form';
 import { copyLocatorsToClipboard } from './copyLocatorToClipboard';
 import {
   getFullLocatorVividusString,
   getLocatorString,
+  getLocatorValueByType,
   getLocatorWithJDIAnnotation,
   getLocatorWithSelenium,
 } from './locatorOutput';
+import { FormInstance } from 'rc-field-form/lib/interface';
+import { FormValues } from '../components/LocatorEditDialog';
 
 export const isValidJavaVariable = (value: string) => /^[a-zA-Z_$]([a-zA-Z0-9_])*$/.test(value);
 
@@ -32,16 +34,22 @@ export const isValidJavaVariable = (value: string) => /^[a-zA-Z_$]([a-zA-Z0-9_])
 export const evaluateXpath = (xPath: string, element_id?: ElementId, originJdnHash?: string) =>
   sendMessage.evaluateXpath({ xPath, element_id, originJdnHash });
 
-export const evaluateCssSelector = (selector: string, element_id?: ElementId, originJdnHash?: string) =>
-  sendMessage.evaluateCssSelector({ selector, element_id, originJdnHash });
+export const evaluateStandardLocator = (
+  selector: string,
+  locatorType: LocatorType,
+  element_id?: ElementId,
+  originJdnHash?: string,
+) => sendMessage.evaluateStandardLocator({ selector, locatorType, element_id, originJdnHash });
 
 export const generateSelectorByHash = (element_id: ElementId, jdnHash: string) =>
   sendMessage.generateSelectorByHash({ element_id, jdnHash });
 
-export const checkDuplicates = (jdnHash: string, locators: ILocator[], element_id: ElementId) =>
+export const isValidLocator = (message?: string) => !message || message === LocatorValidationWarnings.NewElement;
+
+export const checkDuplicates = (foundHash: string, locators: ILocator[], element_id: ElementId) =>
   locators.filter(
-    ({ jdnHash: _jdnHash, message, element_id: _element_id }) =>
-      _jdnHash === jdnHash && isValidLocator(message) && _element_id !== element_id,
+    ({ jdnHash, message, element_id: _element_id }) =>
+      jdnHash === foundHash && isValidLocator(message) && _element_id !== element_id,
   );
 
 export const createNewName = (
@@ -137,34 +145,53 @@ export const getLocatorValidationStatus = (message: LocatorValidationErrorType):
   }
 };
 
-export const isValidLocator = (message?: string) => !message || message === LocatorValidationWarnings.NewElement;
-
 export const getLocatorValueOnTypeSwitch = async (
   newLocatorType: LocatorType,
   validationMessage: LocatorValidationErrorType,
   element_id: ElementId,
   jdnHash: JDNHash,
-  locator: LocatorValue,
-  form: FormInstance,
+  locatorValue: LocatorValue,
+  form: FormInstance<FormValues>,
 ) => {
-  const isLocatorLeadsToNewElement = validationMessage === LocatorValidationWarnings.NewElement;
-  const isCSSLocator = newLocatorType === LocatorType.cssSelector;
-
+  const isLocatorLeadsToNewElement: boolean = validationMessage === LocatorValidationWarnings.NewElement;
   let newLocatorValue;
+  const isStandardLocator: boolean =
+    newLocatorType === LocatorType.cssSelector ||
+    newLocatorType === LocatorType.className ||
+    newLocatorType === LocatorType.id ||
+    newLocatorType === LocatorType.linkText ||
+    newLocatorType === LocatorType.name ||
+    newLocatorType === LocatorType.tagName ||
+    newLocatorType.startsWith('data-');
 
-  if (isCSSLocator) {
-    if (isLocatorLeadsToNewElement || !locator.cssSelector) {
+  const isDataAttributesFalsy =
+    !locatorValue.attributes.dataAttributes || Object.keys(locatorValue.attributes.dataAttributes).length === 0;
+  const isStandardLocatorFalsy =
+    !locatorValue.cssSelector &&
+    !locatorValue.attributes.className &&
+    !locatorValue.attributes.id &&
+    !locatorValue.attributes.linkText &&
+    !locatorValue.attributes.name &&
+    !locatorValue.attributes.tagName &&
+    isDataAttributesFalsy;
+
+  if (isStandardLocator) {
+    if (isLocatorLeadsToNewElement || isStandardLocatorFalsy) {
       const { foundHash } = JSON.parse(await evaluateXpath(form.getFieldValue('locator'), element_id, jdnHash));
+
       ({ cssSelector: newLocatorValue } = await generateSelectorByHash(element_id, foundHash));
     } else {
-      newLocatorValue = locator.cssSelector;
+      if (newLocatorType === LocatorType.cssSelector) newLocatorValue = locatorValue.cssSelector;
+      newLocatorValue = getLocatorValueByType(locatorValue, newLocatorType);
     }
   } else {
-    if (isLocatorLeadsToNewElement || !locator.xPath) {
-      const { foundHash } = JSON.parse(await evaluateCssSelector(form.getFieldValue('locator'), element_id));
+    if (isLocatorLeadsToNewElement || !locatorValue.xPath) {
+      const { foundHash } = JSON.parse(
+        await evaluateStandardLocator(form.getFieldValue('locator'), newLocatorType, element_id),
+      );
       newLocatorValue = await getElementFullXpath(foundHash);
     } else {
-      newLocatorValue = locator.xPath;
+      newLocatorValue = locatorValue.xPath;
     }
   }
 

@@ -44,9 +44,11 @@ export const getPageObjectTemplateForJdi = (
 
   const locatorsCode = locators.map((loc) => {
     const locatorEscaped = loc.locator.output?.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+    const { locatorType } = pageObject;
+    const currentLocatorType = loc.locatorType || locatorType || LocatorType.xPath;
     return `    ${loc.annotationType}(${getLocatorPrefix(
       loc.annotationType,
-      loc.locatorType,
+      currentLocatorType,
     )}"${locatorEscaped}")\n    public ${loc.type} ${loc.name};`;
   });
 

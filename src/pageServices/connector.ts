@@ -5,6 +5,7 @@ import { SelectorsMap } from '../services/rules/rules.types';
 import { ScriptMessagePayload } from './scriptMessageHandler';
 import { ClassFilterValue } from '../features/filter/types/filter.types';
 import { ScriptMsg } from './scriptMsg.constants';
+import { LocatorType } from '../common/types/common';
 
 export interface ScriptMessage {
   message: string;
@@ -60,7 +61,7 @@ class Connector {
   }
 
   // @ts-ignore
-  sendMessageToAllTabs(action, payload, onResponse) {
+  async sendMessageToAllTabs(action, payload, onResponse) {
     return chrome.tabs
       .query({})
       .then((tabs) => Promise.all(tabs.map((tab) => connector.sendMessage(action, payload, onResponse, tab.id))));
@@ -78,7 +79,7 @@ class Connector {
     chrome.runtime.onMessage.addListener(this.onmessage);
   }
 
-  onDisconnectHandler(port: any, forced?: boolean) {
+  async onDisconnectHandler(port: any, forced?: boolean) {
     if (this.port) this.port = undefined;
     if (typeof this.onDisconnectCallback === "function" && !forced) this.onDisconnectCallback();
     return this.initScripts().then(() => this.port?.onDisconnect.addListener(this.onDisconnectHandler.bind(this)));
@@ -100,7 +101,7 @@ class Connector {
     }
   }
 
-  attachContentScript(script: string[] | ((...args: any[]) => void), scriptName = "") {
+  async attachContentScript(script: string[] | ((...args: any[]) => void), scriptName = "") {
     return this.scriptExists(scriptName).then((result) => {
       if (result) return true;
 
@@ -116,7 +117,7 @@ class Connector {
     });
   }
 
-  scriptExists(scriptName: string): Promise<string | boolean | Error> {
+  async scriptExists(scriptName: string): Promise<string | boolean | Error> {
     if (!scriptName) return Promise.resolve(false);
 
     return sendMessage
@@ -143,7 +144,7 @@ class Connector {
     ]);
   }
 
-  attachCSS(file: string) {
+  async attachCSS(file: string) {
     return chrome.scripting
       .insertCSS({
         target: { tabId: this.tabId },
@@ -169,8 +170,8 @@ export const sendMessage = {
   defineTabId: (payload: number) => connector.sendMessage(ScriptMsg.DefineTabId, payload),
   evaluateXpath: (payload: { xPath: string; element_id?: ElementId, originJdnHash?: string }, onResponse?: () => void) =>
     connector.sendMessage(ScriptMsg.EvaluateXpath, payload, onResponse),
-  evaluateCssSelector: (payload: { selector: string; element_id?: ElementId, originJdnHash?: string }, onResponse?: () => void) =>
-    connector.sendMessage(ScriptMsg.EvaluateCssSelector, payload, onResponse),
+  evaluateStandardLocator: (payload: { selector: string; locatorType: LocatorType, element_id?: ElementId, originJdnHash?: string }, onResponse?: () => void) =>
+    connector.sendMessage(ScriptMsg.EvaluateStandardLocator, payload, onResponse),
   getPageData: (payload?: {}, onResponse?: () => void) => connector.sendMessage(ScriptMsg.GetPageData, payload, onResponse),
   generateSelectorByHash: (payload: { element_id: string, jdnHash: string }, onResponse?: () => void) =>
     connector.sendMessage(ScriptMsg.GenerateSelectorByHash, payload, onResponse),

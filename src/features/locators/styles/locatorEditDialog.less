@@ -25,4 +25,33 @@
   & .ant-modal-body {
     padding-bottom: 12px;
   }
+
+}
+
+.custom-divider-for-dropdown {
+  & .ant-select-item-group {
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .rc-virtual-list-holder {
+
+    &::-webkit-scrollbar {
+      -webkit-appearance: none;
+      width: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 5px;
+      background-color: rgba(0, 0, 0, .3);
+      -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+    }
+  }
+
+
+  .ant-select-dropdown {
+    overflow-y: scroll !important;
+
+  }
 }

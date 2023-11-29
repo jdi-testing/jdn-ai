@@ -17,6 +17,6 @@ export const removeAll = createAsyncThunk('main/removeAll', async (_, thunkAPI) 
 
 export const removeAllReducer = (builder: ActionReducerMapBuilder<MainState>) => {
   return builder.addCase(removeAll.rejected, (error) => {
-    console.log('rejected', error);
+    console.warn('rejected', error);
   });
 };

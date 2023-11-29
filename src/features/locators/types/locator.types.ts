@@ -1,4 +1,4 @@
-import { LocatorType, AnnotationType } from '../../../common/types/common';
+import { LocatorType, AnnotationType, ElementAttributes } from '../../../common/types/common';
 import { PageObjectId } from '../../pageObjects/types/pageObjectSlice.types';
 import { ElementClass } from './generationClasses.types';
 
@@ -57,6 +57,7 @@ export type ElementId = string;
 export interface LocatorValue {
   fullXpath?: string;
   xPath: string;
+  attributes: ElementAttributes;
   cssSelector: string;
   cssSelectorStatus?: LocatorTaskStatus; // status of cssSelector calculation
   xPathStatus?: LocatorTaskStatus; // status of xPath calculation
@@ -96,8 +97,8 @@ export interface ILocator extends PredictedEntity {
   active?: boolean;
   isCustomName?: boolean;
   isCustomLocator?: boolean;
-  annotationType?: AnnotationType;
-  locatorType?: LocatorType;
+  annotationType: AnnotationType;
+  locatorType: LocatorType;
   message: LocatorValidationErrorType;
   pageObj: PageObjectId;
   parent_id: JDNHash;

@@ -3,7 +3,7 @@ import { LocatorTaskStatus, LocatorsState } from '../types/locator.types';
 import { locatorsAdapter, selectLocatorById } from '../selectors/locators.selectors';
 import { RootState } from '../../../app/store/store';
 import { ChangeLocatorAttributesPayload } from '../locators.slice';
-import { evaluateXpath, evaluateCssSelector, generateSelectorByHash } from '../utils/utils';
+import { evaluateXpath, generateSelectorByHash, evaluateStandardLocator } from '../utils/utils';
 import { generateId, getElementFullXpath } from '../../../common/utils/helpers';
 import { sendMessage } from '../../../pageServices/connector';
 import { LocatorType } from '../../../common/types/common';
@@ -13,6 +13,8 @@ type ChangeLocatorElementPayload = ChangeLocatorAttributesPayload;
 export const changeLocatorElement = createAsyncThunk(
   'locators/changeLocatorElement',
   async (payload: ChangeLocatorElementPayload, thunkAPI) => {
+    // ToDo: fix legacy naming
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const { locator, element_id, locatorType, ...rest } = payload;
     const isCSSLocator = locatorType === LocatorType.cssSelector;
     let foundHash;
@@ -20,14 +22,24 @@ export const changeLocatorElement = createAsyncThunk(
     let cssSelector;
     let fullXpath;
 
-    if (isCSSLocator) {
-      ({ foundHash, foundElementText } = JSON.parse(await evaluateCssSelector(locator, element_id)));
+    const isStandardLocator: boolean =
+      locatorType === LocatorType.cssSelector ||
+      locatorType === LocatorType.className ||
+      locatorType === LocatorType.id ||
+      locatorType === LocatorType.linkText ||
+      locatorType === LocatorType.name ||
+      locatorType === LocatorType.tagName ||
+      locatorType.startsWith('data-');
+
+    if (isStandardLocator) {
+      ({ foundHash, foundElementText } = JSON.parse(await evaluateStandardLocator(locator, locatorType, element_id)));
     } else {
       ({ foundHash, foundElementText } = JSON.parse(await evaluateXpath(locator, element_id)));
     }
 
     const state = thunkAPI.getState() as RootState;
-
+    // ToDo: fix legacy naming
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const _locator = selectLocatorById(state, element_id);
 
     if (!_locator) return;

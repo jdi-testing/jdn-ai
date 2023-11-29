@@ -31,7 +31,7 @@ import { changeLocatorElement } from '../reducers/changeLocatorElement.thunk';
 import { addCustomLocator } from '../reducers/addCustomLocator.thunk';
 import { selectPresentLocatorsByPO } from '../selectors/locatorsByPO.selectors';
 import { LocatorMessageForDuplicate } from './LocatorMessageForDuplicate';
-import { useOnboardingContext } from '../../onboarding/OnboardingProvider';
+import { createLocatorTypeOptions } from '../utils/createLocatorTypeOptions';
 
 interface Props extends ILocator {
   isModalOpen: boolean;
@@ -39,13 +39,23 @@ interface Props extends ILocator {
   isCreatingForm?: boolean;
 }
 
-interface FormValues {
+export interface FormValues {
   name: string;
   type: ElementClass;
   locatorType: LocatorType;
   annotationType: AnnotationType;
   locator: string;
 }
+
+// ToDo move to utils
+const annotationTypeOptions: { value: AnnotationType; label: AnnotationType }[] = Object.values(AnnotationType).map(
+  (type) => {
+    return {
+      value: type,
+      label: type,
+    };
+  },
+);
 
 export const LocatorEditDialog: React.FC<Props> = ({
   isModalOpen,
@@ -65,8 +75,9 @@ export const LocatorEditDialog: React.FC<Props> = ({
   annotationType,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const locators = useSelector(selectPresentLocatorsByPO);
+  const locators: ILocator[] = useSelector(selectPresentLocatorsByPO);
   const types = useSelector((_state: RootState) => selectAvailableClasses(_state));
+  // ToDo refactoring needed for selectors: undefined as return is harm practice:
   const pageObjectFramework = useSelector(selectCurrentPageObject)?.framework;
   const pageObjectLocatorType = useSelector(selectCurrentPageObject)?.locatorType;
   const pageObjectAnnotationType = useSelector(selectCurrentPageObject)?.annotationType;
@@ -79,7 +90,8 @@ export const LocatorEditDialog: React.FC<Props> = ({
 
   const [form] = Form.useForm<FormValues>();
   const isCurrentFrameworkVividus = pageObjectFramework === FrameworkType.Vividus;
-  const defaultLocatorType = locatorType || pageObjectLocatorType || LocatorType.xPath;
+  // ToDo rewrite all related logic and tests for defaultLocatorType: string (because it's string)
+  const defaultLocatorType: LocatorType = locatorType || pageObjectLocatorType || LocatorType.xPath;
   const defaultAnnotationType = annotationType || pageObjectAnnotationType || AnnotationType.UI;
   const initialValues: FormValues = {
     type,
@@ -90,7 +102,8 @@ export const LocatorEditDialog: React.FC<Props> = ({
   };
 
   const [isOkButtonDisabled, setIsOkButtonDisabled] = useState<boolean>(true);
-
+  // ToDo: fix legacy:
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   const _isNameUnique = (value: string) => !isNameUnique(locators, element_id, value);
 
   const nameValidationRules: Rule[] = createNameValidationRules(_isNameUnique);
@@ -99,7 +112,8 @@ export const LocatorEditDialog: React.FC<Props> = ({
     form.resetFields();
     setIsModalOpen(false);
   };
-
+  // ToDo: fix legacy:
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   const _locatorValidationRules: () => Rule[] = () =>
     createLocatorValidationRules(
       isCreatingForm,
@@ -138,9 +152,11 @@ export const LocatorEditDialog: React.FC<Props> = ({
     const isLocatorFieldTouched = form.isFieldTouched('locator');
     // in case if user didn't touch locator field to avoid forceUpdate
     const locatorMessage = isLocatorFieldTouched ? validationMessage : LocatorValidationWarnings.NotFound;
-
+    // ToDo: fix legacy:
+    // eslint-disable-next-line @typescript-eslint/no-shadow
     const { name, type, locator, locatorType, annotationType } = await form.validateFields();
     const isCSSLocator = locatorType === LocatorType.cssSelector;
+
     newLocator = {
       ...newLocator,
       locator: { ...newLocator.locator, ...{ [isCSSLocator ? 'cssSelector' : 'xPath']: locator } },
@@ -157,6 +173,8 @@ export const LocatorEditDialog: React.FC<Props> = ({
   };
 
   const handleEditLocator = async () => {
+    // ToDo: fix legacy
+    // eslint-disable-next-line @typescript-eslint/no-shadow
     const { name, type, locator, locatorType, annotationType } = await form.validateFields();
     const updatedLocator = {
       name,
@@ -242,6 +260,8 @@ export const LocatorEditDialog: React.FC<Props> = ({
 
   const isLocatorDisabled = form.getFieldValue('locator') === CALCULATING;
 
+  const locatorTypeOptions = createLocatorTypeOptions(locator, locators, element_id);
+
   return (
     <DialogWithForm
       onboardingRefProps={{
@@ -289,16 +309,9 @@ export const LocatorEditDialog: React.FC<Props> = ({
       <FormItem name="locatorType" label="Locator" style={{ marginBottom: '8px' }}>
         <Select
           disabled={!isValidLocator(validationMessage)}
-          options={[
-            {
-              value: LocatorType.xPath,
-              label: LocatorType.xPath,
-            },
-            {
-              value: LocatorType.cssSelector,
-              label: LocatorType.cssSelector,
-            },
-          ]}
+          options={locatorTypeOptions}
+          popupClassName="custom-divider-for-dropdown"
+          virtual={false}
         />
       </FormItem>
       <FormItem
@@ -306,19 +319,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
         name="annotationType"
         style={{ marginBottom: '8px' }}
       >
-        <Select
-          disabled={isCurrentFrameworkVividus}
-          options={[
-            {
-              value: AnnotationType.UI,
-              label: AnnotationType.UI,
-            },
-            {
-              value: AnnotationType.FindBy,
-              label: AnnotationType.FindBy,
-            },
-          ]}
-        />
+        <Select disabled={isCurrentFrameworkVividus} options={annotationTypeOptions} />
       </FormItem>
       <Form.Item
         wrapperCol={{ span: 24, xs: { offset: 0 }, sm: { offset: 4 } }}

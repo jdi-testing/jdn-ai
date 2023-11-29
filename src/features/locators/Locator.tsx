@@ -35,7 +35,7 @@ import { selectCalculatedActiveByPageObj, selectWaitingActiveByPageObj } from '.
 import { isLocatorListPage } from '../../app/utils/helpers';
 import { selectCurrentPageObject } from '../pageObjects/selectors/pageObjects.selectors';
 import { AnnotationType, FrameworkType, LocatorType } from '../../common/types/common';
-import { getLocatorPrefix, getLocatorTemplateWithVividus } from './utils/locatorOutput';
+import { getLocatorTemplateWithVividus, renderColorizedJdiString } from './utils/locatorOutput';
 import { ScriptMsg } from '../../pageServices/scriptMsg.constants';
 import { OnboardingStep } from '../onboarding/constants';
 import { useOnboardingContext } from '../onboarding/OnboardingProvider';
@@ -65,6 +65,8 @@ export const Locator: FC<Props> = ({ element, currentPage, searchState, depth, s
     active,
     isCustomLocator,
     isChecked,
+    annotationType: elementAnnotationType,
+    locatorType: elementLocatorType,
   } = element;
 
   const currentPageObject = useSelector(selectCurrentPageObject);
@@ -118,15 +120,11 @@ export const Locator: FC<Props> = ({ element, currentPage, searchState, depth, s
 
   if (!currentPageObject) return null;
 
-  const {
-    name: pageObjectName,
-    framework,
-    annotationType: pageObjectAnnotationType,
-    locatorType: pageObjectLocatorType,
-  } = currentPageObject;
+  const { name: pageObjectName, framework } = currentPageObject;
 
-  const annotationType = element?.annotationType || pageObjectAnnotationType || AnnotationType.UI;
-  const locatorType = element?.locatorType || pageObjectLocatorType || LocatorType.xPath;
+  const annotationType: AnnotationType = elementAnnotationType;
+
+  const locatorType: LocatorType = elementLocatorType;
 
   const isVividusFramework = framework === FrameworkType.Vividus;
 
@@ -165,32 +163,24 @@ export const Locator: FC<Props> = ({ element, currentPage, searchState, depth, s
       if (event.detail === 2) setIsEditModalOpen(true);
     };
 
-    const jdiString = () => {
-      return (
-        <>
-          <span>
-            {annotationType}({getLocatorPrefix(annotationType, locatorType)}
-          </span>
-          <span className="jdn__xpath_item-locator">&quot;{locator.output}&quot;</span>)
-          <br />
-          <span className="jdn__xpath_item-type">public</span>
-          <span>&nbsp;{type}&nbsp;</span>
-          {name}
-        </>
-      );
-    };
-
+    // ToDo: make clean, fix DRY (check locatorOutput.tsx)
     const vividusString = () => {
       return (
         <>
           <span>{getLocatorTemplateWithVividus(pageObjectName, locatorType, element)}</span>(
-          <span className="jdn__xpath_item-locator">{locator.output}</span>)
+          <span className="jdn__locator__output-string">{locator.output}</span>)
           <br />
         </>
       );
     };
 
-    return <span onClick={handleClick}>{isVividusFramework ? vividusString() : jdiString()}</span>;
+    return (
+      <span onClick={handleClick}>
+        {isVividusFramework
+          ? vividusString()
+          : renderColorizedJdiString(annotationType, locatorType, locator.output ?? '', type, name)}
+      </span>
+    );
   };
 
   return (

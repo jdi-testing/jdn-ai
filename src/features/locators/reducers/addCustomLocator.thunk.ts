@@ -3,7 +3,12 @@ import { ILocator, LocatorsState, ValidationStatus } from '../types/locator.type
 import { generateId, getElementFullXpath } from '../../../common/utils/helpers';
 import { addLocatorToPageObj } from '../../pageObjects/pageObject.slice';
 import { addLocators, setScrollToLocator, setActiveSingle } from '../locators.slice';
-import { getLocatorValidationStatus, evaluateXpath, evaluateCssSelector, generateSelectorByHash } from '../utils/utils';
+import {
+  getLocatorValidationStatus,
+  evaluateXpath,
+  generateSelectorByHash,
+  evaluateStandardLocator,
+} from '../utils/utils';
 import { PageObjectId } from '../../pageObjects/types/pageObjectSlice.types';
 import { sendMessage } from '../../../pageServices/connector';
 import { locatorsAdapter } from '../selectors/locators.selectors';
@@ -22,7 +27,8 @@ export const addCustomLocator = createAsyncThunk(
     let foundElementText;
     let cssSelector = '';
     let fullXpath = '';
-
+    // ToDo: fix legacy naming
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const element_id = `${generateId()}_${pageObjectId}`;
 
     newLocator = {
@@ -33,7 +39,9 @@ export const addCustomLocator = createAsyncThunk(
     if (getLocatorValidationStatus(message) === ValidationStatus.SUCCESS) {
       try {
         if (isCSSLocator) {
-          ({ foundHash, foundElementText } = JSON.parse(await evaluateCssSelector(locator.cssSelector, element_id)));
+          ({ foundHash, foundElementText } = JSON.parse(
+            await evaluateStandardLocator(locator.cssSelector, LocatorType.cssSelector, element_id),
+          ));
         } else {
           ({ foundHash, foundElementText } = JSON.parse(await evaluateXpath(locator.xPath, element_id)));
         }
@@ -51,7 +59,7 @@ export const addCustomLocator = createAsyncThunk(
               else throw new Error('Failed to assign jdnHash');
             })
             .catch((err) => {
-              console.log(err);
+              console.warn(err);
             });
         }
 
@@ -69,7 +77,7 @@ export const addCustomLocator = createAsyncThunk(
           jdnHash: foundHash,
         };
       } catch (err) {
-        console.log(err);
+        console.warn(err);
       }
     }
 

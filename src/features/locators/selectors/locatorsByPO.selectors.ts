@@ -37,6 +37,7 @@ export const selectPresentLocatorsByPO = createSelector(
       .map((loc) => {
         const annotationType = loc.annotationType || pageObject?.annotationType;
         const locatorType = loc.locatorType || pageObject?.locatorType || LocatorType.xPath;
+        // ToDo: isDefaultLocatorType ???
         const isDefaultLocatorType = () => !loc.locatorType && pageObject?.locatorType === LocatorType.cssSelector;
 
         return {
@@ -44,7 +45,10 @@ export const selectPresentLocatorsByPO = createSelector(
           ...(annotationType && { annotationType }),
           ...(locatorType && { locatorType }),
           ...(isDefaultLocatorType() && {
-            locator: { ...loc.locator, output: getLocator(loc.locator, pageObject?.locatorType) },
+            locator: {
+              ...loc.locator,
+              output: getLocator(loc.annotationType, loc.locator, pageObject?.locatorType),
+            },
           }),
         };
       });

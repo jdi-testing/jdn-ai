@@ -1,3 +1,5 @@
+import { ElementAttributes, LocatorType } from '../../common/types/common';
+import { LocatorValidationWarnings } from '../../features/locators/types/locator.types';
 import { ScriptMsg } from '../scriptMsg.constants';
 
 export const evaluateXpath = ({ xPath, element_id, originJdnHash }: Record<string, string>) => {
@@ -9,19 +11,54 @@ export const evaluateXpath = ({ xPath, element_id, originJdnHash }: Record<strin
     const foundElementText = foundElement && foundElement.textContent;
     return JSON.stringify({ length, foundHash, element_id, foundElementText, originJdnHash });
   } catch (error) {
-    return 'The locator was not found on the page.';
+    return LocatorValidationWarnings.NotFound;
   }
 };
 
-export const evaluateCssSelector = ({ selector, element_id, originJdnHash }: Record<string, string>) => {
+interface EvaluateStandardLocator {
+  selector: string;
+  locatorType: LocatorType;
+  elementId: string;
+  originJdnHash: string;
+}
+
+export const evaluateStandardLocator = ({
+  selector,
+  locatorType,
+  elementId,
+  originJdnHash,
+}: EvaluateStandardLocator) => {
   try {
-    const foundElements = document.querySelectorAll(selector);
+    let foundElements: NodeListOf<Element>;
+    if (locatorType === LocatorType.linkText) {
+      const nodeList = document.querySelectorAll('a');
+      const condition = (node: HTMLAnchorElement) => node.textContent && node.textContent.includes(selector);
+
+      // create temporary nodeList
+      const filteredNodes = document.createElement('div');
+
+      Array.from(nodeList).forEach((node) => {
+        if (condition(node)) {
+          filteredNodes.appendChild(node.cloneNode(true));
+        }
+      });
+
+      foundElements = filteredNodes.childNodes as NodeListOf<Element>;
+    } else if (locatorType === LocatorType.className) {
+      const preparedClassName = selector.replaceAll(' ', '.');
+      foundElements = document.querySelectorAll(preparedClassName);
+    } else {
+      foundElements = document.querySelectorAll(selector);
+    }
+
     const length = foundElements.length;
     const foundHash = foundElements && foundElements[0].getAttribute('jdn-hash');
     const foundElementText = foundElements && foundElements[0].textContent;
-    return JSON.stringify({ length, foundHash, element_id, foundElementText, originJdnHash });
+    return JSON.stringify({ length, foundHash, elementId, foundElementText, originJdnHash });
   } catch (error) {
-    return 'The locator was not found on the page.';
+    console.error('error: ', error);
+
+    return LocatorValidationWarnings.NotFound;
   }
 };
 
@@ -49,10 +86,10 @@ export const assignJdnHash = ({
       foundElement.setAttribute('jdn-hash', jdnHash);
       return 'success';
     } else {
-      return 'The locator was not found on the page.';
+      return LocatorValidationWarnings.NotFound;
     }
   } catch (error) {
-    return 'The locator was not found on the page.';
+    return LocatorValidationWarnings.NotFound;
   }
 };
 
@@ -62,8 +99,8 @@ export const utilityScript = () => {
       case ScriptMsg.EvaluateXpath:
         sendResponse(evaluateXpath(param));
         break;
-      case ScriptMsg.EvaluateCssSelector:
-        sendResponse(evaluateCssSelector(param));
+      case ScriptMsg.EvaluateStandardLocator:
+        sendResponse(evaluateStandardLocator(param));
         break;
       case ScriptMsg.AssignJdnHash:
         sendResponse(assignJdnHash(param));
@@ -78,3 +115,41 @@ export const sendMessage = (msg: { message: ScriptMsg; param: any }) =>
   chrome.runtime.sendMessage(msg).catch((error) => {
     if (error.message !== 'The message port closed before a response was received.') throw new Error(error.message);
   });
+
+export const getElementAttributes = (element: HTMLElement): ElementAttributes => {
+  let attributes: ElementAttributes = {};
+
+  if (element.id) {
+    attributes.id = element.id;
+  }
+  // ignore for name attribute:
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  if (element.name) {
+    attributes.name = element.getAttribute('name') ?? null;
+  }
+
+  if (element.innerText) {
+    attributes.linkText = element.textContent?.trim();
+  }
+
+  if (element.tagName) {
+    attributes.tagName = element.tagName.toLowerCase();
+  }
+
+  if (element.className) {
+    attributes.className = element.className;
+  }
+
+  // Get data attributes
+  const dataAttributes: { [key: string]: string } = {};
+  for (let i = 0; i < element.attributes.length; i++) {
+    const attribute = element.attributes[i];
+    if (attribute.name.startsWith('data-')) {
+      dataAttributes[attribute.name] = attribute.value;
+    }
+  }
+  if (!!Object.keys(dataAttributes).length) attributes = { ...attributes, dataAttributes };
+
+  return attributes;
+};
