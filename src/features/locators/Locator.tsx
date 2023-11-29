@@ -178,7 +178,7 @@ export const Locator: FC<Props> = ({ element, currentPage, searchState, depth, s
       <span onClick={handleClick}>
         {isVividusFramework
           ? vividusString()
-          : renderColorizedJdiString(annotationType, locatorType, locator, type, name)}
+          : renderColorizedJdiString(annotationType, locatorType, locator.output ?? '', type, name)}
       </span>
     );
   };

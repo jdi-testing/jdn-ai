@@ -5,11 +5,7 @@ import { ILocator, LocatorValue } from '../types/locator.types';
 import { CALCULATING } from './constants';
 import { camelCase } from 'lodash';
 
-export const getLocatorAnnotationStringByType = (
-  value: string,
-  locatorType: LocatorType,
-  annotationType: AnnotationType,
-) => {
+const getLocatorAnnotationStringByType = (value: string, locatorType: LocatorType, annotationType: AnnotationType) => {
   if (annotationType === AnnotationType.FindBy) return value;
   // else return annotation string for UI Annotation Type:
   const annotations = {
@@ -20,7 +16,7 @@ export const getLocatorAnnotationStringByType = (
     tagName: value,
     className: `.${value}`,
     linkText: value,
-    [locatorType]: value,
+    dataAttributes: value,
   };
 
   return annotations[locatorType];
@@ -59,9 +55,10 @@ export const getLocator = (
   locatorValue: LocatorValue,
   locatorType: LocatorType = LocatorType.xPath,
 ) => {
+  const preparedLocatorType = locatorType.startsWith('data-') ? LocatorType.dataAttributes : locatorType;
   const annotationString: string = getLocatorAnnotationStringByType(
     getLocatorValueByType(locatorValue, locatorType),
-    locatorType,
+    preparedLocatorType,
     annotationType,
   );
 
@@ -80,6 +77,8 @@ export const getLocatorPrefix = (annotationType: AnnotationType, locatorType: Lo
       prefix = 'css = ';
     } else if (locatorType === LocatorType.xPath) {
       prefix = 'xpath = ';
+    } else if (locatorType === LocatorType.className) {
+      prefix = 'className = ';
     } else if (locatorType) {
       prefix = `${locatorType} = `;
     }
@@ -105,7 +104,7 @@ export const getLocatorString = (
 export const renderColorizedJdiString = (
   annotationType: AnnotationType,
   locatorType: LocatorType,
-  locator: LocatorValue,
+  locatorOutput: string,
   type: ElementLibrary | ElementClass,
   name: string,
 ) => {
@@ -114,7 +113,7 @@ export const renderColorizedJdiString = (
       <span>
         {annotationType}({getLocatorPrefix(annotationType, locatorType)}
       </span>
-      <span className="jdn__locator__output-string">{`"${locator.output}"`}</span>)
+      <span className="jdn__locator__output-string">{`"${locatorOutput}"`}</span>)
       <br />
       <span className="jdn__locator_item-type">public</span>
       <span>&nbsp;{type}&nbsp;</span>
