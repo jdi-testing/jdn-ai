@@ -21,26 +21,27 @@ interface ILocatorTypeOptions {
 }
 
 const generateOptionsWithLabel = (attributes: ElementAttributes): IOptionsWithLabel[] => {
-  const generateLabel = (key: string, attribute: string | null) => {
+  const generateLabel = (locatorType: string, attribute: string | null) => {
     if (attribute === null) {
-      return <Tooltip title="Disabled because no data">{key}</Tooltip>;
+      return <Tooltip title="Disabled because no data">{locatorType}</Tooltip>;
     }
 
     return (
       <>
-        {key} <span style={{ color: 'rgba(0, 0, 0, 0.45)' }}>{`"${attribute}"`}</span>
+        {locatorType} <span style={{ color: 'rgba(0, 0, 0, 0.45)' }}>{`"${attribute}"`}</span>
       </>
     );
   };
+
   return Object.keys(attributes).map((key) => {
     let locatorType = key;
     if (locatorType === 'cssSelector') locatorType = 'CSS Selector';
     const option: IOptionsWithLabel = {
-      label: generateLabel(locatorType, attributes[locatorType as keyof ElementAttributes] as string),
+      label: generateLabel(locatorType, attributes[key as keyof ElementAttributes] as string),
       value: locatorType,
     };
 
-    if (attributes[locatorType as keyof ElementAttributes] === null) {
+    if (attributes[key as keyof ElementAttributes] === null) {
       option.disabled = true;
     }
 

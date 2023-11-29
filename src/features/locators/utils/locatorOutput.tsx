@@ -13,7 +13,7 @@ export const getLocatorAnnotationStringByType = (
   if (annotationType === AnnotationType.FindBy) return value;
   // else return annotation string for UI Annotation Type:
   const annotations = {
-    cssSelector: value,
+    'CSS Selector': value,
     xPath: value,
     id: `#${value}`,
     name: `[name='${value}']`,
@@ -30,7 +30,7 @@ export const getLocatorValueByType = (locatorValue: LocatorValue, type: LocatorT
   let dataAttribute = '';
 
   const value = {
-    cssSelector: locatorValue.cssSelector || CALCULATING,
+    'CSS Selector': locatorValue.cssSelector || CALCULATING,
     xPath: locatorValue.xPath,
     id: locatorValue.attributes.id ?? '',
     name: locatorValue.attributes.name ?? '',
@@ -49,7 +49,8 @@ export const getLocatorValueByType = (locatorValue: LocatorValue, type: LocatorT
   if (value[type]) {
     return value[type];
   } else {
-    return 'can`t find this type';
+    console.warn(`can't find this type: ${type}`);
+    return ``;
   }
 };
 

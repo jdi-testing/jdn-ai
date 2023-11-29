@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Form, Input, Select } from 'antd';
 import Icon from '@ant-design/icons';
 import WarningFilled from '../assets/warning-filled.svg';
-import { FieldData, FormInstance } from 'rc-field-form/lib/interface';
+import { FieldData } from 'rc-field-form/lib/interface';
 import { Footnote } from '../../../common/components/footnote/Footnote';
 import { Rule } from 'antd/lib/form';
 import { useDispatch, useSelector } from 'react-redux';
@@ -24,7 +24,7 @@ import { createNewName, isValidLocator, getLocatorValidationStatus, getLocatorVa
 import { createLocatorValidationRules } from '../utils/locatorValidationRules';
 import { createNameValidationRules } from '../utils/nameValidationRules';
 import FormItem from 'antd/es/form/FormItem';
-import { LocatorType, SelectOption, AnnotationType, FrameworkType, locatorTypes } from '../../../common/types/common';
+import { LocatorType, SelectOption, AnnotationType, FrameworkType } from '../../../common/types/common';
 import { isFilteredSelect } from '../../../common/utils/helpers';
 import { CALCULATING, newLocatorStub } from '../utils/constants';
 import { changeLocatorElement } from '../reducers/changeLocatorElement.thunk';
@@ -91,8 +91,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
   const [form] = Form.useForm<FormValues>();
   const isCurrentFrameworkVividus = pageObjectFramework === FrameworkType.Vividus;
   // ToDo rewrite all related logic and tests for defaultLocatorType: string (because it's string)
-  const defaultLocatorType: LocatorType =
-    (locatorTypes[locatorType] as LocatorType) || pageObjectLocatorType || LocatorType.xPath;
+  const defaultLocatorType: LocatorType = locatorType || pageObjectLocatorType || LocatorType.xPath;
   const defaultAnnotationType = annotationType || pageObjectAnnotationType || AnnotationType.UI;
   const initialValues: FormValues = {
     type,
@@ -240,7 +239,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
         element_id,
         jdnHash,
         locator,
-        form as FormInstance<FormValues>,
+        form,
       );
       form.setFieldValue('locator', newLocatorValue);
     }

@@ -11,7 +11,7 @@ export enum AnnotationType {
 }
 
 export enum LocatorType {
-  cssSelector = 'cssSelector',
+  cssSelector = 'CSS Selector',
   xPath = 'xPath',
   id = 'id',
   name = 'name',
@@ -22,7 +22,7 @@ export enum LocatorType {
 }
 
 export const locatorTypes: { [key in LocatorType]: string } = {
-  [LocatorType.cssSelector]: 'CSS selector',
+  [LocatorType.cssSelector]: 'CSS Selector',
   [LocatorType.xPath]: 'xPath',
   [LocatorType.id]: 'id',
   [LocatorType.name]: 'name',
