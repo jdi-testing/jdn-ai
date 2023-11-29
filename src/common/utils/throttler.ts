@@ -4,7 +4,7 @@ import { selectAreInProgress } from '../../features/locators/selectors/locatorsB
 class Throttler {
   accumulatedArgs: any[] = [];
 
-  interval: NodeJS.Timer | null = null;
+  interval: NodeJS.Timeout | null = null;
 
   constructor() {
     this.accumulateAndThrottle = this.accumulateAndThrottle.bind(this);
@@ -35,7 +35,7 @@ class Throttler {
   }
 
   quitThrottler() {
-    this.interval && clearInterval(this.interval);
+    if (this.interval) clearInterval(this.interval);
     this.interval = null;
   }
 }

@@ -26,6 +26,7 @@ import {
   getLocatorWithSelenium,
 } from './locatorOutput';
 import { FormInstance } from 'rc-field-form/lib/interface';
+import { FormValues } from '../components/LocatorEditDialog';
 
 export const isValidJavaVariable = (value: string) => /^[a-zA-Z_$]([a-zA-Z0-9_])*$/.test(value);
 
@@ -150,7 +151,7 @@ export const getLocatorValueOnTypeSwitch = async (
   element_id: ElementId,
   jdnHash: JDNHash,
   locatorValue: LocatorValue,
-  form: FormInstance,
+  form: FormInstance<FormValues>,
 ) => {
   const isLocatorLeadsToNewElement: boolean = validationMessage === LocatorValidationWarnings.NewElement;
   let newLocatorValue;

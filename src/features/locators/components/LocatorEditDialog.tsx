@@ -39,7 +39,7 @@ interface Props extends ILocator {
   isCreatingForm?: boolean;
 }
 
-interface FormValues {
+export interface FormValues {
   name: string;
   type: ElementClass;
   locatorType: LocatorType;
