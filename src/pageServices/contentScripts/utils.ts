@@ -29,7 +29,7 @@ export const evaluateStandardLocator = ({
   originJdnHash,
 }: EvaluateStandardLocator) => {
   try {
-    let foundElements;
+    let foundElements: NodeListOf<Element>;
     if (locatorType === LocatorType.linkText) {
       const nodeList = document.querySelectorAll('a');
       const condition = (node: HTMLAnchorElement) => node.textContent && node.textContent.includes(selector);
@@ -43,7 +43,7 @@ export const evaluateStandardLocator = ({
         }
       });
 
-      foundElements = filteredNodes.childNodes;
+      foundElements = filteredNodes.childNodes as NodeListOf<Element>;
     } else if (locatorType === LocatorType.className) {
       const preparedClassName = selector.replaceAll(' ', '.');
       foundElements = document.querySelectorAll(preparedClassName);
