@@ -1,4 +1,4 @@
-import { ElementAttributes } from '../../common/types/common';
+import { ElementAttributes, LocatorType } from '../../common/types/common';
 import { LocatorValidationWarnings } from '../../features/locators/types/locator.types';
 import { ScriptMsg } from '../scriptMsg.constants';
 
@@ -15,26 +15,49 @@ export const evaluateXpath = ({ xPath, element_id, originJdnHash }: Record<strin
   }
 };
 
+interface EvaluateStandardLocator {
+  selector: string;
+  locatorType: LocatorType;
+  elementId: string;
+  originJdnHash: string;
+}
+
 export const evaluateStandardLocator = ({
   selector,
+  locatorType,
   elementId,
   originJdnHash,
-  isLinkTextLocator,
-}: Record<string, string>) => {
+}: EvaluateStandardLocator) => {
   try {
     let foundElements;
-    if (isLinkTextLocator) {
-      foundElements = Array.from(document.querySelectorAll('a')).filter(
-        (element) => element.textContent && element.textContent.includes(selector),
-      );
+    if (locatorType === LocatorType.linkText) {
+      const nodeList = document.querySelectorAll('a');
+      const condition = (node: HTMLAnchorElement) => node.textContent && node.textContent.includes(selector);
+
+      // create temporary nodeList
+      const filteredNodes = document.createElement('div');
+
+      Array.from(nodeList).forEach((node) => {
+        if (condition(node)) {
+          filteredNodes.appendChild(node.cloneNode(true));
+        }
+      });
+
+      foundElements = filteredNodes.childNodes;
+    } else if (locatorType === LocatorType.className) {
+      const preparedClassName = selector.replaceAll(' ', '.');
+      foundElements = document.querySelectorAll(preparedClassName);
     } else {
       foundElements = document.querySelectorAll(selector);
     }
+
     const length = foundElements.length;
     const foundHash = foundElements && foundElements[0].getAttribute('jdn-hash');
     const foundElementText = foundElements && foundElements[0].textContent;
     return JSON.stringify({ length, foundHash, elementId, foundElementText, originJdnHash });
   } catch (error) {
+    console.error('error: ', error);
+
     return LocatorValidationWarnings.NotFound;
   }
 };

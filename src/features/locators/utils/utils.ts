@@ -36,10 +36,10 @@ export const evaluateXpath = (xPath: string, element_id?: ElementId, originJdnHa
 
 export const evaluateStandardLocator = (
   selector: string,
+  locatorType: LocatorType,
   element_id?: ElementId,
   originJdnHash?: string,
-  isLinkTextLocator?: boolean,
-) => sendMessage.evaluateStandardLocator({ selector, element_id, originJdnHash, isLinkTextLocator });
+) => sendMessage.evaluateStandardLocator({ selector, locatorType, element_id, originJdnHash });
 
 export const generateSelectorByHash = (element_id: ElementId, jdnHash: string) =>
   sendMessage.generateSelectorByHash({ element_id, jdnHash });
@@ -186,9 +186,8 @@ export const getLocatorValueOnTypeSwitch = async (
     }
   } else {
     if (isLocatorLeadsToNewElement || !locatorValue.xPath) {
-      const isLinkText = newLocatorType === LocatorType.linkText;
       const { foundHash } = JSON.parse(
-        await evaluateStandardLocator(form.getFieldValue('locator'), element_id, undefined, isLinkText),
+        await evaluateStandardLocator(form.getFieldValue('locator'), newLocatorType, element_id),
       );
       newLocatorValue = await getElementFullXpath(foundHash);
     } else {

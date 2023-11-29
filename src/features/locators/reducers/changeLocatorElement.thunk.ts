@@ -31,12 +31,8 @@ export const changeLocatorElement = createAsyncThunk(
       locatorType === LocatorType.tagName ||
       locatorType.startsWith('data-');
 
-    const isLinkText = locatorType === LocatorType.linkText;
-
     if (isStandardLocator) {
-      ({ foundHash, foundElementText } = JSON.parse(
-        await evaluateStandardLocator(locator, element_id, undefined, isLinkText),
-      ));
+      ({ foundHash, foundElementText } = JSON.parse(await evaluateStandardLocator(locator, locatorType, element_id)));
     } else {
       ({ foundHash, foundElementText } = JSON.parse(await evaluateXpath(locator, element_id)));
     }

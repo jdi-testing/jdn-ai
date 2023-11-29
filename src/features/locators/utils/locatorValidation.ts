@@ -23,11 +23,10 @@ const evaluateLocator = async (
   jdnHash: string,
   locatorType: LocatorType,
 ) => {
-  const isLinkTextLocator = locatorType === LocatorType.linkText;
   if (locatorType === LocatorType.xPath) return evaluateXpath(locatorString, elementId, jdnHash);
   else {
     const preparedValue = prepareLocatorStringForEvaluation(locatorType, locatorString);
-    return evaluateStandardLocator(preparedValue, elementId, jdnHash, isLinkTextLocator);
+    return evaluateStandardLocator(preparedValue, locatorType, elementId, jdnHash);
   }
 };
 // ToDo: logic refactoring needed

@@ -5,6 +5,7 @@ import { SelectorsMap } from '../services/rules/rules.types';
 import { ScriptMessagePayload } from './scriptMessageHandler';
 import { ClassFilterValue } from '../features/filter/types/filter.types';
 import { ScriptMsg } from './scriptMsg.constants';
+import { LocatorType } from '../common/types/common';
 
 export interface ScriptMessage {
   message: string;
@@ -169,7 +170,7 @@ export const sendMessage = {
   defineTabId: (payload: number) => connector.sendMessage(ScriptMsg.DefineTabId, payload),
   evaluateXpath: (payload: { xPath: string; element_id?: ElementId, originJdnHash?: string }, onResponse?: () => void) =>
     connector.sendMessage(ScriptMsg.EvaluateXpath, payload, onResponse),
-  evaluateStandardLocator: (payload: { selector: string; element_id?: ElementId, originJdnHash?: string, isLinkTextLocator?: boolean }, onResponse?: () => void) =>
+  evaluateStandardLocator: (payload: { selector: string; locatorType: LocatorType, element_id?: ElementId, originJdnHash?: string }, onResponse?: () => void) =>
     connector.sendMessage(ScriptMsg.EvaluateStandardLocator, payload, onResponse),
   getPageData: (payload?: {}, onResponse?: () => void) => connector.sendMessage(ScriptMsg.GetPageData, payload, onResponse),
   generateSelectorByHash: (payload: { element_id: string, jdnHash: string }, onResponse?: () => void) =>
