@@ -56,9 +56,9 @@ export type ElementId = string;
 
 export interface LocatorValue {
   fullXpath?: string;
-  xPath: string;
+  xPath: string | null;
   attributes: ElementAttributes;
-  cssSelector: string;
+  cssSelector: string | null;
   cssSelectorStatus?: LocatorTaskStatus; // status of cssSelector calculation
   xPathStatus?: LocatorTaskStatus; // status of xPath calculation
   taskStatus?: LocatorTaskStatus; // status of both calculations

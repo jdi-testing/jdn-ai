@@ -42,8 +42,8 @@ export interface ElementAttributes {
 }
 
 export interface ExtendedElementAttributes extends ElementAttributes {
-  cssSelector: string;
-  xPath: string;
+  cssSelector: string | null;
+  xPath: string | null;
 }
 
 export const locatorAttributesInitialState: ElementAttributes = {
