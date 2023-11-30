@@ -37,7 +37,7 @@ export const updateSocketMessageHandler = (dispatch: any, state: any) => {
           } else {
             reScheduledTasks.add(jdnHash);
             const rescheduleTask = async () => {
-              await sendMessage.assignJdnHash({ jdnHash: element.jdnHash, locator: element.locator.xPath });
+              await sendMessage.assignJdnHash({ jdnHash: element.jdnHash, locator: element.locator.xPath ?? '' });
               locatorGenerationController.scheduleMultipleXpathGeneration([element]);
             };
             rescheduleTask();
