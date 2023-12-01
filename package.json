@@ -8,7 +8,7 @@
     "start:reduxlog": "webpack --watch --env reduxlogenable devenv",
     "build": "webpack --mode production",
     "build:devenv": "webpack --mode production --env devenv",
-    "patch": "npx mversion patch",
+    "patch": "node ./patch.js && git add manifest.json package.json package-lock.json && git commit -m \"update version\"",
     "minor": "npx mversion minor",
     "test": "jest",
     "test:watch": "jest --watch",
