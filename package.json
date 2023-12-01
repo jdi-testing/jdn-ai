@@ -56,7 +56,6 @@
     "css-selector-generator": "^3.6.4",
     "jszip": "^3.10.1",
     "lodash": "4.17.21",
-    "mversion": "^1.2.0",
     "rc-field-form": "^1.40.0",
     "react": "18.2.0",
     "react-children-utilities": "^2.8.0",
