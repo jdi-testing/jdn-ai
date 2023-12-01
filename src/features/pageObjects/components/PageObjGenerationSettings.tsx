@@ -193,7 +193,6 @@ export const PageObjGenerationSettings: React.FC<Props> = ({ pageObj, library, u
                 id="library"
                 disabled={isCurrentFrameworkVividus}
                 value={currentLibrary}
-                defaultValue={library}
                 className="jdn__select"
                 onChange={onLibraryChange}
                 options={libraryOptions}
