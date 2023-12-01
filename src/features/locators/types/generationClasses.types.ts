@@ -22,7 +22,7 @@ export enum ElementLibrary {
   Vuetify = 'Vuetify',
 }
 
-export const defaultLibrary = ElementLibrary.MUI;
+export const defaultLibrary = ElementLibrary.HTML5;
 
 export const libraryNames: Record<ElementLibrary, string> = {
   [ElementLibrary.MUI]: 'Material UI (beta)',
