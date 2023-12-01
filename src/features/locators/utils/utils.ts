@@ -93,19 +93,19 @@ export const copyLocator =
         value = locatorsForCopy.map(({ locator }) => `"${locator.xPath}"`);
         break;
       case LocatorOption.XpathAndSelenium:
-        value = locatorsForCopy.map(({ locator }) => getLocatorWithSelenium(locator.xPath, 'xpath'));
+        value = locatorsForCopy.map(({ locator }) => getLocatorWithSelenium(locator.xPath ?? '', 'xpath'));
         break;
       case LocatorOption.XpathAndJDI:
-        value = locatorsForCopy.map(({ locator }) => getLocatorWithJDIAnnotation(locator.xPath));
+        value = locatorsForCopy.map(({ locator }) => getLocatorWithJDIAnnotation(locator.xPath ?? ''));
         break;
       case LocatorOption.CSSSelector:
         value = locatorsForCopy.map(({ locator }) => `"${locator.cssSelector}"`);
         break;
       case LocatorOption.CSSAndSelenium:
-        value = locatorsForCopy.map(({ locator }) => getLocatorWithSelenium(locator.cssSelector, 'css'));
+        value = locatorsForCopy.map(({ locator }) => getLocatorWithSelenium(locator.cssSelector ?? '', 'css'));
         break;
       case LocatorOption.CSSAndJDI:
-        value = locatorsForCopy.map(({ locator }) => getLocatorWithJDIAnnotation(locator.cssSelector));
+        value = locatorsForCopy.map(({ locator }) => getLocatorWithJDIAnnotation(locator.cssSelector ?? ''));
         break;
       default:
         value = locatorsForCopy.map((element) => {

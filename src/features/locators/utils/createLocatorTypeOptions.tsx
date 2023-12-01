@@ -22,7 +22,7 @@ interface ILocatorTypeOptions {
 
 const generateOptionsWithLabel = (attributes: ElementAttributes): IOptionsWithLabel[] => {
   const generateLabel = (locatorType: string, attribute: string | null) => {
-    if (attribute === null) {
+    if (attribute === null || attribute === '') {
       return <Tooltip title="Disabled because no data">{locatorType}</Tooltip>;
     }
 
@@ -51,8 +51,8 @@ const generateOptionsWithLabel = (attributes: ElementAttributes): IOptionsWithLa
 
 const addRestAttributes = (
   attributes: ElementAttributes[],
-  cssSelector: string,
-  xPath: string,
+  cssSelector: string | null,
+  xPath: string | null,
   allLocatorAttributes: ElementAttributes | undefined = locatorAttributesInitialState,
 ): [ExtendedElementAttributes, ElementAttributes] => {
   const uniqueAttributes = attributes[0];
@@ -72,8 +72,8 @@ const addRestAttributes = (
 
 const getLocatorTypeOptions = (
   attributes: ElementAttributes[],
-  cssSelector: string,
-  xPath: string,
+  cssSelector: string | null,
+  xPath: string | null,
 ): ILocatorTypeOptions[] => {
   const [updatedUniqueAttributes, updatedNonUniqueAttributes] = addRestAttributes(attributes, cssSelector, xPath);
 
