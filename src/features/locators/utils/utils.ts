@@ -44,7 +44,9 @@ export const evaluateStandardLocator = (
 export const generateSelectorByHash = (element_id: ElementId, jdnHash: string) =>
   sendMessage.generateSelectorByHash({ element_id, jdnHash });
 
-export const isValidLocator = (message?: string) => !message || message === LocatorValidationWarnings.NewElement;
+export const isValidLocator = (message?: LocatorValidationErrorType) => {
+  return !message || message === LocatorValidationWarnings.NewElement;
+};
 
 export const checkDuplicates = (foundHash: string, locators: ILocator[], element_id: ElementId) =>
   locators.filter(
