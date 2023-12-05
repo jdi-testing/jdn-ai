@@ -23,7 +23,38 @@ describe('changeLocatorAttributes reducer', () => {
     removeElementSpy = jest.spyOn(sendMessage, 'removeElement');
   });
 
-  test('edit type and name', () => {
+  test('should update type and name when editing a locator', () => {
+    // Arrange
+    const locatorMock = {
+      ...locator1,
+      type: 'ProgressBar',
+      name: 'myAwesomeLocator',
+      locator: "//*[@class='sidebar-menu left']",
+      message: '',
+      library: ElementLibrary.MUI,
+      locatorType: LocatorType.xPath,
+    };
+
+    // Act
+    store.dispatch(changeLocatorAttributes(locatorMock));
+
+    // Assert
+    const locator = selectLocatorById(store.getState(), '8736312404689610766421832473');
+    expect(locator.type).toBe('ProgressBar');
+    expect(locator.name).toBe('myAwesomeLocator');
+    expect(locator.locator).toStrictEqual({
+      attributes: {},
+      cssSelector: '.sidebar-menu.left',
+      output: "//*[@class='sidebar-menu left']",
+      taskStatus: LocatorTaskStatus.SUCCESS,
+      xPath: "//*[@class='sidebar-menu left']",
+      xPathStatus: LocatorTaskStatus.SUCCESS,
+    });
+    expect(changeElementNameSpy).toHaveBeenCalledWith(locator);
+  });
+
+  test('should not update type and name when they remain the same', () => {
+    // Act
     store.dispatch(
       changeLocatorAttributes({
         element_id: '8736312404689610766421832473',
@@ -33,35 +64,27 @@ describe('changeLocatorAttributes reducer', () => {
         type: 'ProgressBar',
         message: '',
         library: ElementLibrary.MUI,
+        locatorType: LocatorType.xPath,
       }),
     );
+
+    // Assert
     const locator = selectLocatorById(store.getState(), '8736312404689610766421832473');
     expect(locator.type).toBe('ProgressBar');
     expect(locator.name).toBe('myAwesomeLocator');
-    expect(locator.locator).toStrictEqual(locator1.locator);
+    expect(locator.locator).toStrictEqual({
+      attributes: {},
+      cssSelector: '.sidebar-menu.left',
+      output: "//*[@class='sidebar-menu left']",
+      taskStatus: LocatorTaskStatus.SUCCESS,
+      xPath: "//*[@class='sidebar-menu left']",
+      xPathStatus: LocatorTaskStatus.SUCCESS,
+    });
     expect(changeElementNameSpy).toHaveBeenCalledWith(locator);
   });
 
-  test("didn't edit type and name", () => {
-    store.dispatch(
-      changeLocatorAttributes({
-        element_id: '8736312404689610766421832473',
-        is_shown: true,
-        locator: "//*[@class='sidebar-menu left']",
-        name: 'myAwesomeLocator',
-        type: 'ProgressBar',
-        message: '',
-        library: ElementLibrary.MUI,
-      }),
-    );
-    const locator = selectLocatorById(store.getState(), '8736312404689610766421832473');
-    expect(locator.type).toBe('ProgressBar');
-    expect(locator.name).toBe('myAwesomeLocator');
-    expect(locator.locator).toStrictEqual(locator1.locator);
-    expect(changeElementNameSpy).toHaveBeenCalledWith(locator);
-  });
-
-  test('edit type, custom name remains the same', () => {
+  test('should update type and keep custom name when editing a locator', () => {
+    // Act
     store.dispatch(
       changeLocatorAttributes({
         element_id: '8736312404689610766421832473',
@@ -71,16 +94,27 @@ describe('changeLocatorAttributes reducer', () => {
         message: '',
         type: 'Dialog',
         library: ElementLibrary.MUI,
+        locatorType: LocatorType.xPath,
       }),
     );
+
+    // Assert
     const locator = selectLocatorById(store.getState(), '8736312404689610766421832473');
     expect(locator.type).toBe('Dialog');
     expect(locator.name).toBe('myAwesomeLocator');
-    expect(locator.locator).toStrictEqual(locator1.locator);
+    expect(locator.locator).toStrictEqual({
+      attributes: {},
+      cssSelector: '.sidebar-menu.left',
+      output: "//*[@class='sidebar-menu left']",
+      taskStatus: LocatorTaskStatus.SUCCESS,
+      xPath: "//*[@class='sidebar-menu left']",
+      xPathStatus: LocatorTaskStatus.SUCCESS,
+    });
     expect(changeElementNameSpy).toHaveBeenCalledWith(locator);
   });
 
-  test('edit locator', () => {
+  test('should update locator when editing a locator', () => {
+    // Act
     store.dispatch(
       changeLocatorAttributes({
         element_id: '8736312404689610766421832473',
@@ -94,6 +128,8 @@ describe('changeLocatorAttributes reducer', () => {
         library: ElementLibrary.MUI,
       }),
     );
+
+    // Assert
     const locator = selectLocatorById(store.getState(), '8736312404689610766421832473');
     expect(locator.type).toBe('Dialog');
     expect(locator.name).toBe('myAwesomeLocator');
@@ -103,8 +139,11 @@ describe('changeLocatorAttributes reducer', () => {
     expect(locator.locator.xPathStatus).toBe(LocatorTaskStatus.SUCCESS);
   });
 
-  test('warned validation', () => {
+  test('should handle warned validation and remove element', () => {
+    // Arrange
     const oldLocator = selectLocatorById(store.getState(), '8736312404689610766421832473');
+
+    // Act
     store.dispatch(
       changeLocatorAttributes({
         element_id: '8736312404689610766421832473',
@@ -114,8 +153,11 @@ describe('changeLocatorAttributes reducer', () => {
         type: 'Dialog',
         message: 'NOT_FOUND',
         library: ElementLibrary.MUI,
+        locatorType: LocatorType.cssSelector,
       }),
     );
+
+    // Assert
     const locator = selectLocatorById(store.getState(), '8736312404689610766421832473');
     expect(locator).toBeDefined();
     expect(locator.message).toBe('NOT_FOUND');
