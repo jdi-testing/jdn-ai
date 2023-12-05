@@ -69,14 +69,25 @@ const locatorsSlice = createSlice({
       if (!currentLocator) return;
 
       const newValue: ILocator = { ...currentLocator, locator: { ...currentLocator.locator }, locatorType, ...rest };
+      const isStandardLocator: boolean =
+        locatorType === LocatorType.cssSelector ||
+        locatorType === LocatorType.className ||
+        locatorType === LocatorType.id ||
+        locatorType === LocatorType.linkText ||
+        locatorType === LocatorType.name ||
+        locatorType === LocatorType.tagName ||
+        locatorType.startsWith('data-');
 
       if (locatorType === LocatorType.cssSelector) {
         newValue.locator.cssSelector = locator;
       } else if (locatorType === LocatorType.xPath) {
         newValue.locator.xPath = locator;
-      } else {
-        if (locatorType === LocatorType.dataAttributes) {
-          newValue.locator.attributes = { ...newValue.locator.attributes, dataAttributes: {} }; // unfreeze object
+      } else if (isStandardLocator) {
+        if (locatorType === LocatorType.dataAttributes || locatorType.startsWith('data-')) {
+          newValue.locator.attributes = {
+            ...newValue.locator.attributes,
+            dataAttributes: { ...(newValue.locator.attributes?.dataAttributes || {}) },
+          }; // unfreeze object
 
           if (newValue.locator.attributes.dataAttributes) {
             newValue.locator.attributes.dataAttributes[locatorType] = locator;
