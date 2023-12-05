@@ -60,21 +60,37 @@ const locatorsSlice = createSlice({
       state.status = IdentificationStatus.success;
     },
     changeLocatorAttributes(state, { payload }: PayloadAction<ChangeLocatorAttributesPayload>) {
+      // ToDo: fix legacy naming
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       const { locator, element_id, locatorType, ...rest } = payload;
 
-      const _locator = simpleSelectLocatorById(state, element_id);
+      const currentLocator = simpleSelectLocatorById(state, element_id);
 
-      if (!_locator) return;
+      if (!currentLocator) return;
 
-      const newValue = { ..._locator, locator: { ..._locator.locator }, locatorType, ...rest };
+      const newValue: ILocator = { ...currentLocator, locator: { ...currentLocator.locator }, locatorType, ...rest };
 
       if (locatorType === LocatorType.cssSelector) {
         newValue.locator.cssSelector = locator;
       } else if (locatorType === LocatorType.xPath) {
         newValue.locator.xPath = locator;
+      } else {
+        if (locatorType === LocatorType.dataAttributes) {
+          newValue.locator.attributes = { ...newValue.locator.attributes, dataAttributes: {} }; // unfreeze object
+
+          if (newValue.locator.attributes.dataAttributes) {
+            newValue.locator.attributes.dataAttributes[locatorType] = locator;
+          }
+        } else {
+          const attributes = { ...newValue.locator.attributes }; // unfreeze object
+          attributes[locatorType] = locator;
+          newValue.locator.attributes = attributes;
+        }
       }
 
-      if (rest.message === LocatorValidationWarnings.NotFound) newValue.jdnHash = '';
+      if (rest.message === LocatorValidationWarnings.NotFound) {
+        newValue.jdnHash = '';
+      }
 
       locatorsAdapter.upsertOne(state, newValue);
     },
@@ -140,6 +156,8 @@ const locatorsSlice = createSlice({
       state,
       { payload }: PayloadAction<{ element_id?: ElementId; priority: LocatorCalculationPriority; ids?: ElementId[] }>,
     ) {
+      // ToDo: fix legacy naming
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       const { element_id, ids, priority } = payload;
       if (element_id) locatorsAdapter.upsertOne(state, { element_id, priority } as ILocator);
       if (ids) {
@@ -181,6 +199,8 @@ const locatorsSlice = createSlice({
       locatorsAdapter.upsertMany(state, locators.map(({ element_id }) => ({ element_id, isGenerated })) as ILocator[]);
     },
     setJdnHash(state, { payload }: PayloadAction<{ element_id: ElementId; jdnHash: string }>) {
+      // ToDo: fix legacy naming
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       const { element_id, jdnHash } = payload;
       locatorsAdapter.upsertOne(state, { element_id, jdnHash } as ILocator);
     },
@@ -212,12 +232,16 @@ const locatorsSlice = createSlice({
       // ToDo isGenerated refactoring
       const locator = typeof payload === 'string' ? simpleSelectLocatorById(state, payload) : payload;
       if (!locator) return;
+      // ToDo: fix legacy naming
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       const { isGenerated, element_id } = locator;
       locatorsAdapter.upsertOne(state, { element_id, isGenerated: !isGenerated } as ILocator);
     },
     toggleLocatorIsChecked(state, { payload }: PayloadAction<string>) {
       const locator = simpleSelectLocatorById(state, payload);
       if (!locator) return;
+      // ToDo: fix legacy naming
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       const { isChecked, element_id } = locator;
       locatorsAdapter.upsertOne(state, { element_id, isChecked: !isChecked } as ILocator);
     },
