@@ -20,7 +20,7 @@ import {
 } from '../types/locator.types';
 
 import { changeLocatorAttributes } from '../locators.slice';
-import { createNewName, isValidLocator, getLocatorValidationStatus, getLocatorValueOnTypeSwitch } from '../utils/utils';
+import { createNewName, getLocatorValidationStatus, getLocatorValueOnTypeSwitch } from '../utils/utils';
 import { createLocatorValidationRules } from '../utils/locatorValidationRules';
 import { createNameValidationRules } from '../utils/nameValidationRules';
 import FormItem from 'antd/es/form/FormItem';
@@ -32,6 +32,7 @@ import { addCustomLocator } from '../reducers/addCustomLocator.thunk';
 import { selectPresentLocatorsByPO } from '../selectors/locatorsByPO.selectors';
 import { LocatorMessageForDuplicate } from './LocatorMessageForDuplicate';
 import { createLocatorTypeOptions } from '../utils/createLocatorTypeOptions';
+import { validateLocator } from '../utils/locatorValidation';
 
 interface Props extends ILocator {
   isModalOpen: boolean;
@@ -112,9 +113,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
     form.resetFields();
     setIsModalOpen(false);
   };
-  // ToDo: fix legacy:
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const _locatorValidationRules: () => Rule[] = () =>
+  const getLocatorValidationRules: () => Rule[] = () =>
     createLocatorValidationRules(
       isCreatingForm,
       form.getFieldValue('locatorType') || defaultLocatorType,
@@ -124,7 +123,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
       jdnHash,
       element_id,
     );
-  const [locatorValidationRules, setLocatorValidationRules] = useState<Rule[]>(_locatorValidationRules());
+  const [locatorValidationRules, setLocatorValidationRules] = useState<Rule[]>(getLocatorValidationRules());
 
   const handleTypeChange = (value: string) => {
     if (isEditedName) return;
@@ -175,11 +174,11 @@ export const LocatorEditDialog: React.FC<Props> = ({
   const handleEditLocator = async () => {
     // ToDo: fix legacy
     // eslint-disable-next-line @typescript-eslint/no-shadow
-    const { name, type, locator, locatorType, annotationType } = await form.validateFields();
+    const { name, type, locator: locatorValue, locatorType, annotationType } = await form.validateFields();
     const updatedLocator = {
       name,
       type,
-      locator,
+      locator: locatorValue,
       annotationType,
       locatorType,
       element_id,
@@ -226,8 +225,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
     ) : null;
 
   const onLocatorTypeChange = async () => {
-    setLocatorValidationRules(_locatorValidationRules());
-
+    setLocatorValidationRules(getLocatorValidationRules());
     const newLocatorType = form.getFieldValue('locatorType');
     const newLocator = form.getFieldValue('locator');
 
@@ -246,7 +244,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
 
   const onFieldsChange = async (changedValues: FieldData[]) => {
     const isLocatorTypeChanged = changedValues.some((value) => value.name.toString().includes('locatorType'));
-    isLocatorTypeChanged && onLocatorTypeChange();
+    if (isLocatorTypeChanged) await onLocatorTypeChange();
     setIsOkButtonDisabled(computeIsOkButtonDisabled());
   };
 
@@ -261,6 +259,29 @@ export const LocatorEditDialog: React.FC<Props> = ({
   const isLocatorDisabled = form.getFieldValue('locator') === CALCULATING;
 
   const locatorTypeOptions = createLocatorTypeOptions(locator, locators, element_id);
+
+  const handleLocatorDropdownOnChange = async () => {
+    setValidationMessage('');
+
+    try {
+      const locatorTypeFromForm = await form.getFieldValue('locatorType');
+      const locatorValue = await form.getFieldValue('locator');
+
+      const updatedValidationMessage: LocatorValidationErrorType = await validateLocator(
+        locatorValue,
+        locatorTypeFromForm,
+        jdnHash,
+        locators,
+        element_id,
+        isCreatingForm,
+      );
+
+      setValidationMessage(updatedValidationMessage);
+    } catch (error) {
+      const newValidationMessage = error.message;
+      setValidationMessage(newValidationMessage);
+    }
+  };
 
   return (
     <DialogWithForm
@@ -308,7 +329,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
       </Form.Item>
       <FormItem name="locatorType" label="Locator" style={{ marginBottom: '8px' }}>
         <Select
-          disabled={!isValidLocator(validationMessage)}
+          onChange={handleLocatorDropdownOnChange}
           options={locatorTypeOptions}
           popupClassName="custom-divider-for-dropdown"
           virtual={false}
