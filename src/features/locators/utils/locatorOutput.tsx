@@ -37,7 +37,7 @@ export const getLocatorValueByType = (locatorValue: LocatorValue, type: LocatorT
   };
 
   if (locatorValue.attributes.dataAttributes && type.startsWith('data-')) {
-    dataAttribute = `[${type}='${locatorValue.attributes.dataAttributes[type]}']`;
+    dataAttribute = locatorValue.attributes.dataAttributes[type] ?? '';
 
     value[type] = dataAttribute;
   }

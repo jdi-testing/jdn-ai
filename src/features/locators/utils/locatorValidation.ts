@@ -37,12 +37,12 @@ export const validateLocator = async (
   locators: ILocator[],
   element_id: ElementId,
   isCreatingForm?: boolean,
-): Promise<LocatorValidationErrorType | string> => {
+): Promise<LocatorValidationErrorType> => {
   let length;
   let foundHash;
   let validatedElementId: ElementId;
   let validatedJdnHash;
-  let validationMessage = '';
+  let validationMessage: LocatorValidationErrorType = '';
 
   const locatorValue = await evaluateLocator(locatorString, element_id, jdnHash, locatorType);
 
