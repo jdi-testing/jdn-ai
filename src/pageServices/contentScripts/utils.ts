@@ -45,7 +45,9 @@ export const evaluateStandardLocator = ({
 
       foundElements = filteredNodes.childNodes as NodeListOf<Element>;
     } else if (locatorType === LocatorType.className) {
-      const preparedClassName = selector.replaceAll(' ', '.');
+      const classNamesArray = selector.split(/\s+/).filter(Boolean);
+      const preparedClassName = classNamesArray.join('.');
+
       foundElements = document.querySelectorAll(preparedClassName);
     } else if (locatorType.startsWith('data-')) {
       foundElements = document.querySelectorAll(`[${locatorType}="${selector}"]`);
