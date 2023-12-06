@@ -95,7 +95,7 @@ export const getLocatorString = (
   type: ElementLibrary | ElementClass,
   name: string,
 ): string => {
-  const locatorOutput = `'${locator.output}'`;
+  const locatorOutput = `"${locator.output}"`;
 
   return `${annotationType}(${getLocatorPrefix(annotationType, locatorType)}${locatorOutput})\npublic ${type} ${name};`;
 };
@@ -117,7 +117,7 @@ export const renderColorizedJdiString = (
       <br />
       <span className="jdn__locator_item-type">public</span>
       <span>&nbsp;{type}&nbsp;</span>
-      {name}
+      {name};
     </>
   );
 };
