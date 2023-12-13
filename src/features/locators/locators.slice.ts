@@ -70,13 +70,14 @@ const locatorsSlice = createSlice({
 
       const newValue: ILocator = { ...currentLocator, locator: { ...currentLocator.locator }, locatorType, ...rest };
       const isStandardLocator: boolean =
-        locatorType === LocatorType.cssSelector ||
-        locatorType === LocatorType.className ||
-        locatorType === LocatorType.id ||
-        locatorType === LocatorType.linkText ||
-        locatorType === LocatorType.name ||
-        locatorType === LocatorType.tagName ||
-        locatorType.startsWith('data-');
+        [
+          LocatorType.cssSelector,
+          LocatorType.className,
+          LocatorType.id,
+          LocatorType.linkText,
+          LocatorType.name,
+          LocatorType.tagName,
+        ].includes(locatorType) || locatorType.startsWith('data-');
 
       if (locatorType === LocatorType.cssSelector) {
         newValue.locator.cssSelector = locator;
@@ -102,7 +103,6 @@ const locatorsSlice = createSlice({
       if (rest.message === LocatorValidationWarnings.NotFound) {
         newValue.jdnHash = '';
       }
-
       locatorsAdapter.upsertOne(state, newValue);
     },
     changeIdentificationStatus(state, { payload }: PayloadAction<IdentificationStatus>) {
