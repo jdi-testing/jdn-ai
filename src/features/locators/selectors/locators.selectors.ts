@@ -18,7 +18,7 @@ export const selectLocatorById = createSelector(selectById, (_item?: ILocator) =
       ..._item,
       locator: {
         ..._item.locator,
-        output: getLocator(_item.annotationType, _item.locator, _item.locatorType),
+        output: getLocator(_item.locator, _item.locatorType),
         taskStatus: getTaskStatus(_item.locator),
       },
     };
@@ -32,7 +32,7 @@ export const selectLocators = createSelector(selectAll, (items: ILocator[]) =>
       ..._item,
       locator: {
         ..._item.locator,
-        output: getLocator(_item.annotationType, _item.locator, _item.locatorType),
+        output: getLocator(_item.locator, _item.locatorType),
         taskStatus: getTaskStatus(_item.locator),
       },
     };

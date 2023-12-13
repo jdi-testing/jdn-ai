@@ -33,21 +33,21 @@ export const selectPresentLocatorsByPO = createSelector(
   (locators, pageObject) => {
     const locByPageObj = pageObject?.locators || [];
     return locators
-      .filter((loc) => locByPageObj.includes(loc.element_id))
-      .map((loc) => {
-        const annotationType = loc.annotationType || pageObject?.annotationType;
-        const locatorType = loc.locatorType || pageObject?.locatorType || LocatorType.xPath;
+      .filter((locator) => locByPageObj.includes(locator.element_id))
+      .map((locator) => {
+        const annotationType = locator.annotationType || pageObject?.annotationType;
+        const locatorType = locator.locatorType || pageObject?.locatorType || LocatorType.xPath;
         // ToDo: isDefaultLocatorType ???
-        const isDefaultLocatorType = () => !loc.locatorType && pageObject?.locatorType === LocatorType.cssSelector;
+        const isDefaultLocatorType = () => !locator.locatorType && pageObject?.locatorType === LocatorType.cssSelector;
 
         return {
-          ...loc,
+          ...locator,
           ...(annotationType && { annotationType }),
           ...(locatorType && { locatorType }),
           ...(isDefaultLocatorType() && {
             locator: {
-              ...loc.locator,
-              output: getLocator(loc.annotationType, loc.locator, pageObject?.locatorType),
+              ...locator.locator,
+              output: getLocator(locator.locator, pageObject?.locatorType),
             },
           }),
         };

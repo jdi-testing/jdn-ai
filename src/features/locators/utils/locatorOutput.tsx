@@ -7,17 +7,26 @@ import { camelCase } from 'lodash';
 
 const getLocatorAnnotationStringByType = (value: string, locatorType: LocatorType, annotationType: AnnotationType) => {
   if (annotationType === AnnotationType.FindBy) return value;
+  const isDataAttributes = locatorType.startsWith('data-');
+
   // else return annotation string for UI Annotation Type:
   const annotations = {
-    'CSS Selector': value,
     xPath: value,
+    'CSS Selector': value,
     id: `#${value}`,
-    name: `[name='${value}']`,
+    name: `[name="${value}"]`,
     tagName: value,
-    className: `.${value}`,
+    className: value
+      .split(/\s+/)
+      .map((className) => `.${className}`)
+      .join(''),
     linkText: value,
-    dataAttributes: value,
+    dataAttributes: `[${locatorType}='${value}']`,
   };
+
+  if (isDataAttributes) {
+    return annotations.dataAttributes;
+  }
 
   return annotations[locatorType];
 };
@@ -50,23 +59,14 @@ export const getLocatorValueByType = (locatorValue: LocatorValue, type: LocatorT
   }
 };
 
-export const getLocator = (
-  annotationType: AnnotationType,
-  locatorValue: LocatorValue,
-  locatorType: LocatorType = LocatorType.xPath,
-) => {
-  const preparedLocatorType = locatorType.startsWith('data-') ? LocatorType.dataAttributes : locatorType;
-  const annotationString: string = getLocatorAnnotationStringByType(
-    getLocatorValueByType(locatorValue, locatorType),
-    preparedLocatorType,
-    annotationType,
-  );
+export const getLocator = (locatorValue: LocatorValue, locatorType: LocatorType = LocatorType.xPath) => {
+  const locatorValueByType = getLocatorValueByType(locatorValue, locatorType);
 
   if (locatorType === LocatorType.cssSelector) {
-    return annotationString || CALCULATING;
+    return locatorValueByType || CALCULATING;
   }
 
-  return annotationString;
+  return locatorValueByType;
 };
 
 export const getLocatorPrefix = (annotationType: AnnotationType, locatorType: LocatorType): string => {
@@ -113,7 +113,12 @@ export const renderColorizedJdiString = (
       <span>
         {annotationType}({getLocatorPrefix(annotationType, locatorType)}
       </span>
-      <span className="jdn__locator__output-string">{`"${locatorOutput}"`}</span>)
+      <span className="jdn__locator__output-string">{`"${getLocatorAnnotationStringByType(
+        locatorOutput,
+        locatorType,
+        annotationType,
+      )}"`}</span>
+      )
       <br />
       <span className="jdn__locator_item-type">public</span>
       <span>&nbsp;{type}&nbsp;</span>
@@ -121,9 +126,10 @@ export const renderColorizedJdiString = (
     </>
   );
 };
-
-export const getLocatorWithJDIAnnotation = (locator: string): string => `${AnnotationType.UI}("${locator}")`;
-
+// used in the coverage panel in the Copy option of the Context Menu:
+export const getLocatorWithJDIAnnotation = (locator: string, locatorType: LocatorType): string =>
+  `${AnnotationType.UI}("${getLocatorAnnotationStringByType(locator, locatorType, AnnotationType.UI)}")`;
+// used in the coverage panel in the Copy option of the Context Menu:
 export const getLocatorWithSelenium = (locator: string, option: string): string =>
   `${AnnotationType.FindBy}(${option} = "${locator}")`;
 

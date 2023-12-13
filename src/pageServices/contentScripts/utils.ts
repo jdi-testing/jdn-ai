@@ -56,8 +56,8 @@ export const evaluateStandardLocator = ({
     }
 
     const length = foundElements.length;
-    const foundHash = foundElements && foundElements[0].getAttribute('jdn-hash');
-    const foundElementText = foundElements && foundElements[0].textContent;
+    const foundHash = foundElements[0] && foundElements[0].getAttribute('jdn-hash');
+    const foundElementText = foundElements[0] && foundElements[0].textContent;
     return JSON.stringify({ length, foundHash, elementId, foundElementText, originJdnHash });
   } catch (error) {
     console.error('error: ', error);
