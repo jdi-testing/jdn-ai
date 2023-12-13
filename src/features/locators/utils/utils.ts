@@ -41,6 +41,26 @@ export const evaluateStandardLocator = (
   originJdnHash?: string,
 ) => sendMessage.evaluateStandardLocator({ selector, locatorType, element_id, originJdnHash });
 
+const prepareLocatorStringForEvaluation = (type: LocatorType, string: string): string => {
+  if (type === LocatorType.id) return `#${string}`;
+  if (type === LocatorType.className) return `.${string}`;
+  if (type === LocatorType.name) return `[name="${string}"]`;
+  return string;
+};
+
+export const evaluateLocator = async (
+  locatorString: string,
+  locatorType: LocatorType,
+  elementId: ElementId,
+  jdnHash?: string,
+) => {
+  if (locatorType === LocatorType.xPath) return evaluateXpath(locatorString, elementId, jdnHash);
+  else {
+    const preparedValue = prepareLocatorStringForEvaluation(locatorType, locatorString);
+    return evaluateStandardLocator(preparedValue, locatorType, elementId, jdnHash);
+  }
+};
+
 export const generateSelectorByHash = (element_id: ElementId, jdnHash: string) =>
   sendMessage.generateSelectorByHash({ element_id, jdnHash });
 
@@ -86,6 +106,7 @@ export const setIndents = (ref: React.RefObject<HTMLDivElement>, depth: number) 
   }
 };
 
+// used in the coverage panel in the Copy option of the Context Menu:
 export const copyLocator =
   (framework: FrameworkType, locatorsForCopy: ILocator[], option?: LocatorOption) => (): void => {
     const isVividusFramework = framework === FrameworkType.Vividus;
@@ -98,7 +119,9 @@ export const copyLocator =
         value = locatorsForCopy.map(({ locator }) => getLocatorWithSelenium(locator.xPath ?? '', 'xpath'));
         break;
       case LocatorOption.XpathAndJDI:
-        value = locatorsForCopy.map(({ locator }) => getLocatorWithJDIAnnotation(locator.xPath ?? ''));
+        value = locatorsForCopy.map(({ locator }) =>
+          getLocatorWithJDIAnnotation(locator.xPath ?? '', LocatorType.xPath),
+        );
         break;
       case LocatorOption.CSSSelector:
         value = locatorsForCopy.map(({ locator }) => `"${locator.cssSelector}"`);
@@ -107,7 +130,9 @@ export const copyLocator =
         value = locatorsForCopy.map(({ locator }) => getLocatorWithSelenium(locator.cssSelector ?? '', 'css'));
         break;
       case LocatorOption.CSSAndJDI:
-        value = locatorsForCopy.map(({ locator }) => getLocatorWithJDIAnnotation(locator.cssSelector ?? ''));
+        value = locatorsForCopy.map(({ locator }) =>
+          getLocatorWithJDIAnnotation(locator.cssSelector ?? '', LocatorType.cssSelector),
+        );
         break;
       default:
         value = locatorsForCopy.map((element) => {
@@ -184,7 +209,11 @@ export const getLocatorValueOnTypeSwitch = async (
       ({ cssSelector: newLocatorValue } = await generateSelectorByHash(element_id, foundHash));
     } else {
       if (newLocatorType === LocatorType.cssSelector) newLocatorValue = locatorValue.cssSelector;
-      newLocatorValue = getLocatorValueByType(locatorValue, newLocatorType);
+      try {
+        newLocatorValue = getLocatorValueByType(locatorValue, newLocatorType);
+      } catch (error) {
+        console.log('error: ', error);
+      }
     }
   } else {
     if (isLocatorLeadsToNewElement || !locatorValue.xPath) {

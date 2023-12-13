@@ -54,18 +54,6 @@ export interface LocatorsState {
 
 export type ElementId = string;
 
-export interface LocatorValue {
-  fullXpath?: string;
-  xPath: string | null;
-  attributes: ElementAttributes;
-  cssSelector: string | null;
-  cssSelectorStatus?: LocatorTaskStatus; // status of cssSelector calculation
-  xPathStatus?: LocatorTaskStatus; // status of xPath calculation
-  taskStatus?: LocatorTaskStatus; // status of both calculations
-  errorMessage?: string; // comes during the locator generation
-  output?: string;
-}
-
 export enum LocatorValidationErrors {
   DuplicatedName = 'This name already exists in the page object.',
   DuplicatedLocator = 'The locator for this element already exists.',
@@ -81,6 +69,18 @@ export enum LocatorValidationWarnings {
 
 export type LocatorValidationErrorType = LocatorValidationErrors | LocatorValidationWarnings | '';
 export type JDNHash = string;
+
+export interface LocatorValue {
+  fullXpath?: string;
+  xPath: string | null;
+  attributes: ElementAttributes;
+  cssSelector: string | null;
+  cssSelectorStatus?: LocatorTaskStatus; // status of cssSelector calculation
+  xPathStatus?: LocatorTaskStatus; // status of xPath calculation
+  taskStatus?: LocatorTaskStatus; // status of both calculations
+  errorMessage?: string; // comes during the locator generation
+  output?: string;
+}
 
 export interface ILocator extends PredictedEntity {
   children?: ElementId[];

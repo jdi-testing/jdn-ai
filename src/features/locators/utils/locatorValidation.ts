@@ -8,27 +8,8 @@ import {
   JDNHash,
   ElementId,
 } from '../types/locator.types';
-import { checkDuplicates, evaluateStandardLocator, evaluateXpath } from './utils';
+import { checkDuplicates, evaluateLocator } from './utils';
 
-const prepareLocatorStringForEvaluation = (type: LocatorType, string: string): string => {
-  if (type === LocatorType.id) return `#${string}`;
-  if (type === LocatorType.className) return `.${string}`;
-  if (type === LocatorType.name) return `[name="${string}"]`;
-  return string;
-};
-
-const evaluateLocator = async (
-  locatorString: string,
-  elementId: ElementId,
-  jdnHash: string,
-  locatorType: LocatorType,
-) => {
-  if (locatorType === LocatorType.xPath) return evaluateXpath(locatorString, elementId, jdnHash);
-  else {
-    const preparedValue = prepareLocatorStringForEvaluation(locatorType, locatorString);
-    return evaluateStandardLocator(preparedValue, locatorType, elementId, jdnHash);
-  }
-};
 // ToDo: logic refactoring needed
 export const validateLocator = async (
   locatorString: string,
@@ -44,7 +25,7 @@ export const validateLocator = async (
   let validatedJdnHash;
   let validationMessage: LocatorValidationErrorType = '';
 
-  const locatorValue = await evaluateLocator(locatorString, element_id, jdnHash, locatorType);
+  const locatorValue = await evaluateLocator(locatorString, locatorType, element_id, jdnHash);
 
   if (locatorValue === LocatorValidationWarnings.NotFound || !locatorValue) {
     validationMessage = LocatorValidationWarnings.NotFound; //validationStatus: WARNING

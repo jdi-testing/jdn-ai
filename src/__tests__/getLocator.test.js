@@ -35,10 +35,10 @@ const data = [
 describe('locator presentation by getLocator()', () => {
   data.forEach((_data) => {
     test(`converts ${JSON.stringify(_data.input, LocatorType.xPath)} to ${_data.xpathOutput}`, () => {
-      expect(getLocator(AnnotationType.UI, _data.input)).toBe(_data.xpathOutput);
+      expect(getLocator(_data.input)).toBe(_data.xpathOutput);
     });
     test(`converts ${JSON.stringify(_data.input, LocatorType.cssSelector)} to ${_data.cssOutput}`, () => {
-      expect(getLocator(AnnotationType.UI, _data.input, LocatorType.cssSelector)).toBe(_data.cssOutput);
+      expect(getLocator(_data.input, LocatorType.cssSelector)).toBe(_data.cssOutput);
     });
   });
 });
