@@ -3,25 +3,27 @@ import { ILocator, LocatorsState, ValidationStatus } from '../types/locator.type
 import { generateId, getElementFullXpath } from '../../../common/utils/helpers';
 import { addLocatorToPageObj } from '../../pageObjects/pageObject.slice';
 import { addLocators, setScrollToLocator, setActiveSingle } from '../locators.slice';
-import {
-  getLocatorValidationStatus,
-  evaluateXpath,
-  generateSelectorByHash,
-  evaluateStandardLocator,
-} from '../utils/utils';
-import { PageObjectId } from '../../pageObjects/types/pageObjectSlice.types';
+import { getLocatorValidationStatus, evaluateXpath, generateSelectorByHash, evaluateLocator } from '../utils/utils';
 import { sendMessage } from '../../../pageServices/connector';
 import { locatorsAdapter } from '../selectors/locators.selectors';
 import { LocatorType } from '../../../common/types/common';
 
 export const addCustomLocator = createAsyncThunk(
   'locators/addCustomLocator',
-  async (payload: { newLocator: ILocator; pageObjectId: PageObjectId }, thunkAPI) => {
-    let { newLocator } = payload;
-    const { pageObjectId } = payload;
-    const { message, locator, locatorType } = newLocator;
+  async (payload: { newLocatorData: ILocator & { locatorFormValue: string } }, thunkAPI) => {
+    const { newLocatorData } = payload;
+    const { message, locator, locatorType, pageObj: pageObjectId, locatorFormValue: locatorValue } = newLocatorData;
 
-    const isCSSLocator = locatorType === LocatorType.cssSelector;
+    const isXPathLocator = locatorType === LocatorType.xPath;
+    const isStandardLocator: boolean =
+      [
+        LocatorType.cssSelector,
+        LocatorType.className,
+        LocatorType.id,
+        LocatorType.linkText,
+        LocatorType.name,
+        LocatorType.tagName,
+      ].includes(locatorType) || locatorType.startsWith('data-');
 
     let foundHash;
     let foundElementText;
@@ -31,21 +33,14 @@ export const addCustomLocator = createAsyncThunk(
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const element_id = `${generateId()}_${pageObjectId}`;
 
-    newLocator = {
-      ...newLocator,
-      element_id,
-    };
-
     if (getLocatorValidationStatus(message) === ValidationStatus.SUCCESS) {
       try {
-        if (isCSSLocator && locator.cssSelector) {
-          ({ foundHash, foundElementText } = JSON.parse(
-            await evaluateStandardLocator(locator.cssSelector, LocatorType.cssSelector, element_id),
-          ));
-        } else {
-          if (locator.xPath) {
-            ({ foundHash, foundElementText } = JSON.parse(await evaluateXpath(locator.xPath, element_id)));
-          }
+        if ((isXPathLocator && locator.xPath) || (isStandardLocator && locatorValue)) {
+          const locatorData = await (isXPathLocator && locator.xPath
+            ? evaluateXpath(locator.xPath, element_id)
+            : evaluateLocator(locatorValue, locatorType, element_id));
+
+          ({ foundHash, foundElementText } = JSON.parse(locatorData));
         }
 
         if (!foundHash) {
@@ -53,8 +48,8 @@ export const addCustomLocator = createAsyncThunk(
           await sendMessage
             .assignJdnHash({
               jdnHash: foundHash,
-              ...{ locator: isCSSLocator ? locator.cssSelector ?? '' : locator.xPath ?? '' },
-              isCSSLocator,
+              ...{ locator: isStandardLocator ? locatorValue : locator.xPath ?? '' },
+              isCSSLocator: isStandardLocator,
             })
             .then((res) => {
               if (res === 'success') return res;
@@ -65,23 +60,28 @@ export const addCustomLocator = createAsyncThunk(
             });
         }
 
-        isCSSLocator
-          ? (fullXpath = await getElementFullXpath(foundHash))
-          : ({ cssSelector } = await generateSelectorByHash(element_id, foundHash));
+        if (isXPathLocator) {
+          ({ cssSelector } = await generateSelectorByHash(element_id, foundHash));
+        }
 
-        newLocator = {
-          ...newLocator,
-          locator: {
-            ...newLocator.locator,
-            ...(isCSSLocator ? { xPath: fullXpath } : { cssSelector }),
-          },
-          elemText: foundElementText || '',
-          jdnHash: foundHash,
-        };
+        if (isStandardLocator) {
+          fullXpath = await getElementFullXpath(foundHash);
+        }
       } catch (err) {
         console.warn(err);
       }
     }
+
+    const newLocator: ILocator = {
+      ...newLocatorData,
+      element_id,
+      locator: {
+        ...newLocatorData.locator,
+        ...(isStandardLocator ? { xPath: fullXpath } : { cssSelector }),
+      },
+      elemText: foundElementText || '',
+      jdnHash: foundHash,
+    };
 
     const dispatch = thunkAPI.dispatch;
     dispatch(addLocators([newLocator]));

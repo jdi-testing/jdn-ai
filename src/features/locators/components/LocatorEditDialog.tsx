@@ -142,32 +142,32 @@ export const LocatorEditDialog: React.FC<Props> = ({
   };
 
   const handleCreateCustomLocator = async () => {
-    let newLocator: ILocator = {
-      ...newLocatorStub,
-      pageObj: pageObjectId,
-      isCustomName: isEditedName,
-    };
-
     const isLocatorFieldTouched = form.isFieldTouched('locator');
     // in case if user didn't touch locator field to avoid forceUpdate
     const locatorMessage = isLocatorFieldTouched ? validationMessage : LocatorValidationWarnings.NotFound;
-    // ToDo: fix legacy:
-    // eslint-disable-next-line @typescript-eslint/no-shadow
-    const { name, type, locator, locatorType, annotationType } = await form.validateFields();
-    const isCSSLocator = locatorType === LocatorType.cssSelector;
 
-    newLocator = {
-      ...newLocator,
-      locator: { ...newLocator.locator, ...{ [isCSSLocator ? 'cssSelector' : 'xPath']: locator } },
+    const {
+      name: locatorFormName,
+      type: locatorFormElementClass,
+      locator: locatorFormValue,
+      locatorType: locatorFormType,
+      annotationType: locatorFormAnnotationType,
+    } = await form.validateFields();
+
+    const newLocatorData: ILocator & { locatorFormValue: string } = {
+      ...newLocatorStub,
+      pageObj: pageObjectId,
+      isCustomName: isEditedName,
       predicted_label: type.toLowerCase(),
-      annotationType,
-      locatorType,
+      annotationType: locatorFormAnnotationType,
+      locatorType: locatorFormType,
       message: locatorMessage,
-      name,
-      type,
+      name: locatorFormName,
+      type: locatorFormElementClass,
+      locatorFormValue,
     };
 
-    dispatch(addCustomLocator({ newLocator, pageObjectId }));
+    await dispatch(addCustomLocator({ newLocatorData }));
     closeDialog();
   };
 
@@ -190,7 +190,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
 
     // we need this check for the case when user edits custom invalid locator, that doesn't have jdnHash
     if ((!validationMessage.length && !jdnHash) || validationMessage === LocatorValidationWarnings.NewElement) {
-      dispatch(changeLocatorElement(updatedLocator));
+      await dispatch(changeLocatorElement(updatedLocator));
     } else {
       dispatch(changeLocatorAttributes(updatedLocator));
     }
