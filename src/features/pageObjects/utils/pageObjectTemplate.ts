@@ -2,7 +2,11 @@ import { ElementLibrary } from '../../locators/types/generationClasses.types';
 import { camelCase, upperFirst } from 'lodash';
 import transliterate from '@sindresorhus/transliterate';
 import { ILocator } from '../../locators/types/locator.types';
-import { getLocatorPrefix, getLocatorTemplateWithVividus } from '../../locators/utils/locatorOutput';
+import {
+  getLocatorPrefix,
+  getLocatorTemplateWithVividus,
+  getLocatorValueByType,
+} from '../../locators/utils/locatorOutput';
 import { AnnotationType, LocatorType } from '../../../common/types/common';
 import { hasAnnotationType } from './hasAnnotationType';
 import { PageObject } from '../types/pageObjectSlice.types';
@@ -26,11 +30,13 @@ export const getPageObjectTemplateForVividus = (
   const { name, pathname, locatorType } = pageObject;
   let pageCode = `variables.${name}.url=${pathname}\n`;
 
-  locators.forEach((it) => {
-    const currentLocatorType = it.locatorType || locatorType || LocatorType.xPath;
-    const locatorTypeProperty = camelCase(currentLocatorType);
-    // @ts-ignore
-    pageCode += `${getLocatorTemplateWithVividus(name, locatorTypeProperty, it)}(${it.locator[locatorTypeProperty]})\n`;
+  locators.forEach((locator) => {
+    const currentLocatorType = locator.locatorType || locatorType || LocatorType.xPath;
+
+    pageCode += `${getLocatorTemplateWithVividus(name, currentLocatorType, locator)}(${getLocatorValueByType(
+      locator.locatorValue,
+      currentLocatorType,
+    )})\n`;
   });
 
   return { pageCode, title: name };
@@ -42,14 +48,14 @@ export const getPageObjectTemplateForJdi = (
 ): { pageCode: string; title: string } => {
   const { name: className, library } = pageObject;
 
-  const locatorsCode = locators.map((loc) => {
-    const locatorEscaped = loc.locator.output?.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+  const locatorsCode = locators.map((locator) => {
+    const locatorEscaped = locator.locatorValue.output?.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
     const { locatorType } = pageObject;
-    const currentLocatorType = loc.locatorType || locatorType || LocatorType.xPath;
-    return `    ${loc.annotationType}(${getLocatorPrefix(
-      loc.annotationType,
+    const currentLocatorType = locator.locatorType || locatorType || LocatorType.xPath;
+    return `    ${locator.annotationType}(${getLocatorPrefix(
+      locator.annotationType,
       currentLocatorType,
-    )}"${locatorEscaped}")\n    public ${loc.type} ${loc.name};`;
+    )}"${locatorEscaped}")\n    public ${locator.type} ${locator.name};`;
   });
 
   const hasFindByAnnotationType: boolean = hasAnnotationType(locators, AnnotationType.FindBy);
