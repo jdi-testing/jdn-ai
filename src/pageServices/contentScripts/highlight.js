@@ -108,7 +108,7 @@ export const highlightOnPage = () => {
         div.setAttribute('jdn-status', LocatorElementStatus.DELETED);
       }
     } else {
-      div.setAttribute('jdn-status', element.locator.taskStatus);
+      div.setAttribute('jdn-status', element.locatorValue.taskStatus);
       findAndHighlight();
     }
     toggleElement({ element, skipScroll: true });
@@ -136,17 +136,17 @@ export const highlightOnPage = () => {
 
   const updateTooltipXpath = (element) => {
     if (
-      element.locator.taskStatus === LocatorTaskStatus.SUCCESS &&
+      element.locatorValue.taskStatus === LocatorTaskStatus.SUCCESS &&
       tooltip.getAttribute('jdn-element-hash') === element.element_id
     ) {
-      tooltip.querySelector('.jdn-tooltip-xpath').innerHTML = element.locator.xPath;
+      tooltip.querySelector('.jdn-tooltip-xpath').innerHTML = element.locatorValue.xPath;
     }
   };
 
   const changeGenerationStatus = (element) => {
     const div = updateElement(element);
     if (!div) return;
-    div.setAttribute('jdn-status', element.locator.taskStatus);
+    div.setAttribute('jdn-status', element.locatorValue.taskStatus);
     updateTooltipXpath(element);
   };
 
@@ -218,8 +218,12 @@ export const highlightOnPage = () => {
       return `
       <div class="jdn-tooltip-paragraph"><b>Name:</b> ${el.name}</div>
       <div class="jdn-tooltip-paragraph"><b>Type:</b> ${el.type}</div>
-      <div class="jdn-tooltip-paragraph"><b>xPath:</b> <span class="jdn-tooltip-xpath">${el.locator.xPath}</span></div>
-      <div class="jdn-tooltip-paragraph"><b>CSS selector:</b> ${el.locator.cssSelector ?? ADD_ELEMENT_TO_PO}</div>`;
+      <div class="jdn-tooltip-paragraph"><b>xPath:</b> <span class="jdn-tooltip-xpath">${
+        el.locatorValue.xPath
+      }</span></div>
+      <div class="jdn-tooltip-paragraph"><b>CSS selector:</b> ${
+        el.locatorValue.cssSelector ?? ADD_ELEMENT_TO_PO
+      }</div>`;
     };
 
     const showTooltip = (event) => {
@@ -236,7 +240,7 @@ export const highlightOnPage = () => {
     div.id = jdnHash;
     div.className = getClassName(predictedElement);
     div.setAttribute('jdn-highlight', true);
-    div.setAttribute('jdn-status', predictedElement.locator.taskStatus || LocatorTaskStatus.STARTED);
+    div.setAttribute('jdn-status', predictedElement.locatorValue.taskStatus || LocatorTaskStatus.STARTED);
     div.addEventListener('mouseover', () => {
       tooltipTimer = setTimeout(() => {
         showTooltip(coordinates);
@@ -282,11 +286,11 @@ export const highlightOnPage = () => {
     if (param?.filter) classFilter = param.filter;
 
     nodes = [];
-    predictedElements.forEach(({ deleted, type, jdnHash, locator }) => {
+    predictedElements.forEach(({ deleted, type, jdnHash, locatorValue }) => {
       if (deleted || isFilteredOut(type)) return;
       let node = findByHash(jdnHash);
       if (!node) {
-        const isHashAssigned = assignJdnHash({ locator: locator.xPath, jdnHash }) === 'success';
+        const isHashAssigned = assignJdnHash({ locatorValue: locatorValue.xPath, jdnHash }) === 'success';
         if (isHashAssigned) node = findByHash(jdnHash);
       }
       if (!node) return; // for now we don't know cases that would lead to this

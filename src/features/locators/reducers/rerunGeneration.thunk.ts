@@ -15,7 +15,7 @@ export const rerunGeneration = createAsyncThunk('locators/rerunGeneration', asyn
     locatorValue: { xPath, taskStatus },
   } = meta.generationData[0];
   if (meta.generationData.length === 1 && taskStatus === LocatorTaskStatus.FAILURE) {
-    await sendMessage.assignJdnHash({ jdnHash, locator: xPath ?? '' });
+    await sendMessage.assignJdnHash({ jdnHash, locatorValue: xPath ?? '' });
   }
   return thunkAPI.dispatch(
     runLocatorsGeneration({ locators: meta.generationData, maxGenerationTime: meta.maxGenerationTime }),

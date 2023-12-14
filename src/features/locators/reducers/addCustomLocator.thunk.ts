@@ -48,7 +48,7 @@ export const addCustomLocator = createAsyncThunk(
           await sendMessage
             .assignJdnHash({
               jdnHash: foundHash,
-              ...{ locator: isStandardLocator ? locatorFormValue : locatorValue.xPath ?? '' },
+              ...{ locatorValue: isStandardLocator ? locatorFormValue : locatorValue.xPath ?? '' },
               isCSSLocator: isStandardLocator,
             })
             .then((res) => {
