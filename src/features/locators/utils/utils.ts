@@ -108,7 +108,8 @@ export const setIndents = (ref: React.RefObject<HTMLDivElement>, depth: number) 
 
 // used in the coverage panel in the Copy option of the Context Menu:
 export const copyLocator =
-  (framework: FrameworkType, locatorsForCopy: ILocator[], option?: LocatorOption) => (): void => {
+  (framework: FrameworkType, locatorsForCopy: ILocator[], pageObjectName: string, option?: LocatorOption) =>
+  (): void => {
     const isVividusFramework = framework === FrameworkType.Vividus;
     let value: string[];
     switch (option) {
@@ -142,7 +143,7 @@ export const copyLocator =
           const locatorType = element?.locatorType || LocatorType.xPath;
 
           return isVividusFramework
-            ? getFullLocatorVividusString(name, locatorType, element)
+            ? getFullLocatorVividusString(pageObjectName, locatorType, element)
             : getLocatorString(annotationType, locatorType, locatorValue, type, name);
         });
     }
@@ -150,10 +151,10 @@ export const copyLocator =
     copyLocatorsToClipboard(value, isVividusFramework);
   };
 
-export const getCopyOptions = (framework: FrameworkType, selectedLocators: ILocator[]) => {
+export const getCopyOptions = (framework: FrameworkType, selectedLocators: ILocator[], pageObjectName: string) => {
   return Object.values(LocatorOption).reduce(
     (options, option) => {
-      options[option as LocatorOption] = copyLocator(framework, selectedLocators, option);
+      options[option as LocatorOption] = copyLocator(framework, selectedLocators, pageObjectName, option);
       return options;
     },
     {} as Record<LocatorOption, () => void>,

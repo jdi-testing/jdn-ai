@@ -216,7 +216,7 @@ export const Locator: FC<Props> = ({ element, currentPage, searchState, depth, s
               </Text>
               {searchState !== SearchState.Hidden ? (
                 <div onContextMenu={handleLocatorRightClick} className="jdn__xpath_buttons">
-                  <LocatorCopyButton {...{ framework, element }} />
+                  <LocatorCopyButton {...{ framework, element, pageObjectName }} />
                   <OnboardingTooltip>
                     <LocatorMenu {...{ setIsEditModalOpen, trigger: ['click', 'contextMenu'] }}>
                       <Button

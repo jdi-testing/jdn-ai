@@ -47,7 +47,8 @@ export const updateMessageHandler = (
     [ScriptMsg.CopyLocator]: ({ value, option }) => {
       const pageObject = selectCurrentPageObject(state)!;
       const framework = pageObject?.framework || FrameworkType.JdiLight;
-      copyLocator(framework, value, option)();
+      const pageObjectName = pageObject.name;
+      copyLocator(framework, value, pageObjectName, option)();
     },
     [ScriptMsg.ElementSelect]: (payload) => {
       dispatch(elementSetActive(payload.element_id));

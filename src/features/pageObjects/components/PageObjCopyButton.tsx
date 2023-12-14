@@ -10,19 +10,20 @@ import { copyLocatorsToClipboard } from '../../locators/utils/copyLocatorToClipb
 interface Props {
   framework: FrameworkType;
   elements: ILocator[];
+  pageObjectName: string;
 }
 
-export const PageObjCopyButton: FC<Props> = ({ framework, elements }) => {
+export const PageObjCopyButton: FC<Props> = ({ framework, elements, pageObjectName }) => {
   const [copyTooltipTitle, setTooltipTitle] = useState(CopyTitle.Copy);
   const isVividusFramework = framework === FrameworkType.Vividus;
 
-  const getPageObjectForCopying = (locators: ILocator[]) => {
+  const getPageObjectForCopying = (locators: ILocator[], pageObjectNameForCopying: string) => {
     return locators.map((element) => {
       const { annotationType, locatorValue, type, name } = element;
       const locatorType = element?.locatorType || LocatorType.xPath;
 
       return isVividusFramework
-        ? getFullLocatorVividusString(name, locatorType, element)
+        ? getFullLocatorVividusString(pageObjectNameForCopying, locatorType, element)
         : getLocatorString(annotationType, locatorType, locatorValue, type, name);
     });
   };
@@ -30,7 +31,7 @@ export const PageObjCopyButton: FC<Props> = ({ framework, elements }) => {
   const handleCopy = (e: MouseEvent<HTMLElement>) => {
     e.stopPropagation();
 
-    const pageObject = getPageObjectForCopying(elements);
+    const pageObject = getPageObjectForCopying(elements, pageObjectName);
     copyLocatorsToClipboard(pageObject, isVividusFramework);
 
     setTooltipTitle(CopyTitle.Copied);
