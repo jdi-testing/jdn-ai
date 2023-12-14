@@ -8,5 +8,5 @@ export const isAutoStartGeneration = (items: any[]) => items.length <= AUTO_GENE
 export const isProgressStatus = (taskStatus?: LocatorTaskStatus) =>
   LocatorTaskStatus.PENDING === taskStatus || taskStatus === LocatorTaskStatus.STARTED;
 
-export const filterInProgress = (elements: ILocator[]) =>
-  elements.filter((el) => isProgressStatus(el.locator.taskStatus) && !el.deleted);
+export const filterInProgress = (locators: ILocator[]) =>
+  locators.filter((locator) => isProgressStatus(locator.locatorValue.taskStatus) && !locator.deleted);

@@ -45,9 +45,9 @@ export const selectPresentLocatorsByPO = createSelector(
           ...(annotationType && { annotationType }),
           ...(locatorType && { locatorType }),
           ...(isDefaultLocatorType() && {
-            locator: {
-              ...locator.locator,
-              output: getLocator(locator.locator, pageObject?.locatorType),
+            locatorValue: {
+              ...locator.locatorValue,
+              output: getLocator(locator.locatorValue, pageObject?.locatorType),
             },
           }),
         };

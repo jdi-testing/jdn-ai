@@ -36,8 +36,10 @@ export const includesSearchSubstr = (strings: Array<string | undefined>, searchS
 };
 
 export const applySearch = (element: ILocator, searchString: string): SearchState => {
-  const { locator, type, name, elemText } = element;
-  if (includesSearchSubstr([locator.output, type as string, name, ...(elemText ? [elemText] : [])], searchString)) {
+  const { locatorValue, type, name, elemText } = element;
+  if (
+    includesSearchSubstr([locatorValue.output, type as string, name, ...(elemText ? [elemText] : [])], searchString)
+  ) {
     return SearchState.None;
   } else return SearchState.Hidden;
 };

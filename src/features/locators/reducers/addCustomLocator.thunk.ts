@@ -12,7 +12,7 @@ export const addCustomLocator = createAsyncThunk(
   'locators/addCustomLocator',
   async (payload: { newLocatorData: ILocator & { locatorFormValue: string } }, thunkAPI) => {
     const { newLocatorData } = payload;
-    const { message, locator, locatorType, pageObj: pageObjectId, locatorFormValue: locatorValue } = newLocatorData;
+    const { message, locatorValue, locatorType, pageObj: pageObjectId, locatorFormValue } = newLocatorData;
 
     const isXPathLocator = locatorType === LocatorType.xPath;
     const isStandardLocator: boolean =
@@ -35,10 +35,10 @@ export const addCustomLocator = createAsyncThunk(
 
     if (getLocatorValidationStatus(message) === ValidationStatus.SUCCESS) {
       try {
-        if ((isXPathLocator && locator.xPath) || (isStandardLocator && locatorValue)) {
-          const locatorData = await (isXPathLocator && locator.xPath
-            ? evaluateXpath(locator.xPath, element_id)
-            : evaluateLocator(locatorValue, locatorType, element_id));
+        if ((isXPathLocator && locatorValue.xPath) || (isStandardLocator && locatorFormValue)) {
+          const locatorData = await (isXPathLocator && locatorValue.xPath
+            ? evaluateXpath(locatorValue.xPath, element_id)
+            : evaluateLocator(locatorFormValue, locatorType, element_id));
 
           ({ foundHash, foundElementText } = JSON.parse(locatorData));
         }
@@ -48,7 +48,7 @@ export const addCustomLocator = createAsyncThunk(
           await sendMessage
             .assignJdnHash({
               jdnHash: foundHash,
-              ...{ locator: isStandardLocator ? locatorValue : locator.xPath ?? '' },
+              ...{ locator: isStandardLocator ? locatorFormValue : locatorValue.xPath ?? '' },
               isCSSLocator: isStandardLocator,
             })
             .then((res) => {
@@ -75,8 +75,8 @@ export const addCustomLocator = createAsyncThunk(
     const newLocator: ILocator = {
       ...newLocatorData,
       element_id,
-      locator: {
-        ...newLocatorData.locator,
+      locatorValue: {
+        ...newLocatorData.locatorValue,
         ...(isStandardLocator ? { xPath: fullXpath } : { cssSelector }),
       },
       elemText: foundElementText || '',

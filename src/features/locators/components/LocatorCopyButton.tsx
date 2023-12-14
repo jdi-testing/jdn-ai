@@ -13,7 +13,7 @@ interface Props {
 
 export const LocatorCopyButton: React.FC<Props> = ({ framework, element }) => {
   const [copyTooltipTitle, setTooltipTitle] = useState(CopyTitle.Copy);
-  const { locator, type, name, annotationType } = element;
+  const { locatorValue, type, name, annotationType } = element;
   const isVividusFramework = framework === FrameworkType.Vividus;
   const locatorType = element?.locatorType || LocatorType.xPath;
 
@@ -22,7 +22,7 @@ export const LocatorCopyButton: React.FC<Props> = ({ framework, element }) => {
 
     const locatorString = isVividusFramework
       ? getFullLocatorVividusString(name, locatorType, element)
-      : getLocatorString(annotationType, locatorType, locator, type, name);
+      : getLocatorString(annotationType, locatorType, locatorValue, type, name);
 
     copyToClipboard(locatorString);
     setTooltipTitle(CopyTitle.Copied);

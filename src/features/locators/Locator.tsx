@@ -59,7 +59,7 @@ export const Locator: FC<Props> = ({ element, currentPage, searchState, depth, s
     element_id,
     type,
     name,
-    locator,
+    locatorValue,
     message: elementMessage,
     deleted,
     active,
@@ -168,7 +168,7 @@ export const Locator: FC<Props> = ({ element, currentPage, searchState, depth, s
       return (
         <>
           <span>{getLocatorTemplateWithVividus(pageObjectName, locatorType, element)}</span>(
-          <span className="jdn__locator__output-string">{locator.output}</span>)
+          <span className="jdn__locator__output-string">{locatorValue.output}</span>)
           <br />
         </>
       );
@@ -178,7 +178,7 @@ export const Locator: FC<Props> = ({ element, currentPage, searchState, depth, s
       <span onClick={handleClick}>
         {isVividusFramework
           ? vividusString()
-          : renderColorizedJdiString(annotationType, locatorType, locator.output ?? '', type, name)}
+          : renderColorizedJdiString(annotationType, locatorType, locatorValue.output ?? '', type, name)}
       </span>
     );
   };
@@ -211,7 +211,7 @@ export const Locator: FC<Props> = ({ element, currentPage, searchState, depth, s
                   searchState === SearchState.Hidden ? ' jdn__xpath_item--disabled' : ''
                 }`}
               >
-                <LocatorIcon {...{ message: elementMessage, locator, deleted, isCustomLocator }} />
+                <LocatorIcon {...{ message: elementMessage, locatorValue, deleted, isCustomLocator }} />
                 {renderColorizedString()}
               </Text>
               {searchState !== SearchState.Hidden ? (

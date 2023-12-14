@@ -47,21 +47,21 @@ export const PageObjMenu: React.FC<Props> = ({ pageObject, elements }) => {
       dispatch(removeLocators(locatorIds));
     };
 
-    const handleDownload = () => {
-      generatePageObject(locatorObjects, pageObject).then(() =>
+    const handleDownload = async () => {
+      await generatePageObject(locatorObjects, pageObject).then(() =>
         dispatch(pushNotification({ action: { type: 'downloadFile' } })),
       );
     };
 
-    const handleDownloadPerfTest = () => {
-      generatePageObjectPerfTest(locatorObjects, pageObject).then(() =>
+    const handleDownloadPerfTest = async () => {
+      await generatePageObjectPerfTest(locatorObjects, pageObject).then(() =>
         dispatch(pushNotification({ action: { type: 'downloadJSFile' } })),
       );
     };
 
-    const handleEdit = () => {
+    const handleEdit = async () => {
       dispatch(setCurrentPageObj(id));
-      dispatch(checkLocatorsValidity()); // create thunk
+      await dispatch(checkLocatorsValidity()); // create thunk
     };
 
     const items = [

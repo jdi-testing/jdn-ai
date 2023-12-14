@@ -22,7 +22,7 @@ export const stopGenerationReducer = (builder: ActionReducerMapBuilder<LocatorsS
     // @ts-ignore
     locatorsAdapter.upsertOne(state, {
       element_id: id,
-      locator: { ...existingLocator.locator, xPathStatus: LocatorTaskStatus.REVOKED },
+      locatorValue: { ...existingLocator.locatorValue, xPathStatus: LocatorTaskStatus.REVOKED },
     });
   })
     .addCase(stopGeneration.rejected, (state, { error }) => {

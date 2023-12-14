@@ -69,10 +69,10 @@ export const updateMessageHandler = (
     },
     [ScriptMsg.RemoveElement]: (payload) => dispatch(toggleDeletedGroup(payload)),
     [ScriptMsg.ResponseCssSelectors]: (payload) => {
-      const locators = payload.map(({ element_id, locator }: ILocator) => {
+      const locators = payload.map(({ element_id, locatorValue }: ILocator) => {
         return {
           element_id,
-          locator: { ...locator, cssSelectorStatus: LocatorTaskStatus.SUCCESS },
+          locatorValue: { ...locatorValue, cssSelectorStatus: LocatorTaskStatus.SUCCESS },
         };
       });
       const pageObject = selectCurrentPageObject(state)!;

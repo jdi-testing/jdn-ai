@@ -9,15 +9,15 @@ import { selectLocatorsByPageObject } from '../selectors/locatorsByPO.selectors'
 export const checkLocatorsValidity = createAsyncThunk('locators/checkLocatorsValidity', async (payload, thunkAPI) => {
   const state = thunkAPI.getState();
 
-  const locators = selectLocatorsByPageObject(state as RootState);
+  const locators: ILocator[] = selectLocatorsByPageObject(state as RootState);
 
   const invalidLocators: Partial<ILocator>[] = [];
 
   for (const locator of locators) {
-    const { jdnHash, element_id, locator: locatorValue, locatorType } = locator;
+    const { jdnHash, element_id, locatorValue, locatorType } = locator;
     try {
       const validation = await validateLocator(
-        locatorValue.output,
+        locatorValue.output ?? '',
         locatorType || LocatorType.xPath,
         jdnHash,
         locators,

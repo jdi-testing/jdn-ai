@@ -18,12 +18,12 @@ export const PageObjCopyButton: FC<Props> = ({ framework, elements }) => {
 
   const getPageObjectForCopying = (locators: ILocator[]) => {
     return locators.map((element) => {
-      const { annotationType, locator, type, name } = element;
+      const { annotationType, locatorValue, type, name } = element;
       const locatorType = element?.locatorType || LocatorType.xPath;
 
       return isVividusFramework
         ? getFullLocatorVividusString(name, locatorType, element)
-        : getLocatorString(annotationType, locatorType, locator, type, name);
+        : getLocatorString(annotationType, locatorType, locatorValue, type, name);
     });
   };
 

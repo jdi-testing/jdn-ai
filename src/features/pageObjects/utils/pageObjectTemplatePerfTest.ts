@@ -5,7 +5,9 @@ export const pageObjectTemplatePerfTest = (
   locators: ILocator[],
   pageObject: PageObject,
 ): { pageCode: string; name: string } => {
-  const locatorsCode = locators.map((loc) => `    this.${loc.name} = new ${loc.type}("${loc.locator.output}", page)`);
+  const locatorsCode = locators.map(
+    (loc) => `    this.${loc.name} = new ${loc.type}("${loc.locatorValue.output}", page)`,
+  );
 
   const pageCode = `const Page = require("../../core/page");
   const TextField = require("../../core/elements/textField");

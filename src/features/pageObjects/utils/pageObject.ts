@@ -126,24 +126,19 @@ export const getPageAttributes = async () => {
   });
 };
 
-export const getPage = async (
-  locators: ILocator[],
-  pageObject: PageObject,
-): Promise<{ pageCode: string; title: string }> => {
+export const getPage = (locators: ILocator[], pageObject: PageObject): { pageCode: string; title: string } => {
   return pageObject.framework === FrameworkType.Vividus
     ? getPageObjectTemplateForVividus(locators, pageObject)
     : getPageObjectTemplateForJdi(locators, pageObject);
 };
 
-export const getPagePerfTest = async (
-  locators: ILocator[],
-  pageObject: PageObject,
-): Promise<{ pageCode: string; name: string }> => {
+export const getPagePerfTest = (locators: ILocator[], pageObject: PageObject): { pageCode: string; name: string } => {
   return pageObjectTemplatePerfTest(locators, pageObject);
 };
 
 export const generatePageObject = async (elements: ILocator[], pageObject: PageObject): Promise<void> => {
-  const page = await getPage(elements, pageObject);
+  const page = getPage(elements, pageObject);
+
   const blob = new Blob([page.pageCode], {
     type: 'text/plain;charset=utf-8',
   });
@@ -151,7 +146,7 @@ export const generatePageObject = async (elements: ILocator[], pageObject: PageO
 };
 
 export const generatePageObjectPerfTest = async (elements: ILocator[], pageObject: PageObject): Promise<void> => {
-  const page = await getPagePerfTest(elements, pageObject);
+  const page = getPagePerfTest(elements, pageObject);
   const blob = new Blob([page.pageCode], {
     type: 'text/plain;charset=utf-8',
   });

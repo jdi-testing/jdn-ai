@@ -113,35 +113,37 @@ export const copyLocator =
     let value: string[];
     switch (option) {
       case LocatorOption.Xpath:
-        value = locatorsForCopy.map(({ locator }) => `"${locator.xPath}"`);
+        value = locatorsForCopy.map(({ locatorValue }) => `"${locatorValue.xPath}"`);
         break;
       case LocatorOption.XpathAndSelenium:
-        value = locatorsForCopy.map(({ locator }) => getLocatorWithSelenium(locator.xPath ?? '', 'xpath'));
+        value = locatorsForCopy.map(({ locatorValue }) => getLocatorWithSelenium(locatorValue.xPath ?? '', 'xpath'));
         break;
       case LocatorOption.XpathAndJDI:
-        value = locatorsForCopy.map(({ locator }) =>
-          getLocatorWithJDIAnnotation(locator.xPath ?? '', LocatorType.xPath),
+        value = locatorsForCopy.map(({ locatorValue }) =>
+          getLocatorWithJDIAnnotation(locatorValue.xPath ?? '', LocatorType.xPath),
         );
         break;
       case LocatorOption.CSSSelector:
-        value = locatorsForCopy.map(({ locator }) => `"${locator.cssSelector}"`);
+        value = locatorsForCopy.map(({ locatorValue }) => `"${locatorValue.cssSelector}"`);
         break;
       case LocatorOption.CSSAndSelenium:
-        value = locatorsForCopy.map(({ locator }) => getLocatorWithSelenium(locator.cssSelector ?? '', 'css'));
+        value = locatorsForCopy.map(({ locatorValue }) =>
+          getLocatorWithSelenium(locatorValue.cssSelector ?? '', 'css'),
+        );
         break;
       case LocatorOption.CSSAndJDI:
-        value = locatorsForCopy.map(({ locator }) =>
-          getLocatorWithJDIAnnotation(locator.cssSelector ?? '', LocatorType.cssSelector),
+        value = locatorsForCopy.map(({ locatorValue }) =>
+          getLocatorWithJDIAnnotation(locatorValue.cssSelector ?? '', LocatorType.cssSelector),
         );
         break;
       default:
         value = locatorsForCopy.map((element) => {
-          const { annotationType, locator, type, name } = element;
+          const { annotationType, locatorValue, type, name } = element;
           const locatorType = element?.locatorType || LocatorType.xPath;
 
           return isVividusFramework
             ? getFullLocatorVividusString(name, locatorType, element)
-            : getLocatorString(annotationType, locatorType, locator, type, name);
+            : getLocatorString(annotationType, locatorType, locatorValue, type, name);
         });
     }
 
@@ -229,8 +231,8 @@ export const getLocatorValueOnTypeSwitch = async (
   return newLocatorValue;
 };
 
-export const getTaskStatus = (locator: LocatorValue) => {
-  const { xPathStatus, cssSelectorStatus } = locator;
+export const getTaskStatus = (locatorValue: LocatorValue) => {
+  const { xPathStatus, cssSelectorStatus } = locatorValue;
   if (!xPathStatus && !cssSelectorStatus) return;
   if (xPathStatus === LocatorTaskStatus.SUCCESS && cssSelectorStatus === LocatorTaskStatus.SUCCESS) {
     return LocatorTaskStatus.SUCCESS;
@@ -248,7 +250,7 @@ export const getTaskStatus = (locator: LocatorValue) => {
   return xPathStatus || cssSelectorStatus;
 };
 
-export const hasAllLocators = ({ locator }: ILocator) =>
-  locator && locator.xPath !== locator.fullXpath && locator.cssSelector;
+export const hasAllLocators = ({ locatorValue }: ILocator) =>
+  locatorValue && locatorValue.xPath !== locatorValue.fullXpath && locatorValue.cssSelector;
 
 export const getNoLocatorsElements = (locators: ILocator[]) => locators.filter((locator) => !hasAllLocators(locator));

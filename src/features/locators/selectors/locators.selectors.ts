@@ -16,10 +16,10 @@ export const selectLocatorById = createSelector(selectById, (_item?: ILocator) =
   if (_item) {
     return {
       ..._item,
-      locator: {
-        ..._item.locator,
-        output: getLocator(_item.locator, _item.locatorType),
-        taskStatus: getTaskStatus(_item.locator),
+      locatorValue: {
+        ..._item.locatorValue,
+        output: getLocator(_item.locatorValue, _item.locatorType),
+        taskStatus: getTaskStatus(_item.locatorValue),
       },
     };
   }
@@ -30,10 +30,10 @@ export const selectLocators = createSelector(selectAll, (items: ILocator[]) =>
   items.map((_item) => {
     return {
       ..._item,
-      locator: {
-        ..._item.locator,
-        output: getLocator(_item.locator, _item.locatorType),
-        taskStatus: getTaskStatus(_item.locator),
+      locatorValue: {
+        ..._item.locatorValue,
+        output: getLocator(_item.locatorValue, _item.locatorType),
+        taskStatus: getTaskStatus(_item.locatorValue),
       },
     };
   }),

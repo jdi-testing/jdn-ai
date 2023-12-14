@@ -12,7 +12,7 @@ interface Meta {
 export const rerunGeneration = createAsyncThunk('locators/rerunGeneration', async (meta: Meta, thunkAPI) => {
   const {
     jdnHash,
-    locator: { xPath, taskStatus },
+    locatorValue: { xPath, taskStatus },
   } = meta.generationData[0];
   if (meta.generationData.length === 1 && taskStatus === LocatorTaskStatus.FAILURE) {
     await sendMessage.assignJdnHash({ jdnHash, locator: xPath ?? '' });

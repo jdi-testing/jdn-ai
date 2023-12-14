@@ -8,12 +8,12 @@ import { getLocatorValidationStatus } from '../utils/utils';
 
 interface Props {
   message: LocatorValidationErrorType;
-  locator: LocatorValue;
+  locatorValue: LocatorValue;
   deleted?: boolean;
   isCustomLocator?: boolean;
 }
 
-export const LocatorIcon: React.FC<Props> = ({ message, locator, deleted }) => {
+export const LocatorIcon: React.FC<Props> = ({ message, locatorValue, deleted }) => {
   const getTooltipText = () => message || 'Edited';
 
   const startedIcon = <Spin size="small" />;
@@ -21,7 +21,7 @@ export const LocatorIcon: React.FC<Props> = ({ message, locator, deleted }) => {
   const deletedIcon = <Trash size={14} color="#9a9da9" className="jdn__itemsList-status" />;
 
   const failureIcon = (
-    <Tooltip title={locator.errorMessage ?? 'Locator generation was failed'}>
+    <Tooltip title={locatorValue.errorMessage ?? 'Locator generation was failed'}>
       <WarningCircle size={14} color="#d81515" className="jdn__itemsList-status" />
     </Tooltip>
   );
@@ -35,7 +35,7 @@ export const LocatorIcon: React.FC<Props> = ({ message, locator, deleted }) => {
   const renderIcon = () => {
     if (deleted) return deletedIcon;
 
-    switch (locator.taskStatus) {
+    switch (locatorValue.taskStatus) {
       case LocatorTaskStatus.SUCCESS: {
         const validationStatus = getLocatorValidationStatus(message);
         return validationStatus === ValidationStatus.WARNING || validationStatus === ValidationStatus.ERROR

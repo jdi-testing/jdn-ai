@@ -91,11 +91,11 @@ export const getLocatorPrefix = (annotationType: AnnotationType, locatorType: Lo
 export const getLocatorString = (
   annotationType: AnnotationType,
   locatorType: LocatorType,
-  locator: LocatorValue,
+  locatorValue: LocatorValue,
   type: ElementLibrary | ElementClass,
   name: string,
 ): string => {
-  const locatorOutput = `"${locator.output}"`;
+  const locatorOutput = `"${locatorValue.output}"`;
 
   return `${annotationType}(${getLocatorPrefix(annotationType, locatorType)}${locatorOutput})\npublic ${type} ${name};`;
 };
@@ -137,4 +137,4 @@ export const getLocatorTemplateWithVividus = (name: string, locatorType: Locator
   `variables.${name}.${locator.type}.${locator.name}=By.${camelCase(locatorType)}`;
 
 export const getFullLocatorVividusString = (name: string, locatorType: LocatorType, locator: ILocator): string =>
-  `${getLocatorTemplateWithVividus(name, locatorType, locator)}(${locator.locator.output})`;
+  `${getLocatorTemplateWithVividus(name, locatorType, locator)}(${locator.locatorValue.output})`;

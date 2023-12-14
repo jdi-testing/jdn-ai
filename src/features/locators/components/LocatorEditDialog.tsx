@@ -66,7 +66,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
   isCustomName = true,
   name,
   type,
-  locator,
+  locatorValue,
   jdnHash,
   message,
   elemId,
@@ -97,7 +97,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
   const initialValues: FormValues = {
     type,
     name: name || '',
-    locator: locator?.output ?? '',
+    locator: locatorValue?.output ?? '',
     locatorType: defaultLocatorType,
     annotationType: defaultAnnotationType,
   };
@@ -178,7 +178,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
     const updatedLocator = {
       name,
       type,
-      locator: locatorValue,
+      locatorValue,
       annotationType,
       locatorType,
       element_id,
@@ -235,7 +235,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
         validationMessage,
         element_id,
         jdnHash,
-        locator,
+        locatorValue,
         form,
       );
       form.setFieldValue('locator', newLocatorValue);
@@ -258,17 +258,17 @@ export const LocatorEditDialog: React.FC<Props> = ({
 
   const isLocatorDisabled = form.getFieldValue('locator') === CALCULATING;
 
-  const locatorTypeOptions = createLocatorTypeOptions(locator, locators, element_id);
+  const locatorTypeOptions = createLocatorTypeOptions(locatorValue, locators, element_id);
 
   const handleLocatorDropdownOnChange = async () => {
     setValidationMessage('');
 
     try {
       const locatorTypeFromForm = await form.getFieldValue('locatorType');
-      const locatorValue = await form.getFieldValue('locator');
+      const locatorValueFromForm = await form.getFieldValue('locator');
 
       const updatedValidationMessage: LocatorValidationErrorType = await validateLocator(
-        locatorValue,
+        locatorValueFromForm,
         locatorTypeFromForm,
         jdnHash,
         locators,
