@@ -91,11 +91,11 @@ export const getLocatorPrefix = (annotationType: AnnotationType, locatorType: Lo
 export const getLocatorString = (
   annotationType: AnnotationType,
   locatorType: LocatorType,
-  locator: LocatorValue,
+  locatorValue: LocatorValue,
   type: ElementLibrary | ElementClass,
   name: string,
 ): string => {
-  const locatorOutput = `"${locator.output}"`;
+  const locatorOutput = `"${locatorValue.output}"`;
 
   return `${annotationType}(${getLocatorPrefix(annotationType, locatorType)}${locatorOutput})\npublic ${type} ${name};`;
 };
@@ -133,8 +133,14 @@ export const getLocatorWithJDIAnnotation = (locator: string, locatorType: Locato
 export const getLocatorWithSelenium = (locator: string, option: string): string =>
   `${AnnotationType.FindBy}(${option} = "${locator}")`;
 
-export const getLocatorTemplateWithVividus = (name: string, locatorType: LocatorType, locator: ILocator): string =>
-  `variables.${name}.${locator.type}.${locator.name}=By.${camelCase(locatorType)}`;
+export const getLocatorTemplateWithVividus = (
+  pageObjectName: string,
+  locatorType: LocatorType,
+  locator: ILocator,
+): string => `variables.${pageObjectName}.${locator.type}.${locator.name}=By.${camelCase(locatorType)}`;
 
-export const getFullLocatorVividusString = (name: string, locatorType: LocatorType, locator: ILocator): string =>
-  `${getLocatorTemplateWithVividus(name, locatorType, locator)}(${locator.locator.output})`;
+export const getFullLocatorVividusString = (
+  pageObjectName: string,
+  locatorType: LocatorType,
+  locator: ILocator,
+): string => `${getLocatorTemplateWithVividus(pageObjectName, locatorType, locator)}(${locator.locatorValue.output})`;

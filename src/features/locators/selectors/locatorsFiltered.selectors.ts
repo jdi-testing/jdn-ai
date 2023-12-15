@@ -41,13 +41,13 @@ export const selectConfirmedLocators = createSelector(selectSortedFilteredLocato
 
 export const selectCalculatedByPageObj = createSelector(selectFilteredLocators, (locators: ILocator[]) =>
   locators.filter(
-    (_loc) => (_loc.locator.taskStatus === LocatorTaskStatus.SUCCESS || _loc.isCustomLocator) && !_loc.deleted,
+    (_loc) => (_loc.locatorValue.taskStatus === LocatorTaskStatus.SUCCESS || _loc.isCustomLocator) && !_loc.deleted,
   ),
 );
 
 export const selectStoppedActiveByPageObject = createSelector(selectFilteredLocators, (elements) =>
   chain(elements)
-    .filter((el) => el.locator.taskStatus === LocatorTaskStatus.REVOKED && !!el.active && !el.deleted)
+    .filter((el) => el.locatorValue.taskStatus === LocatorTaskStatus.REVOKED && !!el.active && !el.deleted)
     .value(),
 );
 
@@ -85,9 +85,9 @@ export const selectWaitingByPageObj = createSelector(selectFilteredLocators, (el
   chain(elements)
     .filter(
       (el) =>
-        (isProgressStatus(el.locator.taskStatus) ||
-          el.locator.taskStatus === LocatorTaskStatus.REVOKED ||
-          el.locator.taskStatus === LocatorTaskStatus.FAILURE) &&
+        (isProgressStatus(el.locatorValue.taskStatus) ||
+          el.locatorValue.taskStatus === LocatorTaskStatus.REVOKED ||
+          el.locatorValue.taskStatus === LocatorTaskStatus.FAILURE) &&
         !el.deleted,
     )
     .value(),
@@ -137,7 +137,7 @@ export const selectInProgressGenerateHashes = createSelector(selectInProgressGen
 );
 
 export const selectFailedByPageObject = createSelector(selectFilteredLocators, (elements) =>
-  elements.filter((element) => element.locator.taskStatus === LocatorTaskStatus.FAILURE),
+  elements.filter((element) => element.locatorValue.taskStatus === LocatorTaskStatus.FAILURE),
 );
 
 export const selectFailedSelectedByPageObject = createSelector(selectFailedByPageObject, (elements) =>

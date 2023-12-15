@@ -10,7 +10,7 @@ export const locatorsTreeMockSearchTypesNames = [
     is_shown: true,
     parent_id: '',
     jdnHash: '7967190244322359771369749968',
-    locator: {
+    locatorValue: {
       xPath: '/html/body/header/div/nav/ul[1]',
       taskStatus: LocatorTaskStatus.SUCCESS,
       errorMessage: '',
@@ -35,7 +35,7 @@ export const locatorsTreeMockSearchTypesNames = [
         is_shown: true,
         parent_id: '4899732051322359779677566872',
         jdnHash: '4829071593322359778594168519',
-        locator: {
+        locatorValue: {
           xPath: '/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[3]/ul/li[3]',
           taskStatus: LocatorTaskStatus.PENDING,
           errorMessage: '',
@@ -60,7 +60,7 @@ export const locatorsTreeMockSearchTypesNames = [
             is_shown: true,
             parent_id: '4829071593322359778594168519',
             jdnHash: '9636042053322359773245578788',
-            locator: {
+            locatorValue: {
               xPath: '/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[5]/ul/li[5]',
               taskStatus: LocatorTaskStatus.PENDING,
               errorMessage: '',
@@ -86,7 +86,7 @@ export const locatorsTreeMockSearchTypesNames = [
             is_shown: true,
             parent_id: '4829071593322359778594168519',
             jdnHash: '8381553594322359777170267551',
-            locator: {
+            locatorValue: {
               xPath: '/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[3]/ul',
               taskStatus: LocatorTaskStatus.PENDING,
               errorMessage: '',
@@ -114,7 +114,7 @@ export const locatorsTreeMockSearchTypesNames = [
         is_shown: true,
         parent_id: '4899732051322359779677566873',
         jdnHash: '4829071593322359778594168522',
-        locator: {
+        locatorValue: {
           xPath: '/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[3]/ul/li[3]',
           taskStatus: LocatorTaskStatus.PENDING,
           errorMessage: '',
@@ -139,7 +139,7 @@ export const locatorsTreeMockSearchTypesNames = [
             is_shown: true,
             parent_id: '4829071593322359778594168522',
             jdnHash: '9636042053322359773245578777',
-            locator: {
+            locatorValue: {
               xPath: '/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[5]/ul/li[5]',
               taskStatus: LocatorTaskStatus.PENDING,
               errorMessage: '',
@@ -165,7 +165,7 @@ export const locatorsTreeMockSearchTypesNames = [
             is_shown: true,
             parent_id: '4829071593322359778594168522',
             jdnHash: '8381553594322359777170267550',
-            locator: {
+            locatorValue: {
               xPath: '/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[3]/ul',
               taskStatus: LocatorTaskStatus.PENDING,
               errorMessage: '',

@@ -43,7 +43,7 @@ export interface ChangeLocatorAttributesPayload {
   element_id: ElementId;
   type: ElementClass;
   name: string;
-  locator: string;
+  locatorValue: string;
   message: LocatorValidationErrorType;
   library: ElementLibrary;
   isCustomName?: boolean;
@@ -62,13 +62,18 @@ const locatorsSlice = createSlice({
     changeLocatorAttributes(state, { payload }: PayloadAction<ChangeLocatorAttributesPayload>) {
       // ToDo: fix legacy naming
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      const { locator, element_id, locatorType, ...rest } = payload;
+      const { locatorValue, element_id, locatorType, ...rest } = payload;
 
       const currentLocator = simpleSelectLocatorById(state, element_id);
 
       if (!currentLocator) return;
 
-      const newValue: ILocator = { ...currentLocator, locator: { ...currentLocator.locator }, locatorType, ...rest };
+      const newValue: ILocator = {
+        ...currentLocator,
+        locatorValue: { ...currentLocator.locatorValue },
+        locatorType,
+        ...rest,
+      };
       const isStandardLocator: boolean =
         [
           LocatorType.cssSelector,
@@ -80,23 +85,23 @@ const locatorsSlice = createSlice({
         ].includes(locatorType) || locatorType.startsWith('data-');
 
       if (locatorType === LocatorType.cssSelector) {
-        newValue.locator.cssSelector = locator;
+        newValue.locatorValue.cssSelector = locatorValue;
       } else if (locatorType === LocatorType.xPath) {
-        newValue.locator.xPath = locator;
+        newValue.locatorValue.xPath = locatorValue;
       } else if (isStandardLocator) {
         if (locatorType === LocatorType.dataAttributes || locatorType.startsWith('data-')) {
-          newValue.locator.attributes = {
-            ...newValue.locator.attributes,
-            dataAttributes: { ...(newValue.locator.attributes?.dataAttributes || {}) },
+          newValue.locatorValue.attributes = {
+            ...newValue.locatorValue.attributes,
+            dataAttributes: { ...(newValue.locatorValue.attributes?.dataAttributes || {}) },
           }; // unfreeze object
 
-          if (newValue.locator.attributes.dataAttributes) {
-            newValue.locator.attributes.dataAttributes[locatorType] = locator;
+          if (newValue.locatorValue.attributes.dataAttributes) {
+            newValue.locatorValue.attributes.dataAttributes[locatorType] = locatorValue;
           }
         } else {
-          const attributes = { ...newValue.locator.attributes }; // unfreeze object
-          attributes[locatorType] = locator;
-          newValue.locator.attributes = attributes;
+          const attributes = { ...newValue.locatorValue.attributes }; // unfreeze object
+          attributes[locatorType] = locatorValue;
+          newValue.locatorValue.attributes = attributes;
         }
       }
 
@@ -137,8 +142,8 @@ const locatorsSlice = createSlice({
         if (existingLocator) {
           return {
             element_id,
-            locator: {
-              ...existingLocator.locator,
+            locatorValue: {
+              ...existingLocator.locatorValue,
               xPathStatus: LocatorTaskStatus.FAILURE,
               errorMessage: errorMessage || DEFAULT_ERROR,
             },
@@ -172,6 +177,8 @@ const locatorsSlice = createSlice({
       const { element_id, ids, priority } = payload;
       if (element_id) locatorsAdapter.upsertOne(state, { element_id, priority } as ILocator);
       if (ids) {
+        // ToDo: fix legacy naming
+        // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-shadow
         const newValue: Partial<ILocator>[] = ids.map((element_id) => ({ element_id, priority }));
         locatorsAdapter.upsertMany(state, newValue as ILocator[]);
       }
@@ -181,7 +188,7 @@ const locatorsSlice = createSlice({
       const { locator, isGenerated } = payload;
       const newValue: Partial<ILocator>[] = [];
       const toggleGenerate = (_locator: ILocator) => {
-        _locator.children &&
+        if (_locator.children)
           _locator.children.forEach((childId) => {
             newValue.push({ element_id: childId, isGenerated });
             const child = simpleSelectLocatorById(state, childId);
@@ -195,7 +202,7 @@ const locatorsSlice = createSlice({
       const { locator, isChecked } = payload;
       const newValue: Partial<ILocator>[] = [];
       const toggleIsChecked = (_locator: ILocator) => {
-        _locator.children &&
+        if (_locator.children)
           _locator.children.forEach((childId) => {
             newValue.push({ element_id: childId, isChecked });
             const child = simpleSelectLocatorById(state, childId);
@@ -223,13 +230,13 @@ const locatorsSlice = createSlice({
     },
     toggleDeleted(state, { payload }: PayloadAction<string>) {
       const locator = simpleSelectLocatorById(state, payload);
-      locator &&
+      if (locator)
         locatorsAdapter.upsertOne(state, {
           ...locator,
           deleted: !locator.deleted,
           // when we delete locator, we uncheck it, when restore - keep isGenerated state as is
           isGenerated: !locator.deleted ? false : locator.isGenerated,
-        } as ILocator);
+        });
     },
     toggleDeletedGroup(state, { payload }: PayloadAction<ILocator[]>) {
       const newValue: Partial<ILocator>[] = [];
@@ -279,19 +286,19 @@ const locatorsSlice = createSlice({
       {
         payload,
       }: PayloadAction<{
-        locators: { element_id?: ElementId; jdnHash?: JDNHash; locator: Partial<LocatorValue> }[];
+        locators: { element_id?: ElementId; jdnHash?: JDNHash; locatorValue: Partial<LocatorValue> }[];
         pageObject: PageObject;
       }>,
     ) {
       const { locators, pageObject } = payload;
-      const newValue = locators.map(({ element_id, jdnHash, locator }) => {
+      const newValue = locators.map(({ element_id, jdnHash, locatorValue }) => {
         const existingLocator = element_id
           ? simpleSelectLocatorById(state, element_id)
           : simpleSelectLocatorByJdnHash(state, jdnHash!, pageObject);
         return (
           existingLocator && {
             element_id: existingLocator.element_id,
-            locator: { ...existingLocator.locator, ...locator },
+            locatorValue: { ...existingLocator.locatorValue, ...locatorValue },
           }
         );
       });
@@ -300,14 +307,14 @@ const locatorsSlice = createSlice({
   },
   extraReducers: (builder) => {
     addCustomLocatorReducer(builder),
-      changeLocatorElementReducer(builder),
-      checkLocatorsValidityReducer(builder),
-      identifyElementsReducer(builder),
-      createLocatorsReducer(builder),
-      rerunGenerationReducer(builder),
-      stopGenerationReducer(builder),
-      stopGenerationGroupReducer(builder),
-      runLocatorsGenerationReducer(builder);
+    changeLocatorElementReducer(builder),
+    checkLocatorsValidityReducer(builder),
+    identifyElementsReducer(builder),
+    createLocatorsReducer(builder),
+    rerunGenerationReducer(builder),
+    stopGenerationReducer(builder),
+    stopGenerationGroupReducer(builder),
+    runLocatorsGenerationReducer(builder);
   },
 });
 

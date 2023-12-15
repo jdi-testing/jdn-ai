@@ -11,7 +11,7 @@ export const locatorsListMock = [
     pageObj: 0,
     parent_id: '',
     jdnHash: '7967190244322359771369749968',
-    locator: {
+    locatorValue: {
       cssSelector: '',
       xPath: '/html/body/header/div/nav/ul[1]',
       taskStatus: LocatorTaskStatus.SUCCESS,
@@ -34,7 +34,7 @@ export const locatorsListMock = [
     pageObj: 0,
     parent_id: '7967190244322359771369749968',
     jdnHash: '3969471880322359761484771163',
-    locator: {
+    locatorValue: {
       cssSelector: '',
       xPath: '/html/body/header/div/nav/div[2]',
       taskStatus: LocatorTaskStatus.SUCCESS,
@@ -57,7 +57,7 @@ export const locatorsListMock = [
     pageObj: 0,
     parent_id: '3969471880322359761484771163',
     jdnHash: '0045220328322359764482356698',
-    locator: {
+    locatorValue: {
       cssSelector: '',
       xPath: '/html/body/header/div/nav/ul[1]/li[3]/a',
       taskStatus: LocatorTaskStatus.FAILURE,
@@ -80,7 +80,7 @@ export const locatorsListMock = [
     pageObj: 0,
     parent_id: '3969471880322359761484771163',
     jdnHash: '6771529534322359778589411351',
-    locator: {
+    locatorValue: {
       cssSelector: '',
       xPath: '/html/body/footer/div/div/ul',
       taskStatus: LocatorTaskStatus.STARTED,
@@ -103,7 +103,7 @@ export const locatorsListMock = [
     pageObj: 0,
     parent_id: '7967190244322359771369749968',
     jdnHash: '4899732051322359779677566872',
-    locator: {
+    locatorValue: {
       cssSelector: '',
       xPath: '/html/body/header/div/nav/ul[2]/li/a',
       taskStatus: LocatorTaskStatus.PENDING,
@@ -126,7 +126,7 @@ export const locatorsListMock = [
     pageObj: 0,
     parent_id: '4899732051322359779677566872',
     jdnHash: '4829071593322359778594168519',
-    locator: {
+    locatorValue: {
       cssSelector: '',
       xPath: '/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[3]/ul/li[3]',
       taskStatus: LocatorTaskStatus.PENDING,
@@ -149,7 +149,7 @@ export const locatorsListMock = [
     pageObj: 0,
     parent_id: '4829071593322359778594168519',
     jdnHash: '9636042053322359773245578788',
-    locator: {
+    locatorValue: {
       cssSelector: '',
       xPath: '/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[5]/ul/li[5]',
       taskStatus: LocatorTaskStatus.PENDING,
@@ -172,7 +172,7 @@ export const locatorsListMock = [
     pageObj: 0,
     parent_id: '4829071593322359778594168519',
     jdnHash: '8381553594322359777170267551',
-    locator: {
+    locatorValue: {
       cssSelector: '',
       xPath: '/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[3]/ul',
       taskStatus: LocatorTaskStatus.PENDING,
@@ -195,7 +195,7 @@ export const locatorsListMock = [
     pageObj: 0,
     parent_id: '7967190244322359771369749968',
     jdnHash: '4899732051322359779677566873',
-    locator: {
+    locatorValue: {
       cssSelector: '',
       xPath: '/html/body/header/div/nav/ul[2]/li/a',
       taskStatus: LocatorTaskStatus.PENDING,
@@ -218,7 +218,7 @@ export const locatorsListMock = [
     pageObj: 0,
     parent_id: '4899732051322359779677566873',
     jdnHash: '4829071593322359778594168522',
-    locator: {
+    locatorValue: {
       cssSelector: '',
       xPath: '/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[3]/ul/li[3]',
       taskStatus: LocatorTaskStatus.PENDING,
@@ -241,7 +241,7 @@ export const locatorsListMock = [
     pageObj: 0,
     parent_id: '4829071593322359778594168522',
     jdnHash: '9636042053322359773245578777',
-    locator: {
+    locatorValue: {
       cssSelector: '',
       xPath: '/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[5]/ul/li[5]',
       taskStatus: LocatorTaskStatus.PENDING,
@@ -264,7 +264,7 @@ export const locatorsListMock = [
     pageObj: 0,
     parent_id: '4829071593322359778594168522',
     jdnHash: '8381553594322359777170267550',
-    locator: {
+    locatorValue: {
       cssSelector: '',
       xPath: '/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[3]/ul',
       taskStatus: LocatorTaskStatus.PENDING,
@@ -285,7 +285,7 @@ export const locatorsListMock = [
     is_shown: true,
     parent_id: '',
     jdnHash: '796719024432235977136974900',
-    locator: {
+    locatorValue: {
       cssSelector: '',
       xPath: '/html/body/header/div/nav/ul[1]',
       taskStatus: LocatorTaskStatus.PENDING,
@@ -315,7 +315,7 @@ export const locatorsListMockForVividus = [
     pageObj: 0,
     parent_id: '',
     jdnHash: '7967190244322359771369749968',
-    locator: {
+    locatorValue: {
       cssSelector: '',
       xPath: "//*[@index='5']//*[@index='8']/a",
       taskStatus: LocatorTaskStatus.SUCCESS,
@@ -340,7 +340,7 @@ export const locatorsListMockForVividus = [
     pageObj: 0,
     parent_id: '7967190244322359771369749968',
     jdnHash: '3969471880322359761484771163',
-    locator: {
+    locatorValue: {
       cssSelector: "[role='menu'] > li:nth-child(7) > a",
       xPath: "//a[contains(text(), 'Table with pages')]",
       taskStatus: LocatorTaskStatus.SUCCESS,

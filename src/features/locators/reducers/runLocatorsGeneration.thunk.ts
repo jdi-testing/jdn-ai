@@ -40,7 +40,11 @@ export const runLocatorsGeneration = createAsyncThunk(
         return locators;
       } else if (generateMissingLocator || generateXpath) {
         return filterLocatorsByClassFilter(locators, filter).filter(
-          ({ locator }) => !locator || !locator.xPath || locator.xPath === locator.fullXpath || !locator.fullXpath,
+          ({ locatorValue }) =>
+            !locatorValue ||
+            !locatorValue.xPath ||
+            locatorValue.xPath === locatorValue.fullXpath ||
+            !locatorValue.fullXpath,
         );
       } else {
         return [];
@@ -51,7 +55,9 @@ export const runLocatorsGeneration = createAsyncThunk(
 
     const toGenerateCss =
       generateMissingLocator || generateCssSelector
-        ? filterLocatorsByClassFilter(locators, filter).filter(({ locator }) => !locator || !locator.cssSelector)
+        ? filterLocatorsByClassFilter(locators, filter).filter(
+            ({ locatorValue }) => !locatorValue || !locatorValue.cssSelector,
+          )
         : [];
 
     const generations = Promise.all([
@@ -60,17 +66,17 @@ export const runLocatorsGeneration = createAsyncThunk(
     ]);
 
     const setPendingXpaths = toGenerateXpaths
-      .filter((locator) => locator.locator && locator.locator.taskStatus !== LocatorTaskStatus.PENDING)
+      .filter((locator) => locator.locatorValue && locator.locatorValue.taskStatus !== LocatorTaskStatus.PENDING)
       .map(({ element_id }) => ({
         element_id,
-        locator: { xPathStatus: LocatorTaskStatus.PENDING },
+        locatorValue: { xPathStatus: LocatorTaskStatus.PENDING },
       }));
 
     const setPendingCss = toGenerateCss
-      .filter((locator) => locator.locator && locator.locator.taskStatus !== LocatorTaskStatus.PENDING)
+      .filter((locator) => locator.locatorValue && locator.locatorValue.taskStatus !== LocatorTaskStatus.PENDING)
       .map(({ element_id }) => ({
         element_id,
-        locator: { cssSelectorStatus: LocatorTaskStatus.PENDING },
+        locatorValue: { cssSelectorStatus: LocatorTaskStatus.PENDING },
       }));
 
     if (setPendingXpaths.length)

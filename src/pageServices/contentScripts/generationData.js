@@ -130,7 +130,7 @@ export const getGenerationAttributes = () => {
       const element = document.querySelector(`[jdn-hash='${jdnHash}']`);
       return {
         element_id,
-        locator: {
+        locatorValue: {
           cssSelector: element ? generateSelectorByElement(element) : null,
         },
       };
@@ -171,7 +171,7 @@ export const getGenerationAttributes = () => {
         predictedElement.elemId = element.id && typeof element.id === 'string' ? camelCase(element.id) : '';
         predictedElement.elemText = element.textContent;
         predictedElement.elemAriaLabel = element.getAttribute('aria-label');
-        predictedElement.locator = {
+        predictedElement.locatorValue = {
           attributes: elementAttributes,
           xPath,
           fullXpath: xPath,

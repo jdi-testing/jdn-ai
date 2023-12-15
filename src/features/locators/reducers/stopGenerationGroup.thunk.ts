@@ -11,10 +11,10 @@ export const stopGenerationGroup = createAsyncThunk('locators/stopGenerationGrou
 export const stopGenerationGroupReducer = (builder: ActionReducerMapBuilder<LocatorsState>) => {
   return builder
     .addCase(stopGenerationGroup.pending, (state, { meta }) => {
-      const newValue = meta.arg.map(({ element_id, locator }) => {
+      const newValue = meta.arg.map(({ element_id, locatorValue }) => {
         return {
           element_id,
-          locator: { ...locator, xPathStatus: LocatorTaskStatus.REVOKED },
+          locatorValue: { ...locatorValue, xPathStatus: LocatorTaskStatus.REVOKED },
         };
       });
       // @ts-ignore

@@ -53,7 +53,7 @@ import {
   selectInProgressActiveDecPriorityByPageObject,
 } from '../selectors/locatorsFiltered.selectors';
 import { AppDispatch } from '../../../app/store/store';
-import { selectLastFrameworkType } from '../../pageObjects/selectors/pageObjects.selectors';
+import { selectCurrentPageObject, selectLastFrameworkType } from '../../pageObjects/selectors/pageObjects.selectors';
 import { selectIsOnboardingOpen } from '../../onboarding/store/onboarding.selectors';
 
 interface Props {
@@ -76,6 +76,7 @@ export const LocatorMenu: React.FC<Props> = ({ setIsEditModalOpen, children, tri
   const noPrioritySelected = useSelector(selectInProgressActiveNoPriorityByPageObject);
   const increasedPrioritySelected = useSelector(selectInProgressActiveIncPriorityByPageObject);
   const decreasedPrioritySelected = useSelector(selectInProgressActiveDecPriorityByPageObject);
+  const pageObject = useSelector(selectCurrentPageObject);
   const framework = useSelector(selectLastFrameworkType) || FrameworkType.JdiLight;
 
   // should be revised after 1240 implementation
@@ -164,7 +165,9 @@ export const LocatorMenu: React.FC<Props> = ({ setIsEditModalOpen, children, tri
       ...(size(actualSelected) === 1 ? [edit(handleEditClick)] : []),
       ...(size(activeNonGenerate) ? [addToPO(handleAddToPO)] : []),
       ...(size(activeGenerate) ? [removeFromPO(handleRemoveFromPO)] : []),
-      ...(size(actualSelected) ? [copyLocatorOption(getCopyOptions(framework, actualSelected))] : []),
+      ...(size(actualSelected)
+        ? [copyLocatorOption(getCopyOptions(framework, actualSelected, pageObject?.name ?? ''))]
+        : []),
       ...(size(stoppedSelected) ? [rerun(() => dispatch(rerunGeneration({ generationData: stoppedSelected })))] : []),
       ...(size(deletedActive) ? [restore(handleRestore)] : []),
       ...(size(inProgressSelected) ? [pause(handlePause)] : []),

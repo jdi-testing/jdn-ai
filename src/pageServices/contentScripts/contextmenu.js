@@ -312,9 +312,11 @@ export const runContextMenu = () => {
   const isGroup = () => predictedElements.length !== 1;
   const noDeleted = () => predictedElements.some(({ deleted }) => !deleted);
   const areInProgress = () =>
-    predictedElements.some(({ locator }) => locator.taskStatus === 'PENDING' || locator.taskStatus === 'STARTED');
-  const areRevoked = () => predictedElements.some(({ locator }) => locator.taskStatus === 'REVOKED');
-  const areFailed = () => predictedElements.some(({ locator }) => locator.taskStatus === 'FAILURE');
+    predictedElements.some(
+      ({ locatorValue }) => locatorValue.taskStatus === 'PENDING' || locatorValue.taskStatus === 'STARTED',
+    );
+  const areRevoked = () => predictedElements.some(({ locatorValue }) => locatorValue.taskStatus === 'REVOKED');
+  const areFailed = () => predictedElements.some(({ locatorValue }) => locatorValue.taskStatus === 'FAILURE');
 
   /* menu */
 

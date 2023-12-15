@@ -7,7 +7,7 @@ export const getLocatorsByAnnotationType = (value) => {
       element_id: '0955274655778840492142094709',
       is_shown: true,
       height: 60,
-      locator: {
+      locatorValue: {
         fullXpath: '/html/body/header/div/nav/ul[1]',
         taskStatus: 'SUCCESS',
         robulaXpath: "//*[@class='uui-navigation nav navbar-nav m-l8']",
@@ -31,7 +31,7 @@ export const getLocatorsByAnnotationType = (value) => {
       element_id: '2022378243778840502461724770',
       is_shown: true,
       height: 15.3333339691,
-      locator: {
+      locatorValue: {
         fullXpath: '/html/body/footer/div/div/ul',
         taskStatus: 'SUCCESS',
         robulaXpath: "//*[@class='footer-menu']",
@@ -55,7 +55,7 @@ export const getLocatorsByAnnotationType = (value) => {
       element_id: '2713188863778840498565585241',
       is_shown: true,
       height: 38.6666679382,
-      locator: {
+      locatorValue: {
         fullXpath: '/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[1]/a',
         output: '/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[1]/a',
         taskStatus: 'REVOKED',
@@ -82,7 +82,7 @@ export const locators = [
     element_id: '0955274655778840492142094709',
     is_shown: true,
     height: 60,
-    locator: {
+    locatorValue: {
       fullXpath: '/html/body/header/div/nav/ul[1]',
       taskStatus: 'SUCCESS',
       robulaXpath: "//*[@class='uui-navigation nav navbar-nav m-l8']",
@@ -106,7 +106,7 @@ export const locators = [
     element_id: '2022378243778840502461724770',
     is_shown: true,
     height: 15.3333339691,
-    locator: {
+    locatorValue: {
       fullXpath: '/html/body/footer/div/div/ul',
       taskStatus: 'SUCCESS',
       robulaXpath: "//*[@class='footer-menu']",
@@ -130,7 +130,7 @@ export const locators = [
     element_id: '2713188863778840498565585241',
     is_shown: true,
     height: 38.6666679382,
-    locator: {
+    locatorValue: {
       fullXpath: '/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[1]/a',
       output: '/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[1]/a',
       taskStatus: 'REVOKED',
@@ -156,7 +156,7 @@ export const locatorsWithFindBy = [
     element_id: '0955274655778840492142094709',
     is_shown: true,
     height: 60,
-    locator: {
+    locatorValue: {
       fullXpath: '/html/body/header/div/nav/ul[1]',
       taskStatus: 'SUCCESS',
       robulaXpath: "//*[@class='uui-navigation nav navbar-nav m-l8']",
@@ -180,7 +180,7 @@ export const locatorsWithFindBy = [
     element_id: '2022378243778840502461724770',
     is_shown: true,
     height: 15.3333339691,
-    locator: {
+    locatorValue: {
       fullXpath: '/html/body/footer/div/div/ul',
       taskStatus: 'SUCCESS',
       robulaXpath: "//*[@class='footer-menu']",
@@ -204,7 +204,7 @@ export const locatorsWithFindBy = [
     element_id: '2713188863778840498565585241',
     is_shown: true,
     height: 38.6666679382,
-    locator: {
+    locatorValue: {
       fullXpath: '/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[1]/a',
       output: '/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[1]/a',
       taskStatus: 'REVOKED',
@@ -237,7 +237,7 @@ export const locatorsVividus = [
     elemId: '',
     elemText: 'Simple Table',
     elemAriaLabel: null,
-    locator: {
+    locatorValue: {
       xPath: "//*[@index='3']//*[@index='4']/a",
       fullXpath: '/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[3]/ul/li[4]/a',
       cssSelector: '[index="\\33 "] [index="\\34 "] > a',
@@ -268,7 +268,7 @@ export const locatorsVividus = [
     elemId: '',
     elemText: 'User Table ',
     elemAriaLabel: null,
-    locator: {
+    locatorValue: {
       xPath: "//*[contains(text(), 'User Table ')]",
       fullXpath: '/html/body/header/div/nav/ul[1]/li[3]/ul/li[6]/a',
       cssSelector: '[role="menu"] > li:nth-child(6) > a',
@@ -303,7 +303,7 @@ export const locatorsVividus = [
     elemId: 'password',
     elemText: '',
     elemAriaLabel: null,
-    locator: {
+    locatorValue: {
       xPath: "//*[@id='password']",
       fullXpath: '/html/body/header/div/nav/ul[2]/li/div/form/div/div[2]/div/input',
       cssSelector: '#password',
@@ -338,7 +338,7 @@ export const locatorsVividus = [
     elemId: '',
     elemText: 'Dates',
     elemAriaLabel: null,
-    locator: {
+    locatorValue: {
       xPath: "//a[contains(text(), 'Dates')]",
       fullXpath: '/html/body/header/div/nav/ul[1]/li[3]/ul/li[2]/a',
       cssSelector: '[role="menu"] > li:nth-child(2) > a',

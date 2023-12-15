@@ -180,13 +180,17 @@ const splitUniqueAndNonUniqueAttributes = (
   return [uniqueAttributes, nonUniqueAttributes];
 };
 
-export const createLocatorTypeOptions = (locator: LocatorValue, locators: ILocator[], currentElementId: string) => {
+export const createLocatorTypeOptions = (
+  locatorValue: LocatorValue,
+  locators: ILocator[],
+  currentElementId: string,
+) => {
   const preparedData: LocatorValue[] = locators
     .filter((element) => element.element_id !== currentElementId)
-    .map((element) => element.locator);
+    .map((element) => element.locatorValue);
 
   const hashMap: Map<string, Set<string | null>> = createHashMap(preparedData);
-  const optionsData = splitUniqueAndNonUniqueAttributes(locator.attributes, hashMap);
+  const optionsData = splitUniqueAndNonUniqueAttributes(locatorValue.attributes, hashMap);
 
-  return getLocatorTypeOptions(optionsData, locator.cssSelector, locator.xPath);
+  return getLocatorTypeOptions(optionsData, locatorValue.cssSelector, locatorValue.xPath);
 };

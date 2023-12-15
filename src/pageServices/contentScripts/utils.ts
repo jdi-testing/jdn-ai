@@ -67,22 +67,28 @@ export const evaluateStandardLocator = ({
 };
 
 export const assignJdnHash = ({
-  locator,
+  locatorValue,
   jdnHash,
   isCSSLocator,
 }: {
   jdnHash: string;
-  locator: string;
+  locatorValue: string;
   isCSSLocator?: boolean;
 }) => {
   try {
     let foundElement, length;
     if (isCSSLocator) {
-      const foundElements = document.querySelectorAll(locator);
+      const foundElements = document.querySelectorAll(locatorValue);
       foundElement = foundElements[0];
       length = foundElements.length;
     } else {
-      const nodeSnapshot = document.evaluate(locator, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
+      const nodeSnapshot = document.evaluate(
+        locatorValue,
+        document,
+        null,
+        XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
+        null,
+      );
       length = nodeSnapshot.snapshotLength;
       foundElement = nodeSnapshot.snapshotItem(0) as Element;
     }

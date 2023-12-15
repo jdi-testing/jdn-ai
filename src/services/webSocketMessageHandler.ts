@@ -37,7 +37,10 @@ export const updateSocketMessageHandler = (dispatch: any, state: any) => {
           } else {
             reScheduledTasks.add(jdnHash);
             const rescheduleTask = async () => {
-              await sendMessage.assignJdnHash({ jdnHash: element.jdnHash, locator: element.locator.xPath ?? '' });
+              await sendMessage.assignJdnHash({
+                jdnHash: element.jdnHash,
+                locatorValue: element.locatorValue.xPath ?? '',
+              });
               locatorGenerationController.scheduleMultipleXpathGeneration([element]);
             };
             rescheduleTask();
@@ -47,7 +50,7 @@ export const updateSocketMessageHandler = (dispatch: any, state: any) => {
 
         if (status === LocatorTaskStatus.REVOKED || status === LocatorTaskStatus.FAILURE) {
           const pageObject = selectCurrentPageObject(state)!;
-          dispatch(updateLocatorGroup({ locators: [{ jdnHash, locator: { xPathStatus: status } }], pageObject }));
+          dispatch(updateLocatorGroup({ locators: [{ jdnHash, locatorValue: { xPathStatus: status } }], pageObject }));
         }
 
         break;
@@ -58,7 +61,7 @@ export const updateSocketMessageHandler = (dispatch: any, state: any) => {
             const { id, result: xPath } = _payload;
             return {
               jdnHash: id,
-              locator: { xPath, xPathStatus: LocatorTaskStatus.SUCCESS },
+              locatorValue: { xPath, xPathStatus: LocatorTaskStatus.SUCCESS },
             };
           });
           const pageObject = selectCurrentPageObject(state)!;

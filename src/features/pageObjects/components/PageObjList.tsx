@@ -139,7 +139,9 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
                     }
                     extra={
                       <>
-                        {isPageObjectNotEmpty && <PageObjCopyButton {...{ framework, elements }} />}
+                        {isPageObjectNotEmpty && (
+                          <PageObjCopyButton {...{ framework, elements, pageObjectName: name }} />
+                        )}
                         <PageObjMenu {...{ pageObject, elements }} />
                       </>
                     }
