@@ -67,7 +67,7 @@ export const getRootState = (_pageObject: PageObject) => ({
           elemId: '',
           elemText: 'EPAM framework Wishes…',
           elemAriaLabel: null,
-          locator: {
+          locatorValue: {
             cssSelector: '.main-content',
             output: '.main-content',
             xPathStatus: 'SUCCESS',
@@ -92,7 +92,7 @@ export const getRootState = (_pageObject: PageObject) => ({
           elemId: '',
           elemText: 'Home',
           elemAriaLabel: null,
-          locator: {
+          locatorValue: {
             cssSelector: '.uui-navigation.nav.navbar-nav.m-l8.any',
             output: "//*[@class='uui-navigation nav navbar-nav m-l8 any']",
             xPathStatus: 'SUCCESS',
@@ -120,7 +120,7 @@ export const getRootState = (_pageObject: PageObject) => ({
           elemId: '',
           elemText: 'HTML 5',
           elemAriaLabel: null,
-          locator: {
+          locatorValue: {
             cssSelector: '[index="5"] > ul',
             xPathStatus: 'SUCCESS',
             cssSelectorStatus: 'FAILURE',
@@ -152,7 +152,7 @@ export const selectMockedLocators = (pageObject: PageObject) => [
     elemId: '',
     elemText: 'EPAM framework Wishes…',
     elemAriaLabel: null,
-    locator: {
+    locatorValue: {
       taskStatus: 'SUCCESS',
       cssSelectorStatus: 'SUCCESS',
       xPathStatus: 'SUCCESS',
@@ -179,7 +179,7 @@ export const selectMockedLocators = (pageObject: PageObject) => [
     elemText: 'Home',
     elemAriaLabel: null,
     locatorType: pageObject.locatorType || LocatorType.xPath,
-    locator: {
+    locatorValue: {
       taskStatus: 'PENDING',
       xPathStatus: 'SUCCESS',
       cssSelectorStatus: 'PENDING',
@@ -211,7 +211,7 @@ export const selectMockedLocators = (pageObject: PageObject) => [
     elemId: '',
     elemText: 'HTML 5',
     elemAriaLabel: null,
-    locator: {
+    locatorValue: {
       taskStatus: 'FAILURE',
       xPathStatus: 'SUCCESS',
       cssSelectorStatus: 'FAILURE',

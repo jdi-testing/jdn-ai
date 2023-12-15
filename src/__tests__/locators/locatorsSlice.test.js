@@ -29,7 +29,7 @@ describe('changeLocatorAttributes reducer', () => {
       ...locator1,
       type: 'ProgressBar',
       name: 'myAwesomeLocator',
-      locator: "//*[@class='sidebar-menu left']",
+      locatorValue: "//*[@class='sidebar-menu left']",
       message: '',
       library: ElementLibrary.MUI,
       locatorType: LocatorType.xPath,
@@ -42,7 +42,7 @@ describe('changeLocatorAttributes reducer', () => {
     const locator = selectLocatorById(store.getState(), '8736312404689610766421832473');
     expect(locator.type).toBe('ProgressBar');
     expect(locator.name).toBe('myAwesomeLocator');
-    expect(locator.locator).toStrictEqual({
+    expect(locator.locatorValue).toStrictEqual({
       attributes: {},
       cssSelector: '.sidebar-menu.left',
       output: "//*[@class='sidebar-menu left']",
@@ -59,7 +59,7 @@ describe('changeLocatorAttributes reducer', () => {
       changeLocatorAttributes({
         element_id: '8736312404689610766421832473',
         is_shown: true,
-        locator: "//*[@class='sidebar-menu left']",
+        locatorValue: "//*[@class='sidebar-menu left']",
         name: 'myAwesomeLocator',
         type: 'ProgressBar',
         message: '',
@@ -72,7 +72,7 @@ describe('changeLocatorAttributes reducer', () => {
     const locator = selectLocatorById(store.getState(), '8736312404689610766421832473');
     expect(locator.type).toBe('ProgressBar');
     expect(locator.name).toBe('myAwesomeLocator');
-    expect(locator.locator).toStrictEqual({
+    expect(locator.locatorValue).toStrictEqual({
       attributes: {},
       cssSelector: '.sidebar-menu.left',
       output: "//*[@class='sidebar-menu left']",
@@ -89,7 +89,7 @@ describe('changeLocatorAttributes reducer', () => {
       changeLocatorAttributes({
         element_id: '8736312404689610766421832473',
         is_shown: true,
-        locator: "//*[@class='sidebar-menu left']",
+        locatorValue: "//*[@class='sidebar-menu left']",
         name: 'myAwesomeLocator',
         message: '',
         type: 'Dialog',
@@ -102,7 +102,7 @@ describe('changeLocatorAttributes reducer', () => {
     const locator = selectLocatorById(store.getState(), '8736312404689610766421832473');
     expect(locator.type).toBe('Dialog');
     expect(locator.name).toBe('myAwesomeLocator');
-    expect(locator.locator).toStrictEqual({
+    expect(locator.locatorValue).toStrictEqual({
       attributes: {},
       cssSelector: '.sidebar-menu.left',
       output: "//*[@class='sidebar-menu left']",
@@ -119,7 +119,7 @@ describe('changeLocatorAttributes reducer', () => {
       changeLocatorAttributes({
         element_id: '8736312404689610766421832473',
         is_shown: true,
-        locator: "//*[@class='any-class']",
+        locatorValue: "//*[@class='any-class']",
         locatorType: LocatorType.xPath,
         name: 'myAwesomeLocator',
         isCustomName: true,
@@ -135,8 +135,8 @@ describe('changeLocatorAttributes reducer', () => {
     expect(locator.name).toBe('myAwesomeLocator');
     expect(locator.isCustomLocator).toBeTruthy();
     expect(locator.isCustomName).toBeTruthy();
-    expect(locator.locator.xPath).toBe("//*[@class='any-class']");
-    expect(locator.locator.xPathStatus).toBe(LocatorTaskStatus.SUCCESS);
+    expect(locator.locatorValue.xPath).toBe("//*[@class='any-class']");
+    expect(locator.locatorValue.xPathStatus).toBe(LocatorTaskStatus.SUCCESS);
   });
 
   test('should handle warned validation and remove element', () => {
@@ -148,7 +148,7 @@ describe('changeLocatorAttributes reducer', () => {
       changeLocatorAttributes({
         element_id: '8736312404689610766421832473',
         is_shown: true,
-        locator: "//*[@class='any-class112']",
+        locatorValue: "//*[@class='any-class112']",
         name: 'myAwesomeLocator',
         type: 'Dialog',
         message: 'NOT_FOUND',

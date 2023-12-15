@@ -9,7 +9,7 @@ export const locatorsTreeMockSearch = [
     is_shown: true,
     parent_id: '',
     jdnHash: '7967190244322359771369749968',
-    locator: {
+    locatorValue: {
       xPath: '/html/body/header/div/nav/ul[1]',
       cssSelector: '',
       taskStatus: LocatorTaskStatus.SUCCESS,
@@ -34,7 +34,7 @@ export const locatorsTreeMockSearch = [
         is_shown: true,
         parent_id: '4829071593322359778594168522',
         jdnHash: '9636042053322359773245578777',
-        locator: {
+        locatorValue: {
           xPath: '/html/body/div/div[1]/div/div[1]/div/div[1]/ul/li[5]/ul/li[5]',
           cssSelector: '',
           taskStatus: LocatorTaskStatus.PENDING,
@@ -62,7 +62,7 @@ export const locatorsTreeMockSearch = [
     is_shown: true,
     parent_id: '',
     jdnHash: '796719024432235977136974900',
-    locator: {
+    locatorValue: {
       xPath: '/html/body/header/div/nav/ul[1]',
       cssSelector: '',
       taskStatus: LocatorTaskStatus.PENDING,

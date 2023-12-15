@@ -3,7 +3,7 @@ export const locator1 = {
   element_id: '8736312404689610766421832473',
   is_shown: true,
   height: 201.3333435059,
-  locator: {
+  locatorValue: {
     xPath: "//*[@class='sidebar-menu left']",
     output: "//*[@class='sidebar-menu left']",
     taskStatus: 'SUCCESS',
@@ -29,7 +29,7 @@ export const locator2 = {
   element_id: '2222222222',
   is_shown: true,
   height: 201.3333435059,
-  locator: {
+  locatorValue: {
     xPath: "//*[@class='sidebar-menu left']",
     cssSelector: '',
     xPathStatus: 'SUCCESS',
@@ -52,7 +52,7 @@ export const locator3 = {
   element_id: '333333333333333',
   is_shown: true,
   height: 201.3333435059,
-  locator: {
+  locatorValue: {
     xPath: "//*[@class='sidebar-menu left']",
     cssSelector: '',
     xPathStatus: 'SUCCESS',
