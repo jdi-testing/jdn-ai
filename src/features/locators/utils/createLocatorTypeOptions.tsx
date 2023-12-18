@@ -144,6 +144,7 @@ const splitUniqueAndNonUniqueAttributes = (
 
   Object.entries(attributes).forEach(([key, value]) => {
     const keyType = key as keyof ElementAttributes;
+    const isValueEmpty = value === '' || value === null || value === undefined;
 
     if (keyType === 'dataAttributes' && value) {
       // Check and unpacked data-attributes:
@@ -152,10 +153,13 @@ const splitUniqueAndNonUniqueAttributes = (
       const nonUniqueDataAttributes: { [key: string]: string | null } = {};
 
       Object.entries(dataAttributes).forEach(([dataKey, dataValue]) => {
-        if (!attributesHashMap.has(dataKey) || !attributesHashMap.get(dataKey)?.has(dataValue)) {
-          uniqueDataAttributes[dataKey] = dataValue;
-        } else {
+        const isDataValueEmpty = dataValue === '' || dataValue === null || dataValue === undefined;
+        const isNonUnique =
+          isDataValueEmpty || !attributesHashMap.has(dataKey) || !attributesHashMap.get(dataKey)?.has(dataValue);
+        if (isNonUnique) {
           nonUniqueDataAttributes[dataKey] = dataValue;
+        } else {
+          uniqueDataAttributes[dataKey] = dataValue;
         }
       });
 
@@ -167,12 +171,11 @@ const splitUniqueAndNonUniqueAttributes = (
         mergeObjects(nonUniqueAttributes, nonUniqueDataAttributes);
       }
     } else {
-      const isUnique = !attributesHashMap.has(key) || !attributesHashMap.get(key)?.has(value);
-
-      if (isUnique) {
-        uniqueAttributes[keyType] = value;
-      } else {
+      const isNonUnique = isValueEmpty || !attributesHashMap.has(key) || !attributesHashMap.get(key)?.has(value);
+      if (isNonUnique) {
         nonUniqueAttributes[keyType] = value;
+      } else {
+        uniqueAttributes[keyType] = value;
       }
     }
   });
