@@ -51,7 +51,7 @@ const prepareLocatorStringForEvaluation = (type: LocatorType, string: string): s
 export const evaluateLocator = async (
   locatorString: string,
   locatorType: LocatorType,
-  elementId: ElementId,
+  elementId?: ElementId,
   jdnHash?: string,
 ) => {
   if (locatorType === LocatorType.xPath) return evaluateXpath(locatorString, elementId, jdnHash);

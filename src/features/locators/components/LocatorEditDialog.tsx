@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Input, Select } from 'antd';
 import Icon from '@ant-design/icons';
 import WarningFilled from '../assets/warning-filled.svg';
@@ -31,7 +31,7 @@ import { changeLocatorElement } from '../reducers/changeLocatorElement.thunk';
 import { addCustomLocator } from '../reducers/addCustomLocator.thunk';
 import { selectPresentLocatorsByPO } from '../selectors/locatorsByPO.selectors';
 import { LocatorMessageForDuplicate } from './LocatorMessageForDuplicate';
-import { createLocatorTypeOptions } from '../utils/createLocatorTypeOptions';
+import { ILocatorTypeOptions, createLocatorTypeOptions } from '../utils/createLocatorTypeOptions';
 import { validateLocator } from '../utils/locatorValidation';
 
 interface Props extends ILocator {
@@ -258,7 +258,19 @@ export const LocatorEditDialog: React.FC<Props> = ({
 
   const isLocatorDisabled = form.getFieldValue('locator') === CALCULATING;
 
-  const locatorTypeOptions = createLocatorTypeOptions(locatorValue, locators, element_id);
+  const [locatorTypeOptions, setLocatorTypeOptions] = useState<ILocatorTypeOptions[]>([]);
+  useEffect(() => {
+    const fetchLocatorTypeOptions = async () => {
+      try {
+        const options = await createLocatorTypeOptions(locatorValue);
+        setLocatorTypeOptions(options);
+      } catch (error) {
+        console.error('Error: can`t get options for locator:', error);
+      }
+    };
+
+    void fetchLocatorTypeOptions();
+  }, [locatorValue, locators, element_id]);
 
   const handleLocatorDropdownOnChange = async () => {
     setValidationMessage('');
