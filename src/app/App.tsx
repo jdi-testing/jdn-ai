@@ -93,7 +93,6 @@ const App = () => {
           </Content>
         </Layout>
       </div>
-      {/* {onboarding} */}
       <Onboarding
         isOpen={isOnboardingOpen}
         steps={stepsRef}
