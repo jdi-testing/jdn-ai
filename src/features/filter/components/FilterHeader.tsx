@@ -13,6 +13,10 @@ export const FilterHeader: React.FC<Props> = ({ onClickClose }) => (
         Filters
       </Typography.Text>
     </div>
-    <Button type="text" shape="circle" icon={<CloseOutlined onClick={onClickClose} />} />
+    <Button type="text" shape="circle" onClick={onClickClose}>
+      <span>
+        <CloseOutlined />
+      </span>
+    </Button>
   </div>
 );

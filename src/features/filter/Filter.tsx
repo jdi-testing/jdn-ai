@@ -35,7 +35,6 @@ export const Filter = () => {
       }),
     );
   };
-
   const menuItems = {
     items: classFilterArr.map(([key, value]) => {
       return {
@@ -64,17 +63,25 @@ export const Filter = () => {
     );
   };
 
-  const handleOpenChange = (flag: boolean) => {
-    setOpen(flag);
+  const handleToggleFilterOpen = () => {
+    setOpen((prev) => !prev);
   };
 
-  const renderFilterButton = useMemo(
-    () => (
+  const renderFilterButton = useMemo(() => {
+    // uncomment for issue 950
+    // const usedFiltersCount = classFilterArr.filter((subArray) => subArray.includes(false)).length;
+
+    return (
       <Button
         className="jdn__filter_filter-button"
         type="link"
+        onClick={handleToggleFilterOpen}
         icon={
           isFiltered ? (
+            // uncomment for issue 950
+            // <Badge count={usedFiltersCount} color="blue" size="small" offset={[2, 2]}>
+            //   <FilterIcon />
+            // </Badge>
             <Badge dot={true} color="blue" offset={[1, 4]}>
               <FilterIcon />
             </Badge>
@@ -83,17 +90,19 @@ export const Filter = () => {
           )
         }
       />
-    ),
+    );
+  }, [isFiltered, classFilterArr]);
 
-    [isFiltered],
-  );
+  const handleCloseFilter = () => {
+    setOpen(false);
+  };
 
   return (
     <Dropdown
       menu={menuItems}
       dropdownRender={(menu) => (
         <div className="jdn__filter_dropdown-content">
-          <FilterHeader onClickClose={() => setOpen(false)} />
+          <FilterHeader onClickClose={handleCloseFilter} />
           <Divider style={{ margin: 0 }} />
           <div className="jdn__filter_dropdown_control">
             <Input allowClear placeholder="Start typing" value={searchTerm} onChange={handleInputChange} />
@@ -110,7 +119,6 @@ export const Filter = () => {
       trigger={['click']}
       getPopupContainer={(triggerNode) => triggerNode}
       overlayClassName="jdn__filter_dropdown"
-      onOpenChange={handleOpenChange}
       {...{ open }}
     >
       {renderFilterButton}
