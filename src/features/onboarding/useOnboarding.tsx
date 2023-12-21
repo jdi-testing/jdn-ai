@@ -6,7 +6,7 @@ import { OnboardingProviderTexts, OnboardingStep } from './constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../app/store/store';
 import { closeModal, openModal, openOnboarding, closeOnboarding, setCurrentStep } from './store/onboarding.slice';
-import { LocalStorageKey, getLocalStorage, setLocalStorage } from '../../common/utils/localStorage';
+import { LocalStorageKey, getLocalStorage, removeStorage, setLocalStorage } from '../../common/utils/localStorage';
 import { BackendStatus, PageType } from '../../app/types/mainSlice.types';
 import { selectCurrentStep, selectIsOnboardingOpen, selectIsWelcomeModalOpen } from './store/onboarding.selectors';
 import { changePage } from '../../app/main.slice';
@@ -15,6 +15,7 @@ import { selectCurrentPageObject } from '../pageObjects/selectors/pageObjects.se
 import { removeLocators } from '../locators/locators.slice';
 import { selectCurrentPage } from '../../app/main.selectors';
 import { isPageObjectPage } from '../../app/utils/helpers';
+import { removeAll as removeAllFilters } from '../filter/filter.slice';
 
 type TOnboarding = {
   isOpen: boolean;
@@ -72,6 +73,9 @@ export const useOnboarding = () => {
   }, [isBackendAvailable, isSessionUnique]);
 
   const openOnboardingHandler = () => {
+    dispatch(removeAllFilters());
+    removeStorage(LocalStorageKey.Filter);
+
     dispatch(setCurrentStep(0));
 
     if (!isPageObjectPage(currentPage.page)) {
