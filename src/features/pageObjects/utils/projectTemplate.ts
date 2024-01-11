@@ -31,44 +31,69 @@ const generatePoFile = (newZip: JSZip, framework: FrameworkType, page: { pageCod
   newZip.file(path, page.pageCode, { binary: false });
 };
 
-const editTestPropertiesFile = (newZip: JSZip, po: PageObject) =>
-  newZip
-    .file('src/test/resources/test.properties')!
-    .async('string')
-    .then(function success(content) {
-      const testDomain = po.origin;
-      const newContent = content.replace('${domain}', `${testDomain}`);
-      return newZip.file(`src/test/resources/test.properties`, newContent, { binary: true });
-    });
+const editTestPropertiesFile = (newZip: JSZip, po: PageObject) => {
+  const testPropertiesFile = newZip.file('src/test/resources/test.properties');
 
-const editMySiteFile = (newZip: JSZip, po: PageObject, instanceName: string) => {
-  if (isVividusFramework(po.framework)) return;
-  newZip
-    .file(JDI.MY_SITE_PATH)!
-    .async('string')
-    .then((content) => {
-      if (content.includes(instanceName)) instanceName = `${instanceName}1`;
-      const urlSearchParams = po.search;
-      const testUrl = urlSearchParams.length ? po.pathname + urlSearchParams : po.pathname;
-      const newContent = content.replace(
-        JDI.EXAMPLE_STRING,
-        `${JDI.EXAMPLE_STRING}\n    @Url("${testUrl}")\n    public static ${po.name} ${instanceName};
-          `,
-      );
-      return newZip.file(JDI.MY_SITE_PATH, newContent, { binary: true });
-    });
+  if (!testPropertiesFile) {
+    console.error('File src/test/resources/test.properties not found in the zip');
+    return Promise.resolve();
+  }
+
+  return testPropertiesFile.async('string').then(function success(content) {
+    const testDomain = po.origin;
+    const newContent = content.replace('${domain}', `${testDomain}`);
+    return newZip.file(`src/test/resources/test.properties`, newContent, { binary: true });
+  });
 };
 
-const editTestsFile = (newZip: JSZip, po: PageObject, instanceName: string) =>
-  newZip.file(`src/test/java/tests/${po.name}Tests.java`, testFileTemplate(instanceName, po.name));
+const addContent = (originalString: string, newContent: string) => {
+  const regex = /\n\}/;
 
-export const editPomFile = (newZip: JSZip, po: PageObject) => {
+  return originalString.replace(regex, `\n\n    ${newContent}\n}`);
+};
+
+const editMySiteFile = async (
+  newZip: JSZip,
+  framework: FrameworkType,
+  pathname: string,
+  search: string,
+  name: string,
+) => {
+  if (isVividusFramework(framework)) return;
+
+  let instanceName = lowerFirst(name);
+  const mySiteFile = newZip.file(JDI.MY_SITE_PATH);
+  if (!mySiteFile) {
+    console.error(`File ${JDI.MY_SITE_PATH} not found in the zip`);
+    return;
+  }
+
+  const content = await mySiteFile.async('string');
+  if (content.includes(instanceName)) instanceName = `${instanceName}1`;
+  const urlSearchParams = search;
+  const testUrl = urlSearchParams.length ? pathname + urlSearchParams : pathname;
+
+  const newContent = addContent(content, `@Url("${testUrl}")\n    public static ${name} ${instanceName};`);
+
+  newZip.file(JDI.MY_SITE_PATH, newContent, { binary: true });
+};
+
+const editTestsFile = (newZip: JSZip, name: string) => {
+  const instanceName = lowerFirst(name);
+  return newZip.file(`src/test/java/tests/${name}Tests.java`, testFileTemplate(instanceName, name));
+};
+
+export const editPomFile = async (newZip: JSZip, po: PageObject) => {
   if (po.library === ElementLibrary.HTML5) return;
 
-  return newZip
-    .file('pom.xml')!
-    .async('string')
-    .then((content) => newZip.file('pom.xml', editPomContent(content, po), { binary: true }));
+  const pomFile = newZip.file('pom.xml');
+  if (!pomFile) {
+    console.error('File pom.xml not found in the zip');
+    return;
+  }
+
+  const content = await pomFile.async('string');
+  newZip.file('pom.xml', editPomContent(content, po), { binary: true });
 };
 
 export const generateAndDownloadZip = async (state: RootState, template: Blob) => {
@@ -102,7 +127,8 @@ export const generateAndDownloadZip = async (state: RootState, template: Blob) =
 
     for (const po of pageObjects) {
       // create page object files
-      const { id, name, framework, url } = po;
+      const { id, name, framework, url, pathname, search } = po;
+
       const locators = selectConfirmedLocators(state, id);
       const isLastPo = po === pageObjects[pageObjects.length - 1];
       const isEmptyPageObject = currentPageObject?.id !== id;
@@ -118,12 +144,11 @@ export const generateAndDownloadZip = async (state: RootState, template: Blob) =
         await generatePoFile(newZip, framework, { pageCode: vividusPageCode });
       } else {
         const page = await getPage(locators, po);
-        const instanceName = lowerFirst(name);
 
         await generatePoFile(newZip, framework, page);
         await editTestPropertiesFile(newZip, po);
-        await editMySiteFile(newZip, po, instanceName);
-        await editTestsFile(newZip, po, instanceName);
+        await editMySiteFile(newZip, framework, pathname, search, name);
+        await editTestsFile(newZip, name);
         await editPomFile(newZip, po);
       }
     }
