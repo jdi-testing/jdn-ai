@@ -56,19 +56,19 @@ export const LocatorsProgress = () => {
   }, [generated, inProgress, deleted]);
 
   return (
-    <React.Fragment>
+    <>
       {isProgressActive ? (
         <div className="jdn__locatorsList-progress">
           <div className="jdn__locatorsList-progress-text">
             {generationStatus === LocatorsGenerationStatus.failed ? (
-              <React.Fragment>
+              <>
                 <Footnote>{LocatorGenerationMessage.failed}</Footnote>
                 <span className="ant-notification-notice-btn">
                   <Button type="text" size="small" onClick={handleRetry}>
                     Retry
                   </Button>
                 </span>
-              </React.Fragment>
+              </>
             ) : (
               <Footnote>
                 {size(inProgress)
@@ -90,6 +90,6 @@ export const LocatorsProgress = () => {
           />
         </div>
       ) : null}
-    </React.Fragment>
+    </>
   );
 };

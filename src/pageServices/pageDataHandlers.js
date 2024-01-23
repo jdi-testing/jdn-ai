@@ -3,7 +3,7 @@ import connector, { sendMessage } from './connector';
 import { request } from '../services/backend';
 import { createOverlay } from './contentScripts/createOverlay';
 import { getFullDocument } from '../common/utils/getFullDocument';
-/* global chrome*/
+// /* global chrome */
 
 let overlayID;
 
@@ -20,7 +20,7 @@ export const removeOverlay = () => {
     connector.attachContentScript(() => {
       chrome.storage.sync.get(['overlayID'], ({ overlayID }) => {
         const overlay = document.getElementById(overlayID);
-        overlay && overlay.remove();
+        if (overlay) overlay.remove();
       });
     });
   }
@@ -37,9 +37,9 @@ Function returns predicted elements. */
 export const predictElements = (endpoint) => {
   let pageData;
   return Promise.all([sendMessage.getPageData(), getFullDocument()])
-    .then(([data, document]) => {
-      pageData = data[0];
-      return sendToModel({ elements: pageData, document }, endpoint);
+    .then(([pageDataResult, documentResult]) => {
+      pageData = pageDataResult[0];
+      return sendToModel({ elements: pageData, document: documentResult }, endpoint);
     })
     .then(
       (response) => {
