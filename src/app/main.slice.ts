@@ -12,7 +12,6 @@ const initialState: MainState = {
   pageHistory: [],
   perception: 0.5,
   scriptMessage: null,
-  showBackdrop: false,
   xpathConfig: {
     maximum_generation_time: 1,
     allow_indexes_at_the_beginning: false,
@@ -55,9 +54,6 @@ const mainSlice = createSlice({
     setScriptMessage(state, { payload }) {
       state.scriptMessage = payload;
     },
-    toggleBackdrop(state, { payload }) {
-      state.showBackdrop = payload;
-    },
     setIsSessionUnique(state, { payload }: PayloadAction<boolean>) {
       state.isSessionUnique = payload;
     },
@@ -77,6 +73,5 @@ export const {
   resetNotifications,
   setBackendAvailable,
   setScriptMessage,
-  toggleBackdrop,
   setIsSessionUnique,
 } = mainSlice.actions;

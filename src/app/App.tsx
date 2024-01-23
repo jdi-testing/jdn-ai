@@ -4,7 +4,6 @@ import { Provider as ReduxProvider, useDispatch, useSelector } from 'react-redux
 import 'antd/dist/reset.css';
 
 import Layout, { Content, Header } from 'antd/lib/layout/layout';
-import { Backdrop } from './components/Backdrop';
 import { StatusBar } from './components/StatusBar';
 import { SeveralTabsWarning } from './components/SeveralTabsWarning';
 import { HttpEndpoint, request } from '../services/backend';
@@ -73,7 +72,6 @@ const App = () => {
   return (
     <>
       <div>
-        <Backdrop />
         <Layout className="jdn__app">
           <Header className="jdn__header">
             <StatusBar />
