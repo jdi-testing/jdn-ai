@@ -2,7 +2,9 @@ import React, { useEffect } from 'react';
 import { Progress } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectIsStarted, selectProgress, selectStage } from '../selectors/progressBar.selector';
-import { setStartTime, updateProgress } from '../progressBar.slice';
+import { setStartTime } from '../progressBar.slice';
+import { updateProgress } from '../thunks/updateProgressBar.thunk';
+import { useAppDispatch } from '../../../app/store/store';
 
 const stageNames: Record<number, string> = {
   1: 'Element parsing... (1/3)',
@@ -26,7 +28,7 @@ const ProgressBarView: React.FC<ProgressBarViewProps> = ({ stageName, progress, 
 };
 
 const ProgressBarController: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const isStarted = useSelector(selectIsStarted);
   const stage = useSelector(selectStage);
   const progress = useSelector(selectProgress);
@@ -39,7 +41,7 @@ const ProgressBarController: React.FC = () => {
       dispatch(setStartTime(Date.now()));
 
       const interval = window.setInterval(() => {
-        dispatch(updateProgress());
+        void dispatch(updateProgress());
       }, updateProgressDelay);
 
       return () => {

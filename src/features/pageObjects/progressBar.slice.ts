@@ -1,4 +1,4 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 interface ProgressBarState {
   isStarted: boolean;
@@ -13,9 +13,6 @@ export const initialState: ProgressBarState = {
   stage: 1,
   startTime: 0,
 };
-
-const timerDuration = 25;
-const delayBeforeNextStage = 500;
 
 const progressBarSlice = createSlice({
   name: 'progressBar',
@@ -37,28 +34,11 @@ const progressBarSlice = createSlice({
       state.isStarted = false;
       state.progress = 0;
       state.stage = 1;
+      state.startTime = 0;
     },
     finishProgressBar(state) {
       state.stage = 3;
       state.progress = 100;
-    },
-    updateProgress(state) {
-      const elapsedTime = Date.now() - state.startTime;
-      const calculatedProgress = Math.min(100, (elapsedTime / (timerDuration * 1000)) * 100);
-
-      if (calculatedProgress >= 100) {
-        state.progress = 100;
-        if (state.stage < 3) {
-          // Delayed call to move to next stage (animation needed):
-          setTimeout(() => {
-            state.stage += 1;
-            state.progress = 0;
-            state.startTime = Date.now();
-          }, delayBeforeNextStage);
-        }
-      } else if (state.progress < 100 && state.stage < 3) {
-        state.progress = Math.floor(calculatedProgress);
-      }
     },
     setStartTime(state, action: PayloadAction<number>) {
       state.startTime = action.payload;
@@ -74,6 +54,6 @@ export const {
   increaseStage,
   finishProgressBar,
   setStartTime,
-  updateProgress,
 } = progressBarSlice.actions;
+
 export default progressBarSlice.reducer;
