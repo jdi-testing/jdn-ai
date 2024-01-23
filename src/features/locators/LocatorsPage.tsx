@@ -46,6 +46,7 @@ import { setIsCustomLocatorFlow } from '../onboarding/store/onboarding.slice';
 import { selectIsEditModalOpen } from './selectors/customLocator.selectors';
 import { setIsEditModalOpen } from './customLocator.slice';
 import { selectIsCustomLocatorFlow } from '../onboarding/store/onboarding.selectors';
+import { stopProgressBar } from '../pageObjects/progressBar.slice';
 
 const { confirm } = Modal;
 
@@ -186,6 +187,8 @@ export const LocatorsPage = () => {
     const saveLocatorsRef = useRef<HTMLElement | null>(null);
     const { updateStepRefs } = useOnboardingContext();
     useEffect(() => {
+      // if LocatorsPage rendered => stopProgressBar:
+      dispatch(stopProgressBar());
       if (saveLocatorsRef.current) {
         updateStepRefs(OnboardingStep.SaveLocators, saveLocatorsRef, pageBack);
       }

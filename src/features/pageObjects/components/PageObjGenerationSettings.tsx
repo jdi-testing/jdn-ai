@@ -23,6 +23,7 @@ import { IN_DEVELOPMENT_TITLE } from '../../../common/constants/constants';
 import { useOnboardingContext } from '../../onboarding/OnboardingProvider';
 import { OnboardingStep } from '../../onboarding/constants';
 import { useOnboarding } from '../../onboarding/useOnboarding';
+import { resetProgressBar, startProgressBar } from '../progressBar.slice';
 
 interface Props {
   pageObj: PageObjectId;
@@ -106,6 +107,11 @@ export const PageObjGenerationSettings: React.FC<Props> = ({ pageObj, library, u
     if (isOnboardingOpen) handleOnChangeStep(OnboardingStep.Generating);
     dispatch(setHideUnadded({ id: pageObj, hideUnadded: false }));
     dispatch(identifyElements({ library, pageObj }));
+    // dispatch disable for PageObjList settings
+    // reset to default progress bar:
+    dispatch(resetProgressBar());
+    // show and start progress bar:
+    dispatch(startProgressBar());
   };
 
   const refSettings = useRef<HTMLElement | null>(null);

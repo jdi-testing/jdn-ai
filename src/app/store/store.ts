@@ -21,12 +21,14 @@ import { cancellableActions } from '../../common/components/notification/middlew
 import { onLocatorsCreated } from '../../features/locators/reducers/identifyElements.thunk';
 
 import { quitThrottlerMiddleware } from '../../common/utils/throttler';
+import progressBarSlice from '../../features/pageObjects/progressBar.slice';
 
 const rootReducer = {
   main: mainSlice,
   filters: filterSlice,
   locators: undoable(locatorsSlice, { undoType: 'LOCATOR_UNDO', jumpType: 'LOCATOR_JUMP' }),
   pageObject: undoable(pageObjectSlice, { undoType: 'PAGEOBJECT_UNDO' }),
+  progressBar: progressBarSlice,
   onboarding: onboardingSlice,
   customLocator: customLocatorSlice,
 };

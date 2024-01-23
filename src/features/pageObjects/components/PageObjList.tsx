@@ -21,6 +21,8 @@ import { ElementLibrary } from '../../locators/types/generationClasses.types';
 import { PageType } from '../../../app/types/mainSlice.types';
 import { selectConfirmedLocators } from '../../locators/selectors/locatorsFiltered.selectors';
 import { FrameworkType } from '../../../common/types/common';
+import ProgressBar from './ProgressBar';
+import { selectIsProgressBarFinished } from '../selectors/progressBar.selector';
 
 interface Props {
   jdiTemplate?: Blob;
@@ -37,6 +39,7 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
     (_state: RootState): string | undefined => _state.pageObject.present.currentPageObject?.toString(),
   );
   const framework = useSelector(selectLastFrameworkType) || FrameworkType.JdiLight;
+  const isProgressBarFinished = useSelector(selectIsProgressBarFinished);
   const pageObjects: PageObject[] = useSelector(selectPageObjects);
   const [activePanel, setActivePanel] = useState<string[] | undefined>([DEFAULT_ACTIVE_KEY]);
 
@@ -54,13 +57,9 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
   }, [currentPageObjectIndex]);
 
   const renderLocators = (elements: ILocator[], library: ElementLibrary) => {
-    if (size(elements)) {
-      return elements.map((element) => (
-        <Locator {...{ element, library }} key={element.element_id} currentPage={PageType.PageObject} />
-      ));
-    } else {
-      return 'No locators selected';
-    }
+    return elements.map((element) => (
+      <Locator {...{ element, library }} key={element.element_id} currentPage={PageType.PageObject} />
+    ));
   };
 
   const renderContent = (
@@ -70,7 +69,7 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
     library: ElementLibrary,
     isPageObjectNotEmpty: boolean,
   ) => {
-    if (isPageObjectNotEmpty) {
+    if (isPageObjectNotEmpty && isProgressBarFinished && elements.length) {
       return renderLocators(elements, library);
     } else {
       return <PageObjGenerationSettings pageObj={pageObjId} {...{ library, url }} />;
@@ -102,7 +101,7 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
       />
       <div ref={contentRef} className="jdn__itemsList-content jdn__pageObject-content">
         {size(pageObjects) ? (
-          <React.Fragment>
+          <>
             <Collapse
               defaultActiveKey={[DEFAULT_ACTIVE_KEY]}
               expandIcon={({ isActive }) => (
@@ -151,7 +150,8 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
                 );
               })}
             </Collapse>
-          </React.Fragment>
+            <ProgressBar />
+          </>
         ) : (
           <PageObjectPlaceholder addPageObjectCallback={setActivePanel} />
         )}
