@@ -9,7 +9,7 @@ import { SeveralTabsWarning } from './components/SeveralTabsWarning';
 import { HttpEndpoint, request } from '../services/backend';
 import { checkSession, initLocatorSocketController } from './utils/appUtils';
 import { selectCurrentPage } from './main.selectors';
-import { AppDispatch, RootState, store } from './store/store';
+import { RootState, store, useAppDispatch } from './store/store';
 import { useOnDisconnect } from './utils/hooks/useOnDisconnect';
 
 import { defineServer } from './reducers/defineServer.thunk';
@@ -29,7 +29,7 @@ const App = () => {
   const backendAvailable = useSelector((state: RootState) => state.main.backendAvailable);
   const xpathConfig = useSelector((state: RootState) => state.main.xpathConfig);
   const currentPage = useSelector(selectCurrentPage);
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const isSessionUnique = useSelector((state: RootState) => state.main.isSessionUnique);
 
   const { stepsRef } = useOnboardingContext();

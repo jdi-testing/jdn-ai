@@ -1,6 +1,5 @@
-import { useDispatch } from 'react-redux';
 import { addPageObj } from '../reducers/addPageObject.thunk';
-import { AppDispatch } from '../../../app/store/store';
+import { useAppDispatch } from '../../../app/store/store';
 import { PageObject } from '../types/pageObjectSlice.types';
 import { useOnboarding } from '../../onboarding/useOnboarding';
 import { OnboardingStep } from '../../onboarding/constants';
@@ -8,7 +7,7 @@ import { OnboardingStep } from '../../onboarding/constants';
 type TSetActivePanel = (pageObjectId: string[] | undefined) => void;
 
 export const useAddPageObject = (setActivePanel: TSetActivePanel, hasDraftPageObject: PageObject | undefined) => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
 
   const { handleOnChangeStep, isOnboardingOpen } = useOnboarding();
   // ToDo refactoring DRY

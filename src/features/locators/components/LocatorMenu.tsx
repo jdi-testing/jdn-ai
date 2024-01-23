@@ -1,7 +1,7 @@
 import React, { ReactNode, SyntheticEvent } from 'react';
 import { Dropdown } from 'antd';
 import { size } from 'lodash';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { MaxGenerationTime } from '../../../app/types/mainSlice.types';
 import { MenuItem } from '../../../common/components/menu/Menu';
 import {
@@ -52,7 +52,7 @@ import {
   selectInProgressActiveIncPriorityByPageObject,
   selectInProgressActiveDecPriorityByPageObject,
 } from '../selectors/locatorsFiltered.selectors';
-import { AppDispatch } from '../../../app/store/store';
+import { useAppDispatch } from '../../../app/store/store';
 import { selectCurrentPageObject, selectLastFrameworkType } from '../../pageObjects/selectors/pageObjects.selectors';
 import { selectIsOnboardingOpen } from '../../onboarding/store/onboarding.selectors';
 
@@ -63,7 +63,7 @@ interface Props {
 }
 
 export const LocatorMenu: React.FC<Props> = ({ setIsEditModalOpen, children, trigger }) => {
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
 
   const activeNonGenerate = useSelector(selectActiveNonGenerateByPO);
   const activeGenerate = useSelector(selectActiveGenerateByPO);

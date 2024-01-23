@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { Col, Row, Select, Space, Typography } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { selectCurrentPageObject, selectPageObjects } from '../selectors/pageObjects.selectors';
-import { AppDispatch, RootState } from '../../../app/store/store';
+import { RootState, useAppDispatch } from '../../../app/store/store';
 import {
   changeElementLibrary,
   setHideUnadded,
@@ -103,7 +103,7 @@ export const PageObjGenerationSettings: React.FC<Props> = ({ pageObj, library, u
 
   const { isOnboardingOpen, handleOnChangeStep } = useOnboarding();
 
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
 
   const handleGenerate = () => {
     if (isOnboardingOpen) handleOnChangeStep(OnboardingStep.Generating);

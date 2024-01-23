@@ -1,8 +1,8 @@
 import React, { useLayoutEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Button, notification } from 'antd';
 import { last } from 'lodash';
-import { AppDispatch, RootState } from '../../../app/store/store';
+import { RootState, useAppDispatch } from '../../../app/store/store';
 
 import { Action } from './types/notification.types';
 import { messages } from './utils/messages';
@@ -11,7 +11,7 @@ import { NotificationInstance } from 'antd/lib/notification/interface';
 
 export const useNotifications = (container?: HTMLElement | null) => {
   const [bottom, setBottom] = React.useState(0);
-  const dispatch = useDispatch<AppDispatch>();
+  const dispatch = useAppDispatch();
   const lastNotification = useSelector((state: RootState) => last(state.main.notifications));
   const openNotification = (
     message: string,
