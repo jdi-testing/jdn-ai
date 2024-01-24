@@ -2,7 +2,6 @@ import React, { useEffect } from 'react';
 import { Progress } from 'antd';
 import { useSelector } from 'react-redux';
 import { selectIsStarted, selectProgress, selectStage } from '../selectors/progressBar.selector';
-import { setStartTime } from '../progressBar.slice';
 import { updateProgress } from '../reducers/updateProgressBar.thunk';
 import { useAppDispatch } from '../../../app/store/store';
 
@@ -33,22 +32,10 @@ const ProgressBarController: React.FC = () => {
   const stage = useSelector(selectStage);
   const progress = useSelector(selectProgress);
   const status = stage === 3 && progress === 100 ? 'success' : 'normal';
-  const updateProgressDelay = 400;
 
   useEffect(() => {
     if (isStarted) {
-      // Setting the start time:
-      dispatch(setStartTime(Date.now()));
-
-      const interval = window.setInterval(() => {
-        void dispatch(updateProgress());
-      }, updateProgressDelay);
-
-      return () => {
-        window.clearInterval(interval);
-      };
-    } else {
-      return;
+      void dispatch(updateProgress());
     }
   }, [isStarted, dispatch]);
 
