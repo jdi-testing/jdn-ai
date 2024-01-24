@@ -5,8 +5,8 @@ import WarningFilled from '../assets/warning-filled.svg';
 import { FieldData } from 'rc-field-form/lib/interface';
 import { Footnote } from '../../../common/components/footnote/Footnote';
 import { Rule } from 'antd/lib/form';
-import { useSelector } from 'react-redux';
-import { RootState, useAppDispatch } from '../../../app/store/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../../app/store/store';
 import { DialogWithForm } from '../../../common/components/DialogWithForm';
 import { selectAvailableClasses } from '../../filter/filter.selectors';
 import { selectCurrentPageObject } from '../../pageObjects/selectors/pageObjects.selectors';
@@ -75,7 +75,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
   locatorType,
   annotationType,
 }) => {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const locators: ILocator[] = useSelector(selectPresentLocatorsByPO);
   const types = useSelector((_state: RootState) => selectAvailableClasses(_state));
   // ToDo refactoring needed for selectors: undefined as return is harm practice:

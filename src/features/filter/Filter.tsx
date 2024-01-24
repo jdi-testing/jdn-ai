@@ -1,7 +1,7 @@
 import React, { ChangeEvent, useMemo, useState } from 'react';
 import { Badge, Button, Checkbox, Divider, Dropdown, Input, Switch, Typography } from 'antd';
 import { SwitchChangeEventHandler } from 'antd/lib/switch';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { selectCurrentPageObject } from '../pageObjects/selectors/pageObjects.selectors';
 import { ElementClass } from '../locators/types/generationClasses.types';
 import { FilterHeader } from './components/FilterHeader';
@@ -10,13 +10,13 @@ import { toggleClassFilter } from './reducers/toggleClassFilter.thunk';
 import { toggleClassFilterAll } from './reducers/toggleClassFilterAll.thunk';
 import { convertFilterToArr } from './utils/filterSet';
 import { FilterIcon } from './components/shared/FilterIcon';
-import { useAppDispatch } from '../../app/store/store';
+import { AppDispatch } from '../../app/store/store';
 
 export const Filter = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [open, setOpen] = useState(false);
   const pageObject = useSelector(selectCurrentPageObject);
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const classFilter = useSelector(selectDetectedClassesFilter);
   const areSelectedAll = useSelector(selectIfSelectedAll);

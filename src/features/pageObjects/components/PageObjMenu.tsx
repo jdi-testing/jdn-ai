@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button, Dropdown } from 'antd';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { size } from 'lodash';
 import { DotsThree } from '@phosphor-icons/react';
@@ -22,7 +22,7 @@ import { RenamePageObjectDialog } from './RenamePageObjDialog';
 import { checkLocatorsValidity } from '../../locators/reducers/checkLocatorValidity.thunk';
 import { OnboardingStep } from '../../onboarding/constants';
 import { OnboardingTooltip } from '../../onboarding/components/OnboardingTooltip';
-import { useAppDispatch } from '../../../app/store/store';
+import { AppDispatch } from '../../../app/store/store';
 import { useOnboardingContext } from '../../onboarding/OnboardingProvider';
 import { selectIsOnboardingOpen } from '../../onboarding/store/onboarding.selectors';
 import { selectIsPageObjectsListUIEnabled } from '../selectors/pageObjectsListUI.selectors';
@@ -33,7 +33,7 @@ interface Props {
 }
 
 export const PageObjMenu: React.FC<Props> = ({ pageObject, elements }) => {
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const { id, locators, name } = pageObject;
 
   const [isRenameModalOpen, setIsRenameModalOpen] = useState(false);

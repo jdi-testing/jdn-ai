@@ -1,12 +1,12 @@
 import { Alert, Button, Steps, Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 /* eslint-disable-next-line */
 // @ts-ignore
 // since webpack works fine with it
 import readme from '../../../../README.md';
 import { BackendStatus } from '../../types/mainSlice.types';
-import { RootState, useAppDispatch } from '../../store/store';
+import { AppDispatch, RootState } from '../../store/store';
 import { useGuideRehype } from '../../utils/hooks/useGuideRehype';
 import { redefineServer } from '../../reducers/redefineServer.thunk';
 import { GuideText } from './text.constants';
@@ -19,7 +19,7 @@ export const Guide = () => {
   const [alertStatus, setAlertStatus] = useState<AlertStatus>(AlertStatus.Hide);
   const [pluginGuideComponent, setPluginGuide] = useGuideRehype();
   const [serverGuideComponent, setServerGuide] = useGuideRehype();
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     const splittedMD = splitMD(readme);

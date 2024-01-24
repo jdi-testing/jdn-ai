@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Progress } from 'antd';
 import { size } from 'lodash';
-import { useSelector } from 'react-redux';
-import { RootState, useAppDispatch } from '../../../app/store/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../../app/store/store';
 import { Footnote } from '../../../common/components/footnote/Footnote';
 import { rerunGeneration } from '../reducers/rerunGeneration.thunk';
 import { LocatorsGenerationStatus } from '../types/locator.types';
@@ -33,7 +33,7 @@ export const LocatorsProgress = () => {
 
   const hideProgressInformation = () => setIsProgressActive(false);
 
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleRetry = () => {
     dispatch(rerunGeneration({ generationData: failed }));

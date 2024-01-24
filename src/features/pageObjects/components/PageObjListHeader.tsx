@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useMemo, useRef } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button, Modal, Row, Space, Tooltip } from 'antd';
 import { CaretDown, Plus, Trash } from '@phosphor-icons/react';
 
@@ -10,7 +10,7 @@ import { selectPageObjects } from '../selectors/pageObjects.selectors';
 import { removeAll as removeAllLocators } from '../../locators/locators.slice';
 import { removeAll as removeAllPageObjects } from '../pageObject.slice';
 import { removeAll as removeAllFilters } from '../../filter/filter.slice';
-import { RootState, useAppDispatch } from '../../../app/store/store';
+import { AppDispatch, RootState } from '../../../app/store/store';
 import { selectLocatorsToGenerate } from '../../locators/selectors/locators.selectors';
 import { generateAndDownloadZip } from '../utils/projectTemplate';
 import { OnboardingStep } from '../../onboarding/constants';
@@ -35,7 +35,7 @@ export const PageObjListHeader: FC<Props> = ({ template, toggleExpand, isExpande
   const enableDownload = useMemo(() => !!size(locatorsToGenerate), [locatorsToGenerate]);
   const hasDraftPageObject: PageObject | undefined = pageObjects.find((pageObject) => !pageObject.locators?.length);
 
-  const dispatch = useAppDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleAddPageObject = useAddPageObject(setActivePanel, hasDraftPageObject);
 
