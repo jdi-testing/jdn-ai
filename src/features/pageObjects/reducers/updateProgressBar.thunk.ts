@@ -5,6 +5,8 @@ import { increaseStage, setProgress, setStartTime } from '../progressBar.slice';
 const timerDuration = 25;
 const delayBeforeNextStage = 500;
 
+// it's a Thunk with setTimeout, so it's async
+// eslint-disable-next-line @typescript-eslint/require-await
 export const updateProgress = createAsyncThunk('progressBar/updateProgress', async (_, { dispatch, getState }) => {
   const state = (getState() as RootState).progressBar;
   const elapsedTime = Date.now() - state.startTime;

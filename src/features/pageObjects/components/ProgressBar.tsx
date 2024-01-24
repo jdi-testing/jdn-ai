@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { Progress } from 'antd';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { selectIsStarted, selectProgress, selectStage } from '../selectors/progressBar.selector';
 import { setStartTime } from '../progressBar.slice';
-import { updateProgress } from '../thunks/updateProgressBar.thunk';
+import { updateProgress } from '../reducers/updateProgressBar.thunk';
 import { useAppDispatch } from '../../../app/store/store';
 
 const stageNames: Record<number, string> = {

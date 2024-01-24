@@ -6,7 +6,6 @@ export type PageObjectId = number;
 
 export interface PageObjectState {
   currentPageObject?: PageObjectId;
-  isPageObjectsListUIEnabled: boolean;
 }
 
 export interface PageObject {

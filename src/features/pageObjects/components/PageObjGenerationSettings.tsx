@@ -9,7 +9,6 @@ import {
   setLocatorType,
   setAnnotationType,
   changeFrameworkType,
-  disablePageObjectsListUI,
 } from '../pageObject.slice';
 import { PageObjectId } from '../types/pageObjectSlice.types';
 import { ElementLibrary, libraryNames } from '../../locators/types/generationClasses.types';
@@ -26,6 +25,7 @@ import { OnboardingStep } from '../../onboarding/constants';
 import { useOnboarding } from '../../onboarding/useOnboarding';
 import { resetProgressBar, startProgressBar } from '../progressBar.slice';
 import { selectIsPageObjectsListUIEnabled } from '../selectors/pageObjectsListUI.selectors';
+import { disablePageObjectsListUI } from '../pageObjectsListUI.slice';
 
 interface Props {
   pageObj: PageObjectId;

@@ -6,11 +6,8 @@ import { ElementId } from '../locators/types/locator.types';
 import { addPageObjReducer } from './reducers/addPageObject.thunk';
 import { ElementLibrary } from '../locators/types/generationClasses.types';
 import { LocatorType, AnnotationType, FrameworkType } from '../../common/types/common';
-import { UIReducers } from './pageObjectsListUI.reducers';
 
-const initialState: PageObjectState = {
-  isPageObjectsListUIEnabled: true,
-};
+const initialState: PageObjectState = {};
 
 const pageObjSlice = createSlice({
   name: 'pageObject',
@@ -71,7 +68,6 @@ const pageObjSlice = createSlice({
     setPageData(state, { payload }: PayloadAction<{ id: PageObjectId; pageData: string }>) {
       pageObjAdapter.upsertOne(state, payload as PageObject);
     },
-    ...UIReducers,
   },
   extraReducers: (builder) => {
     addPageObjReducer(builder);
@@ -94,6 +90,4 @@ export const {
   setAnnotationType,
   setLocatorType,
   setPageData,
-  enablePageObjectsListUI,
-  disablePageObjectsListUI,
 } = pageObjSlice.actions;

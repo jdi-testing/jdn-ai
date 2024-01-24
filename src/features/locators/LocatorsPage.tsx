@@ -7,7 +7,7 @@ import { isEmpty, isEqual, size } from 'lodash';
 import { changePageBack, setScriptMessage } from '../../app/main.slice';
 import { Breadcrumbs } from '../../common/components/breadcrumbs/Breadcrumbs';
 import { customConfirm } from '../../common/components/CustomConfirm';
-import { clearLocators, enablePageObjectsListUI } from '../pageObjects/pageObject.slice';
+import { clearLocators } from '../pageObjects/pageObject.slice';
 import { locatorGenerationController } from './utils/locatorGenerationController';
 import { removeLocators, restoreLocators } from './locators.slice';
 import { LocatorsTree, LocatorTreeProps } from './components/LocatorsTree';
@@ -47,6 +47,7 @@ import { selectIsEditModalOpen } from './selectors/customLocator.selectors';
 import { setIsEditModalOpen } from './customLocator.slice';
 import { selectIsCustomLocatorFlow } from '../onboarding/store/onboarding.selectors';
 import { stopProgressBar } from '../pageObjects/progressBar.slice';
+import { enablePageObjectsListUI } from '../pageObjects/pageObjectsListUI.slice';
 
 const { confirm } = Modal;
 
