@@ -23,6 +23,9 @@ import { IN_DEVELOPMENT_TITLE } from '../../../common/constants/constants';
 import { useOnboardingContext } from '../../onboarding/OnboardingProvider';
 import { OnboardingStep } from '../../onboarding/constants';
 import { useOnboarding } from '../../onboarding/useOnboarding';
+import { resetProgressBar, startProgressBar } from '../progressBar.slice';
+import { selectIsPageObjectsListUIEnabled } from '../selectors/pageObjectsListUI.selectors';
+import { disablePageObjectsListUI } from '../pageObjectsListUI.slice';
 
 interface Props {
   pageObj: PageObjectId;
@@ -106,6 +109,12 @@ export const PageObjGenerationSettings: React.FC<Props> = ({ pageObj, library, u
     if (isOnboardingOpen) handleOnChangeStep(OnboardingStep.Generating);
     dispatch(setHideUnadded({ id: pageObj, hideUnadded: false }));
     dispatch(identifyElements({ library, pageObj }));
+    // disable UI for PageObjList settings:
+    dispatch(disablePageObjectsListUI());
+    // reset to default progress bar:
+    dispatch(resetProgressBar());
+    // show and start progress bar:
+    dispatch(startProgressBar());
   };
 
   const refSettings = useRef<HTMLElement | null>(null);
@@ -160,6 +169,8 @@ export const PageObjGenerationSettings: React.FC<Props> = ({ pageObj, library, u
   const isGenerateAllLoading = () => isLoading() && !currentPageObject?.hideUnadded;
   const isGenerateEmptyLoading = () => isLoading() && currentPageObject?.hideUnadded;
 
+  const isPageObjectsListUIEnabled = useSelector(selectIsPageObjectsListUIEnabled);
+
   return (
     <div className="jdn__pageObject__settings">
       <Footnote className="jdn__pageObject__settings-url">{url}</Footnote>
@@ -176,7 +187,7 @@ export const PageObjGenerationSettings: React.FC<Props> = ({ pageObj, library, u
             <Col flex="auto">
               <Select
                 id="frameworkType"
-                disabled={isMoreThanOnePageObject}
+                disabled={isMoreThanOnePageObject || !isPageObjectsListUIEnabled}
                 defaultValue={currentPageObject?.framework || FrameworkType.JdiLight}
                 className="jdn__select"
                 options={frameworkTypeOptions}
@@ -191,7 +202,7 @@ export const PageObjGenerationSettings: React.FC<Props> = ({ pageObj, library, u
             <Col flex="auto">
               <Select
                 id="library"
-                disabled={isCurrentFrameworkVividus}
+                disabled={isCurrentFrameworkVividus || !isPageObjectsListUIEnabled}
                 value={currentLibrary}
                 className="jdn__select"
                 onChange={onLibraryChange}
@@ -206,7 +217,7 @@ export const PageObjGenerationSettings: React.FC<Props> = ({ pageObj, library, u
             <Col flex="auto">
               <Select
                 id="annotationType"
-                disabled={isCurrentFrameworkVividus}
+                disabled={isCurrentFrameworkVividus || !isPageObjectsListUIEnabled}
                 value={currentAnnotation}
                 defaultValue={currentPageObject?.annotationType || AnnotationType.UI}
                 className="jdn__select"
@@ -226,6 +237,7 @@ export const PageObjGenerationSettings: React.FC<Props> = ({ pageObj, library, u
                 className="jdn__select"
                 onChange={onLocatorTypeChange}
                 options={locatorTypeOptions}
+                disabled={!isPageObjectsListUIEnabled}
               />
             </Col>
           </Row>
@@ -240,13 +252,18 @@ export const PageObjGenerationSettings: React.FC<Props> = ({ pageObj, library, u
             width: '275px',
           }}
         >
-          <PageObjGenerationButton type="primary" loading={isGenerateAllLoading()} onClick={handleGenerate}>
+          <PageObjGenerationButton
+            type="primary"
+            loading={isGenerateAllLoading()}
+            onClick={handleGenerate}
+            disabled={!isPageObjectsListUIEnabled}
+          >
             Generate All
           </PageObjGenerationButton>
           <PageObjGenerationButton
             loading={isGenerateEmptyLoading()}
             onClick={handleEmptyPO}
-            disabled={isOnboardingOpen}
+            disabled={isOnboardingOpen || !isPageObjectsListUIEnabled}
           >
             Empty Page Object
           </PageObjGenerationButton>

@@ -10,7 +10,6 @@ export interface MainState {
   pageHistory: Page[];
   perception: number;
   scriptMessage: { message: string; param: Record<string, any> } | null;
-  showBackdrop: boolean;
   xpathConfig: {
     maximum_generation_time: MaxGenerationTime;
     allow_indexes_at_the_beginning: boolean;

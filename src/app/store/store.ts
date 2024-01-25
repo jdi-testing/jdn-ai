@@ -7,6 +7,7 @@ import locatorsSlice from '../../features/locators/locators.slice';
 import customLocatorSlice from '../../features/locators/customLocator.slice';
 import onboardingSlice from '../../features/onboarding/store/onboarding.slice';
 import pageObjectSlice from '../../features/pageObjects/pageObject.slice';
+import pageObjectsListUISlice from '../../features/pageObjects/pageObjectsListUI.slice';
 
 import { scriptNotifier } from '../../pageServices/scriptNotifier';
 import { updateMessageHandler } from '../../pageServices/scriptMessageHandler';
@@ -21,12 +22,16 @@ import { cancellableActions } from '../../common/components/notification/middlew
 import { onLocatorsCreated } from '../../features/locators/reducers/identifyElements.thunk';
 
 import { quitThrottlerMiddleware } from '../../common/utils/throttler';
+import progressBarSlice from '../../features/pageObjects/progressBar.slice';
+import { useDispatch } from 'react-redux';
 
 const rootReducer = {
   main: mainSlice,
   filters: filterSlice,
   locators: undoable(locatorsSlice, { undoType: 'LOCATOR_UNDO', jumpType: 'LOCATOR_JUMP' }),
   pageObject: undoable(pageObjectSlice, { undoType: 'PAGEOBJECT_UNDO' }),
+  progressBar: progressBarSlice,
+  pageObjectsListUI: pageObjectsListUISlice,
   onboarding: onboardingSlice,
   customLocator: customLocatorSlice,
 };
@@ -58,6 +63,8 @@ export const store = configureStore({
 
 store.subscribe(() => updateMessageHandler(store.dispatch, store.getState()));
 store.subscribe(() => updateSocketMessageHandler(store.dispatch, store.getState()));
+
+export const useAppDispatch = () => useDispatch<AppDispatch>();
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

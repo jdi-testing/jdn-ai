@@ -25,6 +25,7 @@ import { OnboardingTooltip } from '../../onboarding/components/OnboardingTooltip
 import { AppDispatch } from '../../../app/store/store';
 import { useOnboardingContext } from '../../onboarding/OnboardingProvider';
 import { selectIsOnboardingOpen } from '../../onboarding/store/onboarding.selectors';
+import { selectIsPageObjectsListUIEnabled } from '../selectors/pageObjectsListUI.selectors';
 
 interface Props {
   pageObject: PageObject;
@@ -84,6 +85,8 @@ export const PageObjMenu: React.FC<Props> = ({ pageObject, elements }) => {
     }
   }, []);
 
+  const isPageObjectsListUIEnabled = useSelector(selectIsPageObjectsListUIEnabled);
+
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <OnboardingTooltip>
@@ -96,7 +99,7 @@ export const PageObjMenu: React.FC<Props> = ({ pageObject, elements }) => {
           destroyPopupOnHide
         >
           <Button
-            disabled={isOnboardingOpen}
+            disabled={isOnboardingOpen || !isPageObjectsListUIEnabled}
             ref={menuRef}
             className="jdn__itemsList-button jdn__pageObject_button-menu"
             data-testid="dropdown-button"

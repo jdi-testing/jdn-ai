@@ -12,6 +12,8 @@ import { LocalStorageKey, getLocalStorage } from '../../../common/utils/localSto
 import { selectAutoGeneratingLocatorTypes, selectPageObjById } from '../../pageObjects/selectors/pageObjects.selectors';
 import { RootState } from '../../../app/store/store';
 import { runLocatorsGeneration } from './runLocatorsGeneration.thunk';
+import { finishProgressBar } from '../../pageObjects/progressBar.slice';
+import { delay } from '../utils/delay';
 
 interface Meta {
   library: ElementLibrary;
@@ -39,18 +41,26 @@ export const identifyElements = createAsyncThunk('locators/identifyElements', as
       library !== ElementLibrary.Vuetify ? await predictElements(endpoint) : await findByRules();
     const locators = res
       .filter((el: PredictedEntity) => el.is_shown)
-      .map((el: PredictedEntity) => ({
-        ...el,
-        element_id: `${el.element_id}_${pageObj}`,
-        jdnHash: el.element_id,
-        pageObj: pageObj,
-      }));
+      .map((el: PredictedEntity) => {
+        return {
+          ...el,
+          element_id: `${el.element_id}_${pageObj}`,
+          jdnHash: el.element_id,
+          pageObj: pageObj,
+        };
+      });
+
+    thunkAPI.dispatch(finishProgressBar());
+    /* progress-bar finish animation delay: */
+    await delay(2000);
 
     thunkAPI.dispatch(setPageData({ id: pageObj, pageData }));
     thunkAPI.dispatch(createLocators({ predictedElements: locators, library }));
 
     return thunkAPI.fulfillWithValue(locators);
   } catch (error) {
+    // can use params in the function so that when the progress bar is finished there will be information about errors
+    thunkAPI.dispatch(finishProgressBar());
     return thunkAPI.rejectWithValue(null);
   }
 });
