@@ -42,7 +42,7 @@ export interface IOnboardingStep {
   description?: string | React.JSX.Element;
   target?: React.RefObject<HTMLElement> | null;
   nextButtonProps?: TNextButtonProps;
-  prevButtonProps?: TPrevButtonProps;
+  prevButtonProps: TPrevButtonProps;
 }
 
 export interface IOnboardingSteps {
@@ -59,49 +59,58 @@ export const onboardingSteps: IOnboardingSteps = {
       children: 'Create Page Object',
       onClick: undefined,
     },
+    prevButtonProps: {
+      children: 'Back',
+    },
   },
   POsettings: {
     order: OnboardingStep.POsettings,
     title: 'Basic settings',
     description: (
-      <React.Fragment>
+      <>
         <p style={{ marginBottom: '0px' }}>
           At the start of the creation process, you can specify certain characteristics of the Page Object locators for
           your convenience.
         </p>
         <p>Later you can modify these characteristics.</p>
-      </React.Fragment>
+      </>
     ),
     target: undefined,
     nextButtonProps: {
       onClick: undefined,
+    },
+    prevButtonProps: {
+      children: 'Back',
     },
   },
   Generate: {
     order: OnboardingStep.Generate,
     title: 'Start creating',
     description: (
-      <React.Fragment>
+      <>
         <p>
           After clicking this button, the page will be scanned and locators will be generated. Please make sure that you
           have opened the required web page before proceeding.
         </p>
         <p>Also, you can create an Empty Page Object and then select the elements you need for generation.</p>
-      </React.Fragment>
+      </>
     ),
     target: undefined,
     nextButtonProps: {
       children: 'Generate',
       onClick: undefined,
     },
+    prevButtonProps: {
+      children: 'Back',
+    },
   },
   Generating: {
     order: OnboardingStep.Generating,
     title: 'Creating locators...',
     description: (
-      <React.Fragment>
+      <>
         <Spin style={{ display: 'block' }} />
-      </React.Fragment>
+      </>
     ),
     target: undefined,
     nextButtonProps: {
@@ -109,6 +118,7 @@ export const onboardingSteps: IOnboardingSteps = {
       style: { display: 'none' },
     },
     prevButtonProps: {
+      children: 'Back',
       disabled: true,
       style: { display: 'none' },
     },
@@ -116,10 +126,11 @@ export const onboardingSteps: IOnboardingSteps = {
   CustomLocator: {
     order: OnboardingStep.CustomLocator,
     title: 'Create Custom locator',
-    description:
-      'If the JDN has not recognized all the necessary elements on the web page, you can create a custom locator.',
+    description: `No elements were found on this page. 
+      You can go back and change the library settings or create a Custom locator.`,
     target: undefined,
     prevButtonProps: {
+      children: 'Back',
       style: { display: 'none' },
     },
     nextButtonProps: {
@@ -133,6 +144,7 @@ export const onboardingSteps: IOnboardingSteps = {
     description: 'Fill in all the fields and add the new locator to the list',
     target: undefined,
     prevButtonProps: {
+      children: 'Back',
       onClick: undefined,
       disabled: false,
     },
@@ -150,6 +162,7 @@ export const onboardingSteps: IOnboardingSteps = {
       '\n Additionally, you can copy an already optimized locator in your preferred format by accessing the context menu or by right-clicking on the locator.',
     target: undefined,
     prevButtonProps: {
+      children: 'Back',
       style: { display: 'inline-block' },
     },
   },
@@ -160,6 +173,7 @@ export const onboardingSteps: IOnboardingSteps = {
       'Select the needed locators (or choose all of them) to create the final Page object. Note that only selected locators will be added to the final Locators List.',
     target: undefined,
     prevButtonProps: {
+      children: 'Back',
       style: undefined,
     },
     nextButtonProps: {
@@ -175,6 +189,9 @@ export const onboardingSteps: IOnboardingSteps = {
       children: 'Save Page Object',
       onClick: undefined,
     },
+    prevButtonProps: {
+      children: 'Back',
+    },
   },
   DownloadPO: {
     order: OnboardingStep.DownloadPO,
@@ -183,6 +200,7 @@ export const onboardingSteps: IOnboardingSteps = {
       'After saving the required locators, the Page Object is ready. \n You can download all Page Objects as a .zip file.',
     target: undefined,
     prevButtonProps: {
+      children: 'Back',
       style: { display: 'none' },
     },
   },
@@ -192,12 +210,18 @@ export const onboardingSteps: IOnboardingSteps = {
     description:
       'In the context menu, you can edit, rename or delete the Page Object, copy all locators from it, or download the Page Object as a .java file.',
     target: undefined,
+    prevButtonProps: {
+      children: 'Back',
+    },
   },
   Onboarding: {
     order: OnboardingStep.Onboarding,
     title: 'Onboarding tutorial',
     description: 'Provides step-by-step instructions on how to use JDN. You can always go through it again if needed.',
     target: undefined,
+    prevButtonProps: {
+      children: 'Back',
+    },
   },
   Readme: {
     order: OnboardingStep.Readme,
@@ -215,6 +239,9 @@ export const onboardingSteps: IOnboardingSteps = {
     nextButtonProps: {
       onClick: undefined,
     },
+    prevButtonProps: {
+      children: 'Back',
+    },
   },
   Report: {
     order: OnboardingStep.Report,
@@ -222,12 +249,15 @@ export const onboardingSteps: IOnboardingSteps = {
     description:
       'Allows you to report any issues you encounter while using JDN. Your feedback is very important to us!',
     target: undefined,
+    prevButtonProps: {
+      children: 'Back',
+    },
   },
   Connection: {
     order: OnboardingStep.Connection,
     title: 'Server connection type',
     description: (
-      <React.Fragment>
+      <>
         Displays the current type of connection being used by JDN, whether it`&apos;`s the local server or the cloud
         server.
         <Col className="jdn__onboarding_connection">
@@ -238,8 +268,11 @@ export const onboardingSteps: IOnboardingSteps = {
             <DesktopTower size={16} color="#8C8C8C" /> &ndash; you are connected to the local server
           </Row>
         </Col>
-      </React.Fragment>
+      </>
     ),
+    prevButtonProps: {
+      children: 'Back',
+    },
     target: undefined,
   },
 };
