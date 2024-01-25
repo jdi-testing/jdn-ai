@@ -21,7 +21,12 @@ const ProgressBarView: React.FC<ProgressBarViewProps> = ({ stageName, progress, 
   return (
     <div className="jdn_page-object-list_progress-bar-component">
       <p className="stage-name">{stageName}</p>
-      <Progress className="progress-bar" percent={progress} status={status} showInfo={status === 'success'} />
+      <Progress
+        className={`progress-bar${status === 'success' ? ' success' : ''}`}
+        percent={progress}
+        status={status}
+        showInfo={status === 'success'}
+      />
     </div>
   );
 };

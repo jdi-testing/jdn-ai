@@ -3,9 +3,14 @@
 
 	.progress-bar {
 		width: calc(100% - 8px);
+		transition: width linear 100ms;
+
+		&.success {
+			width: calc(100% + 5px);
+		}
 	}
 
 	.stage-name {
-		position: relative;
+		margin: 0;
 	}
 }
