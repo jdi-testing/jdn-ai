@@ -22,9 +22,11 @@
 
     &_locators {
       display: flex;
+      align-items: center;
     }
 
     &_checkbox_wrapper {
+      display: flex;
       margin-right: 12px;
       max-height: 22px;
     }
@@ -37,16 +39,18 @@
     }
 
     &_item {
-      font-family: "Noto Sans Display", sans-serif;
+      display: flex;
+      width: calc(100% - 75px);
+      align-items: center;
+      gap: 12px;
+      flex-grow: 1;
       font-size: 12px;
-      word-break: break-word;
       line-height: 16px;
       padding-top: 6px;
       padding-bottom: 6px;
-      display: flex;
-      width: calc(100% - 75px);
-      gap: 12px;
-      flex-grow: 1;
+
+      font-family: "Noto Sans Display", sans-serif;
+      word-break: break-word;
 
       &--deleted,
       &--deleted &-locator,
