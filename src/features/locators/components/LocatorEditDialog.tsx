@@ -339,20 +339,16 @@ export const LocatorEditDialog: React.FC<Props> = ({
           options={getBlockTypeOptions()}
         />
       </Form.Item>
-      <FormItem name="locatorType" label="Locator" style={{ marginBottom: '8px' }}>
+      <FormItem name="annotationType" label="Locator">
+        <Select disabled={isCurrentFrameworkVividus} options={annotationTypeOptions} />
+      </FormItem>
+      <FormItem name="locatorType" wrapperCol={{ span: 24, xs: { offset: 0 }, sm: { offset: 4 } }}>
         <Select
           onChange={handleLocatorDropdownOnChange}
           options={locatorTypeOptions}
           popupClassName="custom-divider-for-dropdown"
           virtual={false}
         />
-      </FormItem>
-      <FormItem
-        wrapperCol={{ span: 24, xs: { offset: 0 }, sm: { offset: 4 } }}
-        name="annotationType"
-        style={{ marginBottom: '8px' }}
-      >
-        <Select disabled={isCurrentFrameworkVividus} options={annotationTypeOptions} />
       </FormItem>
       <Form.Item
         wrapperCol={{ span: 24, xs: { offset: 0 }, sm: { offset: 4 } }}
@@ -362,12 +358,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
         help={renderValidationMessage()}
         extra={renderValidationWarning()}
       >
-        <Input.TextArea
-          disabled={isLocatorDisabled}
-          autoSize
-          // expands textarea to view port height
-          style={{ maxHeight: `calc(100vh - 396px)`, overflowY: 'scroll' }}
-        />
+        <Input.TextArea spellCheck={false} disabled={isLocatorDisabled} autoSize className="input input__textarea" />
       </Form.Item>
     </DialogWithForm>
   );
