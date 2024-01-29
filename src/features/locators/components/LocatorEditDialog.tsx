@@ -23,7 +23,6 @@ import { changeLocatorAttributes } from '../locators.slice';
 import { createNewName, getLocatorValidationStatus, getLocatorValueOnTypeSwitch } from '../utils/utils';
 import { createLocatorValidationRules } from '../utils/locatorValidationRules';
 import { createNameValidationRules } from '../utils/nameValidationRules';
-import FormItem from 'antd/es/form/FormItem';
 import { LocatorType, SelectOption, AnnotationType, FrameworkType } from '../../../common/types/common';
 import { isFilteredSelect } from '../../../common/utils/helpers';
 import { CALCULATING, newLocatorStub } from '../utils/constants';
@@ -339,17 +338,21 @@ export const LocatorEditDialog: React.FC<Props> = ({
           options={getBlockTypeOptions()}
         />
       </Form.Item>
-      <FormItem name="annotationType" label="Locator">
+      <Form.Item name="annotationType" className="input input__annotation-type" label="Locator">
         <Select disabled={isCurrentFrameworkVividus} options={annotationTypeOptions} />
-      </FormItem>
-      <FormItem name="locatorType" wrapperCol={{ span: 24, xs: { offset: 0 }, sm: { offset: 4 } }}>
+      </Form.Item>
+      <Form.Item
+        name="locatorType"
+        className="input input__locator-type"
+        wrapperCol={{ span: 24, xs: { offset: 0 }, sm: { offset: 4 } }}
+      >
         <Select
           onChange={handleLocatorDropdownOnChange}
           options={locatorTypeOptions}
           popupClassName="custom-divider-for-dropdown"
           virtual={false}
         />
-      </FormItem>
+      </Form.Item>
       <Form.Item
         wrapperCol={{ span: 24, xs: { offset: 0 }, sm: { offset: 4 } }}
         name="locator"
