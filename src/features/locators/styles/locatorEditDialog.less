@@ -26,6 +26,16 @@
     padding-bottom: 12px;
   }
 
+  .input__locator-type,
+  .input__annotation-type {
+    margin-bottom: 8px;
+
+    &__textarea {
+      // expands textarea to view port height:
+      max-height: calc(100vh - 396px);
+      overflow-y: 'scroll';
+    }
+  }
 }
 
 .custom-divider-for-dropdown {

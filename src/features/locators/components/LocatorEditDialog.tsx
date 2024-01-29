@@ -23,7 +23,6 @@ import { changeLocatorAttributes } from '../locators.slice';
 import { createNewName, getLocatorValidationStatus, getLocatorValueOnTypeSwitch } from '../utils/utils';
 import { createLocatorValidationRules } from '../utils/locatorValidationRules';
 import { createNameValidationRules } from '../utils/nameValidationRules';
-import FormItem from 'antd/es/form/FormItem';
 import { LocatorType, SelectOption, AnnotationType, FrameworkType } from '../../../common/types/common';
 import { isFilteredSelect } from '../../../common/utils/helpers';
 import { CALCULATING, newLocatorStub } from '../utils/constants';
@@ -339,21 +338,21 @@ export const LocatorEditDialog: React.FC<Props> = ({
           options={getBlockTypeOptions()}
         />
       </Form.Item>
-      <FormItem name="locatorType" label="Locator" style={{ marginBottom: '8px' }}>
+      <Form.Item name="annotationType" className="input input__annotation-type" label="Locator">
+        <Select disabled={isCurrentFrameworkVividus} options={annotationTypeOptions} />
+      </Form.Item>
+      <Form.Item
+        name="locatorType"
+        className="input input__locator-type"
+        wrapperCol={{ span: 24, xs: { offset: 0 }, sm: { offset: 4 } }}
+      >
         <Select
           onChange={handleLocatorDropdownOnChange}
           options={locatorTypeOptions}
           popupClassName="custom-divider-for-dropdown"
           virtual={false}
         />
-      </FormItem>
-      <FormItem
-        wrapperCol={{ span: 24, xs: { offset: 0 }, sm: { offset: 4 } }}
-        name="annotationType"
-        style={{ marginBottom: '8px' }}
-      >
-        <Select disabled={isCurrentFrameworkVividus} options={annotationTypeOptions} />
-      </FormItem>
+      </Form.Item>
       <Form.Item
         wrapperCol={{ span: 24, xs: { offset: 0 }, sm: { offset: 4 } }}
         name="locator"
@@ -362,12 +361,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
         help={renderValidationMessage()}
         extra={renderValidationWarning()}
       >
-        <Input.TextArea
-          disabled={isLocatorDisabled}
-          autoSize
-          // expands textarea to view port height
-          style={{ maxHeight: `calc(100vh - 396px)`, overflowY: 'scroll' }}
-        />
+        <Input.TextArea spellCheck={false} disabled={isLocatorDisabled} autoSize className="input input__textarea" />
       </Form.Item>
     </DialogWithForm>
   );
