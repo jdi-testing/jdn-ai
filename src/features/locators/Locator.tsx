@@ -168,7 +168,7 @@ export const Locator: FC<Props> = ({ element, currentPage, searchState, depth, s
       return (
         <>
           <span>{getLocatorTemplateWithVividus(pageObjectName, locatorType, element)}</span>(
-          <span className="jdn__locator__output-string">{locatorValue.output}</span>)
+          <span className="jdn__locator_output-string">{locatorValue.output}</span>)
           <br />
         </>
       );

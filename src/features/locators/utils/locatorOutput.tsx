@@ -113,14 +113,14 @@ export const renderColorizedJdiString = (
       <span>
         {annotationType}({getLocatorPrefix(annotationType, locatorType)}
       </span>
-      <span className="jdn__locator__output-string">{`"${getLocatorAnnotationStringByType(
+      <span className="jdn__locator_output-string">{`"${getLocatorAnnotationStringByType(
         locatorOutput,
         locatorType,
         annotationType,
       )}"`}</span>
       )
       <br />
-      <span className="jdn__locator__item-type">public</span>
+      <span className="jdn__locator_item-type">public</span>
       <span>&nbsp;{type}&nbsp;</span>
       {name};
     </>
