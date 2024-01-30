@@ -1,20 +1,17 @@
 @import "../../../common/styles/variables.less";
 
 .jdn {
-  /*
-      XPATHES
-      */
 
   &__locator {
     &_container {
       position: relative;
 
-      & .jdn__locatorsList_button-copy {
+      & .jdn__locator-list_button-copy {
         display: none;
       }
 
       :not(.ant-tree-treenode-disabled) &:hover {
-        & .jdn__locatorsList_button-copy {
+        & .jdn__locator-list_button-copy {
           display: inline-block;
         }
       }
@@ -23,12 +20,14 @@
     &_locators {
       display: flex;
       align-items: flex-start;
+      padding-left: 1px;
     }
 
     &_checkbox_wrapper {
       display: flex;
       margin-right: 12px;
       max-height: 22px;
+      padding-left: 1px;
     }
 
     &_buttons {

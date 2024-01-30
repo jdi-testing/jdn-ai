@@ -1,7 +1,7 @@
 @import "../../../common/styles/variables.less";
 
 .jdn {
-  &__locatorsList {
+  &__locator-list {
     position: relative;
 
     &-content {
@@ -9,11 +9,11 @@
       flex-direction: column;
       justify-content: space-between;
 
-      .ant-checkbox + span {
+      .ant-checkbox+span {
         padding-left: 20px;
       }
 
-      .jdn__locatorsList_button {
+      .jdn__locator-list_button {
         &-copy {
           top: 2px;
           order: 1;
@@ -91,6 +91,10 @@
     .ant-tree {
       &-treenode {
         width: 100%;
+        align-items: flex-start;
+        gap: 1px;
+        align-self: stretch;
+        padding: 6px 8px 6px 1px;
 
         &:hover {
           background-color: @hovered-locator;
@@ -126,8 +130,9 @@
       }
     }
 
-    &_search {
-      width: 275px;
+
+    &_header_locator-search {
+      width: 248px;
       margin-top: 8px;
     }
 
@@ -137,7 +142,7 @@
     }
   }
 
-  &__backConfirm_modal {
+  &__back-confirm_modal {
     width: 416px !important;
 
     .ant-modal-footer {

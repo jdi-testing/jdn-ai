@@ -38,7 +38,7 @@ export const LocatorCopyButton: React.FC<Props> = ({ framework, element, pageObj
       <Button
         onClick={handleCopy}
         onMouseEnter={handleMouseEnter}
-        className="jdn__itemsList-button jdn__locatorsList_button-copy"
+        className="jdn__itemsList-button jdn__locator-list_button-copy"
         icon={<CopySimple size={18} color="currentColor" />}
       />
     </Tooltip>
