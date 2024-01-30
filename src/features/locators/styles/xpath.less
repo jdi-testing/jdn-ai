@@ -5,7 +5,7 @@
       XPATHES
       */
 
-  &__xpath {
+  &__locator {
     &_container {
       position: relative;
 
@@ -22,7 +22,7 @@
 
     &_locators {
       display: flex;
-      align-items: center;
+      align-items: flex-start;
     }
 
     &_checkbox_wrapper {
@@ -38,39 +38,34 @@
       width: 64px;
     }
 
-    &_item {
-      display: flex;
-      width: calc(100% - 75px);
-      align-items: center;
-      gap: 12px;
-      flex-grow: 1;
-      font-size: 12px;
-      line-height: 16px;
-      padding-top: 6px;
-      padding-bottom: 6px;
+    display: flex;
+    width: calc(100% - 75px);
+    font-size: 12px;
 
-      font-family: "Noto Sans Display", sans-serif;
-      word-break: break-word;
+    font-family: "Noto Sans Display",
+    sans-serif;
+    word-break: break-word;
 
-      &--deleted,
-      &--deleted &-locator,
-      &--deleted &-type {
-        color: @jdn-disabled-color;
+    &--deleted,
+    &--deleted &-locator,
+    &--deleted &__item-type {
+      color: @jdn-disabled-color;
 
-        & svg * {
-          stroke: @jdn-disabled-color;
-        }
-      }
-
-      &--disabled,
-      &--disabled &-locator,
-      &--disabled &-type {
-        color: #d9d9d9;
-
-        & svg * {
-          stroke: #d9d9d9;
-        }
+      & svg * {
+        stroke: @jdn-disabled-color;
       }
     }
+
+    &--disabled,
+    &--disabled &-locator,
+    &--disabled &__item-type,
+    &--disabled &__output-string {
+      color: #d9d9d9;
+
+      & svg * {
+        stroke: #d9d9d9;
+      }
+    }
+
   }
 }

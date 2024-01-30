@@ -120,7 +120,7 @@ export const renderColorizedJdiString = (
       )}"`}</span>
       )
       <br />
-      <span className="jdn__locator_item-type">public</span>
+      <span className="jdn__locator__item-type">public</span>
       <span>&nbsp;{type}&nbsp;</span>
       {name};
     </>

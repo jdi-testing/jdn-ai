@@ -187,17 +187,17 @@ export const Locator: FC<Props> = ({ element, currentPage, searchState, depth, s
     <>
       <div
         ref={ref}
-        className="jdn__xpath_container"
+        className="jdn__locator_container"
         onClick={handleLocatorClick}
         onContextMenu={handleLocatorRightClick}
       >
         {isLocatorListPage(currentPage) ? (
           <LocatorMenu {...{ setIsEditModalOpen, trigger: ['contextMenu'] }}>
-            <div className="jdn__xpath_locators">
+            <div className="jdn__locator_locators">
               <div
                 ref={addToPORef as React.LegacyRef<HTMLDivElement>}
                 onContextMenu={(e) => e.stopPropagation()}
-                className="jdn__xpath_checkbox_wrapper"
+                className="jdn__locator_checkbox_wrapper"
               >
                 <Checkbox
                   checked={isChecked}
@@ -207,15 +207,15 @@ export const Locator: FC<Props> = ({ element, currentPage, searchState, depth, s
                 />
               </div>
               <Text
-                className={`jdn__xpath_item${deleted ? ' jdn__xpath_item--deleted' : ''}${
-                  searchState === SearchState.Hidden ? ' jdn__xpath_item--disabled' : ''
+                className={`jdn__locator${deleted ? ' jdn__locator--deleted' : ''}${
+                  searchState === SearchState.Hidden ? ' jdn__locator--disabled' : ''
                 }`}
               >
                 <LocatorIcon {...{ message: elementMessage, locatorValue, deleted, isCustomLocator }} />
                 {renderColorizedString()}
               </Text>
               {searchState !== SearchState.Hidden ? (
-                <div onContextMenu={handleLocatorRightClick} className="jdn__xpath_buttons">
+                <div onContextMenu={handleLocatorRightClick} className="jdn__locator_buttons">
                   <LocatorCopyButton {...{ framework, element, pageObjectName }} />
                   <OnboardingTooltip>
                     <LocatorMenu {...{ setIsEditModalOpen, trigger: ['click', 'contextMenu'] }}>
@@ -231,7 +231,7 @@ export const Locator: FC<Props> = ({ element, currentPage, searchState, depth, s
             </div>
           </LocatorMenu>
         ) : (
-          <Text className="jdn__xpath_item">{renderColorizedString()}</Text>
+          <Text className="jdn__locator">{renderColorizedString()}</Text>
         )}
       </div>
       {isEditModalOpen ? (
