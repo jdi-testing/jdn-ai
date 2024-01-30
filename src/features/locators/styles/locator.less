@@ -2,11 +2,78 @@
 
 .jdn {
 
-	&__locator__output-string {
-		color: @xpath-item-color-locator;
-	}
+  &__locator {
+    display: flex;
+    width: calc(100% - 75px);
+    font-size: 12px;
 
-	&__locator_item-type {
-		color: @xpath-item-color-type;
-	}
+    font-family: "Noto Sans Display",
+      sans-serif;
+    word-break: break-word;
+
+    &_container {
+      position: relative;
+
+      & .jdn__locator-list_button-copy {
+        display: none;
+      }
+
+      :not(.ant-tree-treenode-disabled) &:hover {
+        & .jdn__locator-list_button-copy {
+          display: inline-block;
+        }
+      }
+    }
+
+    &_locators {
+      display: flex;
+      align-items: flex-start;
+      padding-left: 1px;
+    }
+
+    &_checkbox_wrapper {
+      display: flex;
+      margin-right: 8px;
+      max-height: 22px;
+      padding-left: 1px;
+    }
+
+    &_buttons {
+      display: flex;
+      flex-direction: row-reverse;
+      height: 32px;
+      width: 64px;
+    }
+
+    &__locator_output-string {
+      color: @xpath-item-color-locator;
+    }
+
+    &__locator_item-type {
+      color: @xpath-item-color-type;
+    }
+
+
+    &--deleted,
+    &--deleted &-locator,
+    &--deleted &__item-type {
+      color: @jdn-disabled-color;
+
+      & svg * {
+        stroke: @jdn-disabled-color;
+      }
+    }
+
+    &--disabled,
+    &--disabled &-locator,
+    &--disabled &__item-type,
+    &--disabled &__output-string {
+      color: #d9d9d9;
+
+      & svg * {
+        stroke: #d9d9d9;
+      }
+    }
+
+  }
 }

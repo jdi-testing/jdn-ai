@@ -12,7 +12,7 @@ export const LocatorsSearch: FC<Props> = ({ value, onChange }) => {
     <Input
       size="small"
       allowClear
-      className="jdn__locatorsList_search"
+      className="jdn__locator-list_header_locator-search"
       placeholder="Search by type, name or locator"
       value={value}
       onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}

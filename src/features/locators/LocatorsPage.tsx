@@ -224,7 +224,7 @@ export const LocatorsPage = () => {
 
   return (
     <>
-      <div className="jdn__locatorsList">
+      <div className="jdn__locator-list">
         <Row justify="space-between" wrap={false}>
           <Breadcrumbs ref={breadcrumbsRef} />
           <Filter />
@@ -235,7 +235,7 @@ export const LocatorsPage = () => {
           render={(viewProps: LocatorTreeProps['viewProps']) => (
             <div
               ref={containerRef}
-              className="jdn__locatorsList-content jdn__itemsList-content"
+              className="jdn__locator-list-content jdn__itemsList-content"
               style={{ height: containerHeight }}
             >
               {locators.length || areUnselectedAll ? (

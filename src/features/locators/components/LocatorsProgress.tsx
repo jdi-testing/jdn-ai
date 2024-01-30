@@ -58,8 +58,8 @@ export const LocatorsProgress = () => {
   return (
     <>
       {isProgressActive ? (
-        <div className="jdn__locatorsList-progress">
-          <div className="jdn__locatorsList-progress-text">
+        <div className="jdn__locator-list-progress">
+          <div className="jdn__locator-list-progress-text">
             {generationStatus === LocatorsGenerationStatus.failed ? (
               <>
                 <Footnote>{LocatorGenerationMessage.failed}</Footnote>

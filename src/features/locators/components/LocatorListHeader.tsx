@@ -93,7 +93,7 @@ export const LocatorListHeader = ({
 
   return (
     <>
-      <Row justify="space-between" align="bottom">
+      <div className="jdn__locator-list_header_locator-control-group">
         <LocatorsSearch value={searchString} onChange={setSearchString} />
         <OnboardingTooltip>
           <Button
@@ -106,7 +106,8 @@ export const LocatorListHeader = ({
             Custom locator
           </Button>
         </OnboardingTooltip>
-      </Row>
+      </div>
+
       <Row className="jdn__itemsList-header">
         <span className="jdn__itemsList-header-title">
           <CaretDown
@@ -136,7 +137,7 @@ export const LocatorListHeader = ({
         {size(active) ? (
           <LocatorMenu {...{ trigger: ['click'], setIsEditModalOpen }}>
             <Button
-              className="jdn__itemsList-button jdn__locatorsList_button-menu"
+              className="jdn__itemsList-button jdn__locator-list_button-menu"
               icon={<DotsThree size={18} onClick={(e) => e.preventDefault()} />}
             />
           </LocatorMenu>

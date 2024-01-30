@@ -41,7 +41,7 @@ const CustomConfirm: React.FC<Props> = ({
 
   return (
     <Modal
-      className="jdn__backConfirm_modal"
+      className="jdn__back-confirm_modal"
       open={isModalOpen}
       closable={false}
       footer={[

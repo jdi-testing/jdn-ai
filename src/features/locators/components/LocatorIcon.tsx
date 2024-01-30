@@ -17,18 +17,18 @@ export const LocatorIcon: React.FC<Props> = ({ message, locatorValue, deleted })
   const getTooltipText = () => message || 'Edited';
 
   const startedIcon = <Spin size="small" />;
-  const revokedIcon = <PauseCircle size={14} color="#d81515" className="jdn__itemsList-status" />;
-  const deletedIcon = <Trash size={14} color="#9a9da9" className="jdn__itemsList-status" />;
+  const revokedIcon = <PauseCircle size={14} color="#d81515" className="jdn__locator-icon_status" />;
+  const deletedIcon = <Trash size={14} color="#9a9da9" className="jdn__locator-icon_status" />;
 
   const failureIcon = (
     <Tooltip title={locatorValue.errorMessage ?? 'Locator generation was failed'}>
-      <WarningCircle size={14} color="#d81515" className="jdn__itemsList-status" />
+      <WarningCircle size={14} color="#d81515" className="jdn__locator-icon_status" />
     </Tooltip>
   );
 
   const warningEditedIcon = (
     <Tooltip title={getTooltipText()}>
-      <Icon component={WarningEditedSvg} className="jdn__itemsList-status" />
+      <Icon component={WarningEditedSvg} className="jdn__locator-icon_status--edited" />
     </Tooltip>
   );
 
@@ -54,5 +54,5 @@ export const LocatorIcon: React.FC<Props> = ({ message, locatorValue, deleted })
     }
   };
 
-  return renderIcon();
+  return <div className="jdn__locator-icon">{renderIcon()}</div>;
 };
