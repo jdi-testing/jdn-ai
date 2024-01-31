@@ -1,10 +1,15 @@
 import { BaseUrl } from '../types/mainSlice.types';
 
-const devUrl = 'http://10.253.219.156:5000';
-const prodUrl = 'http://10.253.219.156:80';
+export const devUrl = 'http://10.253.219.156:5000';
+export const prodUrl = 'http://10.253.219.156:80';
 
-export const LocalUrl = 'http://localhost:5050';
-export const RemoteUrl: BaseUrl = __DEV_ENVIRONMENT__ ? devUrl : prodUrl;
+export const URL: { [key: string]: BaseUrl } = {
+  devRemote: 'http://10.253.219.156:5000',
+  prodRemote: 'http://10.253.219.156:80',
+  local: 'http://localhost:5050',
+};
+
+export const RemoteUrl: BaseUrl = __DEV_ENVIRONMENT__ ? URL.devRemote : URL.prodRemote;
 
 export enum componentsTexts {
   SeveralTabsWarningMessage = 'You can use the plugin only within 1 tab!',

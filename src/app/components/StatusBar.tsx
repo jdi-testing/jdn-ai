@@ -5,7 +5,7 @@ import { Button, Space, Tooltip, Typography } from 'antd';
 import { isNil } from 'lodash';
 import { CloudCheck, CloudSlash, DesktopTower, Info } from '@phosphor-icons/react';
 import { BackendStatus } from '../types/mainSlice.types';
-import { LocalUrl, componentsTexts } from '../utils/constants';
+import { URL, componentsTexts } from '../utils/constants';
 import { RootState } from '../store/store';
 import DesktopSlash from '../assets/desktopTowerSlash.svg';
 import { readmeLinkAddress } from '../../common/constants/constants';
@@ -23,8 +23,12 @@ type TServerIndicator = {
 
 const ServerIndicator: FC<TServerIndicator> = ({ backendAvailable, serverLocation, generationStatus }) => {
   const locationIcon =
-    serverLocation === LocalUrl ? <DesktopTower size={16} color="#8C8C8C" /> : <CloudCheck size={16} color="#8C8C8C" />;
-  const errorLocationIcon = serverLocation === LocalUrl ? <DesktopSlash /> : <CloudSlash size={16} color="#8C8C8C" />;
+    serverLocation === URL.local ? (
+      <DesktopTower size={16} color="#8C8C8C" />
+    ) : (
+      <CloudCheck size={16} color="#8C8C8C" />
+    );
+  const errorLocationIcon = serverLocation === URL.local ? <DesktopSlash /> : <CloudSlash size={16} color="#8C8C8C" />;
 
   const connectionRef = React.createRef<HTMLElement>();
   const { updateStepRefs } = useOnboardingContext();
@@ -38,7 +42,7 @@ const ServerIndicator: FC<TServerIndicator> = ({ backendAvailable, serverLocatio
   const title =
     generationStatus === LocatorsGenerationStatus.failed
       ? componentsTexts.StatusBarServerNoConnection
-      : serverLocation === LocalUrl
+      : serverLocation === URL.local
       ? componentsTexts.StatusBarLocalServer
       : componentsTexts.StatusBarRemoteServer;
 

@@ -2,7 +2,7 @@ import { ActionReducerMapBuilder, createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosResponse } from 'axios';
 import { toInteger } from 'lodash';
 import { BackendStatus, BaseUrl, MainState } from '../types/mainSlice.types';
-import { LocalUrl, RemoteUrl } from '../utils/constants';
+import { URL, RemoteUrl } from '../utils/constants';
 import { HttpEndpoint, request } from '../../services/backend';
 import { compatibleBuildVer, compatibleMajorVer, compatibleMinorVer } from '../utils/compatibleVersions';
 
@@ -21,7 +21,7 @@ export const defineServer = createAsyncThunk('main/defineServer', async () => {
 
   return Promise.any<AxiosResponse<BaseUrl>>([
     checkVersion(request.get(HttpEndpoint.BUILD, undefined, RemoteUrl), true),
-    checkVersion(request.get(HttpEndpoint.BUILD, undefined, LocalUrl), false),
+    checkVersion(request.get(HttpEndpoint.BUILD, undefined, URL.local), false),
   ]).then(
     (response) => {
       request.setBaseUrl(response.config.baseURL as BaseUrl);
