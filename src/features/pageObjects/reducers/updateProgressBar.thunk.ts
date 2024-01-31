@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '../../../app/store/store';
-import { finishProgressBar, increaseStage, setProgress, setStartTime } from '../progressBar.slice';
+import { increaseStage, setProgress, setStartTime } from '../progressBar.slice';
 import { delay } from '../../locators/utils/delay';
 
 // it's a Thunk with setTimeout, so it's async
@@ -34,12 +34,7 @@ export const updateProgress = createAsyncThunk('progressBar/updateProgress', asy
       dispatch(setProgress(0));
       dispatch(setStartTime(Date.now()));
     } else if (state.stage === totalStages && calculatedProgress >= 100) {
-      if (state.progress !== 100) {
-        // Ensure progress is set to 100% at the end of the last stage
-        dispatch(setProgress(100));
-        // If reached the last stage and 100% progress
-        dispatch(finishProgressBar());
-      }
+      // the last stage should not reach 100% on its own, its end is triggered when receiving data from the backend
       break;
     } else {
       // Update progress if it has not yet reached 100%
