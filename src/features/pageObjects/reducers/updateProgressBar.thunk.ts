@@ -7,7 +7,7 @@ import { delay } from '../../locators/utils/delay';
 // eslint-disable-next-line @typescript-eslint/require-await
 export const updateProgress = createAsyncThunk('progressBar/updateProgress', async (_, { dispatch, getState }) => {
   const updateProgressDelay = 400; // Update 400ms
-  const timerDuration = 3; // Duration of each stage in seconds (total time - 12 min)
+  const timerDuration = 60 * 4; // Duration of each stage in seconds (total time - 12 min)
   const delayBeforeNextStage = 500; // for animation
   const totalStages = 3;
 
