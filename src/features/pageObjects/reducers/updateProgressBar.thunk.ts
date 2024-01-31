@@ -1,13 +1,13 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '../../../app/store/store';
-import { finishProgressBar, increaseStage, setProgress, setStartTime } from '../progressBar.slice';
+import { increaseStage, setProgress, setStartTime } from '../progressBar.slice';
 import { delay } from '../../locators/utils/delay';
 
 // it's a Thunk with setTimeout, so it's async
 // eslint-disable-next-line @typescript-eslint/require-await
 export const updateProgress = createAsyncThunk('progressBar/updateProgress', async (_, { dispatch, getState }) => {
   const updateProgressDelay = 400; // Update 400ms
-  const timerDuration = 60 * 4; // Duration of each stage in seconds (total time - 12 min)
+  const timerDuration = 3; // Duration of each stage in seconds (total time - 12 min)
   const delayBeforeNextStage = 500; // for animation
   const totalStages = 3;
 
@@ -34,12 +34,7 @@ export const updateProgress = createAsyncThunk('progressBar/updateProgress', asy
       dispatch(setProgress(0));
       dispatch(setStartTime(Date.now()));
     } else if (state.stage === totalStages && calculatedProgress >= 100) {
-      if (state.progress !== 100) {
-        // Ensure progress is set to 100% at the end of the last stage
-        dispatch(setProgress(100));
-        // If reached the last stage and 100% progress
-        dispatch(finishProgressBar());
-      }
+      // the last stage should not reach 100% on its own, its end is triggered when receiving data from the backend
       break;
     } else {
       // Update progress if it has not yet reached 100%
