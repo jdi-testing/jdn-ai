@@ -173,7 +173,7 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
           {...{ expandedKeys, onExpand, autoExpandParent }}
           switcherIcon={<CaretDown color="#878A9C" size={14} />}
           treeData={treeNodes}
-          height={containerHeight || 0}
+          style={{ height: 'inherit' }}
         />
       </div>
       <LocatorsProgress />

@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
 import { BackendStatus } from '../types/mainSlice.types';
 import { useOnboarding } from '../../features/onboarding/useOnboarding';
+import { OnboardingTooltip } from '../../features/onboarding/components/OnboardingTooltip';
 
 export const OnboardingButton = () => {
   const [isTooltipVisible, setIsTooltipVisible] = React.useState(false);
@@ -33,17 +34,21 @@ export const OnboardingButton = () => {
         placement="bottomRight"
         open={isTooltipVisible}
         align={{ offset: [16, 0] }}
-        title={componentsTexts.OnboardingButtonTitle}
+        title={
+          isOnboardingOpen ? 'Available only after completing the onboarding' : componentsTexts.OnboardingButtonTitle
+        }
       >
         <div ref={onboardingButtonRef as React.LegacyRef<HTMLDivElement>}>
-          <Button
-            disabled={!isOnboardingAvailable}
-            type="link"
-            icon={<BookOpen size={14} color="#8C8C8C" />}
-            onClick={() => setIsTooltipVisible(false)}
-            onMouseEnter={() => setIsTooltipVisible(true)}
-            onMouseLeave={() => setIsTooltipVisible(false)}
-          />
+          <OnboardingTooltip>
+            <Button
+              disabled={!isOnboardingAvailable}
+              type="link"
+              icon={<BookOpen size={14} color="#8C8C8C" />}
+              onClick={() => setIsTooltipVisible(false)}
+              onMouseEnter={() => setIsTooltipVisible(true)}
+              onMouseLeave={() => setIsTooltipVisible(false)}
+            />
+          </OnboardingTooltip>
         </div>
       </Tooltip>
     </OnboardingPopup>

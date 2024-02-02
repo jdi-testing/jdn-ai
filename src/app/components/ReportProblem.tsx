@@ -182,7 +182,11 @@ export const ReportProblem = () => {
 
   return (
     <div className="jdn__reportProblem">
-      <Tooltip title="Report a problem" placement="bottomRight" align={{ offset: [12, 0] }}>
+      <Tooltip
+        title={!isOnboardingOpen ? 'Report a problem' : 'Available only after completing the onboarding'}
+        placement="bottomRight"
+        align={{ offset: [12, 0] }}
+      >
         <Button
           disabled={isOnboardingOpen}
           ref={reportRef}
@@ -191,7 +195,7 @@ export const ReportProblem = () => {
           loading={serverPingInProcess}
           className="ant-btn ant-btn-link ant-btn-icon-only"
           icon={<Warning size={14} color="#8C8C8C" />}
-        ></Button>
+        />
       </Tooltip>
       {isModalOpen ? (
         <DialogWithForm

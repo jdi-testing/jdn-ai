@@ -26,6 +26,7 @@ import { useOnboarding } from '../../onboarding/useOnboarding';
 import { resetProgressBar, startProgressBar } from '../progressBar.slice';
 import { selectIsPageObjectsListUIEnabled } from '../selectors/pageObjectsListUI.selectors';
 import { disablePageObjectsListUI } from '../pageObjectsListUI.slice';
+import { OnboardingTooltip } from '../../onboarding/components/OnboardingTooltip';
 
 interface Props {
   pageObj: PageObjectId;
@@ -260,13 +261,15 @@ export const PageObjGenerationSettings: React.FC<Props> = ({ pageObj, library, u
           >
             Generate All
           </PageObjGenerationButton>
-          <PageObjGenerationButton
-            loading={isGenerateEmptyLoading()}
-            onClick={handleEmptyPO}
-            disabled={isOnboardingOpen || !isPageObjectsListUIEnabled}
-          >
-            Empty Page Object
-          </PageObjGenerationButton>
+          <OnboardingTooltip>
+            <PageObjGenerationButton
+              loading={isGenerateEmptyLoading()}
+              onClick={handleEmptyPO}
+              disabled={isOnboardingOpen || !isPageObjectsListUIEnabled}
+            >
+              Empty Page Object
+            </PageObjGenerationButton>
+          </OnboardingTooltip>
         </div>
       </div>
     </div>

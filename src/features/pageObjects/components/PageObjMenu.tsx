@@ -92,11 +92,12 @@ export const PageObjMenu: React.FC<Props> = ({ pageObject, elements }) => {
       <OnboardingTooltip>
         <Dropdown
           disabled={isOnboardingOpen}
-          align={{ offset: [15, 0] }}
+          align={{ offset: [2, 0] }}
           trigger={['click']}
           menu={getMenuItems(pageObject, locators, elements)}
           getPopupContainer={(triggerNode) => triggerNode}
           destroyPopupOnHide
+          arrow
         >
           <Button
             disabled={isOnboardingOpen || !isPageObjectsListUIEnabled}
@@ -104,7 +105,7 @@ export const PageObjMenu: React.FC<Props> = ({ pageObject, elements }) => {
             className="jdn__itemsList-button jdn__pageObject_button-menu"
             data-testid="dropdown-button"
             icon={<DotsThree size={18} />}
-          ></Button>
+          />
         </Dropdown>
       </OnboardingTooltip>
       <RenamePageObjectDialog
