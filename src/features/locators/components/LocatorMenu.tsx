@@ -204,7 +204,7 @@ export const LocatorMenu: React.FC<Props> = ({ setIsEditModalOpen, children, tri
 
   return (
     <Dropdown
-      className="locator-menu"
+      className="jdn__locator-menu"
       disabled={isOnboardingOpen}
       menu={{ items: getMenuItems(), onClick: handleMenuClick }}
       align={{ offset: [10, 0] }}
