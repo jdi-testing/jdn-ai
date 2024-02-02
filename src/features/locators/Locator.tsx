@@ -215,9 +215,9 @@ export const Locator: FC<Props> = ({ element, currentPage, searchState, depth, s
                 {renderColorizedString()}
               </Text>
               {searchState !== SearchState.Hidden ? (
-                <div onContextMenu={handleLocatorRightClick} className="jdn__locator_buttons">
-                  <LocatorCopyButton {...{ framework, element, pageObjectName }} />
-                  <OnboardingTooltip>
+                <OnboardingTooltip>
+                  <div onContextMenu={handleLocatorRightClick} className="jdn__locator_buttons">
+                    <LocatorCopyButton {...{ framework, element, pageObjectName }} />
                     <LocatorMenu {...{ setIsEditModalOpen, trigger: ['click', 'contextMenu'] }}>
                       <Button
                         ref={menuRef}
@@ -225,8 +225,8 @@ export const Locator: FC<Props> = ({ element, currentPage, searchState, depth, s
                         icon={<DotsThree size={18} onClick={(e) => e.preventDefault()} />}
                       />
                     </LocatorMenu>
-                  </OnboardingTooltip>
-                </div>
+                  </div>
+                </OnboardingTooltip>
               ) : null}
             </div>
           </LocatorMenu>

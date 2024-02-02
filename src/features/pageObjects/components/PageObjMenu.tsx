@@ -86,25 +86,42 @@ export const PageObjMenu: React.FC<Props> = ({ pageObject, elements }) => {
   }, []);
 
   const isPageObjectsListUIEnabled = useSelector(selectIsPageObjectsListUIEnabled);
+  console.log('code version: ', 10);
 
   return (
     <div onClick={(e) => e.stopPropagation()}>
       <OnboardingTooltip>
         <Dropdown
           disabled={isOnboardingOpen}
-          align={{ offset: [15, 0] }}
+          align={{ offset: [2, 0] }}
           trigger={['click']}
           menu={getMenuItems(pageObject, locators, elements)}
           getPopupContainer={(triggerNode) => triggerNode}
           destroyPopupOnHide
+          arrow
         >
-          <Button
-            disabled={isOnboardingOpen || !isPageObjectsListUIEnabled}
-            ref={menuRef}
-            className="jdn__itemsList-button jdn__pageObject_button-menu"
-            data-testid="dropdown-button"
-            icon={<DotsThree size={18} />}
-          ></Button>
+          {/* had to use a ternary, 
+          because with the usual wrapping in a tooltip component, the dropdown functionality is: */}
+          lost
+          {isOnboardingOpen ? (
+            <OnboardingTooltip>
+              <Button
+                disabled={isOnboardingOpen || !isPageObjectsListUIEnabled}
+                ref={menuRef}
+                className="jdn__itemsList-button jdn__pageObject_button-menu"
+                data-testid="dropdown-button"
+                icon={<DotsThree size={18} />}
+              />
+            </OnboardingTooltip>
+          ) : (
+            <Button
+              disabled={isOnboardingOpen || !isPageObjectsListUIEnabled}
+              ref={menuRef}
+              className="jdn__itemsList-button jdn__pageObject_button-menu"
+              data-testid="dropdown-button"
+              icon={<DotsThree size={18} />}
+            />
+          )}
         </Dropdown>
       </OnboardingTooltip>
       <RenamePageObjectDialog

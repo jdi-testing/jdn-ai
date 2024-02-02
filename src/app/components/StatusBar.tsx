@@ -21,6 +21,16 @@ type TServerIndicator = {
   generationStatus: LocatorsGenerationStatus;
 };
 
+const getTitle = (generationStatus: LocatorsGenerationStatus, serverLocation: string) => {
+  if (generationStatus === LocatorsGenerationStatus.failed) {
+    return componentsTexts.StatusBarServerNoConnection;
+  } else if (serverLocation === URL.local) {
+    return componentsTexts.StatusBarLocalServer;
+  } else {
+    return componentsTexts.StatusBarRemoteServer;
+  }
+};
+
 const ServerIndicator: FC<TServerIndicator> = ({ backendAvailable, serverLocation, generationStatus }) => {
   const locationIcon =
     serverLocation === URL.local ? (
@@ -39,17 +49,13 @@ const ServerIndicator: FC<TServerIndicator> = ({ backendAvailable, serverLocatio
     }
   }, [backendAvailable, serverLocation, generationStatus]);
 
-  const title =
-    generationStatus === LocatorsGenerationStatus.failed
-      ? componentsTexts.StatusBarServerNoConnection
-      : serverLocation === URL.local
-      ? componentsTexts.StatusBarLocalServer
-      : componentsTexts.StatusBarRemoteServer;
+  const title = () => getTitle(generationStatus, serverLocation);
 
   return backendAvailable === BackendStatus.Accessed ? (
     <Tooltip placement="bottomRight" align={{ offset: [12, 0] }} title={title}>
       <Button
         ref={connectionRef}
+        style={{ cursor: 'default' }}
         type="link"
         icon={
           generationStatus === LocatorsGenerationStatus.failed ? (
