@@ -8,7 +8,7 @@ import { LocatorTaskStatus, LocatorElementStatus } from '../../features/locators
 
 const ADD_ELEMENT_TO_PO = 'To get data add element to Page Object';
 
-/* global chrome */
+///* global chrome */
 export const highlightOnPage = () => {
   let port;
   let nodes = [];
