@@ -15,16 +15,17 @@ You can find the video instructions on YouTube in [English](https://www.youtube.
 
 **Contents**
 
-* [Plugin setup](#plugin-setup)
-  * [Frontend setup](#frontend-setup)
-  * [Server setup](#server-setup)
-* [Working with JDN plugin](#working-with-jdn-plugin)
-  * [Launch JDN plugin](#launch-jdn-plugin)
-  * [Generate page objects](#generate-page-objects)
-  * [Download page objects](#download-page-objects)
-  * [Manage locators](#manage-locators)
-* [FAQ](#faq)
-* [Support](#support)
+- [JDN plugin](#jdn-plugin)
+  - [Plugin setup](#plugin-setup)
+    - [Frontend setup](#frontend-setup)
+    - [Server setup](#server-setup)
+  - [Working with JDN plugin](#working-with-jdn-plugin)
+    - [Launch JDN plugin](#launch-jdn-plugin)
+    - [Generate page objects](#generate-page-objects)
+    - [Download page objects](#download-page-objects)
+    - [Manage locators](#manage-locators)
+  - [FAQ](#faq)
+  - [Support](#support)
 
 ## Plugin setup
 The current JDN version is available in the Chrome Web Store or can be downloaded as a client-server application.
@@ -52,32 +53,37 @@ If the plugin does not work after downloading from the Chrome Web Store, you can
 
 If you are an EPAM employee, skip this section. Turn on EPAM VPN to enable connection to the server and :warning: make sure the VPN connection is established. In other cases, please use the instructions below.
 
-1. Set up [Docker](https://www.docker.com/products/docker-desktop)  
-2. Download the latest Docker Compose file from the `develop` branch and run `docker compose`  
-3. On _Windows 10_, use the command line; on _macOS_, use the native terminal.
+1. Set up [Docker Desktop](https://www.docker.com/products/docker-desktop) or [Docker CLI](https://www.docker.com/products/cli)
+2. Run Docker Daemon   
+3. On _Windows 10_, use the command line; on _macOS_ and _Linux_, use the native terminal.
 
 **Windows**
 ```shell
-docker rm --force jdi-qasp-ml-api && docker image rm ghcr.io/jdi-testing/jdi-qasp-ml:rc --force && curl.exe --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/rc/docker-compose-rc.yaml && docker compose up
+set SELENOID_PARALLEL_SESSIONS_COUNT=%NUMBER_OF_PROCESSORS%&& docker rm --force jdi-qasp-ml-api && docker image rm ghcr.io/jdi-testing/jdi-qasp-ml:rc --force && curl.exe --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/rc/docker-compose-rc.yaml && curl.exe --output browsers.json --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/rc/browsers.json && docker compose up
 ```
-**macOS/Linux**
+**macOS**
 ```shell
-docker rm --force jdi-qasp-ml-api && docker image rm ghcr.io/jdi-testing/jdi-qasp-ml:rc --force && curl --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/rc/docker-compose-rc.yaml && docker compose up
+export SELENOID_PARALLEL_SESSIONS_COUNT=$(sysctl -n hw.ncpu) && docker rm --force jdi-qasp-ml-api && docker image rm ghcr.io/jdi-testing/jdi-qasp-ml:rc --force && curl --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/rc/docker-compose-rc.yaml && curl --output browsers.json https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/rc/browsers.json && docker-compose up
+```
+**Linux**
+```shell
+export SELENOID_PARALLEL_SESSIONS_COUNT=$(nproc) && docker rm --force jdi-qasp-ml-api && docker image rm ghcr.io/jdi-testing/jdi-qasp-ml:rc --force && curl --output docker-compose.yaml https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/rc/docker-compose-rc.yaml && curl --output browsers.json https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/rc/browsers.json && docker compose up
 ```
 
 <details>
   <summary>Commands to install the development version</summary>
   
 **Windows**
-
 ```shell
-docker rm --force jdi-qasp-ml-api && docker image rm ghcr.io/jdi-testing/jdi-qasp-ml:latest --force && curl.exe --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/develop/docker-compose.yaml && docker compose up
+set SELENOID_PARALLEL_SESSIONS_COUNT=%NUMBER_OF_PROCESSORS%&& docker rm --force jdi-qasp-ml-api && docker image rm ghcr.io/jdi-testing/jdi-qasp-ml:latest --force && curl.exe --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/develop/docker-compose.yaml && curl.exe --output browsers.json --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/develop/browsers.json && docker compose up
 ```
-
-**macOS/Linux**
-
+**macOS**
 ```shell
-docker rm --force jdi-qasp-ml-api && docker image rm ghcr.io/jdi-testing/jdi-qasp-ml:latest --force && curl --output docker-compose.yaml --url https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/develop/docker-compose.yaml && docker compose up
+export SELENOID_PARALLEL_SESSIONS_COUNT=$(sysctl -n hw.ncpu) && docker rm --force jdi-qasp-ml-api && docker image rm ghcr.io/jdi-testing/jdi-qasp-ml:latest --force && curl --output docker-compose.yaml https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/develop/docker-compose.yaml && curl --output browsers.json https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/develop/browsers.json && docker-compose up
+```
+**Linux**
+```shell
+export SELENOID_PARALLEL_SESSIONS_COUNT=$(nproc) && docker rm --force jdi-qasp-ml-api && docker image rm ghcr.io/jdi-testing/jdi-qasp-ml:latest --force && curl --output docker-compose.yaml https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/develop/docker-compose.yaml && curl --output browsers.json https://raw.githubusercontent.com/jdi-testing/jdi-qasp-ml/develop/browsers.json && docker compose up
 ```
 
 </details>
