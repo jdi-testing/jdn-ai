@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import React, { useEffect, useRef, useState } from 'react';
 import { Collapse } from 'antd';
 import Children from 'react-children-utilities';
@@ -39,11 +40,13 @@ export const useGuideRehype = () =>
         // @ts-ignore
         details: (props) => {
           // @ts-ignore
-          const header = Children.onlyText(Children.filter(props.children, (child) => child.type === 'summary'));
+          const headerText = Children.onlyText(Children.filter(props.children, (child) => child.type === 'summary'));
+          const key = `details-${headerText}-${Math.random().toString(16).slice(2)}`;
+
           return (
             <div className="jdn__guide_collapse">
               <Collapse ghost>
-                <Collapse.Panel key="0" {...{ header }}>
+                <Collapse.Panel key={key} {...{ header: headerText }}>
                   {props.children}
                 </Collapse.Panel>
               </Collapse>
