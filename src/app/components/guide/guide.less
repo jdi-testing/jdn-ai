@@ -36,6 +36,20 @@
   &_code {
     position: relative;
 
+
+    pre {
+      &::-webkit-scrollbar {
+        -webkit-appearance: none;
+        height: 4px;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        border-radius: 5px;
+        background-color: #8C8C8C;
+        -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+      }
+    }
+
     code {
       line-height: 26px;
     }
