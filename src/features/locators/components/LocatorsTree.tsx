@@ -16,6 +16,7 @@ import { selectCurrentPageObject } from '../../pageObjects/selectors/pageObjects
 import { selectPresentLocatorsByPO } from '../selectors/locatorsByPO.selectors';
 import { selectFilteredLocators } from '../selectors/locatorsFiltered.selectors';
 import { isLocatorListPage } from '../../../app/utils/helpers';
+import type RcTree from 'rc-tree';
 
 export enum SearchState {
   None = 'none',
@@ -52,7 +53,7 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
   const [autoExpandParent, setAutoExpandParent] = useState(true);
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const treeRef = useRef(null);
+  const treeRef = useRef<RcTree>(null);
 
   const containerHeight = useSize(containerRef)?.height;
 
@@ -152,12 +153,9 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
     if (scrollToLocator) {
       setTimeout(() => {
         // antd docs for scrollTo https://github.com/ant-design/ant-design/blob/master/components/tree/index.en-US.md#tree-methods
-        treeRef.current &&
-          containerHeight &&
-          // bug in ant's typings, impossible to create correct ref type
-          // eslint-disable-next-line
-          // @ts-ignore
+        if (treeRef.current && containerHeight) {
           treeRef.current.scrollTo({ key: scrollToLocator, align: 'top', offset: containerHeight / 2 });
+        }
       }, 500);
     }
   }, [expandedKeys]);
@@ -173,6 +171,7 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
           {...{ expandedKeys, onExpand, autoExpandParent }}
           switcherIcon={<CaretDown color="#878A9C" size={14} />}
           treeData={treeNodes}
+          height={containerHeight || 0} // necessary for scrollTo works
           style={{ height: 'inherit' }}
         />
       </div>
