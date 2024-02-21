@@ -8,7 +8,7 @@ import { PageObjValidationErrorType } from '../utils/constants';
 import { selectPageObjects } from '../selectors/pageObjects.selectors';
 import { changeName } from '../pageObject.slice';
 import { PageObjectId } from '../types/pageObjectSlice.types';
-import { isPONameUnique } from '../../pageObjects/utils/pageObject';
+import { isPONameUnique } from '../utils/pageObject';
 
 interface Props {
   isModalOpen: boolean;
@@ -37,7 +37,7 @@ export const RenamePageObjectDialog: React.FC<Props> = ({ isModalOpen, setIsModa
     },
     () => ({
       validator(_: Rule, value: string) {
-        if (value.length && !isPONameUnique(pageObjects, pageObjId, value)) {
+        if (value.length && !isPONameUnique(pageObjects, value)) {
           return Promise.reject(new Error(PageObjValidationErrorType.DuplicatedPageObjName));
         } else return Promise.resolve();
       },

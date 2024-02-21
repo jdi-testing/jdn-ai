@@ -85,7 +85,14 @@
         "varsIgnorePattern": "_"
       }
     ],
-    "@typescript-eslint/ban-ts-comment": "warn"
+    "@typescript-eslint/ban-ts-comment": "warn",
+    "@typescript-eslint/naming-convention": [
+      "warn",
+      {
+        "selector": "variable",
+        "format": ["camelCase", "PascalCase", "UPPER_CASE"]
+      }
+    ]
   },
   "settings": {
     "react": {

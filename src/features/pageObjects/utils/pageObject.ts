@@ -2,10 +2,9 @@ import { saveAs } from 'file-saver';
 import { chain, isEmpty, size, subtract, toLower, toString, truncate, upperFirst } from 'lodash';
 import connector from '../../../pageServices/connector';
 import { ElementId, ILocator } from '../../locators/types/locator.types';
-import { PageObject, PageObjectId } from '../../pageObjects/types/pageObjectSlice.types';
+import { PageObject } from '../types/pageObjectSlice.types';
 import { ElementLabel, ElementLibrary } from '../../locators/types/generationClasses.types';
 import javaReservedWords from './javaReservedWords.json';
-import perfReservedWords from './perfReservedWords.json';
 import { getPageObjectTemplateForJdi, getPageObjectTemplateForVividus } from './pageObjectTemplate';
 import { pageObjectTemplatePerfTest } from './pageObjectTemplatePerfTest';
 import { getJDILabel } from '../../locators/utils/locatorTypesUtils';
@@ -13,14 +12,14 @@ import { MAX_LOCATOR_NAME_LENGTH } from './constants';
 import { FrameworkType } from '../../../common/types/common';
 
 export const isStringMatchesReservedWord = (string: string) => javaReservedWords.includes(string);
-
-export const isStringMatchesReservedWordPerfTest = (string: string) => perfReservedWords.includes(string);
+// ToDo: uncomment with validation rework, see issue #1176:
+// export const isStringMatchesReservedWordPerfTest = (string: string) => perfReservedWords.includes(string);
 
 export const isNameUnique = (elements: ILocator[], element_id: ElementId, newName: string) =>
   !elements.find((elem) => elem.name === newName && elem.element_id !== element_id);
 
-export const isPONameUnique = (elements: PageObject[], id: PageObjectId, newName: string) =>
-  !elements.find((elem) => toLower(elem.name) === toLower(newName) && elem.id !== id);
+export const isPONameUnique = (elements: PageObject[], newName: string) =>
+  !elements.find((elem) => toLower(elem.name) === toLower(newName));
 
 export const createElementName = (
   element: ILocator,

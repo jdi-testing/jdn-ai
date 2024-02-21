@@ -60,10 +60,13 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
   const { expandAll, setExpandAll, searchString } = viewProps;
 
   const currentPage = useSelector(selectCurrentPage).page;
-  const origLocators = useSelector(selectPresentLocatorsByPO);
+  const originalLocators = useSelector(selectPresentLocatorsByPO);
   const filteredLocators = useSelector(selectFilteredLocators);
   const locators =
-    size(origLocators) !== size(filteredLocators) ? setNewParents(origLocators, filteredLocators || []) : origLocators;
+    originalLocators.length !== filteredLocators.length
+      ? setNewParents(originalLocators, filteredLocators || [])
+      : originalLocators;
+
   const scrollToLocator = useSelector((_state: RootState) => _state.locators.present.scrollToLocator);
   const library = useSelector(selectCurrentPageObject)?.library || defaultLibrary;
 

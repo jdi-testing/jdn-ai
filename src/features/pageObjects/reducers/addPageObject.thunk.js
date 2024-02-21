@@ -2,18 +2,18 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { isNull, map, size, toLower } from 'lodash';
 import {
   pageObjAdapter,
-  selectLastElementLibrary,
-  selectLastLocatorType,
   selectLastAnnotationType,
+  selectLastElementLibrary,
+  selectLastFrameworkType,
+  selectLastLocatorType,
   selectMaxId,
   simpleSelectPageObjects,
-  selectLastFrameworkType,
 } from '../selectors/pageObjects.selectors';
 import { defaultLibrary } from '../../locators/types/generationClasses.types';
 import { getPageAttributes, isPONameUnique } from '../utils/pageObject';
 import { getClassName } from '../utils/pageObjectTemplate';
-import { LocalStorageKey, getLocalStorage } from '../../../common/utils/localStorage';
-import { AnnotationType, LocatorType, FrameworkType } from '../../../common/types/common';
+import { getLocalStorage, LocalStorageKey } from '../../../common/utils/localStorage';
+import { AnnotationType, FrameworkType, LocatorType } from '../../../common/types/common';
 
 export const addPageObj = createAsyncThunk('pageObject/addPageObj', async (payload, { getState }) => {
   const res = await getPageAttributes();
@@ -59,13 +59,8 @@ export const addPageObjReducer = (builder) => {
       const names = map(pageObjects, 'name');
       let name = className;
 
-      for (let index = 0; !isPONameUnique(pageObjects, 0, name); index++) {
-        const repeats = size(
-          names.filter((_name) => {
-            const res = toLower(_name).includes(toLower(className));
-            return res;
-          }),
-        );
+      for (let index = 0; !isPONameUnique(pageObjects, name); index++) {
+        const repeats = size(names.filter((_name) => toLower(_name).includes(toLower(className))));
         name = `${className}${repeats + index}`;
       }
 
