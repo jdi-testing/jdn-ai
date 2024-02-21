@@ -2,7 +2,7 @@ import { saveAs } from 'file-saver';
 import { chain, isEmpty, size, subtract, toLower, toString, truncate, upperFirst } from 'lodash';
 import connector from '../../../pageServices/connector';
 import { ElementId, ILocator } from '../../locators/types/locator.types';
-import { PageObject } from '../../pageObjects/types/pageObjectSlice.types';
+import { PageObject } from '../types/pageObjectSlice.types';
 import { ElementLabel, ElementLibrary } from '../../locators/types/generationClasses.types';
 import javaReservedWords from './javaReservedWords.json';
 import { getPageObjectTemplateForJdi, getPageObjectTemplateForVividus } from './pageObjectTemplate';

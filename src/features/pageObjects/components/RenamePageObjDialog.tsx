@@ -8,7 +8,7 @@ import { PageObjValidationErrorType } from '../utils/constants';
 import { selectPageObjects } from '../selectors/pageObjects.selectors';
 import { changeName } from '../pageObject.slice';
 import { PageObjectId } from '../types/pageObjectSlice.types';
-import { isPONameUnique } from '../../pageObjects/utils/pageObject';
+import { isPONameUnique } from '../utils/pageObject';
 
 interface Props {
   isModalOpen: boolean;
