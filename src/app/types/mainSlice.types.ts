@@ -1,4 +1,4 @@
-import { AnyAction } from '@reduxjs/toolkit';
+import type { AnyAction } from '@reduxjs/toolkit';
 import { PageObjectId } from '../../features/pageObjects/types/pageObjectSlice.types';
 
 export interface MainState {
@@ -8,7 +8,6 @@ export interface MainState {
   serverVersion?: string;
   notifications: Notification[];
   pageHistory: Page[];
-  perception: number;
   scriptMessage: { message: string; param: Record<string, any> } | null;
   xpathConfig: {
     maximum_generation_time: MaxGenerationTime;
@@ -41,7 +40,8 @@ export enum BackendStatus {
   OutdatedServerLocal = 'Local server version need to be updated.',
   OutdatedPluginLocal = 'Plugin version need to be updated.',
   IncompatibleVersionRemote = 'Remote server version is incompatible. Please, update plugin',
-  IncompatibleVersions = 'Remote and local server versions are incompatible. Please, update plugin or local server, or try to connect the remote server.',
+  // IncompatibleVersions = `Remote and local server versions are incompatible.
+  // Please, update plugin or local server, or try to connect the remote server.`,
   Retry = 'Retrying...',
 }
 

@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Button, Modal, Tooltip, Row } from 'antd';
+import React, { useEffect, useRef, useState } from 'react';
+import { Button, Modal, Row, Tooltip } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { isEmpty, isEqual, size } from 'lodash';
@@ -8,7 +8,7 @@ import { changePageBack, setScriptMessage } from '../../app/main.slice';
 import { Breadcrumbs } from '../../common/components/breadcrumbs/Breadcrumbs';
 import { customConfirm } from '../../common/components/CustomConfirm';
 import { clearLocators } from '../pageObjects/pageObject.slice';
-import { locatorGenerationController } from './utils/locatorGenerationController';
+import { locatorGenerationController } from './utils/LocatorGenerationController';
 import { removeLocators, restoreLocators } from './locators.slice';
 import { LocatorsTree, LocatorTreeProps } from './components/LocatorsTree';
 import { LocatorListHeader } from './components/LocatorListHeader';
@@ -18,7 +18,7 @@ import { RootState } from '../../app/store/store';
 import { IdentificationStatus } from './types/locator.types';
 import { LocatorTreeSpinner } from './components/LocatorTreeSpinner';
 import { removeAll as removeAllFilters, setFilter } from '../filter/filter.slice';
-import { selectIfUnselectedAll, selectClassFilterByPO } from '../filter/filter.selectors';
+import { selectClassFilterByPO, selectIfUnselectedAll } from '../filter/filter.selectors';
 
 import {
   getLocatorsIdsByPO,
@@ -26,14 +26,14 @@ import {
   selectPresentLocatorsByPO,
 } from './selectors/locatorsByPO.selectors';
 import {
-  selectFilteredLocators,
-  selectInProgressGenerateByPageObj,
+  selectCalculatedAndCheckedByPageObj,
   selectCheckedLocatorsByPageObject,
+  selectDeletedCheckedByPageObj,
+  selectFilteredLocators,
+  selectGenerateByPageObject,
+  selectInProgressGenerateByPageObj,
   selectInProgressGenerateHashes,
   selectInProgressHashes,
-  selectCalculatedAndCheckedByPageObj,
-  selectDeletedCheckedByPageObj,
-  selectGenerateByPageObject,
 } from './selectors/locatorsFiltered.selectors';
 import { useNotifications } from '../../common/components/notification/useNotifications';
 import { selectCurrentPageObject } from '../pageObjects/selectors/pageObjects.selectors';

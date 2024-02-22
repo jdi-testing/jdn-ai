@@ -1,5 +1,5 @@
 import { WebSocketMessage } from '../../../services/backend';
-import { JDNHash, ILocator, LocatorTaskStatus } from '../types/locator.types';
+import { ILocator, JDNHash, LocatorTaskStatus } from '../types/locator.types';
 import { webSocketController } from '../../../services/webSocketController';
 import { getFullDocument } from '../../../common/utils/getFullDocument';
 import { MainState, MaxGenerationTime } from '../../../app/types/mainSlice.types';
@@ -8,15 +8,13 @@ import { PageObject } from '../../pageObjects/types/pageObjectSlice.types';
 export const isGeneratedStatus = (taskStatus: LocatorTaskStatus) => taskStatus === LocatorTaskStatus.SUCCESS;
 
 class LocatorGenerationController {
-  onGenerationFailed = null;
-
   sessionId: string;
 
   pageObject: PageObject;
 
   xPathConfig: MainState['xpathConfig'];
 
-  document: string;
+  fullDocument: string;
 
   init(sessionId: string, xPathConfig: MainState['xpathConfig']) {
     this.sessionId = sessionId;
@@ -29,7 +27,7 @@ class LocatorGenerationController {
     maxGenerationTime?: MaxGenerationTime,
   ) {
     if (pageObject) this.pageObject = pageObject;
-    this.document = await getFullDocument();
+    this.fullDocument = await getFullDocument();
 
     const hashes = elements.map((element) => element.jdnHash);
 
@@ -44,7 +42,7 @@ class LocatorGenerationController {
         JSON.stringify({
           action: WebSocketMessage.SCHEDULE_MULTIPLE_XPATH_GENERATIONS,
           payload: {
-            document: this.document,
+            document: this.fullDocument,
             id: hashes,
             config,
           },

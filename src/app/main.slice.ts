@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { defineServerReducer } from './reducers/defineServer.thunk';
 import { PageObjectId } from '../features/pageObjects/types/pageObjectSlice.types';
 import { BackendStatus, MainState, Notification, PageType } from './types/mainSlice.types';
@@ -10,7 +11,6 @@ const initialState: MainState = {
   isSessionUnique: true,
   notifications: [],
   pageHistory: [],
-  perception: 0.5,
   scriptMessage: null,
   xpathConfig: {
     maximum_generation_time: 1,
@@ -35,21 +35,12 @@ const mainSlice = createSlice({
       state.pageHistory.pop();
       state.notifications = [];
     },
-    changePerception(state, { payload }) {
-      state.perception = payload;
-    },
     clearAll: (state) => {
       const { backendAvailable, baseUrl, serverVersion } = state;
       return { ...initialState, backendAvailable, baseUrl, serverVersion };
     },
     pushNotification(state, { payload }: PayloadAction<Notification>) {
       state.notifications.push(payload);
-    },
-    resetNotifications(state) {
-      state.notifications.length = 0;
-    },
-    setBackendAvailable(state, { payload }) {
-      state.backendAvailable = payload;
     },
     setScriptMessage(state, { payload }) {
       state.scriptMessage = payload;
@@ -64,14 +55,5 @@ const mainSlice = createSlice({
 });
 
 export default mainSlice.reducer;
-export const {
-  changePage,
-  changePageBack,
-  changePerception,
-  clearAll,
-  pushNotification,
-  resetNotifications,
-  setBackendAvailable,
-  setScriptMessage,
-  setIsSessionUnique,
-} = mainSlice.actions;
+export const { changePage, changePageBack, clearAll, pushNotification, setScriptMessage, setIsSessionUnique } =
+  mainSlice.actions;

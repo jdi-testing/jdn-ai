@@ -3,7 +3,7 @@ import { failGeneration, updateLocatorGroup } from '../features/locators/locator
 import { selectLocatorByJdnHash } from '../features/locators/selectors/locators.selectors';
 import { ILocator, LocatorTaskStatus } from '../features/locators/types/locator.types';
 import { NETWORK_ERROR, NO_ELEMENT_IN_DOCUMENT } from '../features/locators/utils/constants';
-import { locatorGenerationController } from '../features/locators/utils/locatorGenerationController';
+import { locatorGenerationController } from '../features/locators/utils/LocatorGenerationController';
 import { sendMessage } from '../pageServices/connector';
 import { webSocketController } from './webSocketController';
 import { selectInProgressByPageObj } from '../features/locators/selectors/locatorsFiltered.selectors';

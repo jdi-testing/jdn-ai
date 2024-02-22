@@ -1,19 +1,20 @@
-import { ActionReducerMapBuilder, Middleware, createAsyncThunk } from '@reduxjs/toolkit';
+import { ActionReducerMapBuilder, createAsyncThunk, Middleware } from '@reduxjs/toolkit';
 import { predictElements } from '../../../pageServices/pageDataHandlers';
 import { IdentificationStatus, LocatorsState, PredictedEntity } from '../../locators/types/locator.types';
 import { setCurrentPageObj, setPageData } from '../../pageObjects/pageObject.slice';
 import { setFilter } from '../../filter/filter.slice';
 import { PageObjectId } from '../../pageObjects/types/pageObjectSlice.types';
-import { ElementLibrary, defaultLibrary, predictEndpoints } from '../types/generationClasses.types';
+import { defaultLibrary, ElementLibrary, predictEndpoints } from '../types/generationClasses.types';
 
 import { createLocators } from './createLocators.thunk';
 import { findByRules } from '../utils/generationButton';
-import { LocalStorageKey, getLocalStorage } from '../../../common/utils/localStorage';
+import { getLocalStorage, LocalStorageKey } from '../../../common/utils/localStorage';
 import { selectAutoGeneratingLocatorTypes, selectPageObjById } from '../../pageObjects/selectors/pageObjects.selectors';
 import { RootState } from '../../../app/store/store';
 import { runLocatorsGeneration } from './runLocatorsGeneration.thunk';
 import { finishProgressBar } from '../../pageObjects/progressBar.slice';
 import { delay } from '../utils/delay';
+import { createDocumentForRobula } from '../../../services/pageDocument/pageDocument.slice';
 
 interface Meta {
   library: ElementLibrary;
@@ -37,9 +38,9 @@ export const identifyElements = createAsyncThunk('locators/identifyElements', as
   Then adds needed locators to state and runs locator value generation. */
   try {
     const endpoint = predictEndpoints[library];
-    const { data: res, pageData } =
+    const { data, pageData } =
       library !== ElementLibrary.Vuetify ? await predictElements(endpoint) : await findByRules();
-    const locators = res
+    const locators = data
       .filter((el: PredictedEntity) => el.is_shown)
       .map((el: PredictedEntity) => {
         return {
@@ -49,6 +50,8 @@ export const identifyElements = createAsyncThunk('locators/identifyElements', as
           pageObj: pageObj,
         };
       });
+
+    thunkAPI.dispatch(createDocumentForRobula(data));
 
     thunkAPI.dispatch(finishProgressBar());
     /* progress-bar finish animation delay: */

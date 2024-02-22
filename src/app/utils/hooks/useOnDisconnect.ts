@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { removeEmptyPageObjects } from '../../../features/pageObjects/reducers/removeEmptyPageObjects.thunk';
-import { locatorGenerationController } from '../../../features/locators/utils/locatorGenerationController';
+import { locatorGenerationController } from '../../../features/locators/utils/LocatorGenerationController';
 import connector from '../../../pageServices/connector';
 import { removeOverlay } from '../../../pageServices/pageDataHandlers';
 import { clearAll } from '../../main.slice';

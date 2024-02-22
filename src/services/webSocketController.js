@@ -1,5 +1,5 @@
 import { isNull } from 'lodash';
-import { WebSocketMessage, request } from './backend';
+import { request, WebSocketMessage } from './backend';
 import { NETWORK_ERROR } from '../features/locators/utils/constants';
 
 class WebSocketController {
@@ -10,8 +10,6 @@ class WebSocketController {
   readyState = null;
 
   messageListener;
-
-  errorListener;
 
   async init() {
     return this.openWebSocket();

@@ -1,7 +1,7 @@
 import { HttpEndpoint, request } from '../../services/backend';
 import connector, { sendMessage } from '../../pageServices/connector';
 import { SCRIPT_ERROR } from '../../common/constants/constants';
-import { locatorGenerationController } from '../../features/locators/utils/locatorGenerationController';
+import { locatorGenerationController } from '../../features/locators/utils/LocatorGenerationController';
 import { MainState } from '../types/mainSlice.types';
 
 export const checkSession = async (setStateCallback: (val: boolean) => void) => {
