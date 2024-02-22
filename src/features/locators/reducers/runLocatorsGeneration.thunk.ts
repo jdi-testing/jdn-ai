@@ -1,5 +1,6 @@
-import { ActionReducerMapBuilder, createAsyncThunk } from '@reduxjs/toolkit';
-import { ILocator, LocatorTaskStatus, LocatorsGenerationStatus, LocatorsState } from '../types/locator.types';
+import type { ActionReducerMapBuilder } from '@reduxjs/toolkit';
+import { createAsyncThunk } from '@reduxjs/toolkit';
+import { ILocator, LocatorsGenerationStatus, LocatorsState, LocatorTaskStatus } from '../types/locator.types';
 import { runXpathGeneration } from '../utils/runXpathGeneration';
 import { MaxGenerationTime } from '../../../app/types/mainSlice.types';
 import { RootState } from '../../../app/store/store';
@@ -7,8 +8,9 @@ import { runCssSelectorGeneration } from '../utils/runCssSelectorGeneration';
 import { updateLocatorGroup } from '../locators.slice';
 import { selectCurrentPageObject } from '../../pageObjects/selectors/pageObjects.selectors';
 import { filterLocatorsByClassFilter } from '../utils/filterLocators';
-import { LocalStorageKey, getLocalStorage } from '../../../common/utils/localStorage';
+import { getLocalStorage, LocalStorageKey } from '../../../common/utils/localStorage';
 import { selectClassFilterByPO } from '../../filter/filter.selectors';
+import { selectPageDocument } from '../../../services/pageDocument/pageDocument.selectors';
 
 interface Meta {
   locators: ILocator[];
@@ -60,8 +62,15 @@ export const runLocatorsGeneration = createAsyncThunk(
           )
         : [];
 
+    const pageDocument = selectPageDocument(state);
+    if (pageDocument === null) {
+      console.error(`can't run Xpath Generation: Page Document is null`);
+      return;
+    }
     const generations = Promise.all([
-      ...[toGenerateXpaths.length ? runXpathGeneration(state, toGenerateXpaths, maxGenerationTime) : null],
+      ...[
+        toGenerateXpaths.length ? runXpathGeneration(state, toGenerateXpaths, pageDocument, maxGenerationTime) : null,
+      ],
       ...[toGenerateCss.length ? runCssSelectorGeneration(toGenerateCss) : null],
     ]);
 

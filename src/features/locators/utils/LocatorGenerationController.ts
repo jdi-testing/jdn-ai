@@ -1,7 +1,6 @@
 import { WebSocketMessage } from '../../../services/backend';
 import { ILocator, JDNHash, LocatorTaskStatus } from '../types/locator.types';
 import { webSocketController } from '../../../services/webSocketController';
-import { getFullDocument } from '../../../common/utils/getFullDocument';
 import { MainState, MaxGenerationTime } from '../../../app/types/mainSlice.types';
 import { PageObject } from '../../pageObjects/types/pageObjectSlice.types';
 
@@ -14,20 +13,21 @@ class LocatorGenerationController {
 
   xPathConfig: MainState['xpathConfig'];
 
-  fullDocument: string;
+  pageDocument: string;
 
   init(sessionId: string, xPathConfig: MainState['xpathConfig']) {
     this.sessionId = sessionId;
     this.xPathConfig = xPathConfig;
   }
 
-  async scheduleMultipleXpathGeneration(
+  scheduleMultipleXpathGeneration(
     elements: ILocator[],
+    pageDocument: string,
     pageObject?: PageObject,
     maxGenerationTime?: MaxGenerationTime,
   ) {
     if (pageObject) this.pageObject = pageObject;
-    this.fullDocument = await getFullDocument();
+    this.pageDocument = pageDocument;
 
     const hashes = elements.map((element) => element.jdnHash);
 
@@ -42,7 +42,7 @@ class LocatorGenerationController {
         JSON.stringify({
           action: WebSocketMessage.SCHEDULE_MULTIPLE_XPATH_GENERATIONS,
           payload: {
-            document: this.fullDocument,
+            document: this.pageDocument, // заменить на documentForRobula
             id: hashes,
             config,
           },

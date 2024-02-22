@@ -1,4 +1,5 @@
-import { ActionReducerMapBuilder, createAsyncThunk, Middleware } from '@reduxjs/toolkit';
+import type { ActionReducerMapBuilder, Middleware } from '@reduxjs/toolkit';
+import { createAsyncThunk } from '@reduxjs/toolkit';
 import { predictElements } from '../../../pageServices/pageDataHandlers';
 import { IdentificationStatus, LocatorsState, PredictedEntity } from '../../locators/types/locator.types';
 import { setCurrentPageObj, setPageData } from '../../pageObjects/pageObject.slice';
@@ -14,6 +15,7 @@ import { RootState } from '../../../app/store/store';
 import { runLocatorsGeneration } from './runLocatorsGeneration.thunk';
 import { finishProgressBar } from '../../pageObjects/progressBar.slice';
 import { delay } from '../utils/delay';
+import { fetchPageDocument } from '../../../services/pageDocument/fetchPageDocument.thunk';
 import { createDocumentForRobula } from '../../../services/pageDocument/pageDocument.slice';
 
 interface Meta {
@@ -51,6 +53,7 @@ export const identifyElements = createAsyncThunk('locators/identifyElements', as
         };
       });
 
+    await thunkAPI.dispatch(fetchPageDocument()).unwrap();
     thunkAPI.dispatch(createDocumentForRobula(data));
 
     thunkAPI.dispatch(finishProgressBar());

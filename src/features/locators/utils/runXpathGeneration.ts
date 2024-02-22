@@ -4,13 +4,20 @@ import { selectCurrentPageObject } from '../../pageObjects/selectors/pageObjects
 import { ILocator, LocatorsGenerationStatus } from '../types/locator.types';
 import { locatorGenerationController } from './LocatorGenerationController';
 
-export const runXpathGeneration = async (
+export const runXpathGeneration = (
   state: RootState,
   generationData: ILocator[],
+  pageDocument: string,
   maxGenerationTime?: MaxGenerationTime,
 ) => {
   const pageObject = selectCurrentPageObject(state)!;
-  await locatorGenerationController.scheduleMultipleXpathGeneration(generationData, pageObject, maxGenerationTime);
+
+  locatorGenerationController.scheduleMultipleXpathGeneration(
+    generationData,
+    pageDocument,
+    pageObject,
+    maxGenerationTime,
+  );
 
   return LocatorsGenerationStatus.started;
 };
