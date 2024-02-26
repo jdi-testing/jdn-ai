@@ -10,7 +10,7 @@ import { selectCurrentPageObject } from '../../pageObjects/selectors/pageObjects
 import { filterLocatorsByClassFilter } from '../utils/filterLocators';
 import { getLocalStorage, LocalStorageKey } from '../../../common/utils/localStorage';
 import { selectClassFilterByPO } from '../../filter/filter.selectors';
-import { selectPageDocument } from '../../../services/pageDocument/pageDocument.selectors';
+import { selectPageDocumentForRobula } from '../../../services/pageDocument/pageDocument.selectors';
 
 interface Meta {
   locators: ILocator[];
@@ -62,14 +62,17 @@ export const runLocatorsGeneration = createAsyncThunk(
           )
         : [];
 
-    const pageDocument = selectPageDocument(state);
-    if (pageDocument === null) {
-      console.error(`can't run Xpath Generation: Page Document is null`);
+    const pageDocumentForRubula = selectPageDocumentForRobula(state);
+    if (pageDocumentForRubula === null) {
+      console.error(`can't run Xpath Generation: Page Document For Robula is null`);
       return;
     }
+
     const generations = Promise.all([
       ...[
-        toGenerateXpaths.length ? runXpathGeneration(state, toGenerateXpaths, pageDocument, maxGenerationTime) : null,
+        toGenerateXpaths.length
+          ? runXpathGeneration(state, toGenerateXpaths, pageDocumentForRubula, maxGenerationTime)
+          : null,
       ],
       ...[toGenerateCss.length ? runCssSelectorGeneration(toGenerateCss) : null],
     ]);

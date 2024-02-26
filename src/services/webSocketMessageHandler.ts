@@ -9,6 +9,7 @@ import { webSocketController } from './webSocketController';
 import { selectInProgressByPageObj } from '../features/locators/selectors/locatorsFiltered.selectors';
 import { selectCurrentPageObject } from '../features/pageObjects/selectors/pageObjects.selectors';
 import { selectAreInProgress } from '../features/locators/selectors/locatorsByPO.selectors';
+import { selectPageDocumentForRobula } from './pageDocument/pageDocument.selectors';
 
 const reScheduledTasks = new Set();
 
@@ -41,7 +42,13 @@ export const updateSocketMessageHandler = (dispatch: any, state: any) => {
                 jdnHash: element.jdnHash,
                 locatorValue: element.locatorValue.xPath ?? '',
               });
-              locatorGenerationController.scheduleMultipleXpathGeneration([element]);
+              const pageDocumentForRubula = selectPageDocumentForRobula(state);
+              if (pageDocumentForRubula === null) {
+                return console.error(
+                  `Error: can't schedule Multiple Xpath Generation: Page Document For Robula is null`,
+                );
+              }
+              locatorGenerationController.scheduleMultipleXpathGeneration([element], pageDocumentForRubula);
             };
             rescheduleTask();
           }

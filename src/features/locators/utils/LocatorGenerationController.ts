@@ -42,7 +42,7 @@ class LocatorGenerationController {
         JSON.stringify({
           action: WebSocketMessage.SCHEDULE_MULTIPLE_XPATH_GENERATIONS,
           payload: {
-            document: this.pageDocument, // заменить на documentForRobula
+            document: this.pageDocument,
             id: hashes,
             config,
           },
