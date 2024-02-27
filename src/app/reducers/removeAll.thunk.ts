@@ -1,4 +1,5 @@
-import { ActionReducerMapBuilder, createAsyncThunk } from '@reduxjs/toolkit';
+import type { ActionReducerMapBuilder } from '@reduxjs/toolkit';
+import { createAsyncThunk } from '@reduxjs/toolkit';
 import { removeAll as removeAllLocators } from '../../features/locators/locators.slice';
 import { removeAll as removeAllPageObjects } from '../../features/pageObjects/pageObject.slice';
 import { removeAll as removeAllFilters } from '../../features/filter/filter.slice';

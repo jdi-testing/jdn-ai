@@ -23,6 +23,8 @@ import { onLocatorsCreated } from '../../features/locators/reducers/identifyElem
 
 import { quitThrottlerMiddleware } from '../../common/utils/throttler';
 import progressBarSlice from '../../features/pageObjects/progressBar.slice';
+import pageDocumentSlice from '../../services/pageDocument/pageDocument.slice';
+
 import { useDispatch } from 'react-redux';
 
 const rootReducer = {
@@ -34,6 +36,7 @@ const rootReducer = {
   pageObjectsListUI: pageObjectsListUISlice,
   onboarding: onboardingSlice,
   customLocator: customLocatorSlice,
+  pageDocument: pageDocumentSlice,
 };
 
 export const store = configureStore({

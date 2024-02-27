@@ -3,12 +3,13 @@ import { failGeneration, updateLocatorGroup } from '../features/locators/locator
 import { selectLocatorByJdnHash } from '../features/locators/selectors/locators.selectors';
 import { ILocator, LocatorTaskStatus } from '../features/locators/types/locator.types';
 import { NETWORK_ERROR, NO_ELEMENT_IN_DOCUMENT } from '../features/locators/utils/constants';
-import { locatorGenerationController } from '../features/locators/utils/locatorGenerationController';
+import { locatorGenerationController } from '../features/locators/utils/LocatorGenerationController';
 import { sendMessage } from '../pageServices/connector';
 import { webSocketController } from './webSocketController';
 import { selectInProgressByPageObj } from '../features/locators/selectors/locatorsFiltered.selectors';
 import { selectCurrentPageObject } from '../features/pageObjects/selectors/pageObjects.selectors';
 import { selectAreInProgress } from '../features/locators/selectors/locatorsByPO.selectors';
+import { selectPageDocumentForRobula } from './pageDocument/pageDocument.selectors';
 
 const reScheduledTasks = new Set();
 
@@ -41,7 +42,13 @@ export const updateSocketMessageHandler = (dispatch: any, state: any) => {
                 jdnHash: element.jdnHash,
                 locatorValue: element.locatorValue.xPath ?? '',
               });
-              locatorGenerationController.scheduleMultipleXpathGeneration([element]);
+              const pageDocumentForRubula = selectPageDocumentForRobula(state);
+              if (pageDocumentForRubula === null) {
+                return console.error(
+                  `Error: can't schedule Multiple Xpath Generation: Page Document For Robula is null`,
+                );
+              }
+              locatorGenerationController.scheduleMultipleXpathGeneration([element], pageDocumentForRubula);
             };
             rescheduleTask();
           }

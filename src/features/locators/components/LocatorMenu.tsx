@@ -5,26 +5,26 @@ import { useDispatch, useSelector } from 'react-redux';
 import { MaxGenerationTime } from '../../../app/types/mainSlice.types';
 import { MenuItem } from '../../../common/components/menu/Menu';
 import {
+  addToPO,
   advanced,
+  copyLocatorOption,
   deleteOption,
+  dividerItem,
   downPriority,
   edit,
   pause,
+  removeFromPO,
   rerun,
   restore,
   retry,
   upPriority,
-  copyLocatorOption,
-  dividerItem,
-  addToPO,
-  removeFromPO,
 } from '../../../common/components/menu/menuOptions';
-import { locatorGenerationController } from '../utils/locatorGenerationController';
+import { locatorGenerationController } from '../utils/LocatorGenerationController';
 import {
   ILocator,
   LocatorCalculationPriority,
-  ValidationStatus,
   LocatorValidationWarnings,
+  ValidationStatus,
 } from '../types/locator.types';
 import {
   setCalculationPriority,
@@ -40,17 +40,17 @@ import { stopGeneration } from '../reducers/stopGeneration.thunk';
 import { FrameworkType, LocatorType } from '../../../common/types/common';
 
 import {
-  selectCalculatedActiveByPageObj,
-  selectActiveNonGenerateByPO,
   selectActiveGenerateByPO,
+  selectActiveNonGenerateByPO,
+  selectActualActiveByPageObject,
+  selectCalculatedActiveByPageObj,
   selectDeletedActiveByPageObj,
   selectFailedSelectedByPageObject,
   selectInProgressActiveByPageObject,
-  selectActualActiveByPageObject,
-  selectStoppedActiveByPageObject,
-  selectInProgressActiveNoPriorityByPageObject,
-  selectInProgressActiveIncPriorityByPageObject,
   selectInProgressActiveDecPriorityByPageObject,
+  selectInProgressActiveIncPriorityByPageObject,
+  selectInProgressActiveNoPriorityByPageObject,
+  selectStoppedActiveByPageObject,
 } from '../selectors/locatorsFiltered.selectors';
 import { AppDispatch } from '../../../app/store/store';
 import { selectCurrentPageObject, selectLastFrameworkType } from '../../pageObjects/selectors/pageObjects.selectors';
