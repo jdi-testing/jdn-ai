@@ -8,15 +8,15 @@ export enum HttpEndpoint {
   NGMAT_PREDICT = 'angular-predict', // ToDo: check when implemented at BE
   REPORT_PROBLEM = 'report_problem',
   DOWNLOAD_TEMPLATE = 'download_template',
-  DOWNLOAD_TEMPLATE_VIVIDUS = 'download_template?repo_zip_url=https://github.com/vividus-framework/vividus-sample-tests/archive/refs/heads/main.zip',
+  DOWNLOAD_TEMPLATE_VIVIDUS = 'download_template?repo_zip_url=https://github.com/vividus-framework/vividus-starter/archive/refs/heads/main.zip',
 
   SESSION_ID = 'get_session_id',
-  PING_SMTP = 'ping_smtp',
+  // PING_SMTP = 'ping_smtp',
 }
 
 export enum WebSocketMessage {
   SCHEDULE_MULTIPLE_XPATH_GENERATIONS = 'schedule_multiple_xpath_generations',
-  SHEDULE_XPATH_GENERATION = 'schedule_xpath_generation',
+  // SHEDULE_XPATH_GENERATION = 'schedule_xpath_generation',
   REVOKE_TASKS = 'revoke_tasks',
   UP_PRIORITY = 'prioritize_existing_task',
   DOWN_PRIORITY = 'deprioritize_existing_task',
