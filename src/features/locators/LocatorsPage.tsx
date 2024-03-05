@@ -251,6 +251,7 @@ export const LocatorsPage = () => {
                       onCancel={() => setIsEmptyListModalOpen(false)}
                       onOk={pageBack}
                       okText={EmptyListModal.OkButtonTitle}
+                      cancelText={EmptyListModal.Close}
                     >
                       {EmptyListModal.Contents}
                     </Modal>
@@ -258,7 +259,7 @@ export const LocatorsPage = () => {
                   <LocatorsEmptyListInfo
                     isNoPageLocators={isNoPageLocators}
                     setIsEditModalOpen={handleSetIsEditModalOpen}
-                  ></LocatorsEmptyListInfo>
+                  />
                 </>
               )}
             </div>

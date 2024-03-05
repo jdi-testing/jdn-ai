@@ -58,7 +58,7 @@ export const RenamePageObjectDialog: React.FC<Props> = ({ isModalOpen, setIsModa
   return (
     <DialogWithForm
       modalProps={{
-        title: 'Rename page object',
+        title: 'Rename Page Object',
         open: isModalOpen,
         setIsModalOpen,
         onOk: handleOk,

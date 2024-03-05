@@ -1,5 +1,5 @@
-@import "../../../common/styles/variables.less";
-@import "./pageObjectListHeader.less";
+@import '../../../common/styles/variables.less';
+@import './pageObjectListHeader.less';
 
 .jdn {
   &__pageObject {
@@ -28,7 +28,7 @@
 
     &__settings {
       background-color: #fafafa;
-      padding: 8px 20px;
+      padding: 8px 20px 16px;
 
       &-url {
         word-break: break-all;
@@ -36,7 +36,6 @@
     }
 
     &_button {
-
       &-menu,
       &-copy {
         padding: 0;
@@ -55,10 +54,10 @@
       border: none;
       border-radius: 0;
 
-      &>.ant-collapse-item {
+      & > .ant-collapse-item {
         border: none;
 
-        &>.ant-collapse-header {
+        & > .ant-collapse-header {
           background: #fff;
           padding: 5px 8px;
           font-size: 12px;
@@ -90,15 +89,15 @@
           display: flex;
         }
 
-        &>.ant-collapse-content {
+        & > .ant-collapse-content {
           border: none;
 
-          &>.ant-collapse-content-box {
+          & > .ant-collapse-content-box {
             padding: 0 0;
           }
         }
 
-        &>.ant-collapse-header .ant-collapse-arrow {
+        & > .ant-collapse-header .ant-collapse-arrow {
           margin-right: 0px;
         }
       }
@@ -125,8 +124,7 @@
     }
 
     .jdn__locator_container {
-      padding-left: 24px;
-      padding-right: 24px;
+      padding: 4px 8px 4px 32px;
       width: 100%;
     }
   }
