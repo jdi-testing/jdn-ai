@@ -97,7 +97,7 @@ export const LocatorListHeader = ({
         <LocatorsSearch value={searchString} onChange={setSearchString} />
         <OnboardingTooltip>
           <Button
-            style={{ marginLeft: '8px' }}
+            className="jdn__locator-list_locator-add-btn"
             disabled={isOnboardingOpen && !!size(locators)}
             ref={customLocatorRef}
             icon={<PlusOutlined size={14} />}

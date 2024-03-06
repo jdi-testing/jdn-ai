@@ -22,7 +22,7 @@ export const PageObjectPlaceholder: FC<TPageObjectPlaceholder> = ({ addPageObjec
       </Button>{' '}
       button to start.
       <br />
-      <div style={{ marginTop: '12px' }}>
+      <div className="jdn__pageObject-onboarding">
         And you can get started quickly with our{' '}
         <OnboardingPopup>
           <Button type="link" size="small">
