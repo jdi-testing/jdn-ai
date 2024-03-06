@@ -47,10 +47,10 @@ export const PageObjListHeader: FC<Props> = ({ template, toggleExpand, isExpande
   const handleRemoveAll = () => {
     const isOnePO = size(pageObjects) === 1;
     confirm({
-      title: isOnePO ? 'Delete page object?' : 'Delete all page objects?',
+      title: isOnePO ? 'Delete Page Object?' : 'Delete all Page Objects?',
       content: isOnePO
-        ? 'This page object will be deleted and you can lose all your data'
-        : 'All page objects will be deleted and you can lose all your data',
+        ? 'This Page Object will be deleted and you can lose all your data'
+        : 'All Page Objects will be deleted and you can lose all your data',
       okText: isOnePO ? 'Delete' : 'Delete all',
       okButtonProps: {
         type: 'primary',
