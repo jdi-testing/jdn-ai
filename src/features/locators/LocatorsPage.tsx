@@ -258,7 +258,7 @@ export const LocatorsPage = () => {
                   <LocatorsEmptyListInfo
                     isNoPageLocators={isNoPageLocators}
                     setIsEditModalOpen={handleSetIsEditModalOpen}
-                  ></LocatorsEmptyListInfo>
+                  />
                 </>
               )}
             </div>
