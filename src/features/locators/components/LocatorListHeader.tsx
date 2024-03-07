@@ -137,7 +137,7 @@ export const LocatorListHeader = ({
         {size(active) ? (
           <LocatorMenu {...{ trigger: ['click'], setIsEditModalOpen }}>
             <Button
-              className="jdn__itemsList-button jdn__locator-list_button-menu"
+              className="jdn__itemsList-button jdn__itemsList-button_menu"
               icon={<DotsThree size={18} onClick={(e) => e.preventDefault()} />}
             />
           </LocatorMenu>
