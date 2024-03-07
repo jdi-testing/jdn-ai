@@ -25,7 +25,6 @@ export const LocatorsEmptyListInfo = ({
           <Button type="link" size="small">
             Onboarding tutorial
           </Button>
-          .
         </OnboardingPopup>{' '}
         to understand the JDN features
       </>

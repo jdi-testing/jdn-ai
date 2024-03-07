@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Col, Row, Select, Space, Typography } from 'antd';
+import { Space } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCurrentPageObject, selectPageObjects } from '../selectors/pageObjects.selectors';
 import { AppDispatch, RootState } from '../../../app/store/store';
@@ -27,6 +27,7 @@ import { resetProgressBar, startProgressBar } from '../progressBar.slice';
 import { selectIsPageObjectsListUIEnabled } from '../selectors/pageObjectsListUI.selectors';
 import { disablePageObjectsListUI } from '../pageObjectsListUI.slice';
 import { OnboardingTooltip } from '../../onboarding/components/OnboardingTooltip';
+import PageObjSettingsItem from './PageObjSettingsItem';
 
 interface Props {
   pageObj: PageObjectId;
@@ -176,72 +177,44 @@ export const PageObjGenerationSettings: React.FC<Props> = ({ pageObj, library, u
     <div className="jdn__pageObject__settings">
       <Footnote className="jdn__pageObject__settings-url">{url}</Footnote>
       <div className="jdn__generationButtons">
-        <Space direction="vertical" size={16}>
+        <Space direction="vertical" size={8}>
           <div
             ref={refSettings as React.LegacyRef<HTMLDivElement>}
             className="jdn__generationButtons_onboardingMask"
           ></div>
-          <Row>
-            <Col flex="104px">
-              <Typography.Text>Framework:</Typography.Text>
-            </Col>
-            <Col flex="auto">
-              <Select
-                id="frameworkType"
-                disabled={isMoreThanOnePageObject || !isPageObjectsListUIEnabled}
-                defaultValue={currentPageObject?.framework || FrameworkType.JdiLight}
-                className="jdn__select"
-                options={frameworkTypeOptions}
-                onChange={onFrameworkChange}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col flex="104px">
-              <Typography.Text>Library:</Typography.Text>
-            </Col>
-            <Col flex="auto">
-              <Select
-                id="library"
-                disabled={isCurrentFrameworkVividus || !isPageObjectsListUIEnabled}
-                value={currentLibrary}
-                className="jdn__select"
-                onChange={onLibraryChange}
-                options={libraryOptions}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col flex="104px">
-              <Typography.Text>Annotation:</Typography.Text>
-            </Col>
-            <Col flex="auto">
-              <Select
-                id="annotationType"
-                disabled={isCurrentFrameworkVividus || !isPageObjectsListUIEnabled}
-                value={currentAnnotation}
-                defaultValue={currentPageObject?.annotationType || AnnotationType.UI}
-                className="jdn__select"
-                onChange={onAnnotationTypeChange}
-                options={annotationTypeOptions}
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col flex="104px">
-              <Typography.Text>Locators type:</Typography.Text>
-            </Col>
-            <Col flex="auto">
-              <Select
-                id="locatorType"
-                defaultValue={currentPageObject?.locatorType || LocatorType.xPath}
-                className="jdn__select"
-                onChange={onLocatorTypeChange}
-                options={locatorTypeOptions}
-                disabled={!isPageObjectsListUIEnabled}
-              />
-            </Col>
-          </Row>
+          <PageObjSettingsItem
+            label="Framework:"
+            id="frameworkType"
+            disabled={isMoreThanOnePageObject || !isPageObjectsListUIEnabled}
+            defaultValue={currentPageObject?.framework || FrameworkType.JdiLight}
+            options={frameworkTypeOptions}
+            onChange={onFrameworkChange}
+          />
+          <PageObjSettingsItem
+            label="Library:"
+            id="library"
+            disabled={isCurrentFrameworkVividus || !isPageObjectsListUIEnabled}
+            options={libraryOptions}
+            onChange={onLibraryChange}
+            value={currentLibrary}
+          />
+          <PageObjSettingsItem
+            label="Annotation:"
+            id="annotationType"
+            disabled={isCurrentFrameworkVividus || !isPageObjectsListUIEnabled}
+            value={currentAnnotation}
+            defaultValue={currentPageObject?.annotationType || AnnotationType.UI}
+            onChange={onAnnotationTypeChange}
+            options={annotationTypeOptions}
+          />
+          <PageObjSettingsItem
+            label="Locators type:"
+            id="locatorType"
+            defaultValue={currentPageObject?.locatorType || LocatorType.xPath}
+            onChange={onLocatorTypeChange}
+            options={locatorTypeOptions}
+            disabled={!isPageObjectsListUIEnabled}
+          />
         </Space>
         <div
           ref={generationButtonRef as React.LegacyRef<HTMLDivElement>}

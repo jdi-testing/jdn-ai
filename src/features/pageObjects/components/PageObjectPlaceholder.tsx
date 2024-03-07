@@ -14,7 +14,7 @@ export const PageObjectPlaceholder: FC<TPageObjectPlaceholder> = ({ addPageObjec
 
   return (
     <EmptyListInfo>
-      No page objects created.
+      No Page Objects created.
       <br />
       Open a needed web-page and click the{' '}
       <Button type="link" size="small" onClick={handleAddPageObject}>
@@ -22,13 +22,15 @@ export const PageObjectPlaceholder: FC<TPageObjectPlaceholder> = ({ addPageObjec
       </Button>{' '}
       button to start.
       <br />
-      And you can get started quickly with our{' '}
-      <OnboardingPopup>
-        <Button type="link" size="small">
-          Onboarding tutorial
-        </Button>
-        .
-      </OnboardingPopup>
+      <div className="jdn__pageObject-onboarding">
+        And you can get started quickly with our{' '}
+        <OnboardingPopup>
+          <Button type="link" size="small">
+            Onboarding tutorial
+          </Button>
+          .
+        </OnboardingPopup>
+      </div>
     </EmptyListInfo>
   );
 };
