@@ -99,7 +99,7 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
           setActivePanel,
         }}
       />
-      <div ref={contentRef} className="jdn__itemsList-content jdn__pageObject-content">
+      <div ref={contentRef} className="jdn__items-list_content jdn__pageObject-content">
         {size(pageObjects) ? (
           <>
             <Collapse
@@ -132,7 +132,7 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
                         getPopupContainer={(triggerNode) => triggerNode}
                         align={{ offset: [-28, 0] }}
                       >
-                        <Icon component={PageSvg} className="jdn__itemsList-status" />
+                        <Icon component={PageSvg} className="jdn__items-list_status" />
                         <Typography.Text className="jdn__pageObject-content-text">{name}</Typography.Text>
                       </Tooltip>
                     }

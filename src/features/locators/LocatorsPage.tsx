@@ -235,7 +235,7 @@ export const LocatorsPage = () => {
           render={(viewProps: LocatorTreeProps['viewProps']) => (
             <div
               ref={containerRef}
-              className="jdn__locator-list-content jdn__itemsList-content"
+              className="jdn__locator-list-content jdn__items-list_content"
               style={{ height: containerHeight }}
             >
               {locators.length || areUnselectedAll ? (

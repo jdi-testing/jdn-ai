@@ -1,22 +1,9 @@
 @import './chip.less';
 
-.jdn {
-  &__locator-list {
-    &_header_locator-control-group {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-    }
-
-    &_locator-add-btn {
-      margin-left: 8px;
-    }
-  }
-
-  &__itemsList {
+.jdn__items-list {
     position: relative;
 
-    &-header {
+    &_header {
       padding-left: 8px;
       margin-top: 13px;
       margin-bottom: 8px;
@@ -34,11 +21,6 @@
         margin-top: auto;
         margin-bottom: auto;
         cursor: pointer;
-      }
-
-      .jdn__itemsList-button {
-        margin-right: 1px;
-        height: 28px;
       }
 
       .ant-select-multiple .ant-select-selection-item {
@@ -82,7 +64,7 @@
       }
     }
 
-    &-status {
+    &_status {
       font-size: 14px;
       min-width: 14px;
       min-height: 14px;
@@ -91,7 +73,7 @@
       top: 2px;
     }
 
-    &-content {
+    &_content {
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -102,14 +84,22 @@
       overflow-y: auto;
     }
 
-    &-button,
-    &-button button {
+    &_button,
+    &_button button {
       border: none;
       box-shadow: none;
       background: transparent !important;
       padding-left: 0;
       padding-right: 0;
       color: #000000a6;
+      
+      &-menu.jdn__items-list_button {
+        width: 24px;
+        height: 24px;
+        padding: 3px;
+        margin-right: 12px;
+        margin-left: 8px;
+        margin-top: 6px;
+      }
     }
-  }
 }
