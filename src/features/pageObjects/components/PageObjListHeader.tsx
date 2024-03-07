@@ -81,12 +81,12 @@ export const PageObjListHeader: FC<Props> = ({ template, toggleExpand, isExpande
   }, [enableDownload]);
 
   return (
-    <Row className="jdn__itemsList-header" justify="space-between">
+    <Row className="jdn__items-list_header" justify="space-between">
       <CaretDown
         style={{
           transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
         }}
-        className="jdn__itemsList-header-collapse"
+        className="jdn__items-list_header-collapse"
         color="#00000073"
         size={14}
         onClick={toggleExpand}

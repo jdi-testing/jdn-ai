@@ -102,7 +102,7 @@ export const PageObjMenu: React.FC<Props> = ({ pageObject, elements }) => {
           <Button
             disabled={isOnboardingOpen || !isPageObjectsListUIEnabled}
             ref={menuRef}
-            className="jdn__itemsList-button jdn__pageObject_button-menu"
+            className="jdn__items-list_button jdn__pageObject_button-menu"
             data-testid="dropdown-button"
             icon={<DotsThree size={18} />}
           />

@@ -93,7 +93,7 @@ export const LocatorListHeader = ({
 
   return (
     <>
-      <div className="jdn__locator-list_header_locator-control-group">
+      <div className="jdn__locator-list_header-locator-control-group">
         <LocatorsSearch value={searchString} onChange={setSearchString} />
         <OnboardingTooltip>
           <Button
@@ -109,13 +109,13 @@ export const LocatorListHeader = ({
         </OnboardingTooltip>
       </div>
 
-      <Row className="jdn__itemsList-header">
-        <span className="jdn__itemsList-header-title">
+      <Row className="jdn__items-list_header">
+        <span className="jdn__items-list_header-title">
           <CaretDown
             style={{
               transform: expandAll === ExpandState.Expanded ? 'rotate(180deg)' : 'rotate(0deg)',
             }}
-            className="jdn__itemsList-header-collapse"
+            className="jdn__items-list_header-collapse"
             color="#878A9C"
             size={14}
             onClick={() =>
@@ -138,7 +138,7 @@ export const LocatorListHeader = ({
         {size(active) ? (
           <LocatorMenu {...{ trigger: ['click'], setIsEditModalOpen }}>
             <Button
-              className="jdn__itemsList-button jdn__itemsList-button_menu"
+              className="jdn__items-list_button jdn__items-list_button-menu"
               icon={<DotsThree size={18} onClick={(e) => e.preventDefault()} />}
             />
           </LocatorMenu>
