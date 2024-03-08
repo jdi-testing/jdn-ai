@@ -44,7 +44,7 @@ export const PageObjCopyButton: FC<Props> = ({ framework, elements, pageObjectNa
   return (
     <Tooltip placement="bottom" title={copyTooltipTitle}>
       <Button
-        className="jdn__itemsList-button jdn__pageObject_button-copy"
+        className="jdn__items-list_button jdn__pageObject_button-copy"
         icon={<CopySimple size={18} color="currentColor" />}
         onMouseEnter={handleMouseEnter}
         onClick={(e) => handleCopy(e)}

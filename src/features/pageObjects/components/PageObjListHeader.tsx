@@ -47,10 +47,10 @@ export const PageObjListHeader: FC<Props> = ({ template, toggleExpand, isExpande
   const handleRemoveAll = () => {
     const isOnePO = size(pageObjects) === 1;
     confirm({
-      title: isOnePO ? 'Delete page object?' : 'Delete all page objects?',
+      title: isOnePO ? 'Delete Page Object?' : 'Delete all Page Objects?',
       content: isOnePO
-        ? 'This page object will be deleted and you can lose all your data'
-        : 'All page objects will be deleted and you can lose all your data',
+        ? 'This Page Object will be deleted and you can lose all your data'
+        : 'All Page Objects will be deleted and you can lose all your data',
       okText: isOnePO ? 'Delete' : 'Delete all',
       okButtonProps: {
         type: 'primary',
@@ -81,12 +81,12 @@ export const PageObjListHeader: FC<Props> = ({ template, toggleExpand, isExpande
   }, [enableDownload]);
 
   return (
-    <Row className="jdn__itemsList-header" justify="space-between">
+    <Row className="jdn__items-list_header" justify="space-between">
       <CaretDown
         style={{
           transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
         }}
-        className="jdn__itemsList-header-collapse"
+        className="jdn__items-list_header-collapse"
         color="#00000073"
         size={14}
         onClick={toggleExpand}
