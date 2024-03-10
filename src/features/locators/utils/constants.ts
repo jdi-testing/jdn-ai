@@ -41,7 +41,7 @@ export const newLocatorStub: ILocator = {
   isCustomLocator: true,
   type: '' as ElementClass,
   isGenerated: true,
-  isChecked: false,
+  isChecked: true,
 };
 
 export const NO_ELEMENT_IN_DOCUMENT = 'Document does not contain given element!';

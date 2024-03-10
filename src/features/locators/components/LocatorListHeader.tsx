@@ -60,6 +60,8 @@ export const LocatorListHeader = ({
       generatedLocators.length === locators.length
     ) {
       setIsAllLocatorsSelected(true);
+    } else {
+      setIsAllLocatorsSelected(false);
     }
   }, [checkedLocators.length]);
 
