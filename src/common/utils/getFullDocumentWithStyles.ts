@@ -24,7 +24,6 @@ export const getFullDocumentWithStyles = async () => {
 
   const documentResult = await connector.attachContentScript(() => {
     const fetchCSS = () => {
-      console.log('fetchCSS  is loaded');
       let allStyles = '';
       for (let i = 0; i < document.styleSheets.length; i++) {
         const sheet = document.styleSheets[i];
@@ -59,6 +58,5 @@ export const getFullDocumentWithStyles = async () => {
 
   const result = await documentResult[0].result;
   const { outerHTML } = JSON.parse(result);
-  console.log(outerHTML);
   return JSON.stringify(outerHTML);
 };
