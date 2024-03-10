@@ -6,6 +6,7 @@ interface ProgressBarState {
   progress: number;
   stage: number;
   startTime: number;
+  error: string;
 }
 
 export const initialState: ProgressBarState = {
@@ -13,6 +14,7 @@ export const initialState: ProgressBarState = {
   progress: 0,
   stage: 1,
   startTime: 0,
+  error: '',
 };
 
 const progressBarSlice = createSlice({
@@ -36,10 +38,12 @@ const progressBarSlice = createSlice({
       state.progress = 0;
       state.stage = 1;
       state.startTime = 0;
+      state.error = '';
     },
-    finishProgressBar(state) {
+    finishProgressBar(state, action: PayloadAction<string | undefined>) {
       state.stage = 3;
       state.progress = 100;
+      state.error = action.payload || '';
     },
     setStartTime(state, action: PayloadAction<number>) {
       state.startTime = action.payload;

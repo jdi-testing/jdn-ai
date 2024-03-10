@@ -1,6 +1,6 @@
 import type { ActionReducerMapBuilder, Middleware } from '@reduxjs/toolkit';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { predictElements } from '../../../pageServices/pageDataHandlers';
+import { findByRules, predictElements } from '../../../pageServices/pageDataHandlers';
 import { IdentificationStatus, LocatorsState, PredictedEntity } from '../../locators/types/locator.types';
 import { setCurrentPageObj, setPageData } from '../../pageObjects/pageObject.slice';
 import { setFilter } from '../../filter/filter.slice';
@@ -8,7 +8,6 @@ import { PageObjectId } from '../../pageObjects/types/pageObjectSlice.types';
 import { defaultLibrary, ElementLibrary, predictEndpoints } from '../types/generationClasses.types';
 
 import { createLocators } from './createLocators.thunk';
-import { findByRules } from '../utils/generationButton';
 import { getLocalStorage, LocalStorageKey } from '../../../common/utils/localStorage';
 import { selectAutoGeneratingLocatorTypes, selectPageObjById } from '../../pageObjects/selectors/pageObjects.selectors';
 import { RootState } from '../../../app/store/store';
@@ -40,33 +39,45 @@ export const identifyElements = createAsyncThunk('locators/identifyElements', as
   Then adds needed locators to state and runs locator value generation. */
   try {
     const endpoint = predictEndpoints[library];
-    const { data, pageData } =
-      library !== ElementLibrary.Vuetify ? await predictElements(endpoint) : await findByRules();
-    const locators = data
-      .filter((el: PredictedEntity) => el.is_shown)
-      .map((el: PredictedEntity) => {
-        return {
-          ...el,
-          element_id: `${el.element_id}_${pageObj}`,
-          jdnHash: el.element_id,
-          pageObj: pageObj,
-        };
-      });
+    const { data, pageData, error } =
+      library === ElementLibrary.Vuetify ? await findByRules() : await predictElements(endpoint);
 
-    await thunkAPI.dispatch(fetchPageDocument()).unwrap();
-    thunkAPI.dispatch(createDocumentForRobula(data));
+    if (error) {
+      throw new Error(error);
+    }
 
-    thunkAPI.dispatch(finishProgressBar());
-    /* progress-bar finish animation delay: */
-    await delay(2000);
+    if (data) {
+      const locators = data
+        .filter((el: PredictedEntity) => el.is_shown)
+        .map((el: PredictedEntity) => {
+          return {
+            ...el,
+            element_id: `${el.element_id}_${pageObj}`,
+            jdnHash: el.element_id,
+            pageObj: pageObj,
+          };
+        });
 
-    thunkAPI.dispatch(setPageData({ id: pageObj, pageData }));
-    thunkAPI.dispatch(createLocators({ predictedElements: locators, library }));
+      await thunkAPI.dispatch(fetchPageDocument()).unwrap();
+      thunkAPI.dispatch(createDocumentForRobula(data));
 
-    return thunkAPI.fulfillWithValue(locators);
+      thunkAPI.dispatch(finishProgressBar());
+      /* progress-bar finish animation delay: */
+      await delay(2000);
+
+      if (pageData) {
+        thunkAPI.dispatch(setPageData({ id: pageObj, pageData }));
+      }
+
+      await thunkAPI.dispatch(createLocators({ predictedElements: locators, library }));
+
+      return thunkAPI.fulfillWithValue(locators);
+    }
+
+    throw new Error('No valid data');
   } catch (error) {
     // can use params in the function so that when the progress bar is finished there will be information about errors
-    thunkAPI.dispatch(finishProgressBar());
+    thunkAPI.dispatch(finishProgressBar(error.message));
     return thunkAPI.rejectWithValue(null);
   }
 });
@@ -77,7 +88,6 @@ export const identifyElementsReducer = (builder: ActionReducerMapBuilder<Locator
       state.status = IdentificationStatus.loading;
     })
     .addCase(identifyElements.fulfilled, (state, { payload }) => {
-      // @ts-ignore
       if (payload.length) state.status = IdentificationStatus.preparing;
       else state.status = IdentificationStatus.noElements;
     })

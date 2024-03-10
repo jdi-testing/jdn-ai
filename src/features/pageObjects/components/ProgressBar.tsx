@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
 import { Progress } from 'antd';
 import { useSelector } from 'react-redux';
-import { selectIsStarted, selectProgress, selectStage } from '../selectors/progressBar.selector';
+import { selectErrorText, selectIsStarted, selectProgress, selectStage } from '../selectors/progressBar.selector';
 import { updateProgress } from '../reducers/updateProgressBar.thunk';
 import { useAppDispatch } from '../../../app/store/store';
+import cn from 'classnames';
 
 const stageNames: Record<number, string> = {
   1: 'Element parsing... (1/3)',
@@ -11,32 +12,17 @@ const stageNames: Record<number, string> = {
   3: 'Locators preparation... (3/3)',
 };
 
-type ProgressBarViewProps = {
-  stageName: string;
-  progress: number;
-  status: 'normal' | 'success';
-};
-
-const ProgressBarView: React.FC<ProgressBarViewProps> = ({ stageName, progress, status }) => {
-  return (
-    <div className="jdn_page-object-list_progress-bar-component">
-      <p className="stage-name">{stageName}</p>
-      <Progress
-        className={`progress-bar${status === 'success' ? ' success' : ''}`}
-        percent={progress}
-        status={status}
-        showInfo={status === 'success'}
-      />
-    </div>
-  );
-};
-
-const ProgressBarController: React.FC = () => {
+const ProgressBar: React.FC = () => {
   const dispatch = useAppDispatch();
   const isStarted = useSelector(selectIsStarted);
   const stage = useSelector(selectStage);
   const progress = useSelector(selectProgress);
-  const status = stage === 3 && progress === 100 ? 'success' : 'normal';
+  const errorText = useSelector(selectErrorText);
+
+  const status = errorText ? 'exception' : stage === 3 && progress === 100 ? 'success' : 'normal';
+  const isStatusFinished = status === 'success' || status === 'exception';
+
+  const stageName = status === 'exception' ? errorText : stageNames[stage];
 
   useEffect(() => {
     if (isStarted) {
@@ -44,7 +30,22 @@ const ProgressBarController: React.FC = () => {
     }
   }, [isStarted, dispatch]);
 
-  return isStarted ? <ProgressBarView stageName={stageNames[stage]} progress={progress} status={status} /> : null;
+  const className = cn({
+    'progress-bar': true,
+    finished: isStatusFinished,
+  });
+
+  if (!isStarted) {
+    return null;
+  }
+
+  return (
+    <div className="jdn_page-object-list_progress-bar-component">
+      <p className="stage-name">{stageName}</p>
+      <p>Retry</p>
+      <Progress className={className} percent={progress} status={status} showInfo={isStatusFinished} />
+    </div>
+  );
 };
 
-export default ProgressBarController;
+export default ProgressBar;

@@ -7,6 +7,8 @@ export const selectIsStarted = createSelector(selectProgressBarState, (state) =>
 
 export const selectProgress = createSelector(selectProgressBarState, (state) => state.progress);
 
+export const selectErrorText = createSelector(selectProgressBarState, (state) => state.error);
+
 export const selectStage = createSelector(selectProgressBarState, (state) => state.stage);
 
 export const selectIsProgressBarFinished = createSelector(selectProgressBarState, (state) => {
