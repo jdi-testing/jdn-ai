@@ -42,7 +42,6 @@ const ProgressBar: React.FC = () => {
   return (
     <div className="jdn_page-object-list_progress-bar-component">
       <p className="stage-name">{stageName}</p>
-      <p>Retry</p>
       <Progress className={className} percent={progress} status={status} showInfo={isStatusFinished} />
     </div>
   );

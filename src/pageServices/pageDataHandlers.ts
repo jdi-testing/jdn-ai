@@ -13,7 +13,6 @@ let overlayID: string;
 export const showOverlay = () => {
   connector.attachContentScript(createOverlay).then((data) => {
     overlayID = data[0].result;
-    console.log(overlayID);
   });
 };
 
@@ -51,7 +50,6 @@ export const predictElements = (endpoint: HttpEndpoint): PredictElementsType => 
     })
     .then(
       (response) => {
-        console.log(response);
         removeOverlay();
         return { data: response, pageData };
       },
