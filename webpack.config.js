@@ -19,6 +19,8 @@ const mainConfig = {
     index: './src/index.js',
     app: './src/app.jsx',
     contentScript: './src/pageServices/contentScripts/index.ts',
+    backgroundScript: './src/pageServices/contentScripts/background.js',
+    fetchCSS: './src/pageServices/contentScripts/fetchCSS.js',
   },
   output: {
     path: join(__dirname, 'dist'),
