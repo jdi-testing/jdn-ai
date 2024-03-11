@@ -29,7 +29,7 @@ export const removeOverlay = () => {
   }
 };
 
-const sendToModel = async (payload: any, endpoint: HttpEndpoint) => {
+const sendToModel = async (payload: { elements: string; document: string }, endpoint: HttpEndpoint) => {
   const response = await request.post(endpoint, payload);
   return response;
 };

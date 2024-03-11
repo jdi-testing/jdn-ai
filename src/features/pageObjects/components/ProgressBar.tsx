@@ -12,6 +12,18 @@ const stageNames: Record<number, string> = {
   3: 'Locators preparation... (3/3)',
 };
 
+const getStatus = (errorText: string, stage: number, progress: number) => {
+  if (errorText) {
+    return 'exception';
+  }
+
+  if (stage === 3 && progress === 100) {
+    return 'success';
+  }
+
+  return 'normal';
+};
+
 const ProgressBar: React.FC = () => {
   const dispatch = useAppDispatch();
   const isStarted = useSelector(selectIsStarted);
@@ -19,7 +31,7 @@ const ProgressBar: React.FC = () => {
   const progress = useSelector(selectProgress);
   const errorText = useSelector(selectErrorText);
 
-  const status = errorText ? 'exception' : stage === 3 && progress === 100 ? 'success' : 'normal';
+  const status = getStatus(errorText, stage, progress);
   const isStatusFinished = status === 'success' || status === 'exception';
 
   const stageName = status === 'exception' ? errorText : stageNames[stage];
