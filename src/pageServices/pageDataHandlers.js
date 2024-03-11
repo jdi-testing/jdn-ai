@@ -2,7 +2,7 @@
 import connector, { sendMessage } from './connector';
 import { request } from '../services/backend';
 import { createOverlay } from './contentScripts/createOverlay';
-import { getFullDocument } from '../common/utils/getFullDocument';
+import { getFullDocumentWithStyles } from '../common/utils/getFullDocumentWithStyles';
 // /* global chrome */
 
 let overlayID;
@@ -36,7 +36,7 @@ And then tha data is sent to endpoint, according to selected library.
 Function returns predicted elements. */
 export const predictElements = (endpoint) => {
   let pageData;
-  return Promise.all([sendMessage.getPageData(), getFullDocument()])
+  return Promise.all([sendMessage.getPageData(), getFullDocumentWithStyles()])
     .then(([pageDataResult, documentResult]) => {
       pageData = pageDataResult[0];
       return sendToModel({ elements: pageData, document: documentResult }, endpoint);
