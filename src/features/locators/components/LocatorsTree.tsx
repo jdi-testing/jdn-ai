@@ -17,6 +17,7 @@ import { selectPresentLocatorsByPO } from '../selectors/locatorsByPO.selectors';
 import { selectFilteredLocators } from '../selectors/locatorsFiltered.selectors';
 import { isLocatorListPage } from '../../../app/utils/helpers';
 import type RcTree from 'rc-tree';
+import cn from 'classnames';
 
 export enum SearchState {
   None = 'none',
@@ -113,24 +114,28 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
     // create tree
     const createTree = (_data: LocatorTree[]): TreeNode[] => {
       const childNodes: TreeNode[] = [];
-      _data.forEach((element, i) => {
+      _data.forEach((element, index) => {
         const { element_id, children, parent_id, jdnHash, searchState, depth } = element;
+        const locator = locatorsMap[element_id];
+
+        const className = cn({
+          'jdn__tree-item--selected': locator?.isGenerated && isLocatorListPage(currentPage),
+          'jdn__tree-item--active': locator?.active,
+        });
 
         const node: TreeNode = {
           key: element_id,
-          className: `${
-            locatorsMap[element_id].isGenerated && isLocatorListPage(currentPage) ? 'jdn__tree-item--selected' : ''
-          }${locatorsMap[element_id].active ? ' jdn__tree-item--active' : ''}`,
+          className,
           title: (
             <Locator
               {...{
-                element: locatorsMap[element_id],
+                element: locator,
                 currentPage,
                 library,
                 depth,
                 searchState,
                 searchString,
-                index: i,
+                index,
               }}
             />
           ),
@@ -140,7 +145,7 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
         childNodes.push(node);
         if (!parent_id.length) treeNodes.push(node);
 
-        map[jdnHash] = i;
+        map[jdnHash] = index;
       });
       return childNodes;
     };

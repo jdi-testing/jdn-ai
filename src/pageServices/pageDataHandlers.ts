@@ -2,7 +2,7 @@
 import connector, { sendMessage } from './connector';
 import { HttpEndpoint, request } from '../services/backend';
 import { createOverlay } from './contentScripts/createOverlay';
-import { getFullDocument } from '../common/utils/getFullDocument';
+import { getFullDocumentWithStyles } from '../common/utils/getFullDocumentWithStyles';
 import { PredictedEntity } from '../features/locators/types/locator.types';
 import { getLibrarySelectors } from '../services/rules/createSelector';
 import { VueRules } from '../services/rules/Vue.rules';
@@ -43,7 +43,7 @@ Function returns predicted elements. */
 export const predictElements = (endpoint: HttpEndpoint): PredictElementsType => {
   let pageData: string;
 
-  return Promise.all([sendMessage.getPageData(), getFullDocument()])
+  return Promise.all([sendMessage.getPageData(), getFullDocumentWithStyles()])
     .then(([pageDataResult, documentResult]) => {
       pageData = pageDataResult[0];
       return sendToModel({ elements: pageData, document: documentResult }, endpoint);
