@@ -56,12 +56,6 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
     }
   }, [currentPageObjectIndex]);
 
-  const renderLocators = (elements: ILocator[], library: ElementLibrary) => {
-    return elements.map((element) => (
-      <Locator {...{ element, library }} key={element.element_id} currentPage={PageType.PageObject} />
-    ));
-  };
-
   const renderContent = (
     pageObjId: PageObjectId,
     url: string,
@@ -70,7 +64,9 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
     isPageObjectNotEmpty: boolean,
   ) => {
     if (isPageObjectNotEmpty && isProgressBarFinished && elements.length) {
-      return renderLocators(elements, library);
+      return elements.map((element) => (
+        <Locator {...{ element, library }} key={element.element_id} currentPage={PageType.PageObject} />
+      ));
     } else {
       return <PageObjGenerationSettings pageObj={pageObjId} {...{ library, url }} />;
     }

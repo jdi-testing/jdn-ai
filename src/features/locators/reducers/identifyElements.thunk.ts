@@ -16,7 +16,6 @@ import { finishProgressBar } from '../../pageObjects/progressBar.slice';
 import { delay } from '../utils/delay';
 import { fetchPageDocument } from '../../../services/pageDocument/fetchPageDocument.thunk';
 import { createDocumentForRobula } from '../../../services/pageDocument/pageDocument.slice';
-import { enablePageObjectsListUI } from '../../pageObjects/pageObjectsListUI.slice';
 
 interface Meta {
   library: ElementLibrary;
@@ -79,7 +78,6 @@ export const identifyElements = createAsyncThunk('locators/identifyElements', as
   } catch (error) {
     // can use params in the function so that when the progress bar is finished there will be information about errors
     thunkAPI.dispatch(finishProgressBar(error.message));
-    thunkAPI.dispatch(enablePageObjectsListUI());
     return thunkAPI.rejectWithValue(null);
   }
 });

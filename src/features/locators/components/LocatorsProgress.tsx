@@ -14,6 +14,7 @@ import {
   selectDeletedByPageObj,
   selectFailedByPageObject,
 } from '../selectors/locatorsFiltered.selectors';
+import cn from 'classnames';
 
 let timer: NodeJS.Timeout;
 
@@ -55,41 +56,41 @@ export const LocatorsProgress = () => {
     return () => clearTimeout(timer);
   }, [generated, inProgress, deleted]);
 
+  const className = cn({
+    'jdn__progress_hide-info': readinessPercentage !== 100 && generationStatus !== LocatorsGenerationStatus.failed,
+  });
+
+  if (!isProgressActive) {
+    return null;
+  }
+
   return (
-    <>
-      {isProgressActive ? (
-        <div className="jdn__locator-list-progress">
-          <div className="jdn__locator-list-progress-text">
-            {generationStatus === LocatorsGenerationStatus.failed ? (
-              <>
-                <Footnote>{LocatorGenerationMessage.failed}</Footnote>
-                <span className="ant-notification-notice-btn">
-                  <Button type="text" size="small" onClick={handleRetry}>
-                    Retry
-                  </Button>
-                </span>
-              </>
-            ) : (
-              <Footnote>
-                {size(inProgress)
-                  ? `${LocatorGenerationMessage.started} (${calculationReady}/${total})`
-                  : size(failed)
-                  ? `${LocatorGenerationMessage.completeWithErrors} (${calculationReady}/${total})`
-                  : `${LocatorGenerationMessage.complete}`}
-              </Footnote>
-            )}
-          </div>
-          <Progress
-            status={generationStatus === LocatorsGenerationStatus.failed ? 'exception' : undefined}
-            percent={readinessPercentage}
-            className={
-              readinessPercentage !== 100 && generationStatus !== LocatorsGenerationStatus.failed
-                ? 'jdn__progress_hide-info'
-                : ''
-            }
-          />
-        </div>
-      ) : null}
-    </>
+    <div className="jdn__locator-list-progress">
+      <div className="jdn__locator-list-progress-text">
+        {generationStatus === LocatorsGenerationStatus.failed ? (
+          <>
+            <Footnote>{LocatorGenerationMessage.failed}</Footnote>
+            <span className="ant-notification-notice-btn">
+              <Button type="text" size="small" onClick={handleRetry}>
+                Retry
+              </Button>
+            </span>
+          </>
+        ) : (
+          <Footnote>
+            {size(inProgress)
+              ? `${LocatorGenerationMessage.started} (${calculationReady}/${total})`
+              : size(failed)
+              ? `${LocatorGenerationMessage.completeWithErrors} (${calculationReady}/${total})`
+              : `${LocatorGenerationMessage.complete}`}
+          </Footnote>
+        )}
+      </div>
+      <Progress
+        status={generationStatus === LocatorsGenerationStatus.failed ? 'exception' : undefined}
+        percent={readinessPercentage}
+        className={className}
+      />
+    </div>
   );
 };

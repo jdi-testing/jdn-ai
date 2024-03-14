@@ -24,16 +24,19 @@ const getStatus = (errorText: string, stage: number, progress: number) => {
   return 'normal';
 };
 
+const ERROR_TEXT = 'Server unavailable: check connection and settings';
+
 const ProgressBar: React.FC = () => {
   const dispatch = useAppDispatch();
   const isStarted = useSelector(selectIsStarted);
   const stage = useSelector(selectStage);
   const progress = useSelector(selectProgress);
-  const errorText = useSelector(selectErrorText);
+  const errorCode = useSelector(selectErrorText);
 
-  const status = getStatus(errorText, stage, progress);
+  const status = getStatus(errorCode, stage, progress);
   const isStatusFinished = status === 'success' || status === 'exception';
 
+  const errorText = `${ERROR_TEXT} (${errorCode})`;
   const stageName = status === 'exception' ? errorText : stageNames[stage];
 
   useEffect(() => {
