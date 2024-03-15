@@ -50,4 +50,4 @@ export enum PageType {
   LocatorsList = 'locatorsList',
 }
 
-export type BaseUrl = 'http://localhost:5050' | 'http://10.253.219.156:5000' | 'http://10.253.219.156:80';
+export type BaseUrl = 'http://localhost:5050' | 'http://78.47.220.208:5000' | 'http://78.47.220.208:80';
