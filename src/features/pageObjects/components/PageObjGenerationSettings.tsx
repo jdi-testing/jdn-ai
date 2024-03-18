@@ -91,19 +91,12 @@ const locatorTypeOptions = [
 
 interface Props {
   pageObj: PageObjectId;
-  library: ElementLibrary;
   url: string;
   isOnboardingOpen: boolean;
   handleGenerate: () => void;
 }
 
-export const PageObjGenerationSettings: React.FC<Props> = ({
-  pageObj,
-  library,
-  url,
-  handleGenerate,
-  isOnboardingOpen,
-}) => {
+export const PageObjGenerationSettings: React.FC<Props> = ({ pageObj, url, handleGenerate, isOnboardingOpen }) => {
   const status = useSelector((state: RootState) => state.locators.present.status);
   const currentPageObject = useSelector(selectCurrentPageObject);
   const pageObjects = useSelector(selectPageObjects);

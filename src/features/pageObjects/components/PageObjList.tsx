@@ -152,7 +152,7 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
                         <Locator {...{ element, library }} key={element.element_id} currentPage={PageType.PageObject} />
                       ))
                     ) : (
-                      <PageObjGenerationSettings pageObj={id} {...{ library, url, isOnboardingOpen, handleGenerate }} />
+                      <PageObjGenerationSettings pageObj={id} {...{ url, isOnboardingOpen, handleGenerate }} />
                     )}
                   </Collapse.Panel>
                 );
