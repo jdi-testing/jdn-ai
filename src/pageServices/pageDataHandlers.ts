@@ -55,7 +55,7 @@ export const predictElements = (endpoint: HttpEndpoint): PredictElementsType => 
       },
       (error) => {
         removeOverlay();
-        return { error: error.message };
+        return { error: error.response?.status ?? 500 };
       },
     );
 };

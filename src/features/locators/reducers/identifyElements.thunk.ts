@@ -18,7 +18,6 @@ import { fetchPageDocument } from '../../../services/pageDocument/fetchPageDocum
 import { createDocumentForRobula } from '../../../services/pageDocument/pageDocument.slice';
 
 interface Meta {
-  library: ElementLibrary;
   pageObj: PageObjectId;
 }
 
@@ -74,7 +73,7 @@ export const identifyElements = createAsyncThunk('locators/identifyElements', as
       return thunkAPI.fulfillWithValue(locators);
     }
 
-    throw new Error('No valid data');
+    throw new Error('Something went wrong');
   } catch (error) {
     // can use params in the function so that when the progress bar is finished there will be information about errors
     thunkAPI.dispatch(finishProgressBar(error.message));

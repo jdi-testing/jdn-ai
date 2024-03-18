@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { Progress } from 'antd';
+import React, { useEffect, FC } from 'react';
+import { Button, Progress } from 'antd';
 import { useSelector } from 'react-redux';
 import { selectErrorText, selectIsStarted, selectProgress, selectStage } from '../selectors/progressBar.selector';
 import { updateProgress } from '../reducers/updateProgressBar.thunk';
@@ -26,17 +26,21 @@ const getStatus = (errorText: string, stage: number, progress: number) => {
 
 const ERROR_TEXT = 'Server unavailable: check connection and settings';
 
-const ProgressBar: React.FC = () => {
+type Props = {
+  onRetry: () => void;
+};
+
+const ProgressBar: FC<Props> = ({ onRetry }) => {
   const dispatch = useAppDispatch();
   const isStarted = useSelector(selectIsStarted);
   const stage = useSelector(selectStage);
   const progress = useSelector(selectProgress);
-  const errorCode = useSelector(selectErrorText);
+  const error = useSelector(selectErrorText);
 
-  const status = getStatus(errorCode, stage, progress);
+  const status = getStatus(error, stage, progress);
   const isStatusFinished = status === 'success' || status === 'exception';
 
-  const errorText = `${ERROR_TEXT} (${errorCode})`;
+  const errorText = `${ERROR_TEXT} (${error})`;
   const stageName = status === 'exception' ? errorText : stageNames[stage];
 
   useEffect(() => {
@@ -56,7 +60,14 @@ const ProgressBar: React.FC = () => {
 
   return (
     <div className="jdn_page-object-list_progress-bar-component">
-      <p className="stage-name">{stageName}</p>
+      <div className="jdn_page-object-list_progress-bar-status">
+        <p className="stage-name">{stageName}</p>
+        {error && (
+          <Button type="text" onClick={onRetry}>
+            Retry
+          </Button>
+        )}
+      </div>
       <Progress className={className} percent={progress} status={status} showInfo={isStatusFinished} />
     </div>
   );
