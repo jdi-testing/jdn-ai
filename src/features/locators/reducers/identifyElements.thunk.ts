@@ -12,7 +12,7 @@ import { getLocalStorage, LocalStorageKey } from '../../../common/utils/localSto
 import { selectAutoGeneratingLocatorTypes, selectPageObjById } from '../../pageObjects/selectors/pageObjects.selectors';
 import { RootState } from '../../../app/store/store';
 import { runLocatorsGeneration } from './runLocatorsGeneration.thunk';
-import { finishProgressBar } from '../../pageObjects/progressBar.slice';
+import { finishProgressBar, setProgressError } from '../../pageObjects/progressBar.slice';
 import { delay } from '../utils/delay';
 import { fetchPageDocument } from '../../../services/pageDocument/fetchPageDocument.thunk';
 import { createDocumentForRobula } from '../../../services/pageDocument/pageDocument.slice';
@@ -76,7 +76,7 @@ export const identifyElements = createAsyncThunk('locators/identifyElements', as
     throw new Error('Something went wrong');
   } catch (error) {
     // can use params in the function so that when the progress bar is finished there will be information about errors
-    thunkAPI.dispatch(finishProgressBar(error.message));
+    thunkAPI.dispatch(setProgressError(error.message));
     return thunkAPI.rejectWithValue(null);
   }
 });

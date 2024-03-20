@@ -3,7 +3,7 @@ import connector, { sendMessage } from './connector';
 import { HttpEndpoint, request } from '../services/backend';
 import { createOverlay } from './contentScripts/createOverlay';
 import { getFullDocumentWithStyles } from '../common/utils/getFullDocumentWithStyles';
-import { PredictedEntity } from '../features/locators/types/locator.types';
+import { ILocator, PredictedEntity } from '../features/locators/types/locator.types';
 import { getLibrarySelectors } from '../services/rules/createSelector';
 import { VueRules } from '../services/rules/Vue.rules';
 // /* global chrome */
@@ -60,7 +60,7 @@ export const predictElements = (endpoint: HttpEndpoint): PredictElementsType => 
     );
 };
 
-export const setParents = async (elements: any) => {
+export const setParents = async (elements: ILocator[]) => {
   return sendMessage.assignParents(elements).then((response) => response);
 };
 

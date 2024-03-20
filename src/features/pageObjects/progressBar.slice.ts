@@ -40,10 +40,12 @@ const progressBarSlice = createSlice({
       state.startTime = 0;
       state.error = '';
     },
-    finishProgressBar(state, action: PayloadAction<string | undefined>) {
+    finishProgressBar(state) {
       state.stage = 3;
       state.progress = 100;
-      state.error = action.payload || '';
+    },
+    setProgressError(state, action: PayloadAction<string>) {
+      state.error = action.payload;
     },
     setStartTime(state, action: PayloadAction<number>) {
       state.startTime = action.payload;
@@ -59,6 +61,7 @@ export const {
   increaseStage,
   finishProgressBar,
   setStartTime,
+  setProgressError,
 } = progressBarSlice.actions;
 
 export default progressBarSlice.reducer;
