@@ -21,7 +21,7 @@ export const removeOverlay = () => {
     chrome.storage.sync.set({ overlayID });
 
     connector.attachContentScript(() => {
-      chrome.storage.sync.get(['overlayID'], ({ id }) => {
+      chrome.storage.sync.get(['overlayID'], ({ overlayID: id }) => {
         const overlay = document.getElementById(id);
         if (overlay) overlay.remove();
       });

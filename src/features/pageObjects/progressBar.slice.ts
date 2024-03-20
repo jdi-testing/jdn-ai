@@ -46,6 +46,7 @@ const progressBarSlice = createSlice({
     },
     setProgressError(state, action: PayloadAction<string>) {
       state.error = action.payload;
+      state.progress = 100;
     },
     setStartTime(state, action: PayloadAction<number>) {
       state.startTime = action.payload;
