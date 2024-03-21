@@ -586,7 +586,8 @@ export const runContextMenu = () => {
     if (isMacPlatform && event.ctrlKey) return;
 
     const highlightTarget = event.target.closest('[jdn-highlight=true]');
-    if (!highlightTarget.classList.contains('jdn-active')) return;
+    if (!highlightTarget) return;
+    if (highlightTarget && !highlightTarget.classList.contains('jdn-active')) return;
 
     event.preventDefault();
 
