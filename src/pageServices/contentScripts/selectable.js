@@ -179,13 +179,14 @@ export const selectable = () => {
       const menuTarget = e.target.closest(".context-menu");
       if (menuTarget) return;
       
-      if (e.button === 2) return;
-
       self.options.start && self.options.start(e);
       if (self.options.key && !e[self.options.key]) return;
       self.options.onDeselect && self.selectedItems.size && self.options.onDeselect(Array.from(self.selectedItems));
-
+      
       document.body.classList.add("s-noselect");
+
+      if (e.button === 2) return;
+      
       self.ipos = [e.pageX, e.pageY];
       if (!rb()) {
         const gh = document.createElement("div");
