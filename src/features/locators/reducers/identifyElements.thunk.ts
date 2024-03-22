@@ -45,37 +45,36 @@ export const identifyElements = createAsyncThunk('locators/identifyElements', as
       throw new Error(error);
     }
 
-    if (data) {
-      const locators = data
-        .filter((el: PredictedEntity) => el.is_shown)
-        .map((el: PredictedEntity) => {
-          return {
-            ...el,
-            element_id: `${el.element_id}_${pageObj}`,
-            jdnHash: el.element_id,
-            pageObj: pageObj,
-          };
-        });
-
-      await thunkAPI.dispatch(fetchPageDocument()).unwrap();
-      thunkAPI.dispatch(createDocumentForRobula(data));
-
-      thunkAPI.dispatch(finishProgressBar());
-      /* progress-bar finish animation delay: */
-      await delay(2000);
-
-      if (pageData) {
-        thunkAPI.dispatch(setPageData({ id: pageObj, pageData }));
-      }
-
-      await thunkAPI.dispatch(createLocators({ predictedElements: locators, library }));
-
-      return thunkAPI.fulfillWithValue(locators);
+    if (!data) {
+      throw new Error('No data received from server');
     }
 
-    throw new Error('Something went wrong');
+    const locators = data
+      .filter((el: PredictedEntity) => el.is_shown)
+      .map((el: PredictedEntity) => {
+        return {
+          ...el,
+          element_id: `${el.element_id}_${pageObj}`,
+          jdnHash: el.element_id,
+          pageObj: pageObj,
+        };
+      });
+
+    await thunkAPI.dispatch(fetchPageDocument()).unwrap();
+    thunkAPI.dispatch(createDocumentForRobula(data));
+
+    thunkAPI.dispatch(finishProgressBar());
+    /* progress-bar finish animation delay: */
+    await delay(2000);
+
+    if (pageData) {
+      thunkAPI.dispatch(setPageData({ id: pageObj, pageData }));
+    }
+
+    thunkAPI.dispatch(createLocators({ predictedElements: locators, library }));
+
+    return thunkAPI.fulfillWithValue(locators);
   } catch (error) {
-    // can use params in the function so that when the progress bar is finished there will be information about errors
     thunkAPI.dispatch(setProgressError(error.message));
     return thunkAPI.rejectWithValue(null);
   }
