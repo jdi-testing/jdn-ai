@@ -123,7 +123,9 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
                 const { id, locators, url, name, library } = pageObject;
 
                 const elements = selectConfirmedLocators(state, id);
-                const isPageObjectNotEmpty = !!size(locators);
+                const isPageObjectEmpty = !size(locators);
+                const shouldDisplayLocators = !isPageObjectEmpty && isProgressBarFinished && elements.length;
+
                 return (
                   <Collapse.Panel
                     key={id}
@@ -140,14 +142,12 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
                     }
                     extra={
                       <>
-                        {isPageObjectNotEmpty && (
-                          <PageObjCopyButton {...{ framework, elements, pageObjectName: name }} />
-                        )}
+                        {!isPageObjectEmpty && <PageObjCopyButton {...{ framework, elements, pageObjectName: name }} />}
                         <PageObjMenu {...{ pageObject, elements }} />
                       </>
                     }
                   >
-                    {isPageObjectNotEmpty && isProgressBarFinished && elements.length ? (
+                    {shouldDisplayLocators ? (
                       elements.map((element) => (
                         <Locator {...{ element, library }} key={element.element_id} currentPage={PageType.PageObject} />
                       ))
