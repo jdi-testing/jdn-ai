@@ -68,7 +68,7 @@ const ProgressBar: FC<Props> = ({ onRetry }) => {
           </Button>
         )}
       </div>
-      <Progress className={className} percent={progress} status={status} showInfo={isStatusFinished} />
+      <Progress className={className} percent={progress} status={status} />
     </div>
   );
 };

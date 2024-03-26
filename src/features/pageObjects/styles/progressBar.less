@@ -3,10 +3,10 @@
     margin: 8px 16px 0;
 
     .progress-bar {
-      width: calc(100% - 36px);
-
-      &.finished {
-        width: 100%;
+      &:not(.finished) {
+        .ant-progress-text {
+          display: none;
+        }
       }
     }
 

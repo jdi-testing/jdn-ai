@@ -22,12 +22,11 @@ export const LocatorsProgress = () => {
   const [isProgressActive, setIsProgressActive] = useState(false);
   const generationStatus = useSelector((state: RootState) => state.locators.present.generationStatus);
 
-  const locatorsAll = useSelector((_state: RootState) => selectFilteredLocators(_state));
-  const generated = useSelector((_state: RootState) => selectCalculatedByPageObj(_state));
-  const inProgress = useSelector((_state: RootState) => selectInProgressByPageObj(_state));
-  const deleted = useSelector((_state: RootState) => selectDeletedByPageObj(_state));
-  const failed = useSelector((_state: RootState) => selectFailedByPageObject(_state));
-
+  const locatorsAll = useSelector(selectFilteredLocators);
+  const generated = useSelector(selectCalculatedByPageObj);
+  const inProgress = useSelector(selectInProgressByPageObj);
+  const deleted = useSelector(selectDeletedByPageObj);
+  const failed = useSelector(selectFailedByPageObject);
   const calculationReady = size(generated);
   const toBeCalculated = size(inProgress) + size(failed);
   const total = size(locatorsAll) - size(deleted);
@@ -56,8 +55,11 @@ export const LocatorsProgress = () => {
     return () => clearTimeout(timer);
   }, [generated, inProgress, deleted]);
 
+  const shouldHideInfo = readinessPercentage !== 100 && generationStatus !== LocatorsGenerationStatus.failed;
+  const isGeneratedStatusFailed = generationStatus === LocatorsGenerationStatus.failed;
+
   const className = cn({
-    'jdn__progress_hide-info': readinessPercentage !== 100 && generationStatus !== LocatorsGenerationStatus.failed,
+    'jdn__progress_hide-info': shouldHideInfo,
   });
 
   if (!isProgressActive) {
@@ -67,7 +69,7 @@ export const LocatorsProgress = () => {
   return (
     <div className="jdn__locator-list-progress">
       <div className="jdn__locator-list-progress-text">
-        {generationStatus === LocatorsGenerationStatus.failed ? (
+        {isGeneratedStatusFailed ? (
           <>
             <Footnote>{LocatorGenerationMessage.failed}</Footnote>
             <span className="ant-notification-notice-btn">
@@ -87,7 +89,7 @@ export const LocatorsProgress = () => {
         )}
       </div>
       <Progress
-        status={generationStatus === LocatorsGenerationStatus.failed ? 'exception' : undefined}
+        status={isGeneratedStatusFailed ? 'exception' : undefined}
         percent={readinessPercentage}
         className={className}
       />
