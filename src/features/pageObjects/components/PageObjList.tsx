@@ -2,7 +2,7 @@ import Icon from '@ant-design/icons';
 import { Collapse, Tooltip, Typography } from 'antd';
 import { isNil, size } from 'lodash';
 import React, { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { CaretDown } from '@phosphor-icons/react';
 import PageSvg from '../assets/page.svg';
@@ -14,15 +14,19 @@ import { Locator } from '../../locators/Locator';
 import { PageObjMenu } from './PageObjMenu';
 import { PageObjListHeader } from './PageObjListHeader';
 import { useNotifications } from '../../../common/components/notification/useNotifications';
-import { RootState } from '../../../app/store/store';
-import { ILocator } from '../../locators/types/locator.types';
-import { PageObject, PageObjectId } from '../types/pageObjectSlice.types';
-import { ElementLibrary } from '../../locators/types/generationClasses.types';
+import { AppDispatch, RootState } from '../../../app/store/store';
+import { PageObject } from '../types/pageObjectSlice.types';
 import { PageType } from '../../../app/types/mainSlice.types';
 import { selectConfirmedLocators } from '../../locators/selectors/locatorsFiltered.selectors';
 import { FrameworkType } from '../../../common/types/common';
 import ProgressBar from './ProgressBar';
 import { selectIsProgressBarFinished } from '../selectors/progressBar.selector';
+import { identifyElements } from '../../locators/reducers/identifyElements.thunk';
+import { OnboardingStep } from '../../onboarding/constants';
+import { setHideUnadded } from '../pageObject.slice';
+import { disablePageObjectsListUI } from '../pageObjectsListUI.slice';
+import { resetProgressBar, startProgressBar } from '../progressBar.slice';
+import { useOnboarding } from '../../onboarding/useOnboarding';
 
 interface Props {
   jdiTemplate?: Blob;
@@ -43,6 +47,10 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
   const pageObjects: PageObject[] = useSelector(selectPageObjects);
   const [activePanel, setActivePanel] = useState<string[] | undefined>([DEFAULT_ACTIVE_KEY]);
 
+  const { isOnboardingOpen, handleOnChangeStep } = useOnboarding();
+
+  const dispatch = useDispatch<AppDispatch>();
+
   const contentRef = useRef<HTMLDivElement>(null);
   useNotifications(contentRef?.current);
 
@@ -56,24 +64,18 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
     }
   }, [currentPageObjectIndex]);
 
-  const renderLocators = (elements: ILocator[], library: ElementLibrary) => {
-    return elements.map((element) => (
-      <Locator {...{ element, library }} key={element.element_id} currentPage={PageType.PageObject} />
-    ));
-  };
+  const handleGenerate = () => {
+    const pageObj = Number(activePanel?.[0]) || 0;
 
-  const renderContent = (
-    pageObjId: PageObjectId,
-    url: string,
-    elements: ILocator[],
-    library: ElementLibrary,
-    isPageObjectNotEmpty: boolean,
-  ) => {
-    if (isPageObjectNotEmpty && isProgressBarFinished && elements.length) {
-      return renderLocators(elements, library);
-    } else {
-      return <PageObjGenerationSettings pageObj={pageObjId} {...{ library, url }} />;
-    }
+    if (isOnboardingOpen) handleOnChangeStep(OnboardingStep.Generating);
+    dispatch(setHideUnadded({ id: pageObj, hideUnadded: false }));
+    dispatch(identifyElements({ pageObj }));
+    // disable UI for PageObjList settings:
+    dispatch(disablePageObjectsListUI());
+    // reset to default progress bar:
+    dispatch(resetProgressBar());
+    // show and start progress bar:
+    dispatch(startProgressBar());
   };
 
   const toggleExpand = () => {
@@ -121,7 +123,9 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
                 const { id, locators, url, name, library } = pageObject;
 
                 const elements = selectConfirmedLocators(state, id);
-                const isPageObjectNotEmpty = !!size(locators);
+                const isPageObjectEmpty = !size(locators);
+                const shouldDisplayLocators = !isPageObjectEmpty && isProgressBarFinished && elements.length;
+
                 return (
                   <Collapse.Panel
                     key={id}
@@ -138,19 +142,23 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
                     }
                     extra={
                       <>
-                        {isPageObjectNotEmpty && (
-                          <PageObjCopyButton {...{ framework, elements, pageObjectName: name }} />
-                        )}
+                        {!isPageObjectEmpty && <PageObjCopyButton {...{ framework, elements, pageObjectName: name }} />}
                         <PageObjMenu {...{ pageObject, elements }} />
                       </>
                     }
                   >
-                    {renderContent(id, url, elements, library, isPageObjectNotEmpty)}
+                    {shouldDisplayLocators ? (
+                      elements.map((element) => (
+                        <Locator {...{ element, library }} key={element.element_id} currentPage={PageType.PageObject} />
+                      ))
+                    ) : (
+                      <PageObjGenerationSettings pageObj={id} {...{ url, isOnboardingOpen, handleGenerate }} />
+                    )}
                   </Collapse.Panel>
                 );
               })}
             </Collapse>
-            <ProgressBar />
+            <ProgressBar onRetry={handleGenerate} />
           </>
         ) : (
           <PageObjectPlaceholder addPageObjectCallback={setActivePanel} />
