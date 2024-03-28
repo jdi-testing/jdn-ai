@@ -75,7 +75,10 @@ export const convertListToTree = (_list: ILocator[], searchString = '') => {
       const treeParent = getParent(node.parent_id);
       const origDepth = (list[map[node.parent_id]].depth || 0) + 1;
       const children = treeParent.children;
-      children && children.push({ ...node, depth: origDepth });
+
+      if (children) {
+        children.push({ ...node, depth: origDepth });
+      }
     } else {
       tree.push({ ...node, searchState });
     }
