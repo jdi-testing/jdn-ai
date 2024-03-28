@@ -1,16 +1,24 @@
-.jdn_page-object-list_progress-bar-component {
-	margin: 8px 16px 0;
+.jdn_page-object-list_progress-bar {
+  &-component {
+    margin: 8px 16px 0;
 
-	.progress-bar {
-		width: calc(100% - 8px);
-		transition: width linear 100ms;
+    .progress-bar {
+      &:not(.finished) {
+        .ant-progress-text {
+          display: none;
+        }
+      }
+    }
 
-		&.success {
-			width: calc(100% + 5px);
-		}
-	}
+    .stage-name {
+      margin: 0;
+    }
+  }
 
-	.stage-name {
-		margin: 0;
-	}
+  &-status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 32px;
+  }
 }

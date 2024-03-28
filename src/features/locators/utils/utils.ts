@@ -3,15 +3,15 @@ import { sendMessage } from '../../../pageServices/connector';
 import { ElementLibrary } from '../types/generationClasses.types';
 import { createElementName } from '../../pageObjects/utils/pageObject';
 import {
-  ILocator,
-  LocatorValue,
-  LocatorValidationWarnings,
-  LocatorValidationErrors,
-  LocatorValidationErrorType,
-  ValidationStatus,
   ElementId,
+  ILocator,
   JDNHash,
   LocatorTaskStatus,
+  LocatorValidationErrors,
+  LocatorValidationErrorType,
+  LocatorValidationWarnings,
+  LocatorValue,
+  ValidationStatus,
 } from '../types/locator.types';
 import { getElementFullXpath, isStringContainsNumbers } from '../../../common/utils/helpers';
 import { LocatorOption } from './constants';
@@ -27,6 +27,7 @@ import {
 } from './locatorOutput';
 import { FormInstance } from 'rc-field-form/lib/interface';
 import { FormValues } from '../components/LocatorEditDialog';
+import { startsWithDigit } from '../../../app/utils/startsWithDigit';
 
 export const isValidJavaVariable = (value: string) => /^[a-zA-Z_$]([a-zA-Z0-9_])*$/.test(value);
 
@@ -54,11 +55,11 @@ export const evaluateLocator = async (
   elementId?: ElementId,
   jdnHash?: string,
 ) => {
+  if (startsWithDigit(locatorString)) return LocatorValidationWarnings.StartsWithDigit;
   if (locatorType === LocatorType.xPath) return evaluateXpath(locatorString, elementId, jdnHash);
-  else {
-    const preparedValue = prepareLocatorStringForEvaluation(locatorType, locatorString);
-    return evaluateStandardLocator(preparedValue, locatorType, elementId, jdnHash);
-  }
+
+  const preparedValue = prepareLocatorStringForEvaluation(locatorType, locatorString);
+  return evaluateStandardLocator(preparedValue, locatorType, elementId, jdnHash);
 };
 
 export const generateSelectorByHash = (element_id: ElementId, jdnHash: string) =>
