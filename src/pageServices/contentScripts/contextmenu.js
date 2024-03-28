@@ -587,6 +587,7 @@ export const runContextMenu = () => {
 
     const highlightTarget = event.target.closest('[jdn-highlight=true]');
     if (!highlightTarget) return;
+    if (highlightTarget && !highlightTarget.classList.contains('jdn-active')) return;
 
     event.preventDefault();
 
