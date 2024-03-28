@@ -57,10 +57,9 @@ export const evaluateLocator = async (
 ) => {
   if (startsWithDigit(locatorString)) return LocatorValidationWarnings.StartsWithDigit;
   if (locatorType === LocatorType.xPath) return evaluateXpath(locatorString, elementId, jdnHash);
-  else {
-    const preparedValue = prepareLocatorStringForEvaluation(locatorType, locatorString);
-    return evaluateStandardLocator(preparedValue, locatorType, elementId, jdnHash);
-  }
+
+  const preparedValue = prepareLocatorStringForEvaluation(locatorType, locatorString);
+  return evaluateStandardLocator(preparedValue, locatorType, elementId, jdnHash);
 };
 
 export const generateSelectorByHash = (element_id: ElementId, jdnHash: string) =>
