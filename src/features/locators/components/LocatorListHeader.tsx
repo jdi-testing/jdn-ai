@@ -43,6 +43,8 @@ export const LocatorListHeader = ({
   const [expandAll, setExpandAll] = useState(ExpandState.Expanded);
   const [searchString, setSearchString] = useState('');
   const [isAllLocatorsSelected, setIsAllLocatorsSelected] = useState<boolean>(false);
+  const [isDisabled, setIsDisabled] = useState(false);
+  const [hasSubLocators, setHasSubLocators] = useState(false);
 
   const locators = useSelector(selectFilteredLocators);
   const generatedLocators = useSelector(selectGenerateByPageObject);
@@ -54,6 +56,12 @@ export const LocatorListHeader = ({
   const isCreatingForm = useSelector(selectIsCreatingFormOpen);
 
   useEffect(() => {
+    setIsDisabled(locators.length === emptyLength);
+    const locatorHasSubLocators = locators.some(
+      (locator) => Array.isArray(locator.children) && locator.children.length > 0,
+    );
+    setHasSubLocators(locatorHasSubLocators);
+
     if (
       checkedLocators.length > emptyLength &&
       checkedLocators.length === locators.length &&
@@ -63,7 +71,7 @@ export const LocatorListHeader = ({
     } else {
       setIsAllLocatorsSelected(false);
     }
-  }, [checkedLocators.length]);
+  }, [locators, checkedLocators.length, generatedLocators.length]);
 
   const partiallySelected =
     checkedLocators.length > emptyLength &&
@@ -115,14 +123,20 @@ export const LocatorListHeader = ({
         <span className="jdn__items-list_header-title">
           <CaretDown
             style={{
-              transform: expandAll === ExpandState.Expanded ? 'rotate(180deg)' : 'rotate(0deg)',
+              transform: hasSubLocators
+                ? `rotate(${expandAll === ExpandState.Expanded ? '180' : '0'}deg)`
+                : 'rotate(0deg)',
+
+              pointerEvents: isDisabled || !hasSubLocators ? 'none' : 'auto',
             }}
             className="jdn__items-list_header-collapse"
-            color="#878A9C"
+            color={`${isDisabled || !hasSubLocators ? 'rgba(0, 0, 0, 0.25)' : '#878A9C'}`}
             size={14}
-            onClick={() =>
-              setExpandAll(expandAll === ExpandState.Collapsed ? ExpandState.Expanded : ExpandState.Collapsed)
-            }
+            onClick={() => {
+              if (hasSubLocators) {
+                setExpandAll(expandAll === ExpandState.Collapsed ? ExpandState.Expanded : ExpandState.Collapsed);
+              }
+            }}
           />
           <Checkbox
             checked={isAllLocatorsSelected}
