@@ -19,10 +19,13 @@ const mainConfig = {
     index: './src/index.js',
     app: './src/app.jsx',
     contentScript: './src/pageServices/contentScripts/index.ts',
+    options: './src/options/options.js',
   },
   output: {
     path: join(__dirname, 'dist'),
-    filename: '[name].bundle.js',
+    filename: (chunkData) => {
+      return chunkData.chunk.name === 'options' ? '[name].js' : '[name].bundle.js';
+    },
     publicPath: './',
   },
   plugins: [
@@ -38,6 +41,13 @@ const mainConfig = {
       template: './src/app.html',
       filename: 'app.html',
       chunks: ['app'],
+    }),
+    new HtmlWebpackPlugin({
+      title: 'Настройки расширения',
+      template: './src/options/options.html',
+      filename: 'options.html',
+      chunks: ['optionsScript'],
+      inject: true,
     }),
     new MiniCssExtractPlugin({
       filename: '[name].css',
