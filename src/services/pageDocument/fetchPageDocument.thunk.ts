@@ -5,7 +5,7 @@ import { PageDocumentState } from './pageDocument.slice';
 
 export const fetchPageDocument = createAsyncThunk('pageDocument/fetchPageDocument', async (_, { rejectWithValue }) => {
   try {
-    const response: string = await getFullDocument();
+    const response = await getFullDocument();
     return response;
   } catch (error) {
     return rejectWithValue(error.response.data);
