@@ -1,6 +1,6 @@
 import type { ActionReducerMapBuilder, Middleware } from '@reduxjs/toolkit';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { predictElements } from '../../../pageServices/pageDataHandlers';
+import { findByRules, predictElements } from '../../../pageServices/pageDataHandlers';
 import { IdentificationStatus, LocatorsState, PredictedEntity } from '../../locators/types/locator.types';
 import { setCurrentPageObj, setPageData } from '../../pageObjects/pageObject.slice';
 import { setFilter } from '../../filter/filter.slice';
@@ -8,18 +8,16 @@ import { PageObjectId } from '../../pageObjects/types/pageObjectSlice.types';
 import { defaultLibrary, ElementLibrary, predictEndpoints } from '../types/generationClasses.types';
 
 import { createLocators } from './createLocators.thunk';
-import { findByRules } from '../utils/generationButton';
 import { getLocalStorage, LocalStorageKey } from '../../../common/utils/localStorage';
 import { selectAutoGeneratingLocatorTypes, selectPageObjById } from '../../pageObjects/selectors/pageObjects.selectors';
 import { RootState } from '../../../app/store/store';
 import { runLocatorsGeneration } from './runLocatorsGeneration.thunk';
-import { finishProgressBar } from '../../pageObjects/progressBar.slice';
+import { finishProgressBar, setProgressError } from '../../pageObjects/progressBar.slice';
 import { delay } from '../utils/delay';
 import { fetchPageDocument } from '../../../services/pageDocument/fetchPageDocument.thunk';
 import { createDocumentForRobula } from '../../../services/pageDocument/pageDocument.slice';
 
 interface Meta {
-  library: ElementLibrary;
   pageObj: PageObjectId;
 }
 
@@ -40,8 +38,17 @@ export const identifyElements = createAsyncThunk('locators/identifyElements', as
   Then adds needed locators to state and runs locator value generation. */
   try {
     const endpoint = predictEndpoints[library];
-    const { data, pageData } =
-      library !== ElementLibrary.Vuetify ? await predictElements(endpoint) : await findByRules();
+    const { data, pageData, error } =
+      library === ElementLibrary.Vuetify ? await findByRules() : await predictElements(endpoint);
+
+    if (error) {
+      throw new Error(error);
+    }
+
+    if (!data) {
+      throw new Error('No data received from server');
+    }
+
     const locators = data
       .filter((el: PredictedEntity) => el.is_shown)
       .map((el: PredictedEntity) => {
@@ -60,13 +67,15 @@ export const identifyElements = createAsyncThunk('locators/identifyElements', as
     /* progress-bar finish animation delay: */
     await delay(2000);
 
-    thunkAPI.dispatch(setPageData({ id: pageObj, pageData }));
+    if (pageData) {
+      thunkAPI.dispatch(setPageData({ id: pageObj, pageData }));
+    }
+
     thunkAPI.dispatch(createLocators({ predictedElements: locators, library }));
 
     return thunkAPI.fulfillWithValue(locators);
   } catch (error) {
-    // can use params in the function so that when the progress bar is finished there will be information about errors
-    thunkAPI.dispatch(finishProgressBar());
+    thunkAPI.dispatch(setProgressError(error.message));
     return thunkAPI.rejectWithValue(null);
   }
 });
@@ -77,7 +86,6 @@ export const identifyElementsReducer = (builder: ActionReducerMapBuilder<Locator
       state.status = IdentificationStatus.loading;
     })
     .addCase(identifyElements.fulfilled, (state, { payload }) => {
-      // @ts-ignore
       if (payload.length) state.status = IdentificationStatus.preparing;
       else state.status = IdentificationStatus.noElements;
     })

@@ -16,7 +16,7 @@ export const updateProgress = createAsyncThunk('progressBar/updateProgress', asy
 
   while (true) {
     const state = (getState() as RootState).progressBar;
-    if (state.stage === totalStages && state.progress === 100) {
+    if (state.stage === totalStages || state.progress === 100) {
       break;
     }
 
