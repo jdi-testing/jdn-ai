@@ -10,28 +10,29 @@ import { AppDispatch, RootState } from '../../../app/store/store';
 import { DialogWithForm } from '../../../common/components/DialogWithForm';
 import { selectAvailableClasses } from '../../filter/filter.selectors';
 import { selectCurrentPageObject } from '../../pageObjects/selectors/pageObjects.selectors';
-import { ElementClass, defaultLibrary } from '../types/generationClasses.types';
+import { defaultLibrary, ElementClass } from '../types/generationClasses.types';
 import { isNameUnique } from '../../pageObjects/utils/pageObject';
 import {
   ILocator,
-  LocatorValidationWarnings,
   LocatorValidationErrors,
   LocatorValidationErrorType,
+  LocatorValidationWarnings,
 } from '../types/locator.types';
 
 import { changeLocatorAttributes } from '../locators.slice';
 import { createNewName, getLocatorValidationStatus, getLocatorValueOnTypeSwitch } from '../utils/utils';
 import { createLocatorValidationRules } from '../utils/locatorValidationRules';
 import { createNameValidationRules } from '../utils/nameValidationRules';
-import { LocatorType, SelectOption, AnnotationType, FrameworkType } from '../../../common/types/common';
+import { AnnotationType, FrameworkType, LocatorType, SelectOption } from '../../../common/types/common';
 import { isFilteredSelect } from '../../../common/utils/helpers';
 import { CALCULATING, newLocatorStub } from '../utils/constants';
 import { changeLocatorElement } from '../reducers/changeLocatorElement.thunk';
 import { addCustomLocator } from '../reducers/addCustomLocator.thunk';
 import { selectPresentLocatorsByPO } from '../selectors/locatorsByPO.selectors';
 import { LocatorMessageForDuplicate } from './LocatorMessageForDuplicate';
-import { ILocatorTypeOptions, createLocatorTypeOptions } from '../utils/createLocatorTypeOptions';
+import { createLocatorTypeOptions, ILocatorTypeOptions } from '../utils/createLocatorTypeOptions';
 import { validateLocator } from '../utils/locatorValidation';
+import { annotationTypeOptions } from './utils';
 
 interface Props extends ILocator {
   isModalOpen: boolean;
@@ -46,16 +47,6 @@ export interface FormValues {
   annotationType: AnnotationType;
   locator: string;
 }
-
-// ToDo move to utils
-const annotationTypeOptions: { value: AnnotationType; label: AnnotationType }[] = Object.values(AnnotationType).map(
-  (type) => {
-    return {
-      value: type,
-      label: type,
-    };
-  },
-);
 
 export const LocatorEditDialog: React.FC<Props> = ({
   isModalOpen,
@@ -257,18 +248,28 @@ export const LocatorEditDialog: React.FC<Props> = ({
 
   const isLocatorDisabled = form.getFieldValue('locator') === CALCULATING;
 
+  const staticLocatorTypeOptions = Object.values(LocatorType)
+    .filter((value) => value !== LocatorType.dataAttributes)
+    .map((value) => ({
+      label: value,
+      value: value,
+    }));
   const [locatorTypeOptions, setLocatorTypeOptions] = useState<ILocatorTypeOptions[]>([]);
   useEffect(() => {
-    const fetchLocatorTypeOptions = async () => {
-      try {
-        const options = await createLocatorTypeOptions(locatorValue);
-        setLocatorTypeOptions(options);
-      } catch (error) {
-        console.error('Error: can`t get options for locator:', error);
-      }
-    };
+    if (!isCreatingForm) {
+      const fetchLocatorTypeOptions = async () => {
+        try {
+          const options = await createLocatorTypeOptions(locatorValue);
+          setLocatorTypeOptions(options);
+        } catch (error) {
+          console.error('Error: can`t get options for locator:', error);
+        }
+      };
 
-    void fetchLocatorTypeOptions();
+      void fetchLocatorTypeOptions();
+    } else {
+      setLocatorTypeOptions(staticLocatorTypeOptions);
+    }
   }, [locatorValue, locators, element_id]);
 
   const handleLocatorDropdownOnChange = async () => {

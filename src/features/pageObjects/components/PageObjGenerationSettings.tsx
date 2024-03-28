@@ -22,18 +22,9 @@ import { IN_DEVELOPMENT_TITLE } from '../../../common/constants/constants';
 
 import { useOnboardingContext } from '../../onboarding/OnboardingProvider';
 import { OnboardingStep } from '../../onboarding/constants';
-import { useOnboarding } from '../../onboarding/useOnboarding';
-import { resetProgressBar, startProgressBar } from '../progressBar.slice';
 import { selectIsPageObjectsListUIEnabled } from '../selectors/pageObjectsListUI.selectors';
-import { disablePageObjectsListUI } from '../pageObjectsListUI.slice';
 import { OnboardingTooltip } from '../../onboarding/components/OnboardingTooltip';
 import PageObjSettingsItem from './PageObjSettingsItem';
-
-interface Props {
-  pageObj: PageObjectId;
-  library: ElementLibrary;
-  url: string;
-}
 
 // ToDo move to constants
 const libraryOptions = [
@@ -98,26 +89,19 @@ const locatorTypeOptions = [
   },
 ];
 
-export const PageObjGenerationSettings: React.FC<Props> = ({ pageObj, library, url }) => {
+interface Props {
+  pageObj: PageObjectId;
+  url: string;
+  isOnboardingOpen: boolean;
+  handleGenerate: () => void;
+}
+
+export const PageObjGenerationSettings: React.FC<Props> = ({ pageObj, url, handleGenerate, isOnboardingOpen }) => {
   const status = useSelector((state: RootState) => state.locators.present.status);
   const currentPageObject = useSelector(selectCurrentPageObject);
   const pageObjects = useSelector(selectPageObjects);
 
-  const { isOnboardingOpen, handleOnChangeStep } = useOnboarding();
-
   const dispatch = useDispatch<AppDispatch>();
-
-  const handleGenerate = () => {
-    if (isOnboardingOpen) handleOnChangeStep(OnboardingStep.Generating);
-    dispatch(setHideUnadded({ id: pageObj, hideUnadded: false }));
-    dispatch(identifyElements({ library, pageObj }));
-    // disable UI for PageObjList settings:
-    dispatch(disablePageObjectsListUI());
-    // reset to default progress bar:
-    dispatch(resetProgressBar());
-    // show and start progress bar:
-    dispatch(startProgressBar());
-  };
 
   const refSettings = useRef<HTMLElement | null>(null);
   const generationButtonRef = useRef<HTMLElement | null>(null);
@@ -164,7 +148,7 @@ export const PageObjGenerationSettings: React.FC<Props> = ({ pageObj, library, u
 
   const handleEmptyPO = () => {
     dispatch(setHideUnadded({ id: pageObj, hideUnadded: true }));
-    dispatch(identifyElements({ library, pageObj }));
+    dispatch(identifyElements({ pageObj }));
   };
 
   const isLoading = () => isIdentificationLoading(status) && currentPageObject?.id === pageObj;
