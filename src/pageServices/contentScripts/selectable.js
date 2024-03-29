@@ -178,12 +178,15 @@ export const selectable = () => {
 
       const menuTarget = e.target.closest(".context-menu");
       if (menuTarget) return;
-
+      
       self.options.start && self.options.start(e);
       if (self.options.key && !e[self.options.key]) return;
       self.options.onDeselect && self.selectedItems.size && self.options.onDeselect(Array.from(self.selectedItems));
-
+      
       document.body.classList.add("s-noselect");
+
+      if (e.button === 2) return;
+      
       self.ipos = [e.pageX, e.pageY];
       if (!rb()) {
         const gh = document.createElement("div");
@@ -221,7 +224,7 @@ export const selectable = () => {
       const selected = new Set();
       const deselected = new Set();
       const a = rb();
-      if (!a) return;
+      if (!a) return; // if no elements are chosen
 
       delete self.ipos;
       document.body.classList.remove("s-noselect");
@@ -240,6 +243,7 @@ export const selectable = () => {
           el.classList.add(s);
         }
       };
+
       if (isPlainClick(a)) {
         const highlightTarget = e.target.closest("[jdn-highlight=true]:not([id^='jdn-overlay'])");
         const isActiveTarget = highlightTarget && highlightTarget.classList.contains(self.options.selectedClass);
@@ -253,9 +257,6 @@ export const selectable = () => {
             if (isActiveGroup) self.removePreviousSelection([highlightTarget.id]);
             /** make target active, if it's still not **/
             if (!isActiveTarget) toggleActiveClass(highlightTarget);
-          } else {
-            /** with "more button" used, active class is always converted **/
-            toggleActiveClass(highlightTarget);
           }
           /* single click outside highlight cancels all selections */
         } else if (!highlightTarget) self.removePreviousSelection();
