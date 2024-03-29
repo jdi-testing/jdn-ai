@@ -1,4 +1,4 @@
-import { LocatorType, AnnotationType, ElementAttributes } from '../../../common/types/common';
+import { AnnotationType, ElementAttributes, LocatorType } from '../../../common/types/common';
 import { PageObjectId } from '../../pageObjects/types/pageObjectSlice.types';
 import { ElementClass } from './generationClasses.types';
 
@@ -65,6 +65,7 @@ export enum LocatorValidationWarnings {
   EmptyValue = 'Please fill out this field.',
   NotFound = 'The locator was not found on the page.',
   NewElement = 'The locator leads to the new element.',
+  StartsWithDigit = 'The locator cannot start with a number.',
 }
 
 export type LocatorValidationErrorType = LocatorValidationErrors | LocatorValidationWarnings | '';

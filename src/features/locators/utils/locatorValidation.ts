@@ -1,12 +1,12 @@
 import { LocatorType } from '../../../common/types/common';
 import { CustomError } from '../../../common/utils/customError';
 import {
+  ElementId,
   ILocator,
+  JDNHash,
   LocatorValidationErrors,
   LocatorValidationErrorType,
   LocatorValidationWarnings,
-  JDNHash,
-  ElementId,
 } from '../types/locator.types';
 import { checkDuplicates, evaluateLocator } from './utils';
 
@@ -26,8 +26,9 @@ export const validateLocator = async (
   let validationMessage: LocatorValidationErrorType = '';
 
   const locatorValue = await evaluateLocator(locatorString, locatorType, element_id, jdnHash);
-
-  if (locatorValue === LocatorValidationWarnings.NotFound || !locatorValue) {
+  if (locatorValue === LocatorValidationWarnings.StartsWithDigit) {
+    validationMessage = LocatorValidationWarnings.StartsWithDigit;
+  } else if (locatorValue === LocatorValidationWarnings.NotFound || !locatorValue) {
     validationMessage = LocatorValidationWarnings.NotFound; //validationStatus: WARNING
   } else {
     ({ length, foundHash } = JSON.parse(locatorValue));

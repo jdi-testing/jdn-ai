@@ -4,8 +4,8 @@ import { LocatorValue } from '../types/locator.types';
 import {
   ElementAttributes,
   ExtendedElementAttributes,
-  LocatorType,
   locatorAttributesInitialState,
+  LocatorType,
 } from '../../../common/types/common';
 import { mergeObjects } from './mergeObjects';
 import { Tooltip } from 'antd';
@@ -18,8 +18,9 @@ interface IOptionsWithLabel {
 }
 
 export interface ILocatorTypeOptions {
+  value?: string;
   label: string;
-  options: IOptionsWithLabel[];
+  options?: IOptionsWithLabel[];
 }
 
 const generateOptionsWithLabel = (attributes: ElementAttributes): IOptionsWithLabel[] => {

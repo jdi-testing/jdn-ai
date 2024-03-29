@@ -1,9 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "JDN",
+  "name": "JDN — Page Object Generator",
   "description": "JDN – helps Test Automation Engineer to create Page Objects in the test automation framework and speed up test development",
   "devtools_page": "index.html",
-  "version": "3.15.9",
+  "version": "3.15.15",
   "icons": {
     "128": "icon128.png"
   },

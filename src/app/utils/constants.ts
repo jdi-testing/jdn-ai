@@ -1,8 +1,8 @@
 import { BaseUrl } from '../types/mainSlice.types';
 
 export const URL: { [key: string]: BaseUrl } = {
-  devRemote: 'http://10.253.219.156:5000',
-  prodRemote: 'http://10.253.219.156:80',
+  devRemote: 'http://78.47.220.208:5000',
+  prodRemote: 'http://78.47.220.208:80',
   local: 'http://localhost:5050',
 };
 
