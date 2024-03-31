@@ -2,11 +2,14 @@ import { ActionReducerMapBuilder, createAsyncThunk } from '@reduxjs/toolkit';
 import { AxiosResponse } from 'axios';
 import { toInteger } from 'lodash';
 import { BackendStatus, BaseUrl, MainState } from '../types/mainSlice.types';
-import { URL, RemoteUrl } from '../utils/constants';
+import { RemoteUrl, URL } from '../utils/constants';
 import { HttpEndpoint, request } from '../../services/backend';
 import { compatibleBuildVer, compatibleMajorVer, compatibleMinorVer } from '../utils/compatibleVersions';
+import { getUrlFromStorage } from '../utils/getUrlFromStorage';
 
 export const defineServer = createAsyncThunk('main/defineServer', async () => {
+  const remoteUrl: string = await getUrlFromStorage('serverUrl', RemoteUrl);
+
   const checkVersion = (request: Promise<AxiosResponse<BaseUrl>>, isRemote: boolean) =>
     request.then((response) => {
       const [major, minor, build] = response.data.split('.').map(toInteger);
@@ -20,7 +23,7 @@ export const defineServer = createAsyncThunk('main/defineServer', async () => {
     });
 
   return Promise.any<AxiosResponse<BaseUrl>>([
-    checkVersion(request.get(HttpEndpoint.BUILD, undefined, RemoteUrl), true),
+    checkVersion(request.get(HttpEndpoint.BUILD, undefined, remoteUrl as BaseUrl), true),
     checkVersion(request.get(HttpEndpoint.BUILD, undefined, URL.local), false),
   ]).then(
     (response) => {
