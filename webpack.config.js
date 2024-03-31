@@ -1,8 +1,11 @@
 import path, { join, resolve as _resolve } from 'path';
 import { fileURLToPath } from 'url';
 import pkg from 'webpack';
+
 import HtmlWebpackPlugin from 'html-webpack-plugin';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import CopyPlugin from 'copy-webpack-plugin';
+
 import process from 'process';
 
 const reduxLogEnable = process.argv.includes('reduxlogenable');
@@ -43,7 +46,7 @@ const mainConfig = {
       chunks: ['app'],
     }),
     new HtmlWebpackPlugin({
-      title: 'Настройки расширения',
+      title: 'Extension settings',
       template: './src/options/options.html',
       filename: 'options.html',
       chunks: ['optionsScript'],
@@ -55,6 +58,9 @@ const mainConfig = {
     new pkg.DefinePlugin({
       __REDUX_LOG_ENABLE__: reduxLogEnable,
       __DEV_ENVIRONMENT__: devEnvironment,
+    }),
+    new CopyPlugin({
+      patterns: [{ from: './src/options/options.styles.css', to: '' }],
     }),
   ],
   resolve: {
