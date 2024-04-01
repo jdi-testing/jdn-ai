@@ -10,6 +10,7 @@ import {
 import { AnnotationType, LocatorType } from '../../../common/types/common';
 import { hasAnnotationType } from './hasAnnotationType';
 import { PageObject } from '../types/pageObjectSlice.types';
+import { escapeString, unescapeString } from '../../../common/utils/escapeString';
 
 export const getClassName = (title: string) => {
   let className = transliterate(title);
@@ -49,12 +50,13 @@ export const getPageObjectTemplateForJdi = (
   const { name: className, library } = pageObject;
 
   const locatorsCode = locators.map((locator) => {
+    let locatorEscaped = escapeString(unescapeString(locator.locatorValue.output)) //unescape first in case the locator has already been escaped
     const { locatorType } = pageObject;
     const currentLocatorType = locator.locatorType || locatorType || LocatorType.xPath;
     return `    ${locator.annotationType}(${getLocatorPrefix(
       locator.annotationType,
       currentLocatorType,
-    )}"${locator.locatorValue.output}")\n    public ${locator.type} ${locator.name};`;
+    )}"${locatorEscaped}")\n    public ${locator.type} ${locator.name};`;
   });
 
   const hasFindByAnnotationType: boolean = hasAnnotationType(locators, AnnotationType.FindBy);
