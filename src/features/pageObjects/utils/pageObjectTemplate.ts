@@ -49,13 +49,12 @@ export const getPageObjectTemplateForJdi = (
   const { name: className, library } = pageObject;
 
   const locatorsCode = locators.map((locator) => {
-    const locatorEscaped = locator.locatorValue.output?.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
     const { locatorType } = pageObject;
     const currentLocatorType = locator.locatorType || locatorType || LocatorType.xPath;
     return `    ${locator.annotationType}(${getLocatorPrefix(
       locator.annotationType,
       currentLocatorType,
-    )}"${locatorEscaped}")\n    public ${locator.type} ${locator.name};`;
+    )}"${locator.locatorValue.output}")\n    public ${locator.type} ${locator.name};`;
   });
 
   const hasFindByAnnotationType: boolean = hasAnnotationType(locators, AnnotationType.FindBy);

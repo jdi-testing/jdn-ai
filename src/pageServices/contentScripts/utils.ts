@@ -1,4 +1,5 @@
 import { ElementAttributes, LocatorType } from '../../common/types/common';
+import { escapeString, unescapeString } from '../../common/utils/escapeString';
 import { LocatorValidationWarnings } from '../../features/locators/types/locator.types';
 import { ScriptMsg } from '../scriptMsg.constants';
 
@@ -31,8 +32,9 @@ export const evaluateStandardLocator = ({
   try {
     let foundElements: NodeListOf<Element>;
     if (locatorType === LocatorType.linkText) {
+      const unescaped = unescapeString(selector);
       const nodeList = document.querySelectorAll('a');
-      const condition = (node: HTMLAnchorElement) => node.textContent && node.textContent.includes(selector);
+      const condition = (node: HTMLAnchorElement) => node.textContent && node.textContent.includes(unescaped);
 
       // create temporary nodeList
       const filteredNodes = document.createElement('div');
@@ -140,7 +142,7 @@ export const getElementAttributes = (element: HTMLElement): ElementAttributes =>
   }
 
   if (element.innerText) {
-    attributes.linkText = element.textContent?.trim();
+    attributes.linkText = escapeString(element.textContent?.trim());
   }
 
   if (element.tagName) {
