@@ -524,7 +524,10 @@ export const runContextMenu = () => {
           elementMenu.hide();
           return sendMessage({
             message: ScriptMsg.ElementSelect,
-            param: _element,
+            param: {
+              chosenElem: _element,
+              otherElems: predictedElements,
+            },
           });
         },
       },
