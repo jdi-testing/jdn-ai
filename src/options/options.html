@@ -2,23 +2,51 @@
 <html lang="en">
   <head>
     <title>JDN Options</title>
-    <link rel="stylesheet" href="options.styles.css">
+    <link rel="stylesheet" href="options.styles.css" />
   </head>
   <body>
-  <main>
-    <h2>JDN Options</h2>
-    <hr/>
-    <form class="form">
-
-    <div class="form-item">
-      <label for="serverUrl">Server URL:</label>
-      <input type="text" id="serverUrl" name="serverUrl">
-      <button id="save">Save</button>
-      <button id="restore">Reset</button>
-    </div>
-    <div id="status"></div>
-    </form>
-  </main>
+    <main>
+      <h2>JDN Options</h2>
+      <hr />
+      <form class="form">
+        <h4>Server Address:</h4>
+        <div class="checkbox-group">
+          <div class="form-item">
+            <input type="checkbox" id="custom" name="serverType" />
+            <label for="custom">Custom</label>
+          </div>
+          <div class="form-item">
+            <input type="checkbox" id="devRemote" name="serverType" />
+            <label for="devRemote">Dev Remote</label>
+          </div>
+          <div class="form-item">
+            <input type="checkbox" id="prodRemote" name="serverType" />
+            <label for="prodRemote">Prod Remote</label>
+          </div>
+          <div class="form-item">
+            <input type="checkbox" id="local" name="serverType" />
+            <label for="local">Local</label>
+          </div>
+        </div>
+        <div class="form-item input-group">
+          <label class="label--input" for="serverUrl">URL :</label>
+          <input type="text" id="serverUrl" name="serverUrl" />
+        </div>
+        <div class="control-group">
+          <button id="save">Save</button>
+            <button id="restore">
+              <span>
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="#FF4D4F" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    d="M14 7.99997C14.0001 9.5774 13.3791 11.0914 12.2712 12.2144C11.1634 13.3373 9.65791 13.9788 8.08062 14H8C6.46765 14.0038 4.99268 13.4174 3.88125 12.3625C3.83352 12.3173 3.79515 12.2632 3.76833 12.2033C3.74152 12.1433 3.72677 12.0786 3.72494 12.013C3.72311 11.9473 3.73424 11.8819 3.75768 11.8205C3.78112 11.7592 3.81642 11.703 3.86156 11.6553C3.9067 11.6076 3.9608 11.5692 4.02077 11.5424C4.08074 11.5155 4.14541 11.5008 4.21108 11.499C4.27675 11.4971 4.34213 11.5083 4.4035 11.5317C4.46487 11.5552 4.52102 11.5905 4.56875 11.6356C5.28362 12.3098 6.1813 12.7584 7.14964 12.9253C8.11799 13.0923 9.11406 12.9702 10.0134 12.5744C10.9128 12.1786 11.6756 11.5265 12.2065 10.6996C12.7375 9.87279 13.013 8.90783 12.9987 7.92531C12.9844 6.94278 12.6809 5.98624 12.1262 5.17519C11.5714 4.36414 10.79 3.73454 9.87944 3.36503C8.96893 2.99552 7.96973 2.90249 7.00665 3.09756C6.04358 3.29263 5.15933 3.76715 4.46438 4.46184C4.45927 4.46736 4.45384 4.47258 4.44812 4.47747L2.78688 5.99997H4.5C4.63261 5.99997 4.75979 6.05265 4.85355 6.14641C4.94732 6.24018 5 6.36736 5 6.49997C5 6.63258 4.94732 6.75975 4.85355 6.85352C4.75979 6.94729 4.63261 6.99997 4.5 6.99997H1.5C1.36739 6.99997 1.24021 6.94729 1.14645 6.85352C1.05268 6.75975 1 6.63258 1 6.49997V3.49997C1 3.36736 1.05268 3.24018 1.14645 3.14641C1.24021 3.05265 1.36739 2.99997 1.5 2.99997C1.63261 2.99997 1.75979 3.05265 1.85355 3.14641C1.94732 3.24018 2 3.36736 2 3.49997V5.36247L3.76562 3.74997C4.60561 2.91324 5.67467 2.34413 6.83783 2.11449C8.001 1.88484 9.20612 2.00495 10.3011 2.45965C11.396 2.91435 12.3317 3.68326 12.9901 4.66931C13.6484 5.65536 13.9998 6.81435 14 7.99997Z"
+                  />
+                </svg>
+              </span>
+              <span>Reset</span>
+            </button>
+        </div>
+      </form>
+    </main>
     <script src="options.js"></script>
   </body>
 </html>
