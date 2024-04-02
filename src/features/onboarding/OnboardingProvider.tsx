@@ -36,6 +36,10 @@ const generateSteps = (
       stepData.prevButtonProps = {
         style: { display: isCustomLocatorFlow ? 'none' : 'inline-block' },
       };
+      stepData.title = isCustomLocatorFlow ? 'Add the locator to Page Object.' : 'Add the locator to the Page Object';
+      stepData.description = isCustomLocatorFlow
+        ? 'Custom locators are added as selected by default.'
+        : 'Select the needed locators (or choose all of them) to create the final Page object. Note that only selected locators will be added to the final Locators List.';
     }
 
     if (stepData.order === OnboardingStep.ContextMenu) {
