@@ -51,7 +51,8 @@ export const updateMessageHandler = (
       copyLocator(framework, value, pageObjectName, option)();
     },
     [ScriptMsg.ElementSelect]: (payload) => {
-      dispatch(elementSetActive(payload.element_id));
+      dispatch(elementGroupUnsetActive(payload.otherElems));
+      dispatch(elementSetActive(payload.chosenElem));
     },
     [ScriptMsg.ElementGroupSetActive]: (payload) => {
       const locators = payload.map((jdnHash: string) => selectLocatorByJdnHash(state, jdnHash));
