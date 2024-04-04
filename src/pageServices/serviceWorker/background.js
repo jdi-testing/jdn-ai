@@ -3,7 +3,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     fetch(request.url, { method: 'GET' })
       .then((response) => response.text())
       .then((text) => sendResponse({ css: text }))
-      .catch((error) => console.error('Ошибка загрузки CSS:', error));
+      .catch((error) => console.error("Can't fetch CSS:", error));
     return true;
   }
 });
