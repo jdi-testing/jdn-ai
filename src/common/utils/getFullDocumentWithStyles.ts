@@ -22,26 +22,55 @@ async function waitForAllStylesToLoad() {
 export const getFullDocumentWithStyles = async () => {
   await waitForAllStylesToLoad();
 
-  const documentResult = await connector.attachContentScript(() => {
-    const fetchCSS = () => {
+  const documentResult = await connector.attachContentScript(async () => {
+    const fetchExternalStyles = (sheet: CSSStyleSheet) => {
+      return new Promise<string>((resolve) => {
+        chrome.runtime.sendMessage(
+          {
+            contentScriptQuery: 'fetchCSS',
+            url: sheet.href,
+          },
+          (response) => {
+            if (response && response.css && typeof response.css === 'string') {
+              const formattedCss = response.css.trim() + '\n';
+              resolve(formattedCss);
+            } else {
+              resolve('');
+            }
+          },
+        );
+      });
+    };
+
+    const getAllStyles = async () => {
       let allStyles = '';
       for (let i = 0; i < document.styleSheets.length; i++) {
         const sheet = document.styleSheets[i];
-        try {
-          const rules = sheet.rules || sheet.cssRules;
-          for (let j = 0; j < rules.length; j++) {
-            allStyles += rules[j].cssText + '\n';
+        if (sheet.href != null) {
+          /* external styles: */
+          try {
+            const cssText = await fetchExternalStyles(sheet);
+            allStyles += cssText;
+          } catch (e) {
+            console.error("Can't fetch styles: ", e);
           }
-        } catch (e) {
-          console.error("Can't  fetch styles: ", e);
+        } else {
+          /* local styles: */
+          try {
+            const rules = sheet.rules || sheet.cssRules;
+            for (let j = 0; j < rules.length; j++) {
+              allStyles += rules[j].cssText + '\n';
+            }
+          } catch (e) {
+            console.error("Can't fetch styles: ", e);
+          }
         }
       }
-      return allStyles;
+      return allStyles.trim();
     };
 
     let outerHTML = document.documentElement.outerHTML;
-
-    const stylesString = fetchCSS();
+    const stylesString = await getAllStyles();
     outerHTML = outerHTML.replace(/<link rel="stylesheet"[^>]+>/g, '');
     outerHTML = outerHTML.replace('</head>', `<style>\n${stylesString}</style></head>`);
 
@@ -57,6 +86,7 @@ export const getFullDocumentWithStyles = async () => {
   });
 
   const result = await documentResult[0].result;
+  console.log(result);
   const { outerHTML } = JSON.parse(result);
   return JSON.stringify(outerHTML);
 };
