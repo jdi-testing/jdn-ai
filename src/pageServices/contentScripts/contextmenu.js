@@ -524,7 +524,10 @@ export const runContextMenu = () => {
           elementMenu.hide();
           return sendMessage({
             message: ScriptMsg.ElementSelect,
-            param: _element,
+            param: {
+              chosenElem: _element,
+              otherElems: predictedElements,
+            },
           });
         },
       },
@@ -587,6 +590,7 @@ export const runContextMenu = () => {
 
     const highlightTarget = event.target.closest('[jdn-highlight=true]');
     if (!highlightTarget) return;
+    if (highlightTarget && !highlightTarget.classList.contains('jdn-active')) return;
 
     event.preventDefault();
 
