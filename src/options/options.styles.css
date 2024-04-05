@@ -1,0 +1,140 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Noto Sans", sans-serif;
+    padding: 20px;
+    background-color: #ffffff;
+}
+
+h2 {
+    color: #333;
+}
+
+/* Checkbox Start: */
+.checkbox-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-item {
+    display: flex;
+    align-items: center;
+}
+
+.form-item input[type="checkbox"] {
+    -webkit-appearance: none;
+    appearance: none;
+    border: 2px solid #d9d9d9;
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    margin-right: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+}
+
+.form-item input[type="checkbox"]:checked::before {
+    content: '';
+    background-color: #1890ff;
+    border-radius: 50%;
+    height: 8px;
+    width: 8px;
+    color: white;
+}
+
+
+/* Checkbox End: */
+
+/* Input Start: */
+
+input[type="text"] {
+    width: 100%;
+    padding: 6.5px 11px;
+    background-color: #fff;
+    border: 1px solid #d9d9d9;
+    border-radius: 6px;
+    transition: all 0.3s;
+}
+
+input[type="text"]:focus {
+    border-color: #40a9ff;
+    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
+}
+
+/* Input End: */
+
+/* Other Input styles: */
+
+#serverUrl {
+    width: 200px;
+    margin-left: 8px;
+}
+
+.input-group {
+    margin: 16px 0 48px 5px;
+}
+
+/* Buttons Start: */
+
+button {
+    padding: 6.4px 15px;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+    line-height: 1.5715;
+
+    gap: 8px;
+}
+
+#save {
+    color: #fff;
+    background-color: #1890ff;
+    border-color: #1890ff;
+
+    margin-right: 15px;
+}
+
+#save:hover {
+    background-color: #40a9ff;
+    border-color: #40a9ff;
+}
+
+#restore {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ff4d4f;
+    background-color: transparent;
+    border-color: transparent;
+}
+
+#restore:hover {
+    background-color: #ff4d4f;
+    color: #fff;
+}
+
+#restore span {
+    display: flex;
+    align-items: center;
+}
+
+svg {
+    transition: all 0.3s;
+}
+
+#restore:hover svg {
+    fill: #ffffff;
+}
+
+/* Buttons End: */
+
+.control-group {
+    display: flex;
+}
