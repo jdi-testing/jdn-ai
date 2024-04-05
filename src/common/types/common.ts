@@ -8,6 +8,7 @@ export enum FrameworkType {
 export enum AnnotationType {
   UI = '@UI',
   FindBy = '@FindBy',
+  NotApplicable = 'Not applicable',
 }
 
 export enum LocatorType {
