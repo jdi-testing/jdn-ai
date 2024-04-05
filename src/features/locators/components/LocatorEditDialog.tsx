@@ -136,26 +136,32 @@ export const LocatorEditDialog: React.FC<Props> = ({
     // in case if user didn't touch locator field to avoid forceUpdate
     const locatorMessage = isLocatorFieldTouched ? validationMessage : LocatorValidationWarnings.NotFound;
 
-    const {
-      name: locatorFormName,
-      type: locatorFormElementClass,
-      locator: locatorFormValue,
-      locatorType: locatorFormType,
-      annotationType: locatorFormAnnotationType,
-    } = await form.validateFields();
+    const fieldsValue = await form.validateFields();
+
+    const formData = {
+      name: fieldsValue.name,
+      elementClass: fieldsValue.type,
+      locatorValue: fieldsValue.locator,
+      locatorType: fieldsValue.locatorType,
+      annotationType: fieldsValue.annotationType,
+    };
 
     const newLocatorData: ILocator & { locatorFormValue: string } = {
       ...newLocatorStub,
       pageObj: pageObjectId,
       isCustomName: isEditedName,
       predicted_label: type.toLowerCase(),
-      annotationType: locatorFormAnnotationType,
-      locatorType: locatorFormType,
+      annotationType: formData.annotationType,
+      locatorType: formData.locatorType,
       message: locatorMessage,
-      name: locatorFormName,
-      type: locatorFormElementClass,
-      locatorFormValue,
+      name: formData.name,
+      type: formData.elementClass,
+      locatorFormValue: formData.locatorValue,
     };
+
+    if (formData.locatorType === LocatorType.xPath) {
+      newLocatorData.locatorValue.xPath = formData.locatorValue;
+    }
 
     await dispatch(addCustomLocator({ newLocatorData }));
     closeDialog();
