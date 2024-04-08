@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useRef, useState } from 'react';
+import React, { ReactNode, useCallback, useEffect, useRef, useState } from 'react';
 import { size } from 'lodash';
 import { Button, Checkbox, Row } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
@@ -25,6 +25,7 @@ import { selectIsOnboardingOpen } from '../../onboarding/store/onboarding.select
 import { useOnboarding } from '../../onboarding/useOnboarding';
 import { selectIsCreatingFormOpen } from '../selectors/customLocator.selectors';
 import { setIsCreatingFormOpen } from '../customLocator.slice';
+import '../styles/caretDown.less';
 
 interface LocatorListHeaderProps {
   render: (viewProps: LocatorTreeProps['viewProps']) => ReactNode;
@@ -55,23 +56,23 @@ export const LocatorListHeader = ({
   const isOnboardingOpen = useSelector(selectIsOnboardingOpen);
   const isCreatingForm = useSelector(selectIsCreatingFormOpen);
 
-  useEffect(() => {
+  const updateLocatorsInfo = useCallback(() => {
     setIsDisabled(locators.length === emptyLength);
     const locatorHasSubLocators = locators.some(
       (locator) => Array.isArray(locator.children) && locator.children.length > 0,
     );
     setHasSubLocators(locatorHasSubLocators);
 
-    if (
+    setIsAllLocatorsSelected(
       checkedLocators.length > emptyLength &&
-      checkedLocators.length === locators.length &&
-      generatedLocators.length === locators.length
-    ) {
-      setIsAllLocatorsSelected(true);
-    } else {
-      setIsAllLocatorsSelected(false);
-    }
-  }, [locators, checkedLocators.length, generatedLocators.length]);
+        checkedLocators.length === locators.length &&
+        generatedLocators.length === locators.length,
+    );
+  }, [locators, checkedLocators, generatedLocators]);
+
+  useEffect(() => {
+    updateLocatorsInfo();
+  }, [updateLocatorsInfo]);
 
   const partiallySelected =
     checkedLocators.length > emptyLength &&
@@ -101,6 +102,12 @@ export const LocatorListHeader = ({
     }
   }, []);
 
+  const handleShowLocators = () => {
+    if (hasSubLocators) {
+      setExpandAll((prevState) => (prevState === ExpandState.Collapsed ? ExpandState.Expanded : ExpandState.Collapsed));
+    }
+  };
+
   return (
     <>
       <div className="jdn__locator-list_header-locator-control-group">
@@ -122,21 +129,11 @@ export const LocatorListHeader = ({
       <Row className="jdn__items-list_header">
         <span className="jdn__items-list_header-title">
           <CaretDown
-            style={{
-              transform: hasSubLocators
-                ? `rotate(${expandAll === ExpandState.Expanded ? '180' : '0'}deg)`
-                : 'rotate(0deg)',
-
-              pointerEvents: isDisabled || !hasSubLocators ? 'none' : 'auto',
-            }}
-            className="jdn__items-list_header-collapse"
-            color={`${isDisabled || !hasSubLocators ? 'rgba(0, 0, 0, 0.25)' : '#878A9C'}`}
+            className={`jdn__items-list_header-collapse ${hasSubLocators ? 'has-sub-locators' : 'disabled'} ${
+              isDisabled ? 'disabled' : ''
+            } ${expandAll === ExpandState.Expanded && hasSubLocators ? 'expanded' : ''}`}
             size={14}
-            onClick={() => {
-              if (hasSubLocators) {
-                setExpandAll(expandAll === ExpandState.Collapsed ? ExpandState.Expanded : ExpandState.Collapsed);
-              }
-            }}
+            onClick={handleShowLocators}
           />
           <Checkbox
             checked={isAllLocatorsSelected}

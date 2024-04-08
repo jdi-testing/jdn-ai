@@ -18,6 +18,7 @@ import { checkLocatorsValidity } from '../../locators/reducers/checkLocatorValid
 import { useAddPageObject } from '../utils/useAddPageObject';
 import { useOnboardingContext } from '../../onboarding/OnboardingProvider';
 import { PageObject } from '../types/pageObjectSlice.types';
+import '../styles/caretDownExpand.less';
 
 const { confirm } = Modal;
 
@@ -83,11 +84,9 @@ export const PageObjListHeader: FC<Props> = ({ template, toggleExpand, isExpande
   return (
     <Row className="jdn__items-list_header" justify="space-between">
       <CaretDown
-        style={{
-          transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
-        }}
-        className="jdn__items-list_header-collapse"
-        color="#00000073"
+        className={`jdn__items-list_header-collapse ${isExpanded ? 'expanded' : 'collapsed'} ${
+          pageObjects.length === 0 ? 'disabled' : ''
+        }`}
         size={14}
         onClick={toggleExpand}
       />
