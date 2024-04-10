@@ -12,7 +12,7 @@ type Props = InternalSelectProps & {
 const PageObjSettingsItem = ({ label, disabled, id, value, defaultValue, onChange, options }: Props) => {
   const currentPageObject = useSelector(selectCurrentPageObject);
   const isCurrentFrameworkVividus = currentPageObject?.framework === FrameworkType.Vividus;
-  const ourSelect = (
+  const selectContent = (
     <Select
       className="jdn__select"
       disabled={disabled}
@@ -32,10 +32,10 @@ const PageObjSettingsItem = ({ label, disabled, id, value, defaultValue, onChang
       <Col flex="auto">
         {isCurrentFrameworkVividus && id === 'annotationType' ? (
           <Tooltip placement="bottom" title="Not available for Vividus framework">
-            {ourSelect}
+            {selectContent}
           </Tooltip>
         ) : (
-          ourSelect
+          selectContent
         )}
       </Col>
     </Row>
