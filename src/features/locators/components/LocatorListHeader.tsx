@@ -26,7 +26,7 @@ import { selectIsOnboardingOpen } from '../../onboarding/store/onboarding.select
 import { useOnboarding } from '../../onboarding/useOnboarding';
 import { selectIsCreatingFormOpen } from '../selectors/customLocator.selectors';
 import { setIsCreatingFormOpen } from '../customLocator.slice';
-import '../../../common/styles/caretDown.less';
+import '../../../common/styles/headerCollapse.less';
 
 interface LocatorListHeaderProps {
   render: (viewProps: LocatorTreeProps['viewProps']) => ReactNode;

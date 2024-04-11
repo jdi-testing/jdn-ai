@@ -19,7 +19,7 @@ import { checkLocatorsValidity } from '../../locators/reducers/checkLocatorValid
 import { useAddPageObject } from '../utils/useAddPageObject';
 import { useOnboardingContext } from '../../onboarding/OnboardingProvider';
 import { PageObject } from '../types/pageObjectSlice.types';
-import '../../../common/styles/caretDown.less';
+import '../../../common/styles/headerCollapse.less';
 
 const { confirm } = Modal;
 
