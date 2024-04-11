@@ -5,6 +5,7 @@ import { CaretDown, Plus, Trash } from '@phosphor-icons/react';
 
 import { pushNotification } from '../../../app/main.slice';
 import { size } from 'lodash';
+import classNames from 'classnames';
 import { selectPageObjects } from '../selectors/pageObjects.selectors';
 
 import { removeAll as removeAllLocators } from '../../locators/locators.slice';
@@ -18,7 +19,7 @@ import { checkLocatorsValidity } from '../../locators/reducers/checkLocatorValid
 import { useAddPageObject } from '../utils/useAddPageObject';
 import { useOnboardingContext } from '../../onboarding/OnboardingProvider';
 import { PageObject } from '../types/pageObjectSlice.types';
-import '../styles/caretDownExpand.less';
+import '../../../common/styles/caretDown.less';
 
 const { confirm } = Modal;
 
@@ -81,15 +82,14 @@ export const PageObjListHeader: FC<Props> = ({ template, toggleExpand, isExpande
     }
   }, [enableDownload]);
 
+  const headerCollapseClassName = classNames(
+    'jdn__items-list_header-collapse',
+    pageObjects.length === 0 || !isExpanded ? 'disabled' : 'expanded',
+  );
+
   return (
     <Row className="jdn__items-list_header" justify="space-between">
-      <CaretDown
-        className={`jdn__items-list_header-collapse ${isExpanded ? 'expanded' : 'collapsed'} ${
-          pageObjects.length === 0 ? 'disabled' : ''
-        }`}
-        size={14}
-        onClick={toggleExpand}
-      />
+      <CaretDown className={headerCollapseClassName} size={14} onClick={toggleExpand} />
       <Space direction="horizontal" size={8}>
         {size(pageObjects) ? (
           <Tooltip placement="bottom" title="Delete all">
