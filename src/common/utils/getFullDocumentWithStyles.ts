@@ -86,7 +86,6 @@ export const getFullDocumentWithStyles = async () => {
   });
 
   const result = await documentResult[0].result;
-  console.log(result);
   const { outerHTML } = JSON.parse(result);
   return JSON.stringify(outerHTML);
 };
