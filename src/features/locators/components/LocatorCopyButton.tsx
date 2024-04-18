@@ -34,7 +34,7 @@ export const LocatorCopyButton: React.FC<Props> = ({ framework, element, pageObj
   };
 
   return (
-    <Tooltip placement="bottom" title={copyTooltipTitle} align={{ offset: [0, -10] }}>
+    <Tooltip placement="bottom" title={copyTooltipTitle} align={{ offset: [0, -1] }}>
       <Button
         onClick={handleCopy}
         onMouseEnter={handleMouseEnter}

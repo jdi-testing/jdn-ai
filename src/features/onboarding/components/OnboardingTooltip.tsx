@@ -12,7 +12,9 @@ export const OnboardingTooltip: FC<Props> = ({ children }) => {
   return (
     <>
       {isOnboardingOpen ? (
-        <Tooltip title="Available only after completing the onboarding">{children}</Tooltip>
+        <Tooltip placement="top" title="Available only after completing the onboarding">
+          {children}
+        </Tooltip>
       ) : (
         children
       )}
