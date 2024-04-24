@@ -16,7 +16,7 @@ export enum HttpEndpoint {
 
 export enum WebSocketMessage {
   SCHEDULE_MULTIPLE_XPATH_GENERATIONS = 'schedule_multiple_xpath_generations',
-  // SHEDULE_XPATH_GENERATION = 'schedule_xpath_generation',
+  // SCHEDULE_XPATH_GENERATION = 'schedule_xpath_generation',
   REVOKE_TASKS = 'revoke_tasks',
   UP_PRIORITY = 'prioritize_existing_task',
   DOWN_PRIORITY = 'deprioritize_existing_task',
