@@ -81,7 +81,7 @@ export interface LocatorValue {
   errorMessage?: string; // comes during the locator generation
   output?: string;
   fullXpath?: string;
-  fullCssSelector?: string;
+  originalCssSelector?: string;
 }
 
 export interface ILocator extends PredictedEntity {
