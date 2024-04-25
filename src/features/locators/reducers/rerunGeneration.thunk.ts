@@ -1,8 +1,9 @@
 import { ActionReducerMapBuilder, createAsyncThunk } from '@reduxjs/toolkit';
 import { MaxGenerationTime } from '../../../app/types/mainSlice.types';
-import { ILocator, LocatorTaskStatus, LocatorsState } from '../../../features/locators/types/locator.types';
+import { ILocator, LocatorsState, LocatorTaskStatus } from '../types/locator.types';
 import { sendMessage } from '../../../pageServices/connector';
 import { runLocatorsGeneration } from './runLocatorsGeneration.thunk';
+import { getTaskStatus } from '../utils/utils';
 
 interface Meta {
   generationData: ILocator[];
@@ -12,8 +13,11 @@ interface Meta {
 export const rerunGeneration = createAsyncThunk('locators/rerunGeneration', async (meta: Meta, thunkAPI) => {
   const {
     jdnHash,
-    locatorValue: { xPath, taskStatus },
+    locatorValue: { xPath, xPathStatus, cssSelectorStatus },
   } = meta.generationData[0];
+
+  const taskStatus = getTaskStatus(xPathStatus, cssSelectorStatus);
+
   if (meta.generationData.length === 1 && taskStatus === LocatorTaskStatus.FAILURE) {
     await sendMessage.assignJdnHash({ jdnHash, locatorValue: xPath ?? '' });
   }

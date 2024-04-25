@@ -12,28 +12,30 @@ export const locatorsAdapter = createEntityAdapter<ILocator>({
 
 const { selectAll, selectById } = locatorsAdapter.getSelectors<RootState>((state) => state.locators.present);
 
-export const selectLocatorById = createSelector(selectById, (_item?: ILocator) => {
-  if (_item) {
+export const selectLocatorById = createSelector(selectById, (locator?: ILocator) => {
+  if (locator) {
+    const taskStatus = getTaskStatus(locator.locatorValue.xPathStatus, locator.locatorValue.cssSelectorStatus);
     return {
-      ..._item,
+      ...locator,
       locatorValue: {
-        ..._item.locatorValue,
-        output: getLocator(_item.locatorValue, _item.locatorType),
-        taskStatus: getTaskStatus(_item.locatorValue),
+        ...locator.locatorValue,
+        output: getLocator(locator.locatorValue, locator.locatorType),
+        taskStatus,
       },
     };
   }
-  return _item;
+  return locator;
 });
 
-export const selectLocators = createSelector(selectAll, (items: ILocator[]) =>
-  items.map((_item) => {
+export const selectLocators = createSelector(selectAll, (locators: ILocator[]) =>
+  locators.map((locator) => {
+    const taskStatus = getTaskStatus(locator.locatorValue.xPathStatus, locator.locatorValue.cssSelectorStatus);
     return {
-      ..._item,
+      ...locator,
       locatorValue: {
-        ..._item.locatorValue,
-        output: getLocator(_item.locatorValue, _item.locatorType),
-        taskStatus: getTaskStatus(_item.locatorValue),
+        ...locator.locatorValue,
+        output: getLocator(locator.locatorValue, locator.locatorType),
+        taskStatus,
       },
     };
   }),
@@ -58,8 +60,8 @@ export const isLocatorIndeterminate = createSelector(
         hasSelectedChild ||
         (_locator.children &&
           _locator.children.some((childId: ElementId) => {
-            const _locator = selectLocatorById(state, childId);
-            if (_locator) hasChildToGenerate(_locator);
+            const selectedLocator = selectLocatorById(state, childId);
+            if (selectedLocator) hasChildToGenerate(selectedLocator);
           }))
       );
     };
@@ -96,13 +98,14 @@ export const { selectAll: simpleSelectLocators, selectById: simpleSelectLocatorB
 export const simpleSelectLocatorsByPageObject = createDraftSafeSelector(
   simpleSelectLocators,
   (_: EntityState<ILocator>, pageObj: PageObjectId) => pageObj,
-  (locators: ILocator[], pageObj: PageObjectId) => locators.filter((_loc) => _loc.pageObj === pageObj)
+  (locators: ILocator[], pageObj: PageObjectId) => locators.filter((_loc) => _loc.pageObj === pageObj),
 );
 
 export const simpleSelectLocatorByJdnHash = createDraftSafeSelector(
-  (state: EntityState<ILocator>, jdnHash: string) => simpleSelectLocators(state).filter((loc) => loc.jdnHash === jdnHash),
+  (state: EntityState<ILocator>, jdnHash: string) =>
+    simpleSelectLocators(state).filter((loc) => loc.jdnHash === jdnHash),
   (_state: EntityState<ILocator>, _: string, pageObject: PageObject) => pageObject.locators,
   (locators, pageObjLocators) => {
     return locators.find(({ element_id }) => pageObjLocators?.includes(element_id));
-  }
+  },
 );

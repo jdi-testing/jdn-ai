@@ -28,6 +28,7 @@ export enum LocatorTaskStatus {
   SUCCESS = 'SUCCESS',
   PENDING = 'PENDING',
   STARTED = 'STARTED',
+  NOT_STARTED = 'NOT_STARTED',
 }
 
 export enum LocatorElementStatus {
@@ -72,15 +73,15 @@ export type LocatorValidationErrorType = LocatorValidationErrors | LocatorValida
 export type JDNHash = string;
 
 export interface LocatorValue {
-  fullXpath?: string;
   xPath: string | null;
   attributes: ElementAttributes;
   cssSelector: string | null;
-  cssSelectorStatus?: LocatorTaskStatus; // status of cssSelector calculation
-  xPathStatus?: LocatorTaskStatus; // status of xPath calculation
-  taskStatus?: LocatorTaskStatus; // status of both calculations
+  cssSelectorStatus: LocatorTaskStatus; // status of cssSelector calculation
+  xPathStatus: LocatorTaskStatus; // status of xPath calculation
   errorMessage?: string; // comes during the locator generation
   output?: string;
+  fullXpath?: string;
+  fullCssSelector?: string;
 }
 
 export interface ILocator extends PredictedEntity {

@@ -16,7 +16,6 @@ import { Filter } from '../filter/Filter';
 import { useCalculateHeaderSize } from './utils/useCalculateHeaderSize';
 import { RootState } from '../../app/store/store';
 import { IdentificationStatus } from './types/locator.types';
-import { LocatorTreeSpinner } from './components/LocatorTreeSpinner';
 import { removeAll as removeAllFilters, setFilter } from '../filter/filter.slice';
 import { selectClassFilterByPO, selectIfUnselectedAll } from '../filter/filter.selectors';
 
@@ -53,9 +52,6 @@ const { confirm } = Modal;
 
 export const LocatorsPage = () => {
   const dispatch = useDispatch();
-  const showSpinner = useSelector(
-    (state: RootState) => state.locators.present.status === IdentificationStatus.preparing,
-  );
   const locators = useSelector(selectFilteredLocators);
   const areUnselectedAll = useSelector(selectIfUnselectedAll);
   const locatorIds = useSelector(getLocatorsIdsByPO);
@@ -240,8 +236,6 @@ export const LocatorsPage = () => {
             >
               {locators.length || areUnselectedAll ? (
                 <LocatorsTree {...{ viewProps, locatorIds }} />
-              ) : showSpinner ? (
-                <LocatorTreeSpinner />
               ) : (
                 <>
                   {isNoPageLocators && (
