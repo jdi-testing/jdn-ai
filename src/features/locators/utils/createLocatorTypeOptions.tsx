@@ -14,6 +14,7 @@ import { evaluateLocator } from './utils';
 interface IOptionsWithLabel {
   label: React.JSX.Element;
   value: string;
+  desc: string;
   disabled?: boolean;
 }
 
@@ -33,11 +34,7 @@ const generateOptionsWithLabel = (attributes: ElementAttributes): IOptionsWithLa
       );
     }
 
-    return (
-      <>
-        {locatorType} <span style={{ color: 'rgba(0, 0, 0, 0.45)' }}>{`"${attribute}"`}</span>
-      </>
-    );
+    return <>{locatorType}</>;
   };
 
   return Object.keys(attributes).map((key) => {
@@ -46,6 +43,7 @@ const generateOptionsWithLabel = (attributes: ElementAttributes): IOptionsWithLa
     const option: IOptionsWithLabel = {
       label: generateLabel(locatorType, attributes[key as keyof ElementAttributes] as string),
       value: locatorType,
+      desc: attributes[key as keyof ElementAttributes] as string,
     };
 
     if (attributes[key as keyof ElementAttributes] === null) {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Select } from 'antd';
+import { Form, Input, Select, Space } from 'antd';
 import Icon from '@ant-design/icons';
 import WarningFilled from '../assets/warning-filled.svg';
 import { FieldData } from 'rc-field-form/lib/interface';
@@ -356,9 +356,15 @@ export const LocatorEditDialog: React.FC<Props> = ({
       >
         <Select
           onChange={handleLocatorDropdownOnChange}
-          options={locatorTypeOptions}
           popupClassName="custom-divider-for-dropdown"
           virtual={false}
+          options={locatorTypeOptions}
+          optionRender={(option) => (
+            <Space>
+              {option.data.label}
+              <span style={{ color: 'rgba(0, 0, 0, 0.45)' }}>{option.data.desc}</span>
+            </Space>
+          )}
         />
       </Form.Item>
       <Form.Item
