@@ -111,7 +111,7 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
                   style={{
                     transform: isActive ? 'rotate(180deg)' : 'rotate(0deg)',
                   }}
-                  size={14}
+                  size={16}
                   color="#878A9C"
                 />
               )}

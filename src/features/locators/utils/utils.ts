@@ -28,6 +28,7 @@ import {
 import { FormInstance } from 'rc-field-form/lib/interface';
 import { FormValues } from '../components/LocatorEditDialog';
 import { startsWithDigit } from '../../../app/utils/startsWithDigit';
+import { escapeLocatorString } from './escapeLocatorString';
 
 export const isValidJavaVariable = (value: string) => /^[a-zA-Z_$]([a-zA-Z0-9_])*$/.test(value);
 
@@ -43,10 +44,11 @@ export const evaluateStandardLocator = (
 ) => sendMessage.evaluateStandardLocator({ selector, locatorType, element_id, originJdnHash });
 
 const prepareLocatorStringForEvaluation = (type: LocatorType, string: string): string => {
-  if (type === LocatorType.id) return `#${string}`;
-  if (type === LocatorType.className) return `.${string}`;
-  if (type === LocatorType.name) return `[name="${string}"]`;
-  return string;
+  const escapeString = escapeLocatorString(string);
+  if (type === LocatorType.id) return `#${escapeString}`;
+  if (type === LocatorType.className) return `.${escapeString}`;
+  if (type === LocatorType.name) return `[name="${escapeString}"]`;
+  return escapeString;
 };
 
 export const evaluateLocator = async (

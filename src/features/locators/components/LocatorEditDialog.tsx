@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Form, Input, Select } from 'antd';
+import { Form, Input, Select, Space } from 'antd';
 import Icon from '@ant-design/icons';
 import WarningFilled from '../assets/warning-filled.svg';
 import { FieldData } from 'rc-field-form/lib/interface';
@@ -131,11 +131,11 @@ export const LocatorEditDialog: React.FC<Props> = ({
     setIsEditedName(true);
   };
 
+  const isLocatorFieldTouched = form.isFieldTouched('locator');
+
   const handleCreateCustomLocator = async () => {
-    const isLocatorFieldTouched = form.isFieldTouched('locator');
     // in case if user didn't touch locator field to avoid forceUpdate
     const locatorMessage = isLocatorFieldTouched ? validationMessage : LocatorValidationWarnings.NotFound;
-
     const fieldsValue = await form.validateFields();
 
     const formData = {
@@ -213,7 +213,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
   };
 
   const renderValidationWarning = () =>
-    isCreatingForm ? (
+    isCreatingForm && (!isLocatorFieldTouched || validationMessage === LocatorValidationWarnings.EmptyValue) ? (
       <div className="jdn__locatorEdit-warning">
         <Icon component={WarningFilled} className="ant-alert-icon" />
         <Footnote>If you leave this field empty, the locator will be invalid</Footnote>
@@ -308,7 +308,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
         isOkButtonDisabled: isOkButtonDisabled,
       }}
       modalProps={{
-        title: isCreatingForm ? 'Create custom locator' : 'Edit locator',
+        title: isCreatingForm ? 'Create' : 'Edit locator',
         open: isModalOpen,
         onOk: isCreatingForm ? handleCreateCustomLocator : handleEditLocator,
         enableOverlay: isModalOpen,
@@ -317,6 +317,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
           disabled: isOkButtonDisabled,
         },
         width: 580,
+        okText: isCreatingForm ? 'Add to the list' : 'OK',
       }}
       formProps={{
         form,
@@ -355,9 +356,15 @@ export const LocatorEditDialog: React.FC<Props> = ({
       >
         <Select
           onChange={handleLocatorDropdownOnChange}
-          options={locatorTypeOptions}
           popupClassName="custom-divider-for-dropdown"
           virtual={false}
+          options={locatorTypeOptions}
+          optionRender={(option) => (
+            <Space>
+              {option.data.label}
+              <span style={{ color: 'rgba(0, 0, 0, 0.45)' }}>{option.data.desc}</span>
+            </Space>
+          )}
         />
       </Form.Item>
       <Form.Item
