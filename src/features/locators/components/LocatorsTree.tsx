@@ -16,6 +16,8 @@ import { selectCurrentPageObject } from '../../pageObjects/selectors/pageObjects
 import { selectPresentLocatorsByPO } from '../selectors/locatorsByPO.selectors';
 import { selectFilteredLocators } from '../selectors/locatorsFiltered.selectors';
 import { isLocatorListPage } from '../../../app/utils/helpers';
+import { fullEscapeLocatorString, checkForEscaped } from '../utils/escapeLocatorString';
+import { LocatorType } from '../../../common/types/common';
 import type RcTree from 'rc-tree';
 import cn from 'classnames';
 
@@ -117,6 +119,10 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
       _data.forEach((element, index) => {
         const { element_id, children, parent_id, jdnHash, searchState, depth } = element;
         const locator = locatorsMap[element_id];
+
+        if (locator.locatorType === LocatorType.linkText && !checkForEscaped(locator.locatorValue.output)) {
+          locator.locatorValue.output = fullEscapeLocatorString(locator.locatorValue.output);
+        }
 
         const className = cn({
           'jdn__tree-item--selected': locator?.isGenerated && isLocatorListPage(currentPage),
