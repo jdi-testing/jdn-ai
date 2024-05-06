@@ -7,6 +7,7 @@ export const fullEscapeLocatorString = (str: string = ''): string => {
     .replaceAll(/\\/g, '\\\\') // escape backslash
     .replaceAll(/\"/g, '\\"') // escape double quotes
     .replaceAll(/\'/g, "\\'") // escape single quotes
+    .replaceAll(/\b/g, '\\b') // escape backspaces
     .replaceAll(/\t/g, '\\t') // escape tabs
     .replaceAll(/\n/g, '\\n') // escape newlines
     .replaceAll(/\r/g, '\\r') // escape carriage returns
