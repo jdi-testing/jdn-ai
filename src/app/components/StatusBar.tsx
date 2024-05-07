@@ -100,7 +100,7 @@ export const StatusBar = () => {
       </div>
       <Space size={[10, 0]} className="header__space">
         {isSessionUnique && <OnboardingButton />}
-        <Tooltip title={componentsTexts.StatusBarVersionReadme}>
+        <Tooltip title={componentsTexts.StatusBarVersionReadme} align={{ offset: [16, 0] }}>
           <Button
             ref={readmeRef}
             type="link"
