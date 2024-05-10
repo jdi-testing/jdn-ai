@@ -3,8 +3,8 @@
  */
 
 import { ScriptMsg } from '../scriptMsg.constants';
-import { assignJdnHash } from './utils';
-import { LocatorTaskStatus, LocatorElementStatus } from '../../features/locators/types/locator.types';
+import { assignJdnHash, getTaskStatus } from './utils';
+import { LocatorElementStatus, LocatorTaskStatus } from '../../features/locators/types/locator.types';
 
 const ADD_ELEMENT_TO_PO = 'To get data add element to Page Object';
 
@@ -108,7 +108,8 @@ export const highlightOnPage = () => {
         div.setAttribute('jdn-status', LocatorElementStatus.DELETED);
       }
     } else {
-      div.setAttribute('jdn-status', element.locatorValue.taskStatus);
+      const taskStatus = getTaskStatus(element.locatorValue.xPathStatus, element.locatorValue.cssSelectorStatus);
+      div.setAttribute('jdn-status', taskStatus);
       findAndHighlight();
     }
     toggleElement({ element, skipScroll: true });
@@ -135,10 +136,8 @@ export const highlightOnPage = () => {
   };
 
   const updateTooltipXpath = (element) => {
-    if (
-      element.locatorValue.taskStatus === LocatorTaskStatus.SUCCESS &&
-      tooltip.getAttribute('jdn-element-hash') === element.element_id
-    ) {
+    const taskStatus = getTaskStatus(element.locatorValue.xPathStatus, element.locatorValue.cssSelectorStatus);
+    if (taskStatus === LocatorTaskStatus.SUCCESS && tooltip.getAttribute('jdn-element-hash') === element.element_id) {
       tooltip.querySelector('.jdn-tooltip-xpath').innerHTML = element.locatorValue.xPath;
     }
   };
@@ -146,7 +145,8 @@ export const highlightOnPage = () => {
   const changeGenerationStatus = (element) => {
     const div = updateElement(element);
     if (!div) return;
-    div.setAttribute('jdn-status', element.locatorValue.taskStatus);
+    const taskStatus = getTaskStatus(element.locatorValue.xPathStatus, element.locatorValue.cssSelectorStatus);
+    div.setAttribute('jdn-status', taskStatus);
     updateTooltipXpath(element);
   };
 
@@ -236,11 +236,15 @@ export const highlightOnPage = () => {
       tooltip.setAttribute('jdn-element-hash', el.element_id);
     };
 
+    const predictedElementTaskStatus = getTaskStatus(
+      predictedElement.locatorValue.xPathStatus,
+      predictedElement.locatorValue.cssSelectorStatus,
+    );
     const div = document.createElement('div');
     div.id = jdnHash;
     div.className = getClassName(predictedElement);
     div.setAttribute('jdn-highlight', true);
-    div.setAttribute('jdn-status', predictedElement.locatorValue.taskStatus || LocatorTaskStatus.STARTED);
+    div.setAttribute('jdn-status', predictedElementTaskStatus || LocatorTaskStatus.STARTED);
     div.addEventListener('mouseover', () => {
       tooltipTimer = setTimeout(() => {
         showTooltip(coordinates);
