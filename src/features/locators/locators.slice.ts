@@ -1,4 +1,5 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { size } from 'lodash';
 import { ElementClass, ElementLibrary } from './types/generationClasses.types';
 import {
@@ -13,17 +14,17 @@ import { rerunGenerationReducer } from './reducers/rerunGeneration.thunk';
 import { stopGenerationReducer } from './reducers/stopGeneration.thunk';
 import { stopGenerationGroupReducer } from './reducers/stopGenerationGroup.thunk';
 import {
-  LocatorsState,
-  LocatorsGenerationStatus,
-  IdentificationStatus,
   ElementId,
-  LocatorValidationErrorType,
-  LocatorTaskStatus,
+  IdentificationStatus,
   ILocator,
-  LocatorCalculationPriority,
   JDNHash,
-  LocatorValue,
+  LocatorCalculationPriority,
+  LocatorsGenerationStatus,
+  LocatorsState,
+  LocatorTaskStatus,
+  LocatorValidationErrorType,
   LocatorValidationWarnings,
+  LocatorValue,
 } from './types/locator.types';
 import { checkLocatorsValidityReducer } from './reducers/checkLocatorValidity.thunk';
 import { LocatorType } from '../../common/types/common';
@@ -136,6 +137,7 @@ const locatorsSlice = createSlice({
     },
     failGeneration(state, { payload }: PayloadAction<{ ids: string[]; errorMessage?: string }>) {
       const { ids, errorMessage } = payload;
+      console.error('NETWORK ERROR: ', errorMessage);
       if (errorMessage === NETWORK_ERROR) state.generationStatus = LocatorsGenerationStatus.failed;
       const newValues = ids.map((element_id) => {
         const existingLocator = simpleSelectLocatorById(state, element_id);
@@ -286,7 +288,7 @@ const locatorsSlice = createSlice({
       {
         payload,
       }: PayloadAction<{
-        locators: { element_id?: ElementId; jdnHash?: JDNHash; locatorValue: Partial<LocatorValue> }[];
+        locators: { element_id?: ElementId; jdnHash: JDNHash; locatorValue: Partial<LocatorValue> }[];
         pageObject: PageObject;
       }>,
     ) {
@@ -294,7 +296,7 @@ const locatorsSlice = createSlice({
       const newValue = locators.map(({ element_id, jdnHash, locatorValue }) => {
         const existingLocator = element_id
           ? simpleSelectLocatorById(state, element_id)
-          : simpleSelectLocatorByJdnHash(state, jdnHash!, pageObject);
+          : simpleSelectLocatorByJdnHash(state, jdnHash, pageObject);
         return (
           existingLocator && {
             element_id: existingLocator.element_id,
@@ -307,14 +309,14 @@ const locatorsSlice = createSlice({
   },
   extraReducers: (builder) => {
     addCustomLocatorReducer(builder),
-    changeLocatorElementReducer(builder),
-    checkLocatorsValidityReducer(builder),
-    identifyElementsReducer(builder),
-    createLocatorsReducer(builder),
-    rerunGenerationReducer(builder),
-    stopGenerationReducer(builder),
-    stopGenerationGroupReducer(builder),
-    runLocatorsGenerationReducer(builder);
+      changeLocatorElementReducer(builder),
+      checkLocatorsValidityReducer(builder),
+      identifyElementsReducer(builder),
+      createLocatorsReducer(builder),
+      rerunGenerationReducer(builder),
+      stopGenerationReducer(builder),
+      stopGenerationGroupReducer(builder),
+      runLocatorsGenerationReducer(builder);
   },
 });
 
@@ -336,9 +338,9 @@ export const {
   setChildrenIsChecked,
   setCalculationPriority,
   setElementGroupGeneration,
-  setJdnHash,
+  // setJdnHash,
   setScrollToLocator,
-  setValidity,
+  // setValidity,
   toggleDeleted,
   toggleDeletedGroup,
   toggleElementGeneration,

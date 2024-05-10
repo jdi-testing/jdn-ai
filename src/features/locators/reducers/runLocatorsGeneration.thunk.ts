@@ -1,16 +1,16 @@
 import type { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { ILocator, LocatorsGenerationStatus, LocatorsState, LocatorTaskStatus } from '../types/locator.types';
-import { runXpathGeneration } from '../utils/runXpathGeneration';
+import { runLocatorGeneration } from '../utils/runLocatorGeneration';
 import { MaxGenerationTime } from '../../../app/types/mainSlice.types';
 import { RootState } from '../../../app/store/store';
-import { runCssSelectorGeneration } from '../utils/runCssSelectorGeneration';
 import { updateLocatorGroup } from '../locators.slice';
 import { selectCurrentPageObject } from '../../pageObjects/selectors/pageObjects.selectors';
 import { filterLocatorsByClassFilter } from '../utils/filterLocators';
 import { getLocalStorage, LocalStorageKey } from '../../../common/utils/localStorage';
 import { selectClassFilterByPO } from '../../filter/filter.selectors';
 import { selectPageDocumentForRobula } from '../../../services/pageDocument/pageDocument.selectors';
+import { getTaskStatus } from '../utils/utils';
 
 interface Meta {
   locators: ILocator[];
@@ -37,7 +37,7 @@ export const runLocatorsGeneration = createAsyncThunk(
       filter = getLocalStorage(LocalStorageKey.Filter)[currentPageObjLibrary];
     }
 
-    const getXpathsForGeneration = (): ILocator[] => {
+    const getXPathsForGeneration = (): ILocator[] => {
       if (maxGenerationTime) {
         return locators;
       } else if (generateMissingLocator || generateXpath) {
@@ -53,7 +53,7 @@ export const runLocatorsGeneration = createAsyncThunk(
       }
     };
 
-    const toGenerateXpaths: ILocator[] = getXpathsForGeneration();
+    const toGenerateXPaths: ILocator[] = getXPathsForGeneration();
 
     const toGenerateCss =
       generateMissingLocator || generateCssSelector
@@ -70,39 +70,52 @@ export const runLocatorsGeneration = createAsyncThunk(
 
     const generations = Promise.all([
       ...[
-        toGenerateXpaths.length
-          ? runXpathGeneration(state, toGenerateXpaths, pageDocumentForRubula, maxGenerationTime)
+        toGenerateXPaths.length
+          ? runLocatorGeneration(
+              state,
+              [...toGenerateXPaths, ...toGenerateCss],
+              pageDocumentForRubula,
+              maxGenerationTime,
+            )
           : null,
       ],
-      ...[toGenerateCss.length ? runCssSelectorGeneration(toGenerateCss) : null],
+      // ...[toGenerateCss.length ? runCssSelectorGeneration(toGenerateCss) : null],
     ]);
 
-    const setPendingXpaths = toGenerateXpaths
-      .filter((locator) => locator.locatorValue && locator.locatorValue.taskStatus !== LocatorTaskStatus.PENDING)
+    // console.log(generations);  // LOG
+
+    const XPathsSelectorsPending = toGenerateXPaths
+      .filter((locator) => {
+        const taskStatus = getTaskStatus(locator.locatorValue.xPathStatus, locator.locatorValue.cssSelectorStatus);
+        return locator.locatorValue && taskStatus !== LocatorTaskStatus.PENDING;
+      })
       .map(({ element_id }) => ({
         element_id,
         locatorValue: { xPathStatus: LocatorTaskStatus.PENDING },
       }));
 
-    const setPendingCss = toGenerateCss
-      .filter((locator) => locator.locatorValue && locator.locatorValue.taskStatus !== LocatorTaskStatus.PENDING)
+    const cssSelectorsPending = toGenerateCss
+      .filter((locator) => {
+        const taskStatus = getTaskStatus(locator.locatorValue.xPathStatus, locator.locatorValue.cssSelectorStatus);
+        return locator.locatorValue && taskStatus !== LocatorTaskStatus.PENDING;
+      })
       .map(({ element_id }) => ({
         element_id,
         locatorValue: { cssSelectorStatus: LocatorTaskStatus.PENDING },
       }));
 
-    if (setPendingXpaths.length)
+    if (XPathsSelectorsPending.length)
       thunkAPI.dispatch(
         updateLocatorGroup({
-          locators: setPendingXpaths,
+          locators: XPathsSelectorsPending,
           pageObject: selectCurrentPageObject(state)!,
         }),
       );
 
-    if (setPendingCss.length)
+    if (cssSelectorsPending.length)
       thunkAPI.dispatch(
         updateLocatorGroup({
-          locators: setPendingCss,
+          locators: cssSelectorsPending,
           pageObject: selectCurrentPageObject(state)!,
         }),
       );
@@ -118,7 +131,7 @@ export const runLocatorsGenerationReducer = (builder: ActionReducerMapBuilder<Lo
     })
     .addCase(runLocatorsGeneration.fulfilled, (state, { payload }) => {
       state.generationStatus = LocatorsGenerationStatus.started;
-      const [_startXpaths, _startCss] = payload as [string | null, string | null];
+      const [_startXPaths, _startCss] = payload as [string | null, string | null];
     })
     .addCase(runLocatorsGeneration.rejected, (state, { error }) => {
       throw new Error(error.stack);
