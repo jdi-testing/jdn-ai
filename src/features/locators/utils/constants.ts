@@ -1,4 +1,4 @@
-import { LocatorTaskStatus, ILocator } from '../types/locator.types';
+import { ILocator, LocatorTaskStatus } from '../types/locator.types';
 import { ElementClass } from '../types/generationClasses.types';
 import { AnnotationType, LocatorType } from '../../../common/types/common';
 
@@ -29,10 +29,11 @@ export const newLocatorStub: ILocator = {
     xPath: null,
     cssSelector: null,
     attributes: {},
-    taskStatus: LocatorTaskStatus.SUCCESS,
+    cssSelectorStatus: LocatorTaskStatus.NOT_STARTED,
+    xPathStatus: LocatorTaskStatus.NOT_STARTED,
   },
-  annotationType: '' as AnnotationType,
-  locatorType: '' as LocatorType,
+  annotationType: '' as AnnotationType, // TODO: fix type
+  locatorType: '' as LocatorType, // TODO: fix type
   name: '',
   message: '',
   pageObj: 0,

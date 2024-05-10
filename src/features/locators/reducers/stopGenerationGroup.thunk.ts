@@ -15,7 +15,11 @@ export const stopGenerationGroupReducer = (builder: ActionReducerMapBuilder<Loca
       const newValue = meta.arg.map(({ element_id, locatorValue }) => {
         return {
           element_id,
-          locatorValue: { ...locatorValue, xPathStatus: LocatorTaskStatus.REVOKED },
+          locatorValue: {
+            ...locatorValue,
+            xPathStatus: LocatorTaskStatus.REVOKED,
+            cssSelectorStatus: LocatorTaskStatus.REVOKED,
+          },
         };
       });
       // @ts-ignore

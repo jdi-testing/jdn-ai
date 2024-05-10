@@ -1,4 +1,4 @@
-import { ActionReducerMapBuilder, createAsyncThunk } from '@reduxjs/toolkit';
+import { type ActionReducerMapBuilder, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { RootState } from '../../../app/store/store';
 import { LocatorsState, PredictedEntity } from '../types/locator.types';

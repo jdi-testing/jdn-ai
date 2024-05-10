@@ -11,6 +11,7 @@ import { LocatorType } from '../../../common/types/common';
 import { filterInProgress } from '../utils/helpers';
 import { selectCurrentPage } from '../../../app/main.selectors';
 import { isLocatorListPage } from '../../../app/utils/helpers';
+import { ILocator } from '../types/locator.types';
 
 export const getLocatorsIdsByPO = (state: RootState, pageObjId?: PageObjectId) => {
   pageObjId = isNil(pageObjId) ? selectCurrentPageObject(state)?.id : pageObjId;
@@ -40,7 +41,7 @@ export const selectPresentLocatorsByPO = createSelector(
         // ToDo: isDefaultLocatorType ???
         const isDefaultLocatorType = () => !locator.locatorType && pageObject?.locatorType === LocatorType.cssSelector;
 
-        return {
+        const res: ILocator = {
           ...locator,
           ...(annotationType && { annotationType }),
           ...(locatorType && { locatorType }),
@@ -51,6 +52,7 @@ export const selectPresentLocatorsByPO = createSelector(
             },
           }),
         };
+        return res;
       });
   },
 );
