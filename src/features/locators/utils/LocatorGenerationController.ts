@@ -1,10 +1,25 @@
 import { WebSocketMessage } from '../../../services/backend';
-import { ILocator, JDNHash, LocatorTaskStatus } from '../types/locator.types';
+import { ILocator, JDNHash } from '../types/locator.types';
 import { webSocketController } from '../../../services/webSocketController';
 import { MainState, MaxGenerationTime } from '../../../app/types/mainSlice.types';
 import { PageObject } from '../../pageObjects/types/pageObjectSlice.types';
+import { GeneralLocatorType } from '../../../common/types/common';
+import { getWebSocketMessages } from './helpers';
 
-export const isGeneratedStatus = (taskStatus: LocatorTaskStatus) => taskStatus === LocatorTaskStatus.SUCCESS;
+export interface IGeneralWebSocketMessage {
+  action: WebSocketMessage;
+  payload: {
+    document: string;
+    id: string[];
+    config?: MainState['xpathConfig'];
+  };
+  logging_info?: {
+    session_id: string;
+    page_object_creation: string;
+    element_library: string;
+    website_url: string;
+  };
+}
 
 class LocatorGenerationController {
   sessionId: string;
@@ -15,12 +30,17 @@ class LocatorGenerationController {
 
   pageDocument: string;
 
+  xPathGenerationMessage: IGeneralWebSocketMessage;
+
+  CssSelectorGenerationMessage: IGeneralWebSocketMessage;
+
   init(sessionId: string, xPathConfig: MainState['xpathConfig']) {
     this.sessionId = sessionId;
     this.xPathConfig = xPathConfig;
   }
 
-  scheduleMultipleXpathGeneration(
+  scheduleMultipleLocatorGeneration(
+    locatorType: GeneralLocatorType,
     elements: ILocator[],
     pageDocument: string,
     pageObject?: PageObject,
@@ -37,23 +57,35 @@ class LocatorGenerationController {
       ...(maxGenerationTime ? { advanced_calculation: true } : null),
     };
 
+    this.xPathGenerationMessage = {
+      action: WebSocketMessage.SCHEDULE_MULTIPLE_XPATH_GENERATIONS,
+      payload: {
+        document: this.pageDocument,
+        id: hashes,
+        config,
+      },
+      logging_info: {
+        session_id: this.sessionId,
+        page_object_creation: this.pageObject.name,
+        element_library: this.pageObject.library,
+        website_url: this.pageObject.url,
+      },
+    };
+
+    this.CssSelectorGenerationMessage = {
+      action: WebSocketMessage.SCHEDULE_MULTIPLE_CSS_SELECTOR_GENERATIONS,
+      payload: {
+        document: this.pageDocument,
+        id: hashes,
+      },
+    };
+
+    const messages = getWebSocketMessages(locatorType, this.xPathGenerationMessage, this.CssSelectorGenerationMessage);
     return webSocketController
-      .sendSocket(
-        JSON.stringify({
-          action: WebSocketMessage.SCHEDULE_MULTIPLE_XPATH_GENERATIONS,
-          payload: {
-            document: this.pageDocument,
-            id: hashes,
-            config,
-          },
-          logging_info: {
-            session_id: this.sessionId,
-            page_object_creation: this.pageObject.name,
-            element_library: this.pageObject.library,
-            website_url: this.pageObject.url,
-          },
-        }),
-      )
+      .sendSocket(JSON.stringify(messages[0]))
+      .then(() => {
+        webSocketController.sendSocket(JSON.stringify(messages[1]));
+      })
       .then(() => {
         webSocketController.startPing();
       });
@@ -89,6 +121,10 @@ class LocatorGenerationController {
       }),
     );
   }
+
+  // scheduleMultipleCssSelectorGeneration() {
+  //   webSocketController.sendSocket(JSON.stringify(this.CssSelectorGenerationMessage));
+  // }
 }
 
 export const locatorGenerationController = new LocatorGenerationController();
