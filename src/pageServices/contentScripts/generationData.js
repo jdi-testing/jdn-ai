@@ -141,7 +141,7 @@ export const getGenerationAttributes = () => {
           attributes: elementAttributes,
           xPath,
           fullXpath: xPath,
-          cssSelector: originalCssSelector,
+          cssSelector: null,
           originalCssSelector,
         };
 

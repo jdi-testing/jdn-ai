@@ -70,7 +70,7 @@ export const runLocatorsGeneration = createAsyncThunk(
 
     const generations = Promise.all([
       ...[
-        toGenerateXPaths.length
+        toGenerateXPaths.length || toGenerateCss.length
           ? runLocatorGeneration(
               state,
               [...toGenerateXPaths, ...toGenerateCss],
@@ -79,19 +79,17 @@ export const runLocatorsGeneration = createAsyncThunk(
             )
           : null,
       ],
-      // ...[toGenerateCss.length ? runCssSelectorGeneration(toGenerateCss) : null],
     ]);
-
-    // console.log(generations);  // LOG
 
     const XPathsSelectorsPending = toGenerateXPaths
       .filter((locator) => {
         const taskStatus = getTaskStatus(locator.locatorValue.xPathStatus, locator.locatorValue.cssSelectorStatus);
         return locator.locatorValue && taskStatus !== LocatorTaskStatus.PENDING;
       })
-      .map(({ element_id }) => ({
+      .map(({ element_id, jdnHash }) => ({
         element_id,
         locatorValue: { xPathStatus: LocatorTaskStatus.PENDING },
+        jdnHash,
       }));
 
     const cssSelectorsPending = toGenerateCss
@@ -99,9 +97,10 @@ export const runLocatorsGeneration = createAsyncThunk(
         const taskStatus = getTaskStatus(locator.locatorValue.xPathStatus, locator.locatorValue.cssSelectorStatus);
         return locator.locatorValue && taskStatus !== LocatorTaskStatus.PENDING;
       })
-      .map(({ element_id }) => ({
+      .map(({ element_id, jdnHash }) => ({
         element_id,
         locatorValue: { cssSelectorStatus: LocatorTaskStatus.PENDING },
+        jdnHash,
       }));
 
     if (XPathsSelectorsPending.length)

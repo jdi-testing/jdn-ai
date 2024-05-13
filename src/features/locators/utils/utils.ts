@@ -240,7 +240,6 @@ export const getTaskStatus = (
   cssSelectorStatus: LocatorTaskStatus,
 ): LocatorTaskStatus | null => {
   if (!xPathStatus && !cssSelectorStatus) return LocatorTaskStatus.NOT_STARTED;
-  // console.log('!!!!!!!!!!!!!!!!!!!!', xPathStatus, cssSelectorStatus); // LOG
   const statusMap = {
     success: xPathStatus === LocatorTaskStatus.SUCCESS && cssSelectorStatus === LocatorTaskStatus.SUCCESS,
     pending: xPathStatus === LocatorTaskStatus.PENDING || cssSelectorStatus === LocatorTaskStatus.PENDING,
@@ -265,6 +264,6 @@ export const getTaskStatus = (
 };
 
 export const hasAllLocators = ({ locatorValue }: ILocator) =>
-  locatorValue && locatorValue.xPath !== locatorValue.fullXpath && locatorValue.cssSelector;
+  locatorValue && locatorValue.xPath !== locatorValue.fullXpath && locatorValue.originalCssSelector;
 
 export const getNoLocatorsElements = (locators: ILocator[]) => locators.filter((locator) => !hasAllLocators(locator));
