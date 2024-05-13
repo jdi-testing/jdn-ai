@@ -42,11 +42,13 @@ export const identifyElements = createAsyncThunk('locators/identifyElements', as
       library === ElementLibrary.Vuetify ? await findByRules() : await predictElements(endpoint);
 
     if (error) {
-      throw new Error(error);
+      thunkAPI.dispatch(setProgressError(error));
+      return thunkAPI.rejectWithValue(null);
     }
 
     if (!data) {
-      throw new Error('No data received from server');
+      thunkAPI.dispatch(setProgressError('No data received from server'));
+      return thunkAPI.rejectWithValue(null);
     }
 
     const locators = data
@@ -75,7 +77,7 @@ export const identifyElements = createAsyncThunk('locators/identifyElements', as
 
     return thunkAPI.fulfillWithValue(locators);
   } catch (error) {
-    thunkAPI.dispatch(setProgressError(error.message));
+    thunkAPI.dispatch(setProgressError(error.message || 'An unknown error occurred'));
     return thunkAPI.rejectWithValue(null);
   }
 });
