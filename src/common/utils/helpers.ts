@@ -53,6 +53,19 @@ export const getElementFullXpath = async (foundHash: string): Promise<string> =>
   return fullXpath;
 };
 
+export const getElementOriginalCssSelector = async (foundHash: string): Promise<string> => {
+  let originalCssSelector = '';
+
+  await sendMessage
+    .getElementOriginalCssSelector(foundHash)
+    .then((res: string) => {
+      if (res) originalCssSelector = res;
+    })
+    .catch((err: Error) => err);
+
+  return originalCssSelector;
+};
+
 export const isFilteredSelect = (input: string, option: any) =>
   (option?.value?.toString() ?? '').toLowerCase().includes(input.toLowerCase());
 

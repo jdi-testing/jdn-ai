@@ -16,6 +16,7 @@ export enum ScriptMsg {
   GenerateSelectorByHash = 'GenerateSelectorByHash',
   GenerateSelectorGroupByHash = 'GenerateSelectorGroupByHash',
   GetElementXpath = 'GetElementXpath',
+  GetElementOriginalCssSelector = 'GetElementOriginalCssSelector',
   HighlightToggled = 'HighlightToggled',
   KillHighlight = 'KillHighlight',
   PingScript = 'PingScript',

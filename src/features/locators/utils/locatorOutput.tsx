@@ -1,6 +1,6 @@
 import React from 'react';
 import { AnnotationType, LocatorType } from '../../../common/types/common';
-import { ElementLibrary, ElementClass } from '../types/generationClasses.types';
+import { ElementClass, ElementLibrary } from '../types/generationClasses.types';
 import { ILocator, LocatorValue } from '../types/locator.types';
 import { CALCULATING } from './constants';
 import { camelCase } from 'lodash';
@@ -35,7 +35,7 @@ export const getLocatorValueByType = (locatorValue: LocatorValue, type: LocatorT
   let dataAttribute = '';
 
   const value = {
-    'CSS Selector': locatorValue.cssSelector || CALCULATING,
+    'CSS Selector': locatorValue.cssSelector || locatorValue.originalCssSelector || CALCULATING,
     xPath: locatorValue.xPath ?? '',
     id: locatorValue.attributes.id ?? '',
     name: locatorValue.attributes.name ?? '',

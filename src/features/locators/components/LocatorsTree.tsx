@@ -20,6 +20,7 @@ import { fullEscapeLocatorString, checkForEscaped } from '../utils/escapeLocator
 import { LocatorType } from '../../../common/types/common';
 import type RcTree from 'rc-tree';
 import cn from 'classnames';
+import { getTaskStatus } from '../utils/utils';
 
 export enum SearchState {
   None = 'none',
@@ -119,6 +120,10 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
       _data.forEach((element, index) => {
         const { element_id, children, parent_id, jdnHash, searchState, depth } = element;
         const locator = locatorsMap[element_id];
+        const locatorTaskStatus = getTaskStatus(
+          locator.locatorValue.xPathStatus,
+          locator.locatorValue.cssSelectorStatus,
+        );
 
         if (locator.locatorType === LocatorType.linkText && !checkForEscaped(locator.locatorValue.output)) {
           locator.locatorValue.output = fullEscapeLocatorString(locator.locatorValue.output);
@@ -135,7 +140,7 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
           title: (
             <Locator
               {...{
-                element: locator,
+                element: { ...locator, locatorTaskStatus },
                 currentPage,
                 library,
                 depth,

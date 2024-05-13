@@ -203,6 +203,8 @@ export const sendMessage = {
     connector.sendMessage(ScriptMsg.GenerateAttributes, payload, onResponse),
   getElementXpath: (payload: string, onResponse?: () => void) =>
     connector.sendMessage(ScriptMsg.GetElementXpath, payload, onResponse),
+  getElementOriginalCssSelector: (payload: string, onResponse?: () => void) =>
+    connector.sendMessage(ScriptMsg.GetElementOriginalCssSelector, payload, onResponse),
   pingScript: (payload: { scriptName: string }, onResponse?: () => void) =>
     connector.sendMessage(ScriptMsg.PingScript, payload, onResponse),
   removeElement: (payload: ILocator) => connector.sendMessage(ScriptMsg.RemoveElement, payload),

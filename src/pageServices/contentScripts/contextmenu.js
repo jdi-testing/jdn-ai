@@ -1,23 +1,24 @@
 import {
-  plusCircle,
-  minusCircle,
-  pencil,
-  handPointing,
-  bringToFrontIcon,
-  sendToBackIcon,
-  trash,
-  arrowsClockwise,
-  pause,
-  play,
   arrowClockwise,
+  arrowFatLinesDown,
+  arrowsClockwise,
+  bringToFrontIcon,
   caretRight,
   copy,
-  arrowFatLinesDown,
+  handPointing,
+  minusCircle,
+  pause,
+  pencil,
+  play,
+  plusCircle,
+  sendToBackIcon,
+  trash,
 } from './assets/icons';
 
 import { LocatorOption } from '../../features/locators/utils/constants';
 import { LocatorType } from '../../common/types/common';
 import { ScriptMsg } from '../scriptMsg.constants';
+import { getTaskStatus } from './utils';
 
 export const runContextMenu = () => {
   /*
@@ -312,11 +313,29 @@ export const runContextMenu = () => {
   const isGroup = () => predictedElements.length !== 1;
   const noDeleted = () => predictedElements.some(({ deleted }) => !deleted);
   const areInProgress = () =>
-    predictedElements.some(
-      ({ locatorValue }) => locatorValue.taskStatus === 'PENDING' || locatorValue.taskStatus === 'STARTED',
-    );
-  const areRevoked = () => predictedElements.some(({ locatorValue }) => locatorValue.taskStatus === 'REVOKED');
-  const areFailed = () => predictedElements.some(({ locatorValue }) => locatorValue.taskStatus === 'FAILURE');
+    predictedElements.some(({ locatorValue }) => {
+      const taskStatus = getTaskStatus(
+        locatorValue.locatorValue.xPathStatus,
+        locatorValue.locatorValue.cssSelectorStatus,
+      );
+      return taskStatus === 'PENDING' || taskStatus === 'STARTED';
+    });
+  const areRevoked = () =>
+    predictedElements.some(({ locatorValue }) => {
+      const taskStatus = getTaskStatus(
+        locatorValue.locatorValue.xPathStatus,
+        locatorValue.locatorValue.cssSelectorStatus,
+      );
+      return taskStatus === 'REVOKED';
+    });
+  const areFailed = () =>
+    predictedElements.some(({ locatorValue }) => {
+      const taskStatus = getTaskStatus(
+        locatorValue.locatorValue.xPathStatus,
+        locatorValue.locatorValue.cssSelectorStatus,
+      );
+      return taskStatus === 'FAILURE';
+    });
 
   /* menu */
 

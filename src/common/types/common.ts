@@ -21,6 +21,8 @@ export enum LocatorType {
   dataAttributes = 'dataAttributes',
 }
 
+export type GeneralLocatorType = LocatorType.cssSelector | LocatorType.xPath;
+
 export const locatorTypes: { [key in LocatorType]: string } = {
   [LocatorType.cssSelector]: 'CSS Selector',
   [LocatorType.xPath]: 'xPath',

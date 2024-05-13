@@ -1,11 +1,11 @@
 import type { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { getFullDocument } from '../../common/utils/getFullDocument';
 import { PageDocumentState } from './pageDocument.slice';
+import { getFullDocumentWithStyles } from '../../common/utils/getFullDocumentWithStyles';
 
 export const fetchPageDocument = createAsyncThunk('pageDocument/fetchPageDocument', async (_, { rejectWithValue }) => {
   try {
-    const response: string = await getFullDocument();
+    const response: string = await getFullDocumentWithStyles();
     return response;
   } catch (error) {
     return rejectWithValue(error.response.data);

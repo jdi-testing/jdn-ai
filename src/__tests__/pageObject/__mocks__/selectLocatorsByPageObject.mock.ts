@@ -153,7 +153,6 @@ export const selectMockedLocators = (pageObject: PageObject) => [
     elemText: 'EPAM framework Wishes…',
     elemAriaLabel: null,
     locatorValue: {
-      taskStatus: 'SUCCESS',
       cssSelectorStatus: 'SUCCESS',
       xPathStatus: 'SUCCESS',
       xPath: "//*[@class='main-content']",
@@ -180,7 +179,6 @@ export const selectMockedLocators = (pageObject: PageObject) => [
     elemAriaLabel: null,
     locatorType: pageObject.locatorType || LocatorType.xPath,
     locatorValue: {
-      taskStatus: 'PENDING',
       xPathStatus: 'SUCCESS',
       cssSelectorStatus: 'PENDING',
       xPath: "//*[@class='uui-navigation nav navbar-nav m-l8 any']",
@@ -212,7 +210,6 @@ export const selectMockedLocators = (pageObject: PageObject) => [
     elemText: 'HTML 5',
     elemAriaLabel: null,
     locatorValue: {
-      taskStatus: 'FAILURE',
       xPathStatus: 'SUCCESS',
       cssSelectorStatus: 'FAILURE',
       xPath: "//*[@index='5']/ul",

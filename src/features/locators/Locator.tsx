@@ -1,7 +1,7 @@
 // ToDo fix naming according to naming-convention
 /* eslint-disable @typescript-eslint/naming-convention */
-import React, { useEffect, useRef, useState, useMemo, FC, useLayoutEffect } from 'react';
-import { Checkbox, Button } from 'antd';
+import React, { FC, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { Button, Checkbox } from 'antd';
 import { DotsThree } from '@phosphor-icons/react';
 import Text from 'antd/lib/typography/Text';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,20 +9,20 @@ import { useDispatch, useSelector } from 'react-redux';
 import { areChildrenChecked, isLocatorIndeterminate } from './selectors/locators.selectors';
 import { isMacPlatform } from '../../common/utils/helpers';
 import {
+  elementGroupUnsetActive,
   elementSetActive,
   elementUnsetActive,
-  elementGroupUnsetActive,
   setActiveSingle,
-  toggleLocatorIsChecked,
+  setChildrenGeneration,
   setChildrenIsChecked,
   toggleElementGeneration,
-  setChildrenGeneration,
+  toggleLocatorIsChecked,
 } from './locators.slice';
 
 import { size } from 'lodash';
 import { PageType } from '../../app/types/mainSlice.types';
 import { RootState } from '../../app/store/store';
-import { ILocator } from './types/locator.types';
+import { ILocator, LocatorTaskStatus } from './types/locator.types';
 import { SearchState } from './components/LocatorsTree';
 import { LocatorEditDialog } from './components/LocatorEditDialog';
 import { LocatorCopyButton } from './components/LocatorCopyButton';
@@ -41,7 +41,7 @@ import { OnboardingStep } from '../onboarding/constants';
 import { useOnboardingContext } from '../onboarding/OnboardingProvider';
 
 interface Props {
-  element: ILocator;
+  element: ILocator & { locatorTaskStatus: LocatorTaskStatus | null };
   currentPage: PageType;
   disabled?: boolean;
   searchState?: SearchState;
@@ -67,6 +67,7 @@ export const Locator: FC<Props> = ({ element, currentPage, searchState, depth, s
     isChecked,
     annotationType: elementAnnotationType,
     locatorType: elementLocatorType,
+    locatorTaskStatus,
   } = element;
 
   const currentPageObject = useSelector(selectCurrentPageObject);
@@ -211,7 +212,15 @@ export const Locator: FC<Props> = ({ element, currentPage, searchState, depth, s
                   searchState === SearchState.Hidden ? ' jdn__locator--disabled' : ''
                 }`}
               >
-                <LocatorIcon {...{ message: elementMessage, locatorValue, deleted, isCustomLocator }} />
+                <LocatorIcon
+                  {...{
+                    message: elementMessage,
+                    locatorErrorMessage: locatorValue.errorMessage,
+                    locatorTaskStatus,
+                    deleted,
+                    isCustomLocator,
+                  }}
+                />
                 {renderColorizedString()}
               </Text>
               {searchState !== SearchState.Hidden ? (

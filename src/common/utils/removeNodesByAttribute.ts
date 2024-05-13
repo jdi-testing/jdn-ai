@@ -13,6 +13,5 @@ export const removeNodesByAttribute = (htmlString: string, attributeName: string
     }
   });
 
-  const res = document.documentElement.outerHTML.replace(/\\&quot;/g, '');
-  return JSON.stringify(res);
+  return document.documentElement.outerHTML.replace(/\\&quot;/g, '');
 };

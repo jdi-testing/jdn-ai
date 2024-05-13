@@ -1,5 +1,5 @@
 import { ElementAttributes, LocatorType } from '../../common/types/common';
-import { LocatorValidationWarnings } from '../../features/locators/types/locator.types';
+import { LocatorTaskStatus, LocatorValidationWarnings } from '../../features/locators/types/locator.types';
 import { ScriptMsg } from '../scriptMsg.constants';
 
 export const evaluateXpath = ({ xPath, element_id, originJdnHash }: Record<string, string>) => {
@@ -162,4 +162,33 @@ export const getElementAttributes = (element: HTMLElement): ElementAttributes =>
   if (!!Object.keys(dataAttributes).length) attributes = { ...attributes, dataAttributes };
 
   return attributes;
+};
+
+/* duplicate from app utils: */
+export const getTaskStatus = (
+  xPathStatus: LocatorTaskStatus,
+  cssSelectorStatus: LocatorTaskStatus,
+): LocatorTaskStatus | null => {
+  if (!xPathStatus && !cssSelectorStatus) return LocatorTaskStatus.NOT_STARTED;
+  const statusMap = {
+    success: xPathStatus === LocatorTaskStatus.SUCCESS && cssSelectorStatus === LocatorTaskStatus.SUCCESS,
+    pending: xPathStatus === LocatorTaskStatus.PENDING || cssSelectorStatus === LocatorTaskStatus.PENDING,
+    failure: xPathStatus === LocatorTaskStatus.FAILURE || cssSelectorStatus === LocatorTaskStatus.FAILURE,
+    revoked: xPathStatus === LocatorTaskStatus.REVOKED || cssSelectorStatus === LocatorTaskStatus.REVOKED,
+  };
+
+  if (statusMap.success) {
+    return LocatorTaskStatus.SUCCESS;
+  }
+  if (statusMap.pending) {
+    return LocatorTaskStatus.PENDING;
+  }
+  if (statusMap.failure) {
+    return LocatorTaskStatus.FAILURE;
+  }
+  if (statusMap.revoked) {
+    return LocatorTaskStatus.REVOKED;
+  }
+  // fallback for any unhandled cases
+  return null;
 };

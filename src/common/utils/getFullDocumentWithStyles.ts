@@ -23,6 +23,18 @@ export const getFullDocumentWithStyles = async () => {
   await waitForAllStylesToLoad();
 
   const documentResult = await connector.attachContentScript(() => {
+    const minifyHTML = (outerHTML: string) => {
+      return outerHTML
+        .replace(/\s{2,}/g, ' ') // replace multiple spaces with one
+        .replace(/\s*(<[^>]+>)\s*/g, '$1') // remove spaces around tags
+        .replace(/>\s+</g, '><') // remove spaces between tags
+        .replace(/\n/g, ''); // remove line breaks
+    };
+
+    const removeScriptTags = (html: string): string => {
+      return html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+    };
+
     const fetchCSS = () => {
       let allStyles = '';
       for (let i = 0; i < document.styleSheets.length; i++) {
@@ -45,18 +57,10 @@ export const getFullDocumentWithStyles = async () => {
     outerHTML = outerHTML.replace(/<link rel="stylesheet"[^>]+>/g, '');
     outerHTML = outerHTML.replace('</head>', `<style>\n${stylesString}</style></head>`);
 
-    const scripts = [...document.scripts]
-      .map((script: HTMLScriptElement) => {
-        return script.src ? `<script src="${script.src}"></script>` : `<script>${script.innerHTML}</script>`;
-      })
-      .join('\n');
-
-    outerHTML = outerHTML.replace('</body>', `${scripts}</body>`);
-
-    return JSON.stringify({ outerHTML });
+    return removeScriptTags(minifyHTML(outerHTML));
   });
 
   const result = await documentResult[0].result;
-  const { outerHTML } = JSON.parse(result);
-  return JSON.stringify(outerHTML);
+
+  return result;
 };

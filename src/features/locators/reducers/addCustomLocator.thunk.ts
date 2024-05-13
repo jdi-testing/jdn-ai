@@ -1,9 +1,9 @@
-import { ActionReducerMapBuilder, createAsyncThunk } from '@reduxjs/toolkit';
+import { type ActionReducerMapBuilder, createAsyncThunk } from '@reduxjs/toolkit';
 import { ILocator, LocatorsState, ValidationStatus } from '../types/locator.types';
-import { generateId, getElementFullXpath } from '../../../common/utils/helpers';
+import { generateId, getElementFullXpath, getElementOriginalCssSelector } from '../../../common/utils/helpers';
 import { addLocatorToPageObj } from '../../pageObjects/pageObject.slice';
 import { addLocators, setActiveSingle, setScrollToLocator } from '../locators.slice';
-import { evaluateLocator, evaluateXpath, generateSelectorByHash, getLocatorValidationStatus } from '../utils/utils';
+import { evaluateLocator, evaluateXpath, getLocatorValidationStatus } from '../utils/utils';
 import { sendMessage } from '../../../pageServices/connector';
 import { locatorsAdapter } from '../selectors/locators.selectors';
 import { LocatorType } from '../../../common/types/common';
@@ -27,7 +27,7 @@ export const addCustomLocator = createAsyncThunk(
 
     let foundHash;
     let foundElementText;
-    let cssSelector = '';
+    let originalCssSelector = '';
     let fullXpath = '';
     // ToDo: fix legacy naming
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -61,7 +61,7 @@ export const addCustomLocator = createAsyncThunk(
         }
 
         if (isXPathLocator) {
-          ({ cssSelector } = await generateSelectorByHash(element_id, foundHash));
+          originalCssSelector = await getElementOriginalCssSelector(foundHash);
         }
 
         if (isStandardLocator) {
@@ -77,7 +77,7 @@ export const addCustomLocator = createAsyncThunk(
       element_id,
       locatorValue: {
         ...newLocatorData.locatorValue,
-        ...(isStandardLocator ? { xPath: fullXpath } : { cssSelector }),
+        ...(isStandardLocator ? { xPath: fullXpath } : { cssSelector: originalCssSelector }),
       },
       elemText: foundElementText || '',
       jdnHash: foundHash,

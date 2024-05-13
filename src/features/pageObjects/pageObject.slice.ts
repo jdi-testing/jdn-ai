@@ -1,13 +1,15 @@
-import { PayloadAction, createSlice } from '@reduxjs/toolkit';
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import { isNil } from 'lodash';
 import { pageObjAdapter, simpleSelectPageObjById } from './selectors/pageObjects.selectors';
-import { PageObjectState, PageObject, PageObjectId } from './types/pageObjectSlice.types';
+import { PageObject, PageObjectId, PageObjectState } from './types/pageObjectSlice.types';
 import { ElementId } from '../locators/types/locator.types';
 import { addPageObjReducer } from './reducers/addPageObject.thunk';
 import { ElementLibrary } from '../locators/types/generationClasses.types';
-import { LocatorType, AnnotationType, FrameworkType } from '../../common/types/common';
+import { AnnotationType, FrameworkType, LocatorType } from '../../common/types/common';
 
-const initialState: PageObjectState = {};
+const initialState: PageObjectState = pageObjAdapter.getInitialState({
+  currentPageObject: undefined,
+});
 
 const pageObjSlice = createSlice({
   name: 'pageObject',

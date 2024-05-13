@@ -1,10 +1,10 @@
-import { ActionReducerMapBuilder, createAsyncThunk } from '@reduxjs/toolkit';
-import { ILocator, LocatorTaskStatus, LocatorsState } from '../types/locator.types';
+import { type ActionReducerMapBuilder, createAsyncThunk } from '@reduxjs/toolkit';
+import { ILocator, LocatorsState, LocatorTaskStatus } from '../types/locator.types';
 import { locatorsAdapter, selectLocatorById } from '../selectors/locators.selectors';
 import { RootState } from '../../../app/store/store';
 import { ChangeLocatorAttributesPayload } from '../locators.slice';
-import { generateSelectorByHash, evaluateLocator } from '../utils/utils';
-import { generateId, getElementFullXpath } from '../../../common/utils/helpers';
+import { evaluateLocator } from '../utils/utils';
+import { generateId, getElementFullXpath, getElementOriginalCssSelector } from '../../../common/utils/helpers';
 import { sendMessage } from '../../../pageServices/connector';
 import { LocatorType } from '../../../common/types/common';
 
@@ -36,7 +36,7 @@ export const changeLocatorElement = createAsyncThunk(
         LocatorType.dataAttributes,
       ].includes(locatorType) || locatorType.startsWith('data-');
 
-    let foundHash, foundElementText, cssSelector, fullXpath;
+    let foundHash, foundElementText, originalCssSelector, fullXpath;
 
     ({ foundHash, foundElementText } = JSON.parse(await await evaluateLocator(locatorValue, locatorType, element_id)));
 
@@ -58,15 +58,15 @@ export const changeLocatorElement = createAsyncThunk(
       elemText: foundElementText || '',
       jdnHash: foundHash,
     };
-
+    // почему здесь так, почему не отправляется на бэк WS message? для генерации xPath (и cssSelector)
     if (isCSSLocator) {
       fullXpath = await getElementFullXpath(foundHash);
       newValue.locatorValue.cssSelector = locatorValue;
       newValue.locatorValue.xPath = fullXpath;
       newValue.locatorValue.cssSelectorStatus = LocatorTaskStatus.SUCCESS;
     } else if (isXPathLocator) {
-      cssSelector = (await generateSelectorByHash(element_id, foundHash)).cssSelector;
-      newValue.locatorValue.cssSelector = cssSelector;
+      originalCssSelector = await getElementOriginalCssSelector(foundHash);
+      newValue.locatorValue.originalCssSelector = originalCssSelector;
       newValue.locatorValue.xPath = locatorValue;
       newValue.locatorValue.xPathStatus = LocatorTaskStatus.SUCCESS;
     } else if (isStandardLocator) {

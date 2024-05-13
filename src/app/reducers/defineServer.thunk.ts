@@ -14,7 +14,7 @@ export const defineServer = createAsyncThunk('main/defineServer', async () => {
     request.then((response) => {
       const [major, minor, build] = response.data.split('.').map(toInteger);
       if (compatibleMajorVer === major && compatibleMinorVer === minor && compatibleBuildVer <= build) {
-        return JSON.parse(JSON.stringify(response));
+        return JSON.parse(JSON.stringify(response)); // Deep copy
       } else if (isRemote) {
         throw new Error(BackendStatus.IncompatibleVersionRemote);
       } else if (major < compatibleMajorVer || minor < compatibleMinorVer || build < compatibleBuildVer) {

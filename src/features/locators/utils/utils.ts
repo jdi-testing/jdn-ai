@@ -199,7 +199,7 @@ export const getLocatorValueOnTypeSwitch = async (
 
   const isDataAttributesFalsy =
     !locatorValue.attributes.dataAttributes || Object.keys(locatorValue.attributes.dataAttributes).length === 0;
-  const isStandardLocatorFalsy =
+  const isStandardLocatorValueFalsy =
     !locatorValue.cssSelector &&
     !locatorValue.attributes.className &&
     !locatorValue.attributes.id &&
@@ -209,12 +209,12 @@ export const getLocatorValueOnTypeSwitch = async (
     isDataAttributesFalsy;
 
   if (isStandardLocator) {
-    if (isLocatorLeadsToNewElement || isStandardLocatorFalsy) {
+    if (isLocatorLeadsToNewElement || isStandardLocatorValueFalsy) {
       const { foundHash } = JSON.parse(await evaluateXpath(form.getFieldValue('locator'), element_id, jdnHash));
 
       ({ cssSelector: newLocatorValue } = await generateSelectorByHash(element_id, foundHash));
     } else {
-      if (newLocatorType === LocatorType.cssSelector) newLocatorValue = locatorValue.cssSelector;
+      if (newLocatorType === LocatorType.cssSelector) newLocatorValue = locatorValue.cssSelector; // а не original ли надо делать?
       try {
         newLocatorValue = getLocatorValueByType(locatorValue, newLocatorType);
       } catch (error) {
@@ -235,26 +235,35 @@ export const getLocatorValueOnTypeSwitch = async (
   return newLocatorValue;
 };
 
-export const getTaskStatus = (locatorValue: LocatorValue) => {
-  const { xPathStatus, cssSelectorStatus } = locatorValue;
-  if (!xPathStatus && !cssSelectorStatus) return;
-  if (xPathStatus === LocatorTaskStatus.SUCCESS && cssSelectorStatus === LocatorTaskStatus.SUCCESS) {
+export const getTaskStatus = (
+  xPathStatus: LocatorTaskStatus,
+  cssSelectorStatus: LocatorTaskStatus,
+): LocatorTaskStatus | null => {
+  if (!xPathStatus && !cssSelectorStatus) return LocatorTaskStatus.NOT_STARTED;
+  const statusMap = {
+    success: xPathStatus === LocatorTaskStatus.SUCCESS && cssSelectorStatus === LocatorTaskStatus.SUCCESS,
+    pending: xPathStatus === LocatorTaskStatus.PENDING || cssSelectorStatus === LocatorTaskStatus.PENDING,
+    failure: xPathStatus === LocatorTaskStatus.FAILURE || cssSelectorStatus === LocatorTaskStatus.FAILURE,
+    revoked: xPathStatus === LocatorTaskStatus.REVOKED || cssSelectorStatus === LocatorTaskStatus.REVOKED,
+  };
+
+  if (statusMap.success) {
     return LocatorTaskStatus.SUCCESS;
   }
-  if (xPathStatus === LocatorTaskStatus.PENDING || cssSelectorStatus === LocatorTaskStatus.PENDING) {
+  if (statusMap.pending) {
     return LocatorTaskStatus.PENDING;
   }
-  if (xPathStatus === LocatorTaskStatus.FAILURE || cssSelectorStatus === LocatorTaskStatus.FAILURE) {
+  if (statusMap.failure) {
     return LocatorTaskStatus.FAILURE;
   }
-  if (xPathStatus === LocatorTaskStatus.REVOKED || cssSelectorStatus === LocatorTaskStatus.REVOKED) {
+  if (statusMap.revoked) {
     return LocatorTaskStatus.REVOKED;
   }
   // fallback for any unhandled cases
-  return xPathStatus || cssSelectorStatus;
+  return null;
 };
 
 export const hasAllLocators = ({ locatorValue }: ILocator) =>
-  locatorValue && locatorValue.xPath !== locatorValue.fullXpath && locatorValue.cssSelector;
+  locatorValue && locatorValue.xPath !== locatorValue.fullXpath && locatorValue.originalCssSelector;
 
 export const getNoLocatorsElements = (locators: ILocator[]) => locators.filter((locator) => !hasAllLocators(locator));

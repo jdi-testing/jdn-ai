@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { CaretDown } from '@phosphor-icons/react';
 import PageSvg from '../assets/page.svg';
-import { selectPageObjects, selectLastFrameworkType } from '../selectors/pageObjects.selectors';
+import { selectLastFrameworkType, selectPageObjects } from '../selectors/pageObjects.selectors';
 import { PageObjGenerationSettings } from './PageObjGenerationSettings';
 import { PageObjectPlaceholder } from './PageObjectPlaceholder';
 import { PageObjCopyButton } from './PageObjCopyButton';
@@ -27,6 +27,7 @@ import { setHideUnadded } from '../pageObject.slice';
 import { disablePageObjectsListUI } from '../pageObjectsListUI.slice';
 import { resetProgressBar, startProgressBar } from '../progressBar.slice';
 import { useOnboarding } from '../../onboarding/useOnboarding';
+import { getTaskStatus } from '../../locators/utils/utils';
 
 interface Props {
   jdiTemplate?: Blob;
@@ -148,9 +149,20 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
                     }
                   >
                     {shouldDisplayLocators ? (
-                      elements.map((element) => (
-                        <Locator {...{ element, library }} key={element.element_id} currentPage={PageType.PageObject} />
-                      ))
+                      elements.map((element) => {
+                        const locatorTaskStatus = getTaskStatus(
+                          element.locatorValue.xPathStatus,
+                          element.locatorValue.cssSelectorStatus,
+                        );
+                        const elementWithTaskStatus = { ...element, locatorTaskStatus };
+                        return (
+                          <Locator
+                            {...{ element: elementWithTaskStatus, library }}
+                            key={element.element_id}
+                            currentPage={PageType.PageObject}
+                          />
+                        );
+                      })
                     ) : (
                       <PageObjGenerationSettings pageObj={id} {...{ url, isOnboardingOpen, handleGenerate }} />
                     )}

@@ -1,5 +1,5 @@
-import { createAsyncThunk } from '@reduxjs/toolkit';
-import { isNull, map, size, toLower } from 'lodash';
+import { type ActionReducerMapBuilder, createAsyncThunk } from '@reduxjs/toolkit';
+import { isNull, map } from 'lodash';
 import {
   pageObjAdapter,
   selectLastAnnotationType,
@@ -10,17 +10,19 @@ import {
   simpleSelectPageObjects,
 } from '../selectors/pageObjects.selectors';
 import { defaultLibrary } from '../../locators/types/generationClasses.types';
-import { getPageAttributes, isPONameUnique } from '../utils/pageObject';
+import { getPageAttributes, getUniquePageObjectName } from '../utils/pageObject';
 import { getClassName } from '../utils/pageObjectTemplate';
 import { getLocalStorage, LocalStorageKey } from '../../../common/utils/localStorage';
 import { AnnotationType, FrameworkType, LocatorType } from '../../../common/types/common';
+import { RootState } from '../../../app/store/store';
+import { PageObjectState } from '../types/pageObjectSlice.types';
 
 export const addPageObj = createAsyncThunk('pageObject/addPageObj', async (payload, { getState }) => {
   const res = await getPageAttributes();
   const { title, url } = res[0].result;
   const className = getClassName(title);
 
-  const state = getState();
+  const state = getState() as RootState;
 
   const lastSelectedFrameworkType =
     getLocalStorage(LocalStorageKey.Framework) || selectLastFrameworkType(state) || FrameworkType.JdiLight;
@@ -40,7 +42,7 @@ export const addPageObj = createAsyncThunk('pageObject/addPageObj', async (paylo
   };
 });
 
-export const addPageObjReducer = (builder) => {
+export const addPageObjReducer = (builder: ActionReducerMapBuilder<PageObjectState>) => {
   return builder
     .addCase(addPageObj.fulfilled, (state, { payload }) => {
       const {
@@ -52,32 +54,29 @@ export const addPageObjReducer = (builder) => {
         lastSelectedAnnotationType,
       } = payload;
 
-      // create unique PO name
       let maxExistingId = selectMaxId(state);
       const id = !isNull(maxExistingId) ? ++maxExistingId : 0;
       const pageObjects = simpleSelectPageObjects(state);
       const names = map(pageObjects, 'name');
-      let name = className;
-
-      for (let index = 0; !isPONameUnique(pageObjects, name); index++) {
-        const repeats = size(names.filter((_name) => toLower(_name).includes(toLower(className))));
-        name = `${className}${repeats + index}`;
-      }
+      const name = getUniquePageObjectName(className, names, pageObjects);
 
       const { pathname, origin, search } = new URL(url);
 
-      pageObjAdapter.addOne(state, {
+      const pageObject = {
         id,
-        name,
-        url,
         framework: lastSelectedFrameworkType,
         library: lastSelectedLibrary,
         annotationType: lastSelectedAnnotationType,
-        pathname,
-        search,
+        name,
         origin,
+        pathname,
+        pageData: null,
+        url,
+        search,
         ...(lastSelectedLocatorType ? { locatorType: lastSelectedLocatorType } : { locatorType: LocatorType.xPath }),
-      });
+      };
+
+      pageObjAdapter.addOne(state, pageObject);
       state.currentPageObject = id;
     })
     .addCase(addPageObj.rejected, (state, { error }) => {

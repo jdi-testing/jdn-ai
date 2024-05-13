@@ -1,11 +1,12 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { chain } from 'lodash';
-import { LocatorCalculationPriority, LocatorTaskStatus, ILocator } from '../types/locator.types';
+import { ILocator, LocatorCalculationPriority, LocatorTaskStatus } from '../types/locator.types';
 import { selectClassFilterByPO } from '../../filter/filter.selectors';
 
 import { filterLocatorsByClassFilter } from '../utils/filterLocators';
 import { selectLocatorsByPageObject, selectSortedLocators } from './locatorsByPO.selectors';
 import { filterInProgress, isProgressStatus } from '../utils/helpers';
+import { getTaskStatus } from '../utils/utils';
 
 export const selectFilteredLocators = createSelector(
   selectLocatorsByPageObject,
@@ -41,13 +42,22 @@ export const selectConfirmedLocators = createSelector(selectSortedFilteredLocato
 
 export const selectCalculatedByPageObj = createSelector(selectFilteredLocators, (locators: ILocator[]) =>
   locators.filter(
-    (_loc) => (_loc.locatorValue.taskStatus === LocatorTaskStatus.SUCCESS || _loc.isCustomLocator) && !_loc.deleted,
+    (_loc) =>
+      (getTaskStatus(_loc.locatorValue.xPathStatus, _loc.locatorValue.cssSelectorStatus) ===
+        LocatorTaskStatus.SUCCESS ||
+        _loc.isCustomLocator) &&
+      !_loc.deleted,
   ),
 );
 
 export const selectStoppedActiveByPageObject = createSelector(selectFilteredLocators, (elements) =>
   chain(elements)
-    .filter((el) => el.locatorValue.taskStatus === LocatorTaskStatus.REVOKED && !!el.active && !el.deleted)
+    .filter(
+      (el) =>
+        getTaskStatus(el.locatorValue.xPathStatus, el.locatorValue.cssSelectorStatus) === LocatorTaskStatus.REVOKED &&
+        !!el.active &&
+        !el.deleted,
+    )
     .value(),
 );
 
@@ -83,13 +93,16 @@ export const selectDeletedActiveByPageObj = createSelector(selectDeletedByPageOb
 
 export const selectWaitingByPageObj = createSelector(selectFilteredLocators, (elements) =>
   chain(elements)
-    .filter(
-      (el) =>
-        (isProgressStatus(el.locatorValue.taskStatus) ||
-          el.locatorValue.taskStatus === LocatorTaskStatus.REVOKED ||
-          el.locatorValue.taskStatus === LocatorTaskStatus.FAILURE) &&
-        !el.deleted,
-    )
+    .filter((el) => {
+      const taskStatus = getTaskStatus(el.locatorValue.xPathStatus, el.locatorValue.cssSelectorStatus);
+
+      const isFailureOrRevokedStatus =
+        isProgressStatus(taskStatus) ||
+        taskStatus === LocatorTaskStatus.REVOKED ||
+        taskStatus === LocatorTaskStatus.FAILURE;
+
+      return isFailureOrRevokedStatus && !el.deleted;
+    })
     .value(),
 );
 
@@ -137,7 +150,11 @@ export const selectInProgressGenerateHashes = createSelector(selectInProgressGen
 );
 
 export const selectFailedByPageObject = createSelector(selectFilteredLocators, (elements) =>
-  elements.filter((element) => element.locatorValue.taskStatus === LocatorTaskStatus.FAILURE),
+  elements.filter(
+    (element) =>
+      getTaskStatus(element.locatorValue.xPathStatus, element.locatorValue.cssSelectorStatus) ===
+      LocatorTaskStatus.FAILURE,
+  ),
 );
 
 export const selectFailedSelectedByPageObject = createSelector(selectFailedByPageObject, (elements) =>

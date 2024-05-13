@@ -151,3 +151,14 @@ export const generatePageObjectPerfTest = async (elements: ILocator[], pageObjec
   });
   saveAs(blob, `${page.name}.js`);
 };
+
+export const getUniquePageObjectName = (className: string, names: string[], pageObjects: any) => {
+  let name = className;
+
+  for (let index = 0; !isPONameUnique(pageObjects, name); index++) {
+    const repeats = size(names.filter((_name) => toLower(_name).includes(toLower(className))));
+    name = `${className}${repeats + index}`;
+  }
+
+  return name;
+};
