@@ -1,6 +1,6 @@
 import { type Middleware } from '@reduxjs/toolkit';
 import { selectAreInProgress } from '../../features/locators/selectors/locatorsByPO.selectors';
-import { CssSelectorsGenerationPayload, XpathMultipleGenerationPayload } from '../../services/webSocketMessageHandler';
+import { CssSelectorsGenerationPayload, XpathMultipleGenerationPayload } from '../../services/webSoket.types';
 
 class Throttler {
   accumulatedArgs: (CssSelectorsGenerationPayload | XpathMultipleGenerationPayload)[] = [];

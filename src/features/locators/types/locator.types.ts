@@ -113,3 +113,9 @@ export interface PredictedEntity {
   predicted_label: string;
   is_shown: boolean;
 }
+
+export interface IPartialLocatorDataForUpdate {
+  element_id?: ElementId;
+  jdnHash: JDNHash;
+  locatorValue: Partial<LocatorValue>;
+}

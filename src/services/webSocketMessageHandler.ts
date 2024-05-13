@@ -1,6 +1,6 @@
 import { failGeneration, updateLocatorGroup } from '../features/locators/locators.slice';
 import { selectLocatorByJdnHash } from '../features/locators/selectors/locators.selectors';
-import { ILocator, LocatorTaskStatus } from '../features/locators/types/locator.types';
+import { ILocator, IPartialLocatorDataForUpdate, LocatorTaskStatus } from '../features/locators/types/locator.types';
 import { NETWORK_ERROR, NO_ELEMENT_IN_DOCUMENT } from '../features/locators/utils/constants';
 import { locatorGenerationController } from '../features/locators/utils/LocatorGenerationController';
 import { sendMessage } from '../pageServices/connector';
@@ -14,40 +14,12 @@ import { selectAreInProgress } from '../features/locators/selectors/locatorsByPO
 import { selectPageDocumentForRobula } from './pageDocument/pageDocument.selectors';
 import { GeneralLocatorType, LocatorType } from '../common/types/common';
 import { throttler } from '../common/utils/throttler';
-
-// type AllPayloads = XpathMultipleGenerationPayload | CssSelectorsGenerationPayload | { id: string[] };
-
-interface WebSocketMessageEvent extends MessageEvent {
-  data: string;
-}
-
-const enum WSResponseAction {
-  PONG = 'pong',
-  RESULT_READY = 'result_ready',
-  STATUS_CHANGED = 'status_changed',
-  TASKS_REVOKED = 'tasks_revoked',
-}
-
-export interface XpathMultipleGenerationPayload {
-  id: string; // JDN-hash
-  result: string;
-}
-
-export interface CssSelectorsGenerationPayload {
-  id: string;
-  result: {
-    id: string; // JDN-hash
-    result: string;
-  }[];
-}
-
-// interface ResultData<T> {
-//   action: WSResponseAction;
-//   payload: T;
-//   result: any; //TODO: does result even exist? go backend and see what he sends, check all cases
-//   pong?: number;
-//   error_message?: string;
-// }
+import {
+  CssSelectorsGenerationPayload,
+  WebSocketMessageEvent,
+  WSResponseAction,
+  XpathMultipleGenerationPayload,
+} from './webSoket.types';
 
 const isCssSelectorsGenerationPayloadGuard = (payload: any): payload is CssSelectorsGenerationPayload => {
   return (
@@ -57,7 +29,7 @@ const isCssSelectorsGenerationPayloadGuard = (payload: any): payload is CssSelec
     payload.id.startsWith('css-selectors-gen') &&
     Array.isArray(payload.result) &&
     payload.result.every(
-      (res) => typeof res === 'object' && typeof res.id === 'string' && typeof res.result === 'string',
+      (res: any) => typeof res === 'object' && typeof res.id === 'string' && typeof res.result === 'string',
     )
   );
 };
@@ -73,10 +45,9 @@ export const updateSocketMessageHandler = (dispatch: any, state: any) => {
       return;
     }
 
-    //TODO does result even exist? go backend and see what he sends, check all cases
-    const { payload, action, result, pong, error_message: errorMessage } = JSON.parse(event.data);
+    const { payload, action, pong, error_message: errorMessage } = JSON.parse(event.data);
 
-    switch (action || result) {
+    switch (action) {
       case WSResponseAction.STATUS_CHANGED: {
         const { id: jdnHash, status } = payload;
         const element = selectLocatorByJdnHash(state, jdnHash);
@@ -125,7 +96,7 @@ export const updateSocketMessageHandler = (dispatch: any, state: any) => {
         break;
       }
       case WSResponseAction.RESULT_READY: {
-        let locators: ILocator[] = [];
+        let locators: IPartialLocatorDataForUpdate[] = [];
         const onStatusChange = (wsPayload: CssSelectorsGenerationPayload | XpathMultipleGenerationPayload) => {
           if (isCssSelectorsGenerationPayloadGuard(wsPayload)) {
             locators = wsPayload.result.map((res) => {
@@ -135,7 +106,7 @@ export const updateSocketMessageHandler = (dispatch: any, state: any) => {
                   cssSelector: res.result,
                   cssSelectorStatus: LocatorTaskStatus.SUCCESS,
                 },
-              } as ILocator;
+              };
             });
           } else {
             locators = [
@@ -145,7 +116,7 @@ export const updateSocketMessageHandler = (dispatch: any, state: any) => {
                   xPath: wsPayload.result,
                   xPathStatus: LocatorTaskStatus.SUCCESS,
                 },
-              } as ILocator,
+              },
             ];
           }
 

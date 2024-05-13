@@ -17,14 +17,13 @@ import {
   ElementId,
   IdentificationStatus,
   ILocator,
-  JDNHash,
+  IPartialLocatorDataForUpdate,
   LocatorCalculationPriority,
   LocatorsGenerationStatus,
   LocatorsState,
   LocatorTaskStatus,
   LocatorValidationErrorType,
   LocatorValidationWarnings,
-  LocatorValue,
 } from './types/locator.types';
 import { checkLocatorsValidityReducer } from './reducers/checkLocatorValidity.thunk';
 import { LocatorType } from '../../common/types/common';
@@ -288,7 +287,7 @@ const locatorsSlice = createSlice({
       {
         payload,
       }: PayloadAction<{
-        locators: { element_id?: ElementId; jdnHash: JDNHash; locatorValue: Partial<LocatorValue> }[];
+        locators: IPartialLocatorDataForUpdate[];
         pageObject: PageObject;
       }>,
     ) {
