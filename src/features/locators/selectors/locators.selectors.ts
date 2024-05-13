@@ -4,7 +4,6 @@ import { PageObject, PageObjectId } from '../../pageObjects/types/pageObjectSlic
 import { ElementId, ILocator } from '../types/locator.types';
 import { getLocator } from '../utils/locatorOutput';
 import { selectCurrentPageObject } from '../../pageObjects/selectors/pageObjects.selectors';
-import { getTaskStatus } from '../utils/utils';
 
 export const locatorsAdapter = createEntityAdapter<ILocator>({
   selectId: (locator) => locator.element_id,
@@ -14,13 +13,11 @@ const { selectAll, selectById } = locatorsAdapter.getSelectors<RootState>((state
 
 export const selectLocatorById = createSelector(selectById, (locator?: ILocator) => {
   if (locator) {
-    const taskStatus = getTaskStatus(locator.locatorValue.xPathStatus, locator.locatorValue.cssSelectorStatus);
     return {
       ...locator,
       locatorValue: {
         ...locator.locatorValue,
         output: getLocator(locator.locatorValue, locator.locatorType),
-        taskStatus,
       },
     };
   }
@@ -29,13 +26,11 @@ export const selectLocatorById = createSelector(selectById, (locator?: ILocator)
 
 export const selectLocators = createSelector(selectAll, (locators: ILocator[]) =>
   locators.map((locator) => {
-    const taskStatus = getTaskStatus(locator.locatorValue.xPathStatus, locator.locatorValue.cssSelectorStatus);
     return {
       ...locator,
       locatorValue: {
         ...locator.locatorValue,
         output: getLocator(locator.locatorValue, locator.locatorType),
-        taskStatus,
       },
     };
   }),
