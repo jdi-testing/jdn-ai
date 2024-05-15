@@ -22,13 +22,19 @@ const mainConfig = {
     index: './src/index.js',
     app: './src/app.jsx',
     contentScript: './src/pageServices/contentScripts/index.ts',
+    background: './src/pageServices/serviceWorker/background.js',
     options: './src/options/options.js',
   },
   output: {
     path: join(__dirname, 'dist'),
     filename: (chunkData) => {
-      return chunkData.chunk.name === 'options' ? '[name].js' : '[name].bundle.js';
+      if (chunkData.chunk.name === 'options' || chunkData.chunk.name === 'background') {
+        return '[name].js';
+      } else {
+        return '[name].bundle.js';
+      }
     },
+
     publicPath: './',
   },
   plugins: [
