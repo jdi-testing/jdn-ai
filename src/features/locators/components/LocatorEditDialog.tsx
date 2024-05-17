@@ -265,7 +265,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
     if (!isCreatingForm) {
       const fetchLocatorTypeOptions = async () => {
         try {
-          const options = await createLocatorTypeOptions(locatorValue);
+          const options = await createLocatorTypeOptions(locatorValue, isCurrentFrameworkVividus);
           setLocatorTypeOptions(options);
         } catch (error) {
           console.error('Error: can`t get options for locator:', error);

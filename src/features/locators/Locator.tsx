@@ -35,7 +35,7 @@ import { selectCalculatedActiveByPageObj, selectWaitingActiveByPageObj } from '.
 import { isLocatorListPage } from '../../app/utils/helpers';
 import { selectCurrentPageObject } from '../pageObjects/selectors/pageObjects.selectors';
 import { AnnotationType, FrameworkType, LocatorType } from '../../common/types/common';
-import { getLocatorTemplateWithVividus, renderColorizedJdiString } from './utils/locatorOutput';
+import { jdiColorizedString, vividusColorizedString } from './utils/locatorOutput';
 import { ScriptMsg } from '../../pageServices/scriptMsg.constants';
 import { OnboardingStep } from '../onboarding/constants';
 import { useOnboardingContext } from '../onboarding/OnboardingProvider';
@@ -164,22 +164,11 @@ export const Locator: FC<Props> = ({ element, currentPage, searchState, depth, s
       if (event.detail === 2) setIsEditModalOpen(true);
     };
 
-    // ToDo: make clean, fix DRY (check locatorOutput.tsx)
-    const vividusString = () => {
-      return (
-        <>
-          <span>{getLocatorTemplateWithVividus(pageObjectName, locatorType, element)}</span>(
-          <span className="jdn__locator_output-string">{locatorValue.output}</span>)
-          <br />
-        </>
-      );
-    };
-
     return (
       <span onClick={handleClick}>
         {isVividusFramework
-          ? vividusString()
-          : renderColorizedJdiString(annotationType, locatorType, locatorValue.output ?? '', type, name)}
+          ? vividusColorizedString(pageObjectName, locatorType, element, locatorValue.output ?? '')
+          : jdiColorizedString(annotationType, locatorType, locatorValue.output ?? '', type, name)}
       </span>
     );
   };
