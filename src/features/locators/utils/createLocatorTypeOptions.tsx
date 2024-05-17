@@ -160,5 +160,9 @@ export const createLocatorTypeOptions = async (locatorValue: LocatorValue, isViv
   }
 
   const optionsData = await splitUniqueAndNonUniqueAttributes(attributes);
-  return getLocatorTypeOptions(optionsData, locatorValue.cssSelector, locatorValue.xPath);
+  return getLocatorTypeOptions(
+    optionsData,
+    locatorValue.cssSelector ?? locatorValue.originalCssSelector ?? null,
+    locatorValue.xPath,
+  );
 };
