@@ -1,21 +1,21 @@
 import {
-  locators,
-  pageObjectMUI,
-  pageObjectHTML,
-  pageObjectVuetify,
-  pageObjectHTMLWithFindBy,
   getLocatorsByAnnotationType,
+  locators,
   locatorsVividus,
+  pageObjectHTML,
+  pageObjectHTMLWithFindBy,
+  pageObjectMUI,
   pageObjectVividus,
+  pageObjectVuetify,
 } from '../__mocks__/pageObjectMocks/pageObject.mock';
 import { elementsWithoutNames } from '../__mocks__/pageObjectMocks/elementsWithoutNames';
 import { elementsWithNames } from '../__mocks__/pageObjectMocks/elementsWithNames';
-import { pageObjectsNames } from '../__mocks__/pageObjectMocks/pageObjectNames';
+import { pageObjectsNames } from '../__mocks__/pageObjectMocks/pageObjectNames.mock.js';
 import { ElementLibrary } from '../../features/locators/types/generationClasses.types';
 import {
+  getClassName,
   getPageObjectTemplateForJdi,
   getPageObjectTemplateForVividus,
-  getClassName,
 } from '../../features/pageObjects/utils/pageObjectTemplate';
 import { createLocatorNames } from '../../features/pageObjects/utils/pageObject';
 
