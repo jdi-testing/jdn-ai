@@ -101,7 +101,7 @@ export const getLocatorString = (
 };
 
 // the same as getLocatorString only with additional formatting and css classes for colorized styles:
-export const renderColorizedJdiString = (
+export const jdiColorizedString = (
   annotationType: AnnotationType,
   locatorType: LocatorType,
   locatorOutput: string,
@@ -126,6 +126,21 @@ export const renderColorizedJdiString = (
     </>
   );
 };
+export const vividusColorizedString = (
+  pageObjectName: string,
+  locatorType: LocatorType,
+  element: ILocator,
+  locatorValueOutput: string,
+) => {
+  return (
+    <>
+      <span>{getLocatorTemplateWithVividus(pageObjectName, locatorType, element)}</span>(
+      <span className="jdn__locator_output-string">*{locatorValueOutput}</span>)
+      <br />
+    </>
+  );
+};
+
 // used in the coverage panel in the Copy option of the Context Menu:
 export const getLocatorWithJDIAnnotation = (locator: string, locatorType: LocatorType): string =>
   `${AnnotationType.UI}("${getLocatorAnnotationStringByType(locator, locatorType, AnnotationType.UI)}")`;
