@@ -152,7 +152,11 @@ const splitUniqueAndNonUniqueAttributes = async (attributes: ElementAttributes):
   return [uniqueAttributes, nonUniqueAttributes];
 };
 
-export const createLocatorTypeOptions = async (locatorValue: LocatorValue) => {
-  const optionsData = await splitUniqueAndNonUniqueAttributes(locatorValue.attributes);
+export const createLocatorTypeOptions = async (locatorValue: LocatorValue, isVividusFramework: boolean) => {
+  const attributes: ElementAttributes = {};
+  Object.assign(attributes, locatorValue.attributes);
+  if (isVividusFramework) delete attributes.dataAttributes;
+
+  const optionsData = await splitUniqueAndNonUniqueAttributes(attributes);
   return getLocatorTypeOptions(optionsData, locatorValue.cssSelector, locatorValue.xPath);
 };
