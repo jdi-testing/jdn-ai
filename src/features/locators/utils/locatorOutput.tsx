@@ -126,6 +126,13 @@ export const jdiColorizedString = (
     </>
   );
 };
+
+export const getLocatorTemplateWithVividus = (
+  pageObjectName: string,
+  locatorType: LocatorType,
+  locator: ILocator,
+): string => `variables.${pageObjectName}.${locator.type}.${locator.name}=By.${camelCase(locatorType)}`;
+
 export const vividusColorizedString = (
   pageObjectName: string,
   locatorType: LocatorType,
@@ -135,7 +142,7 @@ export const vividusColorizedString = (
   return (
     <>
       <span>{getLocatorTemplateWithVividus(pageObjectName, locatorType, element)}</span>(
-      <span className="jdn__locator_output-string">*{locatorValueOutput}</span>)
+      <span className="jdn__locator_output-string">{locatorValueOutput}</span>)
       <br />
     </>
   );
@@ -147,12 +154,6 @@ export const getLocatorWithJDIAnnotation = (locator: string, locatorType: Locato
 // used in the coverage panel in the Copy option of the Context Menu:
 export const getLocatorWithSelenium = (locator: string, option: string): string =>
   `${AnnotationType.FindBy}(${option} = "${locator}")`;
-
-export const getLocatorTemplateWithVividus = (
-  pageObjectName: string,
-  locatorType: LocatorType,
-  locator: ILocator,
-): string => `variables.${pageObjectName}.${locator.type}.${locator.name}=By.${camelCase(locatorType)}`;
 
 export const getFullLocatorVividusString = (
   pageObjectName: string,
