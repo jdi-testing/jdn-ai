@@ -1,4 +1,4 @@
-import { AsyncThunkAction } from '@reduxjs/toolkit';
+import { type AsyncThunkAction } from '@reduxjs/toolkit';
 import { Dispatch } from 'react';
 import { setScriptMessage } from '../app/main.slice';
 import { RootState } from '../app/store/store';
@@ -20,7 +20,7 @@ import { rerunGeneration } from '../features/locators/reducers/rerunGeneration.t
 import { stopGenerationGroup } from '../features/locators/reducers/stopGenerationGroup.thunk';
 import { copyLocator } from '../features/locators/utils/utils';
 import { selectLocatorByJdnHash } from '../features/locators/selectors/locators.selectors';
-import { ScriptMsg, dispatchingMessages } from './scriptMsg.constants';
+import { dispatchingMessages, ScriptMsg } from './scriptMsg.constants';
 import { selectPresentActiveLocators } from '../features/locators/selectors/locatorsByPO.selectors';
 import { selectCurrentPageObject } from '../features/pageObjects/selectors/pageObjects.selectors';
 import { FrameworkType } from '../common/types/common';
@@ -107,7 +107,7 @@ export const updateMessageHandler = (
     { message, param }: ScriptMessagePayload,
     sender: chrome.runtime.MessageSender,
     sendResponse: (response: Record<string, never>) => void,
-    _actions: Actions
+    _actions: Actions,
   ) => {
     if (_actions[message]) {
       _actions[message]!(param, sender, sendResponse);
@@ -117,6 +117,6 @@ export const updateMessageHandler = (
 
   connector.updateMessageListener(
     (payload: ScriptMessagePayload, sender: chrome.runtime.MessageSender, sendResponse: (response: any) => void) =>
-      messageHandler(payload, sender, sendResponse, actions)
+      messageHandler(payload, sender, sendResponse, actions),
   );
 };

@@ -22,7 +22,7 @@ async function waitForAllStylesToLoad() {
 export const getFullDocumentWithStyles = async () => {
   await waitForAllStylesToLoad();
 
-  const documentResult = await connector.attachContentScript(() => {
+  const documentResult = await connector.attachContentScript(async () => {
     const minifyHTML = (outerHTML: string) => {
       return outerHTML
         .replace(/\s{2,}/g, ' ') // replace multiple spaces with one
@@ -35,17 +35,27 @@ export const getFullDocumentWithStyles = async () => {
       return html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
     };
 
-    const fetchCSS = () => {
+    const fetchCSS = async () => {
       let allStyles = '';
       for (let i = 0; i < document.styleSheets.length; i++) {
         const sheet = document.styleSheets[i];
-        try {
-          const rules = sheet.rules || sheet.cssRules;
-          for (let j = 0; j < rules.length; j++) {
-            allStyles += rules[j].cssText + '\n';
+        if (sheet.href) {
+          try {
+            const response = await fetch(sheet.href);
+            const text = await response.text();
+            allStyles += text + '\n';
+          } catch (e) {
+            console.error("Can't fetch styles: ", e);
           }
-        } catch (e) {
-          console.error("Can't  fetch styles: ", e);
+        } else if (sheet.cssRules) {
+          try {
+            const rules = sheet.rules || sheet.cssRules;
+            for (let j = 0; j < rules.length; j++) {
+              allStyles += rules[j].cssText + '\n';
+            }
+          } catch (e) {
+            console.error("Can't fetch styles: ", e);
+          }
         }
       }
       return allStyles;
@@ -53,7 +63,7 @@ export const getFullDocumentWithStyles = async () => {
 
     let outerHTML = document.documentElement.outerHTML;
 
-    const stylesString = fetchCSS();
+    const stylesString = await fetchCSS();
     outerHTML = outerHTML.replace(/<link rel="stylesheet"[^>]+>/g, '');
     outerHTML = outerHTML.replace('</head>', `<style>\n${stylesString}</style></head>`);
 

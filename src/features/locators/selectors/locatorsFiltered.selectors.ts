@@ -70,7 +70,7 @@ export const selectCalculatedGenerateByPageObj = createSelector(selectCalculated
 );
 
 export const selectCalculatedAndCheckedByPageObj = createSelector(selectCalculatedByPageObj, (items) =>
-  items.filter((item) => item.isChecked === true),
+  items.filter((item) => item.isChecked),
 );
 
 export const selectDeletedByPageObj = createSelector(selectFilteredLocators, (items) =>
