@@ -119,10 +119,12 @@ export const createLocatorNames = (elements: ILocator[], library: ElementLibrary
 };
 
 export const getPageAttributes = async () => {
-  return connector.attachContentScript(() => {
+  const result = await connector.attachContentScript(() => {
     const { title, URL } = document;
     return { title, url: URL };
   });
+
+  return result;
 };
 
 export const getPage = (locators: ILocator[], pageObject: PageObject): { pageCode: string; title: string } => {
