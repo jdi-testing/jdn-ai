@@ -51,7 +51,8 @@ const App = () => {
     };
 
     if (backendAvailable === BackendStatus.Accessed) {
-      fetchTemplates();
+      // TODO: uncomment when  back-end will be ready (issues/1734)
+      // fetchTemplates();
       initLocatorSocketController(xpathConfig);
     }
   }, [backendAvailable]);
