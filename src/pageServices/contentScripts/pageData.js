@@ -41,6 +41,7 @@ export const pageData = () => {
         const _height = el.getBoundingClientRect().height;
         const _displayed = (_x < 0) | (_y < 0) | (_width <= 1) | (_height <= 1);
 
+        // prepare an object as payload for the predict endpoint on the backend
         return {
           tag_name: el.tagName,
           element_id: el.getAttribute(hashAttribute),

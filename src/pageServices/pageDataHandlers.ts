@@ -36,6 +36,22 @@ const sendToModel = async (payload: { elements: string; document: string }, endp
 
 type PredictElementsType = Promise<{ data?: PredictedEntity[]; pageData?: string; error?: string }>;
 
+interface PredictEndpointData {
+  element_id: string;
+  predicted_label: string;
+  childs: string[] | null;
+  displayed: boolean;
+  is_shown: boolean;
+}
+
+interface PreparedResponseData {
+  elementId: string;
+  predicted_label: string;
+  children: string[] | null;
+  displayed: boolean;
+  is_shown: boolean;
+}
+
 /* First, plugin collects necessary data from the page.
 And then tha data is sent to endpoint, according to selected library.
 Function returns predicted elements. */
@@ -46,12 +62,20 @@ export const predictElements = (endpoint: HttpEndpoint): PredictElementsType => 
   return Promise.all([sendMessage.getPageData(), getFullDocumentWithStyles()])
     .then(([pageDataResult, documentResult]) => {
       pageData = pageDataResult[0];
-      return sendToModel({ elements: pageData, document: documentResult }, endpoint);
+      const payload = { elements: pageData, document: documentResult };
+      return sendToModel(payload, endpoint);
     })
     .then(
-      (response) => {
+      (response: PredictEndpointData[]) => {
         removeOverlay();
-        return { data: response, pageData };
+        const preparedResponse: PreparedResponseData[] = response.map((item) => ({
+          elementId: item.element_id,
+          predicted_label: item.predicted_label,
+          children: item.childs,
+          displayed: item.displayed,
+          is_shown: item.is_shown,
+        }));
+        return { data: preparedResponse, pageData };
       },
       (error) => {
         removeOverlay();

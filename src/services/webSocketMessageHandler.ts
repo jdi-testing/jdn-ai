@@ -40,7 +40,7 @@ export const updateSocketMessageHandler = (dispatch: any, state: any) => {
   const messageHandler = (event: WebSocketMessageEvent | typeof NETWORK_ERROR) => {
     if (event === NETWORK_ERROR) {
       const inProgress = selectInProgressByPageObj(state);
-      const failedIds = inProgress.map(({ element_id }: ILocator) => element_id);
+      const failedIds = inProgress.map(({ elementId }: ILocator) => elementId);
       dispatch(failGeneration({ ids: failedIds, errorMessage: NETWORK_ERROR }));
       return;
     }
@@ -57,7 +57,7 @@ export const updateSocketMessageHandler = (dispatch: any, state: any) => {
         if (errorMessage === NO_ELEMENT_IN_DOCUMENT) {
           if (reScheduledTasks.has(jdnHash)) {
             reScheduledTasks.delete(jdnHash);
-            dispatch(failGeneration({ ids: [element.element_id], errorMessage }));
+            dispatch(failGeneration({ ids: [element.elementId], errorMessage }));
           } else {
             reScheduledTasks.add(jdnHash);
             const rescheduleTask = async () => {

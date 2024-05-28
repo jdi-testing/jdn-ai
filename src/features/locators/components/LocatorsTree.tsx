@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import { Tree } from 'antd';
 import { size } from 'lodash';
 import React, { ReactNode, useEffect, useMemo, useRef, useState } from 'react';
@@ -16,7 +15,7 @@ import { selectCurrentPageObject } from '../../pageObjects/selectors/pageObjects
 import { selectPresentLocatorsByPO } from '../selectors/locatorsByPO.selectors';
 import { selectFilteredLocators } from '../selectors/locatorsFiltered.selectors';
 import { isLocatorListPage } from '../../../app/utils/helpers';
-import { fullEscapeLocatorString, checkForEscaped } from '../utils/escapeLocatorString';
+import { checkForEscaped, fullEscapeLocatorString } from '../utils/escapeLocatorString';
 import { LocatorType } from '../../../common/types/common';
 import type RcTree from 'rc-tree';
 import cn from 'classnames';
@@ -98,7 +97,7 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
   const createLocatorsMap = () => {
     const map: Record<ElementId, ILocator> = {};
     for (let index = 0; index < locators.length; index++) {
-      map[locators[index].element_id] = locators[index];
+      map[locators[index].elementId] = locators[index];
     }
     return map;
   };
@@ -118,8 +117,8 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
     const createTree = (_data: LocatorTree[]): TreeNode[] => {
       const childNodes: TreeNode[] = [];
       _data.forEach((element, index) => {
-        const { element_id, children, parent_id, jdnHash, searchState, depth } = element;
-        const locator = locatorsMap[element_id];
+        const { elementId, children, parent_id, jdnHash, searchState, depth } = element;
+        const locator = locatorsMap[elementId];
         const locatorTaskStatus = getTaskStatus(
           locator.locatorValue.xPathStatus,
           locator.locatorValue.cssSelectorStatus,
@@ -135,7 +134,7 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
         });
 
         const node: TreeNode = {
-          key: element_id,
+          key: elementId,
           className,
           title: (
             <Locator

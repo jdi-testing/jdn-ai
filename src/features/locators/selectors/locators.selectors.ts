@@ -6,7 +6,7 @@ import { getLocator } from '../utils/locatorOutput';
 import { selectCurrentPageObject } from '../../pageObjects/selectors/pageObjects.selectors';
 
 export const locatorsAdapter = createEntityAdapter<ILocator>({
-  selectId: (locator) => locator.element_id,
+  selectId: (locator) => locator.elementId,
 });
 
 const { selectAll, selectById } = locatorsAdapter.getSelectors<RootState>((state) => state.locators.present);
@@ -50,7 +50,7 @@ export const isLocatorIndeterminate = createSelector(
     const hasChildToGenerate = (_locator: ILocator) => {
       const hasSelectedChild =
         _locator.children &&
-        _locator.children.some((childId) => locators.some((loc) => loc.element_id === childId && loc.isGenerated));
+        _locator.children.some((childId) => locators.some((loc) => loc.elementId === childId && loc.isGenerated));
       return (
         hasSelectedChild ||
         (_locator.children &&
@@ -71,14 +71,14 @@ export const areChildrenChecked = createSelector(
   (locators, locator) =>
     locator &&
     Boolean(locator.children?.length) &&
-    locator.children?.every((childId) => locators.some((loc) => loc.element_id === childId && loc.isGenerated)),
+    locator.children?.every((childId) => locators.some((loc) => loc.elementId === childId && loc.isGenerated)),
 );
 
 export const selectLocatorByJdnHash = createSelector(
   (state: RootState, jdnHash: string) => selectLocators(state).filter((loc) => loc.jdnHash === jdnHash),
   (state: RootState) => selectCurrentPageObject(state)?.locators,
   (locators, pageObjLocators) => {
-    return locators.find(({ element_id }) => pageObjLocators?.includes(element_id));
+    return locators.find(({ elementId }) => pageObjLocators?.includes(elementId));
   },
 );
 
@@ -101,6 +101,6 @@ export const simpleSelectLocatorByJdnHash = createDraftSafeSelector(
     simpleSelectLocators(state).filter((loc) => loc.jdnHash === jdnHash),
   (_state: EntityState<ILocator>, _: string, pageObject: PageObject) => pageObject.locators,
   (locators, pageObjLocators) => {
-    return locators.find(({ element_id }) => pageObjLocators?.includes(element_id));
+    return locators.find(({ elementId }) => pageObjLocators?.includes(elementId));
   },
 );

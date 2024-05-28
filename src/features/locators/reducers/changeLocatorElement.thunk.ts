@@ -15,10 +15,10 @@ export const changeLocatorElement = createAsyncThunk(
   async (payload: ChangeLocatorElementPayload, thunkAPI) => {
     // ToDo: fix legacy naming
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    const { locatorValue, element_id, locatorType, ...rest } = payload;
+    const { locatorValue, elementId, locatorType, ...rest } = payload;
 
     const state = thunkAPI.getState() as RootState;
-    const currentLocator = selectLocatorById(state, element_id);
+    const currentLocator = selectLocatorById(state, elementId);
 
     if (!currentLocator) return;
 
@@ -38,7 +38,11 @@ export const changeLocatorElement = createAsyncThunk(
 
     let foundHash, foundElementText, originalCssSelector, fullXpath;
 
-    ({ foundHash, foundElementText } = JSON.parse(await await evaluateLocator(locatorValue, locatorType, element_id)));
+    try {
+      ({ foundHash, foundElementText } = JSON.parse(await evaluateLocator(locatorValue, locatorType, elementId)));
+    } catch (error) {
+      console.error('change locator element error: ', error);
+    }
 
     if (!foundHash) {
       foundHash = generateId();

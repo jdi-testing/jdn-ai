@@ -5,9 +5,9 @@ import { locatorsAdapter, selectLocatorById, simpleSelectLocatorById } from '../
 import { ElementId, ILocator, LocatorsState, LocatorTaskStatus } from '../types/locator.types';
 import { locatorGenerationController } from '../utils/LocatorGenerationController';
 
-export const stopGeneration = createAsyncThunk('locators/stopGeneration', async (element_id: ElementId, thunkAPI) => {
+export const stopGeneration = createAsyncThunk('locators/stopGeneration', async (elementId: ElementId, thunkAPI) => {
   const state = thunkAPI.getState() as RootState;
-  const jdnHash = selectLocatorById(state, element_id)?.jdnHash;
+  const jdnHash = selectLocatorById(state, elementId)?.jdnHash;
   if (!jdnHash) return;
   return locatorGenerationController.revokeTasks([jdnHash]);
 });
@@ -23,7 +23,7 @@ export const stopGenerationReducer = (builder: ActionReducerMapBuilder<LocatorsS
       if (!existingLocator) return;
       // @ts-ignore
       locatorsAdapter.upsertOne(state, {
-        element_id: id,
+        elementId: id,
         locatorValue: {
           ...existingLocator.locatorValue,
           xPathStatus: LocatorTaskStatus.REVOKED,

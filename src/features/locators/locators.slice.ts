@@ -40,7 +40,7 @@ const initialState: LocatorsState = {
 };
 
 export interface ChangeLocatorAttributesPayload {
-  element_id: ElementId;
+  elementId: ElementId;
   type: ElementClass;
   name: string;
   locatorValue: string;
@@ -60,11 +60,9 @@ const locatorsSlice = createSlice({
       state.status = IdentificationStatus.success;
     },
     changeLocatorAttributes(state, { payload }: PayloadAction<ChangeLocatorAttributesPayload>) {
-      // ToDo: fix legacy naming
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      const { locatorValue, element_id, locatorType, ...rest } = payload;
+      const { locatorValue, elementId, locatorType, ...rest } = payload;
 
-      const currentLocator = simpleSelectLocatorById(state, element_id);
+      const currentLocator = simpleSelectLocatorById(state, elementId);
 
       if (!currentLocator) return;
 
@@ -118,31 +116,31 @@ const locatorsSlice = createSlice({
       { payload }: PayloadAction<ILocator[] | { locators: ILocator[]; fromScript: boolean }>,
     ) {
       const locators = Array.isArray(payload) ? payload : payload.locators;
-      locatorsAdapter.upsertMany(state, locators.map(({ element_id }) => ({ element_id, active: true })) as ILocator[]);
+      locatorsAdapter.upsertMany(state, locators.map(({ elementId }) => ({ elementId, active: true })) as ILocator[]);
     },
     elementGroupUnsetActive(
       state,
       { payload }: PayloadAction<ILocator[] | { locators: ILocator[]; fromScript: boolean }>,
     ) {
       const locators = Array.isArray(payload) ? payload : payload.locators;
-      const newValue = locators.map(({ element_id }) => ({ element_id, active: false }));
+      const newValue = locators.map(({ elementId }) => ({ elementId, active: false }));
       locatorsAdapter.upsertMany(state, newValue as ILocator[]);
     },
     elementSetActive(state, { payload }: PayloadAction<ILocator>) {
-      locatorsAdapter.upsertOne(state, { element_id: payload.element_id, active: true } as ILocator);
+      locatorsAdapter.upsertOne(state, { elementId: payload.elementId, active: true } as ILocator);
     },
     elementUnsetActive(state, { payload }: PayloadAction<ElementId>) {
-      locatorsAdapter.upsertOne(state, { element_id: payload, active: false } as ILocator);
+      locatorsAdapter.upsertOne(state, { elementId: payload, active: false } as ILocator);
     },
     failGeneration(state, { payload }: PayloadAction<{ ids: string[]; errorMessage?: string }>) {
       const { ids, errorMessage } = payload;
       console.error('NETWORK ERROR: ', errorMessage);
       if (errorMessage === NETWORK_ERROR) state.generationStatus = LocatorsGenerationStatus.failed;
-      const newValues = ids.map((element_id) => {
-        const existingLocator = simpleSelectLocatorById(state, element_id);
+      const newValues = ids.map((elementId) => {
+        const existingLocator = simpleSelectLocatorById(state, elementId);
         if (existingLocator) {
           return {
-            element_id,
+            elementId,
             locatorValue: {
               ...existingLocator.locatorValue,
               xPathStatus: LocatorTaskStatus.FAILURE,
@@ -165,22 +163,22 @@ const locatorsSlice = createSlice({
     },
     setActiveSingle(state, { payload: locator }: PayloadAction<ILocator>) {
       const newValue = simpleSelectLocatorsByPageObject(state, locator.pageObj).map((_loc) =>
-        _loc.element_id === locator.element_id ? { ..._loc, active: true } : { ..._loc, active: false },
+        _loc.elementId === locator.elementId ? { ..._loc, active: true } : { ..._loc, active: false },
       );
       locatorsAdapter.upsertMany(state, newValue);
     },
     setCalculationPriority(
       state,
-      { payload }: PayloadAction<{ element_id?: ElementId; priority: LocatorCalculationPriority; ids?: ElementId[] }>,
+      { payload }: PayloadAction<{ elementId?: ElementId; priority: LocatorCalculationPriority; ids?: ElementId[] }>,
     ) {
       // ToDo: fix legacy naming
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      const { element_id, ids, priority } = payload;
-      if (element_id) locatorsAdapter.upsertOne(state, { element_id, priority } as ILocator);
+      const { elementId, ids, priority } = payload;
+      if (elementId) locatorsAdapter.upsertOne(state, { elementId, priority } as ILocator);
       if (ids) {
         // ToDo: fix legacy naming
         // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-shadow
-        const newValue: Partial<ILocator>[] = ids.map((element_id) => ({ element_id, priority }));
+        const newValue: Partial<ILocator>[] = ids.map((elementId) => ({ elementId, priority }));
         locatorsAdapter.upsertMany(state, newValue as ILocator[]);
       }
     },
@@ -191,7 +189,7 @@ const locatorsSlice = createSlice({
       const toggleGenerate = (_locator: ILocator) => {
         if (_locator.children)
           _locator.children.forEach((childId) => {
-            newValue.push({ element_id: childId, isGenerated });
+            newValue.push({ elementId: childId, isGenerated });
             const child = simpleSelectLocatorById(state, childId);
             if (child && size(child.children)) toggleGenerate(child);
           });
@@ -205,7 +203,7 @@ const locatorsSlice = createSlice({
       const toggleIsChecked = (_locator: ILocator) => {
         if (_locator.children)
           _locator.children.forEach((childId) => {
-            newValue.push({ element_id: childId, isChecked });
+            newValue.push({ elementId: childId, isChecked });
             const child = simpleSelectLocatorById(state, childId);
             if (child && size(child.children)) toggleIsChecked(child);
           });
@@ -215,18 +213,18 @@ const locatorsSlice = createSlice({
     },
     setElementGroupGeneration(state, { payload }: PayloadAction<{ locators: ILocator[]; isGenerated: boolean }>) {
       const { locators, isGenerated } = payload;
-      locatorsAdapter.upsertMany(state, locators.map(({ element_id }) => ({ element_id, isGenerated })) as ILocator[]);
+      locatorsAdapter.upsertMany(state, locators.map(({ elementId }) => ({ elementId, isGenerated })) as ILocator[]);
     },
-    setJdnHash(state, { payload }: PayloadAction<{ element_id: ElementId; jdnHash: string }>) {
+    setJdnHash(state, { payload }: PayloadAction<{ elementId: ElementId; jdnHash: string }>) {
       // ToDo: fix legacy naming
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      const { element_id, jdnHash } = payload;
-      locatorsAdapter.upsertOne(state, { element_id, jdnHash } as ILocator);
+      const { elementId, jdnHash } = payload;
+      locatorsAdapter.upsertOne(state, { elementId, jdnHash } as ILocator);
     },
-    setScrollToLocator(state, { payload: element_id }: PayloadAction<ElementId>) {
-      state.scrollToLocator = element_id;
+    setScrollToLocator(state, { payload: elementId }: PayloadAction<ElementId>) {
+      state.scrollToLocator = elementId;
     },
-    setValidity(state, { payload }: PayloadAction<{ element_id: ElementId; message: ILocator['message'] }>) {
+    setValidity(state, { payload }: PayloadAction<{ elementId: ElementId; message: ILocator['message'] }>) {
       locatorsAdapter.upsertOne(state, payload as ILocator);
     },
     toggleDeleted(state, { payload }: PayloadAction<string>) {
@@ -241,9 +239,9 @@ const locatorsSlice = createSlice({
     },
     toggleDeletedGroup(state, { payload }: PayloadAction<ILocator[]>) {
       const newValue: Partial<ILocator>[] = [];
-      payload.forEach(({ element_id, deleted, isGenerated }) => {
+      payload.forEach(({ elementId, deleted, isGenerated }) => {
         // when we delete locator, we uncheck it, when restore - keep isGenerated state as is
-        newValue.push({ element_id, deleted: !deleted, isGenerated: !deleted ? false : isGenerated });
+        newValue.push({ elementId, deleted: !deleted, isGenerated: !deleted ? false : isGenerated });
       });
       locatorsAdapter.upsertMany(state, newValue as ILocator[]);
     },
@@ -253,32 +251,32 @@ const locatorsSlice = createSlice({
       if (!locator) return;
       // ToDo: fix legacy naming
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      const { isGenerated, element_id } = locator;
-      locatorsAdapter.upsertOne(state, { element_id, isGenerated: !isGenerated } as ILocator);
+      const { isGenerated, elementId } = locator;
+      locatorsAdapter.upsertOne(state, { elementId, isGenerated: !isGenerated } as ILocator);
     },
     toggleLocatorIsChecked(state, { payload }: PayloadAction<string>) {
       const locator = simpleSelectLocatorById(state, payload);
       if (!locator) return;
       // ToDo: fix legacy naming
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      const { isChecked, element_id } = locator;
-      locatorsAdapter.upsertOne(state, { element_id, isChecked: !isChecked } as ILocator);
+      const { isChecked, elementId } = locator;
+      locatorsAdapter.upsertOne(state, { elementId, isChecked: !isChecked } as ILocator);
     },
     toggleAllLocatorsIsChecked(state, { payload }: PayloadAction<{ locators: ILocator[]; isChecked: boolean }>) {
       const { locators, isChecked } = payload;
-      locatorsAdapter.upsertMany(state, locators.map(({ element_id }) => ({ element_id, isChecked })) as ILocator[]);
+      locatorsAdapter.upsertMany(state, locators.map(({ elementId }) => ({ elementId, isChecked })) as ILocator[]);
     },
     toggleElementGroupIsChecked(state, { payload }: PayloadAction<ILocator[]>) {
       const newValue: Partial<ILocator>[] = [];
-      payload.forEach(({ element_id, isChecked }) => {
-        newValue.push({ element_id, isChecked: !isChecked });
+      payload.forEach(({ elementId, isChecked }) => {
+        newValue.push({ elementId, isChecked: !isChecked });
       });
       locatorsAdapter.upsertMany(state, newValue as ILocator[]);
     },
     toggleElementGroupGeneration(state, { payload }: PayloadAction<ILocator[]>) {
       const newValue: Partial<ILocator>[] = [];
-      payload.forEach(({ element_id, isGenerated }) => {
-        newValue.push({ element_id, isGenerated: !isGenerated });
+      payload.forEach(({ elementId, isGenerated }) => {
+        newValue.push({ elementId, isGenerated: !isGenerated });
       });
       locatorsAdapter.upsertMany(state, newValue as ILocator[]);
     },
@@ -292,13 +290,13 @@ const locatorsSlice = createSlice({
       }>,
     ) {
       const { locators, pageObject } = payload;
-      const newValue = locators.map(({ element_id, jdnHash, locatorValue }) => {
-        const existingLocator = element_id
-          ? simpleSelectLocatorById(state, element_id)
+      const newValue = locators.map(({ elementId, jdnHash, locatorValue }) => {
+        const existingLocator = elementId
+          ? simpleSelectLocatorById(state, elementId)
           : simpleSelectLocatorByJdnHash(state, jdnHash, pageObject);
         return (
           existingLocator && {
-            element_id: existingLocator.element_id,
+            elementId: existingLocator.elementId,
             locatorValue: { ...existingLocator.locatorValue, ...locatorValue },
           }
         );

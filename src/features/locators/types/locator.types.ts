@@ -109,13 +109,13 @@ export interface ILocator extends PredictedEntity {
 }
 
 export interface PredictedEntity {
-  element_id: ElementId;
+  elementId: ElementId;
   predicted_label: string;
   is_shown: boolean;
 }
 
 export interface IPartialLocatorDataForUpdate {
-  element_id?: ElementId;
+  elementId?: ElementId;
   jdnHash: JDNHash;
   locatorValue: Partial<LocatorValue>;
 }

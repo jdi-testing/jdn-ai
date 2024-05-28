@@ -34,7 +34,7 @@ export const selectPresentLocatorsByPO = createSelector(
   (locators, pageObject) => {
     const locByPageObj = pageObject?.locators || [];
     return locators
-      .filter((locator) => locByPageObj.includes(locator.element_id))
+      .filter((locator) => locByPageObj.includes(locator.elementId))
       .map((locator) => {
         const annotationType = locator.annotationType || pageObject?.annotationType;
         const locatorType = locator.locatorType || pageObject?.locatorType || LocatorType.xPath;

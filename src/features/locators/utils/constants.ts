@@ -21,7 +21,7 @@ export const newLocatorStub: ILocator = {
   elemId: '',
   elemName: '',
   elemText: '',
-  element_id: '',
+  elementId: '',
   is_shown: true,
   jdnHash: '',
   parent_id: '',

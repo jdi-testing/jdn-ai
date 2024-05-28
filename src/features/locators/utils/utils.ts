@@ -33,15 +33,16 @@ import { escapeLocatorString } from './escapeLocatorString';
 export const isValidJavaVariable = (value: string) => /^[a-zA-Z_$]([a-zA-Z0-9_])*$/.test(value);
 
 // wishes for future refactorings: get rid these three functions and call sendMessage<> directly
-export const evaluateXpath = (xPath: string, element_id?: ElementId, originJdnHash?: string) =>
-  sendMessage.evaluateXpath({ xPath, element_id, originJdnHash });
+export const evaluateXpath = (xPath: string, elementId?: ElementId, originJdnHash?: string) => {
+  return sendMessage.evaluateXpath({ xPath, elementId, originJdnHash });
+};
 
 export const evaluateStandardLocator = (
   selector: string,
   locatorType: LocatorType,
-  element_id?: ElementId,
+  elementId?: ElementId,
   originJdnHash?: string,
-) => sendMessage.evaluateStandardLocator({ selector, locatorType, element_id, originJdnHash });
+) => sendMessage.evaluateStandardLocator({ selector, locatorType, elementId, originJdnHash });
 
 const prepareLocatorStringForEvaluation = (type: LocatorType, string: string): string => {
   const escapeString = escapeLocatorString(string);
@@ -64,17 +65,17 @@ export const evaluateLocator = async (
   return evaluateStandardLocator(preparedValue, locatorType, elementId, jdnHash);
 };
 
-export const generateSelectorByHash = (element_id: ElementId, jdnHash: string) =>
-  sendMessage.generateSelectorByHash({ element_id, jdnHash });
+export const generateSelectorByHash = (elementId: ElementId, jdnHash: string) =>
+  sendMessage.generateSelectorByHash({ elementId, jdnHash });
 
 export const isValidLocator = (message?: LocatorValidationErrorType) => {
   return !message || message === LocatorValidationWarnings.NewElement;
 };
 
-export const checkDuplicates = (foundHash: string, locators: ILocator[], element_id: ElementId) =>
+export const checkDuplicates = (foundHash: string, locators: ILocator[], elementId: ElementId) =>
   locators.filter(
-    ({ jdnHash, message, element_id: _element_id }) =>
-      jdnHash === foundHash && isValidLocator(message) && _element_id !== element_id,
+    ({ jdnHash, message, elementId: _elementId }) =>
+      jdnHash === foundHash && isValidLocator(message) && _elementId !== elementId,
   );
 
 export const createNewName = (
@@ -84,9 +85,7 @@ export const createNewName = (
   elements: ILocator[],
 ): string => {
   const names = chain(elements).map('name').without(element.name).value();
-  const newName = createElementName({ ...element }, library, names, newType);
-
-  return newName;
+  return createElementName({ ...element }, library, names, newType);
 };
 
 export const setIndents = (ref: React.RefObject<HTMLDivElement>, depth: number) => {
@@ -181,7 +180,7 @@ export const getLocatorValidationStatus = (message: LocatorValidationErrorType):
 export const getLocatorValueOnTypeSwitch = async (
   newLocatorType: LocatorType,
   validationMessage: LocatorValidationErrorType,
-  element_id: ElementId,
+  elementId: ElementId,
   jdnHash: JDNHash,
   locatorValue: LocatorValue,
   form: FormInstance<FormValues>,
@@ -210,9 +209,9 @@ export const getLocatorValueOnTypeSwitch = async (
 
   if (isStandardLocator) {
     if (isLocatorLeadsToNewElement || isStandardLocatorValueFalsy) {
-      const { foundHash } = JSON.parse(await evaluateXpath(form.getFieldValue('locator'), element_id, jdnHash));
+      const { foundHash } = JSON.parse(await evaluateXpath(form.getFieldValue('locator'), elementId, jdnHash));
 
-      ({ cssSelector: newLocatorValue } = await generateSelectorByHash(element_id, foundHash));
+      ({ cssSelector: newLocatorValue } = await generateSelectorByHash(elementId, foundHash));
     } else {
       if (newLocatorType === LocatorType.cssSelector) newLocatorValue = locatorValue.cssSelector; // а не original ли надо делать?
       try {
@@ -224,7 +223,7 @@ export const getLocatorValueOnTypeSwitch = async (
   } else {
     if (isLocatorLeadsToNewElement || !locatorValue.xPath) {
       const { foundHash } = JSON.parse(
-        await evaluateStandardLocator(form.getFieldValue('locator'), newLocatorType, element_id),
+        await evaluateStandardLocator(form.getFieldValue('locator'), newLocatorType, elementId),
       );
       newLocatorValue = await getElementFullXpath(foundHash);
     } else {
@@ -241,29 +240,29 @@ export const getTaskStatus = (
 ): LocatorTaskStatus | null => {
   if (!xPathStatus && !cssSelectorStatus) return LocatorTaskStatus.NOT_STARTED;
 
-  return xPathStatus;
+  // return xPathStatus;
   // TODO: uncomment when  back-end will be ready (issues/1284) 246-267 lines
-  // const statusMap = {
-  //   success: xPathStatus === LocatorTaskStatus.SUCCESS && cssSelectorStatus === LocatorTaskStatus.SUCCESS,
-  //   pending: xPathStatus === LocatorTaskStatus.PENDING || cssSelectorStatus === LocatorTaskStatus.PENDING,
-  //   failure: xPathStatus === LocatorTaskStatus.FAILURE || cssSelectorStatus === LocatorTaskStatus.FAILURE,
-  //   revoked: xPathStatus === LocatorTaskStatus.REVOKED || cssSelectorStatus === LocatorTaskStatus.REVOKED,
-  // };
-  //
-  // if (statusMap.success) {
-  //   return LocatorTaskStatus.SUCCESS;
-  // }
-  // if (statusMap.pending) {
-  //   return LocatorTaskStatus.PENDING;
-  // }
-  // if (statusMap.failure) {
-  //   return LocatorTaskStatus.FAILURE;
-  // }
-  // if (statusMap.revoked) {
-  //   return LocatorTaskStatus.REVOKED;
-  // }
-  // // fallback for any unhandled cases
-  // return null;
+  const statusMap = {
+    success: xPathStatus === LocatorTaskStatus.SUCCESS && cssSelectorStatus === LocatorTaskStatus.SUCCESS,
+    pending: xPathStatus === LocatorTaskStatus.PENDING || cssSelectorStatus === LocatorTaskStatus.PENDING,
+    failure: xPathStatus === LocatorTaskStatus.FAILURE || cssSelectorStatus === LocatorTaskStatus.FAILURE,
+    revoked: xPathStatus === LocatorTaskStatus.REVOKED || cssSelectorStatus === LocatorTaskStatus.REVOKED,
+  };
+
+  if (statusMap.success) {
+    return LocatorTaskStatus.SUCCESS;
+  }
+  if (statusMap.pending) {
+    return LocatorTaskStatus.PENDING;
+  }
+  if (statusMap.failure) {
+    return LocatorTaskStatus.FAILURE;
+  }
+  if (statusMap.revoked) {
+    return LocatorTaskStatus.REVOKED;
+  }
+  // fallback for any unhandled cases
+  return null;
 };
 
 export const hasAllLocators = ({ locatorValue }: ILocator) =>

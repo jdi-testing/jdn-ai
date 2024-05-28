@@ -56,8 +56,8 @@ export const identifyElements = createAsyncThunk('locators/identifyElements', as
       .map((el: PredictedEntity) => {
         return {
           ...el,
-          element_id: `${el.element_id}_${pageObj}`,
-          jdnHash: el.element_id,
+          elementId: `${el.elementId}_${pageObj}`,
+          jdnHash: el.elementId,
           pageObj: pageObj,
         };
       });

@@ -15,8 +15,8 @@ export const isStringMatchesReservedWord = (string: string) => javaReservedWords
 // ToDo: uncomment with validation rework, see issue #1176:
 // export const isStringMatchesReservedWordPerfTest = (string: string) => perfReservedWords.includes(string);
 
-export const isNameUnique = (elements: ILocator[], element_id: ElementId, newName: string) =>
-  !elements.find((elem) => elem.name === newName && elem.element_id !== element_id);
+export const isNameUnique = (elements: ILocator[], elementId: ElementId, newName: string) =>
+  !elements.find((elem) => elem.name === newName && elem.elementId !== elementId);
 
 export const isPONameUnique = (elements: PageObject[], newName: string) =>
   !elements.find((elem) => toLower(elem.name) === toLower(newName));

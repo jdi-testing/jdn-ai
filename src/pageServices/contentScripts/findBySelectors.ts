@@ -69,7 +69,7 @@ export const findBySelectors = () => {
         removeConflictedClasses(document.querySelectorAll(`[${JDN_LABEL}]`), selectorsMap),
         selectorsMap,
       ).map((_elem) => ({
-        element_id: _elem.getAttribute(JDN_HASH),
+        elementId: _elem.getAttribute(JDN_HASH),
         predicted_label: _elem.getAttribute(JDN_LABEL),
       })),
     );

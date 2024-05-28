@@ -95,11 +95,11 @@ export const LocatorMenu: React.FC<Props> = ({ setIsEditModalOpen, children, tri
   const handleDelete = () =>
     actualSelected.length > 1
       ? dispatch(toggleDeletedGroup(actualSelected))
-      : dispatch(toggleDeleted(actualSelected[0].element_id));
+      : dispatch(toggleDeleted(actualSelected[0].elementId));
 
   const handleUpPriority = () => {
     const hashes = [...decreasedPrioritySelected, ...noPrioritySelected].map((element) => element.jdnHash);
-    const ids = [...decreasedPrioritySelected, ...noPrioritySelected].map((element) => element.element_id);
+    const ids = [...decreasedPrioritySelected, ...noPrioritySelected].map((element) => element.elementId);
     dispatch(
       setCalculationPriority({
         ids,
@@ -111,7 +111,7 @@ export const LocatorMenu: React.FC<Props> = ({ setIsEditModalOpen, children, tri
 
   const handleDownPriority = () => {
     const hashes = [...increasedPrioritySelected, ...noPrioritySelected].map((element) => element.jdnHash);
-    const ids = [...increasedPrioritySelected, ...noPrioritySelected].map((element) => element.element_id);
+    const ids = [...increasedPrioritySelected, ...noPrioritySelected].map((element) => element.elementId);
     dispatch(
       setCalculationPriority({
         ids,
@@ -124,13 +124,13 @@ export const LocatorMenu: React.FC<Props> = ({ setIsEditModalOpen, children, tri
   const handlePause = () => {
     inProgressSelected.length > 1
       ? dispatch(stopGenerationGroup(inProgressSelected))
-      : dispatch(stopGeneration(inProgressSelected[0].element_id));
+      : dispatch(stopGeneration(inProgressSelected[0].elementId));
   };
 
   const handleRestore = () =>
     deletedActive.length > 1
       ? dispatch(toggleDeletedGroup(deletedActive))
-      : dispatch(toggleDeleted(deletedActive[0].element_id));
+      : dispatch(toggleDeleted(deletedActive[0].elementId));
 
   const handleMenuClick = ({ domEvent }: { domEvent: SyntheticEvent }) => {
     domEvent.stopPropagation();
