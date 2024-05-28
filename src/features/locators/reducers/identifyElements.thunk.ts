@@ -103,7 +103,6 @@ export const onLocatorsCreated: Middleware = (store) => (next) => (action) => {
     const { generateXpath, generateCssSelector } = selectAutoGeneratingLocatorTypes(state as RootState);
     // generateCssSelector: false because it's run with attributes generation for performance reasons
     // ToDo: take generateCssSelector from selectAutoGeneratingLocatorTypes, when backend will be ready
-    // console.log('generateCssSelector: ', generateCssSelector); // LOG
     // @ts-ignore
     store.dispatch(runLocatorsGeneration({ locators, generateXpath, generateCssSelector }));
   }

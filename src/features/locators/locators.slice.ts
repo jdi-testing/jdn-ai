@@ -171,13 +171,11 @@ const locatorsSlice = createSlice({
       state,
       { payload }: PayloadAction<{ elementId?: ElementId; priority: LocatorCalculationPriority; ids?: ElementId[] }>,
     ) {
-      // ToDo: fix legacy naming
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       const { elementId, ids, priority } = payload;
       if (elementId) locatorsAdapter.upsertOne(state, { elementId, priority } as ILocator);
       if (ids) {
-        // ToDo: fix legacy naming
-        // eslint-disable-next-line @typescript-eslint/naming-convention, @typescript-eslint/no-shadow
+        // TODO: fix legacy naming
+        // eslint-disable-next-line @typescript-eslint/no-shadow
         const newValue: Partial<ILocator>[] = ids.map((elementId) => ({ elementId, priority }));
         locatorsAdapter.upsertMany(state, newValue as ILocator[]);
       }
@@ -216,8 +214,6 @@ const locatorsSlice = createSlice({
       locatorsAdapter.upsertMany(state, locators.map(({ elementId }) => ({ elementId, isGenerated })) as ILocator[]);
     },
     setJdnHash(state, { payload }: PayloadAction<{ elementId: ElementId; jdnHash: string }>) {
-      // ToDo: fix legacy naming
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       const { elementId, jdnHash } = payload;
       locatorsAdapter.upsertOne(state, { elementId, jdnHash } as ILocator);
     },
@@ -249,16 +245,13 @@ const locatorsSlice = createSlice({
       // ToDo isGenerated refactoring
       const locator = typeof payload === 'string' ? simpleSelectLocatorById(state, payload) : payload;
       if (!locator) return;
-      // ToDo: fix legacy naming
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       const { isGenerated, elementId } = locator;
       locatorsAdapter.upsertOne(state, { elementId, isGenerated: !isGenerated } as ILocator);
     },
     toggleLocatorIsChecked(state, { payload }: PayloadAction<string>) {
       const locator = simpleSelectLocatorById(state, payload);
       if (!locator) return;
-      // ToDo: fix legacy naming
-      // eslint-disable-next-line @typescript-eslint/naming-convention
+
       const { isChecked, elementId } = locator;
       locatorsAdapter.upsertOne(state, { elementId, isChecked: !isChecked } as ILocator);
     },

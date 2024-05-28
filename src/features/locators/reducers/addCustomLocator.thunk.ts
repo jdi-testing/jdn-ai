@@ -29,8 +29,7 @@ export const addCustomLocator = createAsyncThunk(
     let foundElementText;
     let originalCssSelector = '';
     let fullXpath = '';
-    // ToDo: fix legacy naming
-    // eslint-disable-next-line @typescript-eslint/naming-convention
+
     const elementId = `${generateId()}_${pageObjectId}`;
 
     if (getLocatorValidationStatus(message) === ValidationStatus.SUCCESS) {

@@ -13,8 +13,6 @@ type ChangeLocatorElementPayload = ChangeLocatorAttributesPayload;
 export const changeLocatorElement = createAsyncThunk(
   'locators/changeLocatorElement',
   async (payload: ChangeLocatorElementPayload, thunkAPI) => {
-    // ToDo: fix legacy naming
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     const { locatorValue, elementId, locatorType, ...rest } = payload;
 
     const state = thunkAPI.getState() as RootState;
