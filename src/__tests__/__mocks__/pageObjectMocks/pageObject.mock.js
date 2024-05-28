@@ -4,7 +4,7 @@ export const getLocatorsByAnnotationType = (value) => {
   return [
     {
       attrId: '',
-      element_id: '0955274655778840492142094709',
+      elementId: '0955274655778840492142094709',
       is_shown: true,
       height: 60,
       locatorValue: {
@@ -28,7 +28,7 @@ export const getLocatorsByAnnotationType = (value) => {
     },
     {
       attrId: '',
-      element_id: '2022378243778840502461724770',
+      elementId: '2022378243778840502461724770',
       is_shown: true,
       height: 15.3333339691,
       locatorValue: {
@@ -52,7 +52,7 @@ export const getLocatorsByAnnotationType = (value) => {
     },
     {
       attrId: '',
-      element_id: '2713188863778840498565585241',
+      elementId: '2713188863778840498565585241',
       is_shown: true,
       height: 38.6666679382,
       locatorValue: {
@@ -79,7 +79,7 @@ export const getLocatorsByAnnotationType = (value) => {
 export const locators = [
   {
     attrId: '',
-    element_id: '0955274655778840492142094709',
+    elementId: '0955274655778840492142094709',
     is_shown: true,
     height: 60,
     locatorValue: {
@@ -103,7 +103,7 @@ export const locators = [
   },
   {
     attrId: '',
-    element_id: '2022378243778840502461724770',
+    elementId: '2022378243778840502461724770',
     is_shown: true,
     height: 15.3333339691,
     locatorValue: {
@@ -127,7 +127,7 @@ export const locators = [
   },
   {
     attrId: '',
-    element_id: '2713188863778840498565585241',
+    elementId: '2713188863778840498565585241',
     is_shown: true,
     height: 38.6666679382,
     locatorValue: {
@@ -153,7 +153,7 @@ export const locators = [
 export const locatorsWithFindBy = [
   {
     attrId: '',
-    element_id: '0955274655778840492142094709',
+    elementId: '0955274655778840492142094709',
     is_shown: true,
     height: 60,
     locatorValue: {
@@ -177,7 +177,7 @@ export const locatorsWithFindBy = [
   },
   {
     attrId: '',
-    element_id: '2022378243778840502461724770',
+    elementId: '2022378243778840502461724770',
     is_shown: true,
     height: 15.3333339691,
     locatorValue: {
@@ -201,7 +201,7 @@ export const locatorsWithFindBy = [
   },
   {
     attrId: '',
-    element_id: '2713188863778840498565585241',
+    elementId: '2713188863778840498565585241',
     is_shown: true,
     height: 38.6666679382,
     locatorValue: {
@@ -226,10 +226,10 @@ export const locatorsWithFindBy = [
 
 export const locatorsVividus = [
   {
-    element_id: '0057770603115098154872149076_0',
+    elementId: '0057770603115098154872149076_0',
     is_shown: true,
     predicted_label: 'label',
-    childs: ['1052464727115098158766915230'],
+    // childs: ['1052464727115098158766915230'],
     displayed: false,
     jdnHash: '0057770603115098154872149076',
     pageObj: 0,
@@ -257,10 +257,10 @@ export const locatorsVividus = [
     locatorType: LocatorType.cssSelector,
   },
   {
-    element_id: '0735357117115098156691382591_0',
+    elementId: '0735357117115098156691382591_0',
     is_shown: true,
     predicted_label: 'label',
-    childs: null,
+    // childs: null,
     displayed: false,
     jdnHash: '0735357117115098156691382591',
     pageObj: 0,
@@ -292,10 +292,10 @@ export const locatorsVividus = [
     isGenerated: true,
   },
   {
-    element_id: '0790139442115098150038335533_0',
+    elementId: '0790139442115098150038335533_0',
     is_shown: true,
     predicted_label: 'textarea',
-    childs: null,
+    // childs: null,
     displayed: false,
     jdnHash: '0790139442115098150038335533',
     pageObj: 0,
@@ -327,10 +327,10 @@ export const locatorsVividus = [
     isGenerated: true,
   },
   {
-    element_id: '0928942213115098152027249027_0',
+    elementId: '0928942213115098152027249027_0',
     is_shown: true,
     predicted_label: 'label',
-    childs: null,
+    // childs: null,
     displayed: false,
     jdnHash: '0928942213115098152027249027',
     pageObj: 0,

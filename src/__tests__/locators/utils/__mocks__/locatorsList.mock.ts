@@ -5,7 +5,7 @@ import { LocatorType } from '../../../../common/types/common';
 
 export const locatorsListMock = [
   {
-    element_id: '7967190244322359771369749968_0',
+    elementId: '7967190244322359771369749968_0',
     is_shown: true,
     isGenerated: true,
     pageObj: 0,
@@ -28,7 +28,7 @@ export const locatorsListMock = [
     isChecked: false,
   },
   {
-    element_id: '3969471880322359761484771163_0',
+    elementId: '3969471880322359761484771163_0',
     is_shown: true,
     isGenerated: true,
     pageObj: 0,
@@ -51,7 +51,7 @@ export const locatorsListMock = [
     isChecked: false,
   },
   {
-    element_id: '0045220328322359764482356698_0',
+    elementId: '0045220328322359764482356698_0',
     is_shown: true,
     isGenerated: true,
     pageObj: 0,
@@ -74,7 +74,7 @@ export const locatorsListMock = [
     isChecked: false,
   },
   {
-    element_id: '6771529534322359778589411351_0',
+    elementId: '6771529534322359778589411351_0',
     is_shown: true,
     isGenerated: true,
     pageObj: 0,
@@ -97,7 +97,7 @@ export const locatorsListMock = [
     isChecked: false,
   },
   {
-    element_id: '4899732051322359779677566872_0',
+    elementId: '4899732051322359779677566872_0',
     is_shown: true,
     isGenerated: true,
     pageObj: 0,
@@ -120,7 +120,7 @@ export const locatorsListMock = [
     isChecked: false,
   },
   {
-    element_id: '4829071593322359778594168519_0',
+    elementId: '4829071593322359778594168519_0',
     is_shown: true,
     isGenerated: true,
     pageObj: 0,
@@ -143,7 +143,7 @@ export const locatorsListMock = [
     isChecked: false,
   },
   {
-    element_id: '9636042053322359773245578788_0',
+    elementId: '9636042053322359773245578788_0',
     is_shown: true,
     isGenerated: true,
     pageObj: 0,
@@ -166,7 +166,7 @@ export const locatorsListMock = [
     isChecked: false,
   },
   {
-    element_id: '8381553594322359777170267551_0',
+    elementId: '8381553594322359777170267551_0',
     is_shown: true,
     isGenerated: true,
     pageObj: 0,
@@ -189,7 +189,7 @@ export const locatorsListMock = [
     isChecked: false,
   },
   {
-    element_id: '4899732051322359779677566873_0',
+    elementId: '4899732051322359779677566873_0',
     is_shown: true,
     isGenerated: true,
     pageObj: 0,
@@ -212,7 +212,7 @@ export const locatorsListMock = [
     isChecked: false,
   },
   {
-    element_id: '4829071593322359778594168522_0',
+    elementId: '4829071593322359778594168522_0',
     is_shown: true,
     isGenerated: true,
     pageObj: 0,
@@ -235,7 +235,7 @@ export const locatorsListMock = [
     isChecked: false,
   },
   {
-    element_id: '9636042053322359773245578777_0',
+    elementId: '9636042053322359773245578777_0',
     is_shown: true,
     isGenerated: true,
     pageObj: 0,
@@ -258,7 +258,7 @@ export const locatorsListMock = [
     isChecked: false,
   },
   {
-    element_id: '8381553594322359777170267550_0',
+    elementId: '8381553594322359777170267550_0',
     is_shown: true,
     isGenerated: true,
     pageObj: 0,
@@ -281,7 +281,7 @@ export const locatorsListMock = [
     isChecked: false,
   },
   {
-    element_id: '796719024432235977136974900_0',
+    elementId: '796719024432235977136974900_0',
     is_shown: true,
     parent_id: '',
     jdnHash: '796719024432235977136974900',
@@ -309,7 +309,7 @@ export const locatorsListMock = [
 
 export const locatorsListMockForVividus = [
   {
-    element_id: '7967190244322359771369749968_0',
+    elementId: '7967190244322359771369749968_0',
     is_shown: true,
     isGenerated: true,
     pageObj: 0,
@@ -334,7 +334,7 @@ export const locatorsListMockForVividus = [
     vividusOutput: "variables.HomePage.Label.materialUi=By.xPath(//*[@index='5']//*[@index='8']/a)",
   },
   {
-    element_id: '3969471880322359761484771163_0',
+    elementId: '3969471880322359761484771163_0',
     is_shown: true,
     isGenerated: true,
     pageObj: 0,

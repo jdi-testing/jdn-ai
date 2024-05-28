@@ -4,7 +4,7 @@ import { convertToListWithChildren } from '../../../features/locators/utils/loca
 describe('convertToListWithChildren', () => {
   const inputList: Partial<ILocator>[] = [
     {
-      element_id: '1',
+      elementId: '1',
       is_shown: true,
       jdnHash: 'hash1',
       name: 'Element 1',
@@ -12,7 +12,7 @@ describe('convertToListWithChildren', () => {
       isGenerated: true,
     },
     {
-      element_id: '2',
+      elementId: '2',
       is_shown: true,
       jdnHash: 'hash2',
       name: 'Element 2',
@@ -20,7 +20,7 @@ describe('convertToListWithChildren', () => {
       isGenerated: true,
     },
     {
-      element_id: '3',
+      elementId: '3',
       is_shown: true,
       jdnHash: 'hash3',
       name: 'Element 3',
@@ -28,7 +28,7 @@ describe('convertToListWithChildren', () => {
       isGenerated: true,
     },
     {
-      element_id: '4',
+      elementId: '4',
       is_shown: true,
       jdnHash: 'hash4',
       name: 'Element 4',
@@ -39,7 +39,7 @@ describe('convertToListWithChildren', () => {
 
   const expectedOutput: Partial<ILocator>[] = [
     {
-      element_id: '1',
+      elementId: '1',
       is_shown: true,
       jdnHash: 'hash1',
       name: 'Element 1',
@@ -48,7 +48,7 @@ describe('convertToListWithChildren', () => {
       children: ['2'],
     },
     {
-      element_id: '2',
+      elementId: '2',
       is_shown: true,
       jdnHash: 'hash2',
       name: 'Element 2',
@@ -57,7 +57,7 @@ describe('convertToListWithChildren', () => {
       children: ['3'],
     },
     {
-      element_id: '3',
+      elementId: '3',
       is_shown: true,
       jdnHash: 'hash3',
       name: 'Element 3',
@@ -66,7 +66,7 @@ describe('convertToListWithChildren', () => {
       children: [],
     },
     {
-      element_id: '4',
+      elementId: '4',
       is_shown: true,
       jdnHash: 'hash4',
       name: 'Element 4',
@@ -78,7 +78,7 @@ describe('convertToListWithChildren', () => {
 
   const inputList2: Partial<ILocator>[] = [
     {
-      element_id: '1',
+      elementId: '1',
       is_shown: true,
       jdnHash: 'hash1',
       name: 'Element 1',
@@ -86,14 +86,14 @@ describe('convertToListWithChildren', () => {
       isGenerated: true,
     },
     {
-      element_id: '2',
+      elementId: '2',
       is_shown: true,
       jdnHash: 'hash2',
       name: 'Element 2',
       isGenerated: true,
     },
     {
-      element_id: '3',
+      elementId: '3',
       is_shown: true,
       jdnHash: 'hash3',
       name: 'Element 3',
@@ -103,7 +103,7 @@ describe('convertToListWithChildren', () => {
   ];
   const expectedOutput2: Partial<ILocator>[] = [
     {
-      element_id: '1',
+      elementId: '1',
       is_shown: true,
       jdnHash: 'hash1',
       name: 'Element 1',
@@ -112,7 +112,7 @@ describe('convertToListWithChildren', () => {
       children: [],
     },
     {
-      element_id: '2',
+      elementId: '2',
       is_shown: true,
       jdnHash: 'hash2',
       name: 'Element 2',
@@ -120,7 +120,7 @@ describe('convertToListWithChildren', () => {
       children: ['3'],
     },
     {
-      element_id: '3',
+      elementId: '3',
       is_shown: true,
       jdnHash: 'hash3',
       name: 'Element 3',
