@@ -10,12 +10,17 @@ export const pageDocumentReducers = {
 
       const notShownElementIds = action.payload
         .filter((el: PredictedEntity) => !el.is_shown)
-        .map((el: PredictedEntity) => el.element_id);
+        .map((el: PredictedEntity) => el.elementId);
+
+      state.notShownElementIds = notShownElementIds;
 
       /* set cleaned Html String into pageDocumentForRobula: */
       state.pageDocumentForRobula = removeNodesByAttribute(documentContent, 'jdn-hash', notShownElementIds);
     } else {
       console.error('Document content is not available.');
     }
+  },
+  setNotShownElementsIds(state: PageDocumentState, action: PayloadAction<string[]>) {
+    state.notShownElementIds = action.payload;
   },
 };

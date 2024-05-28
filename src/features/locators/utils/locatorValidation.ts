@@ -16,7 +16,8 @@ export const validateLocator = async (
   locatorType: LocatorType,
   jdnHash: JDNHash,
   locators: ILocator[],
-  element_id: ElementId,
+  elementId: ElementId,
+  notShownElementIds: string[],
   isCreatingForm?: boolean,
 ): Promise<LocatorValidationErrorType> => {
   let length;
@@ -25,19 +26,24 @@ export const validateLocator = async (
   let validatedJdnHash;
   let validationMessage: LocatorValidationErrorType = '';
 
-  const locatorValue = await evaluateLocator(locatorString, locatorType, element_id, jdnHash);
+  const locatorValue = await evaluateLocator(locatorString, locatorType, elementId, jdnHash);
   if (locatorValue === LocatorValidationWarnings.StartsWithDigit) {
     validationMessage = LocatorValidationWarnings.StartsWithDigit;
   } else if (locatorValue === LocatorValidationWarnings.NotFound || !locatorValue) {
     validationMessage = LocatorValidationWarnings.NotFound; //validationStatus: WARNING
   } else {
     ({ length, foundHash } = JSON.parse(locatorValue));
-    validatedElementId = JSON.parse(locatorValue).element_id || element_id;
+    validatedElementId = JSON.parse(locatorValue).elementId || elementId;
     validatedJdnHash = JSON.parse(locatorValue).originJdnHash || jdnHash;
+
+    // TODO: remove hardcode, when for Selenium framework support is added to the project (issue/585)
+    const isSelenium = false; // hardcode
+    const duplicateErrorCondition = isSelenium ? length > 1 : length > 1 && !notShownElementIds.includes(foundHash);
 
     if (length === 0) {
       validationMessage = LocatorValidationWarnings.NotFound; //validationStatus: WARNING
-    } else if (length > 1) {
+    } else if (duplicateErrorCondition) {
+      console.log('throw duplicate error');
       const err = `${length} ${LocatorValidationErrors.MultipleElements}` as LocatorValidationErrorType; //validationStatus: ERROR;
       throw new Error(err);
     } else if (length === 1 && validatedJdnHash !== foundHash) {

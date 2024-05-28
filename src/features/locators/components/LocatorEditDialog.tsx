@@ -18,21 +18,21 @@ import {
   LocatorValidationErrorType,
   LocatorValidationWarnings,
 } from '../types/locator.types';
-
-import { changeLocatorAttributes } from '../locators.slice';
 import { createNewName, getLocatorValidationStatus, getLocatorValueOnTypeSwitch } from '../utils/utils';
 import { createLocatorValidationRules } from '../utils/locatorValidationRules';
 import { createNameValidationRules } from '../utils/nameValidationRules';
 import { AnnotationType, FrameworkType, LocatorType, SelectOption } from '../../../common/types/common';
 import { isFilteredSelect } from '../../../common/utils/helpers';
 import { CALCULATING, newLocatorStub } from '../utils/constants';
-import { changeLocatorElement } from '../reducers/changeLocatorElement.thunk';
 import { addCustomLocator } from '../reducers/addCustomLocator.thunk';
 import { selectPresentLocatorsByPO } from '../selectors/locatorsByPO.selectors';
 import { LocatorMessageForDuplicate } from './LocatorMessageForDuplicate';
 import { createLocatorTypeOptions, ILocatorTypeOptions } from '../utils/createLocatorTypeOptions';
 import { validateLocator } from '../utils/locatorValidation';
 import { annotationTypeOptions } from './utils';
+import { changeLocatorElement } from '../reducers/changeLocatorElement.thunk';
+import { changeLocatorAttributes } from '../locators.slice';
+import { selectNotShownElementIds } from '../../../services/pageDocument/pageDocument.selectors';
 
 interface Props extends ILocator {
   isModalOpen: boolean;
@@ -52,7 +52,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
   isModalOpen,
   setIsModalOpen,
   isCreatingForm = false,
-  element_id,
+  elementId,
   isCustomName = true,
   name,
   type,
@@ -95,7 +95,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
   const [isOkButtonDisabled, setIsOkButtonDisabled] = useState<boolean>(true);
   // ToDo: fix legacy:
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const _isNameUnique = (value: string) => !isNameUnique(locators, element_id, value);
+  const _isNameUnique = (value: string) => !isNameUnique(locators, elementId, value);
 
   const nameValidationRules: Rule[] = createNameValidationRules(_isNameUnique);
 
@@ -103,6 +103,8 @@ export const LocatorEditDialog: React.FC<Props> = ({
     form.resetFields();
     setIsModalOpen(false);
   };
+
+  const notShownElementIds = useSelector(selectNotShownElementIds);
   const getLocatorValidationRules: () => Rule[] = () =>
     createLocatorValidationRules(
       isCreatingForm,
@@ -111,7 +113,8 @@ export const LocatorEditDialog: React.FC<Props> = ({
       setValidationErrorOptions,
       locators,
       jdnHash,
-      element_id,
+      elementId,
+      notShownElementIds,
     );
   const [locatorValidationRules, setLocatorValidationRules] = useState<Rule[]>(getLocatorValidationRules());
 
@@ -119,7 +122,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
     if (isEditedName) return;
 
     const newName = createNewName(
-      { element_id, isCustomName, type, name, elemId, elemName, elemText } as ILocator,
+      { elementId, isCustomName, type, name, elemId, elemName, elemText } as ILocator,
       value,
       library,
       locators,
@@ -177,7 +180,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
       locatorValue,
       annotationType,
       locatorType,
-      element_id,
+      elementId,
       library,
       message: validationMessage,
       isCustomName: isEditedName,
@@ -229,7 +232,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
       const newLocatorValue = await getLocatorValueOnTypeSwitch(
         newLocatorType,
         validationMessage,
-        element_id,
+        elementId,
         jdnHash,
         locatorValue,
         form,
@@ -276,7 +279,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
     } else {
       setLocatorTypeOptions(staticLocatorTypeOptions);
     }
-  }, [locatorValue, locators, element_id]);
+  }, [locatorValue, locators, elementId]);
 
   const handleLocatorDropdownOnChange = async () => {
     setValidationMessage('');
@@ -290,7 +293,8 @@ export const LocatorEditDialog: React.FC<Props> = ({
         locatorTypeFromForm,
         jdnHash,
         locators,
-        element_id,
+        elementId,
+        notShownElementIds,
         isCreatingForm,
       );
 

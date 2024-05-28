@@ -1,3 +1,4 @@
+import React from 'react';
 import { Rule, RuleObject } from 'antd/lib/form';
 import { validateLocator } from './locatorValidation';
 import { ElementId, ILocator, LocatorValidationErrorType, LocatorValidationWarnings } from '../types/locator.types';
@@ -10,7 +11,8 @@ export const createLocatorValidationRules = (
   setValidationErrorOptions: React.Dispatch<React.SetStateAction<any>>,
   locators: ILocator[],
   jdnHash: string,
-  element_id: ElementId,
+  elementId: ElementId,
+  notShownElementIds: string[],
 ): Rule[] => {
   return [
     {
@@ -19,14 +21,14 @@ export const createLocatorValidationRules = (
           setValidationMessage(LocatorValidationWarnings.EmptyValue); // validationStatus: WARNING
           return Promise.resolve();
         }
-
         try {
           const validationMessage = await validateLocator(
             locatorValue,
             locatorType,
             jdnHash,
             locators,
-            element_id,
+            elementId,
+            notShownElementIds,
             isCreatingForm,
           );
           setValidationMessage(validationMessage as LocatorValidationErrorType);
