@@ -5,7 +5,7 @@ import { Button, Space, Tooltip, Typography } from 'antd';
 import { isNil } from 'lodash';
 import { CloudCheck, CloudSlash, DesktopTower, Info } from '@phosphor-icons/react';
 import { BackendStatus } from '../types/mainSlice.types';
-import { URL, componentsTexts } from '../utils/constants';
+import { componentsTexts, URL } from '../utils/constants';
 import { RootState } from '../store/store';
 import DesktopSlash from '../assets/desktopTowerSlash.svg';
 import { readmeLinkAddress } from '../../common/constants/constants';
@@ -14,6 +14,7 @@ import { LocatorsGenerationStatus } from '../../features/locators/types/locator.
 import { OnboardingButton } from './OnboardingButton';
 import { OnboardingStep } from '../../features/onboarding/constants';
 import { useOnboardingContext } from '../../features/onboarding/OnboardingProvider';
+import { selectServerLocation } from '../main.selectors';
 
 type TServerIndicator = {
   backendAvailable: BackendStatus;
@@ -72,16 +73,14 @@ const ServerIndicator: FC<TServerIndicator> = ({ backendAvailable, serverLocatio
 };
 
 export const StatusBar = () => {
-  const backendVer = useSelector<RootState, string>((_state) => _state.main.serverVersion ?? '');
-  const backendAvailable = useSelector<RootState, BackendStatus>((_state) => _state.main.backendAvailable);
-  const serverLocation = useSelector<RootState, string>((_state) => _state.main.baseUrl ?? '');
-  const generationStatus = useSelector<RootState, LocatorsGenerationStatus>(
-    (_state) => _state.locators.present.generationStatus,
-  );
+  const backendVer = useSelector((state: RootState) => state.main.serverVersion ?? '');
+  const backendAvailable = useSelector((state: RootState) => state.main.backendAvailable);
+  const serverLocation = useSelector(selectServerLocation);
+  const generationStatus = useSelector((state: RootState) => state.locators.present.generationStatus);
+  const isSessionUnique = useSelector((state: RootState) => state.main.isSessionUnique);
 
   const manifest = chrome.runtime.getManifest();
   const pluginVer = manifest.version;
-  const isSessionUnique = useSelector((state: RootState) => state.main.isSessionUnique);
 
   const readmeRef = React.createRef<HTMLElement>();
 
