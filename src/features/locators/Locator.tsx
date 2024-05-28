@@ -56,7 +56,7 @@ export const Locator: FC<Props> = ({ element, currentPage, searchState, depth, s
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const {
-    element_id,
+    elementId,
     type,
     name,
     locatorValue,
@@ -93,8 +93,8 @@ export const Locator: FC<Props> = ({ element, currentPage, searchState, depth, s
     }
   }, [isChecked]);
 
-  const indeterminate = useSelector((state: RootState) => isLocatorIndeterminate(state, element_id));
-  const allChildrenChecked = useSelector((state: RootState) => areChildrenChecked(state, element_id));
+  const indeterminate = useSelector((state: RootState) => isLocatorIndeterminate(state, elementId));
+  const allChildrenChecked = useSelector((state: RootState) => areChildrenChecked(state, elementId));
   const scriptMessage = useSelector((_state: RootState) => _state.main.scriptMessage);
   const calculatedActive: ILocator[] = useSelector(selectCalculatedActiveByPageObj);
   const waitingActive = useSelector(selectWaitingActiveByPageObj);
@@ -112,7 +112,7 @@ export const Locator: FC<Props> = ({ element, currentPage, searchState, depth, s
 
     switch (message) {
       case ScriptMsg.OpenEditLocator:
-        if (param?.value.element_id !== element_id) return;
+        if (param?.value.elementId !== elementId) return;
         setIsEditModalOpen(true);
         dispatch(setScriptMessage({}));
         break;
@@ -130,8 +130,8 @@ export const Locator: FC<Props> = ({ element, currentPage, searchState, depth, s
   const isVividusFramework = framework === FrameworkType.Vividus;
 
   const handleOnChange: React.MouseEventHandler<HTMLDivElement> = () => {
-    dispatch(toggleLocatorIsChecked(element_id));
-    dispatch(toggleElementGeneration(element_id)); // ToDo isGenerated refactoring
+    dispatch(toggleLocatorIsChecked(elementId));
+    dispatch(toggleElementGeneration(elementId)); // ToDo isGenerated refactoring
     if (allChildrenChecked && size(element.children)) {
       dispatch(setChildrenIsChecked({ locator: element, isChecked: false }));
       dispatch(setChildrenGeneration({ locator: element, isGenerated: false })); // ToDo isGenerated refactoring
@@ -144,7 +144,7 @@ export const Locator: FC<Props> = ({ element, currentPage, searchState, depth, s
   const handleLocatorClick: React.MouseEventHandler<HTMLDivElement> = (event) => {
     const keyForMultiSelect = isMacPlatform(window) ? event.metaKey : event.ctrlKey;
     if (keyForMultiSelect) {
-      if (active) dispatch(elementUnsetActive(element_id));
+      if (active) dispatch(elementUnsetActive(elementId));
       else dispatch(elementSetActive(element));
     } else {
       if (!active) dispatch(setActiveSingle(element));

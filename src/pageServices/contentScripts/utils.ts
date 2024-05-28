@@ -2,14 +2,14 @@ import { ElementAttributes, LocatorType } from '../../common/types/common';
 import { LocatorTaskStatus, LocatorValidationWarnings } from '../../features/locators/types/locator.types';
 import { ScriptMsg } from '../scriptMsg.constants';
 
-export const evaluateXpath = ({ xPath, element_id, originJdnHash }: Record<string, string>) => {
+export const evaluateXpath = ({ xPath, elementId, originJdnHash }: Record<string, string>) => {
   try {
     const nodeSnapshot = document.evaluate(xPath, document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null);
     const length = nodeSnapshot.snapshotLength;
     const foundElement = nodeSnapshot.snapshotItem(0) as Element;
     const foundHash = foundElement && foundElement.getAttribute('jdn-hash');
     const foundElementText = foundElement && foundElement.textContent;
-    return JSON.stringify({ length, foundHash, element_id, foundElementText, originJdnHash });
+    return JSON.stringify({ length, foundHash, elementId, foundElementText, originJdnHash });
   } catch (error) {
     return LocatorValidationWarnings.NotFound;
   }

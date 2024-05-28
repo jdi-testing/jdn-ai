@@ -176,17 +176,15 @@ export const sendMessage = {
   checkSession: (payload: null, onResponse?: () => void): Promise<{ message: string; tabId: number }[]> =>
     connector.sendMessageToAllTabs(ScriptMsg.CheckSession, payload, onResponse),
   defineTabId: (payload: number) => connector.sendMessage(ScriptMsg.DefineTabId, payload),
-  evaluateXpath: (
-    payload: { xPath: string; element_id?: ElementId; originJdnHash?: string },
-    onResponse?: () => void,
-  ) => connector.sendMessage(ScriptMsg.EvaluateXpath, payload, onResponse),
+  evaluateXpath: (payload: { xPath: string; elementId?: ElementId; originJdnHash?: string }, onResponse?: () => void) =>
+    connector.sendMessage(ScriptMsg.EvaluateXpath, payload, onResponse),
   evaluateStandardLocator: (
-    payload: { selector: string; locatorType: LocatorType; element_id?: ElementId; originJdnHash?: string },
+    payload: { selector: string; locatorType: LocatorType; elementId?: ElementId; originJdnHash?: string },
     onResponse?: () => void,
   ) => connector.sendMessage(ScriptMsg.EvaluateStandardLocator, payload, onResponse),
   getPageData: (payload?: {}, onResponse?: () => void) =>
     connector.sendMessage(ScriptMsg.GetPageData, payload, onResponse),
-  generateSelectorByHash: (payload: { element_id: string; jdnHash: string }, onResponse?: () => void) =>
+  generateSelectorByHash: (payload: { elementId: string; jdnHash: string }, onResponse?: () => void) =>
     connector.sendMessage(ScriptMsg.GenerateSelectorByHash, payload, onResponse),
   generateSelectorGroupByHash: (
     payload: { elements: ILocator[]; fireCallbackMessage?: boolean },

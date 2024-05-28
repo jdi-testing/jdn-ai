@@ -1,10 +1,12 @@
-import { ActionReducerMapBuilder, createAsyncThunk } from '@reduxjs/toolkit';
+import { type ActionReducerMapBuilder, createAsyncThunk } from '@reduxjs/toolkit';
 import { RootState } from '../../../app/store/store';
 import { locatorsAdapter } from '../selectors/locators.selectors';
 import { ILocator, LocatorsState, LocatorValidationErrorType } from '../types/locator.types';
 import { validateLocator } from '../utils/locatorValidation';
 import { LocatorType } from '../../../common/types/common';
 import { selectLocatorsByPageObject } from '../selectors/locatorsByPO.selectors';
+import { useSelector } from 'react-redux';
+import { selectNotShownElementIds } from '../../../services/pageDocument/pageDocument.selectors';
 
 export const checkLocatorsValidity = createAsyncThunk('locators/checkLocatorsValidity', async (payload, thunkAPI) => {
   const state = thunkAPI.getState();
@@ -12,21 +14,23 @@ export const checkLocatorsValidity = createAsyncThunk('locators/checkLocatorsVal
   const locators: ILocator[] = selectLocatorsByPageObject(state as RootState);
 
   const invalidLocators: Partial<ILocator>[] = [];
+  const notShownElementIds = useSelector(selectNotShownElementIds);
 
   for (const locator of locators) {
-    const { jdnHash, element_id, locatorValue, locatorType } = locator;
+    const { jdnHash, elementId, locatorValue, locatorType } = locator;
     try {
       const validation = await validateLocator(
         locatorValue.output ?? '',
         locatorType || LocatorType.xPath,
         jdnHash,
         locators,
-        element_id,
+        elementId,
+        notShownElementIds,
       );
       if (validation.length)
-        invalidLocators.push({ element_id, message: validation as LocatorValidationErrorType, jdnHash });
+        invalidLocators.push({ elementId, message: validation as LocatorValidationErrorType, jdnHash });
     } catch (error) {
-      invalidLocators.push({ element_id, message: error.message as LocatorValidationErrorType, jdnHash });
+      invalidLocators.push({ elementId, message: error.message as LocatorValidationErrorType, jdnHash });
     }
   }
 

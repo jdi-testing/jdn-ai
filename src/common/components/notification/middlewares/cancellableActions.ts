@@ -32,8 +32,8 @@ export const cancellableActions: Middleware = (store) => (next) => (action) => {
     }
     case 'locators/changeLocatorAttributes':
     case 'locators/changeLocatorElement/fulfilled': {
-      const { element_id } = payload;
-      pushNotificationHandler(selectLocatorById(prevState, element_id));
+      const { elementId } = payload;
+      pushNotificationHandler(selectLocatorById(prevState, elementId));
       break;
     }
     case 'locators/toggleDeleted':

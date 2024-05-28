@@ -158,7 +158,7 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
                         return (
                           <Locator
                             {...{ element: elementWithTaskStatus, library }}
-                            key={element.element_id}
+                            key={element.elementId}
                             currentPage={PageType.PageObject}
                           />
                         );

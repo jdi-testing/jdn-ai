@@ -5,7 +5,7 @@ export const sortLocatorsWithChildren = (locators: ILocator[]) => {
 
   for (const locator of locators) {
     if (locator.parent_id) {
-      childrenMap.set(locator.element_id, locator);
+      childrenMap.set(locator.elementId, locator);
     }
   }
 
@@ -16,10 +16,10 @@ export const sortLocatorsWithChildren = (locators: ILocator[]) => {
       if (typeof locator === 'string') {
         if (!childrenMap.has(locator)) continue;
         locator = childrenMap.get(locator) as ILocator;
-      } else if (locator.parent_id?.length && !childrenMap.has(locator.element_id)) continue;
+      } else if (locator.parent_id?.length && !childrenMap.has(locator.elementId)) continue;
 
       sorted.push(locator);
-      childrenMap.delete(locator.element_id);
+      childrenMap.delete(locator.elementId);
 
       if (locator.children?.length) addLocators(locator.children);
     }

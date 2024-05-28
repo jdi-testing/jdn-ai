@@ -29,22 +29,21 @@ export const addCustomLocator = createAsyncThunk(
     let foundElementText;
     let originalCssSelector = '';
     let fullXpath = '';
-    // ToDo: fix legacy naming
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const element_id = `${generateId()}_${pageObjectId}`;
+
+    const elementId = `${generateId()}_${pageObjectId}`;
 
     if (getLocatorValidationStatus(message) === ValidationStatus.SUCCESS) {
       try {
         if ((isXPathLocator && locatorValue.xPath) || (isStandardLocator && locatorFormValue)) {
           const locatorData = await (isXPathLocator && locatorValue.xPath
-            ? evaluateXpath(locatorValue.xPath, element_id)
-            : evaluateLocator(locatorFormValue, locatorType, element_id));
+            ? evaluateXpath(locatorValue.xPath, elementId)
+            : evaluateLocator(locatorFormValue, locatorType, elementId));
 
           ({ foundHash, foundElementText } = JSON.parse(locatorData));
         }
 
         if (!foundHash) {
-          foundHash = element_id.split('_')[0];
+          foundHash = elementId.split('_')[0];
           await sendMessage
             .assignJdnHash({
               jdnHash: foundHash,
@@ -74,7 +73,7 @@ export const addCustomLocator = createAsyncThunk(
 
     const newLocator: ILocator = {
       ...newLocatorData,
-      element_id,
+      elementId,
       locatorValue: {
         ...newLocatorData.locatorValue,
         ...(isStandardLocator ? { xPath: fullXpath } : { cssSelector: originalCssSelector }),
@@ -85,9 +84,9 @@ export const addCustomLocator = createAsyncThunk(
 
     const dispatch = thunkAPI.dispatch;
     dispatch(addLocators([newLocator]));
-    dispatch(addLocatorToPageObj({ pageObjId: pageObjectId, locatorId: newLocator.element_id }));
+    dispatch(addLocatorToPageObj({ pageObjId: pageObjectId, locatorId: newLocator.elementId }));
     dispatch(setActiveSingle(newLocator));
-    dispatch(setScrollToLocator(newLocator.element_id));
+    dispatch(setScrollToLocator(newLocator.elementId));
 
     return newLocator;
   },

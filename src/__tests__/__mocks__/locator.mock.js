@@ -1,6 +1,6 @@
 export const locator1 = {
   attrId: '',
-  element_id: '8736312404689610766421832473',
+  elementId: '8736312404689610766421832473',
   is_shown: true,
   height: 201.3333435059,
   locatorValue: {
@@ -26,7 +26,7 @@ export const locator1 = {
 
 export const locator2 = {
   attrId: '',
-  element_id: '2222222222',
+  elementId: '2222222222',
   is_shown: true,
   height: 201.3333435059,
   locatorValue: {
@@ -49,7 +49,7 @@ export const locator2 = {
 
 export const locator3 = {
   attrId: '',
-  element_id: '333333333333333',
+  elementId: '333333333333333',
   is_shown: true,
   height: 201.3333435059,
   locatorValue: {

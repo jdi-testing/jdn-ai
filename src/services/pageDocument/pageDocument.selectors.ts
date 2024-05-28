@@ -8,3 +8,4 @@ export const selectPageDocumentForRobula = createSelector(
   selectPageDocumentState,
   (state) => state.pageDocumentForRobula,
 );
+export const selectNotShownElementIds = createSelector(selectPageDocumentState, (state) => state.notShownElementIds);

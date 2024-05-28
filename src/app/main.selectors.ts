@@ -9,6 +9,10 @@ export const selectCurrentPage = (state: RootState) => {
   return last(state.main.pageHistory) || ({ page: PageType.PageObject } as Page);
 };
 
+const selectMain = (state: RootState) => state.main;
+
+export const selectServerLocation = createSelector([selectMain], (main) => main.baseUrl ?? '');
+
 export const selectIsDefaultState = createSelector(
   selectCurrentPage,
   selectPageObjects,

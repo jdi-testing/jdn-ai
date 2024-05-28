@@ -57,7 +57,7 @@ describe('changeLocatorAttributes reducer', () => {
     // Act
     store.dispatch(
       changeLocatorAttributes({
-        element_id: '8736312404689610766421832473',
+        elementId: '8736312404689610766421832473',
         is_shown: true,
         locatorValue: "//*[@class='sidebar-menu left']",
         name: 'myAwesomeLocator',
@@ -87,7 +87,7 @@ describe('changeLocatorAttributes reducer', () => {
     // Act
     store.dispatch(
       changeLocatorAttributes({
-        element_id: '8736312404689610766421832473',
+        elementId: '8736312404689610766421832473',
         is_shown: true,
         locatorValue: "//*[@class='sidebar-menu left']",
         name: 'myAwesomeLocator',
@@ -117,7 +117,7 @@ describe('changeLocatorAttributes reducer', () => {
     // Act
     store.dispatch(
       changeLocatorAttributes({
-        element_id: '8736312404689610766421832473',
+        elementId: '8736312404689610766421832473',
         is_shown: true,
         locatorValue: "//*[@class='any-class']",
         locatorType: LocatorType.xPath,
@@ -146,7 +146,7 @@ describe('changeLocatorAttributes reducer', () => {
     // Act
     store.dispatch(
       changeLocatorAttributes({
-        element_id: '8736312404689610766421832473',
+        elementId: '8736312404689610766421832473',
         is_shown: true,
         locatorValue: "//*[@class='any-class112']",
         name: 'myAwesomeLocator',

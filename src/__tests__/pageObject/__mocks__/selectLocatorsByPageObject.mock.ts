@@ -58,7 +58,7 @@ export const getRootState = (_pageObject: PageObject) => ({
     present: {
       entities: {
         '7524916072510597399809892823_0': {
-          element_id: '7524916072510597399809892823_0',
+          elementId: '7524916072510597399809892823_0',
           is_shown: true,
           predicted_label: 'dialog',
           jdnHash: '7524916072510597399809892823',
@@ -83,7 +83,7 @@ export const getRootState = (_pageObject: PageObject) => ({
           active: false,
         },
         '2075611903510597386448924232_0': {
-          element_id: '2075611903510597386448924232_0',
+          elementId: '2075611903510597386448924232_0',
           is_shown: true,
           predicted_label: 'list',
           jdnHash: '2075611903510597386448924232',
@@ -111,7 +111,7 @@ export const getRootState = (_pageObject: PageObject) => ({
           isGenerated: true,
         },
         '4138940493550098806301857686_0': {
-          element_id: '4138940493550098806301857686_0',
+          elementId: '4138940493550098806301857686_0',
           is_shown: true,
           predicted_label: 'menu',
           jdnHash: '4138940493550098806301857686',
@@ -143,7 +143,7 @@ export const getRootState = (_pageObject: PageObject) => ({
 
 export const selectMockedLocators = (pageObject: PageObject) => [
   {
-    element_id: '7524916072510597399809892823_0',
+    elementId: '7524916072510597399809892823_0',
     is_shown: true,
     predicted_label: 'dialog',
     jdnHash: '7524916072510597399809892823',
@@ -168,7 +168,7 @@ export const selectMockedLocators = (pageObject: PageObject) => [
     active: false,
   },
   {
-    element_id: '2075611903510597386448924232_0',
+    elementId: '2075611903510597386448924232_0',
     is_shown: true,
     predicted_label: 'list',
     jdnHash: '2075611903510597386448924232',
@@ -200,7 +200,7 @@ export const selectMockedLocators = (pageObject: PageObject) => [
     isGenerated: true,
   },
   {
-    element_id: '4138940493550098806301857686_0',
+    elementId: '4138940493550098806301857686_0',
     is_shown: true,
     predicted_label: 'menu',
     jdnHash: '4138940493550098806301857686',

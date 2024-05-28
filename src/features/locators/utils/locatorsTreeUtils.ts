@@ -1,5 +1,5 @@
 import { cloneDeep, map as mapFunction, size } from 'lodash';
-import { JDNHash, ILocator } from '../../locators/types/locator.types';
+import { ILocator, JDNHash } from '../types/locator.types';
 import { SearchState } from '../components/LocatorsTree';
 
 export interface LocatorTree extends Omit<ILocator, 'children'> {
@@ -21,7 +21,7 @@ export const convertToListWithChildren = (_list: ILocator[]) => {
     const node = list[i];
     if (node.parent_id !== '') {
       const children = list[map[node.parent_id]]?.children;
-      children && children.push(node.element_id);
+      children && children.push(node.elementId);
     }
   }
 

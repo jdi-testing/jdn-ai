@@ -86,8 +86,8 @@ export const runLocatorsGeneration = createAsyncThunk(
         const taskStatus = getTaskStatus(locator.locatorValue.xPathStatus, locator.locatorValue.cssSelectorStatus);
         return locator.locatorValue && taskStatus !== LocatorTaskStatus.PENDING;
       })
-      .map(({ element_id, jdnHash }) => ({
-        element_id,
+      .map(({ elementId, jdnHash }) => ({
+        elementId,
         locatorValue: { xPathStatus: LocatorTaskStatus.PENDING },
         jdnHash,
       }));
@@ -97,8 +97,8 @@ export const runLocatorsGeneration = createAsyncThunk(
         const taskStatus = getTaskStatus(locator.locatorValue.xPathStatus, locator.locatorValue.cssSelectorStatus);
         return locator.locatorValue && taskStatus !== LocatorTaskStatus.PENDING;
       })
-      .map(({ element_id, jdnHash }) => ({
-        element_id,
+      .map(({ elementId, jdnHash }) => ({
+        elementId,
         locatorValue: { cssSelectorStatus: LocatorTaskStatus.PENDING },
         jdnHash,
       }));

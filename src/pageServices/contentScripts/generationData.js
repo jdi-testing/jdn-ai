@@ -91,10 +91,10 @@ export const getGenerationAttributes = () => {
   };
 
   const generateSelectorGroupByHash = (elements) => {
-    return elements.map(({ element_id, jdnHash }) => {
+    return elements.map(({ elementId, jdnHash }) => {
       const element = document.querySelector(`[jdn-hash='${jdnHash}']`);
       return {
-        element_id,
+        elementId,
         locatorValue: {
           cssSelector: element ? getUniqueCssSelector(element) : null,
         },
@@ -102,9 +102,9 @@ export const getGenerationAttributes = () => {
     });
   };
 
-  const generateSelectorByHash = ({ element_id, jdnHash }) => {
+  const generateSelectorByHash = ({ elementId, jdnHash }) => {
     const element = document.querySelector(`[jdn-hash='${jdnHash}']`);
-    return element ? { element_id, cssSelector: getUniqueCssSelector(element) } : null;
+    return element ? { elementId, cssSelector: getUniqueCssSelector(element) } : null;
   };
 
   /*

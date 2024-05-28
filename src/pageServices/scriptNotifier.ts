@@ -52,9 +52,9 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
     }
     case 'locators/changeLocatorAttributes':
     case 'locators/changeLocatorElement/fulfilled': {
-      const { element_id, message, type: elementType, name } = payload;
-      const prevValue = selectLocatorById(prevState, element_id);
-      const newValue = selectLocatorById(state, element_id);
+      const { elementId, message, type: elementType, name } = payload;
+      const prevValue = selectLocatorById(prevState, elementId);
+      const newValue = selectLocatorById(state, elementId);
 
       if (!prevValue) return;
 
@@ -92,27 +92,27 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
     case 'locators/stopGenerationGroup/fulfilled': {
       const _arr: ILocator[] = compact(payload);
       _arr.forEach((element) => {
-        const { element_id } = element;
-        const locator = selectLocatorById(state, element_id);
+        const { elementId } = element;
+        const locator = selectLocatorById(state, elementId);
         locator && sendMessage.changeStatus(locator);
       });
       break;
     }
     case 'locators/toggleElementGeneration': // ToDo isGenerated refactoring
     case 'locators/toggleLocatorIsChecked': {
-      const element = selectLocatorById(state, typeof payload === 'string' ? payload : payload.element_id);
+      const element = selectLocatorById(state, typeof payload === 'string' ? payload : payload.elementId);
       element && sendMessage.toggle({ element });
       break;
     }
     case 'locators/toggleElementGroupGeneration':
       payload.forEach((element: ILocator) => {
-        const locator = selectLocatorById(state, element.element_id);
+        const locator = selectLocatorById(state, element.elementId);
         locator && sendMessage.toggle({ element: locator, skipScroll: true });
       });
       break;
     case 'locators/toggleElementGroupIsChecked':
       payload.forEach((element: ILocator) => {
-        const locator = selectLocatorById(state, element.element_id);
+        const locator = selectLocatorById(state, element.elementId);
         locator && sendMessage.toggle({ element: locator, skipScroll: true });
       });
       break;
@@ -132,7 +132,7 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
     }
     case 'locators/setElementGroupGeneration':
       payload.locators.forEach((_loc: ILocator) => {
-        const element = selectLocatorById(state, _loc.element_id);
+        const element = selectLocatorById(state, _loc.elementId);
         element && sendMessage.toggle({ element, skipScroll: true });
       });
       break;
@@ -143,22 +143,22 @@ const notify = (state: RootState, action: any, prevState: RootState) => {
     }
     case 'locators/toggleDeletedGroup':
       payload.forEach((element: ILocator) => {
-        const locator = selectLocatorById(state, element.element_id);
+        const locator = selectLocatorById(state, element.elementId);
         locator && sendMessage.toggleDeleted(locator);
       });
       break;
     case 'locators/updateLocatorGroup':
-      payload.locators.forEach(({ element_id, jdnHash }: ILocator) => {
-        const locator = element_id ? selectLocatorById(state, element_id) : selectLocatorByJdnHash(state, jdnHash);
+      payload.locators.forEach(({ elementId, jdnHash }: ILocator) => {
+        const locator = elementId ? selectLocatorById(state, elementId) : selectLocatorByJdnHash(state, jdnHash);
         locator && sendMessage.changeStatus(locator);
       });
       break;
     case 'locators/failGeneration': {
       const { ids } = payload;
-      const elements = ids.map((element_id: string) => {
-        const jdnHash = selectLocatorById(state, element_id)?.jdnHash;
+      const elements = ids.map((elementId: string) => {
+        const jdnHash = selectLocatorById(state, elementId)?.jdnHash;
         return {
-          element_id,
+          elementId,
           jdnHash,
           locatorValue: { xPathStatus: LocatorTaskStatus.FAILURE, cssSelectorStatus: LocatorTaskStatus.FAILURE },
         } as ILocator;

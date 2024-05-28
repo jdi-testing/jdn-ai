@@ -4,6 +4,7 @@ import { webSocketController } from '../../../services/webSocketController';
 import { MainState, MaxGenerationTime } from '../../../app/types/mainSlice.types';
 import { PageObject } from '../../pageObjects/types/pageObjectSlice.types';
 import { GeneralLocatorType } from '../../../common/types/common';
+import { getWebSocketMessages } from './helpers';
 
 export interface IGeneralWebSocketMessage {
   action: WebSocketMessage;
@@ -44,6 +45,7 @@ class LocatorGenerationController {
     pageDocument: string,
     pageObject?: PageObject,
     maxGenerationTime?: MaxGenerationTime,
+    isLocalServer?: boolean,
   ) {
     if (pageObject) this.pageObject = pageObject;
     this.pageDocument = pageDocument;
@@ -75,24 +77,34 @@ class LocatorGenerationController {
       action: WebSocketMessage.SCHEDULE_MULTIPLE_CSS_SELECTOR_GENERATIONS,
       payload: {
         document: this.pageDocument,
-        // TODO: uncomment when  back-end will be ready (issues/1284) 80 line
-        // id: hashes,
-        id: [],
+        // TODO: remove condition ("isLocalServer ?", ": []") when back-end will be ready (issues/1284)
+        id: isLocalServer ? hashes : [],
       },
     };
-    // TODO: uncomment when  back-end will be ready (issues/1284) 85-94 line
-    // const messages = getWebSocketMessages(locatorType, this.xPathGenerationMessage, this.CssSelectorGenerationMessage);
-    return (
-      webSocketController
-        // .sendSocket(JSON.stringify(messages[0]))
-        .sendSocket(JSON.stringify(this.xPathGenerationMessage))
-        // .then(() => {
-        //   webSocketController.sendSocket(JSON.stringify(messages[1]));
-        // })
-        .then(() => {
-          webSocketController.startPing();
-        })
-    );
+
+    const messages = getWebSocketMessages(locatorType, this.xPathGenerationMessage, this.CssSelectorGenerationMessage);
+
+    // TODO: remove condition and variable "webSocketOperation" when back-end will be ready (issues/1284) 88, 98-105 lines
+    const webSocketOperation = isLocalServer
+      ? webSocketController
+          .sendSocket(JSON.stringify(messages[0]))
+          .then(() => webSocketController.sendSocket(JSON.stringify(messages[1])))
+          .then(() => {
+            webSocketController.startPing();
+          })
+          .catch((error: unknown) => {
+            console.error('Error sending messages: ', error);
+          })
+      : webSocketController
+          .sendSocket(JSON.stringify(this.xPathGenerationMessage))
+          .then(() => {
+            webSocketController.startPing();
+          })
+          .catch((error: unknown) => {
+            console.error('Error sending message: ', error);
+          });
+
+    return webSocketOperation;
   }
 
   upPriority(ids: JDNHash[]) {
@@ -100,7 +112,7 @@ class LocatorGenerationController {
       webSocketController.sendSocket(
         JSON.stringify({
           action: WebSocketMessage.UP_PRIORITY,
-          payload: { element_id: id },
+          payload: { elementId: id },
         }),
       );
     });
@@ -111,7 +123,7 @@ class LocatorGenerationController {
       webSocketController.sendSocket(
         JSON.stringify({
           action: WebSocketMessage.DOWN_PRIORITY,
-          payload: { element_id: id },
+          payload: { elementId: id },
         }),
       );
     });

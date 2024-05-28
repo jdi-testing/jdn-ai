@@ -86,7 +86,7 @@ export const highlightOnPage = () => {
 
   const updateElement = (element) => {
     if (!predictedElements) return null;
-    const i = predictedElements.findIndex((e) => e.element_id === element.element_id);
+    const i = predictedElements.findIndex((e) => e.elementId === element.elementId);
     predictedElements[i] = { ...predictedElements[i], ...element };
     const div = document.getElementById(predictedElements[i].jdnHash);
     return div;
@@ -116,7 +116,7 @@ export const highlightOnPage = () => {
   };
 
   const removeElement = (element) => {
-    const j = predictedElements.findIndex((e) => e.element_id === element?.element_id);
+    const j = predictedElements.findIndex((e) => e.elementId === element?.elementId);
     if (j === -1) return;
     predictedElements.splice(j, 1);
 
@@ -137,7 +137,7 @@ export const highlightOnPage = () => {
 
   const updateTooltipXpath = (element) => {
     const taskStatus = getTaskStatus(element.locatorValue.xPathStatus, element.locatorValue.cssSelectorStatus);
-    if (taskStatus === LocatorTaskStatus.SUCCESS && tooltip.getAttribute('jdn-element-hash') === element.element_id) {
+    if (taskStatus === LocatorTaskStatus.SUCCESS && tooltip.getAttribute('jdn-element-hash') === element.elementId) {
       tooltip.querySelector('.jdn-tooltip-xpath').innerHTML = element.locatorValue.xPath;
     }
   };
@@ -162,7 +162,7 @@ export const highlightOnPage = () => {
   };
 
   const drawRectangle = (elementRect, predictedElement) => {
-    const { element_id, jdnHash } = predictedElement;
+    const { elementId, jdnHash } = predictedElement;
     const getDivPosition = (elementRect) => {
       const { top, left, height, width } = elementRect || {};
 
@@ -230,10 +230,10 @@ export const highlightOnPage = () => {
       const { x, y } = event;
       const { style, classNames } = tooltipDefaultStyle({ x, y });
       Object.assign(tooltip.style, style);
-      const el = predictedElements.find((e) => e.element_id === element_id);
+      const el = predictedElements.find((e) => e.elementId === elementId);
       tooltip.innerHTML = tooltipInnerHTML(el);
       tooltip.className = classNames.join(' ');
-      tooltip.setAttribute('jdn-element-hash', el.element_id);
+      tooltip.setAttribute('jdn-element-hash', el.elementId);
     };
 
     const predictedElementTaskStatus = getTaskStatus(

@@ -19,7 +19,7 @@ export const LocatorMessageForDuplicate: React.FC<LocatorMessageForDuplicateProp
 
     if (duplicates?.length) {
       dispatch(setActiveSingle(duplicates[0]));
-      dispatch(setScrollToLocator(duplicates[0].element_id));
+      dispatch(setScrollToLocator(duplicates[0].elementId));
     }
   };
 

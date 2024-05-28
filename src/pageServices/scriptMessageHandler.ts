@@ -57,7 +57,7 @@ export const updateMessageHandler = (
     [ScriptMsg.ElementGroupSetActive]: (payload) => {
       const locators = payload.map((jdnHash: string) => selectLocatorByJdnHash(state, jdnHash));
       dispatch(elementGroupSetActive({ locators, fromScript: true }));
-      dispatch(setScrollToLocator(locators[0].element_id));
+      dispatch(setScrollToLocator(locators[0].elementId));
     },
     [ScriptMsg.ElementGroupUnsetActive]: (payload) => {
       const locators = payload.map((jdnHash: string) => selectLocatorByJdnHash(state, jdnHash)) as ILocator[];
@@ -71,9 +71,9 @@ export const updateMessageHandler = (
     },
     [ScriptMsg.RemoveElement]: (payload) => dispatch(toggleDeletedGroup(payload)),
     [ScriptMsg.ResponseCssSelectors]: (payload) => {
-      const locators = payload.map(({ element_id, locatorValue }: ILocator) => {
+      const locators = payload.map(({ elementId, locatorValue }: ILocator) => {
         return {
-          element_id,
+          elementId,
           locatorValue: { ...locatorValue, cssSelectorStatus: LocatorTaskStatus.SUCCESS },
         };
       });
@@ -93,7 +93,7 @@ export const updateMessageHandler = (
     [ScriptMsg.StopGroupGeneration]: (payload) => dispatch(stopGenerationGroup(payload)),
     [ScriptMsg.ToggleElement]: (payload) => {
       dispatch(toggleElementGeneration(payload[0]));
-      dispatch(setScrollToLocator(payload[0].element_id));
+      dispatch(setScrollToLocator(payload[0].elementId));
     },
     [ScriptMsg.ToggleElementGroup]: (payload) => {
       dispatch(toggleElementGroupGeneration(payload));
