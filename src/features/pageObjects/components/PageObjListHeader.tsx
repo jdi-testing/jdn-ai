@@ -18,6 +18,8 @@ import { checkLocatorsValidity } from '../../locators/reducers/checkLocatorValid
 import { useAddPageObject } from '../utils/useAddPageObject';
 import { useOnboardingContext } from '../../onboarding/OnboardingProvider';
 import { PageObject } from '../types/pageObjectSlice.types';
+import classNames from 'classnames';
+import '../../../common/styles/headerCollapse.less';
 
 const { confirm } = Modal;
 
@@ -80,16 +82,20 @@ export const PageObjListHeader: FC<Props> = ({ template, toggleExpand, isExpande
     }
   }, [enableDownload]);
 
+  const isHeaderCollapseDisabled = !pageObjects.length;
+  const isHeaderCollapseExpanded = isHeaderCollapseDisabled ? false : isExpanded;
+  const headerCollapseClassName = classNames(
+    'jdn__items-list_header-collapse',
+    { disabled: isHeaderCollapseDisabled },
+    { expanded: isHeaderCollapseExpanded },
+  );
+
   return (
     <Row className="jdn__items-list_header" justify="space-between">
       <CaretDown
-        style={{
-          transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
-        }}
-        className="jdn__items-list_header-collapse"
-        color="#00000073"
+        className={headerCollapseClassName}
         size={14}
-        onClick={toggleExpand}
+        onClick={isHeaderCollapseDisabled ? () => {} : toggleExpand}
       />
       <Space direction="horizontal" size={8}>
         {size(pageObjects) ? (
