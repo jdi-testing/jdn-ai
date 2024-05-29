@@ -11,12 +11,12 @@ import { LocatorsSearch } from './LocatorsSearch';
 import { LocatorEditDialog } from './LocatorEditDialog';
 import { OnboardingTooltip } from '../../onboarding/components/OnboardingTooltip';
 import { LocatorMenu } from './LocatorMenu';
-import { LocatorTreeProps, ExpandState } from './LocatorsTree';
+import { ExpandState, LocatorTreeProps } from './LocatorsTree';
 import {
   selectActiveLocators,
-  selectFilteredLocators,
-  selectCheckedLocatorsByPageObject,
   selectActualActiveByPageObject,
+  selectCheckedLocatorsByPageObject,
+  selectFilteredLocators,
   selectGenerateByPageObject,
 } from '../selectors/locatorsFiltered.selectors';
 import { useOnboardingContext } from '../../onboarding/OnboardingProvider';
@@ -25,6 +25,8 @@ import { selectIsOnboardingOpen } from '../../onboarding/store/onboarding.select
 import { useOnboarding } from '../../onboarding/useOnboarding';
 import { selectIsCreatingFormOpen } from '../selectors/customLocator.selectors';
 import { setIsCreatingFormOpen } from '../customLocator.slice';
+import classNames from 'classnames';
+import '../../../common/styles/headerCollapse.less';
 
 interface LocatorListHeaderProps {
   render: (viewProps: LocatorTreeProps['viewProps']) => ReactNode;
@@ -93,6 +95,22 @@ export const LocatorListHeader = ({
     }
   }, []);
 
+  const isLocatorHasSubLocators = locators.some(
+    (locator) => Array.isArray(locator.children) && locator.children.length > 0,
+  );
+  const isHeaderCollapseDisabled = !locators.length || !isLocatorHasSubLocators;
+  const isHeaderCollapseExpanded = isHeaderCollapseDisabled ? false : expandAll === ExpandState.Expanded;
+  const headerCollapseClassName = classNames(
+    'jdn__items-list_header-collapse',
+    { disabled: isHeaderCollapseDisabled },
+    { expanded: isHeaderCollapseExpanded },
+  );
+
+  const handleExpandAll = () => {
+    if (isHeaderCollapseDisabled) return;
+    setExpandAll(expandAll === ExpandState.Collapsed ? ExpandState.Expanded : ExpandState.Collapsed);
+  };
+
   return (
     <>
       <div className="jdn__locator-list_header-locator-control-group">
@@ -113,17 +131,7 @@ export const LocatorListHeader = ({
 
       <Row className="jdn__items-list_header">
         <span className="jdn__items-list_header-title">
-          <CaretDown
-            style={{
-              transform: expandAll === ExpandState.Expanded ? 'rotate(180deg)' : 'rotate(0deg)',
-            }}
-            className="jdn__items-list_header-collapse"
-            color="#878A9C"
-            size={14}
-            onClick={() =>
-              setExpandAll(expandAll === ExpandState.Collapsed ? ExpandState.Expanded : ExpandState.Collapsed)
-            }
-          />
+          <CaretDown className={headerCollapseClassName} size={14} onClick={handleExpandAll} />
           <Checkbox
             checked={isAllLocatorsSelected}
             indeterminate={partiallySelected}

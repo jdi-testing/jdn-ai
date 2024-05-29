@@ -1,0 +1,15 @@
+.jdn__items-list_header-collapse {
+  // collapsed by default:
+  transform: rotate(0deg);
+  cursor: pointer;
+  color: #878A9C;
+
+  &.disabled {
+    color: #00000040;
+    cursor: default;
+  }
+
+  &.expanded {
+    transform: rotate(180deg);
+  }
+}
