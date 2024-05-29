@@ -239,30 +239,31 @@ export const getTaskStatus = (
   cssSelectorStatus: LocatorTaskStatus,
 ): LocatorTaskStatus | null => {
   if (!xPathStatus && !cssSelectorStatus) return LocatorTaskStatus.NOT_STARTED;
+  // TODO: delete when back-end will be ready (issues/1284)
+  return xPathStatus;
 
-  // return xPathStatus;
-  // TODO: uncomment when  back-end will be ready (issues/1284) 246-267 lines
-  const statusMap = {
-    success: xPathStatus === LocatorTaskStatus.SUCCESS && cssSelectorStatus === LocatorTaskStatus.SUCCESS,
-    pending: xPathStatus === LocatorTaskStatus.PENDING || cssSelectorStatus === LocatorTaskStatus.PENDING,
-    failure: xPathStatus === LocatorTaskStatus.FAILURE || cssSelectorStatus === LocatorTaskStatus.FAILURE,
-    revoked: xPathStatus === LocatorTaskStatus.REVOKED || cssSelectorStatus === LocatorTaskStatus.REVOKED,
-  };
-
-  if (statusMap.success) {
-    return LocatorTaskStatus.SUCCESS;
-  }
-  if (statusMap.pending) {
-    return LocatorTaskStatus.PENDING;
-  }
-  if (statusMap.failure) {
-    return LocatorTaskStatus.FAILURE;
-  }
-  if (statusMap.revoked) {
-    return LocatorTaskStatus.REVOKED;
-  }
-  // fallback for any unhandled cases
-  return null;
+  // TODO: uncomment when back-end will be ready (issues/1284) 246-266 lines
+  // const statusMap = {
+  //   success: xPathStatus === LocatorTaskStatus.SUCCESS && cssSelectorStatus === LocatorTaskStatus.SUCCESS,
+  //   pending: xPathStatus === LocatorTaskStatus.PENDING || cssSelectorStatus === LocatorTaskStatus.PENDING,
+  //   failure: xPathStatus === LocatorTaskStatus.FAILURE || cssSelectorStatus === LocatorTaskStatus.FAILURE,
+  //   revoked: xPathStatus === LocatorTaskStatus.REVOKED || cssSelectorStatus === LocatorTaskStatus.REVOKED,
+  // };
+  //
+  // if (statusMap.success) {
+  //   return LocatorTaskStatus.SUCCESS;
+  // }
+  // if (statusMap.pending) {
+  //   return LocatorTaskStatus.PENDING;
+  // }
+  // if (statusMap.failure) {
+  //   return LocatorTaskStatus.FAILURE;
+  // }
+  // if (statusMap.revoked) {
+  //   return LocatorTaskStatus.REVOKED;
+  // }
+  // // fallback for any unhandled cases
+  // return null;
 };
 
 export const hasAllLocators = ({ locatorValue }: ILocator) =>
