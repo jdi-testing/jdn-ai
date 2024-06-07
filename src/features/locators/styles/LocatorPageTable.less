@@ -1,0 +1,42 @@
+.jdn__locatorsTree-container--table {
+  display: grid;
+  grid-template-columns: minmax(100px, auto) 1fr;
+
+  .jdn__locator_colorized-string--vividus {
+    span {
+      display: none;
+    }
+  }
+
+  .jdn__locatorsTree-left,
+  .jdn__locatorsTree-right {
+    min-width: 100px;
+  }
+
+  .jdn__locatorsTree-left {
+    .jdn__locator_buttons,
+    .jdn__locator_output-string-general-view {
+      display: none;
+    }
+
+    .jdn__locator_locator-name--vividus {
+      display: inline;
+    }
+  }
+
+  .jdn__locatorsTree-right {
+    .jdn__locator_locator-type--vividus,
+    .jdn__locator_output-string-general-view,
+    .jdn__locator_output-string {
+      display: inline;
+    }
+
+    .jdn__locator_checkbox_wrapper, .ant-tree-switcher {
+      display: none;
+    }
+  }
+
+  .jdn__locator_locators {
+    white-space: nowrap;
+  }
+}

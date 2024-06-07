@@ -66,7 +66,7 @@ export const getLocatorValueByType = (locatorValue: LocatorValue, locatorType: L
     dataAttributes: dataAttribute,
   };
 
-  if (locatorValue.attributes.dataAttributes && type.startsWith('data')) {
+  if (locatorValue.attributes.dataAttributes && type.startsWith('data-')) {
     dataAttribute = locatorValue.attributes.dataAttributes[type] ?? '';
 
     value[type] = dataAttribute;
@@ -75,6 +75,7 @@ export const getLocatorValueByType = (locatorValue: LocatorValue, locatorType: L
   if (value[type]) {
     return value[type];
   } else {
+    console.warn(`can't find this type: ${type}`);
     return ``;
   }
 };
@@ -116,6 +117,7 @@ export const getLocatorString = (
   name: string,
 ): string => {
   const locatorOutput = `"${locatorValue.output}"`;
+
   return `${annotationType}(${getLocatorPrefix(annotationType, locatorType)}${locatorOutput})\npublic ${type} ${name};`;
 };
 
@@ -150,11 +152,16 @@ export const getLocatorTemplateWithVividus = (
   pageObjectName: string,
   locatorType: LocatorType,
   locator: ILocator,
-): string => {
-  return `variables.${pageObjectName}.${locator.type}.${locator.name}=By.${camelCase(
-    extractPrefixTypeFromLocator(locatorType),
-  )}`;
-};
+): ReactNode => (
+  <>
+    <span className="jdn__locator_locator-page-object-and-type--vividus">
+      variables.{pageObjectName}.{locator.type}.
+    </span>
+    <span className="jdn__locator_locator-name--vividus">{locator.name}</span>
+    <span>=</span>
+    <span className="jdn__locator_locator-type--vividus">By.{camelCase(extractPrefixTypeFromLocator(locatorType))}</span>
+  </>
+);
 
 export const vividusColorizedString = (
   pageObjectName: string,
@@ -177,6 +184,12 @@ export const getLocatorWithJDIAnnotation = (locator: string, locatorType: Locato
 // used in the coverage panel in the Copy option of the Context Menu:
 export const getLocatorWithSelenium = (locator: string, option: string): string =>
   `${AnnotationType.FindBy}(${option} = "${locator}")`;
+
+const getLocatorTemplateWithVividusString = (
+  pageObjectName: string,
+  locatorType: LocatorType,
+  locator: ILocator,
+): string => `variables.${pageObjectName}.${locator.type}.${locator.name}=By.${camelCase(locatorType)}`;
 
 export const getFullLocatorVividusString = (
   pageObjectName: string,
