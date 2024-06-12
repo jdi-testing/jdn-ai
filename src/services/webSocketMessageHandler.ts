@@ -20,9 +20,6 @@ import {
   WSResponseAction,
   XpathMultipleGenerationPayload,
 } from './webSoket.types';
-import { useSelector } from 'react-redux';
-import { URL } from '../app/utils/constants';
-import { selectServerLocation } from '../app/main.selectors';
 
 const isCssSelectorsGenerationPayloadGuard = (payload: any): payload is CssSelectorsGenerationPayload => {
   return (
@@ -75,17 +72,11 @@ export const updateSocketMessageHandler = (dispatch: any, state: any) => {
                 );
               }
               const locatorType: GeneralLocatorType = selectCurrentPOLocatorType(state) ?? LocatorType.xPath;
-              // TODO: remove when back-end will be ready (issues/1734) 79-80 lines
-              const serverLocation = useSelector(selectServerLocation);
-              const isLocalServer = serverLocation === URL.local;
+
               locatorGenerationController.scheduleMultipleLocatorGeneration(
                 locatorType,
                 [element],
                 pageDocumentForRubula,
-                // TODO: remove when back-end will be ready (issues/1734) 86-88 lines
-                undefined,
-                undefined,
-                isLocalServer,
               );
             };
             rescheduleTask();
