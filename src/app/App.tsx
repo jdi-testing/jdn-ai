@@ -8,7 +8,7 @@ import { StatusBar } from './components/StatusBar';
 import { SeveralTabsWarning } from './components/SeveralTabsWarning';
 import { HttpEndpoint, request } from '../services/backend';
 import { checkSession, initLocatorSocketController } from './utils/appUtils';
-import { selectCurrentPage, selectServerLocation } from './main.selectors';
+import { selectCurrentPage } from './main.selectors';
 import { AppDispatch, RootState, store } from './store/store';
 import { useOnDisconnect } from './utils/hooks/useOnDisconnect';
 
@@ -22,7 +22,6 @@ import { isPageObjectPage } from './utils/helpers';
 import './styles/index.less';
 import { Onboarding, useOnboarding } from '../features/onboarding/useOnboarding';
 import { OnboardingProvider, useOnboardingContext } from '../features/onboarding/OnboardingProvider';
-import { URL } from './utils/constants';
 
 const App = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -33,7 +32,6 @@ const App = () => {
   const xpathConfig = useSelector((state: RootState) => state.main.xpathConfig);
   const currentPage = useSelector(selectCurrentPage);
   const isSessionUnique = useSelector((state: RootState) => state.main.isSessionUnique);
-  const serverLocation = useSelector(selectServerLocation);
 
   const { stepsRef } = useOnboardingContext();
 
@@ -54,10 +52,7 @@ const App = () => {
     };
 
     if (backendAvailable === BackendStatus.Accessed) {
-      // TODO: remove condition ("serverLocation === URL.local") when back-end will be ready (issues/1734)
-      if (serverLocation === URL.local) {
-        fetchTemplates();
-      }
+      fetchTemplates();
       initLocatorSocketController(xpathConfig);
     }
   }, [backendAvailable]);
