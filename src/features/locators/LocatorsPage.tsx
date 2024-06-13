@@ -47,11 +47,14 @@ import { setIsEditModalOpen } from './customLocator.slice';
 import { selectIsCustomLocatorFlow } from '../onboarding/store/onboarding.selectors';
 import { stopProgressBar } from '../pageObjects/progressBar.slice';
 import { enablePageObjectsListUI } from '../pageObjects/pageObjectsListUI.slice';
+import { LocatorTreeSpinner } from './components/LocatorTreeSpinner';
+import { selectLocatorsStatus } from './selectors/locators.selectors';
 
 const { confirm } = Modal;
 
 export const LocatorsPage = () => {
   const dispatch = useDispatch();
+  const showSpinner = useSelector(selectLocatorsStatus) === IdentificationStatus.preparing;
   const locators = useSelector(selectFilteredLocators);
   const areUnselectedAll = useSelector(selectIfUnselectedAll);
   const locatorIds = useSelector(getLocatorsIdsByPO);
@@ -236,6 +239,8 @@ export const LocatorsPage = () => {
             >
               {locators.length || areUnselectedAll ? (
                 <LocatorsTree {...{ viewProps, locatorIds }} />
+              ) : showSpinner ? (
+                <LocatorTreeSpinner />
               ) : (
                 <>
                   {isNoPageLocators && (
