@@ -1,6 +1,8 @@
 import { isNull } from 'lodash';
 import { request, WebSocketMessage } from './backend';
-import { NETWORK_ERROR } from '../features/locators/utils/constants';
+import { CONNECTION_TIMEOUT, NETWORK_ERROR } from '../features/locators/utils/constants';
+
+const thirtySeconds = 30000;
 
 class WebSocketController {
   pingInterval = null;
@@ -89,8 +91,8 @@ class WebSocketController {
       this.ping();
       if (this.pingTimeout) return;
       this.pingTimeout = setTimeout(() => {
-        this.messageListener(NETWORK_ERROR);
-      }, 10000);
+        this.messageListener(CONNECTION_TIMEOUT);
+      }, thirtySeconds);
     }, 5000);
   }
 

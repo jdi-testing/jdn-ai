@@ -104,3 +104,8 @@ export const simpleSelectLocatorByJdnHash = createDraftSafeSelector(
     return locators.find(({ elementId }) => pageObjLocators?.includes(elementId));
   },
 );
+
+export const selectLocatorsStatus = createSelector(
+  (state: RootState) => state.locators.present.status,
+  (status) => status,
+);
