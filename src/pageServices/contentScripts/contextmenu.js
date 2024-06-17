@@ -314,26 +314,17 @@ export const runContextMenu = () => {
   const noDeleted = () => predictedElements.some(({ deleted }) => !deleted);
   const areInProgress = () =>
     predictedElements.some(({ locatorValue }) => {
-      const taskStatus = getTaskStatus(
-        locatorValue.locatorValue.xPathStatus,
-        locatorValue.locatorValue.cssSelectorStatus,
-      );
+      const taskStatus = getTaskStatus(locatorValue.xPathStatus, locatorValue.cssSelectorStatus);
       return taskStatus === 'PENDING' || taskStatus === 'STARTED';
     });
   const areRevoked = () =>
     predictedElements.some(({ locatorValue }) => {
-      const taskStatus = getTaskStatus(
-        locatorValue.locatorValue.xPathStatus,
-        locatorValue.locatorValue.cssSelectorStatus,
-      );
+      const taskStatus = getTaskStatus(locatorValue.xPathStatus, locatorValue.cssSelectorStatus);
       return taskStatus === 'REVOKED';
     });
   const areFailed = () =>
     predictedElements.some(({ locatorValue }) => {
-      const taskStatus = getTaskStatus(
-        locatorValue.locatorValue.xPathStatus,
-        locatorValue.locatorValue.cssSelectorStatus,
-      );
+      const taskStatus = getTaskStatus(locatorValue.xPathStatus, locatorValue.cssSelectorStatus);
       return taskStatus === 'FAILURE';
     });
 
