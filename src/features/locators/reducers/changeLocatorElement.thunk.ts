@@ -60,7 +60,7 @@ export const changeLocatorElement = createAsyncThunk(
       elemText: foundElementText || '',
       jdnHash: foundHash,
     };
-    // почему здесь так, почему не отправляется на бэк WS message? для генерации xPath (и cssSelector)
+
     if (isCSSLocator) {
       fullXpath = await getElementFullXpath(foundHash);
       newValue.locatorValue.cssSelector = locatorValue;

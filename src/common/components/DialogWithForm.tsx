@@ -21,6 +21,7 @@ interface OnboardingRefProps {
   onNextClickHandler: () => void;
   isOkButtonDisabled: boolean;
 }
+
 interface DialogFormProps {
   modalProps: JDNModalProps;
   children?: ReactNode;
@@ -79,11 +80,11 @@ export const DialogWithForm: React.FC<DialogFormProps> = ({ modalProps, formProp
         onOk={onOk}
         open={open}
         okButtonProps={okButtonProps}
-        {...{ ...restModal }}
+        {...restModal}
       >
         {open ? (
           <div className="jdn__dialog-with-form" ref={modalRef as React.LegacyRef<HTMLDivElement>}>
-            <Form labelCol={{ span: 4 }} wrapperCol={{ span: 20 }} {...{ form }} {...{ ...restForm }}>
+            <Form labelCol={{ span: 4 }} wrapperCol={{ span: 20 }} form={form} {...restForm}>
               {children}
             </Form>
           </div>
