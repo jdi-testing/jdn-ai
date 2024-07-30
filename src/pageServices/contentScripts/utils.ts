@@ -34,7 +34,7 @@ export const evaluateStandardLocator = ({
       const nodeList = document.querySelectorAll('a');
       const condition = (node: HTMLAnchorElement) => node.textContent && node.textContent.includes(selector);
 
-      // create temporary nodeList
+      // create temporary nodeList:
       const filteredNodes = document.createElement('div');
 
       Array.from(nodeList).forEach((node) => {
@@ -51,10 +51,6 @@ export const evaluateStandardLocator = ({
       foundElements = document.querySelectorAll(preparedClassName);
     } else if (locatorType.startsWith('data-')) {
       foundElements = document.querySelectorAll(`[${locatorType}="${selector}"]`);
-    } else if (selector.startsWith('[data-') && locatorType === LocatorType.cssSelector) {
-      // TODO: find where added escaping for this string and remove it:
-      // At the moment the workaround replaceAll(/\\/g, '') is used
-      foundElements = document.querySelectorAll(`${selector.replaceAll(/\\/g, '')}`);
     } else {
       foundElements = document.querySelectorAll(selector);
     }

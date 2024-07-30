@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { CaretDown } from '@phosphor-icons/react';
 import { selectCurrentPage } from '../../../app/main.selectors';
 import { RootState } from '../../../app/store/store';
-import { ElementId, ILocator } from '../types/locator.types';
+import { ElementId } from '../types/locator.types';
 import { defaultLibrary } from '../types/generationClasses.types';
 import { LocatorsProgress } from './LocatorsProgress';
 import { useSize } from '../utils/useSize';
@@ -19,7 +19,7 @@ import { checkForEscaped, fullEscapeLocatorString } from '../utils/escapeLocator
 import { LocatorType } from '../../../common/types/common';
 import type RcTree from 'rc-tree';
 import cn from 'classnames';
-import { getTaskStatus } from '../utils/utils';
+import { createLocatorsMap, getTaskStatus } from '../utils/utils';
 
 export enum SearchState {
   None = 'none',
@@ -94,15 +94,7 @@ export const LocatorsTree: React.FC<LocatorTreeProps> = ({ locatorIds, viewProps
     setExpandAll(ExpandState.Custom);
   };
 
-  const createLocatorsMap = () => {
-    const map: Record<ElementId, ILocator> = {};
-    for (let index = 0; index < locators.length; index++) {
-      map[locators[index].elementId] = locators[index];
-    }
-    return map;
-  };
-
-  const locatorsMap = createLocatorsMap();
+  const locatorsMap = createLocatorsMap(locators);
 
   const locatorsTree = useMemo(
     () => convertListToTree(locators, searchString),

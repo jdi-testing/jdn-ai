@@ -4,6 +4,7 @@ import { ElementClass, ElementLibrary } from '../types/generationClasses.types';
 import { ILocator, LocatorValue } from '../types/locator.types';
 import { CALCULATING } from './constants';
 import { camelCase } from 'lodash';
+import { dataAttrPrefixForVividus, extractPrefixTypeFromLocator, removePrefixFromLocatorType } from './utils';
 
 const getLocatorAnnotationStringByType = (value: string, locatorType: LocatorType, annotationType: AnnotationType) => {
   if (annotationType === AnnotationType.FindBy) return value;
@@ -31,8 +32,28 @@ const getLocatorAnnotationStringByType = (value: string, locatorType: LocatorTyp
   return annotations[locatorType];
 };
 
-export const getLocatorValueByType = (locatorValue: LocatorValue, type: LocatorType): string => {
+export const getLocatorValueByType = (locatorValue: LocatorValue, locatorType: LocatorType): string => {
   let dataAttribute = '';
+  let type = locatorType;
+
+  const isXPathDataAttrForVividus = type.startsWith(dataAttrPrefixForVividus.xPath);
+  const isCssSelectorDataAttrForVividus = type.startsWith(dataAttrPrefixForVividus.cssSelector);
+  const isDataAttrForVividus = isXPathDataAttrForVividus || isCssSelectorDataAttrForVividus;
+
+  if (isDataAttrForVividus) {
+    type = removePrefixFromLocatorType(type);
+    if (locatorValue.attributes.dataAttributes) {
+      const outputValue = locatorValue.attributes.dataAttributes[type] ?? '';
+      let outputValueString = outputValue;
+      if (isXPathDataAttrForVividus) {
+        outputValueString = `//*[@${type}='${outputValue}']`;
+      }
+      if (isCssSelectorDataAttrForVividus) {
+        outputValueString = `*[${type}="${outputValue}"]`;
+      }
+      return outputValueString;
+    }
+  }
 
   const value = {
     'CSS Selector': locatorValue.cssSelector || locatorValue.originalCssSelector || CALCULATING,
@@ -45,7 +66,7 @@ export const getLocatorValueByType = (locatorValue: LocatorValue, type: LocatorT
     dataAttributes: dataAttribute,
   };
 
-  if (locatorValue.attributes.dataAttributes && type.startsWith('data-')) {
+  if (locatorValue.attributes.dataAttributes && type.startsWith('data')) {
     dataAttribute = locatorValue.attributes.dataAttributes[type] ?? '';
 
     value[type] = dataAttribute;
@@ -54,7 +75,6 @@ export const getLocatorValueByType = (locatorValue: LocatorValue, type: LocatorT
   if (value[type]) {
     return value[type];
   } else {
-    console.warn(`can't find this type: ${type}`);
     return ``;
   }
 };
@@ -96,7 +116,6 @@ export const getLocatorString = (
   name: string,
 ): string => {
   const locatorOutput = `"${locatorValue.output}"`;
-
   return `${annotationType}(${getLocatorPrefix(annotationType, locatorType)}${locatorOutput})\npublic ${type} ${name};`;
 };
 
@@ -131,7 +150,11 @@ export const getLocatorTemplateWithVividus = (
   pageObjectName: string,
   locatorType: LocatorType,
   locator: ILocator,
-): string => `variables.${pageObjectName}.${locator.type}.${locator.name}=By.${camelCase(locatorType)}`;
+): string => {
+  return `variables.${pageObjectName}.${locator.type}.${locator.name}=By.${camelCase(
+    extractPrefixTypeFromLocator(locatorType),
+  )}`;
+};
 
 export const vividusColorizedString = (
   pageObjectName: string,

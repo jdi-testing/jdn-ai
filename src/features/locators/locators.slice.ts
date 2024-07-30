@@ -49,6 +49,7 @@ export interface ChangeLocatorAttributesPayload {
   isCustomName?: boolean;
   isGeneratedName?: boolean;
   locatorType: LocatorType;
+  isCurrentFrameworkVividus?: boolean;
 }
 
 const locatorsSlice = createSlice({
@@ -60,7 +61,7 @@ const locatorsSlice = createSlice({
       state.status = IdentificationStatus.success;
     },
     changeLocatorAttributes(state, { payload }: PayloadAction<ChangeLocatorAttributesPayload>) {
-      const { locatorValue, elementId, locatorType, ...rest } = payload;
+      const { locatorValue, elementId, locatorType, isCurrentFrameworkVividus, ...rest } = payload;
 
       const currentLocator = simpleSelectLocatorById(state, elementId);
 
