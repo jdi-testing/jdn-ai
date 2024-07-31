@@ -19,8 +19,9 @@ interface IOptionsWithLabel {
 }
 
 export interface ILocatorTypeOptions {
-  value?: string;
   label: string;
+  value?: string;
+  desc?: string;
   options?: IOptionsWithLabel[];
 }
 
