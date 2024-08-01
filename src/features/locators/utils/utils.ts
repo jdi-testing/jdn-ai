@@ -80,11 +80,7 @@ export const extractPrefixTypeFromLocator = (str: string): string => {
 
 const prepareLocatorStringForEvaluation = (type: LocatorType, string: string): string => {
   const escapeString = escapeLocatorString(string);
-  const isCSSSelectorForVividus =
-    type.startsWith(dataAttrPrefixForVividus.cssSelector) || type.startsWith('CSS Selector');
-  if (isCSSSelectorForVividus) {
-    return string;
-  }
+
   if (type === LocatorType.id) return `#${escapeString}`;
   if (type === LocatorType.className) return `.${escapeString}`;
   if (type === LocatorType.name) return `[name="${escapeString}"]`;

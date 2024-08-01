@@ -22,6 +22,11 @@ interface EvaluateStandardLocator {
   originJdnHash: string;
 }
 
+const unescapeLocatorString = (escapedStr: string): string => {
+  return escapedStr.replace(/\\(["'\\])/g, '$1');
+};
+const dataAttrPrefixForVividus = { xPath: 'xPath-data-', cssSelector: 'cssSelector-data-' };
+
 export const evaluateStandardLocator = ({
   selector,
   locatorType,
@@ -30,7 +35,12 @@ export const evaluateStandardLocator = ({
 }: EvaluateStandardLocator) => {
   try {
     let foundElements: NodeListOf<Element>;
-    if (locatorType === LocatorType.linkText) {
+    const isCSSSelectorForVividus =
+      locatorType.startsWith(dataAttrPrefixForVividus.cssSelector) || locatorType.startsWith('CSS Selector');
+
+    if (isCSSSelectorForVividus) {
+      foundElements = document.querySelectorAll(unescapeLocatorString(selector));
+    } else if (locatorType === LocatorType.linkText) {
       const nodeList = document.querySelectorAll('a');
       const condition = (node: HTMLAnchorElement) => node.textContent && node.textContent.includes(selector);
 
