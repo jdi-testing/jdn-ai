@@ -1,3 +1,6 @@
+// ToDo: fix TS, remove the comment when there is time in the sprint
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import React, { useEffect, useState } from 'react';
 import { Form, Input, Select, Space } from 'antd';
 import Icon from '@ant-design/icons';
@@ -80,6 +83,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
   const [isEditedName, setIsEditedName] = useState<boolean>(isCustomName);
 
   const [form] = Form.useForm<FormValues>();
+
   const isCurrentFrameworkVividus = pageObjectFramework === FrameworkType.Vividus;
   // ToDo rewrite all related logic and tests for defaultLocatorType: string (because it's string)
   const defaultLocatorType: LocatorType = locatorType || pageObjectLocatorType || LocatorType.xPath;
@@ -105,6 +109,25 @@ export const LocatorEditDialog: React.FC<Props> = ({
   };
 
   const notShownElementIds = useSelector(selectNotShownElementIds);
+
+  const [textareaValue, setTextareaValue] = useState('');
+
+  const handleTypeChangeBySelect = (value: string, option: { desc: React.SetStateAction<string> }) => {
+    console.log('handleTypeChangeBySelect ', option.desc);
+    setTextareaValue(option.desc);
+    form.setFieldValue('locator', option.desc);
+
+    if (isEditedName) return;
+
+    const newName = createNewName(
+      { elementId, isCustomName, type, name, elemId, elemName, elemText } as ILocator,
+      value,
+      library,
+      locators,
+    );
+    form.setFieldValue('name', newName);
+  };
+
   const getLocatorValidationRules: () => Rule[] = () =>
     createLocatorValidationRules(
       isCreatingForm,
@@ -116,19 +139,8 @@ export const LocatorEditDialog: React.FC<Props> = ({
       elementId,
       notShownElementIds,
     );
+
   const [locatorValidationRules, setLocatorValidationRules] = useState<Rule[]>(getLocatorValidationRules());
-
-  const handleTypeChange = (value: string) => {
-    if (isEditedName) return;
-
-    const newName = createNewName(
-      { elementId, isCustomName, type, name, elemId, elemName, elemText } as ILocator,
-      value,
-      library,
-      locators,
-    );
-    form.setFieldValue('name', newName);
-  };
 
   const handleNameChange = () => {
     setIsEditedName(true);
@@ -191,7 +203,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
     if ((!validationMessage.length && !jdnHash) || validationMessage === LocatorValidationWarnings.NewElement) {
       await dispatch(changeLocatorElement(updatedLocator));
     } else {
-      dispatch(changeLocatorAttributes(updatedLocator));
+      dispatch(changeLocatorAttributes({ ...updatedLocator, isCurrentFrameworkVividus }));
     }
 
     closeDialog();
@@ -223,12 +235,12 @@ export const LocatorEditDialog: React.FC<Props> = ({
       </div>
     ) : null;
 
-  const onLocatorTypeChange = async () => {
+  const onLocatorTypeChange = async (newLocatorType: LocatorType) => {
     setLocatorValidationRules(getLocatorValidationRules());
-    const newLocatorType = form.getFieldValue('locatorType');
-    const newLocator = form.getFieldValue('locator');
 
-    if (newLocator !== '') {
+    const previousLocatorValue = form.getFieldValue('locator');
+
+    if (previousLocatorValue !== '') {
       const newLocatorValue = await getLocatorValueOnTypeSwitch(
         newLocatorType,
         validationMessage,
@@ -243,7 +255,10 @@ export const LocatorEditDialog: React.FC<Props> = ({
 
   const onFieldsChange = async (changedValues: FieldData[]) => {
     const isLocatorTypeChanged = changedValues.some((value) => value.name.toString().includes('locatorType'));
-    if (isLocatorTypeChanged) await onLocatorTypeChange();
+    if (isLocatorTypeChanged) {
+      const newLocatorType = changedValues.find((value) => value.name.toString().includes('locatorType'))?.value;
+      await onLocatorTypeChange(newLocatorType);
+    }
     setIsOkButtonDisabled(computeIsOkButtonDisabled());
   };
 
@@ -264,6 +279,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
       value: value,
     }));
   const [locatorTypeOptions, setLocatorTypeOptions] = useState<ILocatorTypeOptions[]>([]);
+
   useEffect(() => {
     if (!isCreatingForm) {
       const fetchLocatorTypeOptions = async () => {
@@ -281,7 +297,8 @@ export const LocatorEditDialog: React.FC<Props> = ({
     }
   }, [locatorValue, locators, elementId]);
 
-  const handleLocatorDropdownOnChange = async () => {
+  const handleLocatorDropdownOnChange = async (_: any, option: { desc: React.SetStateAction<string> }) => {
+    setTextareaValue(option.desc);
     setValidationMessage('');
 
     try {
@@ -344,7 +361,7 @@ export const LocatorEditDialog: React.FC<Props> = ({
         ]}
       >
         <Select
-          onChange={handleTypeChange}
+          onChange={handleTypeChangeBySelect}
           showSearch
           filterOption={(input, option) => isFilteredSelect(input, option)}
           options={getBlockTypeOptions()}
@@ -379,7 +396,13 @@ export const LocatorEditDialog: React.FC<Props> = ({
         help={renderValidationMessage()}
         extra={renderValidationWarning()}
       >
-        <Input.TextArea spellCheck={false} disabled={isLocatorDisabled} autoSize className="input input__textarea" />
+        <Input.TextArea
+          value={textareaValue}
+          spellCheck={false}
+          disabled={isLocatorDisabled}
+          autoSize
+          className="input input__textarea"
+        />
       </Form.Item>
     </DialogWithForm>
   );

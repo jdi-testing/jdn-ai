@@ -44,11 +44,47 @@ export const evaluateStandardLocator = (
   originJdnHash?: string,
 ) => sendMessage.evaluateStandardLocator({ selector, locatorType, elementId, originJdnHash });
 
+export const dataAttrPrefixForVividus = { xPath: 'xPath-data-', cssSelector: 'cssSelector-data-' };
+
+export const removePrefixFromLocatorType = (str: string): LocatorType => {
+  if (str.startsWith(dataAttrPrefixForVividus.cssSelector)) {
+    return str.replace(dataAttrPrefixForVividus.cssSelector, '') as LocatorType;
+  }
+  if (str.startsWith(dataAttrPrefixForVividus.xPath)) {
+    return str.replace(dataAttrPrefixForVividus.xPath, '') as LocatorType;
+  }
+
+  console.warn(`Can't remove prefix: Unknown prefix: ${str}`);
+  return str as LocatorType;
+};
+
+enum VividusDataAttributesPrefixes {
+  CssSelector = 'cssSelector-data-',
+  xPath = 'xPath-data-',
+}
+
+export const extractPrefixTypeFromLocator = (str: string): string => {
+  const cssSelectorPrefix = VividusDataAttributesPrefixes.CssSelector;
+  const xPathPrefix = VividusDataAttributesPrefixes.xPath;
+
+  if (str.startsWith(cssSelectorPrefix)) {
+    return 'cssSelector';
+  }
+  if (str.startsWith(xPathPrefix)) {
+    return 'xPath';
+  }
+
+  console.log(`Can't extract prefix: Unknown prefix: ${str}`);
+  return str;
+};
+
 const prepareLocatorStringForEvaluation = (type: LocatorType, string: string): string => {
   const escapeString = escapeLocatorString(string);
+
   if (type === LocatorType.id) return `#${escapeString}`;
   if (type === LocatorType.className) return `.${escapeString}`;
   if (type === LocatorType.name) return `[name="${escapeString}"]`;
+
   return escapeString;
 };
 
@@ -59,7 +95,9 @@ export const evaluateLocator = async (
   jdnHash?: string,
 ) => {
   if (startsWithDigit(locatorString)) return LocatorValidationWarnings.StartsWithDigit;
-  if (locatorType === LocatorType.xPath) return evaluateXpath(locatorString, elementId, jdnHash);
+  if (locatorType === LocatorType.xPath || locatorType.startsWith('xPath')) {
+    return evaluateXpath(locatorString, elementId, jdnHash);
+  }
 
   const preparedValue = prepareLocatorStringForEvaluation(locatorType, locatorString);
   return evaluateStandardLocator(preparedValue, locatorType, elementId, jdnHash);
@@ -196,6 +234,11 @@ export const getLocatorValueOnTypeSwitch = async (
     newLocatorType === LocatorType.tagName ||
     newLocatorType.startsWith('data-');
 
+  const isCssSelectorDataAttributeForVividus = newLocatorType.startsWith(dataAttrPrefixForVividus.cssSelector);
+  const isXPathDataAttributeForVividus = newLocatorType.startsWith(dataAttrPrefixForVividus.xPath);
+
+  const isDataAttributeForVividus = isCssSelectorDataAttributeForVividus || isXPathDataAttributeForVividus;
+
   const isDataAttributesFalsy =
     !locatorValue.attributes.dataAttributes || Object.keys(locatorValue.attributes.dataAttributes).length === 0;
   const isStandardLocatorValueFalsy =
@@ -213,15 +256,27 @@ export const getLocatorValueOnTypeSwitch = async (
 
       ({ cssSelector: newLocatorValue } = await generateSelectorByHash(elementId, foundHash));
     } else {
-      if (newLocatorType === LocatorType.cssSelector) newLocatorValue = locatorValue.cssSelector;
+      if (newLocatorType === LocatorType.cssSelector) return locatorValue.cssSelector;
       try {
         newLocatorValue = getLocatorValueByType(locatorValue, newLocatorType);
       } catch (error) {
         console.log('error: ', error);
       }
     }
+  } else if (isDataAttributeForVividus) {
+    const newLocatorTypeWithoutPrefix = removePrefixFromLocatorType(newLocatorType);
+    if (isCssSelectorDataAttributeForVividus && locatorValue.attributes.dataAttributes) {
+      const attributeValue = locatorValue.attributes.dataAttributes[newLocatorTypeWithoutPrefix];
+      newLocatorValue = `*[${newLocatorTypeWithoutPrefix}="${attributeValue}"]`;
+    } else if (isXPathDataAttributeForVividus && locatorValue.attributes.dataAttributes) {
+      const attributeValue = locatorValue.attributes.dataAttributes[newLocatorTypeWithoutPrefix];
+      newLocatorValue = `//*[@${newLocatorTypeWithoutPrefix}='${attributeValue}']`;
+    }
+    return newLocatorValue;
   } else {
+    console.log('not a isStandardLocator');
     if (isLocatorLeadsToNewElement || !locatorValue.xPath) {
+      console.log('isLocatorLeadsToNewElement || !locatorValue.xPath');
       const { foundHash } = JSON.parse(
         await evaluateStandardLocator(form.getFieldValue('locator'), newLocatorType, elementId),
       );
@@ -267,3 +322,11 @@ export const hasAllLocators = ({ locatorValue }: ILocator) =>
   locatorValue && locatorValue.xPath !== locatorValue.fullXpath && locatorValue.originalCssSelector;
 
 export const getNoLocatorsElements = (locators: ILocator[]) => locators.filter((locator) => !hasAllLocators(locator));
+
+export const createLocatorsMap = (locators: ILocator[]) => {
+  const map: Record<ElementId, ILocator> = {};
+  for (let index = 0; index < locators.length; index++) {
+    map[locators[index].elementId] = locators[index];
+  }
+  return map;
+};

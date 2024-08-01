@@ -34,6 +34,7 @@ export const createLocatorValidationRules = (
           setValidationMessage(validationMessage as LocatorValidationErrorType);
           return await Promise.resolve();
         } catch (err) {
+          console.error('another validation error');
           setValidationMessage(err.message as LocatorValidationErrorType);
           setValidationErrorOptions(err.options);
           return Promise.reject(err);

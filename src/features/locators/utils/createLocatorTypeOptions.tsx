@@ -19,12 +19,13 @@ interface IOptionsWithLabel {
 }
 
 export interface ILocatorTypeOptions {
-  value?: string;
   label: string;
+  value?: string;
+  desc?: string;
   options?: IOptionsWithLabel[];
 }
 
-const generateOptionsWithLabel = (attributes: ElementAttributes): IOptionsWithLabel[] => {
+const generateOptionsWithLabel = (attributes: ElementAttributes, isVividusFramework: boolean): IOptionsWithLabel[] => {
   const generateLabel = (locatorType: string, attribute: string | null) => {
     if (attribute === null || attribute === '') {
       return (
@@ -37,21 +38,43 @@ const generateOptionsWithLabel = (attributes: ElementAttributes): IOptionsWithLa
     return <>{locatorType}</>;
   };
 
-  return Object.keys(attributes).map((key) => {
-    let locatorType = key;
+  const options: IOptionsWithLabel[] = [];
+
+  for (const dataKey of Object.keys(attributes)) {
+    let locatorType = dataKey;
     if (locatorType === 'cssSelector') locatorType = 'CSS Selector';
-    const option: IOptionsWithLabel = {
-      label: generateLabel(locatorType, attributes[key as keyof ElementAttributes] as string),
-      value: locatorType,
-      desc: attributes[key as keyof ElementAttributes] as string,
-    };
 
-    if (attributes[key as keyof ElementAttributes] === null) {
-      option.disabled = true;
+    if (isVividusFramework && dataKey.startsWith('data-') && attributes[dataKey as keyof ElementAttributes]) {
+      const dataValue: string = attributes[dataKey as keyof ElementAttributes] as string;
+
+      if (dataValue !== null && dataValue !== '') {
+        options.push({
+          label: generateLabel('CSS Selector', dataValue),
+          value: `cssSelector-data-${dataKey}`,
+          desc: `*[${dataKey}="${dataValue}"]`,
+        });
+        options.push({
+          label: generateLabel('xPath', dataValue),
+          value: `xPath-data-${dataKey}`,
+          desc: `//*[@${dataKey}='${dataValue}']`,
+        });
+      }
+    } else {
+      const option: IOptionsWithLabel = {
+        label: generateLabel(locatorType, attributes[dataKey as keyof ElementAttributes] as string),
+        value: locatorType,
+        desc: attributes[dataKey as keyof ElementAttributes] as string,
+      };
+
+      if (attributes[dataKey as keyof ElementAttributes] === null) {
+        option.disabled = true;
+      }
+
+      options.push(option);
     }
+  }
 
-    return option;
-  });
+  return options;
 };
 
 const addRestAttributes = (
@@ -65,7 +88,6 @@ const addRestAttributes = (
   const updatedUniqueAttributes: ExtendedElementAttributes = { ...uniqueAttributes, xPath, cssSelector };
   const updatedNonUniqueAttributes: ElementAttributes = nonUniqueAttributes;
 
-  // Add noData fields:
   Object.entries(allLocatorAttributes).forEach(([key, value]) => {
     if (!updatedUniqueAttributes.hasOwnProperty(key) && !updatedNonUniqueAttributes.hasOwnProperty(key)) {
       updatedNonUniqueAttributes[key as keyof ElementAttributes] = value;
@@ -79,13 +101,14 @@ const getLocatorTypeOptions = (
   attributes: ElementAttributes[],
   cssSelector: string | null,
   xPath: string | null,
+  isVividusFramework: boolean,
 ): ILocatorTypeOptions[] => {
   const [updatedUniqueAttributes, updatedNonUniqueAttributes] = addRestAttributes(attributes, cssSelector, xPath);
 
-  const uniqueOptions = generateOptionsWithLabel(updatedUniqueAttributes)
+  const uniqueOptions = generateOptionsWithLabel(updatedUniqueAttributes, isVividusFramework)
     .slice()
     .sort((a, b) => a.value.localeCompare(b.value));
-  const nonUniqueOptions = generateOptionsWithLabel(updatedNonUniqueAttributes)
+  const nonUniqueOptions = generateOptionsWithLabel(updatedNonUniqueAttributes, isVividusFramework)
     .slice()
     .sort((a, b) => a.value.localeCompare(b.value));
 
@@ -155,14 +178,12 @@ const splitUniqueAndNonUniqueAttributes = async (attributes: ElementAttributes):
 export const createLocatorTypeOptions = async (locatorValue: LocatorValue, isVividusFramework: boolean) => {
   const attributes: ElementAttributes = {};
   Object.assign(attributes, locatorValue.attributes);
-  if (isVividusFramework) {
-    delete attributes.dataAttributes;
-  }
 
   const optionsData = await splitUniqueAndNonUniqueAttributes(attributes);
   return getLocatorTypeOptions(
     optionsData,
     locatorValue.cssSelector ?? locatorValue.originalCssSelector ?? null,
     locatorValue.xPath,
+    isVividusFramework,
   );
 };

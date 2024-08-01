@@ -1,5 +1,3 @@
-// ToDo fix naming according to naming-convention
-/* eslint-disable @typescript-eslint/naming-convention */
 import React, { FC, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { Button, Checkbox } from 'antd';
 import { DotsThree } from '@phosphor-icons/react';
@@ -52,7 +50,6 @@ interface Props {
 
 export const Locator: FC<Props> = ({ element, currentPage, searchState, depth, searchString, index }) => {
   const dispatch = useDispatch();
-
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const {

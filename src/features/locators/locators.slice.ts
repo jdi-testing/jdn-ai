@@ -49,6 +49,7 @@ export interface ChangeLocatorAttributesPayload {
   isCustomName?: boolean;
   isGeneratedName?: boolean;
   locatorType: LocatorType;
+  isCurrentFrameworkVividus?: boolean;
 }
 
 const locatorsSlice = createSlice({

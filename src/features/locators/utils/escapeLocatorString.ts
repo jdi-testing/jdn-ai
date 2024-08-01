@@ -16,5 +16,5 @@ export const fullEscapeLocatorString = (str: string = ''): string => {
 
 export const checkForEscaped = (str: string = ''): boolean => {
   const found = str.match(/\\/);
-  return found ? true : false;
+  return !!found;
 };
