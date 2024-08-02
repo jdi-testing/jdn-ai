@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useMemo, useState } from 'react';
-import { Badge, Button, Checkbox, Divider, Dropdown, Input, Switch, Typography } from 'antd';
+import { Badge, Checkbox, Divider, Dropdown, Input, Switch, Typography } from 'antd';
 import { SwitchChangeEventHandler } from 'antd/lib/switch';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCurrentPageObject } from '../pageObjects/selectors/pageObjects.selectors';
@@ -68,28 +68,22 @@ export const Filter = () => {
   };
 
   const renderFilterButton = useMemo(() => {
-    // uncomment for issue 950
-    // const usedFiltersCount = classFilterArr.filter((subArray) => subArray.includes(false)).length;
+    const usedFiltersCount = classFilterArr.filter((subArray) => subArray.includes(false)).length;
+    console.log('usedFiltersCount: ', usedFiltersCount);
 
     return (
-      <Button
-        className="jdn__filter_filter-button"
-        type="link"
-        onClick={handleToggleFilterOpen}
-        icon={
-          isFiltered ? (
-            // uncomment for issue 950
-            // <Badge count={usedFiltersCount} color="blue" size="small" offset={[2, 2]}>
-            //   <FilterIcon />
-            // </Badge>
-            <Badge dot={true} color="blue" offset={[1, 4]}>
+      <div className="jdn__filter_filter-button" onClick={handleToggleFilterOpen}>
+        <span className="jdn__filter_filter-button_icon">
+          {isFiltered ? (
+            <Badge count={usedFiltersCount} color="blue" size="small" offset={[2, 2]}>
               <FilterIcon />
             </Badge>
           ) : (
             <FilterIcon />
-          )
-        }
-      />
+          )}
+        </span>
+        Filter
+      </div>
     );
   }, [isFiltered, classFilterArr]);
 
