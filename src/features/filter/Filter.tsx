@@ -1,16 +1,15 @@
 import React, { ChangeEvent, useMemo, useState } from 'react';
-import { Badge, Checkbox, Divider, Dropdown, Input, Switch, Typography } from 'antd';
-import { SwitchChangeEventHandler } from 'antd/lib/switch';
+import { Badge, Button, Checkbox, Divider, Dropdown, Input, Switch, Typography } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { selectCurrentPageObject } from '../pageObjects/selectors/pageObjects.selectors';
 import { ElementClass } from '../locators/types/generationClasses.types';
 import { FilterHeader } from './components/FilterHeader';
-import { selectDetectedClassesFilter, selectIfSelectedAll, selectIsFiltered } from './filter.selectors';
+import { selectDetectedClassesFilter, selectIsFiltered } from './filter.selectors';
 import { toggleClassFilter } from './reducers/toggleClassFilter.thunk';
-import { toggleClassFilterAll } from './reducers/toggleClassFilterAll.thunk';
 import { convertFilterToArr } from './utils/filterSet';
 import { FilterIcon } from './components/shared/FilterIcon';
 import { AppDispatch } from '../../app/store/store';
+import { clearAllFilters } from './reducers/clearAllFilters.thunk';
 
 export const Filter = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -19,7 +18,18 @@ export const Filter = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const classFilter = useSelector(selectDetectedClassesFilter);
-  const areSelectedAll = useSelector(selectIfSelectedAll);
+  // const areSelectedAll = useSelector(selectIfSelectedAll);
+  // const handleSelectAllChange: SwitchChangeEventHandler = (checked) => {
+  //   if (!pageObject) return;
+  //   dispatch(
+  //     toggleClassFilterAll({
+  //       pageObjectId: pageObject.id,
+  //       library: pageObject.library,
+  //       value: checked,
+  //     }),
+  //   );
+  // };
+  // <Switch size="small" checked={areSelectedAll} onChange={handleSelectAllChange} />
   const classFilterArr = useMemo(() => convertFilterToArr(classFilter, searchTerm), [classFilter, searchTerm]);
 
   const isFiltered = useSelector(selectIsFiltered);
@@ -52,15 +62,9 @@ export const Filter = () => {
     setSearchTerm(event.target.value);
   };
 
-  const handleSelectAllChange: SwitchChangeEventHandler = (checked) => {
+  const clearAllFilers: React.MouseEventHandler<HTMLElement> = () => {
     if (!pageObject) return;
-    dispatch(
-      toggleClassFilterAll({
-        pageObjectId: pageObject.id,
-        library: pageObject.library,
-        value: checked,
-      }),
-    );
+    dispatch(clearAllFilters({ pageObjectId: pageObject.id, library: pageObject.library }));
   };
 
   const handleToggleFilterOpen = () => {
@@ -91,6 +95,8 @@ export const Filter = () => {
     setOpen(false);
   };
 
+  const isDefaultSetTurnOn = false;
+
   return (
     <Dropdown
       menu={menuItems}
@@ -103,10 +109,15 @@ export const Filter = () => {
           </div>
           <div className="jdn__filter_dropdown_scroll">
             <div className="jdn__filter_dropdown_control">
-              <Switch size="small" checked={areSelectedAll} onChange={handleSelectAllChange} />
-              <Typography.Text> Select all</Typography.Text>
+              <Switch size="small" checked={isDefaultSetTurnOn} onChange={() => console.log('Default set toggle')} />
+              <Typography.Text>Default set</Typography.Text>
             </div>
             {menu}
+            <div className="jdn__filter_dropdown_control">
+              <Button type="link" onClick={clearAllFilers}>
+                Clear
+              </Button>
+            </div>
           </div>
         </div>
       )}

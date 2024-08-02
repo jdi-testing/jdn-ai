@@ -6,12 +6,11 @@ import { jdiClassFilterInit } from '../utils/filterSet';
 import { PageObjectId } from '../../pageObjects/types/pageObjectSlice.types';
 import { ElementLibrary } from '../../locators/types/generationClasses.types';
 import { getLocalStorage, LocalStorageKey, setLocalStorage } from '../../../common/utils/localStorage';
-import { clearAllFilters } from './clearAllFilters.thunk';
 
-export const toggleClassFilterAll = createAsyncThunk(
-  'filter/toggleClassFilterAll',
-  async (payload: { pageObjectId: PageObjectId; library: ElementLibrary; value: boolean }, { getState }) => {
-    const { pageObjectId, value, library } = payload;
+export const clearAllFilters = createAsyncThunk(
+  'filter/clearAllFilters',
+  async (payload: { pageObjectId: PageObjectId; library: ElementLibrary }, { getState }) => {
+    const { pageObjectId, library } = payload;
     const state = getState() as RootState;
     let newFilterValue = simpleSelectFilterById(state.filters, pageObjectId);
     const savedFilters = getLocalStorage(LocalStorageKey.Filter);
@@ -21,9 +20,8 @@ export const toggleClassFilterAll = createAsyncThunk(
     }
     const newFilter = { ...newFilterValue[FilterKey.JDIclassFilter] };
     Object.keys(newFilter).forEach((key: string) => {
-      // don't know how to fix it
       //@ts-ignore
-      newFilter[key] = value;
+      newFilter[key] = false;
     });
 
     setLocalStorage(LocalStorageKey.Filter, { ...(savedFilters ?? {}), [library]: newFilter });
@@ -31,18 +29,8 @@ export const toggleClassFilterAll = createAsyncThunk(
   },
 );
 
-export const toggleClassFilterAllReducer = (builder: any) => {
+export const clearAllFiltersReducer = (builder: any) => {
   return builder
-    .addCase(
-      toggleClassFilterAll.fulfilled,
-      (state: any, { payload }: { payload: { newFilterValue: Filter; newFilter: ClassFilterValue } }) => {
-        const { newFilterValue, newFilter } = payload;
-        filterAdapter.upsertOne(state, { ...newFilterValue, [FilterKey.JDIclassFilter]: newFilter });
-      },
-    )
-    .addCase(toggleClassFilterAll.rejected, (state: RootState, { error }: { error: Error }) => {
-      throw new Error(error.stack);
-    })
     .addCase(
       clearAllFilters.fulfilled,
       (state: any, { payload }: { payload: { newFilterValue: Filter; newFilter: ClassFilterValue } }) => {
