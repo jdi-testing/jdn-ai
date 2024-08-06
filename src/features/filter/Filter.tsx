@@ -10,6 +10,7 @@ import { convertFilterToArr } from './utils/filterSet';
 import { FilterIcon } from './components/shared/FilterIcon';
 import { AppDispatch } from '../../app/store/store';
 import { clearAllFilters } from './reducers/clearAllFilters.thunk';
+import { areAllValuesFalse } from '../locators/utils/helpers';
 
 export const Filter = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -18,24 +19,14 @@ export const Filter = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const classFilter = useSelector(selectDetectedClassesFilter);
-  // const areSelectedAll = useSelector(selectIfSelectedAll);
-  // const handleSelectAllChange: SwitchChangeEventHandler = (checked) => {
-  //   if (!pageObject) return;
-  //   dispatch(
-  //     toggleClassFilterAll({
-  //       pageObjectId: pageObject.id,
-  //       library: pageObject.library,
-  //       value: checked,
-  //     }),
-  //   );
-  // };
-  // <Switch size="small" checked={areSelectedAll} onChange={handleSelectAllChange} />
+
   const classFilterArr = useMemo(() => convertFilterToArr(classFilter, searchTerm), [classFilter, searchTerm]);
 
   const isFiltered = useSelector(selectIsFiltered);
 
   const handleFilterChange = (key: string, oldValue: boolean) => () => {
     if (!pageObject) return;
+    console.log('oldValue: ', key, oldValue);
     dispatch(
       toggleClassFilter({
         pageObjectId: pageObject.id,
@@ -45,6 +36,7 @@ export const Filter = () => {
       }),
     );
   };
+
   const menuItems = {
     items: classFilterArr.map(([key, value]) => {
       return {
@@ -72,14 +64,14 @@ export const Filter = () => {
   };
 
   const renderFilterButton = useMemo(() => {
-    const usedFiltersCount = classFilterArr.filter((subArray) => subArray.includes(false)).length;
-    console.log('usedFiltersCount: ', usedFiltersCount);
+    const isFilterClear = areAllValuesFalse(classFilterArr);
+    const usedFiltersCount = classFilterArr.filter((subArray) => subArray.includes(true)).length;
 
     return (
       <div className="jdn__filter_filter-button" onClick={handleToggleFilterOpen}>
         <span className="jdn__filter_filter-button_icon">
           {isFiltered ? (
-            <Badge count={usedFiltersCount} color="blue" size="small" offset={[2, 2]}>
+            <Badge count={isFilterClear ? 0 : usedFiltersCount} color="blue" size="small" offset={[2, 2]}>
               <FilterIcon />
             </Badge>
           ) : (
@@ -97,6 +89,10 @@ export const Filter = () => {
 
   const isDefaultSetTurnOn = false;
 
+  const defaultSetToggle = () => {
+    console.log('Default set toggle');
+  };
+
   return (
     <Dropdown
       menu={menuItems}
@@ -109,8 +105,8 @@ export const Filter = () => {
           </div>
           <div className="jdn__filter_dropdown_scroll">
             <div className="jdn__filter_dropdown_control">
-              <Switch size="small" checked={isDefaultSetTurnOn} onChange={() => console.log('Default set toggle')} />
-              <Typography.Text>Default set</Typography.Text>
+              <Switch size="small" checked={isDefaultSetTurnOn} onChange={defaultSetToggle} />
+              <Typography.Text> Default set</Typography.Text>
             </div>
             {menu}
             <div className="jdn__filter_dropdown_control">
