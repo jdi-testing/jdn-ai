@@ -20,4 +20,6 @@ export enum HTML5classes {
   textarea = 'TextArea',
   textfield = 'TextField',
   title = 'Title',
+  combobox = 'Combobox',
+  form = 'Form',
 }

@@ -26,7 +26,7 @@ export enum VuetifyClasses {
   datePickerMonth = 'DatePickerMonth',
   dialog = 'Dialog',
   divider = 'Divider',
-  // expansionPanel = "ExpansionPanel",
+  expansionPanel = 'ExpansionPanel',
   expansionPanels = 'ExpansionPanels',
   fileInput = 'FileInput',
   footer = 'Footer',
