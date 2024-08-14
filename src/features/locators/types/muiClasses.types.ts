@@ -23,4 +23,6 @@ export enum MUIclasses {
   table = 'Table',
   'textarea-autosize' = 'TextArea',
   'text-field' = 'TextField',
+  card = 'Card',
+  modal = 'Modal',
 }

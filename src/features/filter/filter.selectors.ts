@@ -4,14 +4,14 @@ import { selectCurrentPageObject, selectPageObjById } from '../pageObjects/selec
 import { PageObjectId } from '../pageObjects/types/pageObjectSlice.types';
 import { defaultLibrary, ElementClass } from '../locators/types/generationClasses.types';
 import { Filter, FilterKey } from './types/filter.types';
-
-import { jdiClassFilterInit } from './utils/filterSet';
 import { selectLocatorById } from '../locators/selectors/locators.selectors';
 import { isNil } from 'lodash';
 import { hasFalseValue } from './utils/hasFalseValue';
+import { jdiClassFilterInit } from './utils/filterSet';
 
 export const filterAdapter = createEntityAdapter<Filter>({
   selectId: (filter) => filter.pageObjectId,
+  sortComparer: false,
 });
 
 export const { selectAll: simpleSelectFilters, selectById: simpleSelectFilterById } = filterAdapter.getSelectors();
@@ -39,17 +39,29 @@ export const selectDetectedClassesFilter = createSelector(
   (state: RootState) => state,
   (pageObj, state) => {
     const classFilterPO = selectClassFilterByPO(state, pageObj?.id);
+
     if (pageObj?.locators) {
-      const locatorType = new Set(pageObj?.locators.map((locatorId) => selectLocatorById(state, locatorId)?.type));
+      const locatorType = new Set(
+        pageObj.locators.map((locatorId) => {
+          const locator = selectLocatorById(state, locatorId);
+          return locator?.type;
+        }),
+      );
+
       return Object.entries(classFilterPO).reduce(
         (result: Record<ElementClass, boolean>, entry) => {
           const [key, value] = entry;
-          locatorType.has(key as ElementClass) ? (result[key as ElementClass] = value) : null;
+
+          if (locatorType.has(key as ElementClass)) {
+            result[key as ElementClass] = value;
+          }
+
           return result;
         },
         {} as Record<ElementClass, boolean>,
       );
     }
+
     return classFilterPO;
   },
 );
@@ -63,11 +75,6 @@ export const selectAvailableClasses = createSelector(
   },
 );
 
-export const selectIfSelectedAll = createSelector(selectDetectedClassesFilter, (classFilter) => {
-  const arr = Object.entries(classFilter);
-  return !arr.some(([, value]) => !value);
-});
-
 export const selectIfUnselectedAll = createSelector(selectDetectedClassesFilter, (classFilter) => {
   const arr = Object.entries(classFilter);
   return arr.every(([, value]) => !value);
@@ -75,4 +82,9 @@ export const selectIfUnselectedAll = createSelector(selectDetectedClassesFilter,
 
 export const selectIsFiltered = createSelector(selectDetectedClassesFilter, (classFilter) =>
   hasFalseValue(classFilter),
+);
+
+export const selectIsDefaultSetOn = createSelector(
+  (state: RootState, pageObjectId: PageObjectId) => selectFilterById(state, pageObjectId),
+  (filter) => (filter ? filter.isDefaultSetOn ?? false : false),
 );

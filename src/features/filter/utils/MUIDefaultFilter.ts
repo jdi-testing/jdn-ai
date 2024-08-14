@@ -1,0 +1,30 @@
+import { MUIclasses } from '../../locators/types/muiClasses.types';
+import { ElementClass } from '../../locators/types/generationClasses.types';
+
+export const MUIDefaultFilterOn: ElementClass[] = [
+  MUIclasses.button,
+  MUIclasses['button-group'],
+  MUIclasses.checkbox,
+  MUIclasses.radiogroup,
+  MUIclasses.select,
+  MUIclasses.slider,
+  MUIclasses.switch,
+  MUIclasses['text-field'],
+  MUIclasses['bottom-navigation'],
+  MUIclasses.breadcrumbs,
+  MUIclasses.drawer,
+  MUIclasses.link,
+  MUIclasses.menu,
+  MUIclasses.stepper,
+  MUIclasses.progress,
+  MUIclasses.dialog,
+  MUIclasses.snackbar,
+  MUIclasses.accordion,
+  MUIclasses.card,
+  MUIclasses.badge,
+  MUIclasses.chip,
+  MUIclasses.list,
+  MUIclasses.table,
+  MUIclasses.modal,
+  MUIclasses['textarea-autosize'],
+];

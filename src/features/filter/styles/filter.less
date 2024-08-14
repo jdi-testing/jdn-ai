@@ -1,5 +1,6 @@
 .jdn__filter {
   &_dropdown {
+    cursor: default;
     &-content {
       background: #fff;
       box-shadow: 0 3px 6px -4px rgb(0 0 0 / 12%), 0 6px 16px 0 rgb(0 0 0 / 8%), 0 9px 28px 8px rgb(0 0 0 / 5%);
@@ -31,7 +32,7 @@
       flex-direction: row;
       justify-content: space-between;
     }
-    
+
     .ant-modal-close-x {
       width: 34px;
       height: 34px;
@@ -40,11 +41,22 @@
   }
 
   &_filter-button {
+    cursor: pointer;
     width: fit-content;
     height: 23px;
     padding-top: 0;
     padding-bottom: 0;
     padding-left: 10px;
     align-self: flex-end;
+
+    color: rgba(0, 0, 0, 0.85);
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+
+    &_icon {
+      margin-right: 8px;
+    }
+
   }
 }

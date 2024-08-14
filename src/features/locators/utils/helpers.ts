@@ -30,3 +30,11 @@ export const getWebSocketMessages = (
 
   return defaultWebSocketMessages;
 };
+
+export const areAllValuesFalse = (filter: { [key: string]: boolean } | [string, boolean][]): boolean => {
+  if (Array.isArray(filter)) {
+    return filter.every(([_, value]) => value === false);
+  } else {
+    return Object.values(filter).every((value) => value === false);
+  }
+};

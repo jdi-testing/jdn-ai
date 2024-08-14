@@ -32,28 +32,31 @@ export const selectPresentLocatorsByPO = createSelector(
   (state: RootState, pageObjId?: PageObjectId) =>
     isNil(pageObjId) ? selectCurrentPageObject(state) : selectPageObjById(state, pageObjId),
   (locators, pageObject) => {
-    const locByPageObj = pageObject?.locators || [];
-    return locators
-      .filter((locator) => locByPageObj.includes(locator.elementId))
-      .map((locator) => {
-        const annotationType = locator.annotationType || pageObject?.annotationType;
-        const locatorType = locator.locatorType || pageObject?.locatorType || LocatorType.xPath;
-        // ToDo: isDefaultLocatorType ???
-        const isDefaultLocatorType = () => !locator.locatorType && pageObject?.locatorType === LocatorType.cssSelector;
+    if (!pageObject) return [];
 
-        const res: ILocator = {
-          ...locator,
-          ...(annotationType && { annotationType }),
-          ...(locatorType && { locatorType }),
-          ...(isDefaultLocatorType() && {
-            locatorValue: {
-              ...locator.locatorValue,
-              output: getLocator(locator.locatorValue, pageObject?.locatorType),
-            },
-          }),
-        };
-        return res;
-      });
+    const locByPageObj = pageObject.locators || [];
+    const filteredLocators = locators.filter((locator) => locByPageObj.includes(locator.elementId));
+    const mappedLocators = filteredLocators.map((locator) => {
+      const annotationType = locator.annotationType || pageObject.annotationType;
+      const locatorType = locator.locatorType || pageObject.locatorType || LocatorType.xPath;
+
+      const isDefaultLocatorType = () => !locator.locatorType && pageObject.locatorType === LocatorType.cssSelector;
+
+      const res: ILocator = {
+        ...locator,
+        ...(annotationType && { annotationType }),
+        ...(locatorType && { locatorType }),
+        ...(isDefaultLocatorType() && {
+          locatorValue: {
+            ...locator.locatorValue,
+            output: getLocator(locator.locatorValue, pageObject.locatorType),
+          },
+        }),
+      };
+      return res;
+    });
+
+    return mappedLocators;
   },
 );
 

@@ -1,11 +1,11 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { filterAdapter, simpleSelectFilterById } from '../filter.selectors';
 import { RootState } from '../../../app/store/store';
-import { FilterKey, ClassFilterValue, Filter } from '../types/filter.types';
+import { ClassFilterValue, Filter, FilterKey } from '../types/filter.types';
 import { jdiClassFilterInit } from '../utils/filterSet';
 import { PageObjectId } from '../../pageObjects/types/pageObjectSlice.types';
 import { ElementLibrary } from '../../locators/types/generationClasses.types';
-import { LocalStorageKey, setLocalStorage, getLocalStorage } from '../../../common/utils/localStorage';
+import { getLocalStorage, LocalStorageKey, setLocalStorage } from '../../../common/utils/localStorage';
 
 export const toggleClassFilterAll = createAsyncThunk(
   'filter/toggleClassFilterAll',

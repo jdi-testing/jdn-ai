@@ -3,7 +3,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { findByRules, predictElements } from '../../../pageServices/pageDataHandlers';
 import { IdentificationStatus, LocatorsState, PredictedEntity } from '../types/locator.types';
 import { setCurrentPageObj, setPageData } from '../../pageObjects/pageObject.slice';
-import { setFilter } from '../../filter/filter.slice';
+import { setDefaultFilterSetOn, setFilter } from '../../filter/filter.slice';
 import { PageObjectId } from '../../pageObjects/types/pageObjectSlice.types';
 import { defaultLibrary, ElementLibrary, predictEndpoints } from '../types/generationClasses.types';
 
@@ -16,6 +16,8 @@ import { finishProgressBar, setProgressError } from '../../pageObjects/progressB
 import { delay } from '../utils/delay';
 import { fetchPageDocument } from '../../../services/pageDocument/fetchPageDocument.thunk';
 import { createDocumentForRobula } from '../../../services/pageDocument/pageDocument.slice';
+import { defaultFilters } from '../../filter/utils/defaultFilters';
+import { mapJDIclassesToFilter } from '../../filter/utils/filterSet';
 
 interface Meta {
   pageObj: PageObjectId;
@@ -29,8 +31,29 @@ export const identifyElements = createAsyncThunk('locators/identifyElements', as
   const state = thunkAPI.getState() as RootState;
   const library = selectPageObjById(state, pageObj)?.library || defaultLibrary;
   const savedFilters = getLocalStorage(LocalStorageKey.Filter);
-  if (savedFilters && savedFilters[library]) {
-    thunkAPI.dispatch(setFilter({ pageObjectId: pageObj, JDIclassFilter: savedFilters[library] }));
+
+  if (savedFilters) {
+    if (savedFilters[library]) {
+      thunkAPI.dispatch(setFilter({ pageObjectId: pageObj, JDIclassFilter: savedFilters[library] }));
+    } else if (!savedFilters[library]) {
+      thunkAPI.dispatch(
+        setFilter({
+          pageObjectId: pageObj,
+          JDIclassFilter: mapJDIclassesToFilter(library, defaultFilters[library]),
+          isDefaultSetOn: true,
+        }),
+      );
+      thunkAPI.dispatch(setDefaultFilterSetOn({ pageObjectId: pageObj }));
+    }
+  } else if (!savedFilters) {
+    thunkAPI.dispatch(setDefaultFilterSetOn({ pageObjectId: pageObj }));
+    thunkAPI.dispatch(
+      setFilter({
+        pageObjectId: pageObj,
+        JDIclassFilter: mapJDIclassesToFilter(library, defaultFilters[library]),
+        isDefaultSetOn: true,
+      }),
+    );
   }
 
   /* Identify elements, needed for testing purposes. Depend on selected element library,
