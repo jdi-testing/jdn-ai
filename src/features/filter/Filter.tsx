@@ -4,18 +4,24 @@ import { useDispatch, useSelector } from 'react-redux';
 import { selectCurrentPageObject } from '../pageObjects/selectors/pageObjects.selectors';
 import { ElementClass } from '../locators/types/generationClasses.types';
 import { FilterHeader } from './components/FilterHeader';
-import { selectDetectedClassesFilter, selectIsFiltered } from './filter.selectors';
+import { selectDetectedClassesFilter, selectIsDefaultSetOn, selectIsFiltered } from './filter.selectors';
 import { toggleClassFilter } from './reducers/toggleClassFilter.thunk';
-import { convertFilterToArr } from './utils/filterSet';
+import { convertFilterToArr, mapJDIclassesToFilter } from './utils/filterSet';
 import { FilterIcon } from './components/shared/FilterIcon';
-import { AppDispatch } from '../../app/store/store';
-import { clearAllFilters } from './reducers/clearAllFilters.thunk';
+import { AppDispatch, RootState } from '../../app/store/store';
 import { areAllValuesFalse } from '../locators/utils/helpers';
+import { clearFilters, setDefaultFilterSetOff, setDefaultFilterSetOn, setFilter } from './filter.slice';
+import { getLocalStorage, LocalStorageKey } from '../../common/utils/localStorage';
+import { defaultFilters } from './utils/defaultFilters';
+import { isEmptyObject } from '../../common/utils/isEmptyObject';
 
 export const Filter = () => {
+  const pageObject = useSelector(selectCurrentPageObject);
+  if (!pageObject) return null;
+
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [open, setOpen] = useState(false);
-  const pageObject = useSelector(selectCurrentPageObject);
+
   const dispatch = useDispatch<AppDispatch>();
 
   const classFilter = useSelector(selectDetectedClassesFilter);
@@ -25,8 +31,7 @@ export const Filter = () => {
   const isFiltered = useSelector(selectIsFiltered);
 
   const handleFilterChange = (key: string, oldValue: boolean) => () => {
-    if (!pageObject) return;
-    console.log('oldValue: ', key, oldValue);
+    dispatch(setDefaultFilterSetOff({ pageObjectId: pageObject.id }));
     dispatch(
       toggleClassFilter({
         pageObjectId: pageObject.id,
@@ -55,8 +60,8 @@ export const Filter = () => {
   };
 
   const clearAllFilers: React.MouseEventHandler<HTMLElement> = () => {
-    if (!pageObject) return;
-    dispatch(clearAllFilters({ pageObjectId: pageObject.id, library: pageObject.library }));
+    dispatch(clearFilters({ pageObjectId: pageObject.id, library: pageObject.library, isDefaultSetOn: false }));
+    dispatch(setDefaultFilterSetOff({ pageObjectId: pageObject.id }));
   };
 
   const handleToggleFilterOpen = () => {
@@ -87,10 +92,35 @@ export const Filter = () => {
     setOpen(false);
   };
 
-  const isDefaultSetTurnOn = false;
+  const savedFilters = getLocalStorage(LocalStorageKey.Filter);
+
+  const isDefaultSetOn = useSelector((state: RootState) => selectIsDefaultSetOn(state, pageObject.id));
 
   const defaultSetToggle = () => {
-    console.log('Default set toggle');
+    const prevFilterState = savedFilters;
+    const prevDefaultSetToggleState = isDefaultSetOn;
+    const library = pageObject.library;
+    const isSavedFiltersForCurrentLibrary = prevFilterState[library] && !isEmptyObject(prevFilterState[library]);
+
+    if (prevDefaultSetToggleState) {
+      if (isSavedFiltersForCurrentLibrary) {
+        dispatch(
+          setFilter({ pageObjectId: pageObject.id, JDIclassFilter: prevFilterState[library], isDefaultSetOn: false }),
+        );
+      } else if (!isSavedFiltersForCurrentLibrary) {
+        dispatch(clearFilters({ pageObjectId: pageObject.id, library, isDefaultSetOn: false }));
+      }
+      dispatch(setDefaultFilterSetOff({ pageObjectId: pageObject.id })); // переключаем тоггл в false
+    } else if (!prevDefaultSetToggleState) {
+      dispatch(
+        setFilter({
+          pageObjectId: pageObject.id,
+          JDIclassFilter: mapJDIclassesToFilter(library, defaultFilters[library]),
+          isDefaultSetOn: true,
+        }),
+      );
+      dispatch(setDefaultFilterSetOn({ pageObjectId: pageObject.id })); // переключаем тоггл в true
+    }
   };
 
   return (
@@ -105,7 +135,7 @@ export const Filter = () => {
           </div>
           <div className="jdn__filter_dropdown_scroll">
             <div className="jdn__filter_dropdown_control">
-              <Switch size="small" checked={isDefaultSetTurnOn} onChange={defaultSetToggle} />
+              <Switch size="small" checked={isDefaultSetOn} onChange={defaultSetToggle} />
               <Typography.Text> Default set</Typography.Text>
             </div>
             {menu}

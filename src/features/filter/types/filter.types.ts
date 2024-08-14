@@ -3,6 +3,7 @@ import { ElementClass } from '../../locators/types/generationClasses.types';
 
 export interface Filter extends FilterType {
   pageObjectId: PageObjectId;
+  isDefaultSetOn?: boolean;
 }
 
 export interface FilterType {

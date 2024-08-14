@@ -6,7 +6,6 @@ import { jdiClassFilterInit } from '../utils/filterSet';
 import { PageObjectId } from '../../pageObjects/types/pageObjectSlice.types';
 import { ElementLibrary } from '../../locators/types/generationClasses.types';
 import { getLocalStorage, LocalStorageKey, setLocalStorage } from '../../../common/utils/localStorage';
-import { clearAllFilters } from './clearAllFilters.thunk';
 
 export const toggleClassFilterAll = createAsyncThunk(
   'filter/toggleClassFilterAll',
@@ -41,16 +40,6 @@ export const toggleClassFilterAllReducer = (builder: any) => {
       },
     )
     .addCase(toggleClassFilterAll.rejected, (state: RootState, { error }: { error: Error }) => {
-      throw new Error(error.stack);
-    })
-    .addCase(
-      clearAllFilters.fulfilled,
-      (state: any, { payload }: { payload: { newFilterValue: Filter; newFilter: ClassFilterValue } }) => {
-        const { newFilterValue, newFilter } = payload;
-        filterAdapter.upsertOne(state, { ...newFilterValue, [FilterKey.JDIclassFilter]: newFilter });
-      },
-    )
-    .addCase(clearAllFilters.rejected, (state: RootState, { error }: { error: Error }) => {
       throw new Error(error.stack);
     });
 };
