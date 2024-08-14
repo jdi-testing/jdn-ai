@@ -8,6 +8,7 @@ const optionsMUI = [
   'Breadcrumbs',
   'Button',
   'ButtonGroup',
+  'Card',
   'Checkbox',
   'Chip',
   'Dialog',
@@ -15,6 +16,7 @@ const optionsMUI = [
   'Link',
   'List',
   'Menu',
+  'Modal',
   'ProgressBar',
   'RadioButtons',
   'Select',
@@ -37,6 +39,7 @@ const optionsHTML5 = [
   'DateTimeSelector',
   'Dropdown',
   'FileInput',
+  'Form',
   'Label',
   'Link',
   'MultiSelector',
@@ -74,11 +77,11 @@ describe('Get JDI class by predicted label', () => {
     expect(getJdiClassName(undefined, ElementLibrary.MUI)).toBe('UIElement (undefined)');
   });
 
-  test('get types', () => {
+  test('get types MUI', () => {
     expect(getTypesMenuOptions(ElementLibrary.MUI)).toStrictEqual(optionsMUI);
   });
 
-  test('get types', () => {
+  test('get types HTML5', () => {
     expect(getTypesMenuOptions(ElementLibrary.HTML5)).toStrictEqual(optionsHTML5);
   });
 });
