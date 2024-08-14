@@ -20,106 +20,115 @@ interface Meta {
   generateMissingLocator?: boolean;
 }
 
-/* Purpose of this thunk is to start locators generation.
-It's used for initial locators generation, or can be called on demand for particular locator type
-or with parameters.
-*/
 export const runLocatorsGeneration = createAsyncThunk(
   'locators/runLocatorsGeneration',
   async (meta: Meta, thunkAPI) => {
-    const state = thunkAPI.getState() as RootState;
+    try {
+      const state = thunkAPI.getState() as RootState;
 
-    const currentPageObjLibrary = selectCurrentPageObject(state)?.library;
-    const { locators, maxGenerationTime, generateXpath, generateCssSelector, generateMissingLocator } = meta;
+      const currentPageObjLibrary = selectCurrentPageObject(state)?.library;
+      const { locators, maxGenerationTime, generateXpath, generateCssSelector, generateMissingLocator } = meta;
 
-    let filter = selectClassFilterByPO(state);
-    if (currentPageObjLibrary && getLocalStorage(LocalStorageKey.Filter)) {
-      filter = getLocalStorage(LocalStorageKey.Filter)[currentPageObjLibrary];
-    }
+      let filter = selectClassFilterByPO(state);
 
-    const getXPathsForGeneration = (): ILocator[] => {
-      if (maxGenerationTime) {
-        return locators;
-      } else if (generateMissingLocator || generateXpath) {
-        return filterLocatorsByClassFilter(locators, filter).filter(
-          ({ locatorValue }) =>
-            !locatorValue ||
-            !locatorValue.xPath ||
-            locatorValue.xPath === locatorValue.fullXpath ||
-            !locatorValue.fullXpath,
-        );
-      } else {
-        return [];
+      if (currentPageObjLibrary && getLocalStorage(LocalStorageKey.Filter)) {
+        const storedFilters = getLocalStorage(LocalStorageKey.Filter);
+        filter = storedFilters ? storedFilters[currentPageObjLibrary] || {} : {};
       }
-    };
 
-    const toGenerateXPaths: ILocator[] = getXPathsForGeneration();
+      const getXPathsForGeneration = (): ILocator[] => {
+        if (maxGenerationTime) {
+          return locators;
+        } else if (generateMissingLocator || generateXpath) {
+          if (!filter || Object.keys(filter).length === 0) {
+            console.error('filter is empty or invalid:', filter);
+            return locators;
+          }
+          const res = filterLocatorsByClassFilter(locators, filter).filter(
+            ({ locatorValue }) =>
+              !locatorValue ||
+              !locatorValue.xPath ||
+              locatorValue.xPath === locatorValue.fullXpath ||
+              !locatorValue.fullXpath,
+          );
 
-    const toGenerateCss =
-      generateMissingLocator || generateCssSelector
-        ? filterLocatorsByClassFilter(locators, filter).filter(
-            ({ locatorValue }) => !locatorValue || !locatorValue.cssSelector,
-          )
-        : [];
+          return res;
+        } else {
+          return locators;
+        }
+      };
 
-    const pageDocumentForRubula = selectPageDocumentForRobula(state);
-    if (pageDocumentForRubula === null) {
-      console.error(`can't run Xpath Generation: Page Document For Robula is null`);
-      return;
-    }
+      const toGenerateXPaths: ILocator[] = getXPathsForGeneration();
 
-    const generations = Promise.all([
-      ...[
-        toGenerateXPaths.length || toGenerateCss.length
-          ? runLocatorGeneration(
-              state,
-              [...toGenerateXPaths, ...toGenerateCss],
-              pageDocumentForRubula,
-              maxGenerationTime,
+      const toGenerateCss =
+        generateMissingLocator || generateCssSelector
+          ? filterLocatorsByClassFilter(locators, filter).filter(
+              ({ locatorValue }) => !locatorValue || !locatorValue.cssSelector,
             )
-          : null,
-      ],
-    ]);
+          : [];
 
-    const XPathsSelectorsPending = toGenerateXPaths
-      .filter((locator) => {
-        const taskStatus = getTaskStatus(locator.locatorValue.xPathStatus, locator.locatorValue.cssSelectorStatus);
-        return locator.locatorValue && taskStatus !== LocatorTaskStatus.PENDING;
-      })
-      .map(({ elementId, jdnHash }) => ({
-        elementId,
-        locatorValue: { xPathStatus: LocatorTaskStatus.PENDING },
-        jdnHash,
-      }));
+      const pageDocumentForRubula = selectPageDocumentForRobula(state);
+      if (pageDocumentForRubula === null) {
+        console.error(`can't run Xpath Generation: Page Document For Robula is null`);
+        return;
+      }
 
-    const cssSelectorsPending = toGenerateCss
-      .filter((locator) => {
-        const taskStatus = getTaskStatus(locator.locatorValue.xPathStatus, locator.locatorValue.cssSelectorStatus);
-        return locator.locatorValue && taskStatus !== LocatorTaskStatus.PENDING;
-      })
-      .map(({ elementId, jdnHash }) => ({
-        elementId,
-        locatorValue: { cssSelectorStatus: LocatorTaskStatus.PENDING },
-        jdnHash,
-      }));
+      const generations = await Promise.all([
+        ...[
+          toGenerateXPaths.length || toGenerateCss.length
+            ? runLocatorGeneration(
+                state,
+                [...toGenerateXPaths, ...toGenerateCss],
+                pageDocumentForRubula,
+                maxGenerationTime,
+              )
+            : null,
+        ],
+      ]);
 
-    if (XPathsSelectorsPending.length)
-      thunkAPI.dispatch(
-        updateLocatorGroup({
-          locators: XPathsSelectorsPending,
-          pageObject: selectCurrentPageObject(state)!,
-        }),
-      );
+      const XPathsSelectorsPending = toGenerateXPaths
+        .filter((locator) => {
+          const taskStatus = getTaskStatus(locator.locatorValue.xPathStatus, locator.locatorValue.cssSelectorStatus);
+          return locator.locatorValue && taskStatus !== LocatorTaskStatus.PENDING;
+        })
+        .map(({ elementId, jdnHash }) => ({
+          elementId,
+          locatorValue: { xPathStatus: LocatorTaskStatus.PENDING },
+          jdnHash,
+        }));
 
-    if (cssSelectorsPending.length)
-      thunkAPI.dispatch(
-        updateLocatorGroup({
-          locators: cssSelectorsPending,
-          pageObject: selectCurrentPageObject(state)!,
-        }),
-      );
+      const cssSelectorsPending = toGenerateCss
+        .filter((locator) => {
+          const taskStatus = getTaskStatus(locator.locatorValue.xPathStatus, locator.locatorValue.cssSelectorStatus);
+          return locator.locatorValue && taskStatus !== LocatorTaskStatus.PENDING;
+        })
+        .map(({ elementId, jdnHash }) => ({
+          elementId,
+          locatorValue: { cssSelectorStatus: LocatorTaskStatus.PENDING },
+          jdnHash,
+        }));
 
-    return generations;
+      if (XPathsSelectorsPending.length)
+        thunkAPI.dispatch(
+          updateLocatorGroup({
+            locators: XPathsSelectorsPending,
+            pageObject: selectCurrentPageObject(state)!,
+          }),
+        );
+
+      if (cssSelectorsPending.length)
+        thunkAPI.dispatch(
+          updateLocatorGroup({
+            locators: cssSelectorsPending,
+            pageObject: selectCurrentPageObject(state)!,
+          }),
+        );
+
+      return generations;
+    } catch (error) {
+      console.error('Error in runLocatorsGeneration:', error);
+      throw error;
+    }
   },
 );
 
@@ -133,6 +142,7 @@ export const runLocatorsGenerationReducer = (builder: ActionReducerMapBuilder<Lo
       const [_startXPaths, _startCss] = payload as [string | null, string | null];
     })
     .addCase(runLocatorsGeneration.rejected, (state, { error }) => {
+      console.error('runLocatorsGeneration was rejected:', error);
       throw new Error(error.stack);
     });
 };
