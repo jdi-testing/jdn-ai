@@ -6,6 +6,7 @@ import { getFullDocumentWithStyles } from '../common/utils/getFullDocumentWithSt
 import { ILocator, PredictedEntity } from '../features/locators/types/locator.types';
 import { getLibrarySelectors } from '../services/rules/createSelector';
 import { VueRules } from '../services/rules/Vue.rules';
+import { getViewportResolution } from '../common/utils/getViewportResolution';
 // /* global chrome */
 
 let overlayID: string;
@@ -59,10 +60,13 @@ Function returns predicted elements. */
 export const predictElements = (endpoint: HttpEndpoint): PredictElementsType => {
   let pageData: string;
 
-  return Promise.all([sendMessage.getPageData(), getFullDocumentWithStyles()])
-    .then(([pageDataResult, documentResult]) => {
+  return Promise.all([sendMessage.getPageData(), getFullDocumentWithStyles(), getViewportResolution()])
+    .then(([pageDataResult, documentResult, viewportResolution]) => {
       pageData = pageDataResult[0];
-      const payload = { elements: pageData, document: documentResult };
+
+      const viewport = JSON.stringify(viewportResolution[0].result);
+      const payload = { elements: pageData, document: documentResult, viewport };
+
       return sendToModel(payload, endpoint);
     })
     .then(
