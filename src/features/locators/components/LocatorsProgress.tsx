@@ -8,11 +8,11 @@ import { rerunGeneration } from '../reducers/rerunGeneration.thunk';
 import { LocatorsGenerationStatus } from '../types/locator.types';
 import { LocatorGenerationMessage } from '../types/locatorStatus.types';
 import {
-  selectFilteredLocators,
   selectCalculatedByPageObj,
-  selectInProgressByPageObj,
   selectDeletedByPageObj,
   selectFailedByPageObject,
+  selectFilteredLocators,
+  selectInProgressByPageObj,
 } from '../selectors/locatorsFiltered.selectors';
 import cn from 'classnames';
 
@@ -67,8 +67,8 @@ export const LocatorsProgress = () => {
   }
 
   return (
-    <div className="jdn__locator-list-progress">
-      <div className="jdn__locator-list-progress-text">
+    <div className="jdn__locator-page-progress">
+      <div className="jdn__locator-page-progress-text">
         {isGeneratedStatusFailed ? (
           <>
             <Footnote>{LocatorGenerationMessage.failed}</Footnote>

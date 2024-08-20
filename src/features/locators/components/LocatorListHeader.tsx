@@ -11,7 +11,7 @@ import { LocatorsSearch } from './LocatorsSearch';
 import { LocatorEditDialog } from './LocatorEditDialog';
 import { OnboardingTooltip } from '../../onboarding/components/OnboardingTooltip';
 import { LocatorMenu } from './LocatorMenu';
-import { ExpandState, LocatorTreeProps } from './LocatorsTree';
+import { ExpandState, LocatorTreeProps } from './LocatorsTreeNew';
 import {
   selectActiveLocators,
   selectActualActiveByPageObject,
@@ -113,11 +113,11 @@ export const LocatorListHeader = ({
 
   return (
     <>
-      <div className="jdn__locator-list_header-locator-control-group">
+      <div className="jdn__locator-page_header-locator-control-group">
         <LocatorsSearch value={searchString} onChange={setSearchString} />
         <OnboardingTooltip>
           <Button
-            className="jdn__locator-list_locator-add-btn"
+            className="jdn__locator-page_locator-add-btn"
             disabled={isOnboardingOpen && !!size(locators)}
             ref={customLocatorRef}
             icon={<PlusOutlined size={14} />}

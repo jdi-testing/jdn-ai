@@ -1,8 +1,8 @@
-import React, { useState, MouseEvent } from 'react';
+import React, { MouseEvent, useState } from 'react';
 import { Button, Tooltip } from 'antd';
 import { CopySimple } from '@phosphor-icons/react';
 import { CopyTitle, FrameworkType, LocatorType } from '../../../common/types/common';
-import { getLocatorString, getFullLocatorVividusString } from '../utils/locatorOutput';
+import { getFullLocatorVividusString, getLocatorString } from '../utils/locatorOutput';
 import { ILocator } from '../types/locator.types';
 import { copyToClipboard } from '../../../common/utils/copyToClipboard';
 
@@ -38,7 +38,7 @@ export const LocatorCopyButton: React.FC<Props> = ({ framework, element, pageObj
       <Button
         onClick={handleCopy}
         onMouseEnter={handleMouseEnter}
-        className="jdn__items-list_button jdn__locator-list_button-copy"
+        className="jdn__items-list_button jdn__locator-page_button-copy"
         icon={<CopySimple size={18} color="currentColor" />}
       />
     </Tooltip>

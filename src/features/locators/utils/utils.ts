@@ -74,7 +74,6 @@ export const extractPrefixTypeFromLocator = (str: string): string => {
     return 'xPath';
   }
 
-  console.log(`Can't extract prefix: Unknown prefix: ${str}`);
   return str;
 };
 
