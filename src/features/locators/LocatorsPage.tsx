@@ -10,10 +10,10 @@ import { customConfirm } from '../../common/components/CustomConfirm';
 import { clearLocators } from '../pageObjects/pageObject.slice';
 import { locatorGenerationController } from './utils/LocatorGenerationController';
 import { removeLocators, restoreLocators } from './locators.slice';
-import { LocatorsTree, LocatorTreeProps } from './components/LocatorsTree';
+import { LocatorsTree, LocatorTreeProps } from './components/LocatorsTreeNew';
+// import { LocatorTreeProps } from './components/LocatorsTree';
 import { LocatorListHeader } from './components/LocatorListHeader';
 import { Filter } from '../filter/Filter';
-import { useCalculateHeaderSize } from './utils/useCalculateHeaderSize';
 import { RootState } from '../../app/store/store';
 import { IdentificationStatus } from './types/locator.types';
 import { removeAll as removeAllFilters, setFilter } from '../filter/filter.slice';
@@ -49,6 +49,9 @@ import { stopProgressBar } from '../pageObjects/progressBar.slice';
 import { enablePageObjectsListUI } from '../pageObjects/pageObjectsListUI.slice';
 import { LocatorTreeSpinner } from './components/LocatorTreeSpinner';
 import { selectLocatorsStatus } from './selectors/locators.selectors';
+import { useCalculateHeaderSize } from './utils/useCalculateHeaderSize';
+import { LocatorsTreeColumnView } from './components/LocatorsTreeColumnView';
+import { FrameworkType } from '../../common/types/common';
 
 const { confirm } = Modal;
 
@@ -109,6 +112,9 @@ export const LocatorsPage = () => {
   };
 
   const isCustomLocatorFlow = useSelector(selectIsCustomLocatorFlow);
+
+  const framework = useSelector(selectCurrentPageObject)?.framework;
+  const isVividusFramework = framework === FrameworkType.Vividus;
 
   const handleConfirm = () => {
     if (isOnboardingOpen) {
@@ -223,7 +229,7 @@ export const LocatorsPage = () => {
 
   return (
     <>
-      <div className="jdn__locator-list">
+      <div className="jdn__locator-page">
         <Row justify="space-between" wrap={false}>
           <Breadcrumbs ref={breadcrumbsRef} />
           <Filter />
@@ -234,11 +240,15 @@ export const LocatorsPage = () => {
           render={(viewProps: LocatorTreeProps['viewProps']) => (
             <div
               ref={containerRef}
-              className="jdn__locator-list-content jdn__items-list_content"
+              className="jdn__locator-page-content jdn__items-list_content"
               style={{ height: containerHeight }}
             >
               {locators.length || areUnselectedAll ? (
-                <LocatorsTree {...{ viewProps, locatorIds }} />
+                isVividusFramework ? (
+                  <LocatorsTreeColumnView {...{ viewProps, locatorIds }} />
+                ) : (
+                  <LocatorsTree {...{ viewProps, locatorIds }} />
+                )
               ) : showSpinner ? (
                 <LocatorTreeSpinner />
               ) : (

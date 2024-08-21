@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { AnnotationType, LocatorType } from '../../../common/types/common';
 import { ElementClass, ElementLibrary } from '../types/generationClasses.types';
 import { ILocator, LocatorValue } from '../types/locator.types';
@@ -159,7 +159,9 @@ export const getLocatorTemplateWithVividus = (
     </span>
     <span className="jdn__locator_locator-name--vividus">{locator.name}</span>
     <span>=</span>
-    <span className="jdn__locator_locator-type--vividus">By.{camelCase(extractPrefixTypeFromLocator(locatorType))}</span>
+    <span className="jdn__locator_locator-type--vividus">
+      By.{camelCase(extractPrefixTypeFromLocator(locatorType))}
+    </span>
   </>
 );
 
@@ -170,11 +172,13 @@ export const vividusColorizedString = (
   locatorValueOutput: string,
 ) => {
   return (
-    <>
-      <span>{getLocatorTemplateWithVividus(pageObjectName, locatorType, element)}</span>(
-      <span className="jdn__locator_output-string">{locatorValueOutput}</span>)
+    <span className="jdn__locator_colorized-string--vividus">
+      <span>{getLocatorTemplateWithVividus(pageObjectName, locatorType, element)}</span>{' '}
+      <span className="jdn__locator_output-string-general-view">
+        (<span className="jdn__locator_output-string">{locatorValueOutput}</span>)
+      </span>
       <br />
-    </>
+    </span>
   );
 };
 
