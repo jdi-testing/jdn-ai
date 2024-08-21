@@ -10,8 +10,7 @@ import { customConfirm } from '../../common/components/CustomConfirm';
 import { clearLocators } from '../pageObjects/pageObject.slice';
 import { locatorGenerationController } from './utils/LocatorGenerationController';
 import { removeLocators, restoreLocators } from './locators.slice';
-import { LocatorsTree, LocatorTreeProps } from './components/LocatorsTreeNew';
-// import { LocatorTreeProps } from './components/LocatorsTree';
+import { LocatorsTree } from './components/LocatorsTree';
 import { LocatorListHeader } from './components/LocatorListHeader';
 import { Filter } from '../filter/Filter';
 import { RootState } from '../../app/store/store';
@@ -237,7 +236,7 @@ export const LocatorsPage = () => {
         <LocatorListHeader
           isEditModalOpen={isEditModalOpen}
           setIsEditModalOpen={handleSetIsEditModalOpen}
-          render={(viewProps: LocatorTreeProps['viewProps']) => (
+          render={(viewProps) => (
             <div
               ref={containerRef}
               className="jdn__locator-page-content jdn__items-list_content"
@@ -245,9 +244,19 @@ export const LocatorsPage = () => {
             >
               {locators.length || areUnselectedAll ? (
                 isVividusFramework ? (
-                  <LocatorsTreeColumnView {...{ viewProps, locatorIds }} />
+                  <LocatorsTreeColumnView
+                    locatorIds={locatorIds}
+                    expandAll={viewProps.expandAll}
+                    setExpandAll={viewProps.setExpandAll}
+                    searchString={viewProps.searchString}
+                  />
                 ) : (
-                  <LocatorsTree {...{ viewProps, locatorIds }} />
+                  <LocatorsTree
+                    locatorIds={locatorIds}
+                    expandAll={viewProps.expandAll}
+                    setExpandAll={viewProps.setExpandAll}
+                    searchString={viewProps.searchString}
+                  />
                 )
               ) : showSpinner ? (
                 <LocatorTreeSpinner />

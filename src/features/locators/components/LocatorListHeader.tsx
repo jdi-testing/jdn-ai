@@ -11,7 +11,7 @@ import { LocatorsSearch } from './LocatorsSearch';
 import { LocatorEditDialog } from './LocatorEditDialog';
 import { OnboardingTooltip } from '../../onboarding/components/OnboardingTooltip';
 import { LocatorMenu } from './LocatorMenu';
-import { ExpandState, LocatorTreeProps } from './LocatorsTreeNew';
+import { ExpandState, LocatorTreeProps } from './LocatorsTree';
 import {
   selectActiveLocators,
   selectActualActiveByPageObject,
