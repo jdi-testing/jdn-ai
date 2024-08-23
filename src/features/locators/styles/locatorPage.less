@@ -1,7 +1,7 @@
 @import '../../../common/styles/variables.less';
 
 .jdn {
-  &__locator-list {
+  &__locator-page {
     position: relative;
 
     &_header-locator-control-group {
@@ -17,16 +17,6 @@
     &_button-copy {
       top: 5px;
       order: 1;
-    }
-
-    &-content {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-
-      .ant-checkbox + span {
-        padding-left: 20px;
-      }
     }
 
     &-progress {
@@ -83,6 +73,7 @@
         .ant-spin-dot-item {
           background-color: @warning-icon-color;
         }
+        // styles for table view in LocatorPageTable.less (jdn__locatorsTree-container--table)
       }
 
       &-indent {
@@ -94,6 +85,7 @@
     .ant-tree {
       height: 100%;
       &-treenode {
+        height: 38px;
         width: 100%;
         align-items: flex-start;
         gap: 1px;
@@ -131,6 +123,7 @@
 
       &-list-holder {
         height: 100%;
+        overflow-y: hidden !important;
       }
     }
 

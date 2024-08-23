@@ -8,19 +8,23 @@
   display: grid;
   grid-template-columns: minmax(100px, auto) 1fr;
 
+  .ant-tree-list-holder > div {
+    overflow-x: auto;
+  }
+
   .jdn__locator_colorized-string--vividus {
     span span, .jdn__locator_output-string-general-view {
       display: none;
     }
   }
 
-  .jdn__locatorsTree-left,
-  .jdn__locatorsTree-right {
+  .jdn__locatorsTree--left,
+  .jdn__locatorsTree--right {
     height: calc(-192px + 100vh);
     min-width: 100px;
   }
 
-  .jdn__locatorsTree-left {
+  .jdn__locatorsTree--left {
     .jdn__locator_buttons {
       display: none;
     }
@@ -30,8 +34,8 @@
     }
   }
 
-  .jdn__locatorsTree-right {
-    .jdn__locator_checkbox_wrapper, .jdn__locator-icon {
+  .jdn__locatorsTree--right {
+    .jdn__locator_checkbox_wrapper, .jdn__locator-icon, .ant-tree-switcher {
       display: none;
     }
 

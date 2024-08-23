@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { ExpandState, LocatorsTree } from './LocatorsTree';
+import { ExpandState } from './LocatorsTree';
 import { ElementId } from '../types/locator.types';
 import ResizableColumnContainer from './ResizableColumnContainer';
 
@@ -22,13 +22,11 @@ export const LocatorsTreeColumnView: React.FC<LocatorsTreeColumnComponentProps> 
   const memoizedSearchString = useMemo(() => searchString, [searchString]);
 
   return (
-    <ResizableColumnContainer>
-      <LocatorsTree
-        locatorIds={memoizedLocatorIds}
-        expandAll={memoizedExpandAll}
-        setExpandAll={memoizedSetExpandAll}
-        searchString={memoizedSearchString}
-      />
-    </ResizableColumnContainer>
+    <ResizableColumnContainer
+      locatorIds={memoizedLocatorIds}
+      expandAll={memoizedExpandAll}
+      setExpandAll={memoizedSetExpandAll}
+      searchString={memoizedSearchString}
+    />
   );
 };

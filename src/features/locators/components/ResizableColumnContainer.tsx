@@ -3,14 +3,40 @@ import { Resizable, ResizeCallbackData } from 'react-resizable';
 
 import 'react-resizable/css/styles.css';
 import '../../../common/styles/ResizableColumns.less';
+import { ExpandState, LocatorsTree } from './LocatorsTree';
+import { ElementId } from '../types/locator.types';
 
 export interface ResizableContainerProps {
-  children: React.ReactNode;
+  locatorIds: ElementId[];
+  expandAll: ExpandState;
+  setExpandAll: (val: ExpandState) => void;
+  searchString: string;
 }
 
-const ResizableColumnContainer: React.FC<ResizableContainerProps> = ({ children }) => {
+const ResizableColumnContainer: React.FC<ResizableContainerProps> = ({
+  locatorIds,
+  expandAll,
+  setExpandAll,
+  searchString,
+}) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const leftRef = useRef<HTMLDivElement>(null);
+  const rightRef = useRef<HTMLDivElement>(null);
   const [leftWidth, setLeftWidth] = useState<number | undefined>(undefined);
+
+  const syncScrollPosition = (sourceColumn: 'left' | 'right', scrollPosition: number) => {
+    const targetRef = sourceColumn === 'left' ? rightRef.current : leftRef.current;
+    if (targetRef) {
+      const targetScrollContainer = targetRef.querySelector('.ant-tree-list-holder');
+      if (targetScrollContainer) {
+        targetScrollContainer.scrollTop = scrollPosition;
+      }
+    }
+  };
+
+  const createHandleScroll = (column: 'left' | 'right') => (scrollPosition: number) => {
+    syncScrollPosition(column, scrollPosition);
+  };
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -33,7 +59,7 @@ const ResizableColumnContainer: React.FC<ResizableContainerProps> = ({ children 
     const newLeftWidth = data.size.width;
     setLeftWidth(newLeftWidth);
   }, []);
-  // console.log('---------------> 2');
+
   return (
     <div ref={containerRef} className="jdn__locatorsTree-container--table">
       {containerRef.current && (
@@ -43,13 +69,27 @@ const ResizableColumnContainer: React.FC<ResizableContainerProps> = ({ children 
           handle={<span className="resizable-handle" />}
           onResize={handleResize}
         >
-          <div className="jdn__locatorsTree-left" style={{ width: leftWidth }}>
-            {children}
+          <div className="jdn__locatorsTree--left" style={{ width: leftWidth }} ref={leftRef}>
+            <LocatorsTree
+              locatorIds={locatorIds}
+              expandAll={expandAll}
+              setExpandAll={setExpandAll}
+              searchString={searchString}
+              onScroll={createHandleScroll('left')}
+            />
           </div>
         </Resizable>
       )}
 
-      <div className="jdn__locatorsTree-right">{children}</div>
+      <div className="jdn__locatorsTree--right" ref={rightRef}>
+        <LocatorsTree
+          locatorIds={locatorIds}
+          expandAll={expandAll}
+          setExpandAll={setExpandAll}
+          searchString={searchString}
+          onScroll={createHandleScroll('right')}
+        />
+      </div>
     </div>
   );
 };

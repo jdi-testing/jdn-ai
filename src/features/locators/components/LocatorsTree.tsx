@@ -34,9 +34,16 @@ export interface LocatorTreeProps {
   expandAll: ExpandState;
   setExpandAll: (val: ExpandState) => void;
   searchString: string;
+  onScroll?: (scrollPosition: number) => void; // Новый пропс для передачи колбэка скролла
 }
 
-const LocatorsTreeComponent: React.FC<LocatorTreeProps> = ({ locatorIds, expandAll, setExpandAll, searchString }) => {
+const LocatorsTreeComponent: React.FC<LocatorTreeProps> = ({
+  locatorIds,
+  expandAll,
+  setExpandAll,
+  searchString,
+  onScroll,
+}) => {
   const [expandedKeys, setExpandedKeys] = useState(locatorIds);
   const [autoExpandParent, setAutoExpandParent] = useState(true);
 
@@ -98,6 +105,24 @@ const LocatorsTreeComponent: React.FC<LocatorTreeProps> = ({ locatorIds, expandA
       }, 500);
     }
   }, [expandedKeys, scrollToLocator]);
+
+  useEffect(() => {
+    const scrollContainer = containerRef.current?.querySelector('.ant-tree-list-holder');
+    if (!scrollContainer) return;
+
+    const handleScroll = () => {
+      const currentScrollPosition = scrollContainer.scrollTop;
+      if (onScroll) {
+        onScroll(currentScrollPosition);
+      }
+    };
+
+    scrollContainer.addEventListener('scroll', handleScroll);
+
+    return () => {
+      scrollContainer.removeEventListener('scroll', handleScroll);
+    };
+  }, [onScroll]);
 
   return (
     <>
