@@ -5,7 +5,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Chip } from '../../../common/components/Chip';
 import { CaretDown, DotsThree } from '@phosphor-icons/react';
 import { PlusOutlined } from '@ant-design/icons';
-import { elementGroupUnsetActive, setElementGroupGeneration, toggleAllLocatorsIsChecked } from '../locators.slice';
+import {
+  elementGroupUnsetActive,
+  expandCustom,
+  setElementGroupGeneration,
+  setExpandedKeys,
+  toggleAllLocatorsIsChecked,
+} from '../locators.slice';
 import { newLocatorStub } from '../utils/constants';
 import { LocatorsSearch } from './LocatorsSearch';
 import { LocatorEditDialog } from './LocatorEditDialog';
@@ -19,14 +25,17 @@ import {
   selectFilteredLocators,
   selectGenerateByPageObject,
 } from '../selectors/locatorsFiltered.selectors';
+
 import { useOnboardingContext } from '../../onboarding/OnboardingProvider';
 import { OnboardingStep } from '../../onboarding/constants';
 import { selectIsOnboardingOpen } from '../../onboarding/store/onboarding.selectors';
 import { useOnboarding } from '../../onboarding/useOnboarding';
+
 import { selectIsCreatingFormOpen } from '../selectors/customLocator.selectors';
 import { setIsCreatingFormOpen } from '../customLocator.slice';
 import classNames from 'classnames';
 import '../../../common/styles/headerCollapse.less';
+import { selectExpandedKeys } from '../selectors/locators.selectors';
 
 interface LocatorListHeaderProps {
   render: (viewProps: LocatorTreeProps['viewProps']) => ReactNode;
@@ -42,10 +51,9 @@ export const LocatorListHeader = ({
   setIsEditModalOpen,
 }: LocatorListHeaderProps): JSX.Element => {
   const dispatch = useDispatch();
-  const [expandAll, setExpandAll] = useState(ExpandState.Expanded);
   const [searchString, setSearchString] = useState('');
-  const [isAllLocatorsSelected, setIsAllLocatorsSelected] = useState<boolean>(false);
 
+  const expandAll = useSelector(selectExpandedKeys);
   const locators = useSelector(selectFilteredLocators);
   const generatedLocators = useSelector(selectGenerateByPageObject);
   const checkedLocators = useSelector(selectCheckedLocatorsByPageObject);
@@ -54,6 +62,8 @@ export const LocatorListHeader = ({
 
   const isOnboardingOpen = useSelector(selectIsOnboardingOpen);
   const isCreatingForm = useSelector(selectIsCreatingFormOpen);
+
+  const [isAllLocatorsSelected, setIsAllLocatorsSelected] = useState<boolean>(false);
 
   useEffect(() => {
     if (
@@ -99,7 +109,8 @@ export const LocatorListHeader = ({
     (locator) => Array.isArray(locator.children) && locator.children.length > 0,
   );
   const isHeaderCollapseDisabled = !locators.length || !isLocatorHasSubLocators;
-  const isHeaderCollapseExpanded = isHeaderCollapseDisabled ? false : expandAll === ExpandState.Expanded;
+
+  const isHeaderCollapseExpanded = isHeaderCollapseDisabled ? false : expandAll.length > 0;
   const headerCollapseClassName = classNames(
     'jdn__items-list_header-collapse',
     { disabled: isHeaderCollapseDisabled },
@@ -108,7 +119,17 @@ export const LocatorListHeader = ({
 
   const handleExpandAll = () => {
     if (isHeaderCollapseDisabled) return;
-    setExpandAll(expandAll === ExpandState.Collapsed ? ExpandState.Expanded : ExpandState.Collapsed);
+
+    const isCurrentlyExpanded = expandAll.length > 0;
+    const newExpandState = isCurrentlyExpanded ? ExpandState.Collapsed : ExpandState.Expanded;
+
+    if (newExpandState === ExpandState.Expanded) {
+      dispatch(setExpandedKeys(locators.map((loc) => loc.elementId)));
+    } else {
+      dispatch(setExpandedKeys([]));
+    }
+
+    dispatch(expandCustom());
   };
 
   return (
@@ -154,7 +175,7 @@ export const LocatorListHeader = ({
           </LocatorMenu>
         ) : null}
       </Row>
-      {render({ expandAll, setExpandAll, searchString })}
+      {render({ expandAll, setExpandAll: handleExpandAll, searchString })}
       {isEditModalOpen ? (
         <LocatorEditDialog
           isCreatingForm

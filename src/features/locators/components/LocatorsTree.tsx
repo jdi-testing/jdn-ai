@@ -1,22 +1,22 @@
-import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
+import React, { memo, useEffect, useMemo, useRef } from 'react';
 import { Tree } from 'antd';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { CaretDown } from '@phosphor-icons/react';
 
 import { LocatorsProgress } from './LocatorsProgress';
-
 import { RootState } from '../../../app/store/store';
 import { selectCurrentPage } from '../../../app/main.selectors';
 import { selectPresentLocatorsByPO } from '../selectors/locatorsByPO.selectors';
 import { selectFilteredLocators } from '../selectors/locatorsFiltered.selectors';
 import { useSize } from '../utils/useSize';
 import { convertListToTree, setNewParents } from '../utils/locatorsTreeUtils';
-
-import { ElementId } from '../types/locator.types';
-import type RcTree from 'rc-tree';
 import { renderTreeNodes } from './utils';
 import { selectCurrentPageObject } from '../../pageObjects/selectors/pageObjects.selectors';
 import { defaultLibrary } from '../types/generationClasses.types';
+
+import type RcTree from 'rc-tree';
+import { onExpand } from '../locators.slice';
+import { selectOnExpandState } from '../selectors/locators.selectors';
 
 export enum SearchState {
   None = 'none',
@@ -26,26 +26,18 @@ export enum SearchState {
 export enum ExpandState {
   Expanded = 'Expanded',
   Collapsed = 'Collapsed',
-  Custom = 'Custom',
+  // Custom = 'Custom',
 }
 
 export interface LocatorTreeProps {
-  locatorIds: ElementId[];
-  expandAll: ExpandState;
-  setExpandAll: (val: ExpandState) => void;
   searchString: string;
-  onScroll?: (scrollPosition: number) => void; // Новый пропс для передачи колбэка скролла
+  onScroll?: (scrollPosition: number) => void;
 }
 
-const LocatorsTreeComponent: React.FC<LocatorTreeProps> = ({
-  locatorIds,
-  expandAll,
-  setExpandAll,
-  searchString,
-  onScroll,
-}) => {
-  const [expandedKeys, setExpandedKeys] = useState(locatorIds);
-  const [autoExpandParent, setAutoExpandParent] = useState(true);
+const LocatorsTreeComponent: React.FC<LocatorTreeProps> = ({ searchString, onScroll }) => {
+  const dispatch = useDispatch();
+
+  const { expandedKeys } = useSelector(selectOnExpandState);
 
   const containerRef = useRef<HTMLDivElement>(null);
   const treeRef = useRef<RcTree>(null);
@@ -64,24 +56,14 @@ const LocatorsTreeComponent: React.FC<LocatorTreeProps> = ({
   const scrollToLocator = useSelector((_state: RootState) => _state.locators.present.scrollToLocator);
 
   useEffect(() => {
-    if (expandAll === ExpandState.Expanded) setExpandedKeys(locatorIds);
-    else if (expandAll === ExpandState.Collapsed) setExpandedKeys([]);
-  }, [expandAll]);
-
-  useEffect(() => {
     if (!scrollToLocator) return;
-    // eslint-disable-next-line
-    // @ts-ignore
-    if (!expandedKeys.includes[scrollToLocator]) {
-      setAutoExpandParent(true);
-      setExpandedKeys([...expandedKeys, scrollToLocator]);
+    if (!expandedKeys.includes(scrollToLocator)) {
+      dispatch(onExpand([...expandedKeys, scrollToLocator]));
     }
-  }, [scrollToLocator]);
+  }, [scrollToLocator, expandedKeys, dispatch]);
 
-  const onExpand = (expandedKeysValue: string[]) => {
-    setExpandedKeys(expandedKeysValue);
-    setAutoExpandParent(false);
-    setExpandAll(ExpandState.Custom);
+  const handleExpand = (expandedKeysValue: string[]) => {
+    dispatch(onExpand(expandedKeysValue));
   };
 
   const locatorsTree = useMemo(
@@ -93,12 +75,11 @@ const LocatorsTreeComponent: React.FC<LocatorTreeProps> = ({
 
   const treeNodes = useMemo(() => {
     return renderTreeNodes(locatorsTree, locators, currentPage, searchString, library);
-  }, [locatorsTree, locators, currentPage, searchString]);
+  }, [locatorsTree, locators, currentPage, searchString, library]);
 
   useEffect(() => {
     if (scrollToLocator) {
       setTimeout(() => {
-        // antd docs for scrollTo https://github.com/ant-design/ant-design/blob/master/components/tree/index.en-US.md#tree-methods
         if (treeRef.current && containerHeight) {
           treeRef.current.scrollTo({ key: scrollToLocator, align: 'top', offset: containerHeight / 2 });
         }
@@ -132,7 +113,8 @@ const LocatorsTreeComponent: React.FC<LocatorTreeProps> = ({
         {/* @ts-ignore */}
         <Tree
           ref={treeRef}
-          {...{ expandedKeys, onExpand, autoExpandParent }}
+          {...{ expandedKeys, onExpand: handleExpand }}
+          autoExpandParent={true}
           switcherIcon={<CaretDown color="#878A9C" size={14} className="jdn__locator_caret-down" />}
           treeData={treeNodes}
           height={containerHeight || 0} // necessary for scrollTo works
