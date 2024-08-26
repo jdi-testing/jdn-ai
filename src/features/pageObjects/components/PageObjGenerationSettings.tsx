@@ -25,6 +25,7 @@ import { OnboardingStep } from '../../onboarding/constants';
 import { selectIsPageObjectsListUIEnabled } from '../selectors/pageObjectsListUI.selectors';
 import { OnboardingTooltip } from '../../onboarding/components/OnboardingTooltip';
 import PageObjSettingsItem from './PageObjSettingsItem';
+import ViewModeSelector from './VividusViewModeSelector';
 
 // ToDo move to constants
 const libraryOptions = [
@@ -162,10 +163,7 @@ export const PageObjGenerationSettings: React.FC<Props> = ({ pageObj, url, handl
       <Footnote className="jdn__pageObject__settings-url">{url}</Footnote>
       <div className="jdn__generationButtons">
         <Space direction="vertical" size={8}>
-          <div
-            ref={refSettings as React.LegacyRef<HTMLDivElement>}
-            className="jdn__generationButtons_onboardingMask"
-          ></div>
+          <div ref={refSettings as React.LegacyRef<HTMLDivElement>} className="jdn__generationButtons_onboardingMask" />
           <PageObjSettingsItem
             label="Framework:"
             id="frameworkType"
@@ -174,6 +172,7 @@ export const PageObjGenerationSettings: React.FC<Props> = ({ pageObj, url, handl
             options={frameworkTypeOptions}
             onChange={onFrameworkChange}
           />
+          {isCurrentFrameworkVividus && <ViewModeSelector />}
           <PageObjSettingsItem
             label="Library:"
             id="library"
@@ -182,6 +181,7 @@ export const PageObjGenerationSettings: React.FC<Props> = ({ pageObj, url, handl
             onChange={onLibraryChange}
             value={currentLibrary}
           />
+
           <PageObjSettingsItem
             label="Annotation:"
             id="annotationType"

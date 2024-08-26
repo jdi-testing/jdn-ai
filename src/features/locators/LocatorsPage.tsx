@@ -51,6 +51,7 @@ import { selectLocatorsStatus } from './selectors/locators.selectors';
 import { useCalculateHeaderSize } from './utils/useCalculateHeaderSize';
 import { LocatorsTreeColumnView } from './components/LocatorsTreeColumnView';
 import { FrameworkType } from '../../common/types/common';
+import { selectIsTableView } from './selectors/vivdusView.selectors';
 
 const { confirm } = Modal;
 
@@ -113,6 +114,7 @@ export const LocatorsPage = () => {
   const isCustomLocatorFlow = useSelector(selectIsCustomLocatorFlow);
 
   const framework = useSelector(selectCurrentPageObject)?.framework;
+  const isTableViewMode = useSelector(selectIsTableView);
   const isVividusFramework = framework === FrameworkType.Vividus;
 
   const handleConfirm = () => {
@@ -243,7 +245,7 @@ export const LocatorsPage = () => {
               style={{ height: containerHeight }}
             >
               {locators.length || areUnselectedAll ? (
-                isVividusFramework ? (
+                isVividusFramework && isTableViewMode ? (
                   <LocatorsTreeColumnView
                     locatorIds={locatorIds}
                     expandAll={viewProps.expandAll}
