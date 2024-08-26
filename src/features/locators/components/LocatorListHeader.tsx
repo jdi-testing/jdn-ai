@@ -1,4 +1,4 @@
-import React, { ReactNode, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { size } from 'lodash';
 import { Button, Checkbox, Row } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
@@ -17,7 +17,7 @@ import { LocatorsSearch } from './LocatorsSearch';
 import { LocatorEditDialog } from './LocatorEditDialog';
 import { OnboardingTooltip } from '../../onboarding/components/OnboardingTooltip';
 import { LocatorMenu } from './LocatorMenu';
-import { ExpandState, LocatorTreeProps } from './LocatorsTree';
+import { ExpandState } from './LocatorsTree';
 import {
   selectActiveLocators,
   selectActualActiveByPageObject,
@@ -37,8 +37,14 @@ import classNames from 'classnames';
 import '../../../common/styles/headerCollapse.less';
 import { selectExpandedKeys } from '../selectors/locators.selectors';
 
+interface ViewProps {
+  expandAll: string[];
+  setExpandAll: (val: ExpandState) => void;
+  searchString: string;
+}
+
 interface LocatorListHeaderProps {
-  render: (viewProps: LocatorTreeProps['viewProps']) => ReactNode;
+  render: (viewProps: ViewProps) => React.ReactNode;
   isEditModalOpen: boolean;
   setIsEditModalOpen: (isOpen: boolean) => void;
 }
@@ -89,7 +95,7 @@ export const LocatorListHeader = ({
     dispatch(setElementGroupGeneration({ locators, isGenerated: !isAllLocatorsSelected })); // ToDo isGenerated refactoring
   };
 
-  const customLocatorRef = useRef<HTMLElement | null>(null);
+  const customLocatorRef = useRef<HTMLButtonElement | null>(null);
   const { updateStepRefs } = useOnboardingContext();
   const { handleOnChangeStep } = useOnboarding();
 

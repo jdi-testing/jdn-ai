@@ -5,7 +5,7 @@ import ResizableColumnContainer from './ResizableColumnContainer';
 
 interface LocatorsTreeColumnComponentProps {
   locatorIds: ElementId[];
-  expandAll: ExpandState;
+  expandAll: string[];
   setExpandAll: (val: ExpandState) => void;
   searchString: string;
 }

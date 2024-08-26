@@ -8,7 +8,7 @@ import { ElementId } from '../types/locator.types';
 
 export interface ResizableContainerProps {
   locatorIds: ElementId[];
-  expandAll: ExpandState;
+  expandAll: string[];
   setExpandAll: (val: ExpandState) => void;
   searchString: string;
 }

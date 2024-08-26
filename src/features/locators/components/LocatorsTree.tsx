@@ -26,10 +26,12 @@ export enum SearchState {
 export enum ExpandState {
   Expanded = 'Expanded',
   Collapsed = 'Collapsed',
-  // Custom = 'Custom',
 }
 
 export interface LocatorTreeProps {
+  locatorIds: string[];
+  expandAll: string[];
+  setExpandAll: (val: ExpandState) => void;
   searchString: string;
   onScroll?: (scrollPosition: number) => void;
 }

@@ -66,8 +66,8 @@ export const PageObjListHeader: FC<Props> = ({ template, toggleExpand, isExpande
     });
   };
 
-  const downloadRef = useRef<HTMLElement | null>(null);
-  const newPOButtonRef = useRef<HTMLElement | null>(null);
+  const downloadRef = useRef<HTMLButtonElement | null>(null);
+  const newPOButtonRef = useRef<HTMLButtonElement | null>(null);
   const { updateStepRefs } = useOnboardingContext();
 
   useEffect(() => {
