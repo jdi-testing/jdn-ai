@@ -52,6 +52,7 @@ import { useCalculateHeaderSize } from './utils/useCalculateHeaderSize';
 import { LocatorsTreeColumnView } from './components/LocatorsTreeColumnView';
 import { FrameworkType } from '../../common/types/common';
 import { selectIsTableView } from './selectors/vivdusView.selectors';
+import { LocatorsProgress } from './components/LocatorsProgress';
 
 const { confirm } = Modal;
 
@@ -245,21 +246,24 @@ export const LocatorsPage = () => {
               style={{ height: containerHeight }}
             >
               {locators.length || areUnselectedAll ? (
-                isVividusFramework && isTableViewMode ? (
-                  <LocatorsTreeColumnView
-                    locatorIds={locatorIds}
-                    expandAll={viewProps.expandAll}
-                    setExpandAll={viewProps.setExpandAll}
-                    searchString={viewProps.searchString}
-                  />
-                ) : (
-                  <LocatorsTree
-                    locatorIds={locatorIds}
-                    expandAll={viewProps.expandAll}
-                    setExpandAll={viewProps.setExpandAll}
-                    searchString={viewProps.searchString}
-                  />
-                )
+                <>
+                  {isVividusFramework && isTableViewMode ? (
+                    <LocatorsTreeColumnView
+                      locatorIds={locatorIds}
+                      expandAll={viewProps.expandAll}
+                      setExpandAll={viewProps.setExpandAll}
+                      searchString={viewProps.searchString}
+                    />
+                  ) : (
+                    <LocatorsTree
+                      locatorIds={locatorIds}
+                      expandAll={viewProps.expandAll}
+                      setExpandAll={viewProps.setExpandAll}
+                      searchString={viewProps.searchString}
+                    />
+                  )}
+                  <LocatorsProgress />
+                </>
               ) : showSpinner ? (
                 <LocatorTreeSpinner />
               ) : (

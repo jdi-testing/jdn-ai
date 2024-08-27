@@ -2,8 +2,6 @@ import React, { memo, useEffect, useMemo, useRef } from 'react';
 import { Tree } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import { CaretDown } from '@phosphor-icons/react';
-
-import { LocatorsProgress } from './LocatorsProgress';
 import { RootState } from '../../../app/store/store';
 import { selectCurrentPage } from '../../../app/main.selectors';
 import { selectPresentLocatorsByPO } from '../selectors/locatorsByPO.selectors';
@@ -108,23 +106,20 @@ const LocatorsTreeComponent: React.FC<LocatorTreeProps> = ({ searchString, onScr
   }, [onScroll]);
 
   return (
-    <>
-      <div ref={containerRef} className="jdn__locatorsTree-container">
-        {/* incompatible type of Key */}
-        {/* eslint-disable-next-line */}
-        {/* @ts-ignore */}
-        <Tree
-          ref={treeRef}
-          {...{ expandedKeys, onExpand: handleExpand }}
-          autoExpandParent={true}
-          switcherIcon={<CaretDown color="#878A9C" size={14} className="jdn__locator_caret-down" />}
-          treeData={treeNodes}
-          height={containerHeight || 0} // necessary for scrollTo works
-          style={{ height: 'inherit' }}
-        />
-      </div>
-      <LocatorsProgress />
-    </>
+    <div ref={containerRef} className="jdn__locatorsTree-container">
+      {/* incompatible type of Key */}
+      {/* eslint-disable-next-line */}
+      {/* @ts-ignore */}
+      <Tree
+        ref={treeRef}
+        {...{ expandedKeys, onExpand: handleExpand }}
+        autoExpandParent={true}
+        switcherIcon={<CaretDown color="#878A9C" size={14} className="jdn__locator_caret-down" />}
+        treeData={treeNodes}
+        height={containerHeight || 0} // necessary for scrollTo works
+        style={{ height: 'inherit' }}
+      />
+    </div>
   );
 };
 
