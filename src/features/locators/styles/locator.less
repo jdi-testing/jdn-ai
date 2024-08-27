@@ -2,7 +2,9 @@
 
 .jdn__locator {
     display: flex;
-    width: calc(100% - 75px);
+    overflow-x: clip;
+    //width: calc(100vw - 198px);
+    padding-right: 78px;
     font-size: 12px;
 
     font-family: "Noto Sans Display",
@@ -14,6 +16,8 @@
 
       & .jdn__locator-page_button-copy {
         display: none;
+        padding: 0;
+        height: fit-content;
       }
 
       :not(.ant-tree-treenode-disabled) &:hover {
@@ -37,10 +41,15 @@
     }
 
     &_buttons {
+      position: fixed;
+      right: 33px;
       display: flex;
       flex-direction: row-reverse;
-      height: 32px;
-      width: 64px;
+      height: 29px;
+      width: 80px;
+
+      padding-right: 8px;
+      background: linear-gradient(to right, rgba(255, 255, 255, 0) 0px , rgba(255, 255, 255, 1) 10px)
     }
 
     &_output-string {

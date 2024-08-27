@@ -1,7 +1,14 @@
 .jdn__locatorsTree-container {
   height: calc(-192px + 100vh);
   overflow-y: auto;
-  position: relative;
+}
+
+.ant-tree-list-holder-inner {
+  overflow-x: auto;
+}
+
+.jdn__locator, .jdn__locator-menu {
+  width: fit-content;
 }
 
 .jdn__locatorsTree-container--table {
@@ -9,7 +16,9 @@
   grid-template-columns: minmax(100px, auto) 1fr;
 
   .ant-tree-list-holder > div {
+    //height: inherit;
     overflow-x: auto;
+    overflow-y: hidden;
   }
 
   .jdn__locator_colorized-string--vividus {
@@ -20,7 +29,7 @@
 
   .jdn__locatorsTree--left,
   .jdn__locatorsTree--right {
-    height: calc(-192px + 100vh);
+    height: calc(100vh - 192px);
     min-width: 100px;
   }
 
@@ -34,6 +43,7 @@
     }
   }
 
+
   .jdn__locatorsTree--right {
     .jdn__locator_checkbox_wrapper, .jdn__locator-icon, .ant-tree-switcher {
       display: none;
@@ -44,6 +54,17 @@
     .jdn__locator_locator-type--vividus {
       display: inline;
     }
+
+    //.jdn__locator_buttons {
+    //  border: 1px solid red;
+    //  position: absolute;
+    //  right: 0;
+    //  top: -9px;
+    //}
+  }
+
+  .jdn__locator {
+    width: fit-content;
   }
 
 }
@@ -54,4 +75,5 @@
 
 .jdn__locator_locators {
   white-space: nowrap;
+  width: inherit;
 }

@@ -90,7 +90,7 @@
         align-items: flex-start;
         gap: 1px;
         align-self: stretch;
-        padding: 6px 8px 6px 1px;
+        padding: 6px 0 6px 1px;
 
         &:hover {
           background-color: @hovered-locator;
@@ -105,6 +105,10 @@
 
           &.jdn__tree-item--active {
             background-color: @active-locator;
+
+            .jdn__locator_buttons {
+              background: linear-gradient(to right, rgba(255, 255, 255, 0) 0px , @active-locator 10px)
+            }
           }
         }
 
@@ -115,6 +119,10 @@
         &.jdn__tree-item--active {
           background-color: @active-locator;
 
+          .jdn__locator_buttons {
+            background: linear-gradient(to right, rgba(255, 255, 255, 0) 0px , @active-locator 10px)
+          }
+
           &.ant-tree-treenode:hover {
             background-color: @active-locator;
           }
@@ -124,6 +132,14 @@
       &-list-holder {
         height: 100%;
         overflow-y: hidden !important;
+
+        > div {
+          //height: inherit !important;
+
+          .ant-tree-list-holder-inner {
+            //height: inherit;
+          }
+        }
       }
     }
 
