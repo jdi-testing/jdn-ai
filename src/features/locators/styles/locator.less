@@ -2,14 +2,33 @@
 
 .jdn__locator {
     display: flex;
-    overflow-x: clip;
-    //width: calc(100vw - 198px);
-    padding-right: 78px;
     font-size: 12px;
+    width: calc(100vw - 167px);
+    overflow-x: clip;
+    min-height: 44px;
 
     font-family: "Noto Sans Display",
       sans-serif;
     word-break: break-word;
+
+    &::-webkit-scrollbar {
+      -webkit-appearance: none;
+      width: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      border-radius: 5px;
+      background-color: rgba(0, 0, 0, .3);
+      -webkit-box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+    }
+
+    &::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: rgba(0, 0, 0, 0.1); /* Цвет фона под скроллбаром */
+    }
 
     &_container {
       position: relative;
@@ -41,15 +60,10 @@
     }
 
     &_buttons {
-      position: fixed;
-      right: 33px;
       display: flex;
       flex-direction: row-reverse;
-      height: 29px;
-      width: 80px;
-
-      padding-right: 8px;
-      background: linear-gradient(to right, rgba(255, 255, 255, 0) 0px , rgba(255, 255, 255, 1) 10px)
+      height: 32px;
+      width: 64px;
     }
 
     &_output-string {

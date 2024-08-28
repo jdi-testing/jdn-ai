@@ -1,25 +1,10 @@
 .jdn__locatorsTree-container {
   height: calc(-192px + 100vh);
-  overflow-y: auto;
-}
-
-.ant-tree-list-holder-inner {
-  overflow-x: auto;
-}
-
-.jdn__locator, .jdn__locator-menu {
-  width: fit-content;
 }
 
 .jdn__locatorsTree-container--table {
   display: grid;
   grid-template-columns: minmax(100px, auto) 1fr;
-
-  .ant-tree-list-holder > div {
-    //height: inherit;
-    overflow-x: auto;
-    overflow-y: hidden;
-  }
 
   .jdn__locator_colorized-string--vividus {
     span span, .jdn__locator_output-string-general-view {
@@ -33,7 +18,24 @@
     min-width: 100px;
   }
 
+  .jdn__locator {
+    display: flex;
+    flex-wrap: nowrap;
+    word-break: revert;
+    font-size: 12px;
+    width: calc(100vw / 2 - 142px);;
+    overflow-x: clip;
+    overflow-y: hidden;
+    height: 44px;
+
+    &:hover {
+      overflow-x: auto;
+    }
+  }
+
+
   .jdn__locatorsTree--left {
+
     .jdn__locator_buttons {
       display: none;
     }
@@ -41,8 +43,12 @@
     .jdn__locator_locator-name--vividus, .jdn__locator_caret-down {
       display: inline;
     }
-  }
 
+    .jdn__locator {
+      width: 100%;
+      margin-right: 8px;
+    }
+  }
 
   .jdn__locatorsTree--right {
     .jdn__locator_checkbox_wrapper, .jdn__locator-icon, .ant-tree-switcher {
@@ -55,25 +61,14 @@
       display: inline;
     }
 
-    //.jdn__locator_buttons {
-    //  border: 1px solid red;
-    //  position: absolute;
-    //  right: 0;
-    //  top: -9px;
-    //}
+  }
+
+
+  .jdn__locator_checkbox_wrapper {
+    display: none;
   }
 
   .jdn__locator {
     width: fit-content;
   }
-
-}
-
-.jdn__locator_checkbox_wrapper {
-  display: none;
-}
-
-.jdn__locator_locators {
-  white-space: nowrap;
-  width: inherit;
 }
