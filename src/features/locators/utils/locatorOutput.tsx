@@ -201,4 +201,5 @@ export const getFullLocatorVividusString = (
   pageObjectName: string,
   locatorType: LocatorType,
   locator: ILocator,
-): string => `${getLocatorTemplateWithVividus(pageObjectName, locatorType, locator)}(${locator.locatorValue.output})`;
+): string =>
+  `${getLocatorTemplateWithVividusString(pageObjectName, locatorType, locator)}(${locator.locatorValue.output})`;

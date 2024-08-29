@@ -7,11 +7,11 @@ import { DotsThree } from '@phosphor-icons/react';
 import { pushNotification } from '../../../app/main.slice';
 import {
   deleteOption,
+  dividerItem,
   download,
   downloadPerfTest,
   edit,
   renameOption,
-  dividerItem,
 } from '../../../common/components/menu/menuOptions';
 import { ElementId, ILocator } from '../../locators/types/locator.types';
 import { removeLocators } from '../../locators/locators.slice';
@@ -26,6 +26,7 @@ import { AppDispatch } from '../../../app/store/store';
 import { useOnboardingContext } from '../../onboarding/OnboardingProvider';
 import { selectIsOnboardingOpen } from '../../onboarding/store/onboarding.selectors';
 import { selectIsPageObjectsListUIEnabled } from '../selectors/pageObjectsListUI.selectors';
+import { selectIsTableView } from '../../locators/selectors/vivdusView.selectors';
 
 interface Props {
   pageObject: PageObject;
@@ -39,6 +40,7 @@ export const PageObjMenu: React.FC<Props> = ({ pageObject, elements }) => {
   const [isRenameModalOpen, setIsRenameModalOpen] = useState(false);
 
   const isOnboardingOpen = useSelector(selectIsOnboardingOpen);
+  const isTableView = useSelector(selectIsTableView);
 
   const getMenuItems = (pageObject: PageObject, locatorIds: ElementId[] | undefined, locatorObjects: ILocator[]) => {
     const handleRename = () => setIsRenameModalOpen(true);
@@ -49,7 +51,7 @@ export const PageObjMenu: React.FC<Props> = ({ pageObject, elements }) => {
     };
 
     const handleDownload = async () => {
-      await generatePageObject(locatorObjects, pageObject).then(() =>
+      await generatePageObject(locatorObjects, pageObject, isTableView).then(() =>
         dispatch(pushNotification({ action: { type: 'downloadFile' } })),
       );
     };

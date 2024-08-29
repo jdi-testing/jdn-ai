@@ -5,7 +5,11 @@ import { ElementId, ILocator } from '../../locators/types/locator.types';
 import { PageObject } from '../types/pageObjectSlice.types';
 import { ElementLabel, ElementLibrary } from '../../locators/types/generationClasses.types';
 import javaReservedWords from './javaReservedWords.json';
-import { getPageObjectTemplateForJdi, getPageObjectTemplateForVividusTable } from './pageObjectTemplate';
+import {
+  getPageObjectTemplateForJdi,
+  getPageObjectTemplateForVividus,
+  getPageObjectTemplateForVividusTable,
+} from './pageObjectTemplate';
 import { pageObjectTemplatePerfTest } from './pageObjectTemplatePerfTest';
 import { getJDILabel } from '../../locators/utils/locatorTypesUtils';
 import { MAX_LOCATOR_NAME_LENGTH } from './constants';
@@ -127,20 +131,32 @@ export const getPageAttributes = async () => {
   return result;
 };
 
-export const getPage = (locators: ILocator[], pageObject: PageObject): { pageCode: string; title: string } => {
-  console.log('pageObject in GET PAGE: ', pageObject);
+export const getPage = (
+  locators: ILocator[],
+  pageObject: PageObject,
+  isTableView: boolean,
+): { pageCode: string; title: string } => {
+  const getPageObjectForVividus = () => {
+    return isTableView
+      ? getPageObjectTemplateForVividusTable(locators, pageObject)
+      : getPageObjectTemplateForVividus(locators, pageObject);
+  };
+
   return pageObject.framework === FrameworkType.Vividus
-    ? getPageObjectTemplateForVividusTable(locators, pageObject)
-    : // ? getPageObjectTemplateForVividus(locators, pageObject)
-      getPageObjectTemplateForJdi(locators, pageObject);
+    ? getPageObjectForVividus()
+    : getPageObjectTemplateForJdi(locators, pageObject);
 };
 
 export const getPagePerfTest = (locators: ILocator[], pageObject: PageObject): { pageCode: string; name: string } => {
   return pageObjectTemplatePerfTest(locators, pageObject);
 };
 
-export const generatePageObject = async (elements: ILocator[], pageObject: PageObject): Promise<void> => {
-  const page = getPage(elements, pageObject);
+export const generatePageObject = async (
+  elements: ILocator[],
+  pageObject: PageObject,
+  isTableView: boolean,
+): Promise<void> => {
+  const page = getPage(elements, pageObject, isTableView);
 
   const blob = new Blob([page.pageCode], {
     type: 'text/plain;charset=utf-8',

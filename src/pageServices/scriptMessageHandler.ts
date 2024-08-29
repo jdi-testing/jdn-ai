@@ -24,6 +24,7 @@ import { dispatchingMessages, ScriptMsg } from './scriptMsg.constants';
 import { selectPresentActiveLocators } from '../features/locators/selectors/locatorsByPO.selectors';
 import { selectCurrentPageObject } from '../features/pageObjects/selectors/pageObjects.selectors';
 import { FrameworkType } from '../common/types/common';
+import { selectIsTableView } from '../features/locators/selectors/vivdusView.selectors';
 
 export type ScriptMessagePayload = { message: keyof Actions; param: Record<string, never> };
 
@@ -46,9 +47,10 @@ export const updateMessageHandler = (
     },
     [ScriptMsg.CopyLocator]: ({ value, option }) => {
       const pageObject = selectCurrentPageObject(state)!;
+      const isTableView = selectIsTableView(state);
       const framework = pageObject?.framework || FrameworkType.JdiLight;
       const pageObjectName = pageObject.name;
-      copyLocator(framework, value, pageObjectName, option)();
+      copyLocator(framework, value, pageObjectName, isTableView, option)();
     },
     [ScriptMsg.ElementSelect]: (payload) => {
       dispatch(elementGroupUnsetActive(payload.otherElems));

@@ -4,8 +4,11 @@ import { Button, Tooltip } from 'antd';
 import { CopySimple } from '@phosphor-icons/react';
 import { ILocator } from '../../locators/types/locator.types';
 import { CopyTitle, FrameworkType, LocatorType } from '../../../common/types/common';
-import { getLocatorString, getFullLocatorVividusString } from '../../locators/utils/locatorOutput';
+import { getFullLocatorVividusString, getLocatorString } from '../../locators/utils/locatorOutput';
 import { copyLocatorsToClipboard } from '../../locators/utils/copyLocatorToClipboard';
+import { getLocatorStringForTableView } from '../utils/pageObjectTemplate';
+import { useSelector } from 'react-redux';
+import { selectIsTableView } from '../../locators/selectors/vivdusView.selectors';
 
 interface Props {
   framework: FrameworkType;
@@ -16,6 +19,7 @@ interface Props {
 export const PageObjCopyButton: FC<Props> = ({ framework, elements, pageObjectName }) => {
   const [copyTooltipTitle, setTooltipTitle] = useState(CopyTitle.Copy);
   const isVividusFramework = framework === FrameworkType.Vividus;
+  const isTableView = useSelector(selectIsTableView);
 
   const getPageObjectForCopying = (locators: ILocator[], pageObjectNameForCopying: string) => {
     return locators.map((element) => {
@@ -23,7 +27,9 @@ export const PageObjCopyButton: FC<Props> = ({ framework, elements, pageObjectNa
       const locatorType = element?.locatorType || LocatorType.xPath;
 
       return isVividusFramework
-        ? getFullLocatorVividusString(pageObjectNameForCopying, locatorType, element)
+        ? isTableView
+          ? `|${element.name}|${getLocatorStringForTableView(pageObjectNameForCopying, element, locatorType)}|`
+          : getFullLocatorVividusString(pageObjectNameForCopying, locatorType, element)
         : getLocatorString(annotationType, locatorType, locatorValue, type, name);
     });
   };

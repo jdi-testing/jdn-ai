@@ -29,6 +29,7 @@ import { FormInstance } from 'rc-field-form/lib/interface';
 import { FormValues } from '../components/LocatorEditDialog';
 import { startsWithDigit } from '../../../app/utils/startsWithDigit';
 import { escapeLocatorString } from './escapeLocatorString';
+import { getLocatorStringForTableView } from '../../pageObjects/utils/pageObjectTemplate';
 
 export const isValidJavaVariable = (value: string) => /^[a-zA-Z_$]([a-zA-Z0-9_])*$/.test(value);
 
@@ -147,7 +148,13 @@ export const setIndents = (ref: React.RefObject<HTMLDivElement>, depth: number) 
 
 // used in the coverage panel in the Copy option of the Context Menu:
 export const copyLocator =
-  (framework: FrameworkType, locatorsForCopy: ILocator[], pageObjectName: string, option?: LocatorOption) =>
+  (
+    framework: FrameworkType,
+    locatorsForCopy: ILocator[],
+    pageObjectName: string,
+    isTableView: boolean,
+    option?: LocatorOption,
+  ) =>
   (): void => {
     const isVividusFramework = framework === FrameworkType.Vividus;
     let value: string[];
@@ -182,7 +189,9 @@ export const copyLocator =
           const locatorType = element?.locatorType || LocatorType.xPath;
 
           return isVividusFramework
-            ? getFullLocatorVividusString(pageObjectName, locatorType, element)
+            ? isTableView
+              ? `|${element.name}|${getLocatorStringForTableView(pageObjectNameForCopying, element, locatorType)}|`
+              : getFullLocatorVividusString(pageObjectName, locatorType, element)
             : getLocatorString(annotationType, locatorType, locatorValue, type, name);
         });
     }
@@ -190,10 +199,15 @@ export const copyLocator =
     copyLocatorsToClipboard(value, isVividusFramework);
   };
 
-export const getCopyOptions = (framework: FrameworkType, selectedLocators: ILocator[], pageObjectName: string) => {
+export const getCopyOptions = (
+  framework: FrameworkType,
+  selectedLocators: ILocator[],
+  pageObjectName: string,
+  isTableView: boolean,
+) => {
   return Object.values(LocatorOption).reduce(
     (options, option) => {
-      options[option as LocatorOption] = copyLocator(framework, selectedLocators, pageObjectName, option);
+      options[option as LocatorOption] = copyLocator(framework, selectedLocators, pageObjectName, isTableView, option);
       return options;
     },
     {} as Record<LocatorOption, () => void>,

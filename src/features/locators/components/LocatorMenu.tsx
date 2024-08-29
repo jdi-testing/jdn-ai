@@ -166,7 +166,7 @@ export const LocatorMenu: React.FC<Props> = ({ setIsEditModalOpen, children, tri
       ...(size(activeNonGenerate) ? [addToPO(handleAddToPO)] : []),
       ...(size(activeGenerate) ? [removeFromPO(handleRemoveFromPO)] : []),
       ...(size(actualSelected)
-        ? [copyLocatorOption(getCopyOptions(framework, actualSelected, pageObject?.name ?? ''))]
+        ? [copyLocatorOption(getCopyOptions(framework, actualSelected, pageObject?.name ?? '', false))]
         : []),
       ...(size(stoppedSelected) ? [rerun(() => dispatch(rerunGeneration({ generationData: stoppedSelected })))] : []),
       ...(size(deletedActive) ? [restore(handleRestore)] : []),

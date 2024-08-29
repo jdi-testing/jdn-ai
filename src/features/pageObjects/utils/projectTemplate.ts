@@ -10,6 +10,7 @@ import { ElementLibrary } from '../../locators/types/generationClasses.types';
 import { editPomContent } from './templateFileContent';
 import { selectConfirmedLocators } from '../../locators/selectors/locatorsFiltered.selectors';
 import { FrameworkType } from '../../../common/types/common';
+import { selectIsTableView } from '../../locators/selectors/vivdusView.selectors';
 
 const VIVIDUS = {
   PAGES_PROPERTIES_PATH: 'src/main/resources/properties/suite/web_app/pages.properties',
@@ -136,14 +137,15 @@ export const generateAndDownloadZip = async (state: RootState, template: Blob) =
       if (!size(locators)) continue;
 
       if (isVividusFramework(framework)) {
-        vividusPageCode += (await getPage(locators, po))?.pageCode + '\n';
+        const isTableView = selectIsTableView(state);
+        vividusPageCode += (await getPage(locators, po, isTableView))?.pageCode + '\n';
 
         if (!isLastPo && !isEmptyPageObject) continue;
 
         newZip.file(VIVIDUS.SITE_PROPERTIES_PATH, `variables.siteURL=${url}`, { binary: true });
         await generatePoFile(newZip, framework, { pageCode: vividusPageCode });
       } else {
-        const page = await getPage(locators, po);
+        const page = await getPage(locators, po, false);
 
         await generatePoFile(newZip, framework, page);
         await editTestPropertiesFile(newZip, po);

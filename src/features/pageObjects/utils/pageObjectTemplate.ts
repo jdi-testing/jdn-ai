@@ -42,7 +42,7 @@ export const getPageObjectTemplateForVividus = (
   return { pageCode, title: name };
 };
 
-const getLocatorStringForTableView = (name: string, locator: ILocator, locatorType: LocatorType): string => {
+export const getLocatorStringForTableView = (name: string, locator: ILocator, locatorType: LocatorType): string => {
   return `By.${locatorType === LocatorType.cssSelector ? 'cssSelector' : locatorType}(${getLocatorValueByType(
     locator.locatorValue,
     locatorType,
