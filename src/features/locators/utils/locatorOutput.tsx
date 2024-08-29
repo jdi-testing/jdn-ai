@@ -175,7 +175,9 @@ export const vividusColorizedString = (
     <span className="jdn__locator_colorized-string--vividus">
       <span>{getLocatorTemplateWithVividus(pageObjectName, locatorType, element)}</span>{' '}
       <span className="jdn__locator_output-string-general-view">
-        (<span className="jdn__locator_output-string">{locatorValueOutput}</span>)
+        <span>(</span>
+        <span className="jdn__locator_output-string">{locatorValueOutput}</span>
+        <span>)</span>
       </span>
       <br />
     </span>
