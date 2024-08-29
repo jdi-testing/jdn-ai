@@ -4,7 +4,7 @@ import transliterate from '@sindresorhus/transliterate';
 import { ILocator } from '../../locators/types/locator.types';
 import {
   getLocatorPrefix,
-  getLocatorTemplateWithVividus,
+  getLocatorTemplateWithVividusString,
   getLocatorValueByType,
 } from '../../locators/utils/locatorOutput';
 import { AnnotationType, LocatorType } from '../../../common/types/common';
@@ -33,10 +33,47 @@ export const getPageObjectTemplateForVividus = (
   locators.forEach((locator) => {
     const currentLocatorType = locator.locatorType || locatorType || LocatorType.xPath;
 
-    pageCode += `${getLocatorTemplateWithVividus(name, currentLocatorType, locator)}(${getLocatorValueByType(
+    pageCode += `${getLocatorTemplateWithVividusString(name, currentLocatorType, locator)}(${getLocatorValueByType(
       locator.locatorValue,
       currentLocatorType,
     )})\n`;
+  });
+
+  return { pageCode, title: name };
+};
+
+const getLocatorStringForTableView = (name: string, locator: ILocator, locatorType: LocatorType): string => {
+  return `By.${locatorType === LocatorType.cssSelector ? 'cssSelector' : locatorType}(${getLocatorValueByType(
+    locator.locatorValue,
+    locatorType,
+  )})`;
+};
+
+const padString = (str: string, length: number): string => str.padEnd(length);
+
+export const getPageObjectTemplateForVividusTable = (
+  locators: ILocator[],
+  pageObject: PageObject,
+): { pageCode: string; title: string } => {
+  const { name, pathname, locatorType } = pageObject;
+
+  const maxNameLength = locators.reduce((maxLength, locator) => {
+    return Math.max(maxLength, locator.name.length);
+  }, 0);
+
+  const maxLocatorLength = locators.reduce((maxLength, locator) => {
+    const currentLocatorType = locator.locatorType || locatorType || LocatorType.xPath;
+    const locatorString = getLocatorStringForTableView(name, locator, currentLocatorType);
+    return Math.max(maxLength, locatorString.length);
+  }, 0);
+
+  let pageCode = `${name}.url=${pathname}\n`;
+
+  locators.forEach((locator) => {
+    const currentLocatorType = locator.locatorType || locatorType || LocatorType.xPath;
+    const locatorName = padString(locator.name, maxNameLength);
+    const locatorString = padString(getLocatorStringForTableView(name, locator, currentLocatorType), maxLocatorLength);
+    pageCode += `|${locatorName}|${locatorString}|\n`;
   });
 
   return { pageCode, title: name };

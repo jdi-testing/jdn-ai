@@ -191,7 +191,7 @@ export const getLocatorWithJDIAnnotation = (locator: string, locatorType: Locato
 export const getLocatorWithSelenium = (locator: string, option: string): string =>
   `${AnnotationType.FindBy}(${option} = "${locator}")`;
 
-const getLocatorTemplateWithVividusString = (
+export const getLocatorTemplateWithVividusString = (
   pageObjectName: string,
   locatorType: LocatorType,
   locator: ILocator,

@@ -5,7 +5,7 @@ import { ElementId, ILocator } from '../../locators/types/locator.types';
 import { PageObject } from '../types/pageObjectSlice.types';
 import { ElementLabel, ElementLibrary } from '../../locators/types/generationClasses.types';
 import javaReservedWords from './javaReservedWords.json';
-import { getPageObjectTemplateForJdi, getPageObjectTemplateForVividus } from './pageObjectTemplate';
+import { getPageObjectTemplateForJdi, getPageObjectTemplateForVividusTable } from './pageObjectTemplate';
 import { pageObjectTemplatePerfTest } from './pageObjectTemplatePerfTest';
 import { getJDILabel } from '../../locators/utils/locatorTypesUtils';
 import { MAX_LOCATOR_NAME_LENGTH } from './constants';
@@ -128,9 +128,11 @@ export const getPageAttributes = async () => {
 };
 
 export const getPage = (locators: ILocator[], pageObject: PageObject): { pageCode: string; title: string } => {
+  console.log('pageObject in GET PAGE: ', pageObject);
   return pageObject.framework === FrameworkType.Vividus
-    ? getPageObjectTemplateForVividus(locators, pageObject)
-    : getPageObjectTemplateForJdi(locators, pageObject);
+    ? getPageObjectTemplateForVividusTable(locators, pageObject)
+    : // ? getPageObjectTemplateForVividus(locators, pageObject)
+      getPageObjectTemplateForJdi(locators, pageObject);
 };
 
 export const getPagePerfTest = (locators: ILocator[], pageObject: PageObject): { pageCode: string; name: string } => {
