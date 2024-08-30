@@ -8,6 +8,7 @@ import customLocatorSlice from '../../features/locators/customLocator.slice';
 import onboardingSlice from '../../features/onboarding/store/onboarding.slice';
 import pageObjectSlice from '../../features/pageObjects/pageObject.slice';
 import pageObjectsListUISlice from '../../features/pageObjects/pageObjectsListUI.slice';
+import vividusViewSlice from '../../features/locators/VividusView.slice';
 
 import { scriptNotifier } from '../../pageServices/scriptNotifier';
 import { updateMessageHandler } from '../../pageServices/scriptMessageHandler';
@@ -37,6 +38,7 @@ const rootReducer = {
   onboarding: onboardingSlice,
   customLocator: customLocatorSlice,
   pageDocument: pageDocumentSlice,
+  vividusView: vividusViewSlice,
 };
 
 export const store = configureStore({

@@ -11,18 +11,15 @@ export const locatorsAdapter = createEntityAdapter<ILocator>({
 
 const { selectAll, selectById } = locatorsAdapter.getSelectors<RootState>((state) => state.locators.present);
 
-export const selectLocatorById = createSelector(selectById, (locator?: ILocator) => {
-  if (locator) {
-    return {
-      ...locator,
-      locatorValue: {
-        ...locator.locatorValue,
-        output: getLocator(locator.locatorValue, locator.locatorType),
-      },
-    };
-  }
-  return locator;
-});
+export const selectExpandedKeys = createSelector(
+  (state: RootState) => state.locators.present.expandedKeys,
+  (expandedKeys) => expandedKeys,
+);
+
+export const selectAutoExpandParent = createSelector(
+  (state: RootState) => state.locators.present.autoExpandParent,
+  (autoExpandParent) => autoExpandParent,
+);
 
 export const selectLocators = createSelector(selectAll, (locators: ILocator[]) =>
   locators.map((locator) => {
@@ -35,6 +32,28 @@ export const selectLocators = createSelector(selectAll, (locators: ILocator[]) =
     };
   }),
 );
+
+export const selectOnExpandState = createSelector(
+  selectExpandedKeys,
+  selectAutoExpandParent,
+  (expandedKeys, autoExpandParent) => ({
+    expandedKeys,
+    autoExpandParent,
+  }),
+);
+
+export const selectLocatorById = createSelector(selectById, (locator?: ILocator) => {
+  if (locator) {
+    return {
+      ...locator,
+      locatorValue: {
+        ...locator.locatorValue,
+        output: getLocator(locator.locatorValue, locator.locatorType),
+      },
+    };
+  }
+  return locator;
+});
 
 export const selectLocatorsToGenerate = createSelector(selectLocators, (items: ILocator[]) =>
   items.filter((el) => el.isChecked && !el.deleted),

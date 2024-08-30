@@ -97,16 +97,14 @@ export const Filter = () => {
   const isDefaultSetOn = useSelector((state: RootState) => selectIsDefaultSetOn(state, pageObject.id));
 
   const defaultSetToggle = () => {
-    const prevFilterState = savedFilters;
     const prevDefaultSetToggleState = isDefaultSetOn;
     const library = pageObject.library;
-    const isSavedFiltersForCurrentLibrary = prevFilterState[library] && !isEmptyObject(prevFilterState[library]);
+    const prevFilterState = savedFilters ? savedFilters[library] : null;
+    const isSavedFiltersForCurrentLibrary = prevFilterState && !isEmptyObject(prevFilterState);
 
     if (prevDefaultSetToggleState) {
       if (isSavedFiltersForCurrentLibrary) {
-        dispatch(
-          setFilter({ pageObjectId: pageObject.id, JDIclassFilter: prevFilterState[library], isDefaultSetOn: false }),
-        );
+        dispatch(setFilter({ pageObjectId: pageObject.id, JDIclassFilter: prevFilterState, isDefaultSetOn: false }));
       } else if (!isSavedFiltersForCurrentLibrary) {
         dispatch(clearFilters({ pageObjectId: pageObject.id, library, isDefaultSetOn: false }));
       }

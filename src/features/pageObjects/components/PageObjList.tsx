@@ -28,6 +28,8 @@ import { disablePageObjectsListUI } from '../pageObjectsListUI.slice';
 import { resetProgressBar, startProgressBar } from '../progressBar.slice';
 import { useOnboarding } from '../../onboarding/useOnboarding';
 import { getTaskStatus } from '../../locators/utils/utils';
+import { selectIsTableView } from '../../locators/selectors/vivdusView.selectors';
+import LocatorsColumnViewForPO from './LocatorsColumnViewForPO';
 
 interface Props {
   jdiTemplate?: Blob;
@@ -91,6 +93,9 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
   };
 
   const template = framework === FrameworkType.Vividus ? vividusTemplate : jdiTemplate;
+  const isVividusFramework = framework === FrameworkType.Vividus;
+  const isTableViewMode = useSelector(selectIsTableView);
+  const isVividusTableViewMode = isVividusFramework && isTableViewMode;
 
   return (
     <div>
@@ -149,20 +154,25 @@ export const PageObjList: React.FC<Props> = ({ jdiTemplate, vividusTemplate }) =
                     }
                   >
                     {shouldDisplayLocators ? (
-                      elements.map((element) => {
-                        const locatorTaskStatus = getTaskStatus(
-                          element.locatorValue.xPathStatus,
-                          element.locatorValue.cssSelectorStatus,
-                        );
-                        const elementWithTaskStatus = { ...element, locatorTaskStatus };
-                        return (
-                          <Locator
-                            {...{ element: elementWithTaskStatus, library }}
-                            key={element.elementId}
-                            currentPage={PageType.PageObject}
-                          />
-                        );
-                      })
+                      isVividusTableViewMode ? (
+                        <LocatorsColumnViewForPO elements={elements} />
+                      ) : (
+                        elements.map((element) => {
+                          const locatorTaskStatus = getTaskStatus(
+                            element.locatorValue.xPathStatus,
+                            element.locatorValue.cssSelectorStatus,
+                          );
+                          const elementWithTaskStatus = { ...element, locatorTaskStatus };
+
+                          return (
+                            <Locator
+                              {...{ element: elementWithTaskStatus, library }}
+                              key={element.elementId}
+                              currentPage={PageType.PageObject}
+                            />
+                          );
+                        })
+                      )
                     ) : (
                       <PageObjGenerationSettings pageObj={id} {...{ url, isOnboardingOpen, handleGenerate }} />
                     )}

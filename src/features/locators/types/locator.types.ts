@@ -51,6 +51,8 @@ export interface LocatorsState {
   generationStatus: LocatorsGenerationStatus;
   status: IdentificationStatus;
   scrollToLocator: null | string;
+  expandedKeys: ElementId[];
+  autoExpandParent: boolean;
 }
 
 export type ElementId = string;

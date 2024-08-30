@@ -1,0 +1,152 @@
+.jdn__locatorsTree-container {
+  height: calc(-192px + 100vh);
+}
+
+.jdn__locatorsTree-container--table {
+  display: grid;
+  grid-template-columns: minmax(100px, auto) 1fr;
+
+  .jdn__locator_colorized-string--vividus {
+    span span, .jdn__locator_output-string-general-view {
+      display: none;
+    }
+  }
+
+  .jdn__locator_output-string-general-view {
+    text-wrap: nowrap;
+  }
+
+  .jdn__locatorsTree--left,
+  .jdn__locatorsTree--right {
+    height: calc(100vh - 192px);
+    min-width: 100px;
+  }
+
+  .jdn__locator {
+    display: flex;
+    flex-wrap: nowrap;
+    word-break: revert;
+    font-size: 12px;
+    width: calc(100vw / 2 - 142px);;
+    overflow-x: clip;
+    overflow-y: hidden;
+    height: 44px;
+
+    &:hover {
+      overflow-x: auto;
+    }
+  }
+
+
+  .jdn__locatorsTree--left {
+
+    .jdn__locator_buttons {
+      display: none;
+    }
+
+    .jdn__locator_locator-name--vividus, .jdn__locator_caret-down {
+      display: inline;
+    }
+
+    .jdn__locator_checkbox_wrapper {
+      display: flex;
+    }
+
+    .jdn__locator {
+      width: 100%;
+      margin-right: 8px;
+    }
+  }
+
+  .jdn__locatorsTree--right {
+    .jdn__locator_checkbox_wrapper, .jdn__locator-icon, .ant-tree-switcher {
+      display: none;
+    }
+
+    .jdn__locator_output-string-general-view,
+    .jdn__locator_output-string-general-view span,
+    .jdn__locator_locator-type--vividus {
+      display: inline;
+    }
+
+  }
+
+
+  .jdn__locator_checkbox_wrapper {
+    display: none;
+  }
+
+  .jdn__locator {
+    width: -webkit-fill-available;
+  }
+}
+
+// Styles for PO (LocatorsColumnViewForPO.tsx)
+.jdn__locators-container--table {
+  display: grid;
+  grid-template-columns: minmax(100px, auto) 1fr;
+  height: inherit;
+  //overflow-y: auto;
+
+
+  .jdn__locator_colorized-string--vividus {
+    span span, .jdn__locator_output-string-general-view {
+      display: none;
+    }
+  }
+
+  .jdn__locator_output-string-general-view {
+    text-wrap: nowrap;
+  }
+
+  .jdn__locators--left,
+  .jdn__locators--right {
+    height: calc(100vh - 129px);
+    overflow-y: scroll;
+    min-width: 100px;
+
+  }
+
+  .jdn__locator {
+    display: flex;
+    flex-wrap: nowrap;
+    word-break: revert;
+    font-size: 12px;
+    width: calc(100vw / 2 - 142px);;
+    overflow-x: clip;
+    overflow-y: hidden;
+    height: 44px;
+
+    &:hover {
+      overflow-x: auto;
+    }
+  }
+
+
+  .jdn__locators--left {
+    .jdn__locator_locator-name--vividus {
+      display: inline;
+    }
+    .jdn__locator {
+      width: 100%;
+      margin-right: 8px;
+    }
+  }
+
+  .jdn__locators--right {
+    .jdn__locator-icon{
+      display: none;
+    }
+
+    .jdn__locator_output-string-general-view,
+    .jdn__locator_output-string-general-view span,
+    .jdn__locator_locator-type--vividus {
+      display: inline;
+    }
+
+  }
+
+  .jdn__locator {
+    width: -webkit-fill-available;
+  }
+}

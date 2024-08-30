@@ -37,6 +37,8 @@ const initialState: LocatorsState = {
   generationStatus: LocatorsGenerationStatus.noStatus,
   status: IdentificationStatus.noStatus,
   scrollToLocator: null,
+  expandedKeys: [],
+  autoExpandParent: true,
 };
 
 export interface ChangeLocatorAttributesPayload {
@@ -297,6 +299,17 @@ const locatorsSlice = createSlice({
       });
       locatorsAdapter.upsertMany(state, newValue as ILocator[]);
     },
+
+    setExpandedKeys(state, action: PayloadAction<ElementId[]>) {
+      state.expandedKeys = action.payload;
+    },
+    expandCustom(state) {
+      state.autoExpandParent = false;
+    },
+    onExpand(state, action: PayloadAction<ElementId[]>) {
+      state.expandedKeys = action.payload;
+      state.autoExpandParent = false;
+    },
   },
   extraReducers: (builder) => {
     addCustomLocatorReducer(builder),
@@ -340,4 +353,7 @@ export const {
   toggleLocatorIsChecked,
   toggleAllLocatorsIsChecked,
   updateLocatorGroup,
+  setExpandedKeys,
+  expandCustom,
+  onExpand,
 } = locatorsSlice.actions;

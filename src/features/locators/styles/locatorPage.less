@@ -1,7 +1,7 @@
 @import '../../../common/styles/variables.less';
 
 .jdn {
-  &__locator-list {
+  &__locator-page {
     position: relative;
 
     &_header-locator-control-group {
@@ -17,16 +17,6 @@
     &_button-copy {
       top: 5px;
       order: 1;
-    }
-
-    &-content {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-
-      .ant-checkbox + span {
-        padding-left: 20px;
-      }
     }
 
     &-progress {
@@ -65,7 +55,9 @@
     & .jdn__locatorsTree {
       &-container {
         overflow-y: auto;
+        overflow-x: auto;
         height: 100%;
+        width: 100%;
 
         .ant-spin {
           position: relative;
@@ -83,6 +75,7 @@
         .ant-spin-dot-item {
           background-color: @warning-icon-color;
         }
+        // styles for table view in LocatorPageTable.less (jdn__locatorsTree-container--table)
       }
 
       &-indent {
@@ -98,7 +91,7 @@
         align-items: flex-start;
         gap: 1px;
         align-self: stretch;
-        padding: 6px 8px 6px 1px;
+        padding: 6px 0 6px 1px;
 
         &:hover {
           background-color: @hovered-locator;
@@ -113,6 +106,15 @@
 
           &.jdn__tree-item--active {
             background-color: @active-locator;
+
+            .jdn__locator_buttons {
+              background: linear-gradient(to right, rgba(255, 255, 255, 0) 0px , @active-locator 10px)
+            }
+            &.jdn__tree-item:hover {
+              .jdn__locator_buttons {
+                background: linear-gradient(to right, rgba(255, 255, 255, 0) 0px , red 10px)
+              }
+            }
           }
         }
 
@@ -123,6 +125,10 @@
         &.jdn__tree-item--active {
           background-color: @active-locator;
 
+          .jdn__locator_buttons {
+            background: linear-gradient(to right, rgba(255, 255, 255, 0) 0px , @active-locator 10px)
+          }
+
           &.ant-tree-treenode:hover {
             background-color: @active-locator;
           }
@@ -131,6 +137,7 @@
 
       &-list-holder {
         height: 100%;
+        overflow: hidden;
       }
     }
 

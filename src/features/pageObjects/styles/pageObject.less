@@ -3,6 +3,10 @@
 
 .jdn__pageObject {
     &-content {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
       height: calc(100vh - 94px);
 
       &-text {
@@ -22,6 +26,10 @@
       & .ant-tooltip-inner {
         margin-top: 8px;
       }
+
+      .jdn__locator {
+        width: 100%;
+      }
     }
 
     &-onboarding {
@@ -34,6 +42,9 @@
 
       &-url {
         word-break: break-all;
+      }
+      &_view-mode-selector{
+        padding-left: 31px;
       }
     }
 
