@@ -190,7 +190,7 @@ export const copyLocator =
 
           return isVividusFramework
             ? isTableView
-              ? `|${element.name}|${getLocatorStringForTableView(pageObjectNameForCopying, element, locatorType)}|`
+              ? `|${element.name}|${getLocatorStringForTableView(pageObjectName, element, locatorType)}|`
               : getFullLocatorVividusString(pageObjectName, locatorType, element)
             : getLocatorString(annotationType, locatorType, locatorValue, type, name);
         });

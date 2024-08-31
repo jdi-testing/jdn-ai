@@ -1,6 +1,6 @@
 {
   "name": "jdn-ai-chrome-extension",
-  "version": "3.16.5",
+  "version": "3.16.6",
   "description": "jdn-ai chrome extension",
   "scripts": {
     "start": "webpack --watch --env devenv",
@@ -52,7 +52,7 @@
     "@reduxjs/toolkit": "1.9.5",
     "@sindresorhus/transliterate": "1.6.0",
     "@types/file-saver": "^2.0.5",
-    "@types/react-resizable": "^3.0.7",
+    "@types/react-resizable": "^3.0.8",
     "antd": "^5.11.5",
     "axios": "^1.6.2",
     "classnames": "^2.5.1",
